@@ -331,7 +331,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                         organizacion: this.auth.organizacion.id,
                         turnos: [turno.id],
                         estado: 'pendiente',
-                        // tieneTurno: true,
                         ambitoOrigen: 'ambulatorio'
                     }).subscribe((pendientes) => {
                         if (pendientes.length) {
