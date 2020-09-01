@@ -187,7 +187,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         // esSolicitud = this.esTurneable(snomedConcept);
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true

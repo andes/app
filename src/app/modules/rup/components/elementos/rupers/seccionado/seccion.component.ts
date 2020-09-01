@@ -223,7 +223,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         const esSolicitud = this.esTurneable(snomedConcept) || solicitudDesdeBuscador;
 
         const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
 
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;

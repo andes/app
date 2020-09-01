@@ -1,7 +1,8 @@
-import { IElementoRUP } from './elementoRUP.interface';
+import { IElementoRUP, IElementoRUPRequeridos } from './elementoRUP.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPrestacion } from './prestacion.interface';
 
 export class IRegistroPrivacy {
     scope: string;
@@ -16,9 +17,9 @@ export class IPrestacionRegistro {
     nombre: string;
     concepto: ISnomedConcept;
     // Indica si este registro está destacado
-    destacado: Boolean;
+    destacado: boolean;
     // Indica si este registro es una solicitud
-    esSolicitud: Boolean;
+    esSolicitud: boolean;
     // Almacena el valor del átomo, molécula o fórmula.
     // Para el caso de las moléculas, el valor puede ser nulo.
     valor: any;
@@ -39,16 +40,16 @@ export class IPrestacionRegistro {
     transformado: any;
     esPrimeraVez: boolean;
 
-    hasSections: Boolean;
-    isSection: Boolean;
-    noIndex: Boolean;
+    hasSections: boolean;
+    isSection: boolean;
+    noIndex: boolean;
 
     createdAt: Date;
 
     // Virtuales 🤷
     paciente: IPaciente;
 
-    constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
+    constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept, prestacion?: IPrestacion) {
         this.id = (new ObjectID()).toString();
         this.elementoRUP = elementoRUP ? elementoRUP.id : null;
         this.nombre = snomedConcept.term;
@@ -63,9 +64,18 @@ export class IPrestacionRegistro {
         this.noIndex = false;
         if (elementoRUP && elementoRUP.requeridos) {
             elementoRUP.requeridos.forEach((item) => {
-                this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
+                const canAdd = this.checkSexRule(prestacion, item);
+                if (canAdd) {
+                    this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto, prestacion));
+                }
             });
         }
 
+    }
+
+    private checkSexRule(prestacion: IPrestacion, requerido: IElementoRUPRequeridos) {
+        const sexo = prestacion && prestacion.paciente && prestacion.paciente.sexo;
+        const sexoFilter = requerido && requerido.sexo;
+        return !sexo || !sexoFilter || sexo === sexoFilter;
     }
 }

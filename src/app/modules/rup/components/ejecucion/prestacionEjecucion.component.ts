@@ -473,7 +473,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         }
 
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
 
@@ -485,7 +485,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
         if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
             // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
-            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
+            const registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
             if (registroRequerido) {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
             }
