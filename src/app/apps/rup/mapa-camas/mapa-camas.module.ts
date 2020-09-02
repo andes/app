@@ -44,6 +44,7 @@ import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/
 import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
 import { RegistroHUDSItemComponent } from './sidebar/registros-huds-detalle/registros-huds-item/registros-huds-item.component';
 import { IngresoPacienteWorkflowComponent } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.component';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -94,7 +95,8 @@ export const INTERNACION_PROVIDERS = [
         MPILibModule,
         MitosModule,
         OrganizacionLibModule,
-        ElementosRUPModule
+        ElementosRUPModule,
+        NgDragDropModule.forRoot()
     ],
     declarations: [
         ...INTERNACION_COMPONENTS
