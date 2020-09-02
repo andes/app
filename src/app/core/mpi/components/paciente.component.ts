@@ -244,9 +244,6 @@ export class PacienteComponent implements OnInit {
         }
         this.pacienteModel = Object.assign({}, this.paciente);
 
-        if (this.pacienteModel.fechaNacimiento) {
-            this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).add(3, 'h').toDate(); // mers alert
-        }
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.checkDisableValidar();
     }
