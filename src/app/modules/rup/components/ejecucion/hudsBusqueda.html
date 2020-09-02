@@ -94,7 +94,7 @@
                             getCantidadResultados('laboratorios')}}</small>
                 <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
                         class="btn btn-block p-0 btn-laboratorio">
-                    <plex-icon name="recipiente"></plex-icon>
+                    <i class="adi adi-recipiente"></i>
                     LABOS
                 </button>
             </li>
@@ -106,7 +106,7 @@
                        [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
                 <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
                         class="btn btn-block p-0 btn-vacuna">
-                    <plex-icon name="recipiente"></plex-icon>
+                    <i class="adi adi-vacuna"></i>
                     VACUNAS
                 </button>
             </li>
@@ -116,7 +116,7 @@
         <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
         </plex-options>
         <div class="ml-1">
-            <plex-button type="info" size="sm" [icon]="showFiltros ? 'mdi mdi-chevron-up' : 'mdi mdi-chevron-down'"
+            <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
                          [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
                          (click)="toogleFiltros()">
             </plex-button>
