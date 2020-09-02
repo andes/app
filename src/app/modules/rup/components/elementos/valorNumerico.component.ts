@@ -8,6 +8,7 @@ import { RupElement } from '.';
 })
 @RupElement('ValorNumericoComponent')
 export class ValorNumericoComponent extends RUPComponent implements OnInit {
+    public esRequerido: boolean;
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = 0;
@@ -37,6 +38,11 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
                     // TODO : Queda pendiente disparar un alerta para el usuario que se recupera el valor desde otra prestacion
                 });
             }
+        }
+        if (this.params) {
+            this.esRequerido = this.params.required;
+        } else {
+            this.esRequerido = false;
         }
     }
 }
