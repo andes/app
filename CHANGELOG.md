@@ -1,3 +1,24 @@
+# [5.11.0](https://github.com/andes/app/compare/v5.10.0...v5.11.0) (2020-09-02)
+
+
+### Bug Fixes
+
+* **mapa-camas:** missing DragAndDrop service ([#1890](https://github.com/andes/app/issues/1890)) ([011fc4b](https://github.com/andes/app/commit/011fc4b48bd98ec2ba90afd1b915e8b6ab3bdc2d))
+* **mapa-camas:** no se visualiza la huds ([#1881](https://github.com/andes/app/issues/1881)) ([0e5a85c](https://github.com/andes/app/commit/0e5a85c208dfb4c4897601bf3deb00a7cf331640))
+* **rup:** filtrar valores null de los graficos ([#1846](https://github.com/andes/app/issues/1846)) ([cdf5786](https://github.com/andes/app/commit/cdf57860dc3a0fe4a7b8e41b919ec37829c64eff))
+* **TOP:** remueve condicion tieneTurno de busqueda de validadas ([#1867](https://github.com/andes/app/issues/1867)) ([76174a3](https://github.com/andes/app/commit/76174a3dcf0d7dc9791c15a9e3eb76c7f35a430b))
+
+
+### Features
+
+* **elemento-rup:** filtro por sexo en requeridos ([#1828](https://github.com/andes/app/issues/1828)) ([8fe206c](https://github.com/andes/app/commit/8fe206cb524b6a6dd3dabc8a41907d519c0ea0a3))
+* **elementos-rup:** elimina atomos y moléculas que no deberían existir ([#1856](https://github.com/andes/app/issues/1856)) ([63b9b29](https://github.com/andes/app/commit/63b9b2901fe5876348e9803f3870e39dc849aa1e))
+* **gdu:** permitir copy/paste entre prestaciones ([#1878](https://github.com/andes/app/issues/1878)) ([3471f50](https://github.com/andes/app/commit/3471f50bd002c788830cd953c8b20d30642428d1))
+* **mapa-camas:** permite ordenar por columna ([#1851](https://github.com/andes/app/issues/1851)) ([a933596](https://github.com/andes/app/commit/a933596944513845d1c941c4355ebb837b5b5616))
+* **mpi:** muestra direccion legal del paciente ([#1876](https://github.com/andes/app/issues/1876)) ([be39e08](https://github.com/andes/app/commit/be39e0890468d86fb5222e6fc539d6ed1929e623))
+* **organizaciones:** disable eliminar UO que esta en uso en una cama ([#1770](https://github.com/andes/app/issues/1770)) ([8857b42](https://github.com/andes/app/commit/8857b42a9151d7188624e822dc7ae1acf2016613))
+* **rup:** asistencia del turno en background ([#1788](https://github.com/andes/app/issues/1788)) ([3d8f2d4](https://github.com/andes/app/commit/3d8f2d4087e6a77bf5b274d50f1ecf6abf0f1253))
+
 # [5.10.0](https://github.com/andes/app/compare/v5.9.0...v5.10.0) (2020-08-26)
 
 
