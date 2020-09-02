@@ -66,9 +66,8 @@
                                                     <td>
                                                         <!-- Boton aprobar diagnostico Equipo de Salud -->
                                                         <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="success"
-                                                                     icon="mdi mdi-check" title="Aprobar"
-                                                                     (click)="aprobar(i)"></plex-button>
+                                                                     class="btn btn-sm" type="success" icon="check"
+                                                                     title="Aprobar" (click)="aprobar(i)"></plex-button>
                                                         <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
                                                         <plex-button *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
                                                                      icon="delete" title="Eliminar" class="btn btn-sm"
@@ -76,14 +75,12 @@
                                                         </plex-button>
 
                                                         <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="danger"
-                                                                     icon="mdi mdi-pencil" title="Reparar"
-                                                                     (click)="mostrarReparo(i)">
+                                                                     class="btn btn-sm" type="danger" icon="pencil"
+                                                                     title="Reparar" (click)="mostrarReparo(i)">
                                                         </plex-button>
                                                         <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="info"
-                                                                     icon="mdi mdi-refresh" title="Reestablecer"
-                                                                     (click)="borrarReparo(i)">
+                                                                     class="btn btn-sm" type="info" icon="refresh"
+                                                                     title="Reestablecer" (click)="borrarReparo(i)">
                                                         </plex-button>
                                                     </td>
                                                     <td>
@@ -175,9 +172,8 @@
                                                     <td>
                                                         <!-- Boton aprobar diagnostico profesional -->
                                                         <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="success"
-                                                                     icon="mdi mdi-check" title="Aprobar"
-                                                                     (click)="aprobar(i)"></plex-button>
+                                                                     class="btn btn-sm" type="success" icon="check"
+                                                                     title="Aprobar" (click)="aprobar(i)"></plex-button>
                                                         <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
                                                         <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo"
                                                                      icon="delete" title="Eliminar" class="btn btn-sm"
@@ -185,14 +181,12 @@
                                                         </plex-button>
 
                                                         <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="danger"
-                                                                     icon="mdi mdi-pencil" title="Reparar"
-                                                                     (click)="mostrarReparo(i)">
+                                                                     class="btn btn-sm" type="danger" icon="pencil"
+                                                                     title="Reparar" (click)="mostrarReparo(i)">
                                                         </plex-button>
                                                         <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.codificacionAuditoria?.codigo"
-                                                                     class="btn btn-sm" type="info"
-                                                                     icon="mdi mdi-refresh" title="Reestablecer"
-                                                                     (click)="borrarReparo(i)">
+                                                                     class="btn btn-sm" type="info" icon="refresh"
+                                                                     title="Reestablecer" (click)="borrarReparo(i)">
                                                         </plex-button>
                                                     </td>
                                                     <td>

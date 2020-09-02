@@ -94,7 +94,7 @@
                             getCantidadResultados('laboratorios')}}</small>
                 <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
                         class="btn btn-block p-0 btn-laboratorio">
-                    <i class="icon mdi mdi-flask-empty-outline"></i>
+                    <plex-icon name="recipiente"></plex-icon>
                     LABOS
                 </button>
             </li>
@@ -106,7 +106,7 @@
                        [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
                 <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
                         class="btn btn-block p-0 btn-vacuna">
-                    <i class="icon mdi mdi-eyedropper-variant"></i>
+                    <plex-icon name="recipiente"></plex-icon>
                     VACUNAS
                 </button>
             </li>
@@ -544,12 +544,12 @@
                                                              [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
                                                              (onDragStart)="dragStart($event)"
                                                              (onDragEnd)="dragEnd($event)">
-                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                            <plex-icon name="recipiente"></plex-icon>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
                                                         <div class="icon-rup">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                            <plex-icon name="recipiente"></plex-icon>
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"
@@ -604,12 +604,12 @@
                                                              [dragData]="{'tipo': 'vacuna','data': unaVacuna, 'huds': true}"
                                                              (onDragStart)="dragStart($e)"
                                                              (onDragEnd)="dragEnd($event)">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                            <plex-icon name="recipiente"></plex-icon>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
                                                         <div class="icon-rup">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                            <plex-icon name="recipiente"></plex-icon>
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"

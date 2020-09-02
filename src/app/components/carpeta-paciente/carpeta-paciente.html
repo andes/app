@@ -12,7 +12,7 @@
                         </div>
                         <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado"
                              class="col-1">
-                            <plex-button type="info" title="Editar" icon="mdi mdi-pencil" (click)="editar()">
+                            <plex-button type="info" title="Editar" icon="pencil" (click)="editar()">
                             </plex-button>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                         </div>
                         <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
                             <plex-button [disabled]="nroCarpetaOriginal === nuevoNroCarpeta" type="success"
-                                         icon="mdi mdi-content-save" title="Guardar" (click)="guardarCarpetaPaciente()">
+                                         icon="content-save" title="Guardar" (click)="guardarCarpetaPaciente()">
                             </plex-button>
                         </div>
                     </div>
