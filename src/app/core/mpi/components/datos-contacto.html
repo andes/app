@@ -67,8 +67,10 @@
                 <plex-wrapper>
                     <div class="w-100">
                         <plex-grid type="auto" size="sm" cols="2">
-                            <h6 hint="Domicilio declarado por el paciente como su domicilio actual">
-                                <b>Domicilio referido por el paciente</b></h6>
+                            <h6>
+                                <b hint="Domicilio declarado por el paciente como su domicilio actual"
+                                   detach="both">Domicilio
+                                    referido por el paciente</b></h6>
                         </plex-grid>
                     </div>
                     <plex-select [disabled]="viveProvActual" [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
@@ -98,8 +100,9 @@
                     <div class="w-100" *ngIf="paciente.direccion[1]">
                         <hr class="w-100">
                         <plex-grid type="auto" size="sm" cols="2">
-                            <h6 class="mb-0" hint="Domicilio declarado en el documento de identidad del paciente">
-                                <b>Domicilio legal del paciente</b></h6>
+                            <h6 class="mb-0">
+                                <b hint="Domicilio declarado en el documento de identidad del paciente "
+                                   detach="both">Domicilio legal del paciente</b></h6>
                             <span span="2">{{ direccionLegal }}</span>
                         </plex-grid>
                     </div>
