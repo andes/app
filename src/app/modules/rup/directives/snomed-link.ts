@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 
 @Component({
@@ -9,11 +9,7 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
        class="snomed-link"
        href="https://browser.ihtsdotools.org/?perspective=full&conceptId1={{concepto.conceptId}}&edition=MAIN/SNOMEDCT-ES/SNOMEDCT-AR/2020-05-31&release=&languages=es">
        {{concepto.term}}
-        <ng-container *ngIf="sinonimo">
-                 <br>
-                 <p class="text-muted">{{fsn}}</p>
-         </ng-container>
-    </a>
+   </a>
     `,
     styles: [
         `
@@ -23,18 +19,7 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
         `
     ]
 })
-export class SnomedLinkComponent implements OnInit {
+export class SnomedLinkComponent {
     @Input() concepto: ISnomedConcept;
-    public sinonimo = false;
-    public fsn;
-
-    ngOnInit() {
-        const indice = this.concepto.fsn.indexOf('(');
-        this.fsn = this.concepto.fsn.substring(0, indice);
-
-        if (this.concepto.term.trim() !== this.fsn.trim()) {
-            this.sinonimo = true;
-        }
-    }
 
 }

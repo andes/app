@@ -182,6 +182,7 @@
                                 <span *ngIf="item.frecuencia" class="small">
                                     ({{item.frecuencia}})
                                 </span>
+                                <snomed-sinonimo [concepto]="item"></snomed-sinonimo>
                             </div>
                         </div>
                         <div class="col-6 p-0 m-0">
