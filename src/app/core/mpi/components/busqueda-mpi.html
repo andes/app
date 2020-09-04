@@ -1,16 +1,15 @@
 <plex-layout main="{{ sidebar }}">
     <plex-layout-main>
         <paciente-buscar #buscador (searchStart)="onSearchStart()"
-                         (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
-                         (searchClear)="onSearchClear()" [hostComponent]="'mpi'" [create]="true"
-                         [returnScannedPatient]="true" [scrolling]="true">
+                         (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()"
+                         [hostComponent]="'mpi'" [create]="true" [returnScannedPatient]="true">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
         <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                          [autoselect]="false" [editing]="true" (selected)="toVisualize($event)" (edit)="toEdit($event)"
-                          (scrolled)="toPacienteBuscarOnScroll(resultadoBusqueda)">
+                          [autoselect]="false" [editing]="true" (selected)="toVisualize($event)"
+                          (edit)="toEdit($event)">
         </paciente-listado>
         <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
             <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..

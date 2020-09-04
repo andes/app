@@ -58,9 +58,6 @@ export class PacienteListadoComponent {
     // Evento que se emite cuando el mouse está sobre un paciente
     @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    // Evento que se emite cuando se scrollea en la lista
-    @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
-
     constructor(private plex: Plex) {
     }
 
@@ -76,10 +73,6 @@ export class PacienteListadoComponent {
         this.hover.emit(paciente);
     }
 
-    public onScroll() {
-        this.scrolled.emit();
-    }
-
     /**
      * retorna true/false al querer mostrar el documento del tutor de un paciente menor  de 5 años
      * @param paciente
@@ -89,6 +82,5 @@ export class PacienteListadoComponent {
         const edad = 5;
         const rel = paciente.relaciones;
         return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length > 0;
-
     }
 }
