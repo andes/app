@@ -1,7 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
@@ -30,17 +29,12 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     get disabled() {
         return !this.textoLibre || this.textoLibre.length === 0;
     }
-    // para scroll
-    private parametros;
-    private scrollEnd = false;
-    private busquedaAnterior: IPaciente[] = [];
 
     @Input() hostComponent = '';
     @Input() create = false;
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
     @Input() returnScannedPatient = false;
-    @Input() scrolling = false;
 
     // Eventos
     @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
@@ -56,10 +50,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.autoFocus = this.autoFocus + 1;
-        this.parametros = {
-            skip: 0,
-            limit: 10
-        };
         this.routes = [
             { label: 'BEBÉ', route: `${this.pacienteRoute}/bebe/${this.hostComponent}` },
             { label: 'EXTRANJERO', route: `${this.pacienteRoute}/extranjero/${this.hostComponent}` },
@@ -91,53 +81,20 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    /**
-     * Recibe el último resultado emitido y le realiza una nueva búsqueda por texto
-     * retornando ambos resultados concatenados
-     */
-    public onScroll(ultimoResultado: IPaciente[]) {
-        if (!this.scrollEnd) {
-            this.busquedaAnterior = ultimoResultado;
-            this.buscarPorTexto();
-        }
-    }
-
     private buscarPorTexto() {
         let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
 
         if (this.searchSubscription) {
             this.searchSubscription.unsubscribe();
         }
-
-        if (this.scrolling) {
-            this.searchSubscription = this.pacienteService.getMatch({
-                type: 'multimatch',
-                cadenaInput: textoLibre,
-                limit: this.parametros.limit,
-                skip: this.parametros.skip
-            }).subscribe((resultado: any) => {
-
-                resultado = this.busquedaAnterior.concat(resultado);
-                this.parametros.skip = resultado.length;
-
-                // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
-                if (!resultado.length || resultado.length < this.parametros.limit) {
-                    this.scrollEnd = true;
-                }
-                this.searchEnd.emit({ pacientes: resultado, err: null });
-            },
-                (err) => this.searchEnd.emit({ pacientes: [], err: err })
-            );
-        } else {
-            this.searchSubscription = this.pacienteService.getMatch({
-                type: 'multimatch',
-                cadenaInput: textoLibre
-            }).subscribe(resultado => {
-                this.searchEnd.emit({ pacientes: resultado, err: null });
-            },
-                (err) => this.searchEnd.emit({ pacientes: [], err: err })
-            );
-        }
+        this.searchSubscription = this.pacienteService.getMatch({
+            type: 'multimatch',
+            cadenaInput: textoLibre
+        }).subscribe(resultado => {
+            this.searchEnd.emit({ pacientes: resultado, err: null });
+        },
+            (err) => this.searchEnd.emit({ pacientes: [], err: err })
+        );
     }
 
     /**
@@ -152,10 +109,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
         }
-        // reiniciamos variables utilizadas por infinity-scroll
-        this.parametros.skip = 0;
-        this.scrollEnd = false;
-        this.busquedaAnterior = [];
 
         // Controla el scanner
         if (!this.controlarScanner()) {
