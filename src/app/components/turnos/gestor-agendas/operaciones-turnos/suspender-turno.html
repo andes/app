@@ -58,7 +58,7 @@
         <label>Enviar paciente a Lista de Espera</label>
       </div>
       <div class="col-md-4">
-        <plex-button icon="mdi mdi-key" (click)="agregarPacienteListaEspera()" title="Enviar a Lista de Espera">
+        <plex-button icon="key" (click)="agregarPacienteListaEspera()" title="Enviar a Lista de Espera">
         </plex-button>
       </div>
     </div>-->
@@ -67,7 +67,7 @@
         <label>Reprogramar Turno de {{turno.paciente.nombre}} {{turno.paciente.apellido}}</label>
       </div>
       <div class="col-md-4">
-        <plex-button icon="mdi mdi-backup-restore" (click)="reasignarTurno(paciente)" title="Reprogramar Turno">
+        <plex-button icon="backup-restore" (click)="reasignarTurno(paciente)" title="Reprogramar Turno">
         </plex-button>
       </div>
     </div>-->
@@ -78,8 +78,6 @@
         <plex-button *ngIf="!suspendio" type="success" label="Confirmar" (click)="suspenderTurno()"
                      title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
         </plex-button>
-        <!--<plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprogramar" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
-        </plex-button>-->
         <!--TODO: cheuquear que todos los mensajes a enviar tuvieron una respuesta-->
         <plex-button *ngIf="suspendio" type="info" label="Cerrar" (click)="cerrar()" title="Cerrar">
         </plex-button>

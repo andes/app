@@ -16,16 +16,15 @@
     </plex-wrapper>
     <plex-list>
         <plex-item *ngFor="let nota of notas; let i = index" class="">
-            <plex-icon name="file-document" size="xxl"></plex-icon>
+            <plex-icon name="documento" type="info" size="xl"></plex-icon>
             <plex-label titulo="{{ nota.titulo || 'Sin título'}}" subtitulo="{{ nota.nota }}"></plex-label>
             <plex-badge type="info">{{ nota.fecha | fecha: 'utc'}}</plex-badge>
             <plex-button *ngIf="nota.destacada" type="info" size="sm" (click)="destacarNota(i)">
-                <plex-icon name="star" type="light" size="xl"></plex-icon>
+                <plex-icon name="star" type="light"></plex-icon>
             </plex-button>
             <plex-button *ngIf="!nota.destacada" type="info" size="sm" (click)="destacarNota(i)">
-                <plex-icon name="star-outline" type="light" size="xl"></plex-icon>
+                <plex-icon name="star-outline" type="light"></plex-icon>
             </plex-button>
-            <!-- <plex-button *ngIf="!nota.destacada" icon="mdi-star-outline" (click)="destacarNota(i)"></plex-button> -->
             <plex-button type="danger" size="sm" icon="delete" (click)="removeNota(i)"></plex-button>
         </plex-item>
     </plex-list>

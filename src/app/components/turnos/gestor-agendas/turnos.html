@@ -82,31 +82,30 @@
                 </td>
                 <td colspan="3" class="text-right">
                     <div *ngIf="turnosSeleccionados.length > 0">
-                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove"
+                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="account-remove"
                                      (click)="eventosTurno('sacarAsistencia')" title="Registrar inasistencia">
                         </plex-button>
-                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check"
+                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="account-check"
                                      (click)="eventosTurno('darAsistencia')" title="Registrar asistencia"></plex-button>
-                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch"
+                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="account-switch"
                                      (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
                                      title="Reasignar turno">
                         </plex-button>
-                        <plex-button *ngIf="botones.turnoDoble" type="default"
-                                     icon="mdi mdi-numeric-2-box-multiple-outline"
+                        <plex-button *ngIf="botones.turnoDoble" type="default" icon="numeric-2-box-multiple-outline"
                                      (click)="asignarTurnoDoble('darTurnoDoble')" title="Turno doble"></plex-button>
-                        <plex-button *ngIf="botones.quitarTurnoDoble" type="default"
-                                     icon="mdi mdi-numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
-                                     title="Quitar Turno doble"></plex-button>
-                        <plex-button *ngIf="botones.editarCarpeta" type="default" icon="mdi mdi-folder-account"
+                        <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="numeric-1-box-outline"
+                                     (click)="eventosTurno('quitarTurnoDoble')" title="Quitar Turno doble">
+                        </plex-button>
+                        <plex-button *ngIf="botones.editarCarpeta" type="default" icon="folder-account"
                                      (click)="editarCarpetaPaciente()" title="Editar Número de Carpeta"></plex-button>
-                        <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline"
+                        <plex-button *ngIf="botones.nota" type="default" icon="comment-outline"
                                      (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
-                        <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline"
-                                     (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
-                        <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off"
-                                     title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
-                        <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop"
-                                     title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
+                        <plex-button *ngIf="botones.sms" type="default" icon="email-outline" (click)="enviarSMS()"
+                                     title="Enviar un mensaje al paciente"></plex-button>
+                        <plex-button *ngIf="botones.liberarTurno" type="danger" icon="account-off" title="Liberar turno"
+                                     (click)="liberarTurno(agenda)"></plex-button>
+                        <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="stop" title="Suspender turno"
+                                     (click)="suspenderTurno(agenda)"></plex-button>
                     </div>
                 </td>
             </tr>
@@ -410,7 +409,7 @@
         " (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
     </carpeta-paciente>
     <div class="col-12 text-center">
-        <plex-button type="warning" class="text-center" icon="mdi mdi-arrow-left" title="volver"
+        <plex-button type="warning" class="text-center" icon="arrow-left" title="volver"
                      (click)="afterComponenteCarpeta()"></plex-button>
     </div>
 </div>

@@ -210,7 +210,7 @@
                                                 <br />
 
                                                 <span *ngIf="turno.asistencia === 'noAsistio'">
-                                                    <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
+                                                    <plex-button type="danger btn-sm" icon="backup-restore"
                                                                  (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
                                                                  title="Revertir cambios">
                                                     </plex-button>
@@ -408,7 +408,7 @@
                                                         {{sobreturno.asistencia}}
                                                     </plex-badge>
                                                     <span *ngIf="sobreturno.asistencia === 'noAsistio'">
-                                                        <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
+                                                        <plex-button type="danger btn-sm" icon="backup-restore"
                                                                      (click)="registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'sacarAsistencia')"
                                                                      title="Revertir cambios">
                                                         </plex-button>

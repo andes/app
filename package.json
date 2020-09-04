@@ -26,9 +26,9 @@
   "dependencies": {
     "@agm/core": "^1.0.0-beta.5",
     "@andes/auth": "^6.1.0",
-    "@andes/icons": "^0.6.1",
+    "@andes/icons": "^1.1.1",
     "@andes/match": "^1.1.12",
-    "@andes/plex": "^6.11.5",
+    "@andes/plex": "^6.15.0",
     "@andes/shared": "^5.6.1",
     "@angular/animations": "8.1.0",
     "@angular/cdk": "^7.0.1",

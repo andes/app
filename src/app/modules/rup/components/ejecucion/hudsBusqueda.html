@@ -13,7 +13,7 @@
                             getCantidadResultados('planes')}}</small>
                 <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
                         [ngClass]="{'active': filtroActual === 'planes'}">
-                    <i class="icon mdi mdi-clipboard-check-outline"></i>
+                    <i class="adi adi-clipboard-check-outline"></i>
                     PRESTACIONES
                 </button>
             </li>
@@ -26,7 +26,7 @@
                             getCantidadResultados('solicitudes')}}</small>
                 <button (click)="filtroBuscador('solicitudes')" [ngClass]="{'active': filtroActual === 'solicitudes'}"
                         class="btn btn-block p-0 btn-solicitud">
-                    <i class="icon icon-rup-semantic-plan"></i>
+                    <i class="adi adi-mano-corazon"></i>
                     SOLICITUDES
                 </button>
             </li>
@@ -39,7 +39,7 @@
                             getCantidadResultados('hallazgo')}}</small>
                 <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
                         class="btn btn-block p-0 btn-hallazgo" (click)="buscar()">
-                    <i class="icon icon-rup-semantic-hallazgo"></i>
+                    <i class="adi adi-lupa-ojo"></i>
                     HALLAZGOS
                 </button>
             </li>
@@ -52,7 +52,7 @@
                             getCantidadResultados('trastorno')}}</small>
                 <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
                         class="btn btn-block p-0 btn-trastorno" (click)="buscar()">
-                    <i class="icon icon-rup-semantic-trastorno"></i>
+                    <i class="adi adi-trastorno"></i>
                     TRASTORNOS
                 </button>
             </li>
@@ -68,7 +68,7 @@
                 <button (click)="filtroBuscador('procedimiento')"
                         [ngClass]="{'active': filtroActual === 'procedimiento'}"
                         class="btn btn-block p-0 btn-procedimiento" (click)="buscar()">
-                    <i class="icon icon-rup-semantic-procedimiento"></i>
+                    <i class="adi adi-termometro"></i>
                     PROC.
                 </button>
             </li>
@@ -81,7 +81,7 @@
                             getCantidadResultados('producto')}}</small>
                 <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
                         class="btn btn-block p-0 btn-producto" (click)="buscar()">
-                    <i class="icon icon-rup-semantic-producto"></i>
+                    <i class="adi adi-pildoras"></i>
                     PRODUCTOS
                 </button>
             </li>
@@ -94,7 +94,7 @@
                             getCantidadResultados('laboratorios')}}</small>
                 <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
                         class="btn btn-block p-0 btn-laboratorio">
-                    <i class="icon mdi mdi-flask-empty-outline"></i>
+                    <i class="adi adi-recipiente"></i>
                     LABOS
                 </button>
             </li>
@@ -106,7 +106,7 @@
                        [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
                 <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
                         class="btn btn-block p-0 btn-vacuna">
-                    <i class="icon mdi mdi-eyedropper-variant"></i>
+                    <i class="adi adi-vacuna"></i>
                     VACUNAS
                 </button>
             </li>
@@ -116,7 +116,7 @@
         <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
         </plex-options>
         <div class="ml-1">
-            <plex-button type="info" size="sm" [icon]="showFiltros ? 'mdi mdi-chevron-up' : 'mdi mdi-chevron-down'"
+            <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
                          [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
                          (click)="toogleFiltros()">
             </plex-button>
@@ -160,7 +160,7 @@
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
                                                 <div class="col-2 icon-rup drag-handle">
-                                                    <i class='icon icon-rup-semantic-plan'></i>
+                                                    <i class='adi adi-mano-corazon'></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
                                                     <ng-container *ngIf='registro.evoluciones'>
@@ -229,7 +229,7 @@
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
                                                 <div class="col-2 icon-rup drag-handle">
-                                                    <i class="icon icon-rup-semantic-hallazgo"></i>
+                                                    <i class="adi adi-lupa-ojo"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
                                                     {{ registro.concepto.term }}
@@ -281,7 +281,7 @@
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
                                                 <div class="col-2 icon-rup">
-                                                    <i class="icon icon-rup-semantic-trastorno"></i>
+                                                    <i class="adi adi-trastorno"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
                                                     {{ registro.concepto.term }}
@@ -343,8 +343,8 @@
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
                                                 <div class="col-2 icon-rup drag-handle">
-                                                    <i
-                                                       [ngClass]="{'icon icon-rup-semantic-procedimiento': !registro.isSolicitud, 'icon icon-rup-semantic-plan': registro.esSolicitud}"></i>
+                                                    <i class="adi" [class.adi-termometro]="!registro.isSolicitud"
+                                                       [class.adi-mano-corazon]="registro.esSolicitud"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
                                                     {{ registro.concepto.term }}
@@ -417,7 +417,7 @@
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
                                                 <div class="col-2 icon-rup drag-handle">
-                                                    <i class="icon icon-rup-semantic-plan"></i>
+                                                    <i class="adi adi-clipboard-check-outline"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
                                                     {{ prestacion.prestacion.term }}
@@ -476,12 +476,12 @@
                                                          [dragData]="{'tipo': 'producto','data': registro, 'huds': true}"
                                                          (onDragStart)="dragStart($event)"
                                                          (onDragEnd)="dragEnd($event)">
-                                                        <i class="icon icon-rup-semantic-producto"></i>
+                                                        <i class="adi adi-pildoras"></i>
                                                     </div>
                                                 </ng-container>
                                                 <ng-container *ngIf="!emitirConceptos">
                                                     <div class="icon-rup">
-                                                        <i class="icon icon-rup-semantic-producto"></i>
+                                                        <i class="adi adi-pildoras"></i>
                                                     </div>
                                                 </ng-container>
                                                 <div class="col p-0 pl-2 float-left"
@@ -544,12 +544,12 @@
                                                              [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
                                                              (onDragStart)="dragStart($event)"
                                                              (onDragEnd)="dragEnd($event)">
-                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                            <i class="adi adi-recipiente"></i>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
                                                         <div class="icon-rup">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                            <i class="adi adi-recipiente"></i>
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"
@@ -599,17 +599,17 @@
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                             [dragClass]="_dragOverClass"
+                                                        <div justify="center" class="icon-rup" draggable
+                                                             [dragScope]="_dragScope" [dragClass]="_dragOverClass"
                                                              [dragData]="{'tipo': 'vacuna','data': unaVacuna, 'huds': true}"
                                                              (onDragStart)="dragStart($e)"
                                                              (onDragEnd)="dragEnd($event)">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                            <i class="adi adi-vacuna"></i>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
-                                                        <div class="icon-rup">
-                                                            <i class="icon mdi mdi-eyedropper-variant"></i>
+                                                        <div justify="center" class="icon-rup">
+                                                            <i class="adi adi-vacuna"></i>
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"

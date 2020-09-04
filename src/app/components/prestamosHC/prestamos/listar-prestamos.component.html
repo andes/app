@@ -2,8 +2,8 @@
     <legend>Préstamos de Carpetas
         <div class='float-right'>
             <span *ngIf="carpetasSeleccionadas.length > 0">
-                <plex-button type='success' icon="mdi mdi-clipboard-arrow-left" title="Devolver todas"
-                    (click)="devolverCarpetas()">
+                <plex-button type='success' icon="clipboard-arrow-left" title="Devolver todas"
+                             (click)="devolverCarpetas()">
                 </plex-button>
             </span>
         </div>
@@ -12,44 +12,44 @@
     <div class="row">
         <div class="col-3">
             <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
-                name="fechaDesde" label="Desde" class="fechas">
+                           name="fechaDesde" label="Desde" class="fechas">
             </plex-datetime>
         </div>
         <div class="col-3">
             <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
-                name="fechaHasta" label="Hasta" class="fechas">
+                           name="fechaHasta" label="Hasta" class="fechas">
             </plex-datetime>
         </div>
         <div class="col-5" (click)="toogleSort()" style="margin-top: 45px;">
-            <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta
+            <i *ngIf="sortDescending" class="checkbox-marked">Order Nro. Carpeta
                 Descendente</i>
-            <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta
+            <i *ngIf="!sortDescending" class="checkbox-blank-outline">Order Nro. Carpeta
                 Descendente</i>
         </div>
         <div class="col-1 text-right">
             <label>
                 &nbsp;</label>
             <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-                (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                         (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
     </div>
     <div class="row" *ngIf="mostrarMasOpciones">
         <div class="col-4">
             <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')"
-                (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
-                placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
+                         (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
+                         placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
             </plex-select>
         </div>
         <div class="col-4">
             <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico"
-                (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
-                labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
+                         (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
+                         labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
             </plex-select>
         </div>
         <div class="col-4">
             <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
-                (getData)="loadProfesionales($event)" label="Profesional"
-                placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+                         (getData)="loadProfesionales($event)" label="Profesional"
+                         placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
             </plex-select>
         </div>
     </div>
@@ -121,7 +121,7 @@
                 </td>
                 <td *ngIf="carpeta.estado == 'Prestada'">
                     <button class="btn btn-primary" label="Devolver" (click)="devolver(carpeta)"
-                        [disabled]="carpetasSeleccionadas.length > 0">Devolver
+                            [disabled]="carpetasSeleccionadas.length > 0">Devolver
                     </button>
                 </td>
             </tr>

@@ -1,6 +1,6 @@
 <plex-wrapper>
     <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [autoFocus]="autoFocus"
-               prefix="<i class='mdi mdi-barcode-scan'></i>"
+               prefix="barcode-scan"
                placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
     </plex-text>
     <plex-dropdown *ngIf="create" class="mr-0 dropdown-inline" [disabled]="disabled"

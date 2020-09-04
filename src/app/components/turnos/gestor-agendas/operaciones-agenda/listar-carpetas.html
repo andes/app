@@ -14,8 +14,10 @@
                 <table *ngFor="let agenda of agendasSeleccionadas">
                     <thead>
                         <th colspan="14">
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no asignado</span>
-                            <span *ngIf="agenda.profesionales?.length > 0">* {{ agenda.profesionales | enumerar:['apellido','nombre'] }}</span>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
+                                asignado</span>
+                            <span *ngIf="agenda.profesionales?.length > 0">*
+                                {{ agenda.profesionales | enumerar:['apellido','nombre'] }}</span>
                         </th>
                     </thead>
                     <tbody>
@@ -23,8 +25,10 @@
                             <tr *ngFor="let turno of bloque.turnos; let i=index">
                                 <td *ngIf="turno.estado === 'asignado' && turno.paciente?.carpetaEfectores?.length > 0">
                                     <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
-                                            {{carpeta.nroCarpeta}} - {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                        <span
+                                              *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
+                                            {{carpeta.nroCarpeta}} -
+                                            {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
                                         </span>
                                     </span>
                                 </td>
@@ -44,7 +48,6 @@
             <div class="col text-left">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                 <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
-                <!-- <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button> -->
             </div>
 
             <div class="col-1 text-right">

@@ -23,7 +23,7 @@ import * as loadCombos from '../../utils/comboLabelFiltro.component';
             <plex-button type="success mb-1" label="Buscar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
         </div>
         <div class="col-1 offset-2 d-flex align-items-end">
-            <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'mdi mdi-chart-pie' : 'mdi mdi-table-large'"
+            <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'chart-pie' : 'table-large'"
                 class="m-1" (click)="changeTablaGrafico()"></plex-button>
             <plex-button class="m-1" [title]="mostrarMasOpciones ? 'Ocultar filtros' : 'Ver más filtros'" type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
                 (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
