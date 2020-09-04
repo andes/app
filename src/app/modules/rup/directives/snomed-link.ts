@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
-import { ConceptosTurneablesService } from '../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'snomed-link',
