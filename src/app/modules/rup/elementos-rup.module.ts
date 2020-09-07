@@ -1,3 +1,4 @@
+import { RecetaMedicaComponent } from './components/elementos/recetaMedica.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
@@ -82,6 +83,7 @@ const RUPComponentsArray = [
     NuevaEvolucionProblemaComponent,
     ObservacionesComponent,
     PesoComponent,
+    RecetaMedicaComponent,
     RegistrarMedicamentoDefaultComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
