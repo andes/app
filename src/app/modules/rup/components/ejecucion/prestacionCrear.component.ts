@@ -180,10 +180,10 @@ export class PrestacionCrearComponent implements OnInit {
                     // organizacion desde la que se solicita la prestación
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
                 },
-                estados: {
+                estados: [{
                     fecha: new Date(),
                     tipo: 'ejecucion'
-                }
+                }]
             };
             this.disableGuardar = true;
             if (this.tieneAccesoHUDS && pacientePrestacion) {

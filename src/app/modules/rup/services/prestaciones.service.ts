@@ -527,10 +527,10 @@ export class PrestacionesService {
                 registros: []
             };
 
-            prestacion['estados'] = {
+            prestacion['estados'] = [{
                 fecha: fecha,
                 tipo: 'ejecucion'
-            };
+            }];
 
         } else if (momento === 'ejecucion') {
             let profesional;
@@ -572,10 +572,10 @@ export class PrestacionesService {
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
             };
 
-            prestacion['estados'] = {
+            prestacion['estados'] = [{
                 fecha: fecha,
                 tipo: 'ejecucion'
-            };
+            }];
         } else if (momento === 'validacion') {
             prestacion['solicitud'] = {
                 fecha: fecha,
@@ -594,10 +594,10 @@ export class PrestacionesService {
                 registros: []
             };
 
-            prestacion['estados'] = {
+            prestacion['estados'] = [{
                 fecha: fecha,
                 tipo: 'pendiente'
-            };
+            }];
         }
         if (paciente) {
             prestacion.paciente['_id'] = paciente.id;
@@ -664,10 +664,10 @@ export class PrestacionesService {
                         // asignamos el tipoPrestacionOrigen a la solicitud
                         nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacionOrigen.prestacion ? prestacionOrigen.prestacion : prestacion.solicitud.tipoPrestacion;
                         if (prestacionOrigen.auditable) {
-                            nuevaPrestacion['estados'] = {
+                            nuevaPrestacion['estados'] = [{
                                 fecha: new Date(),
                                 tipo: 'auditoria'
-                            };
+                            }];
                         }
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
