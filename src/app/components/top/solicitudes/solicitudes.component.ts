@@ -417,7 +417,7 @@ export class SolicitudesComponent implements OnInit {
     setearArreglos() {
         for (let i = 0; i < this.prestacionesSalida.length; i++) {
 
-            switch (this.prestacionesSalida[i].estados[this.prestacionesSalida[i].estados.length - 1].tipo) {
+            switch (this.prestacionesSalida[i].estadoActual.tipo) {
                 case 'pendiente':
 
                     // Se puede auditar?
@@ -482,7 +482,7 @@ export class SolicitudesComponent implements OnInit {
         }
         for (let i = 0; i < this.prestacionesEntrada.length; i++) {
 
-            switch (this.prestacionesEntrada[i].estados[this.prestacionesEntrada[i].estados.length - 1].tipo) {
+            switch (this.prestacionesEntrada[i].estadoActual.tipo) {
                 case 'pendiente':
 
                     // Se puede auditar?
