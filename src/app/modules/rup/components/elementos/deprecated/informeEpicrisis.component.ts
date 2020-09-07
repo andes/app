@@ -38,11 +38,10 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
     accordionSeleccionado(i, concepto: any) {
         if (this.accordionActive === i) {
             this.accordionActive = -1;
-            this.prestacionesService.clearRefSetData();
+            this.ejecucionService.clearSeccion();
         } else {
             this.accordionActive = i;
-            this.prestacionesService.setRefSetData(concepto);
-            this.prestacionesService.clearData();
+            this.ejecucionService.setSeccion(concepto);
         }
     }
 
@@ -50,9 +49,7 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
         this.desplegarTodo = !this.desplegarTodo;
         this.mensajeAccionAccordion = this.desplegarTodo ? 'Colapsar' : 'Desplegar';
         this.accordionActive = -1;
-        this.prestacionesService.clearRefSetData();
-    }
+        this.ejecucionService.clearSeccion();
 
-    VerArbolRelaciones() {
     }
 }

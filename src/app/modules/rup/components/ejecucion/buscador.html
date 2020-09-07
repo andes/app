@@ -125,11 +125,12 @@
         </div>
 
         <div>
-            <ng-container *ngIf="secciones">
+            <ng-container *ngIf="seccion$ | async as seccion">
                 <span class="pr-1">Sección:</span>
-                {{ secciones }}
+                {{ seccion.term }}
                 <br>
             </ng-container>
+
             <ng-container *ngIf="getSemanticTagFiltros()">
                 <span class="pr-1">Filtros:</span>
                 <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
@@ -170,7 +171,7 @@
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
                      [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
-                     (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                     (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
                     <i
                        class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'planes')}}"></i>
                 </div>

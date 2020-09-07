@@ -1,9 +1,9 @@
 <plex-layout main="8">
     <!-- Sección principal -->
-    <plex-layout-main *ngIf="!showCambioPaciente && prestacion && showPrestacion">
-        <form #form="ngForm" *ngIf="!showCambioPaciente" class="h-100">
+    <plex-layout-main *ngIf="prestacion">
+        <form #form="ngForm" class="h-100">
             <div class="w-100 h-100">
-                <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
+                <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)">
                     <plex-tab label="Registros de esta consulta">
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
@@ -31,7 +31,7 @@
                         </div>
                         <!-- Registros de la prestación -->
                         <div
-                             *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros">
+                             *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length  && itemsRegistros">
                             <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
                                 <!-- Drop area -->
                                 <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
@@ -316,13 +316,12 @@
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
                     <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes"
-                                  [conceptoFrecuente]="conceptoFrecuente" (evtData)="ejecutarConcepto($event)"
-                                  (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
+                                  [conceptoFrecuente]="conceptoFrecuente" (_onDragStart)="arrastrandoConcepto(true)"
+                                  (_onDragEnd)="arrastrandoConcepto(false)">
                     </rup-buscador>
                 </plex-tab>
                 <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
                     <rup-hudsBusqueda [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
-                                      (evtData)="ejecutarConceptoHuds($event)"
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                 </plex-tab>
@@ -336,19 +335,17 @@
     </plex-layout-sidebar>
 
     <!-- Footer -->
-    <plex-layout-footer *ngIf="!showCambioPaciente">
+    <plex-layout-footer>
 
-        <plex-button *ngIf="!showCambioPaciente && prestacion && prestacion.solicitud.ambitoOrigen != 'internacion'"
-                     position="left" label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)"
-                     type="info">
+        <plex-button *ngIf="prestacion && prestacion.solicitud.ambitoOrigen != 'internacion'" position="left"
+                     label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
         </plex-button>
-        <plex-button *ngIf="!showCambioPaciente && prestacion && prestacion.solicitud.ambitoOrigen == 'internacion'"
-                     position="left" label="{{btnVolver}}"
-                     (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info"></plex-button>
+        <plex-button *ngIf="prestacion && prestacion.solicitud.ambitoOrigen == 'internacion'" position="left"
+                     label="{{btnVolver}}" (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
+        </plex-button>
 
-        <plex-button *ngIf="!showCambioPaciente" position="right"
-                     label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()"
-                     type="success" class="float-right"></plex-button>
+        <plex-button position="right" label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}"
+                     (click)="guardarPrestacion()" type="success" class="float-right"></plex-button>
 
     </plex-layout-footer>
 </plex-layout>

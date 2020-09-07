@@ -1,6 +1,6 @@
 
 import { map, switchMap } from 'rxjs/operators';
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
@@ -32,8 +32,6 @@ export class PrestacionesService {
         term: 'internación'
     };
 
-    @Output() notifySelection: EventEmitter<any> = new EventEmitter<any>();
-
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
@@ -41,35 +39,6 @@ export class PrestacionesService {
     public rutaVolver = this.destinoRuta.asObservable();
 
     private datosRefSet = new BehaviorSubject<any>(null);
-    private concepto = new BehaviorSubject<any>(null);
-
-    public esSolicitud = new BehaviorSubject<boolean>(false);
-
-    setEsSolicitud(esSolicitud) {
-        this.esSolicitud.next(esSolicitud);
-    }
-
-    getEsSolicitud() {
-        return this.esSolicitud.asObservable();
-    }
-
-    /**
-     * [TODO] cambiar nombres
-     * Se usan para las secciones de epicrisis y otros.
-     */
-
-    setData(concepto: IPrestacion) {
-        this.concepto.next({ concepto });
-        this.notifySelection.emit(true);
-    }
-
-    getData(): any {
-        return this.concepto.getValue();
-    }
-
-    clearData() {
-        this.concepto.next(null);
-    }
 
     /**
      * [TODO] cambiar nombres

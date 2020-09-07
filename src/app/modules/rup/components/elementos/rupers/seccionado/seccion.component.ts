@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 import { IPrestacionRegistro } from '../../../../interfaces/prestacion.registro.interface';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
 
 /**
  * Parametros:
@@ -49,13 +50,14 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
     public ocultarPanel = false;
-    public conceptosTurneables: any[];
-    suscriptionBuscador: Subscription;
+    // suscriptionBuscador: Subscription;
     seleccionado: any;
     conceptoSeleccionado: any;
 
+    onDestroy$ = new Subject();
+
     ngOnDestroy() {
-        this.suscriptionBuscador.unsubscribe();
+        this.onDestroy$.next();
     }
 
     ngOnInit() {
@@ -92,24 +94,24 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
             this.registro.noIndex = this.params.noIndex;
         }
 
-        this.servicioTipoPrestacion.getAll().subscribe(conceptosTurneables => {
-            this.conceptosTurneables = conceptosTurneables;
-        });
 
-
-        this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
-            this.seleccionado = this.prestacionesService.getRefSetData();
-            // Estamos en la sección que tiene el foco actual?
-            if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
-                let data: any = this.prestacionesService.getData();
-                if (data && data.concepto) {
-                    if (this.conceptoSeleccionado !== data.concepto) {
-                        this.conceptoSeleccionado = data.concepto;
-                        this.ejecutarConceptoInside(data.concepto);
+        this.ejecucionService.conceptosStream().pipe(
+            filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
+            takeUntil(this.onDestroy$)
+        ).subscribe((registro) => {
+            if (this.params.whitelist) {
+                const query = `(${this.params.whitelist}) AND ${registro.concepto.conceptId}`;
+                this.snomedService.getQuery({ expression: query }).subscribe((conceptos) => {
+                    if (conceptos.length > 0) {
+                        this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
                     }
-                }
+                });
+            } else {
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
             }
         });
+
+
     }
 
     get colForText() {
@@ -161,7 +163,10 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
                 esConceptoSnomed = this.ocultarPanel;
             }
             if (esConceptoSnomed) {
-                this.ejecutarConceptoInside(data);
+                this.ejecucionService.agregarConcepto(
+                    data,
+                    false
+                );
             }
         } else {
             let indexEncontrado = this.registro.registros.findIndex(r => (data.conceptId === r.concepto.conceptId));
@@ -173,54 +178,17 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
     }
 
     onConceptoDrop(e: any) {
-        if (e.dragData.tipo) {
-            switch (e.dragData.tipo) {
-                case 'prestacion':
-                    this.ejecutarConceptoInside(e.dragData.data.solicitud.tipoPrestacion);
-                    break;
-                case 'hallazgo':
-                case 'trastorno':
-                case 'situación':
-                    this.ejecutarConceptoInside(e.dragData.data.concepto);
-                    break;
-                default:
-                    this.ejecutarConceptoInside(e.dragData);
-                    break;
-            }
-
-        } else {
-            this.ejecutarConceptoInside(e.dragData);
-        }
+        const { esSolicitud, term, fsn, semanticTag, conceptId } = e.dragData;
+        this.ejecucionService.agregarConcepto(
+            {
+                fsn, term, semanticTag, conceptId
+            },
+            esSolicitud,
+            true
+        );
     }
 
-
-    ejecutarConceptoInside(snomedConcept, registroDestino = null) {
-        this.isDraggingConcepto = false;
-        const registros = this.prestacion.ejecucion.registros;
-
-        // El concepto ya aparece en los registros?
-        const registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-        // si estamos cargando un concepto para una transformación de hall
-        if (registoExiste) {
-            // this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-            return false;
-        }
-        if (this.params.whitelist) {
-            const query = `(${this.params.whitelist}) AND ${snomedConcept.conceptId}`;
-            this.snomedService.getQuery({ expression: query }).subscribe((conceptos) => {
-                if (conceptos.length > 0) {
-                    this.cargarNuevoRegistro(snomedConcept);
-                }
-            });
-        } else {
-            this.cargarNuevoRegistro(snomedConcept);
-        }
-    }
-
-    cargarNuevoRegistro(snomedConcept, valor = null) {
-        // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        const solicitudDesdeBuscador = this.prestacionesService.esSolicitud.getValue();
-        const esSolicitud = this.esTurneable(snomedConcept) || solicitudDesdeBuscador;
+    cargarNuevoRegistro(snomedConcept, esSolicitud = false, valor = null, relaciones = null) {
 
         const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
@@ -232,15 +200,15 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
-        const existeRegistro = this.registroRepetido(nuevoRegistro);
-
-        if (existeRegistro) {
-            if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
-                this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
-            }
-            this.registro.registros.push(nuevoRegistro);
+        if (relaciones) {
+            nuevoRegistro.relacionadoCon = relaciones;
         }
-        this.prestacionesService.clearData();
+
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
+            this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
+        }
+        this.registro.registros.push(nuevoRegistro);
+
     }
 
 
@@ -259,7 +227,9 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         }
         // Controlar si lo que llega como parámetro es un registro o es un concepto
         if (!registroOrigen.concepto) {
-            this.ejecutarConceptoInside(registroOrigen, registroDestino);
+
+            // this.ejecutarConceptoInside(registroOrigen, registroDestino);
+
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];
@@ -412,30 +382,8 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         });
     }
 
-    public esTurneable(concepto: any) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
-    }
-
-    registroRepetido(nuevoRegistro) {
-        const existeRegistro = this.registro.registros.filter(r => (r.concepto.conceptId === nuevoRegistro.concepto.conceptId) && (r.esSolicitud === nuevoRegistro.esSolicitud));
-        if (existeRegistro.length > 0) {
-            this.plex.toast('warning', 'El elemento seleccionados ya se encuentra agregado.');
-            return false;
-        }
-        return true;
-    }
-
-
-
     checkPlantilla(registro) {
-
         const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento';
-
         return checkSemtag;
     }
 }

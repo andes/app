@@ -1,16 +1,14 @@
-import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { forkJoin } from 'rxjs';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
+import { RupEjecucionService } from '../../services/ejecucion.service';
 
 @Component({
     selector: 'rup-buscador',
@@ -26,10 +24,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
     @Input() conceptoFrecuente;
     @Input() prestacion: IPrestacion;
     @Input() busquedaRefSet: any = {};
-    /**
-     * Devuelve un elemento seleccionado.
-     */
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
@@ -62,12 +57,11 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
     public copiaFiltroActual: any;
 
-    private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
     refSet: any;
 
-    secciones: any;
+    seccion$ = this.ejecucionService.getSeccion();
 
     constructor(
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -75,18 +69,15 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         public servicioPrestacion: PrestacionesService,
         private buscadorService: SnomedBuscarService,
         public renderer: Renderer2,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private ejecucionService: RupEjecucionService
     ) {
     }
 
 
     async ngOnInit() {
         this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
-        // inicializamos variable resultsAux con la misma estructura que results
         this.resultsAux = Object.assign({}, this.results);
-        // inicializamos el filtro actual para los hallazgos
-        // this.ultimoTipoBusqueda = this.busquedaActual;
-        // Se inicializa el buscador básico, principal
         this.inicializarBuscadorBasico();
 
     }
@@ -191,8 +182,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
     }
 
     ngAfterViewChecked() {
-        let concepto: any = this.servicioPrestacion.getRefSetData();
-        this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
         this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
 
         if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
@@ -399,15 +388,12 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
 
     public getMisFrecuentes() {
-        let frecuentes = [];
-        // Esperamos que haya un resultado de más frecuentes antes de mostrar los
-        // resultados completos
         if (this.results.misFrecuentes && this.results.misFrecuentes['todos'] && this.results.misFrecuentes['todos'].length) {
             // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope
             // de la lista con Array.unshift()
             // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
             this.results.misFrecuentes['todos'].sort((a, b) => b.frecuencia - a.frecuencia);
-            frecuentes = this.results.misFrecuentes['todos'].map(x => {
+            this.results.misFrecuentes['todos'].map(x => {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
                     let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
                     let registroFrec = this.results.buscadorBasico['todos'][index];
@@ -416,10 +402,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
                 }
                 return x;
             });
-
-
-            // Se le asignan los resultados ordenados con los mas frecuentes.
-            // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
         }
     }
 
@@ -440,34 +422,16 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      */
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
-        let filtro;
 
-        if (concepto.plan) {
-            filtro = ['planes'];
-        } else {
-            filtro = this.getFiltroSeleccionado();
-        }
-
-        if (!this.secciones) {
-            this.evtData.emit([filtro, concepto]);
-        } else {
-            this.servicioPrestacion.setData(concepto);
-        }
-    }
-
-    getFiltroSeleccionado() {
-        this.servicioPrestacion.setEsSolicitud(false);
-        // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
-        let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
-        // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
-        // o bien, si estamos en el buscador guiado, si la opcion desplegada es planes
-        // entonces sobreescribmos el filtro a emitir como ['planes']
-        if (this.filtroActual === 'planes' || this.opcionDesplegada === 'planes') {
-            filtro = ['planes'];
-            // Seteamos si el filtro es solicitud.
-            this.servicioPrestacion.setEsSolicitud(true);
-        }
-        return filtro;
+        this.ejecucionService.agregarConcepto(
+            {
+                term: concepto.term,
+                fsn: concepto.fsn,
+                conceptId: concepto.conceptId,
+                semanticTag: concepto.semanticTag
+            },
+            concepto.esSolicitud
+        );
     }
 
     public esSolicitud(concepto: any) {
@@ -492,6 +456,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
     descendienteSearch: ISnomedConcept;
     previousText = null;
+
     filtrarPorDescendientes(item: ISnomedConcept) {
         this.previousText = this.search;
         this.descendienteSearch = item;

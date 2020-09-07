@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
+import { ISnomedConcept } from '../../../../interfaces/snomed-concept.interface';
 
 // [TODO] Epic ocultar cascaron de RUP en modo seccionado
 
@@ -58,21 +59,20 @@ export class SeccionadoComponent extends RUPComponent implements OnInit {
         return name.substring(0, index);
     }
 
-    accordionSeleccionado(i, concepto: any) {
+    accordionSeleccionado(i: number, concepto: ISnomedConcept) {
         if (this.accordionActive === i) {
             this.accordionActive = -1;
-            this.prestacionesService.clearRefSetData();
+            this.ejecucionService.clearSeccion();
         } else {
             this.accordionActive = i;
-            this.prestacionesService.setRefSetData(concepto);
-            this.prestacionesService.clearData();
+            this.ejecucionService.setSeccion(concepto);
         }
     }
 
     desplegarAccordions() {
         this.desplegarTodo = !this.desplegarTodo;
         this.accordionActive = -1;
-        this.prestacionesService.clearRefSetData();
+        this.ejecucionService.clearSeccion();
     }
 
 }
