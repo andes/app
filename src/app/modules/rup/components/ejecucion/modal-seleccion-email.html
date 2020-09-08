@@ -4,13 +4,11 @@
     <plex-modal-subtitle type="center">Seleccione un servicio de la organización <br>deseada para completar el envío
     </plex-modal-subtitle>
     <main>
-        <div class="w-75">
-            <div>
-                <plex-select [(ngModel)]="emailSelected" [data]="emails" idField="email" labelField="nombre"
-                             placeholder="Seleccione un servicio">
-                </plex-select>
-            </div>
-        </div>
+        <section class="w-75">
+            <plex-select [(ngModel)]="emailSelected" [data]="emails" idField="email" labelField="nombre"
+                         placeholder="Seleccione un servicio">
+            </plex-select>
+        </section>
     </main>
 
     <plex-button modal left type="danger" (click)="notificarAccion(false)">

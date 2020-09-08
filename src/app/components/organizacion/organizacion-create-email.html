@@ -1,0 +1,27 @@
+<plex-layout>
+    <plex-layout-main>
+
+        <plex-title titulo="Configuracion">
+            <plex-button label="Guardar" type="success" (click)="save()"> </plex-button>
+            <plex-button type="info" (click)="addEmail()" title="Agregar" icon="plus"></plex-button>
+        </plex-title>
+
+        <plex-wrapper *ngFor="let configuracion of configuraciones.emails; let i = index">
+            <ng-container>
+                <plex-text label="Nombre" placeholder="Ingrese nombre" [(ngModel)]="configuracion.nombre" name="nombre"
+                           required>
+                    <plex-icon name="barcode" left></plex-icon>
+                </plex-text>
+
+                <plex-text email type="email" label="Ingrese su email" [(ngModel)]="configuracion.email" name="email"
+                           required>
+                    <plex-icon name="email" left></plex-icon>
+                </plex-text>
+
+                <plex-button type="danger" size="sm" icon="delete" (click)="remove(i)">
+                </plex-button>
+            </ng-container>
+        </plex-wrapper>
+
+    </plex-layout-main>
+</plex-layout>

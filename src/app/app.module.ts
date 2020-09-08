@@ -117,8 +117,6 @@ import { ProfesionalComponent } from './components/profesional/profesional.compo
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
-import { OrganizacionComponent } from './components/organizacion/organizacion.component';
-import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 
 // ... MPI
@@ -126,7 +124,6 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
-import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
 import { DatosBasicosComponent } from './core/mpi/components/datos-basicos.component';
 import { DatosContactoComponent } from './core/mpi/components/datos-contacto.component';
@@ -213,11 +210,6 @@ import { ChartsModule } from 'ng2-charts';
 
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
-// Mapa de camas
-import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
-import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
-
-// MAPA CAMAS
 
 
 // Solicitudes
@@ -324,7 +316,6 @@ registerLocaleData(localeEs, 'es');
     ],
     declarations: [
         AppComponent, InicioComponent,
-        OrganizacionComponent, OrganizacionCreateUpdateComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
@@ -357,7 +348,6 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
-        OrganizacionSectoresComponent,
 
         // Solicitudes
         SolicitudesComponent,
@@ -378,8 +368,6 @@ registerLocaleData(localeEs, 'es');
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
-        OrganizacionSectoresComponent,
-        OrganizacionOfertaPrestacionalComponent,
         PucoComponent,
         ReglasComponent,
         ListaReglasComponent,
@@ -389,7 +377,6 @@ registerLocaleData(localeEs, 'es');
         NotaComponent,
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
-        GeorrefMapComponent,
         PacienteComponent,
         DatosBasicosComponent,
         DatosContactoComponent,
