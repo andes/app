@@ -38,7 +38,7 @@ export class ListarPrestamosComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    get cssLayout () {
+    get cssLayout() {
         return { 'col-8': this.verDevolver, 'col': !this.verDevolver };
     }
 
@@ -86,10 +86,10 @@ export class ListarPrestamosComponent implements OnInit {
         }
         if (filter === 'prestaciones') {
             if (value.value !== null) {
-                this.filters['idTipoPrestacion'] = value.value.id;
+                this.filters['tipoPrestacion'] = value.value.conceptId;
                 delete this.filters['idTipoPrestaciones'];
             } else {
-                this.filters['idTipoPrestacion'] = '';
+                this.filters['tipoPrestacion'] = '';
             }
         }
         if (filter === 'profesionales') {

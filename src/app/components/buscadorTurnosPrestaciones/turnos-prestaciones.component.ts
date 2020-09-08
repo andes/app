@@ -176,8 +176,7 @@ export class TurnosPrestacionesComponent implements OnInit {
             }
             if (tipo === 'prestaciones') {
                 if (value.value !== null) {
-                    this.parametros['prestacion'] = value.value._id;
-                    delete this.parametros['prestaciones'];
+                    this.parametros['prestacion'] = value.value.conceptId;
                 } else {
                     this.parametros['prestacion'] = '';
                 }
