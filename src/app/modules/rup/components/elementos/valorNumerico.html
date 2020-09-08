@@ -2,10 +2,14 @@
     <div class="row flex-column">
         <div class="col-12">
             <ng-container *ngIf="!soloValores; else showSoloValores">
-                <plex-int [label]="params.title ? params.title : registro.concepto.term" name="intValue" *ngIf="params.numericType === 'integer'"
-                    [(ngModel)]="registro.valor" [suffix]="params.unit ? params.unit : '' " [min]="params.min" [max]="params.max" (change)="emitChange($event)"></plex-int>
-                <plex-float [label]="params.title ? params.title : registro.concepto.term" name="floatValue" *ngIf="params.numericType === 'float'"
-                    [(ngModel)]="registro.valor" [suffix]="params.unit ? params.unit : ''" [min]="params.min" [max]="params.max" (change)="emitChange($event)"></plex-float>
+                <plex-int [label]="params.title ? params.title : registro.concepto.term" name="intValue"
+                          *ngIf="params.numericType === 'integer'" [(ngModel)]="registro.valor"
+                          [suffix]="params.unit ? params.unit : '' " [min]="params.min" [max]="params.max"
+                          (change)="emitChange($event)" [required]="esRequerido"></plex-int>
+                <plex-float [label]="params.title ? params.title : registro.concepto.term" name="floatValue"
+                            *ngIf="params.numericType === 'float'" [(ngModel)]="registro.valor"
+                            [suffix]="params.unit ? params.unit : ''" [min]="params.min" [max]="params.max"
+                            (change)="emitChange($event)" [required]="esRequerido"></plex-float>
             </ng-container>
             <ng-template #showSoloValores>
                 <div *ngIf="params?.title; else showTerm">
