@@ -2,29 +2,31 @@
 <div class="row mt-1">
     <div class="btn-group col botoneraPrincipal" role="group" aria-label="Botonera principal">
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('sugeridos')"
-                [ngClass]="{'active': busquedaActual === 'sugeridos'}">SUGERIDOS</button>
+                [class.active]="busquedaActual === 'sugeridos'">
+            SUGERIDOS
+        </button>
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('misFrecuentes')"
-                [ngClass]="{'active': busquedaActual === 'misFrecuentes'}">MIS
-            FRECUENTES
+                [class.active]=" busquedaActual === 'misFrecuentes'">
+            MIS FRECUENTES
         </button>
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')"
-                [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR
-            BÁSICO
+                [class.active]="busquedaActual === 'buscadorBasico'">
+            BUSCADOR BÁSICO
         </button>
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')"
-                [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES
-            POR PRESTACION</button>
+                [class.active]="busquedaActual === 'frecuentesTP'">
+            FRECUENTES POR PRESTACION
+        </button>
     </div>
 </div>
 <!-- Fin Tipo de búsqueda -->
 
-<!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' && autofocus"
-               [autofocus]="autofocus" id="buscador"></snomed-buscar>
+<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico'" [autofocus]="true"
+               id="buscador"></snomed-buscar>
 
 <div class="buscador"
      *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
-    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus">
+    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="true">
     </plex-text>
 </div>
 
@@ -32,7 +34,6 @@
     <plex-badge type="info">
         DESCENDIENTES DE {{ descendienteSearch.term.substr(0, 30) }}
         <plex-button (click)="removeDescendiente()" icon="close">
-
         </plex-button>
     </plex-badge>
 </div>
@@ -45,9 +46,10 @@
             <ul class="botones-filtros">
                 <li>
                     <small *ngIf="getCantidadResultados('todos')" class="contador badge-todos ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
-
-                    <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}"
+                           [class.active]="filtroActual === 'todos'">
+                        {{ getCantidadResultados('todos')}}
+                    </small>
+                    <button (click)="filtroBuscadorSnomed('todos')" [class.active]="filtroActual === 'todos'"
                             [disabled]="getCantidadResultados('todos') === 0" class="btn btn-block btn-todos">
                         <i class="icon icon-rup-semantic-todos"></i>
                         TODOS
@@ -55,12 +57,10 @@
                 </li>
                 <li>
                     <small *ngIf="getCantidadResultados('hallazgos')" class="contador badge-hallazgo ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
-                        getCantidadResultados('hallazgos')}}
+                           [class.active]="filtroActual === 'hallazgos'">
+                        {{ getCantidadResultados('hallazgos') }}
                     </small>
-
-                    <button (click)="filtroBuscadorSnomed('hallazgos')"
-                            [ngClass]="{'active': filtroActual === 'hallazgos'}"
+                    <button (click)="filtroBuscadorSnomed('hallazgos')" [class.active]="filtroActual === 'hallazgos'"
                             [disabled]="getCantidadResultados('hallazgos') === 0" class="btn btn-block btn-hallazgo">
                         <i class="icon icon-rup-semantic-hallazgo"></i>
                         HALLAZGOS
@@ -69,12 +69,10 @@
 
                 <li>
                     <small *ngIf="getCantidadResultados('trastornos')" class="contador badge-trastorno ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'trastornos'}">{{
-                        getCantidadResultados('trastornos')}}
+                           [class.active]="filtroActual === 'trastornos'">
+                        {{ getCantidadResultados('trastornos') }}
                     </small>
-
-                    <button (click)="filtroBuscadorSnomed('trastornos')"
-                            [ngClass]="{'active': filtroActual === 'trastornos'}"
+                    <button (click)="filtroBuscadorSnomed('trastornos')" [class.active]="filtroActual === 'trastornos'"
                             [disabled]="getCantidadResultados('trastornos') === 0" class="btn btn-block btn-trastorno">
                         <i class="icon icon-rup-semantic-trastorno"></i>
                         TRASTORNOS
@@ -84,12 +82,11 @@
                 <li>
                     <small *ngIf="getCantidadResultados('procedimientos')"
                            class="contador badge-procedimiento ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
-                        getCantidadResultados('procedimientos')}}
+                           [class.active]="filtroActual === 'procedimientos'">
+                        {{ getCantidadResultados('procedimientos') }}
                     </small>
-
                     <button (click)="filtroBuscadorSnomed('procedimientos')"
-                            [ngClass]="{'active': filtroActual === 'procedimientos'}"
+                            [class.active]="filtroActual === 'procedimientos'"
                             [disabled]="getCantidadResultados('procedimientos') === 0"
                             class="btn btn-block btn-procedimiento">
                         <i class="icon icon-rup-semantic-procedimiento"></i>
@@ -98,10 +95,11 @@
                 </li>
                 <li>
                     <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
-
+                           [class.active]="filtroActual === 'planes'">
+                        {{ getCantidadResultados('planes') }}
+                    </small>
                     <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud"
-                            [ngClass]="{'active': filtroActual === 'planes'}"
+                            [class.active]="filtroActual === 'planes'"
                             [disabled]="getCantidadResultados('planes') === 0">
                         <i class="icon icon-rup-semantic-plan"></i>
                         SOLICITUDES
@@ -110,12 +108,10 @@
 
                 <li>
                     <small *ngIf="getCantidadResultados('productos')" class="contador badge-producto ml-1 float-right"
-                           [ngClass]="{'active': filtroActual === 'productos'}">{{
-                        getCantidadResultados('productos')}}
+                           [class.active]="filtroActual === 'productos'">
+                        {{ getCantidadResultados('productos') }}
                     </small>
-
-                    <button (click)="filtroBuscadorSnomed('productos')"
-                            [ngClass]="{'active': filtroActual === 'productos'}"
+                    <button (click)="filtroBuscadorSnomed('productos')" [class.active]="filtroActual === 'productos'"
                             [disabled]="getCantidadResultados('productos') === 0" class="btn btn-block btn-producto">
                         <i class="icon icon-rup-semantic-producto"></i>
                         INSUMOS
@@ -126,27 +122,39 @@
 
         <div>
             <ng-container *ngIf="seccion$ | async as seccion">
-                <span class="pr-1">Sección:</span>
-                {{ seccion.term }}
-                <br>
+                Sección: {{ seccion.term }} <br>
             </ng-container>
 
-            <ng-container *ngIf="getSemanticTagFiltros()">
-                <span class="pr-1">Filtros:</span>
-                <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-                <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">
-                    (
-                    <ng-container *ngFor="let c of busquedaRefSet.conceptos; let idx=index">
-                        <ng-container *ngIf="c.concepto.term">
-                            <!-- TODO: manejar 100% desde la prestación -->
-                            <span *ngIf="c.cara">diente </span>{{ c.concepto.term }}
-                            <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}
-                                <ng-container *ngIf="idx < busquedaRefSet.conceptos.length - 1">
-                                    / </ng-container>
-                            </span>
+            <ng-container>
+                <span *ngIf="ondontogramaDientes$ | async as dientes; else filtros">
+                    Filtros:
+                    <span class="text-secondary ml-1">
+                        (
+                        <ng-container *ngFor="let c of dientes; let idx=index; let $last=last">
+                            <ng-container *ngIf="c.concepto.term">
+                                <span *ngIf="c.cara">
+                                    diente
+                                </span>
+                                {{ c.concepto.term }}
+                                <span *ngIf="c.cara && c.cara !== 'pieza'">
+                                    , cara {{ c.cara }}
+                                    <ng-container *ngIf="!$last">
+                                        /
+                                    </ng-container>
+                                </span>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>)
-                </i>
+                        )
+                    </span>
+                </span>
+                <ng-template #filtros>
+                    <ng-container *ngIf="getSemanticTagFiltros() as filtros">
+                        Filtros:
+                        <span class="text-secondary ml-1">
+                            {{ filtros }}
+                        </span>
+                    </ng-container>
+                </ng-template>
             </ng-container>
             <ng-container
                           *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0">

@@ -9,6 +9,7 @@ import { gtag } from '../../../../shared/services/analytics.service';
 import { forkJoin } from 'rxjs';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-buscador',
@@ -16,16 +17,10 @@ import { RupEjecucionService } from '../../services/ejecucion.service';
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
-    autofocus: any;
-    @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
-    // Son los mas frecuentes del elemento rup.(tipo de prestación)
+export class BuscadorComponent implements OnInit, OnChanges {
     @Input() frecuentesTipoPrestacion;
     @Input() conceptoFrecuente;
     @Input() prestacion: IPrestacion;
-    @Input() busquedaRefSet: any = {};
-
-    // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
@@ -41,27 +36,28 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         otros: ['elemento de registro']
     };
 
-    public busquedaPorConcepto = false;
-
-    // posibles valores para el filtro actual: 'hallazgos', 'trastornos', 'procedimientos', 'planes', 'productos'
-    public filtroActual: 'hallazgos' | 'trastornos' | 'procedimientos' | 'planes' | 'productos' | 'todos';
-
-    // posibles valores para la búsqueda actual: 'todos', 'misFrecuentes', 'sugeridos', 'buscadorBasico'
-    public busquedaActual: any;
+    public filtroActual: 'hallazgos' | 'trastornos' | 'procedimientos' | 'planes' | 'productos' | 'todos' = 'todos';
+    public busquedaActual: 'misFrecuentes' | 'sugeridos' | 'buscadorBasico' | 'frecuentesTP' = 'misFrecuentes';
 
     // objeto de resultados
-    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], buscadorBasico: [], frecuentesTP: [] };
+    public results: ISnomedSearchResult = {
+        todos: [],
+        misFrecuentes: [],
+        sugeridos: [],
+        buscadorBasico: [],
+        frecuentesTP: []
+    };
     public resultsAux: any;
-
-    // public totalesTodos: Number = 0;
 
     public copiaFiltroActual: any;
 
 
     public search; // buscador de sugeridos y mis frecuentes
-    refSet: any;
 
     seccion$ = this.ejecucionService.getSeccion();
+    ondontogramaDientes$ = this.servicioPrestacion.getRefSet().pipe(
+        map(datos => datos && datos.conceptos)
+    );
 
     constructor(
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -69,15 +65,13 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         public servicioPrestacion: PrestacionesService,
         private buscadorService: SnomedBuscarService,
         public renderer: Renderer2,
-        private cd: ChangeDetectorRef,
         private ejecucionService: RupEjecucionService
     ) {
     }
 
 
     async ngOnInit() {
-        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
-        this.resultsAux = Object.assign({}, this.results);
+        this.resultsAux = { ...this.results };
         this.inicializarBuscadorBasico();
 
     }
@@ -181,19 +175,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         }
     }
 
-    ngAfterViewChecked() {
-        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
-
-        if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-            this.autofocus = false;
-            this.setTipoBusqueda(this.busquedaActual);
-            this.busquedaPorConcepto = true;
-        } else {
-            this.setTipoBusqueda(this.busquedaActual);
-            this.busquedaPorConcepto = false;
-        }
-        this.cd.detectChanges();
-    }
 
     /**
      * Buscar resultados para los tipos de busqueda que sean sugeridos o mis frecuentes
@@ -221,10 +202,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
                             return registro.term.toLowerCase().indexOf(word) >= 0;
                         });
                     }
-
-
                 });
-
             });
 
             // tambien filtramos el campo 'todos' segun el string de busqueda
@@ -238,14 +216,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
             });
 
         } else {
-            // si el string de búsqueda esta vacío, reiniciamos los resultados desde la copia auxiliar
-            // y seteamos en los filtros actuales
-            // this.results[this.busquedaActual][concepto] = this.resultsAux[this.busquedaActual][this.filtroActual];
+            this.filtroActual = 'todos';
             this.results[this.busquedaActual] = this.resultsAux[this.busquedaActual];
         }
-
-        // filtramos los resultados
-        // this.filtrarResultados(this.busquedaActual);
     }
 
     /**
@@ -255,7 +228,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      * @memberof BuscadorComponent
      */
     public setTipoBusqueda(busquedaActual): void {
-        this.busquedaPorConcepto = false;
         if (this.busquedaActual !== busquedaActual) {
             this.busquedaActual = busquedaActual;
             // creamos una copia del filtro
@@ -267,7 +239,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
                 this.buscadorService.search(this.search);
             }
         }
-        this.autofocus = true;
     }
 
     // drag and drop funciones. Hago los emit.
@@ -284,20 +255,8 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      * callback que se ejecuta cuando el buscador de SNOMED envia resultados
      *
      * @param {any} resultadosSnomed
-     * @memberof BuscadorComponent
      */
     recibeResultados(resultadosSnomed: any) {
-
-        setTimeout(() => {
-            if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.autofocus = false;
-                this.setTipoBusqueda(this.busquedaActual);
-                this.busquedaPorConcepto = true;
-            } else {
-                this.setTipoBusqueda(this.busquedaActual);
-                this.busquedaPorConcepto = false;
-            }
-        }, 100);
 
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
@@ -307,10 +266,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
             // llamamos a la funcion que ordena mis frecuentes, poniendolo al prinicpio de los resultados
             this.getMisFrecuentes();
-
-            // filtramos los resultados para el buscador basico en caso de movernos de opcion
-            // evitando tener que volver a buscar
-            // this.filtrarResultados(this.busquedaActual);
             this.filtrarResultados('buscadorBasico');
 
             // asignamos a una variable auxiliar para luego restaurar los valores
@@ -324,8 +279,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
             this.results['sugeridos'] = this.resultsAux.sugeridos;
             this.results['misFrecuentes'] = this.resultsAux.misFrecuentes;
             this.results['frecuentesTP'] = this.resultsAux.frecuentesTP;
-
             this.results['buscadorBasico'] = [];
+        }
+        if (!this.search) {
+            this.filtroActual = 'todos';
         }
     }
 
@@ -377,7 +334,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      *
      * @param {string} semanticTag
      * @returns Cantidad de resultados
-     * @memberof BuscadorComponent
      */
     public getCantidadResultados(semanticTag) {
         if (this.results && this.busquedaActual && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
@@ -410,7 +366,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      */
 
     public filtroBuscadorSnomed(key) {
-
         this.filtroActual = key;
     }
 
@@ -418,7 +373,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      * Si hago clic en un concepto (+), entonces hago el EventEmitter hacia otro componente
      *
      * @param {any} concepto Concepto SNOMED
-     * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
@@ -448,10 +402,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
      * @memberof BuscadorComponent
      */
     public getSemanticTagFiltros() {
-        if (!this.busquedaPorConcepto) {
-            return this.conceptos[this.filtroActual];
-        }
-        return this.busquedaPorConcepto;
+        return this.conceptos[this.filtroActual];
     }
 
     descendienteSearch: ISnomedConcept;

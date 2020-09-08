@@ -38,15 +38,20 @@ export class PrestacionesService {
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
 
-    private datosRefSet = new BehaviorSubject<any>(null);
 
     /**
      * [TODO] cambiar nombres
-     * RefSetData se usa para notificar el seccionado actual.
+     * Se usa solo para le odontograma.
      */
+
+    private datosRefSet = new BehaviorSubject<any>(null);
 
     setRefSetData(datos: IPrestacion[], refsetId?) {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
+    }
+
+    getRefSet() {
+        return this.datosRefSet.asObservable();
     }
 
     getRefSetData(): any {
@@ -57,17 +62,10 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
-    public elementosRegistros = {
-        odontograma: '3561000013109'
-    };
-
-    // Ids de conceptos que refieren que un paciente no concurrió a la consulta
-    // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
-
     constructor(
         private server: Server,
-        public auth: Auth,
-        public snomed: SnomedService,
+        private auth: Auth,
+        private snomed: SnomedService,
         private servicioReglas: ReglaService,
         private hudsService: HUDSService,
         private plex: Plex

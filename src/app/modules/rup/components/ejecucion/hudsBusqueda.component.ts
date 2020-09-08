@@ -34,7 +34,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     @Input() paciente: any;
 
-    @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
 
