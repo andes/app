@@ -25,7 +25,8 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
                 this.validacion = false;
             }
         });
-        if (!this.validacion && !this.soloValores) {
+        const buscarAnterior = this.params && this.params.buscarAnterior;
+        if (!this.validacion && !this.soloValores && buscarAnterior) {
 
             this.prestacionesService.getRegistrosHuds(this.paciente.id, this.registro.concepto.conceptId).subscribe(consulta => {
                 // ordeno por fecha desde lo mas actual hasta infinito
