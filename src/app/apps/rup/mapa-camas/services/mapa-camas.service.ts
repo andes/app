@@ -405,11 +405,12 @@ export class MapaCamasService {
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
-                    if (view === 'mapa-camas') {
+                    if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
-                    } else if (view === 'listado-internacion') {
+                    } else if (view === 'listado-internacion' && selectedPrestacion.id) {
                         return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
                     }
+                    return of([]);
                 }
             }),
             cache()

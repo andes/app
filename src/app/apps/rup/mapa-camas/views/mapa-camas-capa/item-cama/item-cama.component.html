@@ -14,6 +14,7 @@
             Sin paciente
         </span>
         <span *ngIf="cama.paciente" class="d-block">
+            <plex-icon *ngIf="cama.nota" name="documento" [tooltip]="cama.nota" type="info"></plex-icon>
             {{cama.paciente.apellido}},
             {{cama.paciente.nombre}}
         </span>
