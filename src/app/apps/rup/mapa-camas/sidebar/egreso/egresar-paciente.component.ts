@@ -218,7 +218,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     egreso: true,
                     idInternacion: this.cama.idInternacion,
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                }
+                },
+                nota: null,
             };
 
             this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
