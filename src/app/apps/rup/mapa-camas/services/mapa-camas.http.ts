@@ -90,4 +90,8 @@ export class MapaCamasHTTP {
             showError: true
         });
     }
+
+    getPrestacionesInternacion(params: any): Observable<any[]> {
+        return this.server.get(`${this.url}/prestaciones`, { params: params, showError: true });
+    }
 }
