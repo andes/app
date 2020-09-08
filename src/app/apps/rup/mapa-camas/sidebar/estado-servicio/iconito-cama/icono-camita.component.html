@@ -1,7 +1,11 @@
-<div [class]="class">
-    <i [class]="icono"></i>
+<div class="subcontainer-resumen">
+    <i [class]="icono + ' text-' + color"></i>
     <div class="texto-resumen">
-        <p class="numero">{{cantidad}}</p>
-        <p class="texto">Camas {{nombre}}</p>
+        <div [class]="'numero text-' + color" title>
+            {{cantidad}}
+        </div>
+        <div class="texto">
+            Camas {{nombre}}
+        </div>
     </div>
 </div>
