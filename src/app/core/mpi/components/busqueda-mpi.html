@@ -29,6 +29,7 @@
         <!-- detalles del paciente a visualizar -->
         <ng-container *ngIf="showDetallePaciente">
             <plex-title titulo="Detalle paciente" size="sm">
+                <plex-button type="warning" size="sm" label="Editar Datos" (click)="toEdit(paciente)"></plex-button>
                 <plex-button type="danger" icon="close" class="ml-2" size="sm" (click)="closeDetallePaciente()">
                 </plex-button>
             </plex-title>
