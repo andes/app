@@ -19,55 +19,6 @@ $andes-verde-claro: #63c7b7;
 $andes-naranja: #ff4a1a;
 $andes-naranja-claro: #f4a03b;
 
-$modulos: (
-    mpi: #00afa0,
-    citas: #058db1,
-    rup: #967da0,
-    int: #6e6187,
-    huds: #bc5485,
-    dashboard: #ce876b,
-    tm: #9b6762,
-);
-
-:root {
-    // Módulos
-    // 1. MPI
-    --mpi: #00afa0;
-    --mpi-inicio: #00afa0;
-    --mpi-auditoria: #009599;
-
-    // 2. CITAS
-    --citas: #058db1;
-    --citas-gestor: #058db1;
-    --citas-vantanilla: #00a5d1;
-
-    // 3. RUP
-    --rup: #967da0;
-    --rup-inicio: #967da0;
-    --rup-analytics: #967da0;
-
-    // 4. INT
-    --int: #7f8899;
-    --int-inicio: #7f8899;
-    --int-camas: #6e6187;
-
-    // 5. HUDS
-    --huds: #bc5485;
-    --huds-inicio: #bc5485;
-    --huds-carpetas: #e2677b;
-    --huds-analytics: #ce876b;
-
-    // 6. Dashboards
-    --dasbboard: #ce876b;
-    --dasbboard-citas: #396999;
-    --dasbboard-huds: #bc5485;
-    --dasbboard-solicitudes: #a486ae;
-
-    // 7. Tablas Maestras
-    --tm-organizaciones: #9b6762;
-    --tm-espacios-fisicos: #b47670;
-}
-
 header {
     border: 0;
     &.size-sm,
@@ -89,6 +40,7 @@ header {
             font-size: 1rem;
         }
     }
+
     .neuquen {
         color: $andes-azul-claro;
         font-size: 1rem;
@@ -155,32 +107,12 @@ main {
             height: 62px;
 
             .titulo {
+                color: rgb(56, 69, 85);
                 font-size: 22px;
             }
             .descripcion {
+                color: rgb(56, 69, 85);
                 font-size: 13px;
-            }
-            &.mpi {
-                color: #00afa0;
-            }
-            &.citas {
-                color: #058db1;
-            }
-            &.rup {
-                color: #967da0;
-            }
-            &.int {
-                color: #7f8899;
-            }
-            &.huds {
-                color: #bc5485;
-            }
-            &.dashboards {
-                color: #ce876b;
-            }
-            &.tm {
-                // Tablas Maestras
-                color: #9b6762;
             }
         }
 
@@ -206,14 +138,12 @@ main {
 
             box-shadow: 4px 2px 6px #aaa;
 
-            @each $modulo, $color in $modulos {
-                &.#{$modulo} {
-                    transition: all ease-in-out 0.25s;
-                    &:hover {
-                        // mix-blend-mode: luminosity;
-                        background-color: adjust-color($color, $lightness: -10%, $saturation: 10%) !important;
-                        width: 90px;
-                    }
+
+            &.hover {
+                transition: all ease-in-out 0.25s;
+                &:hover {
+                    mix-blend-mode: multiply;
+                    width: 90px;
                 }
             }
 
@@ -226,74 +156,7 @@ main {
                 font-size: 327px !important;
             }
 
-            &.mpi {
-                &.inicio {
-                    background-color: #027a8a;
-                }
-                &.auditoria {
-                    background-color: #009599;
-                }
-            }
-
-            &.citas {
-                &.gestor {
-                    background-color: #058db1;
-                }
-                &.ventanilla {
-                    background-color: #00a5d1;
-                }
-            }
-
-            &.rup {
-                &.inicio {
-                    background-color: #86529b;
-                }
-                &.analytics {
-                    background-color: #967da0;
-                }
-            }
-
-            &.int {
-                &.inicio {
-                    background-color: #5d7093;
-                }
-                &.camas {
-                    background-color: #6e6187;
-                }
-            }
-
-            &.huds {
-                &.inicio {
-                    background-color: #bc5485;
-                }
-                &.carpetas {
-                    background-color: #e2677b;
-                }
-                &.analytics {
-                    background-color: #ce876b;
-                }
-            }
-
-            &.dashboard {
-                &.citas {
-                    background-color: #396999;
-                }
-                &.huds {
-                    background-color: #bc5485;
-                }
-                &.solicitudes {
-                    background-color: #a486ae;
-                }
-            }
-
-            &.tm {
-                &.organizaciones {
-                    background-color: #9b6762;
-                }
-                &.espacios-fisicos {
-                    background-color: #b47670;
-                }
-            }
+            
 
             &:first-child {
                 margin: 0 5px 5px 0;
@@ -332,6 +195,8 @@ main {
     }
 
     .principal plex-icon {
+        transition: all 0.5s ease-in-out;
+
         margin-left: 0px;
         margin-right: 0px;
         &.animated {
@@ -363,8 +228,8 @@ main {
     .principal {
         transition: width ease-in-out 0.5s, margin ease-in 0.5s;
 
-        width: 61px;
-        height: 49px;
+        width: 50px;
+        height: 40px;
         border-radius: 0;
         color: white;
 
@@ -384,27 +249,6 @@ main {
             color: white;
         }
 
-        &.solicitudes {
-            background-color: #a486ae;
-        }
-        &.reportes {
-            background-color: #ad5555;
-        }
-        &.novedades {
-            background-color: #879357;
-        }
-        &.analytics {
-            background-color: #ce876b;
-        }
-        &.usuarios {
-            background-color: #d9a21b;
-        }
-        &.turnos-prestaciones {
-            background-color: #7c87a5;
-        }
-        &.campanias {
-            background-color: #b1c02c;
-        }
     }
     .titulo {
         font-size: 0.85rem;
@@ -451,66 +295,4 @@ main {
     }
 }
 
-.contenedor-marca-h {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
 
-    [svgLogo] {
-        height: 7.5rem;
-    }
-
-    div.bloque-texto {
-        [svgAcronimo] {
-            width: 100%;
-        }
-
-        .suffix-provincia {
-            letter-spacing: 0.9rem;
-            font-size: 2.5vw;
-            font-weight: 400;
-            text-align: right;
-            text-transform: uppercase;
-            margin-right: -0.9rem;
-            color: var(--nav-bar-color);
-        }
-    }
-}
-@keyframes tintin {
-    0% {
-        transform: rotate(0deg);
-    }
-    1% {
-        transform: rotate(20deg);
-    }
-    2% {
-        transform: rotate(-20deg);
-    }
-    3% {
-        transform: rotate(15deg);
-    }
-    4% {
-        transform: rotate(-15deg);
-    }
-    5% {
-        transform: rotate(0deg);
-    }
-    50% {
-        transform: rotate(0deg);
-    }
-}
-.notificacion {
-    position: absolute;
-    top: 3px;
-    right: 20px;
-    width: 27px;
-    height: 30px;
-    div {
-        color: white;
-        border: 3pxsolidwhite;
-        border-radius: 50%;
-        -webkit-offset-keyword: topcenter;
-        animation: tintin 7sease-in-outinfinite;
-    }
-}

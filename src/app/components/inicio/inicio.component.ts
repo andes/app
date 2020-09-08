@@ -1,6 +1,6 @@
 import { CommonNovedadesService } from './../novedades/common-novedades.service';
 import { Plex } from '@andes/plex';
-import { Component, AfterViewInit, HostBinding, OnInit } from '@angular/core';
+import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
@@ -11,7 +11,7 @@ import { setDimension } from '../../shared/services/analytics.service';
     templateUrl: 'inicio.html',
     styleUrls: ['inicio.scss']
 })
-export class InicioComponent implements AfterViewInit, OnInit {
+export class InicioComponent implements AfterViewInit {
     @HostBinding('class.plex-layout')
     public denied = false;
     public loading = false;
@@ -30,10 +30,6 @@ export class InicioComponent implements AfterViewInit, OnInit {
         private route: ActivatedRoute,
         private router: Router
     ) { }
-
-    ngOnInit() {
-        // this.plex.navVisible(false);
-    }
 
     ngAfterViewInit() {
         if (this.auth.profesional) {
@@ -71,7 +67,7 @@ export class InicioComponent implements AfterViewInit, OnInit {
                     }
                     this.loading = false;
 
-                    this.secciones = this.modulos.filter(x => !x.submodulos);
+                    this.secciones = this.modulos.filter(x => !x.submodulos || !x.submodulos.length);
                     this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
 
                 }, (err) => {

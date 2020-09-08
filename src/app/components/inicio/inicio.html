@@ -26,17 +26,18 @@
                 <div *ngFor="let modulo of modulos">
 
                     <div class="modulo">
-                        <div class="principal {{ modulo.class }}">
+                        <div class="principal {{ modulo.class }}" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
                                 <span class="hover" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
-                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="both" icon="bell"
+                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
                                       (click)="irANovedades(modulo._id)"></span>
                             </b>
                             <div class="descripcion">{{modulo.descripcion}}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
-                                <div class="submodulo {{submodulo.class}} hover" (click)="redirect(modulo)">
+                                <div class="submodulo {{submodulo.class}} hover" [style.background]="submodulo.color"
+                                     (click)="redirect(modulo)">
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
                                 </div>
@@ -47,8 +48,11 @@
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
+                    <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
+                          hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
+                          (click)="irANovedades(seccion._id)"></span>
                     <div class="seccion hover" (click)="redirect(seccion)">
-                        <div class="principal {{ seccion.class }}">
+                        <div class="principal {{ seccion.class }} hover" [style.background]="seccion.color">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
