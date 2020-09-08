@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -10,6 +10,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -21,6 +22,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -124,6 +126,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.paciente = null;
     }
 
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
+    }
 
     // -----------------------------------------------
 

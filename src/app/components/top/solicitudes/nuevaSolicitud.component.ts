@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -10,6 +10,7 @@ import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -19,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
 
     showSeleccionarPaciente = true;
@@ -147,6 +149,10 @@ export class NuevaSolicitudComponent implements OnInit {
     onSearchClear() {
         this.resultadoBusqueda = [];
         this.paciente = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     // ----------------------------------

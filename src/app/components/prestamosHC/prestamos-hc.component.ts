@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ListarSolicitudesComponent } from './solicitudes/listar-solicitudes.component';
+import { PacienteBuscarComponent } from '../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'app-prestamos-hc',
@@ -15,6 +16,7 @@ import { ListarSolicitudesComponent } from './solicitudes/listar-solicitudes.com
 export class PrestamosHcComponent implements OnInit {
     @ViewChild('solicitudes', { static: false }) solicitudes: ListarSolicitudesComponent;
     @ViewChild('prestamos', { static: false }) prestamos: ListarPrestamosComponent;
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     recargaPrestamos: any = false;
     recargaSolicitudes: any = false;
@@ -91,6 +93,10 @@ export class PrestamosHcComponent implements OnInit {
     onSearchClear() {
         this.resultadoBusqueda = [];
         this.paciente = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     onSelectPaciente(event) {

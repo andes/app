@@ -9,11 +9,12 @@ import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRela
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
-    styleUrls: []
+    styleUrls: ['datos-basicos.scss']
 })
 
 export class DatosBasicosComponent implements OnInit {
@@ -22,6 +23,7 @@ export class DatosBasicosComponent implements OnInit {
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', null) ngForm: NgForm;
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     formChangesSubscription: Subscription;
 
     estados = [];
@@ -147,6 +149,11 @@ export class DatosBasicosComponent implements OnInit {
         this.busquedaTutor = [];
         this.searchClear = true;
     }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
+    }
+
 
     onPacienteSelected(pacienteSelected: IPaciente) {
         this.searchClear = true;

@@ -2,21 +2,22 @@
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
 
-        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                         (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
-                         [create]="true">
+        <paciente-buscar #buscador (searchStart)="onSearchStart()"
+                         (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()"
+                         [returnScannedPatient]="true" [hostComponent]="'puntoInicio'" [create]="true">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
         <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
-        <div class="col pr-2" *ngIf="!paciente">
+        <ng-container class="col pr-2" *ngIf="!paciente">
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                              [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                              [autoselect]="false" (selected)="onPacienteSelected($event)"
+                              (scrolled)="toPacienteBuscarOnScroll()"></paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>
-        </div>
+        </ng-container>
 
         <!-- VISTA DE PACIENTE SELECCIONADO DE LA LISTA DE RESULTADOS -->
         <div class="col pr-2" *ngIf="paciente">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
@@ -6,6 +6,8 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../services/huds.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -14,7 +16,9 @@ import { HUDSService } from '../../services/huds.service';
 })
 export class PuntoInicioInternacionComponent implements OnInit {
 
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public listado: any;
+    public searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     public pacienteSeleccionado;
     public epicrisisPaciente = [];
     public showLoader = false;
@@ -62,6 +66,16 @@ export class PuntoInicioInternacionComponent implements OnInit {
         }
     }
 
+    onSearchClear() {
+        this.searchClear = true;
+        this.listado = [];
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
+    }
+
+
     /**
      * Cuando seleccionamos un paciente busca todas sus epicrisis
      * formatea la descripcion a mostrar en el listado de epicrisis
@@ -84,6 +98,18 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 this.showLoader = false;
             });
         });
+    }
+
+    /**
+     * retorna true/false al querer mostrar el documento del tutor de un paciente menor  de 5 años
+     * @param paciente
+     */
+    public showDatosTutor(paciente: IPaciente) {
+        //  si es un paciente sin documento menor a 5 años mostramos datos de un familiar/tutor
+        const edad = 5;
+        const rel = paciente.relaciones;
+        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length > 0;
+
     }
 
     /**

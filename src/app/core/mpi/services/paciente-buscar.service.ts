@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { PacienteService } from './paciente.service';
+import { cache } from '@andes/shared';
 
 export interface PacienteEscaneado {
     documento: string;
@@ -14,8 +15,27 @@ export interface PacienteEscaneado {
 
 @Injectable()
 export class PacienteBuscarService {
+
     constructor(
         private pacienteService: PacienteService) { }
+
+    /**
+* Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
+*
+* @public
+* @returns {boolean} Indica si está bien configurado
+*/
+    public controlarScanner(scan): boolean {
+        if (scan) {
+            let index = scan.indexOf('"');
+            if (index >= 0 && index < 20 && scan.length > 5) {
+                /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
@@ -116,9 +136,58 @@ export class PacienteBuscarService {
                 );
             })
         );
-
     }
 
+    /**
+     * Busca paciente cada vez que el campo de busqueda cambia su valor
+     */
+    public search(searchText: string, skip, limit, returnScannedPatient = false) {
+        // Inicia búsqueda
+        if (searchText) {
+            // Si matchea una expresión regular, busca inmediatamente el paciente
+            let pacienteEscaneado = this.comprobarDocumentoEscaneado(searchText);
+            if (pacienteEscaneado) {
+                return this.findByScan(pacienteEscaneado).pipe(
+                    map(resultadoPacientes => {
+                        if (resultadoPacientes.pacientes.length) {
+                            return resultadoPacientes;
+                        } else {
+                            // Si el paciente no fue encontrado ..
+                            if (returnScannedPatient) {
+                                // Ingresa a registro de pacientes ya que es escaneado
+                                return { pacientes: [pacienteEscaneado], escaneado: true, scan: searchText, err: null };
+                            } else {
+                                return { pacientes: [], err: null };
+                            }
+                        }
+                    })
+                );
+            } else {
+                // Busca por texto libre
+                return this.findByText(searchText, skip, limit);
+            }
+        }
+    }
+
+    /**
+     * Busca paciente cada vez que el campo de busqueda cambia su valor
+     */
+    public findByText(searchText, skip, limit) {
+        // Busca por texto libre
+        return this.pacienteService.getMatch({
+            type: 'multimatch',
+            cadenaInput: searchText,
+            limit: limit,
+            skip: skip
+        }).pipe(
+            map(resultado => {
+                return { pacientes: resultado, err: null };
+            },
+                err => { return { pacientes: [], err: err }; }
+            ),
+            cache()
+        );
+    }
 }
 
 export interface DocumentoEscaneado {

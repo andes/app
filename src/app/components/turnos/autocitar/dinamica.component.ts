@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
@@ -9,6 +9,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { Router } from '@angular/router';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'dinamica',
@@ -26,6 +27,7 @@ export class DinamicaFormComponent implements OnInit {
     @Input() agenda: IAgenda;
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     constructor(private plex: Plex,
         private router: Router,
@@ -53,6 +55,10 @@ export class DinamicaFormComponent implements OnInit {
     searchClear() {
         this.pacientes = null;
         this.pacienteActivo = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     onPacienteSelected(paciente: IPaciente) {

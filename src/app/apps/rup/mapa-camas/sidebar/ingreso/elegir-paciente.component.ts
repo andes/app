@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { Subscription, combineLatest } from 'rxjs';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { PacienteBuscarComponent } from '../../../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'app-elegir-paciente',
@@ -11,6 +12,7 @@ import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paci
 })
 
 export class ElegirPacienteComponent implements OnInit, OnDestroy {
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public pacientes;
     public snapshot;
     public selectedCama;
@@ -72,5 +74,9 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
         } else {
             this.pacientes = resultado.pacientes;
         }
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 }

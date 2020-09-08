@@ -79,6 +79,9 @@ export class BusquedaMpiComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
+    }
 
     // ------------- SOBRE LISTA RESULTADO --------------
 

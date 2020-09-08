@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
@@ -8,6 +8,7 @@ import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBu
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { PacienteBuscarComponent } from '../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
   selector: 'auditoria',
@@ -19,6 +20,7 @@ export class AuditoriaComponent implements OnInit {
 
   @Output() patientToFix: any;
   @Output() patient: any;
+  @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
   enableDuplicados: boolean;
   enableActivar: boolean;
@@ -350,6 +352,10 @@ export class AuditoriaComponent implements OnInit {
 
   searchClear() {
     this.pacientes = null;
+  }
+
+  toPacienteBuscarOnScroll() {
+    this.buscador.onScroll();
   }
 
   cancelVincular() {

@@ -25,17 +25,18 @@
 
 
                 <!-- DATOS DEL PROGENITOR PARA EL BEBE-->
-                <div class="mt-4">
+                <div class="mt-2">
                     <plex-title size="sm" titulo="Datos de Progenitor/a o tutor/a"></plex-title>
 
-                    <div *ngIf="showBuscador; else showRelacion" class="mt-2">
+                    <div class="search-container mt-2" *ngIf="showBuscador; else showRelacion">
 
-                        <paciente-buscar label="Buscar" (searchStart)="onSearchStart()"
+                        <paciente-buscar #buscador label="Buscar" (searchStart)="onSearchStart()"
                                          (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()">
                         </paciente-buscar>
 
                         <paciente-listado *ngIf="busquedaTutor?.length" [pacientes]="busquedaTutor" [autoselect]="false"
-                                          (selected)="onPacienteSelected($event)">
+                                          (selected)="onPacienteSelected($event)"
+                                          (scrolled)="toPacienteBuscarOnScroll()">
                         </paciente-listado>
                         <div *ngIf="!busquedaTutor?.length && !searchClear" class="alert alert-danger">
                             <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..

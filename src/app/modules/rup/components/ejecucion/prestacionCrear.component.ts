@@ -1,7 +1,7 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import * as moment from 'moment';
@@ -13,11 +13,14 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { concat } from 'rxjs';
+import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
 export class PrestacionCrearComponent implements OnInit {
+
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     prestacionAutocitar: any;
     showAutocitar = false;
     agendasAutocitar: IAgenda[];
@@ -350,6 +353,11 @@ export class PrestacionCrearComponent implements OnInit {
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
+    }
+
 
     // ----------------------------------
 

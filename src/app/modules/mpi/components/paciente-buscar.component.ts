@@ -2,8 +2,12 @@ import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angu
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
-import { Subscription } from 'rxjs';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { Subscription, Observable, of } from 'rxjs';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
+import { map } from 'rxjs/operators';
+import { cache } from '@andes/shared';
+import { estados } from '../../../utils/enumerados';
 
 interface PacienteEscaneado {
     documento: string;
@@ -20,31 +24,49 @@ interface PacienteEscaneado {
     styleUrls: []
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
-    private timeoutHandle: number;
     public textoLibre: string = null;
+    private limit = 10;
+    private skip = 0;
+    private scrollEnd = false;
     public autoFocus = 0;
+    public loading = false;
     public routes;
+    public listado: IPaciente[];
+    public searchClear = true;
     private pacienteRoute = '/apps/mpi/paciente';
     private searchSubscription = new Subscription();
+    pacienteSeleccionado: IPaciente;
+    selectedId: string;
+
     get disabled() {
         return !this.textoLibre || this.textoLibre.length === 0;
     }
-
+    // Indica el modulo llamador
     @Input() hostComponent = '';
+
     @Input() create = false;
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
     @Input() returnScannedPatient = false;
 
-    // Eventos
-    @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
-    @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
-    @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
+    // Indica si debe aparecer el boton 'editar' en cada resultado
+    @Input() editing = false;
+
+    // Indica la altura de la ventana de scroll'
+    @Input() height: Number = 80;
+
+    // Evento que se emite cuando se selecciona un paciente (click en la lista)
+    @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+
+    // Evento que se emite cuando se presiona el boton 'editar' de un paciente
+    @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+
+    // Evento que se emite cuando se scrollea en la lista
+    @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
 
 
     constructor(
         private plex: Plex,
-        private pacienteService: PacienteService,
         private pacienteBuscar: PacienteBuscarService) {
     }
 
@@ -59,42 +81,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        clearInterval(this.timeoutHandle);
-    }
-
-    /**
-     * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
-     *
-     * @private
-     * @returns {boolean} Indica si está bien configurado
-     */
-    private controlarScanner(): boolean {
-        if (this.textoLibre) {
-            let index = this.textoLibre.indexOf('"');
-            if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
-                /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
-                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
-                this.textoLibre = null;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private buscarPorTexto() {
-        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-
         if (this.searchSubscription) {
             this.searchSubscription.unsubscribe();
         }
-        this.searchSubscription = this.pacienteService.getMatch({
-            type: 'multimatch',
-            cadenaInput: textoLibre
-        }).subscribe(resultado => {
-            this.searchEnd.emit({ pacientes: resultado, err: null });
-        },
-            (err) => this.searchEnd.emit({ pacientes: [], err: err })
-        );
     }
 
     /**
@@ -105,46 +94,73 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if ($event.type) {
             return;
         }
-        // Cancela la búsqueda anterior
-        if (this.timeoutHandle) {
-            window.clearTimeout(this.timeoutHandle);
-        }
+        // reiniciamos variables utilizadas por infinity-scroll
+        this.skip = 0;
+        this.scrollEnd = false;
 
-        // Controla el scanner
-        if (!this.controlarScanner()) {
+        this.textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
+        this.searchClear = this.textoLibre.length ? false : true;
+        if (this.searchClear) {
             return;
         }
-
-        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-        // Inicia búsqueda
-        if (textoLibre) {
-            this.timeoutHandle = window.setTimeout(() => {
-                this.searchStart.emit();
-                this.timeoutHandle = null;
-
-                // Si matchea una expresión regular, busca inmediatamente el paciente
-                let pacienteEscaneado = this.pacienteBuscar.comprobarDocumentoEscaneado(textoLibre);
-                if (pacienteEscaneado) {
-                    this.pacienteBuscar.findByScan(pacienteEscaneado).subscribe(resultadoPacientes => {
-                        if (resultadoPacientes.pacientes.length) {
-                            return this.searchEnd.emit(resultadoPacientes);
-                        } else {
-                            // Si el paciente no fue encontrado ..
-                            if (this.returnScannedPatient) {
-                                // Ingresa a registro de pacientes ya que es escaneado
-                                return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
-                            } else {
-                                return this.searchEnd.emit({ pacientes: [], err: null });
-                            }
-                        }
-                    });
-                } else {
-                    // 2. Busca por texto libre
-                    this.buscarPorTexto();
-                }
-            }, 500);
-        } else {
-            this.searchClear.emit();
+        // Controla el scanner
+        if (!this.pacienteBuscar.controlarScanner(this.textoLibre)) {
+            this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+            return;
         }
+        if (this.searchSubscription) {
+            this.searchSubscription.unsubscribe();
+        }
+        //   this.searchStart.emit();
+        this.loading = true;
+        this.pacienteBuscar.search(this.textoLibre, this.skip, this.limit).subscribe(respuesta => {
+            if (respuesta) {
+                // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
+                if (!respuesta.pacientes.length || respuesta.pacientes.length < this.limit) {
+                    this.scrollEnd = true;
+                }
+                this.loading = false;
+                this.listado = respuesta.pacientes;
+                this.skip = this.listado.length;
+            }
+        });
+    }
+
+    // LISTADO (REULTADO DE BUSQUEDA) -------------------------
+
+    public seleccionar(paciente: IPaciente) {
+        (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+    }
+
+    public editar(paciente: IPaciente) {
+        (paciente.id) ? this.edit.emit(paciente) : this.edit.emit(null);
+    }
+
+    public onScroll() {
+        if (this.scrollEnd) {
+            return;
+        }
+        this.pacienteBuscar.search(this.textoLibre, this.skip, this.limit).subscribe(respuesta => {
+            if (respuesta) {
+                // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
+                if (!respuesta.pacientes.length || respuesta.pacientes.length < this.limit) {
+                    this.scrollEnd = true;
+                }
+                this.loading = false;
+                this.listado = this.listado.concat(respuesta.pacientes);
+                this.skip = this.listado.length;
+            }
+        });
+    }
+
+    /**
+     * retorna true/false al querer mostrar el documento del tutor de un paciente menor  de 5 años
+     * @param paciente
+     */
+    public showDatosTutor(paciente: IPaciente) {
+        //  si es un paciente sin documento menor a 5 años mostramos datos de un familiar/tutor
+        const edad = 5;
+        const rel = paciente.relaciones;
+        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length > 0;
     }
 }

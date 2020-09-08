@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -16,6 +16,7 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { Unsubscribe } from '@andes/shared';
+import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'revision-agenda',
@@ -24,6 +25,8 @@ import { Unsubscribe } from '@andes/shared';
 })
 
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
+
     private lastRequest: ISubscription;
     private _agenda: any;
     private estadoPendienteAuditoria;
@@ -434,6 +437,10 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     onSearchClear() {
         this.resultadoBusqueda = [];
         this.paciente = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     // ----------------------------------

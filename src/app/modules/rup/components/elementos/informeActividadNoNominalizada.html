@@ -81,13 +81,20 @@
                     <tfoot>
                         <tr>
                             <td>
-                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                                 (searchClear)="searchClear()"></paciente-buscar>
-                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                                  [autoselect]="false" (selected)="seleccionarPaciente($event)">
-                                </paciente-listado>
-                                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                                    ¡No se encontró ningún paciente!
+                                <div class="row">
+                                    <div class="col" [ngClass]="{'height-fix': pacientes && pacientes.length}">
+                                        <paciente-buscar #buscador (searchStart)="searchStart()"
+                                                         (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+                                        </paciente-buscar>
+                                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                                          [autoselect]="false" (selected)="seleccionarPaciente($event)"
+                                                          (scrolled)="toPacienteBuscarOnScroll()">
+                                        </paciente-listado>
+                                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                                            ¡No se encontró ningún paciente!
+                                        </div>
+                                    </div>
+
                                 </div>
                             </td>
                             <td>&nbsp;</td>
@@ -105,16 +112,16 @@
             <label>Fecha</label>
             {{registro.valor.informe?.fecha | date}}
         </div>
-        <div class="col-3 ">
+        <div class=" col-3 ">
             <label>Hora inicio</label>
             {{registro.valor.informe?.horaIngreso | date: 'HH:mm'}}
         </div>
-        <div class="col-3 ">
+        <div class=" col-3 ">
             <label>Hora fin</label>
             {{registro.valor.informe?.horaFin | date: 'HH:mm'}}
         </div>
     </div>
-    <div class="row">
+    <div class=" row">
         <div class="col-6">
             <label>Tipo actividad</label>
             {{registro.valor.informe?.tipoActividad?.term}}

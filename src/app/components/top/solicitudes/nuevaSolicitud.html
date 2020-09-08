@@ -6,34 +6,25 @@
             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
                          (click)="guardarSolicitud($event)" [validateForm]="form"> </plex-button>
         </plex-title>
-        <form #form="ngForm">
-            <div class="row">
-                <div *ngIf="showSeleccionarPaciente" class="col-12">
-                    <label *ngIf="showSeleccionarPaciente">Paciente</label>
-                    <!-- ----------- Búsqueda de pacientes -------------- -->
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
-                        </div>
-                    </div>
-                    <plex-loader *ngIf="loading"></plex-loader>
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                              [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                              (selected)="seleccionarPaciente($event)">
-                            </paciente-listado>
+        <ng-container *ngIf="showSeleccionarPaciente">
+            <label *ngIf="showSeleccionarPaciente">Paciente</label>
 
-                            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                                ¡No se encontró ningún paciente!
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ------------------------------------------------ -->
-                </div>
+            <!-- ----------- Búsqueda de pacientes -------------- -->
+
+            <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                             (searchClear)="onSearchClear()">
+            </paciente-buscar>
+            <plex-loader *ngIf="loading"></plex-loader>
+            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                              [autoselect]="false" (selected)="seleccionarPaciente($event)"
+                              (scrolled)="toPacienteBuscarOnScroll()">
+            </paciente-listado>
+            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                ¡No se encontró ningún paciente!
             </div>
+        </ng-container>
+
+        <form #form="ngForm">
             <!-- SOLICITUD ENTRADA -->
             <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'entrada'">
                 <plex-wrapper>

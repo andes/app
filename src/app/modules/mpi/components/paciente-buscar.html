@@ -1,9 +1,57 @@
 <plex-wrapper>
-    <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [autoFocus]="autoFocus"
-               prefix="barcode-scan"
+    <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [debounce]="500"
+               [autoFocus]="autoFocus" prefix="barcode-scan"
                placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
     </plex-text>
     <plex-dropdown *ngIf="create" class="mr-0 dropdown-inline" [disabled]="disabled"
                    [type]="disabled ? 'default' : 'primary'" [right]="true" [items]="routes" label="NUEVO PACIENTE">
     </plex-dropdown>
+    <plex-loader *ngIf="loading" type="ball-pulse" grow="full"></plex-loader>
 </plex-wrapper>
+
+<div *ngIf="!listado?.length && !searchClear" class="alert alert-danger" grow="full">
+    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+</div>
+<plex-list height="{{height}}%" (scrolled)="onScroll()">
+    <plex-item *ngFor="let paciente of listado" class=""
+               [class.pacienteFallecido]="paciente.fechaFallecimiento && paciente.fechaFallecimiento !== null"
+               [selected]="pacienteSeleccionado?.id === paciente.id" (click)="seleccionar(paciente)">
+
+        <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
+
+        <plex-label *ngIf="!paciente.numeroIdentificacion && !showDatosTutor(paciente)" titulo="{{ paciente | nombre }}"
+                    subtitulo="{{ (paciente.documento | number) || 'Sin DNI'}}">
+        </plex-label>
+
+        <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                    subtitulo="{{ paciente.numeroIdentificacion }}">
+        </plex-label>
+
+        <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}" subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
+                                {{ (paciente.relaciones[0].documento | number) || paciente.relaciones[0].numeroIdentificacion || 'Sin DNI'}}
+                                - {{ (paciente.relaciones[0] | nombre)}}">
+        </plex-label>
+
+        <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
+        </plex-label>
+
+        <plex-badge *ngIf="showDatosTutor(paciente)" type="warning"> Sin DNI
+        </plex-badge>
+
+        <plex-badge type="info">{{ paciente | sexo }}
+        </plex-badge>
+
+        <plex-badge type="" class=""
+                    [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} ">
+            {{ paciente.estado }}
+        </plex-badge>
+
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+            {{ paciente.fechaFallecimiento | fecha:'utc'}}
+        </plex-badge>
+
+        <plex-button *ngIf="editing" type="warning" size="sm" icon="pencil" title="Editar paciente"
+                     (click)="editar(paciente)">
+        </plex-button>
+    </plex-item>
+</plex-list>

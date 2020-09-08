@@ -1,31 +1,16 @@
 <plex-layout main="7">
     <plex-layout-main>
         <plex-title titulo="Punto de Inicio - Internacion"></plex-title>
-        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
-        <!-- Tabla / listado de pacientes -->
-        <table *ngIf="listado && listado.length" class="table table-striped table-hover">
-            <tbody>
-                <tr class="hover" *ngFor="let paciente of listado"
-                    [ngClass]="{'bg-inverse text-white': paciente.id == pacienteSeleccionado?.id}"
-                    (click)="onPacienteSelected(paciente)">
-                    <td>
-                        {{ paciente | nombre }}<br>
-                        <span *ngIf="paciente?.documento !== ''"><b>DNI: </b> {{paciente.documento}}</span>
-                        <span *ngIf="paciente?.documento === ''"><b>DNI: </b>N/D</span>
-                        <span *ngIf="paciente.fechaNacimiento !== null">
-                            <span><b>| Fecha de Nac: </b>{{paciente.fechaNacimiento | fecha:'utc'}}</span>
-                            <span *ngIf="paciente.fechaNacimiento === null"><b>| Fecha de Nac: </b>N/D</span>
-                            | <b>sexo:</b> {{paciente | sexo}}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="float-right">
-                            <plex-button label="VER DETALLE" type="info"></plex-button>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                         (searchClear)="onSearchClear()">
+        </paciente-buscar>
+        <paciente-listado *ngIf="listado && listado.length" [pacientes]="listado" [autoselect]="false"
+                          (selected)="onPacienteSelected($event)" (scrolled)="toPacienteBuscarOnScroll()">
+        </paciente-listado>
+        <div *ngIf="listado && !listado.length && !searchClear" class="alert alert-danger">
+            <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+        </div>
+
     </plex-layout-main>
     <!-- Sidebar -->
     <plex-layout-sidebar type="invert">

@@ -1,7 +1,7 @@
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -9,6 +9,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
+import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'sobreturno',
@@ -16,6 +17,8 @@ import { ObraSocialService } from './../../../../services/obraSocial.service';
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
+
     public nota: any;
     public lenNota = 140;
     public changeCarpeta: boolean;
@@ -125,6 +128,10 @@ export class AgregarSobreturnoComponent implements OnInit {
     onSearchClear() {
         this.resultadoBusqueda = [];
         this.paciente = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     onSelect(paciente: any): void {

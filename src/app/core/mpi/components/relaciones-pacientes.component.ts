@@ -4,13 +4,15 @@ import {
     Input,
     HostBinding,
     Output,
-    EventEmitter
+    EventEmitter,
+    ViewChild
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'relaciones-pacientes',
@@ -19,6 +21,7 @@ import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRela
 })
 export class RelacionesPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; //  Permite el uso de flex-box en el componente
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     @Input()
     set paciente(valor: IPaciente) {
         this._paciente = valor;
@@ -78,6 +81,10 @@ export class RelacionesPacientesComponent implements OnInit {
     onSearchClear() {
         this.searchClear = true;
         this.posiblesRelaciones = [];
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     // ------------- SOBRE RELACIONES ---------------

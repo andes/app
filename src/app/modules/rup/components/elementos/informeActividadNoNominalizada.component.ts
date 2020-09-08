@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { RupElement } from '.';
+import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
-    templateUrl: 'informeActividadNoNominalizada.html'
+    templateUrl: 'informeActividadNoNominalizada.html',
+    styleUrls: ['informeActividadNoNominalizada.scss']
 })
 @RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public elegirOtraActividad = false;
     public listaActividades = [];
     public tematicas = [
@@ -39,7 +42,7 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-    private turno;
+    public turno;
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -103,6 +106,10 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     searchClear() {
         this.pacientes = null;
+    }
+
+    toPacienteBuscarOnScroll() {
+        this.buscador.onScroll();
     }
 
     seleccionarPaciente(paciente: IPaciente) {
