@@ -71,6 +71,16 @@
         <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto" justify="{{ justificado }}">
         </plex-label>
     </plex-detail>
+
+    <!-- Se muestran las notas destacadas de un paciente -->
+    <plex-title titulo=" Notas" size="sm" *ngIf="notasDestacadas.length">
+    </plex-title>
+
+    <ng-container *ngFor="let n of notasDestacadas">
+        <plex-label *ngIf="n.destacada" titulo="{{ n.titulo || 'Sin titulo' }}" [subtitulo]="n.nota" grow="4">
+        </plex-label>
+    </ng-container>
+
 </ng-container>
 
 <!-- Propuesta para mostrar otros datos preliminares -->
