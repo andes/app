@@ -315,7 +315,8 @@ registerLocaleData(localeEs, 'es');
         CITASLibModule
     ],
     declarations: [
-        AppComponent, InicioComponent,
+        AppComponent,
+        InicioComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
