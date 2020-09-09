@@ -272,7 +272,7 @@ export class PacienteComponent implements OnInit {
             return elem;
         });
 
-        this.pacienteService.save(pacienteGuardar, ignoreCheck, false).subscribe(
+        this.pacienteService.save(pacienteGuardar, ignoreCheck).subscribe(
             (resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
