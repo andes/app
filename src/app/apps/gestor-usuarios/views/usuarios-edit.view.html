@@ -6,16 +6,18 @@
         <ng-container *ngIf="user$ | async as user">
             <gestor-usuarios-usuario-detalle [usuario]="user"></gestor-usuarios-usuario-detalle>
         </ng-container>
-        <plex-title titulo="Perfiles habilitados"></plex-title>
-        <div class="list-group mt-2" *ngIf="arbolPermisos.length">
-            <ng-container *ngFor="let perfil of perfiles">
-                <div justify class="list-group-item" *ngIf="habilitados[perfil.id] !== undefined">
-                    {{perfil.nombre}}
-                    <plex-bool [(ngModel)]="habilitados[perfil.id]" (change)="onChangePerfil($event, perfil)">
-                    </plex-bool>
-                </div>
-            </ng-container>
-        </div>
+        <ng-container *ngIf="arbolPermisos.length && perfiles.length">
+            <plex-title titulo="Perfiles habilitados"></plex-title>
+            <div class="list-group mt-2">
+                <ng-container *ngFor="let perfil of perfiles">
+                    <div justify class="list-group-item" *ngIf="habilitados[perfil.id] !== undefined">
+                        {{perfil.nombre}}
+                        <plex-bool [(ngModel)]="habilitados[perfil.id]" (change)="onChangePerfil($event, perfil)">
+                        </plex-bool>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
         <plex-title main titulo="Permisos del usuario">
