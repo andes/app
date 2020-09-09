@@ -1,3 +1,25 @@
+# [5.12.0](https://github.com/andes/app/compare/v5.11.0...v5.12.0) (2020-09-09)
+
+
+### Bug Fixes
+
+* **huds:** muestra nombre correcto de concepto de solicitud ([#1797](https://github.com/andes/app/issues/1797)) ([3fd03a7](https://github.com/andes/app/commit/3fd03a78adae17e2f9f6d9fa3e3eb3f2f3c5b75b))
+* **mpi:** quita scroll-infinito de buscador y listado ([#1897](https://github.com/andes/app/issues/1897)) ([6a23730](https://github.com/andes/app/commit/6a23730526f73cac6c73beca0e10b60f916ec928))
+* **rup:** agrega required a ValorNumerico ([#1894](https://github.com/andes/app/issues/1894)) ([a6c42b9](https://github.com/andes/app/commit/a6c42b9c25cd3a31d4139ec702000815369ad10a))
+* **rup:** modifica ancho de listado de pacientes ([#1889](https://github.com/andes/app/issues/1889)) ([85efd7c](https://github.com/andes/app/commit/85efd7c5d4ed41f004e1df635cce4c9fa0159255))
+
+
+### Features
+
+* **core:** @andes/plex 6.15.0 ([#1892](https://github.com/andes/app/issues/1892)) ([14a647e](https://github.com/andes/app/commit/14a647e78a68d5136307caee457d82784f034cdb))
+* **core:** tipoPrestacion.id por tipoPrestacion.conceptId ([#1873](https://github.com/andes/app/issues/1873)) ([98c9cab](https://github.com/andes/app/commit/98c9cab658cbc91a39c0251d12377794a30bd43d))
+* **mapa-camas:** agregar y editar una nota en las camas ocupadas ([#1821](https://github.com/andes/app/issues/1821)) ([d2ab27d](https://github.com/andes/app/commit/d2ab27d153fd02e6a01db6396f5ff1294f1934ad))
+* **mapa-camas:** filtros distintos para fechas de ingreso y egreso ([#1774](https://github.com/andes/app/issues/1774)) ([aa25a33](https://github.com/andes/app/commit/aa25a334366657a068e8caa5e09d1e20bbcc112d))
+* **mapa-camas:** quita el hardcodeo de colores en el estado de servicio ([#1843](https://github.com/andes/app/issues/1843)) ([eff4cb9](https://github.com/andes/app/commit/eff4cb98827feb090ff928cf23708aadf83561bc))
+* **mpi:** Agrega boton 'editar datos' de un paciente ([#1888](https://github.com/andes/app/issues/1888)) ([154bc58](https://github.com/andes/app/commit/154bc58b040d0d94f1954a63f4a33d7fede55229))
+* **organizaciones:** configurar cuentas de email asociadas al efector ([#1862](https://github.com/andes/app/issues/1862)) ([db64b45](https://github.com/andes/app/commit/db64b4578a9fa2f6590d6e2f33844b054ffc0f5a))
+* **rup:** pto inicio lazy load pendientes ([#1728](https://github.com/andes/app/issues/1728)) ([7872654](https://github.com/andes/app/commit/78726545dd94639546961b429c9e058d3fa9745a))
+
 # [5.11.0](https://github.com/andes/app/compare/v5.10.0...v5.11.0) (2020-09-02)
 
 
