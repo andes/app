@@ -50,7 +50,8 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         }, {});
     }
 
-    setFecha(fecha: Date) {
+    setFecha($event) {
+        const fecha = $event.value;
         this.mapaCamasService.setFecha(fecha);
     }
 }
