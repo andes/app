@@ -129,7 +129,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         }
 
         this.camas = this.mapaCamasService.snapshotOrdenado$.pipe(
-            map(snapshots => snapshots.filter(snap => snap.estado !== 'inactiva'))
+            map(snapshots => {
+                return snapshots.filter(snap => snap.estado !== 'inactiva');
+            })
         );
     }
 

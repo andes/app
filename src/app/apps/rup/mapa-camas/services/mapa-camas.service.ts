@@ -322,7 +322,7 @@ export class MapaCamasService {
         }
 
         if (tipoCama) {
-            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.tipoCama.conceptId === tipoCama.conceptId);
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => (!snap.sala && snap.tipoCama.conceptId === tipoCama.conceptId));
         }
 
         if (estado) {

@@ -32,6 +32,7 @@ export interface ISnapshot {
         _id: String,
         nombre: String
     };
+    sala?: boolean;
     extras: {
         ingreso?: boolean,
         egreso?: boolean,
