@@ -1,0 +1,14 @@
+{
+  "name": "@andes/shared",
+  "version": "6.0.0",
+  "peerDependencies": {
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@angular/plex": ">= 5.0.0"
+  },
+  "dependencies": {
+    "file-saver": "^2.0.2",
+    "moment": "^2.24.0",
+    "ng2-slugify": "^0.1.0"
+  }
+}
