@@ -25,8 +25,8 @@
             <div *ngIf="!denied && !loading" class="modulos" justify>
                 <div *ngFor="let modulo of modulos">
 
-                    <div class="modulo">
-                        <div class="principal {{ modulo.class }}" [style.color]="modulo.color">
+                    <div *ngIf="modulo.activo" class="modulo">
+                        <div class="principal" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
                                 <span class="hover" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
                                       hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
@@ -36,8 +36,8 @@
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
-                                <div class="submodulo {{submodulo.class}} hover" [style.background]="submodulo.color"
-                                     (click)="redirect(modulo)">
+                                <div *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
+                                     [style.background]="submodulo.color" (click)="redirect(submodulo)">
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
                                 </div>
@@ -52,7 +52,7 @@
                           hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
                           (click)="irANovedades(seccion._id)"></span>
                     <div class="seccion hover" (click)="redirect(seccion)">
-                        <div class="principal {{ seccion.class }} hover" [style.background]="seccion.color">
+                        <div class="principal hover" [style.background]="seccion.color">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
