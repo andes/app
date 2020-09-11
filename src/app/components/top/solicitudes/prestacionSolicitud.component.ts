@@ -26,6 +26,7 @@ export class PrestacionSolicitudComponent implements OnInit {
     fotos: any[] = [];
     fileToken: String = null;
     lightbox = false;
+    observaciones;
     indice;
     fecha = new Date();
     constructor(
@@ -47,7 +48,7 @@ export class PrestacionSolicitudComponent implements OnInit {
     }
 
     confirmarPrestacion() {
-        this.returnPrestacion.emit({ status: false, fecha: this.fecha });
+        this.returnPrestacion.emit({ status: false, fecha: this.fecha, observaciones: this.observaciones });
     }
 
     esImagen(extension) {

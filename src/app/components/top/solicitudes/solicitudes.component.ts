@@ -712,33 +712,38 @@ export class SolicitudesComponent implements OnInit {
             this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
                 .then(confirmacion => {
                     if (confirmacion) {
-                        this.confirmarIniciarPrestacion(event.fecha);
+                        this.confirmarIniciarPrestacion(event);
                     }
                 });
         }
     }
 
-    private confirmarIniciarPrestacion(fecha) {
+    private confirmarIniciarPrestacion(data) {
         concat(
             // token HUDS
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.prestacionSeleccionada.paciente, 'Fuera de agenda', this.auth.profesional, null, this.prestacionSeleccionada.solicitud.tipoPrestacion.id),
             // PATCH pasar prestacion a ejecución
-            this.iniciarPrestacion(fecha)
+            this.iniciarPrestacion(data.fecha, data.observaciones)
         ).subscribe(
             () => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]),
             (err) => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err)
         );
     }
 
-    private iniciarPrestacion(fecha) {
-        return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, {
+    private iniciarPrestacion(fecha, observaciones?) {
+        let patch: any = {
             op: 'estadoPush',
             ejecucion: { fecha },
             estado: {
                 fecha: new Date(),
                 tipo: 'ejecucion'
             }
-        });
+        };
+
+        if (observaciones) {
+            patch.estado.observaciones = observaciones;
+        }
+        return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch);
     }
 
     devolver(prestacion) {
