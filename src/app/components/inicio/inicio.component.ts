@@ -40,18 +40,27 @@ export class InicioComponent implements AfterViewInit {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
                 registros => {
+                    this.secciones = registros.filter(x => !x.submodulos || !x.submodulos.length);
+
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
                         modulo.permisos.forEach((permiso) => {
-                            if (this.auth.getPermissions(permiso).length > 0) {
-                                if (!tienePermiso) {
+                            if (!tienePermiso) {
+                                if (this.auth.getPermissions(permiso).length > 0) {
                                     this.modulos.push(modulo);
                                     tienePermiso = true;
+                                    if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                        modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                                    }
                                 }
                             }
                         });
                     });
+
                     this.modulos.sort((a, b) => a.orden - b.orden);
+                    this.modulos.map(x => x.submodulos.sort((a, b) => a.orden - b.orden));
+
+
                     if (this.modulos.length) {
                         this.denied = false;
                         let modulos = this.modulos.map(p => {
@@ -67,7 +76,6 @@ export class InicioComponent implements AfterViewInit {
                     }
                     this.loading = false;
 
-                    this.secciones = this.modulos.filter(x => !x.submodulos || !x.submodulos.length);
                     this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
 
                 }, (err) => {
