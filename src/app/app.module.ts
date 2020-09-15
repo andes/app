@@ -284,6 +284,7 @@ import { RUPLibModule } from './modules/rup/rup-lib.module';
 import { TOPLibModule } from './components/top/top.module';
 import { DirectiveLibModule } from './directives/directives.module';
 import { CITASLibModule } from './components/turnos/citas.module';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 registerLocaleData(localeEs, 'es');
 
@@ -299,6 +300,7 @@ registerLocaleData(localeEs, 'es');
         TurneroProvidersModule,
         ChartsModule,
         MitosModule.forRoot(),
+        NgDragDropModule.forRoot(),
         routing,
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
