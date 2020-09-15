@@ -173,7 +173,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     verHuds() {
         this.cama$.pipe(take(1)).subscribe((cama) => {
             this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: '/internacion/mapa-camas' });
-            this.router.navigate(['/rup/huds/paciente/' + cama.paciente.id]);
+            this.router.navigate(['/huds/paciente/' + cama.paciente.id]);
         });
     }
 

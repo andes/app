@@ -54,11 +54,8 @@ export const RUP_COMPONENTS = [
     PrestacionEjecucionComponent,
     PrestacionValidacionComponent,
     VistaHudsComponent,
-    VistaHudsComponent,
     HudsBusquedaPacienteComponent,
     PlantillasRUPComponent,
-    BuscadorComponent,
-    HudsBusquedaComponent,
     BuscadorComponent,
     HudsBusquedaComponent,
     RupRelacionesComponent,
@@ -83,9 +80,6 @@ export const RUP_COMPONENTS = [
 
 export const RUP_PROVIDERS = [
 ];
-
-
-
 
 @NgModule({
     imports: [

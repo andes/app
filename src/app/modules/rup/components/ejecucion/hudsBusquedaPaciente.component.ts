@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
+import { Location } from '@angular/common';
 import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
 
 @Component({
@@ -23,6 +24,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     pacienteSelected = null;
 
     constructor(
+        private location: Location,
         public plex: Plex,
         public auth: Auth,
         private router: Router,
@@ -46,7 +48,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     }
 
     onCancel() {
-        this.router.navigate(['rup']);
+        this.location.back();
     }
 
     searchStart() {
@@ -79,7 +81,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.pacienteSelected, motivoAccesoHuds, this.auth.profesional ? this.auth.profesional : null, null, null).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
                 window.sessionStorage.removeItem('motivoAccesoHuds');
-                this.router.navigate(['/rup/huds/paciente/' + this.pacienteSelected.id]);
+                this.router.navigate(['/huds/paciente/' + this.pacienteSelected.id]);
             });
         } else {
             this.pacienteSelected = null;

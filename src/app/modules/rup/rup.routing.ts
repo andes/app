@@ -16,8 +16,6 @@ export const RUP_ROUTES = [
     { path: 'ejecucion/:id', component: PrestacionEjecucionComponent },
     { path: 'validacion/:id', component: PrestacionValidacionComponent },
     { path: 'vista/:id', component: VistaHudsComponent, canActivate: [RoutingHudsGuard] },
-    { path: 'huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingHudsGuard] },
-    { path: 'huds', component: HudsBusquedaPacienteComponent },
     { path: 'plantillas', component: PlantillasRUPComponent }
 ];
 

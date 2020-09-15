@@ -1,7 +1,5 @@
 import { Unsubscribe } from '@andes/shared';
-
 import { forkJoin as observableForkJoin } from 'rxjs';
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -300,7 +298,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     * Navega para ver seleccionar un paciente y ver la huds
     */
     verHuds() {
-        this.router.navigate(['/rup/huds']);
+        this.router.navigate(['/huds']);
     }
 
     cargarSolicitudes() {
