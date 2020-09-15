@@ -164,9 +164,6 @@ export class VincularPacientesComponent implements OnInit {
         }
     }
 
-    searchStart() {
-        this.pacientes = null;
-    }
 
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
@@ -188,9 +185,6 @@ export class VincularPacientesComponent implements OnInit {
         }
     }
 
-    searchClear() {
-        this.pacientes = null;
-    }
 
     addCandidato(event) {
         this.listaCandidatos.push({ activo: true, vinculado: false, paciente: event });

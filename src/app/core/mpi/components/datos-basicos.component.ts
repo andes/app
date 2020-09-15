@@ -2,14 +2,12 @@ import { OnInit, Component, Input, Output, EventEmitter, ViewChild } from '@angu
 import { IPaciente } from '../interfaces/IPaciente';
 import * as enumerados from '../../../utils/enumerados';
 import { Plex } from '@andes/plex';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'datos-basicos',
@@ -23,7 +21,6 @@ export class DatosBasicosComponent implements OnInit {
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', null) ngForm: NgForm;
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     formChangesSubscription: Subscription;
 
     estados = [];
@@ -38,7 +35,6 @@ export class DatosBasicosComponent implements OnInit {
     hoy = moment().endOf('day').toDate();
 
     // para registro de bebes
-    busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
     contactoImportado = false;
     direccionImportada = false;
     parentescoModel: any[];
@@ -111,9 +107,6 @@ export class DatosBasicosComponent implements OnInit {
 
     // --------------  PARA REGISTRO DE BEBES -----------------
 
-    onSearchStart() {
-        this.busquedaTutor = null;
-    }
 
     onSearchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
@@ -139,20 +132,13 @@ export class DatosBasicosComponent implements OnInit {
             } else {
                 this.onPacienteSelected(pacienteScaneado);
             }
-        } else {
-            this.busquedaTutor = resultado.pacientes;
         }
-
     }
 
     onSearchClear() {
-        this.busquedaTutor = [];
         this.searchClear = true;
     }
 
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
-    }
 
 
     onPacienteSelected(pacienteSelected: IPaciente) {
@@ -181,7 +167,6 @@ export class DatosBasicosComponent implements OnInit {
                 this.copiarDireccion(paciente);
                 /* Si no se cargó un contacto, tomamos el dato de la madre/padre/tutor */
                 this.copiarContacto(paciente);
-                this.busquedaTutor = [];
                 this.showBuscador = false;
                 this.changes.emit({ refreshData: true, relaciones: this.paciente.relaciones });
             });

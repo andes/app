@@ -4,17 +4,17 @@
         <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)">
             <plex-tab *ngIf="permisoVincular" label="Búsqueda de Pacientes" (click)="panelIndex = 0"
                       icon="account-search">
-                <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                 (searchClear)="searchClear()"></paciente-buscar>
-                <plex-loader *ngIf="loading"></plex-loader>
-                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [height]="70"
+                <paciente-buscar [height]="70" (searchEnd)="searchEnd($event)" (selected)="onSelect($event)">
+                </paciente-buscar>
+                <!-- <plex-loader *ngIf="loading"></plex-loader> -->
+                <!-- <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [height]="70"
                                   [autoselect]="false" (selected)="onSelect($event)"
                                   (scrolled)="toPacienteBuscarOnScroll()">
-                </paciente-listado>
+                </paciente-listado> -->
 
-                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                <!-- <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                     ¡No se encontró ningún paciente!
-                </div>
+                </div> -->
             </plex-tab>
 
             <plex-tab *ngIf="permisoVincular" label="Pacientes con vinculaciones" (click)="panelIndex = 1"
@@ -62,8 +62,8 @@
             <plex-tab *ngIf="permisoVincular" label="Pacientes Inactivos" (click)="panelIndex = 2" icon="account-off">
                 <plex-loader *ngIf="loading"></plex-loader>
 
-                <paciente-listado *ngIf="pacientesInactivos && pacientesInactivos.length"
-                                  [pacientes]="pacientesInactivos" [autoselect]="false" (selected)="onSelect($event)">
+                <paciente-listado *ngIf="pacientesInactivos && pacientesInactivos.length" [listado]="pacientesInactivos"
+                                  (selected)="onSelect($event)">
                 </paciente-listado>
 
                 <div *ngIf="pacientesInactivos && !pacientesInactivos.length" class="alert alert-default">

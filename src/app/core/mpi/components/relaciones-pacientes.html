@@ -1,11 +1,11 @@
 <section class="mt-2" [ngClass]="{'height-fix': posiblesRelaciones && posiblesRelaciones.length}">
     <plex-title class="mt-2" size="sm" titulo="Agregar relaciones"></plex-title>
 
-    <paciente-buscar #buscador label="Buscar paciente" (searchStart)="onSearchStart()"
-                     (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()">
+    <paciente-buscar label="Buscar paciente" (searchClear)="onSearchClear()" (searchEnd)="onSearchEnd($event.pacientes)"
+                     (selected)="seleccionarRelacionEntrante($event)">
     </paciente-buscar>
 
-    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+    <!-- <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
     <paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)"
                       (scrolled)="toPacienteBuscarOnScroll()">
@@ -13,7 +13,7 @@
 
     <div *ngIf="posiblesRelaciones && !posiblesRelaciones.length && !searchClear" class="alert alert-danger">
         <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-    </div>
+    </div> -->
 
     <!-- lista de un único elemento -->
     <plex-list *ngIf="relacionEntrante.length">

@@ -82,17 +82,17 @@
                         <tr>
                             <td>
                                 <div class="row">
-                                    <div class="col" [ngClass]="{'height-fix': pacientes && pacientes.length}">
-                                        <paciente-buscar #buscador (searchStart)="searchStart()"
-                                                         (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+                                    <div class="col">
+                                        <paciente-buscar (searchEnd)="searchEnd($event)"
+                                                         (selected)="seleccionarPaciente($event)">
                                         </paciente-buscar>
-                                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                        <!-- <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
                                                           [autoselect]="false" (selected)="seleccionarPaciente($event)"
                                                           (scrolled)="toPacienteBuscarOnScroll()">
                                         </paciente-listado>
                                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                                             ¡No se encontró ningún paciente!
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>

@@ -1,11 +1,9 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
-import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
-import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -14,11 +12,8 @@ import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar
 })
 export class HudsBusquedaPacienteComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public esProfesional = false;
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
-    resultadoBusqueda = null;
-    loading = false;
     routeParams: any;
     // public motivoAccesoHuds;
     showModalMotivo = false;
@@ -51,21 +46,11 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.router.navigate(['rup']);
     }
 
-    searchStart() {
-        this.loading = true;
-    }
-
     searchEnd(resultado) {
-        this.loading = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
             return;
         }
-        this.resultadoBusqueda = resultado.pacientes;
-    }
-
-    onSearchClear() {
-        this.resultadoBusqueda = [];
     }
 
     onSelect(paciente: IPaciente): void {
@@ -73,10 +58,6 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             this.pacienteSelected = paciente;
             this.showModalMotivo = true;
         }
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
 

@@ -1,15 +1,15 @@
 <plex-layout main="7">
     <plex-layout-main>
         <plex-title titulo="Punto de Inicio - Internacion"></plex-title>
-        <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                         (searchClear)="onSearchClear()">
+        <paciente-buscar (searchClear)="onSearchClear()" (searchEnd)="searchEnd($event)"
+                         (selected)="onPacienteSelected($event)">
         </paciente-buscar>
-        <paciente-listado *ngIf="listado && listado.length" [pacientes]="listado" [autoselect]="false"
+        <!-- <paciente-listado *ngIf="listado && listado.length" [pacientes]="listado" [autoselect]="false"
                           (selected)="onPacienteSelected($event)" (scrolled)="toPacienteBuscarOnScroll()">
         </paciente-listado>
         <div *ngIf="listado && !listado.length && !searchClear" class="alert alert-danger">
             <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-        </div>
+        </div> -->
 
     </plex-layout-main>
     <!-- Sidebar -->

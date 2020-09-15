@@ -15,8 +15,6 @@ export class BusquedaMpiComponent implements OnInit {
 
     @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
-    loading = false;
-    resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     historialSeleccionados: IPaciente[] = [];
     escaneado: boolean;
@@ -57,31 +55,23 @@ export class BusquedaMpiComponent implements OnInit {
 
     onSearchStart() {
         this.disableNuevoPaciente = false;
-        this.loading = true;
     }
 
     onSearchEnd(pacientes: any[], escaneado: boolean) {
         this.searchClear = false;
         this.escaneado = escaneado;
-        this.loading = false;
         if (escaneado) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(this.escaneado);
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
-        } else {
-            this.resultadoBusqueda = pacientes;
         }
     }
 
     onSearchClear() {
         this.disableNuevoPaciente = true;
         this.searchClear = true;
-        this.resultadoBusqueda = [];
     }
 
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
-    }
 
     // ------------- SOBRE LISTA RESULTADO --------------
 

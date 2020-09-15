@@ -1,8 +1,8 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
@@ -13,14 +13,12 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { concat } from 'rxjs';
-import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
 export class PrestacionCrearComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     prestacionAutocitar: any;
     showAutocitar = false;
     agendasAutocitar: IAgenda[];
@@ -44,9 +42,7 @@ export class PrestacionCrearComponent implements OnInit {
     public buscandoPaciente = false;
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
-    public loading = false;
     public disableGuardar = false;
-    public resultadoBusqueda = [];
     public tieneAccesoHUDS: Boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
@@ -337,25 +333,17 @@ export class PrestacionCrearComponent implements OnInit {
 
     searchStart() {
         this.paciente = null;
-        this.loading = true;
     }
 
     searchEnd(resultado) {
-        this.loading = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
             return;
         }
-        this.resultadoBusqueda = resultado.pacientes;
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
 
@@ -372,6 +360,5 @@ export class PrestacionCrearComponent implements OnInit {
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
-        this.resultadoBusqueda = [];
     }
 }

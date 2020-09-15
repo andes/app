@@ -11,17 +11,17 @@
 
             <!-- ----------- Búsqueda de pacientes -------------- -->
 
-            <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                             (searchClear)="onSearchClear()">
+            <paciente-buscar (searchStart)="searchStart()" (searchClear)="onSearchClear()"
+                             (searchEnd)="searchEnd($event)" (selected)="seleccionarPaciente($event)">
             </paciente-buscar>
-            <plex-loader *ngIf="loading"></plex-loader>
-            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+            <!-- <plex-loader *ngIf="loading"></plex-loader> -->
+            <!-- <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                               [autoselect]="false" (selected)="seleccionarPaciente($event)"
                               (scrolled)="toPacienteBuscarOnScroll()">
             </paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                 ¡No se encontró ningún paciente!
-            </div>
+            </div> -->
         </ng-container>
 
         <form #form="ngForm">

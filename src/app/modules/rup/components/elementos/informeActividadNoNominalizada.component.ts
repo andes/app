@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { RupElement } from '.';
-import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
@@ -14,7 +12,6 @@ import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar
 @RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public elegirOtraActividad = false;
     public listaActividades = [];
     public tematicas = [
@@ -40,7 +37,6 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         { id: 'Violencia', nombre: 'Violencia' }
     ];
 
-    public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
     public turno;
 
@@ -92,25 +88,12 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         this.registro.valor.informe.otraTematica = this.registro.valor.informe.tematica === 'Otra' ? this.registro.valor.informe.otraTematica : '';
     }
 
-    searchStart() {
-        this.pacientes = null;
-    }
-
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
-        } else {
-            this.pacientes = resultado.pacientes;
         }
     }
 
-    searchClear() {
-        this.pacientes = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
-    }
 
     seleccionarPaciente(paciente: IPaciente) {
         if (!this.registro.valor.informe.pacientes.some((p) => p.id === paciente.id)) {
@@ -119,7 +102,6 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         } else {
             this.plex.info('warning', 'El paciente ya había sido seleccionado.', 'Información');
         }
-        this.pacientes = null;
     }
 
     deletePaciente(indice) {

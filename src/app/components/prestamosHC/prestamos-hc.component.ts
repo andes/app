@@ -4,7 +4,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ListarSolicitudesComponent } from './solicitudes/listar-solicitudes.component';
-import { PacienteBuscarComponent } from '../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'app-prestamos-hc',
@@ -16,7 +15,6 @@ import { PacienteBuscarComponent } from '../../modules/mpi/components/paciente-b
 export class PrestamosHcComponent implements OnInit {
     @ViewChild('solicitudes', { static: false }) solicitudes: ListarSolicitudesComponent;
     @ViewChild('prestamos', { static: false }) prestamos: ListarPrestamosComponent;
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     recargaPrestamos: any = false;
     recargaSolicitudes: any = false;
@@ -33,7 +31,6 @@ export class PrestamosHcComponent implements OnInit {
 
 
     // // ---- Variables asociadas a componentes paciente buscar y paciente listado
-    resultadoBusqueda = null;
     // pacienteSelected = null;
     loading = false;
 
@@ -78,32 +75,23 @@ export class PrestamosHcComponent implements OnInit {
 
     searchStart() {
         this.paciente = null;
-        this.loading = true;
     }
-
     searchEnd(resultado) {
         this.loading = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
             return;
         }
-        this.resultadoBusqueda = resultado.pacientes;
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     onSelectPaciente(event) {
         this.paciente = event;
         this.pacientesSearch = false;
         this.verSolicitudManual = true;
-        this.resultadoBusqueda.length = 0;
     }
 
     onPrestarCarpeta(value) {

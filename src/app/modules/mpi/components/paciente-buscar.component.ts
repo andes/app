@@ -2,12 +2,9 @@ import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angu
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
-import { map } from 'rxjs/operators';
-import { cache } from '@andes/shared';
-import { estados } from '../../../utils/enumerados';
+
 
 interface PacienteEscaneado {
     documento: string;
@@ -32,7 +29,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     public loading = false;
     public routes;
     public listado: IPaciente[];
-    public searchClear = true;
     private pacienteRoute = '/apps/mpi/paciente';
     private searchSubscription = new Subscription();
     pacienteSeleccionado: IPaciente;
@@ -44,6 +40,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     // Indica el modulo llamador
     @Input() hostComponent = '';
 
+    // Indica se deben mostrarse los botones (Dropdown) para alta de pacientes
     @Input() create = false;
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
@@ -64,6 +61,13 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     // Evento que se emite cuando se scrollea en la lista
     @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
 
+    // Evento que se emite al comenzar una búsqueda
+    @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
+    // Evento que se emite al finalizar la búsqueda. Envía el resultado
+    @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
+
+    // Evento que se emite al borrar completamente el campo de búsqueda
+    @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private plex: Plex,
@@ -98,32 +102,34 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         this.skip = 0;
         this.scrollEnd = false;
 
-        this.textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-        this.searchClear = this.textoLibre.length ? false : true;
-        if (this.searchClear) {
-            return;
-        }
-        // Controla el scanner
-        if (!this.pacienteBuscar.controlarScanner(this.textoLibre)) {
-            this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
-            return;
-        }
-        if (this.searchSubscription) {
-            this.searchSubscription.unsubscribe();
-        }
-        //   this.searchStart.emit();
-        this.loading = true;
-        this.pacienteBuscar.search(this.textoLibre, this.skip, this.limit).subscribe(respuesta => {
-            if (respuesta) {
-                // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
-                if (!respuesta.pacientes.length || respuesta.pacientes.length < this.limit) {
-                    this.scrollEnd = true;
-                }
-                this.loading = false;
-                this.listado = respuesta.pacientes;
-                this.skip = this.listado.length;
+        if (this.textoLibre && this.textoLibre.length) {
+            this.textoLibre = this.textoLibre.trim();
+
+            // Controla el scanner
+            if (!this.pacienteBuscar.controlarScanner(this.textoLibre)) {
+                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+                return;
             }
-        });
+            if (this.searchSubscription) {
+                this.searchSubscription.unsubscribe();
+            }
+            this.searchStart.emit();
+            this.loading = true;
+            this.pacienteBuscar.search(this.textoLibre, this.skip, this.limit).subscribe(respuesta => {
+                if (respuesta) {
+                    // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
+                    if (!respuesta.pacientes.length || respuesta.pacientes.length < this.limit) {
+                        this.scrollEnd = true;
+                    }
+                    this.searchEnd.emit(respuesta);
+                    this.loading = false;
+                    this.listado = respuesta.pacientes;
+                    this.skip = this.listado.length;
+                }
+            });
+        } else {
+            this.searchClear.emit();
+        }
     }
 
     // LISTADO (REULTADO DE BUSQUEDA) -------------------------

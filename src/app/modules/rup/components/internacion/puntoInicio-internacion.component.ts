@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
@@ -7,7 +7,6 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../services/huds.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -16,7 +15,6 @@ import { PacienteBuscarComponent } from '../../../mpi/components/paciente-buscar
 })
 export class PuntoInicioInternacionComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public listado: any;
     public searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     public pacienteSeleccionado;
@@ -54,25 +52,16 @@ export class PuntoInicioInternacionComponent implements OnInit {
     /**
      * Funcionalidades del buscador de MPI
      */
-    searchStart() {
-        this.listado = null;
-    }
+
 
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
-        } else {
-            this.listado = resultado.pacientes;
         }
     }
 
     onSearchClear() {
         this.searchClear = true;
-        this.listado = [];
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
 

@@ -24,12 +24,12 @@
                 </div>
             </div>
             <ng-container *ngIf="pacientesSearch">
-                <paciente-buscar #buscador (searchStart)="searchStart()"
+                <paciente-buscar [height]="70" (searchClear)="onSearchClear()"
                                  (searchEnd)="searchEnd($event.pacientes,$event.escaneado)"
-                                 (searchClear)="onSearchClear()">
+                                 (selected)="onSelect($event)">
                 </paciente-buscar>
 
-                <plex-loader *ngIf="loading"></plex-loader>
+                <!-- <plex-loader *ngIf="loading"></plex-loader>
 
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                                   [autoselect]="false" (selected)="onSelect($event)" [height]="70"
@@ -37,7 +37,7 @@
                 </paciente-listado>
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                     ¡No se encontró ningún paciente!
-                </div>
+                </div> -->
             </ng-container>
             <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
                 <div class="col-6">

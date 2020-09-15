@@ -31,19 +31,19 @@
         <ng-container *ngIf="pacientesSearch">
             <plex-title titulo="Buscar Paciente" size="md"></plex-title>
 
-            <paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                             (searchClear)="onSearchClear()">
+            <paciente-buscar (searchStart)="searchStart()" (searchClear)="onSearchClear()"
+                             (searchEnd)="searchEnd($event)" (selected)="onSelectPaciente($event)">
             </paciente-buscar>
 
-            <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
+            <!-- <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader> -->
 
-            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+            <!-- <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                               [autoselect]="false" (selected)="onSelectPaciente($event)"
                               (scrolled)="toPacienteBuscarOnScroll()">
-            </paciente-listado>
-            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+            </paciente-listado> -->
+            <!-- <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                 ¡No se encontró ningún paciente!
-            </div>
+            </div> -->
         </ng-container>
 
         <app-prestar-hc *ngIf="verPrestar" [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="hideSidebar($event)"

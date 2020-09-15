@@ -3,14 +3,15 @@
 <plex-button class="float-left" label="Cancelar" type="danger" (click)="cancelar($event)"></plex-button>
 <plex-button class="float-right" label="Guardar" type="success" [validateForm]="formulario" (click)="guardar($event)">
 </plex-button>
-<paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+<paciente-buscar [height]="70" (searchStart)="searchClear()" (searchClear)="searchClear()"
+                 (searchEnd)="searchEnd($event)" (selected)="onPacienteSelected($event)">
 </paciente-buscar>
-<paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" [height]="70"
+<!-- <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" [height]="70"
                   (selected)="onPacienteSelected($event)" (scrolled)="toPacienteBuscarOnScroll()">
 </paciente-listado>
 <div *ngIf="pacientes && !pacientes.length" class="alert alert-danger">
     ¡No se encontró ningún paciente!
-</div>
+</div> -->
 
 <form #formulario="ngForm">
     <ng-container *ngIf="pacienteActivo">

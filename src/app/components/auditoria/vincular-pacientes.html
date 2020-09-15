@@ -68,11 +68,11 @@
                             </plex-button>
                         </div>
                         <div *ngIf='showBuscador' class="col">
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (searchClear)="searchClear()"></paciente-buscar>
+                            <paciente-buscar (searchEnd)="searchEnd($event)" (selected)="addCandidato($event)">
+                            </paciente-buscar>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
                                               [autoselect]="false" (selected)="addCandidato($event)"></paciente-listado>
@@ -80,7 +80,7 @@
                                 ningún
                                 paciente! </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </fieldset>

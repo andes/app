@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -16,7 +16,6 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { Unsubscribe } from '@andes/shared';
-import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'revision-agenda',
@@ -25,12 +24,9 @@ import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paci
 })
 
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     private lastRequest: ISubscription;
     private _agenda: any;
-    private estadoPendienteAuditoria;
-    private estadoCodificado;
     public agenda: any;
     public cantidadTurnosAsignados: number;
     public indiceReparo: any;
@@ -50,9 +46,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public esAgendaOdonto = false;
     public idOrganizacion = this.auth.organizacion.id;
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
-    public resultadoBusqueda = null;
     public pacienteSelected = null;
-    public loading = false;
     public pacienteDetalle;
 
     constructor(
@@ -416,12 +410,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
 
     searchStart() {
         this.paciente = null;
-        this.loading = true;
     }
 
-
     searchEnd(pacientes: IPaciente[], escaneado: boolean) {
-        this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1 && pacientes[0].id) {
             this.onSelect(pacientes[0]);
@@ -429,18 +420,11 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(escaneado);
             this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
-        } else {
-            this.resultadoBusqueda = pacientes;
         }
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     // ----------------------------------
@@ -448,7 +432,6 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     // Componente paciente-listado
     @Unsubscribe()
     onSelect(paciente: IPaciente) {
-        this.resultadoBusqueda = [];
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
             return this.servicePaciente.getById(paciente.id).subscribe(

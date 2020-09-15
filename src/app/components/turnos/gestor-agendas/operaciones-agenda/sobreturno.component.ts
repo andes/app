@@ -1,7 +1,7 @@
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -9,7 +9,6 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
-import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'sobreturno',
@@ -17,7 +16,6 @@ import { PacienteBuscarComponent } from '../../../../modules/mpi/components/paci
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     public nota: any;
     public lenNota = 140;
@@ -26,8 +24,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     public _revision: any = localStorage.getItem('revision') ? true : false;
     public _agenda;
     public agenda;
-    public loading = false;
-    public resultadoBusqueda: IPaciente[] = [];
     public paciente: IPaciente;
     public tipoPrestacion: ITipoPrestacion;
     public resultado: any;
@@ -108,11 +104,8 @@ export class AgregarSobreturnoComponent implements OnInit {
     onSearchStart() {
         this.esEscaneado = false;
         this.paciente = null;
-        this.loading = true;
     }
-
     onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
-        this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1 && pacientes[0].id) {
             this.onSelect(pacientes[0]);
@@ -126,12 +119,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     onSelect(paciente: any): void {

@@ -1,8 +1,7 @@
 <plex-title justify titulo="INGRESAR PACIENTE">
     <ng-content></ng-content>
 </plex-title>
-<paciente-buscar #buscador (searchStart)="searchStart()" (searchEnd)="searchEnd($event)">
+<paciente-buscar (searchEnd)="searchEnd($event)" (selected)="onPacienteSelected($event)">
 </paciente-buscar>
-<paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"
-                  (scrolled)="toPacienteBuscarOnScroll()">
-</paciente-listado>
+<!-- <paciente-listado [listado]="pacientes" (selected)="onPacienteSelected($event)" (scrolled)="toPacienteBuscarOnScroll()">
+</paciente-listado> -->

@@ -52,19 +52,18 @@
             </span>
         </form>
         <ng-container *ngIf="!showSobreturno && pacientesSearch">
-            <paciente-buscar #buscador (searchStart)="onSearchStart()"
-                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                             (searchClear)="onSearchClear()">
+            <paciente-buscar [height]="75" (searchClear)="onSearchClear()"
+                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (selected)="onSelect($event)">
             </paciente-buscar>
 
-            <plex-loader *ngIf="loading"></plex-loader>
+            <!-- <plex-loader *ngIf="loading"></plex-loader>
 
             <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
                               [height]="75" (selected)="onSelect($event)" (scrolled)="toPacienteBuscarOnScroll()">
             </paciente-listado>
             <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                 ¡No se encontró ningún paciente!
-            </div>
+            </div> -->
         </ng-container>
     </plex-layout-main>
 

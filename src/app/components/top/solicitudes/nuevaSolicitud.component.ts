@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, HostBinding, ViewChildren, QueryList, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -10,7 +10,6 @@ import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -20,7 +19,6 @@ import { PacienteBuscarComponent } from '../../../modules/mpi/components/pacient
 export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
 
     showSeleccionarPaciente = true;
@@ -42,9 +40,7 @@ export class NuevaSolicitudComponent implements OnInit {
     documentos = [];
 
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
-    resultadoBusqueda = null;
     pacienteSelected = null;
-    loading = false;
 
 
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
@@ -134,25 +130,17 @@ export class NuevaSolicitudComponent implements OnInit {
 
     searchStart() {
         this.paciente = null;
-        this.loading = true;
     }
 
     searchEnd(resultado) {
-        this.loading = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
             return;
         }
-        this.resultadoBusqueda = resultado.pacientes;
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     // ----------------------------------
@@ -160,7 +148,6 @@ export class NuevaSolicitudComponent implements OnInit {
     // Componente paciente-listado
 
     seleccionarPaciente(paciente): void {
-        this.resultadoBusqueda = [];
         this.showSeleccionarPaciente = false;
         if (paciente && paciente.id) {
             this.paciente = paciente;

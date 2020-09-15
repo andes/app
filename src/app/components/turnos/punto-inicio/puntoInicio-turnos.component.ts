@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -10,7 +10,6 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -22,7 +21,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -49,9 +47,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     showArancelamiento = false;
     showTab = 0;
     private esOperacion = false;
-
-    loading = false;
-    resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     constructor(
@@ -95,12 +90,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
-        this.loading = true;
     }
 
     onSearchEnd(pacientes: any[], escaneado: boolean) {
         this.searchClear = false;
-        this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1) {
             if (pacientes[0].paciente) {
@@ -112,22 +105,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.pacienteCache.setScanState(escaneado);
                 this.onPacienteSelected(pacientes[0]);
             }
-
             this.searchClear = true;
-        } else {
-            this.resultadoBusqueda = pacientes;
         }
     }
 
     onSearchClear() {
         this.disableNuevoPaciente = true;
         this.searchClear = true;
-        this.resultadoBusqueda = [];
         this.paciente = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     // -----------------------------------------------

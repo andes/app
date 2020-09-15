@@ -1,6 +1,5 @@
-import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -9,14 +8,12 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { Router } from '@angular/router';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'dinamica',
     templateUrl: 'dinamica.html'
 })
 export class DinamicaFormComponent implements OnInit {
-    public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
     public turnoTipoPrestacion: any;
     public datosTurno: any = {};
@@ -27,7 +24,6 @@ export class DinamicaFormComponent implements OnInit {
     @Input() agenda: IAgenda;
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
 
     constructor(private plex: Plex,
         private router: Router,
@@ -40,30 +36,18 @@ export class DinamicaFormComponent implements OnInit {
         this.getPrestacionesAgendaDinamicas();
     }
 
-    searchStart() {
-        this.searchClear();
-    }
-
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
-        } else {
-            this.pacientes = resultado.pacientes;
         }
     }
 
     searchClear() {
-        this.pacientes = null;
         this.pacienteActivo = null;
-    }
-
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
     }
 
     onPacienteSelected(paciente: IPaciente) {
         this.pacienteActivo = paciente;
-        this.pacientes = null;
         if (paciente) {
             this.obraSocialPaciente = null;
             if (paciente.id && paciente.documento) {

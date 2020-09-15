@@ -4,15 +4,13 @@ import {
     Input,
     HostBinding,
     Output,
-    EventEmitter,
-    ViewChild
+    EventEmitter
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'relaciones-pacientes',
@@ -21,7 +19,6 @@ import { PacienteBuscarComponent } from '../../../modules/mpi/components/pacient
 })
 export class RelacionesPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; //  Permite el uso de flex-box en el componente
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     @Input()
     set paciente(valor: IPaciente) {
         this._paciente = valor;
@@ -46,7 +43,6 @@ export class RelacionesPacientesComponent implements OnInit {
     enableIgnorarGuardar = false;
     buscarPacRel = '';
     idPacientesRelacionados = []; // para foto-directive
-    loading = false;
     searchClear = true;    // true si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
@@ -66,14 +62,12 @@ export class RelacionesPacientesComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
-        this.loading = true;
         this.relacionEntrante = [];
     }
 
     onSearchEnd(pacientes: IPaciente[]) {
         if (pacientes) {
             this.searchClear = false;
-            this.loading = false;
             this.actualizarPosiblesRelaciones(pacientes);
         }
     }
@@ -83,9 +77,6 @@ export class RelacionesPacientesComponent implements OnInit {
         this.posiblesRelaciones = [];
     }
 
-    toPacienteBuscarOnScroll() {
-        this.buscador.onScroll();
-    }
 
     // ------------- SOBRE RELACIONES ---------------
 
