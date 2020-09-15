@@ -70,7 +70,7 @@ export class PerfilDetailComponent implements OnInit {
                     );
                 }
             }),
-            tap(perfil => {
+            tap((perfil: any) => {
                 this.perfil = { ...perfil };
                 this.esGlobal = !this.perfil.organizacion;
             }),

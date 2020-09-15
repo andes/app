@@ -3,7 +3,7 @@
         <ng-container *ngIf="fecha$ | async as fecha">
             <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
                 <plex-datetime title="Cambiar Fecha" titlePosition="left" btnOnly="true" size="sm" type="datetime"
-                               [(ngModel)]="fecha" (change)="setFecha(fecha)" name="fecha" class="d-inline-block"
+                               [ngModel]="fecha" (change)="setFecha($event)" name="fecha" class="d-inline-block"
                                [max]="fechaActual" [debounce]="600">
                 </plex-datetime>
             </plex-badge>
@@ -19,8 +19,7 @@
         <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Totales" [cantidad]="total">
         </app-icono-camita>
         <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
-            <app-icono-camita [icono]="estado.icon"
-                              [nombre]="estado.label + 's'" [color]="estado.color"
+            <app-icono-camita [icono]="estado.icon" [nombre]="estado.label + 's'" [color]="estado.color"
                               [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
             </app-icono-camita>
         </ng-container>

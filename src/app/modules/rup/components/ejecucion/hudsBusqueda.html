@@ -136,7 +136,7 @@
 <div class="mt-1"
      *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas'">
     <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
-               autoFocus="true">
+               [autoFocus]="true">
     </plex-text>
 
 </div>

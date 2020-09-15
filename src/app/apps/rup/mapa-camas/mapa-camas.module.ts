@@ -96,7 +96,7 @@ export const INTERNACION_PROVIDERS = [
         MitosModule,
         OrganizacionLibModule,
         ElementosRUPModule,
-        NgDragDropModule.forRoot()
+        NgDragDropModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

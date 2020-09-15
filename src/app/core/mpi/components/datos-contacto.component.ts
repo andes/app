@@ -31,8 +31,8 @@ export class DatosContactoComponent implements OnInit {
 
     @Input() paciente: IPaciente;
     @Output() mobileApp: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('form', null) ngForm: NgForm;
-    @ViewChild('mapa', null) mapa: GeorrefMapComponent;
+    @ViewChild('form', { static: false }) ngForm: NgForm;
+    @ViewChild('mapa', { static: false }) mapa: GeorrefMapComponent;
 
     formChangesSubscription: Subscription;
 

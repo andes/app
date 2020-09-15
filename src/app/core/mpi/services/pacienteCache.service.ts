@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { IPaciente } from '../interfaces/IPaciente';
-
-Injectable();
+@Injectable()
 export class PacienteCacheService {
 
     private pacienteCache = new BehaviorSubject<any>(null);
