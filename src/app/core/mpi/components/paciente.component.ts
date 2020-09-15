@@ -486,8 +486,14 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.nombre = resultado.paciente.nombre;
                     this.pacienteModel.apellido = resultado.paciente.apellido;
                     this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
                     this.pacienteModel.foto = resultado.paciente.foto;
+                    if (this.pacienteModel.edad < 5) {
+                        let fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).toDate();
+                        this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
+                        this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento.setHours(fechaNacimiento.getHours(), fechaNacimiento.getMinutes(), 0, 0)).toDate();
+                    } else {
+                        this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
+                    }
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
                         this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).add(4, 'h').toDate();
