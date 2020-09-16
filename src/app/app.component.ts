@@ -127,9 +127,19 @@ export class AppComponent {
                 modulo.permisos.forEach((permiso) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
-                            modulos.push(modulo._id);
-                            const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
-                            this.menuList.push(menuOption);
+
+                            if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                                modulo.submodulos.forEach(submodulo => {
+                                    modulos.push(submodulo._id);
+                                    const menuOptionSub = { label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
+                                    this.menuList.push(menuOptionSub);
+                                });
+                            } else {
+                                modulos.push(modulo._id);
+                                const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
+                                this.menuList.push(menuOption);
+                            }
                         }
                     }
                 });

@@ -40,21 +40,23 @@ export class InicioComponent implements AfterViewInit {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
                 registros => {
-                    this.secciones = registros.filter(x => !x.submodulos || !x.submodulos.length);
+                    this.secciones = registros.filter(x => (!x.submodulos || !x.submodulos.length));
 
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
-                        modulo.permisos.forEach((permiso) => {
-                            if (!tienePermiso) {
-                                if (this.auth.getPermissions(permiso).length > 0) {
-                                    this.modulos.push(modulo);
-                                    tienePermiso = true;
-                                    if (modulo.submodulos && modulo.submodulos.length > 0) {
-                                        modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                        if (modulo.activo) {
+                            modulo.permisos.forEach((permiso) => {
+                                if (!tienePermiso) {
+                                    if (this.auth.getPermissions(permiso).length > 0) {
+                                        this.modulos.push(modulo);
+                                        tienePermiso = true;
+                                        if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                            modulo.submodulos = modulo.submodulos.filter(x => x.permisos.filter(y => this.auth.getPermissions(y.permisos).length > 0));
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
 
                     this.modulos.sort((a, b) => a.orden - b.orden);

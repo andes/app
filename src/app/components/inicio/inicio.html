@@ -20,10 +20,10 @@
 
         </header>
         <hr>
-        <main>
+        <main responsive>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
-            <div *ngIf="!denied && !loading" class="modulos" justify>
-                <div *ngFor="let modulo of modulos">
+            <div *ngIf="!denied && !loading" class="modulos">
+                <ng-container *ngFor="let modulo of modulos">
 
                     <div *ngIf="modulo.activo" class="modulo">
                         <div class="principal" [style.color]="modulo.color">
@@ -44,7 +44,7 @@
                             </ng-container>
                         </div>
                     </div>
-                </div>
+                </ng-container>
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">

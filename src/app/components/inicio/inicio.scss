@@ -99,6 +99,8 @@ main {
 
 .modulos {
     width: 73vw;
+    display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
 
     .modulo {
@@ -110,10 +112,6 @@ main {
         box-sizing: border-box;
         width: 210px;
 
-        &:not(:last-child) {
-            border-right: 1px solid $andes-azul-claro;
-        }
-
         .principal {
             width: 220px;
             height: 62px;
@@ -124,7 +122,7 @@ main {
             }
 
             .descripcion {
-                color: rgb(56, 69, 85);
+                color: grey;
                 font-size: 13px;
             }
         }
@@ -150,7 +148,7 @@ main {
             font-size: 0.75rem;
 
             box-shadow: 4px 2px 6px #aaa;
-
+            margin: 0 5px 5px 0;
 
             &.hover {
                 transition: all ease-in-out 0.25s;
@@ -172,9 +170,6 @@ main {
 
 
 
-            &:first-child {
-                margin: 0 5px 5px 0;
-            }
         }
     }
 }
@@ -189,10 +184,6 @@ main {
 .secciones {
     width: 20vw;
     flex-direction: column;
-
-    &:not(:last-child) {
-        border-right: 1px solid $andes-azul-claro;
-    }
 }
 
 .seccion {
@@ -316,5 +307,53 @@ main {
 
     &:hover {
         box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+    }
+}
+
+
+// Responsive 
+main {
+    &.size-sm {
+        flex-direction: column;
+
+        .modulos {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            .modulo {
+                width: 30%;
+                margin-bottom: 2rem;
+
+                .principal {
+                    width: 100%;
+                    height: auto;
+
+                    .descripcion {
+                        display: none;
+                    }
+                }
+
+                .submodulos {
+                    height: auto;
+
+                    .submodulo {
+                        margin: 0 5px 5px 0;
+                    }
+                }
+            }
+        }
+
+        .secciones {
+            display: flex;
+            justify-content: space-between;
+            flex-flow: wrap;
+            width: 80vw;
+
+            .seccion {
+                min-width: 225px;
+                padding-right: 0;
+            }
+        }
     }
 }
