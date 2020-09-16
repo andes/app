@@ -410,10 +410,8 @@ export class PacienteComponent implements OnInit {
 
 
     checkDisableValidar() {
-        if (!this.validado || !this.pacienteModel.foto) {
-            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
-        }
+        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -483,14 +481,16 @@ export class PacienteComponent implements OnInit {
                     this.setBackup();
                     this.validado = true;
                     this.showDeshacer = true;
-                    this.pacienteModel.nombre = resultado.paciente.nombre;
-                    this.pacienteModel.apellido = resultado.paciente.apellido;
-                    this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
+                    if (this.pacienteModel.estado !== 'validado') {
+                        this.pacienteModel.nombre = resultado.paciente.nombre;
+                        this.pacienteModel.apellido = resultado.paciente.apellido;
+                        this.pacienteModel.estado = resultado.paciente.estado;
+                    }
+                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.foto = resultado.paciente.foto;
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
-                        this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).add(4, 'h').toDate();
+                        this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).toDate();
                     }
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
