@@ -57,7 +57,7 @@ export class VincularPacientesComponent implements OnInit {
             percentage: true,
             apellido: this.pacienteBase.apellido.toString(),
             nombre: this.pacienteBase.nombre.toString(),
-            documento: this.pacienteBase.documento.toString(),
+            documento: (this.pacienteBase.documento) ? this.pacienteBase.documento.toString() : '',
             sexo: ((typeof this.pacienteBase.sexo === 'string')) ? this.pacienteBase.sexo : (Object(this.pacienteBase.sexo).id),
             fechaNacimiento: this.pacienteBase.fechaNacimiento
         };

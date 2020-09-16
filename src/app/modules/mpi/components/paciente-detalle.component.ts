@@ -139,7 +139,7 @@ export class PacienteDetalleComponent implements OnInit {
         } else {
             this.loadObraSocial();
         }
-        this.notasDestacadas = this.paciente.notas.filter(nota => (nota && nota.destacada));
+        this.notasDestacadas = (this.paciente.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 
     /**
