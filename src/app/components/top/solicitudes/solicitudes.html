@@ -4,7 +4,7 @@
             <form #form="ngForm">
                 <plex-title main titulo="{{asignadas?'Solicitudes asignadas':'Módulo de solicitudes'}}">
                     <plex-button *ngIf="!asignadas" type="success" label="Nueva Solicitud"
-                                 (click)="formularioSolicitud()">
+                                 (click)="nuevaSolicitud()" >
                     </plex-button>
                     <plex-button *ngIf="permisosReglas && !asignadas" type="warning" label="Reglas"
                                  (click)="editarReglas()">
@@ -322,7 +322,7 @@
         </div>
 
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <div *ngIf="showDetalle">
             <plex-title main titulo="Solicitud de {{this.tipoSolicitud}}">
                 <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
@@ -338,6 +338,9 @@
         <div *ngIf="showAnular">
             <anular-solicitud [prestacionSeleccionada]="prestacionSeleccionada" (returnAnular)="returnAnular($event)">
             </anular-solicitud>
+        </div>
+        <div *ngIf="showNuevaSolicitud">
+            <busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></busqueda-paciente>
         </div>
         <div *ngIf="showCitar">
             <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"

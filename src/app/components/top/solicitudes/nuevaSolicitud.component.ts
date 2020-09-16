@@ -10,6 +10,7 @@ import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -20,10 +21,7 @@ export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
     wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
-
-    showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
-
     paciente: any;
     motivo: '';
     fecha: any;
@@ -38,6 +36,8 @@ export class NuevaSolicitudComponent implements OnInit {
     fileToken: String = null;
     timeout = null;
     documentos = [];
+    fieldsDetalle = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
+
 
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
     resultadoBusqueda = null;
@@ -92,6 +92,7 @@ export class NuevaSolicitudComponent implements OnInit {
     tipoSolicitud: any;
 
     constructor(
+        private pacienteService: PacienteService,
         private plex: Plex,
         private auth: Auth,
         private servicioTipoPrestacion: TipoPrestacionService,
@@ -114,77 +115,57 @@ export class NuevaSolicitudComponent implements OnInit {
         }
         ]);
         this.route.params.subscribe(params => {
-            this.tipoSolicitud = params['tipo'];
-            if (this.tipoSolicitud === 'entrada') {
-                this.modelo.solicitud.organizacion = this.auth.organizacion;
+            if (params['paciente']) {
+                this.tipoSolicitud = params['tipo'];
+                if (this.tipoSolicitud === 'entrada') {
+                    this.modelo.solicitud.organizacion = this.auth.organizacion;
+                } else {
+                    this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+                }
+                this.extensions = this.extensions.concat(this.imagenes);
+                this.adjuntosService.generateToken().subscribe((data: any) => {
+                    this.fileToken = data.token;
+                });
+                this.seleccionarPaciente(params['paciente']);
             } else {
-                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+                this.router.navigate(['./']);
             }
         });
-
-        this.extensions = this.extensions.concat(this.imagenes);
-        this.adjuntosService.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-        });
     }
-
-    // -------------- SOBRE BUSCADOR PACIENTES ----------------
-
-    searchStart() {
-        this.paciente = null;
-        this.loading = true;
-    }
-
-    searchEnd(resultado) {
-        this.loading = false;
-        if (resultado.err) {
-            this.plex.info('danger', resultado.err);
-            return;
-        }
-        this.resultadoBusqueda = resultado.pacientes;
-    }
-
-    onSearchClear() {
-        this.resultadoBusqueda = [];
-        this.paciente = null;
-    }
-
-    // ----------------------------------
 
     // Componente paciente-listado
 
     seleccionarPaciente(paciente): void {
-        this.resultadoBusqueda = [];
-        this.showSeleccionarPaciente = false;
-        if (paciente && paciente.id) {
-            this.paciente = paciente;
-        } else {
-            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
-        }
-
-        setTimeout(() => {
-            this.wizardActivo = true;
-            let promise = this.plex.wizard({
-                id: 'top:fechaSolicitud',
-                updatedOn: moment('2019-03-08').toDate(),
-                steps: [
-                    {
-                        title: 'Fecha de solicitud',
-                        content: 'Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema'
-                    },
-                ],
-                forceShow: false,
-                fullScreen: false,
-                showNumbers: false
-            });
-
-            // Devuelve una promise sólo si se mostró el wizard
-            if (promise) {
-                promise.then(() => this.wizardActivo = false);
-            } else {
-                this.wizardActivo = false;
+        this.pacienteService.getById(paciente).subscribe(
+            resultado => {
+                this.paciente = resultado;
+                setTimeout(() => {
+                    this.wizardActivo = true;
+                    let promise = this.plex.wizard({
+                        id: 'top:fechaSolicitud',
+                        updatedOn: moment('2019-03-08').toDate(),
+                        steps: [
+                            {
+                                title: 'Fecha de solicitud',
+                                content: 'Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema'
+                            },
+                        ],
+                        forceShow: true,
+                        fullScreen: false,
+                        showNumbers: false
+                    });
+                    // Devuelve una promise sólo si se mostró el wizard
+                    if (promise) {
+                        promise.then(() => this.wizardActivo = false);
+                    } else {
+                        this.wizardActivo = false;
+                    }
+                }, 1000);
+            },
+            error => {
+                this.plex.info('warning', 'Intente nuevamente', 'Error en la búsqueda de paciente');
             }
-        }, 1000);
+        );
     }
     // ----------------------------------
 
@@ -321,7 +302,6 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     guardarSolicitud($event) {
-
         if ($event.formValid) {
             if (this.tipoSolicitud === 'entrada') {
                 this.modelo.solicitud.organizacion = this.auth.organizacion;

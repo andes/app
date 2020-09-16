@@ -8,6 +8,17 @@ import { SharedModule } from '@andes/shared';
 import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.component';
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { BusquedaPacienteComponent } from './solicitudes/busquedaPaciente.component';
+import { MPILibModule } from '../../modules/mpi/mpi-lib.module';
+import { TOPRouting } from './top.routing';
+import { NuevaSolicitudComponent } from './solicitudes/nuevaSolicitud.component';
+
+export const TOP_COMPONENTS = [
+    BusquedaPacienteComponent,
+    VisualizacionReglasComponent,
+    HistorialSolicitudComponent,
+    NuevaSolicitudComponent
+];
 
 @NgModule({
     imports: [
@@ -17,13 +28,15 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         RouterModule,
         HttpClientModule,
         SharedModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        MPILibModule,
+        TOPRouting
     ],
     declarations: [
-        VisualizacionReglasComponent,
-        HistorialSolicitudComponent
+        ...TOP_COMPONENTS
     ],
     exports: [
+        BusquedaPacienteComponent,
         VisualizacionReglasComponent,
         HistorialSolicitudComponent
     ],

@@ -216,7 +216,6 @@ import { PuntoInicioInternacionComponent } from './modules/rup/components/intern
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
-import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 import { PrestacionSolicitudComponent } from './components/top/solicitudes/prestacionSolicitud.component';
 
@@ -359,7 +358,6 @@ registerLocaleData(localeEs, 'es');
         PrestacionSolicitudComponent,
         AuditarSolicitudComponent,
         AnularSolicitudComponent,
-        NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,

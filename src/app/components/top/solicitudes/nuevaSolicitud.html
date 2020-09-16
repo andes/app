@@ -7,35 +7,8 @@
                          (click)="guardarSolicitud($event)" [validateForm]="form"> </plex-button>
         </plex-title>
         <form #form="ngForm">
-            <div class="row">
-                <div *ngIf="showSeleccionarPaciente" class="col-12">
-                    <label *ngIf="showSeleccionarPaciente">Paciente</label>
-                    <!-- ----------- Búsqueda de pacientes -------------- -->
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
-                        </div>
-                    </div>
-                    <plex-loader *ngIf="loading"></plex-loader>
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                              [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                              (selected)="seleccionarPaciente($event)">
-                            </paciente-listado>
-
-                            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                                ¡No se encontró ningún paciente!
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ------------------------------------------------ -->
-                </div>
-            </div>
             <!-- SOLICITUD ENTRADA -->
-            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'entrada'">
+            <ng-container *ngIf="tipoSolicitud == 'entrada'">
                 <plex-wrapper>
                     <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
@@ -83,7 +56,7 @@
             </ng-container>
             <!-- /SOLICITUD ENTRADA -->
             <!-- SOLICITUD SALIDA -->
-            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'salida'">
+            <ng-container *ngIf="tipoSolicitud == 'salida'">
                 <plex-wrapper>
                     <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
@@ -127,12 +100,12 @@
             </ng-container>
             <!-- /SOLICITUD SALIDA -->
             <!-- Adjuntar Archivos -->
-            <plex-title titulo="Cargar documentos" *ngIf="!showSeleccionarPaciente">
+            <plex-title titulo="Cargar documentos">
                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
                 <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
                 </plex-button>
             </plex-title>
-            <plex-wrapper *ngIf="!showSeleccionarPaciente">
+            <plex-wrapper>
                 <span *ngIf="!waiting">
                     <span *ngIf="errorExt">
                         <plex-badge type="danger"> Archivo inválido </plex-badge>
@@ -164,6 +137,7 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <plex-title titulo="Detalle del paciente"></plex-title>
-        <paciente-detalle *ngIf="!showSeleccionarPaciente" [paciente]="paciente"></paciente-detalle>
+        <paciente-detalle *ngIf="paciente" orientacion="vertical" [paciente]="paciente" [fields]="fieldsDetalle">
+        </paciente-detalle>
     </plex-layout-sidebar>
 </plex-layout>
