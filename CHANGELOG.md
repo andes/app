@@ -1,3 +1,17 @@
+# [5.13.0](https://github.com/andes/app/compare/v5.12.0...v5.13.0) (2020-09-16)
+
+
+### Bug Fixes
+
+* **GDU:** arregla sincro de permisos y perfiles ([#1887](https://github.com/andes/app/issues/1887)) ([fe8081d](https://github.com/andes/app/commit/fe8081d4a0db5652de9e67dcbcb243eca1eba07c))
+* **mpi:** ignorar y guardar paciente ([#1831](https://github.com/andes/app/issues/1831)) ([26887b6](https://github.com/andes/app/commit/26887b68dd85accd049cd1d343a8e2d7092cdb98))
+
+
+### Features
+
+* **informacion:** se agrega modulo visualizacion-informacion ([#1893](https://github.com/andes/app/issues/1893)) ([5e1c555](https://github.com/andes/app/commit/5e1c555a7162e26078f844a17e8323b9da26069a))
+* **plex:** v6.15.3 ([#1902](https://github.com/andes/app/issues/1902)) ([dce0fcb](https://github.com/andes/app/commit/dce0fcb4830457409703be4f918085a6bac2f917))
+
 # [5.12.0](https://github.com/andes/app/compare/v5.11.0...v5.12.0) (2020-09-09)
 
 
