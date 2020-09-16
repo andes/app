@@ -72,8 +72,12 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
     onPrestacionChange() {
         if (this.prestacion) {
             this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
-                result.forEach((item) => { item.check = true; });
-                this.prestacionesHijas = result;
+                if (result.length <= 10) {
+                    result.forEach((item) => { item.check = true; });
+                    this.prestacionesHijas = result;
+                } else {
+                    this.prestacionesHijas = [];
+                }
             });
         }
     }
