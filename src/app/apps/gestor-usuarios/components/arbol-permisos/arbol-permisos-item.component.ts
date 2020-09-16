@@ -30,6 +30,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
+    @Input() unidadesOrganizativas = [];
 
     @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
@@ -152,6 +153,11 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                     this.seleccionados = [...data];
                                     this.parseSelecionados();
                                 });
+                                break;
+                            case 'unidad-organizativa':
+                                this.seleccionados = [...this.unidadesOrganizativas.filter(u => items.includes(u.id))];
+                                this.loading = false;
+                                this.parseSelecionados();
                                 break;
                         }
                     }

@@ -26,7 +26,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     @ViewChild(ArbolPermisosComponent, { static: true }) arbol: ArbolPermisosComponent;
     private userId = '';
-    private organizacionId = '';
+    public organizacionId = '';
     public orgName = '';
 
     public user$: Observable<any>;

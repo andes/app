@@ -20,7 +20,8 @@
         <ng-container *ngIf="!allModule">
             <div *ngFor="let child of item.child; let indiceChild = index">
                 <arbol-permisos-item [item]="child" [parentPermission]="makePermission()"
-                                     [userPermissions]="userPermissions" (change)="change.emit()">
+                                     [unidadesOrganizativas]="unidadesOrganizativas" [userPermissions]="userPermissions"
+                                     (change)="change.emit()">
                 </arbol-permisos-item>
             </div>
         </ng-container>
@@ -50,6 +51,12 @@
                          [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
                          placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
                          (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);">
+            </plex-select>
+            <plex-select *ngIf="item.type === 'unidad-organizativa'" idField='id' labelField="term" [multiple]="true"
+                         [readonly]="all" [(ngModel)]="seleccionados" [data]="unidadesOrganizativas"
+                         placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
+                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);"
+                         [disabled]="!unidadesOrganizativas.length">
             </plex-select>
             <plex-copy *ngIf="!loading && item.type === 'prestacion'" [value]="seleccionadosJson">
             </plex-copy>
