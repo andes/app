@@ -17,7 +17,7 @@
                                  [required]="true" placeholder="Seleccione.." grow="4">
                     </plex-select>
 
-                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
+                    <plex-datetime label="Fecha y hora de Nacimiento" [max]="hoy" type="datetime"
                                    [readonly]="paciente.estado === 'validado'" [(ngModel)]="paciente.fechaNacimiento"
                                    name="fechaNacimientoBebe" [required]="true" grow="4">
                     </plex-datetime>
