@@ -20,8 +20,8 @@ import { Auth } from '@andes/auth';
             <plex-button type="success mb-1" label="Buscar" (click)="onChange()" ></plex-button>
         </div>
         <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
-            <plex-button title="Visualizar de gráficos" *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
-            <plex-button title="Visualizar tablas" *ngIf="!esTablaGrafico" icon="mdi mdi-table-large"></plex-button>
+            <plex-button title="Visualizar de gráficos" *ngIf="esTablaGrafico" icon="chart-pie"></plex-button>
+            <plex-button title="Visualizar tablas" *ngIf="!esTablaGrafico" icon="table-large"></plex-button>
         </div>
     </div>
     <div class="row">
@@ -94,7 +94,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         public servicioProfesional: ProfesionalService,
         public servicioPrestacion: TipoPrestacionService,
         public servicioOrganizacion: OrganizacionService
-    ) {}
+    ) { }
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;

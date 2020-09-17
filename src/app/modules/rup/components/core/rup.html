@@ -1,9 +1,9 @@
 <!-- Este es un elemento RUP -->
 
 <!-- Moléculas -->
-<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="requeridos && requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+        <ng-container *ngFor="let item of requeridos; let i = index">
             <div *ngIf="item.elementoRUP"
                  class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"

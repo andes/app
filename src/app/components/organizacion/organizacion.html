@@ -6,18 +6,18 @@
                     <div class="row">
                         <div class="col">
                             <plex-text [(ngModel)]="nombre" label="Nombre" name="nombre"
-                                placeholder="Ingresar nombre..." (change)="loadDatos()">
+                                       placeholder="Ingresar nombre..." (change)="loadDatos()">
                             </plex-text>
                         </div>
                         <div class="col mt-4">
                             <plex-bool [(ngModel)]="soloNoActivo"
-                                label="Mostrar solo {{organizacionService.getEstado(false)}}" name="activo"
-                                (change)="loadDatos()">
+                                       label="Mostrar solo {{organizacionService.getEstado(false)}}" name="activo"
+                                       (change)="loadDatos()">
                             </plex-bool>
                         </div>
                         <div class="col d-flex justify-content-end mt-4">
                             <plex-button type="success" label="Nueva Organización" (click)="nuevaOrganizacion()"
-                                *ngIf="checkAuth('create')"></plex-button>
+                                         *ngIf="checkAuth('create')"></plex-button>
                         </div>
                     </div>
                     <table style="table-layout:fixed" class="table table-fixed">
@@ -52,11 +52,15 @@
                             </td>
                             <td width="20%" class="text-center">
                                 <plex-button *ngIf="checkAuth('editBasico') || checkAuth('editCompleto')" type="primary"
-                                    label="Editar" (click)="onEdit(organizacion)"></plex-button>
+                                             label="Editar" (click)="onEdit(organizacion)"></plex-button>
                                 <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary"
-                                    label="Ver sectores" (click)="routeSectores(organizacion)"></plex-button>
+                                             label="Ver sectores" (click)="routeSectores(organizacion)">
+                                </plex-button>
                                 <plex-button *ngIf="checkAuth('prestaciones', organizacion.id)" type="primary"
-                                    label="Ofertas Prestacionales" (click)="routePrestaciones(organizacion.id)"></plex-button>
+                                             label="Ofertas Prestacionales"
+                                             (click)="routePrestaciones(organizacion.id)"></plex-button>
+                                <plex-button type="primary" label="Configuracion"
+                                             (click)="routerConfiguracion(organizacion.id)"></plex-button>
                             </td>
                         </tr>
                     </tbody>

@@ -16,11 +16,11 @@
 
         <plex-button *ngIf="showEditar" label="" type="warning" name="editarUsuario" title="Editar correo"
                      [disabled]="disableEditar" (click)="editarEmail()">
-            <plex-icon name="pencil" size="xxl" type="light"></plex-icon>
+            <plex-icon name="pencil" size="md" type="light"></plex-icon>
         </plex-button>
 
         <plex-button *ngIf="cuentaActivada" label="" type="success" name="activacionSuccess" title="" disabled="true">
-            <plex-icon name="check" size="xxl" type="light"></plex-icon>
+            <plex-icon name="check" size="md" type="light"></plex-icon>
         </plex-button>
 
         <plex-button *ngIf="paciente.id && showActivar"

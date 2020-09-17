@@ -22,9 +22,9 @@ import { DatosBasicosComponent } from './datos-basicos.component';
 })
 export class PacienteComponent implements OnInit {
 
-    @ViewChild('relaciones', null) relaciones: RelacionesPacientesComponent;
-    @ViewChild('datosContacto', null) datosContacto: DatosContactoComponent;
-    @ViewChild('datosBasicos', null) datosBasicos: DatosBasicosComponent;
+    @ViewChild('relaciones', { static: false }) relaciones: RelacionesPacientesComponent;
+    @ViewChild('datosContacto', { static: false }) datosContacto: DatosContactoComponent;
+    @ViewChild('datosBasicos', { static: false }) datosBasicos: DatosBasicosComponent;
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
@@ -244,9 +244,6 @@ export class PacienteComponent implements OnInit {
         }
         this.pacienteModel = Object.assign({}, this.paciente);
 
-        if (this.pacienteModel.fechaNacimiento) {
-            this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).add(3, 'h').toDate(); // mers alert
-        }
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.checkDisableValidar();
     }
@@ -272,7 +269,7 @@ export class PacienteComponent implements OnInit {
             return elem;
         });
 
-        this.pacienteService.save(pacienteGuardar, ignoreCheck, false).subscribe(
+        this.pacienteService.save(pacienteGuardar, ignoreCheck).subscribe(
             (resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
@@ -410,10 +407,8 @@ export class PacienteComponent implements OnInit {
 
 
     checkDisableValidar() {
-        if (!this.validado || !this.pacienteModel.foto) {
-            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
-        }
+        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -483,14 +478,16 @@ export class PacienteComponent implements OnInit {
                     this.setBackup();
                     this.validado = true;
                     this.showDeshacer = true;
-                    this.pacienteModel.nombre = resultado.paciente.nombre;
-                    this.pacienteModel.apellido = resultado.paciente.apellido;
-                    this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
+                    if (this.pacienteModel.estado !== 'validado') {
+                        this.pacienteModel.nombre = resultado.paciente.nombre;
+                        this.pacienteModel.apellido = resultado.paciente.apellido;
+                        this.pacienteModel.estado = resultado.paciente.estado;
+                    }
+                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.foto = resultado.paciente.foto;
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
-                        this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).add(4, 'h').toDate();
+                        this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).toDate();
                     }
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {

@@ -4,9 +4,11 @@
             <div class="col-8 h-100">
                 <plex-box>
                     <header>
-                        <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
+                        <plex-button class="mr-1" type="info" size="sm" icon="chevron-left" (click)="cambiarMes('-')">
+                        </plex-button>
                         {{ fecha | date: "MMM yy" | uppercase}}
-                        <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
+                        <plex-button class="ml-1" type="info" size="sm" icon="chevron-right" (click)="cambiarMes('+')">
+                        </plex-button>
                     </header>
                     <table *ngIf="calendario">
                         <tr *ngFor="let week of calendario">

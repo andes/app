@@ -4,7 +4,7 @@ import { ISectores } from './../../../../interfaces/IOrganizacion';
 export interface ISnapshot {
     id: String;
     genero: ISnomedConcept;
-    estado: String;
+    estado: string;
     esCensable: Boolean;
     idInternacion: string;
     esMovimiento: Boolean;
@@ -39,6 +39,7 @@ export interface ISnapshot {
         idInternacion?: String,
         tipo_egreso?: String,
     };
+    nota: String;
     createdAt?: Date;
     createdBy?: {
         id: String,

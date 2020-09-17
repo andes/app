@@ -15,6 +15,7 @@ export class PacientePanelComponent {
         error: boolean;
     };
     public idPacientesRelacionados = [];
+    _paciente: IPaciente;
 
     @Input() showRelaciones = false;
 
@@ -36,12 +37,7 @@ export class PacientePanelComponent {
     * @memberof PacientePanelComponent
     */
     @Input() paciente: IPaciente;
-    /**
-     * Evento que se emite cuando se selecciona un paciente
-     *
-     * @type {EventEmitter<IPaciente>}
-     * @memberof PacientePanelComponent
-     */
+
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     @Output() changeRelacion: EventEmitter<any> = new EventEmitter<any>();

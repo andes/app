@@ -19,6 +19,7 @@ export class PacienteDetalleComponent implements OnInit {
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
+    notasDestacadas = [];
 
     get justificado() {
         return this.orientacion === 'vertical' ? 'center' : 'start';
@@ -138,6 +139,7 @@ export class PacienteDetalleComponent implements OnInit {
         } else {
             this.loadObraSocial();
         }
+        this.notasDestacadas = (this.paciente.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 
     /**

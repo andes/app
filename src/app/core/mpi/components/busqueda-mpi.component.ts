@@ -13,7 +13,7 @@ import { PacienteBuscarComponent } from '../../../modules/mpi/components/pacient
 })
 export class BusquedaMpiComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
+    @ViewChild('buscador', { static: false }) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
@@ -60,7 +60,7 @@ export class BusquedaMpiComponent implements OnInit {
         this.loading = true;
     }
 
-    onSearchEnd(pacientes: any[], escaneado: boolean, busqueda: string) {
+    onSearchEnd(pacientes: any[], escaneado: boolean) {
         this.searchClear = false;
         this.escaneado = escaneado;
         this.loading = false;
@@ -79,9 +79,6 @@ export class BusquedaMpiComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
-    toPacienteBuscarOnScroll(data) {
-        this.buscador.onScroll(data);
-    }
 
     // ------------- SOBRE LISTA RESULTADO --------------
 

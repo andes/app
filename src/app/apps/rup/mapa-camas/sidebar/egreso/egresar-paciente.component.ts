@@ -217,6 +217,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     estado: estado,
                     idInternacion: null,
                     paciente: null,
+                    nota: null,
                     extras: {
                         egreso: true,
                         idInternacion: this.cama.idInternacion,

@@ -26,18 +26,6 @@ export class SeccionadoComponent extends RUPComponent implements OnInit {
         this.accordionSeleccionado(0, this.registro.registros[0].concepto);
     }
 
-    get requeridos() {
-        const requeridos = [];
-        for (let i = 0; i < this.registro.registros.length; i++) {
-            const concepto = this.registro.registros[i].concepto;
-            const requerido = this.elementoRUP.requeridos.find(r => r.concepto.conceptId === concepto.conceptId);
-            if (requerido) {
-                requeridos.push(requerido);
-            }
-        }
-        return requeridos;
-    }
-
     get btnToogleLabel() {
         return this.desplegarTodo ? 'Colapsar Todos' : 'Desplegar Todos';
     }

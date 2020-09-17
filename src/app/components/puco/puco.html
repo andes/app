@@ -6,21 +6,21 @@
                 <div class="col-8">
                     <div class="buscador">
                         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()"
-                            placeholder="Ingrese DNI" [autoFocus]="autofocus"
-                            prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
+                                   placeholder="Ingrese DNI" [autoFocus]="autofocus" prefix="account-search">
+                        </plex-text>
                     </div>
                 </div>
                 <div class="col-4">
                     <plex-select *ngIf="periodos.length" [(ngModel)]="periodoSelect" name="periodoPadron"
-                        [data]="periodos" placeholder="Seleccione un periodo" (change)="setPeriodo($event.value)"
-                        [required]="true"></plex-select>
+                                 [data]="periodos" placeholder="Seleccione un periodo"
+                                 (change)="setPeriodo($event.value)" [required]="true"></plex-select>
                 </div>
             </div>
         </header>
 
         <!-- Error paciente no encontrado -->
         <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading && !errorSearchTerm && periodoSelect"
-            class="alert alert-danger">
+             class="alert alert-danger">
             <i class="mdi mdi-account-alert"></i> Paciente no encontrado en este padrón.
         </div>
         <!-- Error por ingreso de caracteres -->
@@ -99,7 +99,7 @@
         <div class="row" *ngIf="checkLog()">
             <div class="col">
                 <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias"
-                    (click)="sugerencias($event)"></plex-button>
+                             (click)="sugerencias($event)"></plex-button>
             </div>
         </div>
     </plex-layout-sidebar>

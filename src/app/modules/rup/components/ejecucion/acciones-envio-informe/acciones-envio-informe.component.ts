@@ -44,7 +44,6 @@ export class RUPAccionesEnvioInformeComponent {
         private plex: Plex,
         private organizacionService: OrganizacionService
     ) {
-
     }
 
     get noNominalizada() {
@@ -58,9 +57,9 @@ export class RUPAccionesEnvioInformeComponent {
     get entorno() {
         const url = this.activeRoute.snapshot.url;
         if (url.length > 1) {
-            if (url[1].path === 'validacion') {
+            if (url[0].path === 'validacion') {
                 return 'validacion';
-            } else if (url[1].path === 'ejecucion') {
+            } else if (url[0].path === 'ejecucion') {
                 return 'ejecucion';
             }
         }

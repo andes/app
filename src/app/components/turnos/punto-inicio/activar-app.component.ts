@@ -1,30 +1,12 @@
-import {
-    Component,
-    Input,
-    ViewChild,
-    Output,
-    EventEmitter
-} from '@angular/core';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    IPaciente
-} from '../../../core/mpi/interfaces/IPaciente';
+import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import {
-    TurnoService
-} from '../../../services/turnos/turno.service';
-import {
-    AppMobileService
-} from '../../../services/appMobile.service';
-import {
-    PacienteService
-} from '../../../core/mpi/services/paciente.service';
+import { TurnoService } from '../../../services/turnos/turno.service';
+import { AppMobileService } from '../../../services/appMobile.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -33,7 +15,6 @@ import { map } from 'rxjs/operators';
     selector: 'activar-app',
     templateUrl: 'activar-app.html'
 })
-
 export class ActivarAppComponent {
 
     @Input('paciente')
@@ -51,7 +32,7 @@ export class ActivarAppComponent {
     }
     @Input() showCampoCelular = true;
     @Output() activar: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('form', null) ngForm: NgForm;
+    @ViewChild('form', { static: false }) ngForm: NgForm;
 
     private _paciente: IPaciente;
     public celular = null;

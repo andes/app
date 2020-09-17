@@ -39,7 +39,7 @@ export class AppComponent {
     private menuList = [];
     private modulos$: Observable<any[]>;
 
-    public loading = true;
+    // private loading = true;
     public tieneNovedades = false;
 
     constructor(
@@ -69,7 +69,6 @@ export class AppComponent {
         this.auth.session().subscribe((sesion) => {
             if (sesion.permisos) {
                 this.checkPermissions();
-                this.loading = false;
             }
         });
 
@@ -77,8 +76,6 @@ export class AppComponent {
         if (token) {
             this.ws.setToken(token);
             this.auth.setToken(token);
-        } else {
-            this.loading = true;
         }
     }
 

@@ -46,6 +46,7 @@ import { RegistroHUDSItemComponent } from './sidebar/registros-huds-detalle/regi
 import { IngresoPacienteWorkflowComponent } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -98,7 +99,8 @@ export const INTERNACION_PROVIDERS = [
         MPILibModule,
         MitosModule,
         OrganizacionLibModule,
-        ElementosRUPModule
+        ElementosRUPModule,
+        NgDragDropModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

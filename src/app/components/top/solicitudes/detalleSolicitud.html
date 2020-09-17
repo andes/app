@@ -1,52 +1,52 @@
 <div class="mt-3">
     <div class="row"
-         *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+         *ngIf="prestacionSeleccionada.estadoActual.tipo === 'rechazada'">
         <div class="col">
             <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
             <b>Observaciones</b>
             <br>
 
             <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}
+                  *ngIf="prestacionSeleccionada.estadoActual.observaciones">
+                {{prestacionSeleccionada.estadoActual.observaciones}}
             </span>
 
             <span class="text-left"
-                  *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}
+                  *ngIf="!prestacionSeleccionada.estadoActual.observaciones && prestacionSeleccionada.estadoActual.motivoRechazo">
+                {{prestacionSeleccionada.estadoActual.motivoRechazo}}
             </span>
 
             <br>
             <b>Usuario que responde</b>
             <br>
             <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | nombre}}</span>
+                  *ngIf="prestacionSeleccionada.estadoActual.observaciones || prestacionSeleccionada.estadoActual.motivoRechazo">
+                {{prestacionSeleccionada.estadoActual.createdBy | nombre}}</span>
             <br>
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'anulada'">
+    <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
         <div class="col">
             <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
             <b>Motivo de Anulación</b>
             <br>
-            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+            <span *ngIf="prestacionSeleccionada.estadoActual.observaciones"
                   class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}</span>
+                {{prestacionSeleccionada.estadoActual.observaciones}}</span>
             <br>
-            <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+            <span *ngIf="!prestacionSeleccionada.estadoActual.observaciones"
                   class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
+                {{prestacionSeleccionada.estadoActual.motivoRechazo}}</span>
             <br>
             <b>Usuario que anula</b>
             <br>
             <span class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | nombre}}</span>
+                {{prestacionSeleccionada.estadoActual.createdBy | nombre}}</span>
             <br>
             <b>Fecha de Anulación</b>
             <br>
             <span class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdAt | date:
+                {{prestacionSeleccionada.estadoActual.createdAt | date:
                     'dd/MM/yyyy'}}</span>
         </div>
     </div>

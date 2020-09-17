@@ -71,7 +71,7 @@ export class EncabezadoReportesComponent implements OnInit {
     }
 
     public ngOnInit() {
-        if (!this.auth.check('reportes')) {
+        if (!this.auth.check('visualizacionInformacion:reportes')) {
             this.router.navigate(['./inicio']);
         }
         this.parametros = {
@@ -82,7 +82,7 @@ export class EncabezadoReportesComponent implements OnInit {
         this.organizacion = this.auth.organizacion.nombre;
         this.queryService.getAllQueries({ desdeAndes: true }).pipe(
             catchError((err => of([])))
-         ).subscribe(query => {
+        ).subscribe(query => {
             this.opciones = [{
                 id: 1,
                 nombre: 'Reporte C2'
@@ -96,15 +96,15 @@ export class EncabezadoReportesComponent implements OnInit {
                 nombre: 'Consultas por prestación'
             },
             ];
-             if (query) {
-                 this.queries = query;
-                 let i = 4;
-                 this.queries.forEach(element => {
-                     this.opciones.push({ id: i, nombre: element.nombre });
-                     i++;
-                    });
-             }
-            });
+            if (query) {
+                this.queries = query;
+                let i = 4;
+                this.queries.forEach(element => {
+                    this.opciones.push({ id: i, nombre: element.nombre });
+                    i++;
+                });
+            }
+        });
     }
 
     loadOrganizacion(event) {

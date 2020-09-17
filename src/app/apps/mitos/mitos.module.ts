@@ -28,7 +28,7 @@ import { Cie10Service } from './services/cie10.service';
     ]
 })
 export class MitosModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<MitosModule> {
         return {
             ngModule: MitosModule,
             providers: [

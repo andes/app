@@ -143,10 +143,10 @@ export class ListarSolicitudesComponent implements OnInit {
         }
         if (filter === 'prestaciones') {
             if (value.value !== null) {
-                this.filters['idTipoPrestacion'] = value.value.id;
+                this.filters['tipoPrestacion'] = value.value.conceptId;
                 delete this.filters['idTipoPrestaciones'];
             } else {
-                this.filters['idTipoPrestacion'] = '';
+                this.filters['tipoPrestacion'] = '';
             }
         }
         if (filter === 'profesionales') {

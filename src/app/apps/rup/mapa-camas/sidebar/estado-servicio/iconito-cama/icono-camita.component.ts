@@ -10,7 +10,7 @@ import { Auth } from '@andes/auth';
 
 export class IconoCamitaComponent implements OnInit {
     @Input() icono: string;
-    @Input() class: string;
+    @Input() color = 'info';
     @Input() nombre: string;
     @Input() cantidad: string;
 
@@ -20,6 +20,5 @@ export class IconoCamitaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
     }
 }

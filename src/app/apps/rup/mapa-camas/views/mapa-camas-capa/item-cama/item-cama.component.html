@@ -14,6 +14,7 @@
             Sin paciente
         </span>
         <span *ngIf="cama.paciente" class="d-block">
+            <plex-icon *ngIf="cama.nota" name="documento" [tooltip]="cama.nota" type="info"></plex-icon>
             {{cama.paciente.apellido}},
             {{cama.paciente.nombre}}
         </span>
@@ -31,7 +32,7 @@
                 {{estadoCama.label}}
             </plex-badge>
             <plex-badge *ngIf="equipos.aporteOxigeno" size="sm" type="info" class="ml-1" title="Oxígeno">
-                O<sup>2</sup>
+                O<sub>2</sub>
             </plex-badge>
             <plex-badge *ngIf="equipos.respirador" size="sm" type="info" class="ml-1" title="Respirador">
                 R

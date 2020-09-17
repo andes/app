@@ -1,3 +1,60 @@
+# [5.13.0](https://github.com/andes/app/compare/v5.12.0...v5.13.0) (2020-09-16)
+
+
+### Bug Fixes
+
+* **GDU:** arregla sincro de permisos y perfiles ([#1887](https://github.com/andes/app/issues/1887)) ([fe8081d](https://github.com/andes/app/commit/fe8081d4a0db5652de9e67dcbcb243eca1eba07c))
+* **mpi:** ignorar y guardar paciente ([#1831](https://github.com/andes/app/issues/1831)) ([26887b6](https://github.com/andes/app/commit/26887b68dd85accd049cd1d343a8e2d7092cdb98))
+
+
+### Features
+
+* **informacion:** se agrega modulo visualizacion-informacion ([#1893](https://github.com/andes/app/issues/1893)) ([5e1c555](https://github.com/andes/app/commit/5e1c555a7162e26078f844a17e8323b9da26069a))
+* **plex:** v6.15.3 ([#1902](https://github.com/andes/app/issues/1902)) ([dce0fcb](https://github.com/andes/app/commit/dce0fcb4830457409703be4f918085a6bac2f917))
+
+# [5.12.0](https://github.com/andes/app/compare/v5.11.0...v5.12.0) (2020-09-09)
+
+
+### Bug Fixes
+
+* **huds:** muestra nombre correcto de concepto de solicitud ([#1797](https://github.com/andes/app/issues/1797)) ([3fd03a7](https://github.com/andes/app/commit/3fd03a78adae17e2f9f6d9fa3e3eb3f2f3c5b75b))
+* **mpi:** quita scroll-infinito de buscador y listado ([#1897](https://github.com/andes/app/issues/1897)) ([6a23730](https://github.com/andes/app/commit/6a23730526f73cac6c73beca0e10b60f916ec928))
+* **rup:** agrega required a ValorNumerico ([#1894](https://github.com/andes/app/issues/1894)) ([a6c42b9](https://github.com/andes/app/commit/a6c42b9c25cd3a31d4139ec702000815369ad10a))
+* **rup:** modifica ancho de listado de pacientes ([#1889](https://github.com/andes/app/issues/1889)) ([85efd7c](https://github.com/andes/app/commit/85efd7c5d4ed41f004e1df635cce4c9fa0159255))
+
+
+### Features
+
+* **core:** @andes/plex 6.15.0 ([#1892](https://github.com/andes/app/issues/1892)) ([14a647e](https://github.com/andes/app/commit/14a647e78a68d5136307caee457d82784f034cdb))
+* **core:** tipoPrestacion.id por tipoPrestacion.conceptId ([#1873](https://github.com/andes/app/issues/1873)) ([98c9cab](https://github.com/andes/app/commit/98c9cab658cbc91a39c0251d12377794a30bd43d))
+* **mapa-camas:** agregar y editar una nota en las camas ocupadas ([#1821](https://github.com/andes/app/issues/1821)) ([d2ab27d](https://github.com/andes/app/commit/d2ab27d153fd02e6a01db6396f5ff1294f1934ad))
+* **mapa-camas:** filtros distintos para fechas de ingreso y egreso ([#1774](https://github.com/andes/app/issues/1774)) ([aa25a33](https://github.com/andes/app/commit/aa25a334366657a068e8caa5e09d1e20bbcc112d))
+* **mapa-camas:** quita el hardcodeo de colores en el estado de servicio ([#1843](https://github.com/andes/app/issues/1843)) ([eff4cb9](https://github.com/andes/app/commit/eff4cb98827feb090ff928cf23708aadf83561bc))
+* **mpi:** Agrega boton 'editar datos' de un paciente ([#1888](https://github.com/andes/app/issues/1888)) ([154bc58](https://github.com/andes/app/commit/154bc58b040d0d94f1954a63f4a33d7fede55229))
+* **organizaciones:** configurar cuentas de email asociadas al efector ([#1862](https://github.com/andes/app/issues/1862)) ([db64b45](https://github.com/andes/app/commit/db64b4578a9fa2f6590d6e2f33844b054ffc0f5a))
+* **rup:** pto inicio lazy load pendientes ([#1728](https://github.com/andes/app/issues/1728)) ([7872654](https://github.com/andes/app/commit/78726545dd94639546961b429c9e058d3fa9745a))
+
+# [5.11.0](https://github.com/andes/app/compare/v5.10.0...v5.11.0) (2020-09-02)
+
+
+### Bug Fixes
+
+* **mapa-camas:** missing DragAndDrop service ([#1890](https://github.com/andes/app/issues/1890)) ([011fc4b](https://github.com/andes/app/commit/011fc4b48bd98ec2ba90afd1b915e8b6ab3bdc2d))
+* **mapa-camas:** no se visualiza la huds ([#1881](https://github.com/andes/app/issues/1881)) ([0e5a85c](https://github.com/andes/app/commit/0e5a85c208dfb4c4897601bf3deb00a7cf331640))
+* **rup:** filtrar valores null de los graficos ([#1846](https://github.com/andes/app/issues/1846)) ([cdf5786](https://github.com/andes/app/commit/cdf57860dc3a0fe4a7b8e41b919ec37829c64eff))
+* **TOP:** remueve condicion tieneTurno de busqueda de validadas ([#1867](https://github.com/andes/app/issues/1867)) ([76174a3](https://github.com/andes/app/commit/76174a3dcf0d7dc9791c15a9e3eb76c7f35a430b))
+
+
+### Features
+
+* **elemento-rup:** filtro por sexo en requeridos ([#1828](https://github.com/andes/app/issues/1828)) ([8fe206c](https://github.com/andes/app/commit/8fe206cb524b6a6dd3dabc8a41907d519c0ea0a3))
+* **elementos-rup:** elimina atomos y moléculas que no deberían existir ([#1856](https://github.com/andes/app/issues/1856)) ([63b9b29](https://github.com/andes/app/commit/63b9b2901fe5876348e9803f3870e39dc849aa1e))
+* **gdu:** permitir copy/paste entre prestaciones ([#1878](https://github.com/andes/app/issues/1878)) ([3471f50](https://github.com/andes/app/commit/3471f50bd002c788830cd953c8b20d30642428d1))
+* **mapa-camas:** permite ordenar por columna ([#1851](https://github.com/andes/app/issues/1851)) ([a933596](https://github.com/andes/app/commit/a933596944513845d1c941c4355ebb837b5b5616))
+* **mpi:** muestra direccion legal del paciente ([#1876](https://github.com/andes/app/issues/1876)) ([be39e08](https://github.com/andes/app/commit/be39e0890468d86fb5222e6fc539d6ed1929e623))
+* **organizaciones:** disable eliminar UO que esta en uso en una cama ([#1770](https://github.com/andes/app/issues/1770)) ([8857b42](https://github.com/andes/app/commit/8857b42a9151d7188624e822dc7ae1acf2016613))
+* **rup:** asistencia del turno en background ([#1788](https://github.com/andes/app/issues/1788)) ([3d8f2d4](https://github.com/andes/app/commit/3d8f2d4087e6a77bf5b274d50f1ecf6abf0f1253))
+
 # [5.10.0](https://github.com/andes/app/compare/v5.9.0...v5.10.0) (2020-08-26)
 
 

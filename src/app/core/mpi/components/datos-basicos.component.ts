@@ -21,7 +21,7 @@ export class DatosBasicosComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('form', null) ngForm: NgForm;
+    @ViewChild('form', { static: false }) ngForm: NgForm;
     formChangesSubscription: Subscription;
 
     estados = [];

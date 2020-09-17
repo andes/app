@@ -189,7 +189,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         this.shiro.add(this.userPermissions);
     }
 
-    private makePermission() {
+    makePermission() {
         return this.parentPermission + (this.parentPermission.length ? ':' : '') + this.item.key;
     }
 

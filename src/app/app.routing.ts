@@ -1,35 +1,18 @@
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
-/*
-Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
-de la siguiente manera:
-
-1) Módulos principales de Angular
-2) Módulos globales
-3) Servicios
-4) Componentes
-5) Otros
-*/
 
 // Angular
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
 
 // Global
-import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
-
-// Componentes
+import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 
 // ... Tablas Maestras
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
-import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
-import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
-
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
@@ -44,33 +27,20 @@ import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/o
 
 // ... MPI
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-// import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
-// import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
 
-// ... RUP
-import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
-import { PrestacionEjecucionComponent } from './modules/rup/components/ejecucion/prestacionEjecucion.component';
-import { PrestacionValidacionComponent } from './modules/rup/components/ejecucion/prestacionValidacion.component';
-import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
-import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
 // REPORTES
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 
-// REPORTES SJ
-import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
-
 // CONFIGURACIONES
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
-import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
@@ -84,42 +54,28 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 import { VisualizacionReglasTopComponent } from './components/top/reglas/visualizacionReglasTop.component';
 
 // Home de Estadisticas
-// import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 
-
-// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 // Campañas salud
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 // Buscador de turnos y prestaciones
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
-import { INTERNACION_ROUTES } from './apps/rup/mapa-camas/mapa-camas.routing';
 import { NovedadesComponent } from './components/novedades/novedades.component';
-import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
-import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 
 const appRoutes: Routes = [
-  // Tablas maestras
-  { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/:id/ofertas_prestacionales', component: OrganizacionOfertaPrestacionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional/create', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional/create/:id', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
   // MPI
   { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
-  // { path: 'apps/mpi/bebe', component: PacienteComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente', component: PacienteComponent, canActivate: [RoutingGuard] },
-  // { path: 'apps/mpi/extranjero', component: PacienteComponent, canActivate: [RoutingGuard] },
-  // { path: 'apps/mpi/bebe/:origen', component: PacienteComponent, canActivate: [RoutingGuard] },
-  // { path: 'apps/mpi/extranjero/:origen', component: PacienteComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente/:opcion/:origen', component: PacienteComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -141,18 +97,21 @@ const appRoutes: Routes = [
 
   { path: 'citas/revision_agenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  // { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  // RUP
-  { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  {
+    path: 'rup',
+    loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
+  },
+
+  {
+    path: 'tm/organizacion',
+    loadChildren: () => import('./components/organizacion/organizacion.module').then(m => m.OrganizacionesModule),
+    canActivate: [RoutingNavBar, RoutingGuard]
+  },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -173,7 +132,8 @@ const appRoutes: Routes = [
   { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // ReportesDiarios
-  { path: 'reportesDiarios', loadChildren: './components/reportesDiarios/reportes-diarios.module#ReportesDiariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
+
+  { path: 'reportesDiarios', loadChildren: () => import('./components/reportesDiarios/reportes-diarios.module').then(m => m.ReportesDiariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -187,22 +147,21 @@ const appRoutes: Routes = [
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasTopComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
-  /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
   // Principal
-  { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
+  { path: 'auth', loadChildren: () => import('./apps/auth/auth.module').then(m => m.AuthAppModule) },
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'estadisticas', loadChildren: () => import('./modules/estadisticas/estadistica.module').then(m => m.EstadisticaModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'dashboard', loadChildren: () => import('./modules/estadisticas/estadistica.module').then(m => m.EstadisticaModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestor-usuarios', loadChildren: () => import('./apps/gestor-usuarios/gestor-usuarios.module').then(m => m.GestorUsuariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'visualizacion-informacion', loadChildren: () => import('./modules/visualizacion-informacion/visualizacion-informacion.module').then(m => m.VisualizacionInformacionModule), canActivate: [RoutingNavBar, RoutingGuard] },
+
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   // Turnero
-  { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'pantallas', loadChildren: () => import('./apps/turnero/turnero.module').then(m => m.TurneroModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // dejar siempre al último porque no encuentra las url después de esta
   { path: 'novedades/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

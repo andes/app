@@ -110,7 +110,7 @@
                         </plex-select>
                     </div>
                     <div class="col">
-                        <plex-button type="success" size="sm" (click)="addOrgPermiso()">
+                        <plex-button type="success" size="sm" (click)="addOrgPermiso()" [disabled]='!orgSelected'>
                             AGREGAR
                         </plex-button>
                     </div>
