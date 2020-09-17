@@ -117,11 +117,10 @@ export class SolicitudesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         if (!this.auth.getPermissions('solicitudes:?').length) {
-            this.router.navigate([this.auth.profesional ? 'asignadas' : 'inicio']);
+            this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
         } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*') {
-            this.router.navigate(['asignadas']);
+            this.router.navigate(['/solicitudes/asignadas']);
         }
 
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;

@@ -130,7 +130,7 @@ const appRoutes: Routes = [
   { path: 'reportesDiarios', loadChildren: () => import('./components/reportesDiarios/reportes-diarios.module').then(m => m.ReportesDiariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Buscador de turnos y prestaciones
-  { path: 'buscador', component: TurnosPrestacionesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'buscador', loadChildren: () => import('./components/buscadorTurnosPrestaciones/turnos-prestaciones.module').then(m => m.TurnosPrestacionesModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // TOP
   {

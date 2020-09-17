@@ -31,7 +31,6 @@ import { AuthModule, Auth } from '@andes/auth';
 import { SharedModule } from '@andes/shared';
 import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
-import { ElementosRUPModule } from './modules/rup/elementos-rup.module';
 import { MitosModule } from './apps/mitos';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
@@ -191,7 +190,6 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { SeguimientoCovidComponent } from './components/reportes/seguimientoCovid.component';
 
-import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 import { QueriesService } from './services/query.service';
 
@@ -294,12 +292,11 @@ registerLocaleData(localeEs, 'es');
         GestorUsuariosProvidersModule,
         MPILibModule,
         OrganizacionLibModule,
-        ElementosRUPModule,
         SharedModule,
-        RUPLibModule,
         TOPLibModule,
         DirectiveLibModule,
-        CITASLibModule
+        CITASLibModule,
+        RUPLibModule
     ],
     declarations: [
         AppComponent,
@@ -376,8 +373,6 @@ registerLocaleData(localeEs, 'es');
         CampaniaVisualizacionComponent,
         CampaniaFormComponent,
 
-        // Buscador de turnos y prestaciones
-        TurnosPrestacionesComponent,
         LogoSvgComponent,
         AcronimoSvgComponent,
     ],
