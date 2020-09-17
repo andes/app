@@ -397,7 +397,7 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama.pipe(filter(snap => !!snap.idCama)),
+            this.selectedCama.pipe(filter(snap => !!snap.id)),
             this.selectedPrestacion,
             this.view
         ).pipe(
@@ -406,9 +406,9 @@ export class MapaCamasService {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
+                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
                     } else if (view === 'listado-internacion' && selectedPrestacion.id) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
+                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
                     }
                     return of([]);
                 }

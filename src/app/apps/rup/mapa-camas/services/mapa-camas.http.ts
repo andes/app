@@ -8,7 +8,7 @@ export type IFiltrosHistorial = any;
 
 @Injectable({
     providedIn: 'root',
-  })
+})
 export class MapaCamasHTTP {
     private url = '/modules/rup/internacion';
 
@@ -38,6 +38,15 @@ export class MapaCamasHTTP {
             ...filtros
         };
         return this.server.get(`${this.url}/camas/historial`, { params });
+    }
+
+    historialInternacion(ambito: string, capa: string, desde: Date, hasta: Date, idInternacion: string): Observable<ISnapshot[]> {
+        const params = {
+            ambito,
+            desde,
+            hasta
+        };
+        return this.server.get(`${this.url}/${capa}/${idInternacion}/historial`, { params });
     }
 
     get(ambito: string, capa: string, fecha: Date, idCama: string): Observable<ISnapshot> {

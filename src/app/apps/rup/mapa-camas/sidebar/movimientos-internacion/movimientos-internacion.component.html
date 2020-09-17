@@ -53,8 +53,11 @@
                 </small>
             </td>
             <td>
-                <small>
+                <small *ngIf="movimiento.unidadOrganizativa">
                     {{ movimiento.unidadOrganizativa.term }}
+                </small>
+                <small *ngIf="movimiento.unidadOrganizativas && movimiento.unidadOrganizativas.length > 0">
+                    {{ movimiento.unidadOrganizativas[0].term }}
                 </small>
             </td>
         </tr>
