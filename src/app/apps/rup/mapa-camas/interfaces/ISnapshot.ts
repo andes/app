@@ -36,7 +36,8 @@ export interface ISnapshot {
     extras: {
         ingreso?: boolean,
         egreso?: boolean,
-        idInternacion?: boolean
+        idInternacion?: String,
+        tipo_egreso?: String,
     };
     createdAt?: Date;
     createdBy?: {

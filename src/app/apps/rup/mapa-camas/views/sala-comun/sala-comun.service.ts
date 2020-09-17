@@ -3,6 +3,7 @@ import { ISalaComun } from '../../interfaces/ISalaComun';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Injectable()
 export class SalaComunService {
@@ -23,5 +24,13 @@ export class SalaComunService {
       } else {
         return this.server.post(`${this.url}/sala-comun`, { ...salaComun, organizacion });
       }
+    }
+
+    ingresarPaciente(salaComun: ISnapshot, fecha: Date): Observable<ISnapshot> {
+      return this.server.post(`${this.url}/sala-comun/${salaComun.id}/patients`, { ...salaComun, fecha });
+    }
+
+    egresarPaciente(salaComun: ISnapshot, fecha: Date): Observable<ISnapshot> {
+      return this.server.patch(`${this.url}/sala-comun/${salaComun.id}/patients`, { ...salaComun, fecha });
     }
 }

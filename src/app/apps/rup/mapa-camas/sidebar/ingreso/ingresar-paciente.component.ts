@@ -16,6 +16,8 @@ import { ObjectID } from 'bson';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
+import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -83,6 +85,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth,
+        private salaComunService: SalaComunService,
         @Optional() private ingresoPacienteService: IngresoPacienteService
     ) {
     }
@@ -165,9 +168,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (cama.idCama) {
+            if (cama.id) {
                 this.cama = cama;
-                if (cama.estado === 'ocupada') {
+                if (cama.estado === 'ocupada' && !cama.sala) {
                     this.paciente = cama.paciente;
                 }
                 if (this.informeIngreso.especialidades.length === 0) {
@@ -192,7 +195,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 let cama = null;
 
                 snapshot.map(snap => {
-                    if (snap.estado === 'ocupada') {
+                    if (snap.estado === 'ocupada' && !snap.sala) {
                         if (snap.paciente.id === this.paciente.id) {
                             if (!this.cama) {
                                 cama = snap;
@@ -200,7 +203,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                                 cama = snap;
                             }
                         }
-                    } else if (snap.estado === 'disponible') {
+                    } else if (snap.estado === 'disponible' || snap.sala) {
                         camasDisponibles.push(snap);
                     }
                 });
@@ -211,7 +214,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
                 de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
                 }
-
                 return camasDisponibles;
             })
         );
@@ -338,13 +340,23 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             delete this.cama['sectorName'];
             this.cama.extras = { ingreso: true };
-            this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-                this.plex.info('success', 'Paciente internado');
-                this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                this.onSave.emit();
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-            });
+            if (!this.cama.sala) {
+                this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Paciente internado');
+                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.onSave.emit();
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al ingresar paciente');
+                });
+            } else {
+                this.salaComunService.ingresarPaciente(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Paciente internado');
+                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.onSave.emit();
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al ingresar paciente');
+                });
+            }
         }
     }
 
