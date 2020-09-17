@@ -129,7 +129,7 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         let currentUrl = this.router.url;
-        if (currentUrl === '/asignadas') {
+        if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }

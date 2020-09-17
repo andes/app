@@ -134,8 +134,8 @@ const appRoutes: Routes = [
 
   // TOP
   {
-    path: 'top',
-    loadChildren: () => import('./components/top/top.module').then(m => m.TOPLibModule),
+    path: 'solicitudes',
+    loadChildren: () => import('./components/top/top.routing').then(m => m.TOPRouting),
     canActivate: [RoutingNavBar, RoutingGuard],
     runGuardsAndResolvers: 'always'
   },
