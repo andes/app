@@ -110,7 +110,7 @@ main {
         flex-direction: column;
 
         box-sizing: border-box;
-        width: 210px;
+        width: 245px;
 
         .principal {
             width: 220px;
@@ -167,9 +167,6 @@ main {
             .adi {
                 font-size: 327px !important;
             }
-
-
-
         }
     }
 }
@@ -192,7 +189,7 @@ main {
     align-items: center;
 
     padding-right: 40px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 
     .principal .band {
         width: 4px;
@@ -256,7 +253,6 @@ main {
             font-size: 1.25rem;
             color: white;
         }
-
     }
 
     .titulo {
@@ -310,8 +306,7 @@ main {
     }
 }
 
-
-// Responsive 
+// Responsive
 main {
     &.size-sm {
         flex-direction: column;
@@ -353,6 +348,7 @@ main {
             .seccion {
                 min-width: 225px;
                 padding-right: 0;
+                margin-bottom: 0.5rem;
             }
         }
     }

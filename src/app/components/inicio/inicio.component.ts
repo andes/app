@@ -51,7 +51,7 @@ export class InicioComponent implements AfterViewInit {
                                         this.modulos.push(modulo);
                                         tienePermiso = true;
                                         if (modulo.submodulos && modulo.submodulos.length > 0) {
-                                            modulo.submodulos = modulo.submodulos.filter(x => x.permisos.filter(y => this.auth.getPermissions(y.permisos).length > 0));
+                                            modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                         }
                                     }
                                 }
