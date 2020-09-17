@@ -11,7 +11,7 @@
         <div class=" row">
             <div class="col-12">
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onSelect($event)">
+                                  (selected)="onSelect($event)">
                 </paciente-listado>
 
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">

@@ -12,7 +12,7 @@
         <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
         <div class="col pr-2" *ngIf="!paciente">
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                              [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                              (selected)="onPacienteSelected($event)"></paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>

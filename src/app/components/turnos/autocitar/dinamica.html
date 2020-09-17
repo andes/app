@@ -18,7 +18,7 @@
                 <div class="col-md">
                     <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
                                      (searchClear)="searchClear()"></paciente-buscar>
-                    <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
+                    <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
                                       (selected)="onPacienteSelected($event)">
                     </paciente-listado>
                     <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">

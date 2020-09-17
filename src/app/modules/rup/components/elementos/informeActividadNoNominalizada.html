@@ -84,7 +84,7 @@
                                 <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
                                                  (searchClear)="searchClear()"></paciente-buscar>
                                 <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                                  [autoselect]="false" (selected)="seleccionarPaciente($event)">
+                                                  (selected)="seleccionarPaciente($event)">
                                 </paciente-listado>
                                 <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!

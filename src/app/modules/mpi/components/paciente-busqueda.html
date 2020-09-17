@@ -1,0 +1,10 @@
+<paciente-buscar [hostComponent]="hostComponent" [create]="create" [returnScannedPatient]="returnScannedPatient"
+                 (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()"
+                 grow="full">
+</paciente-buscar>
+<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+<paciente-listado *ngIf="resultados?.length" [pacientes]="resultados" [editing]="editing"
+                  (selected)="onSelected($event)" (edit)="onEdit($event)" grow="full"></paciente-listado>
+<div *ngIf="resultados && !resultados.length && !searchAreaCleared" class="alert alert-danger" grow="full">
+    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+</div>

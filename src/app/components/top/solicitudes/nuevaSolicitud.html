@@ -10,17 +10,17 @@
             <!-- SOLICITUD ENTRADA -->
             <ng-container *ngIf="tipoSolicitud == 'entrada'">
                 <plex-wrapper>
-                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
-                                   name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
+                                   label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
                     <div class="mr-4 mb-3" justify="start">
-                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
-                        hintType="info">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema"
+                              hintType="info">
                         </span>
                     </div>
                     <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
                                  tmPrestaciones="solicitudes:tipoPrestacion:?" label="Tipo de Prestación Solicitada"
-escribir                                 placeholder="Escriba al menos 3 letras" [required]="true"
+                                 escribir placeholder="Escriba al menos 3 letras" [required]="true"
                                  (change)="onSelectPrestacionOrigen()">
                     </plex-select>
                     <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
@@ -63,18 +63,18 @@ escribir                                 placeholder="Escriba al menos 3 letras"
             <!-- SOLICITUD SALIDA -->
             <ng-container *ngIf="tipoSolicitud == 'salida'">
                 <plex-wrapper>
-                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
-                                   name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
+                                   label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
                     <div class="mr-4  mb-3" justify="start">
-                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
-                        hintType="info">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema"
+                              hintType="info">
                         </span>
                     </div>
-                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
-                                 name="tipoPrestacionOrigen" (change)="onSelect()"
-                                 tmPrestaciones="solicitudes:tipoPrestacion:?" label="Tipos de Prestación Origen"
-                                 placeholder="Escriba al menos 3 letras" [required]="true">
+                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacionOrigen"
+                                 (change)="onSelect()" tmPrestaciones="solicitudes:tipoPrestacion:?"
+                                 label="Tipos de Prestación Origen" placeholder="Escriba al menos 3 letras"
+                                 [required]="true">
                     </plex-select>
                     <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
                                  name="organizacionDestino" label="Organización destino"

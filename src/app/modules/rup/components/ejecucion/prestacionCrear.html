@@ -31,7 +31,7 @@
 
                 <!-- Tabla / listado de pacientes -->
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onSelect($event)">
+                                  (selected)="onSelect($event)">
                 </paciente-listado>
 
                 <div *ngIf="buscandoPaciente && resultadoBusqueda && !resultadoBusqueda.length"

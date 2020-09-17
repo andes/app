@@ -34,7 +34,7 @@
                                          (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()">
                         </paciente-buscar>
 
-                        <paciente-listado *ngIf="busquedaTutor?.length" [pacientes]="busquedaTutor" [autoselect]="false"
+                        <paciente-listado *ngIf="busquedaTutor?.length" [pacientes]="busquedaTutor"
                                           (selected)="onPacienteSelected($event)">
                         </paciente-listado>
                         <div *ngIf="!busquedaTutor?.length && !searchClear" class="alert alert-danger">

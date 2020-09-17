@@ -1,19 +1,9 @@
 <plex-layout main="{{ sidebar }}">
     <plex-layout-main>
-        <paciente-buscar #buscador (searchStart)="onSearchStart()"
-                         (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()"
-                         [hostComponent]="'mpi'" [create]="true" [returnScannedPatient]="true">
-        </paciente-buscar>
-
-        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-
-        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                          [autoselect]="false" [editing]="true" (selected)="toVisualize($event)"
-                          (edit)="toEdit($event)">
-        </paciente-listado>
-        <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
-            <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-        </div>
+        <paciente-buscar-listar [hostComponent]="'mpi'" [create]="true" [returnScannedPatient]="true" [editing]="true"
+                                (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                (selected)="toVisualize($event)" (edit)="toEdit($event)">
+        </paciente-buscar-listar>
     </plex-layout-main>
 
 
@@ -22,7 +12,7 @@
         <ng-container *ngIf="!showDetallePaciente">
             <plex-title size="md" titulo="Busquedas recientes"></plex-title>
 
-            <paciente-listado [pacientes]="historialSeleccionados" [autoselect]="false" (selected)="toEdit($event)">
+            <paciente-listado [pacientes]="historialSeleccionados" (selected)="toEdit($event)">
             </paciente-listado>
         </ng-container>
 

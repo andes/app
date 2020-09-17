@@ -45,8 +45,7 @@
                         <div class="row" *ngIf="pacientesSearch">
                             <div class="col-12">
                                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                                  [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                                  (selected)="onSelect($event)">
+                                                  [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
                                 </paciente-listado>
                                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!
