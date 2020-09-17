@@ -10,8 +10,13 @@ import { NombrePipe } from './pipes/nombre.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { SexoPipe } from './pipes/sexo.pipe';
 import { FormAutoSaveDirective } from './directives/autosave.directives';
+import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
+import { PlexModule } from '@andes/plex';
 
 @NgModule({
+    imports: [
+        PlexModule
+    ],
     declarations: [
         FechaPipe,
         HoraPipe,
@@ -22,7 +27,8 @@ import { FormAutoSaveDirective } from './directives/autosave.directives';
         NombrePipe,
         PluralizarPipe,
         SexoPipe,
-        FormAutoSaveDirective
+        FormAutoSaveDirective,
+        PopoverAuditComponent
     ],
     exports: [
         FechaPipe,
@@ -34,7 +40,8 @@ import { FormAutoSaveDirective } from './directives/autosave.directives';
         NombrePipe,
         PluralizarPipe,
         SexoPipe,
-        FormAutoSaveDirective
+        FormAutoSaveDirective,
+        PopoverAuditComponent
     ]
 })
 export class SharedModule {

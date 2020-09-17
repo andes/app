@@ -119,9 +119,9 @@
                                                 {{prestacion.createdAt | fecha}}</td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.solicitud.fecha
                                         | fecha}}<br>
-                                                <popover-audit placement="right" [data]="prestacion"
+                                                <shared-popover-audit placement="right" [data]="prestacion"
                                                                [showUpdate]="false">
-                                                </popover-audit>
+                                                </shared-popover-audit>
 
                                             </td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.paciente
@@ -340,7 +340,7 @@
             </anular-solicitud>
         </div>
         <div *ngIf="showNuevaSolicitud">
-            <busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></busqueda-paciente>
+            <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></top-busqueda-paciente>
         </div>
         <div *ngIf="showCitar">
             <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"

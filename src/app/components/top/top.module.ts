@@ -12,12 +12,37 @@ import { BusquedaPacienteComponent } from './solicitudes/busquedaPaciente.compon
 import { MPILibModule } from '../../modules/mpi/mpi-lib.module';
 import { TOPRouting } from './top.routing';
 import { NuevaSolicitudComponent } from './solicitudes/nuevaSolicitud.component';
+import { SolicitudesComponent } from './solicitudes/solicitudes.component';
+import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.component';
+import { PrestacionSolicitudComponent } from './solicitudes/prestacionSolicitud.component';
+import { AuditarSolicitudComponent } from './solicitudes/auditarSolicitud.component';
+import { AnularSolicitudComponent } from './solicitudes/anularSolicitud.component';
+import { ReglasComponent } from './reglas/reglas.component';
+import { ListaReglasComponent } from './reglas/listaReglas.component';
+import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { CITASLibModule } from '../turnos/citas.module';
+
+import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
+
 
 export const TOP_COMPONENTS = [
     BusquedaPacienteComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
-    NuevaSolicitudComponent
+    NuevaSolicitudComponent,
+    SolicitudesComponent,
+    DetalleSolicitudComponent,
+    PrestacionSolicitudComponent,
+    AuditarSolicitudComponent,
+    AnularSolicitudComponent,
+    ReglasComponent,
+    ListaReglasComponent,
+    VisualizacionReglasTopComponent,
+
+];
+
+export const TOP_PROVIDERS = [
 ];
 
 @NgModule({
@@ -29,14 +54,20 @@ export const TOP_COMPONENTS = [
         HttpClientModule,
         SharedModule,
         DirectiveLibModule,
+        InfiniteScrollModule,
         MPILibModule,
-        TOPRouting
+        CITASLibModule,
+        TOPRouting,
+        RUPLibModule,
     ],
     declarations: [
         ...TOP_COMPONENTS
     ],
+    providers: [
+        ...TOP_PROVIDERS
+    ],
     exports: [
-        BusquedaPacienteComponent,
+        VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         HistorialSolicitudComponent
     ],

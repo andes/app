@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -17,9 +17,9 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
     templateUrl: './nuevaSolicitud.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
-export class NuevaSolicitudComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;
+export class NuevaSolicitudComponent implements OnInit, OnDestroy {
     @ViewChildren('upload') childsComponents: QueryList<any>;
+    private sub;
     wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
     permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
     paciente: any;
@@ -114,7 +114,7 @@ export class NuevaSolicitudComponent implements OnInit {
             name: 'Nueva solicitud'
         }
         ]);
-        this.route.params.subscribe(params => {
+        this.sub = this.route.params.subscribe(params => {
             if (params['paciente']) {
                 this.tipoSolicitud = params['tipo'];
                 if (this.tipoSolicitud === 'entrada') {
@@ -133,37 +133,21 @@ export class NuevaSolicitudComponent implements OnInit {
         });
     }
 
-    // Componente paciente-listado
+    ngOnDestroy() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
+    }
 
+    // Componente paciente-listado
     seleccionarPaciente(paciente): void {
         this.pacienteService.getById(paciente).subscribe(
             resultado => {
                 this.paciente = resultado;
-                setTimeout(() => {
-                    this.wizardActivo = true;
-                    let promise = this.plex.wizard({
-                        id: 'top:fechaSolicitud',
-                        updatedOn: moment('2019-03-08').toDate(),
-                        steps: [
-                            {
-                                title: 'Fecha de solicitud',
-                                content: 'Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema'
-                            },
-                        ],
-                        forceShow: true,
-                        fullScreen: false,
-                        showNumbers: false
-                    });
-                    // Devuelve una promise sólo si se mostró el wizard
-                    if (promise) {
-                        promise.then(() => this.wizardActivo = false);
-                    } else {
-                        this.wizardActivo = false;
-                    }
-                }, 1000);
             },
             error => {
-                this.plex.info('warning', 'Intente nuevamente', 'Error en la búsqueda de paciente');
+                this.plex.info('danger', 'Intente nuevamente', 'Error en la búsqueda de paciente');
+                this.router.navigate(['/solicitudes']);
             }
         );
     }

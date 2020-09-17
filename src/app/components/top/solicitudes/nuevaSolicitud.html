@@ -10,15 +10,20 @@
             <!-- SOLICITUD ENTRADA -->
             <ng-container *ngIf="tipoSolicitud == 'entrada'">
                 <plex-wrapper>
-                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
+                    <div class="mr-4 mb-3" justify="start">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
+                        hintType="info">
+                        </span>
+                    </div>
                     <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
                                  (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
                                  placeholder="Tipos de Prestación solicitada" [required]="true"
                                  (change)="onSelectPrestacionOrigen()">
                     </plex-select>
-                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
                                  name="organizacionOrigen" [data]="dataOrganizacionesOrigen" label="Organización origen"
                                  placeholder="Seleccione la organización" labelField="nombre"
                                  (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
@@ -58,15 +63,20 @@
             <!-- SOLICITUD SALIDA -->
             <ng-container *ngIf="tipoSolicitud == 'salida'">
                 <plex-wrapper>
-                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
-                    <plex-select [plexWizard]="0" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                    <div class="mr-4  mb-3" justify="start">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
+                        hintType="info">
+                        </span>
+                    </div>
+                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
                                  name="tipoPrestacionOrigen" (change)="onSelect()"
                                  (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
                                  placeholder="Tipos de Prestación Origen" [required]="true">
                     </plex-select>
-                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
                                  name="organizacionDestino" label="Organización destino"
                                  placeholder="Seleccione la organización" labelField="nombre"
                                  [data]="dataOrganizacionesDestino" [required]="true"

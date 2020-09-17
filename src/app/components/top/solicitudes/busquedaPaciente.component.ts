@@ -3,7 +3,7 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 
 
 @Component({
-    selector: 'busqueda-paciente',
+    selector: 'top-busqueda-paciente',
     templateUrl: './busquedaPaciente.html'
 })
 export class BusquedaPacienteComponent implements OnInit {

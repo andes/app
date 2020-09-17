@@ -81,8 +81,6 @@ import { ObraSocialService } from './services/obraSocial.service';
 import { ObraSocialCacheService } from './services/obraSocialCache.service';
 
 import { ProfeService } from './services/profe.service';
-import { ReglasComponent } from './components/top/reglas/reglas.component';
-import { VisualizacionReglasTopComponent } from './components/top/reglas/visualizacionReglasTop.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { SIISAService } from './services/siisa.service';
@@ -158,7 +156,6 @@ import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/opera
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { RevisionFueraAgendaComponent } from './components/turnos/gestor-agendas/revision/fuera-agenda.component';
 
-import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
@@ -210,16 +207,6 @@ import { ChartsModule } from 'ng2-charts';
 
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
-
-
-// Solicitudes
-import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
-import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
-import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
-import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
-import { PrestacionSolicitudComponent } from './components/top/solicitudes/prestacionSolicitud.component';
-
-
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
@@ -266,7 +253,6 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 import { environment } from '../environments/environment';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
-import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
@@ -327,7 +313,7 @@ registerLocaleData(localeEs, 'es');
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent, PopoverAuditComponent,
+        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         AgregarPacienteComponent,
@@ -353,11 +339,6 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioInternacionComponent,
 
         // Solicitudes
-        SolicitudesComponent,
-        DetalleSolicitudComponent,
-        PrestacionSolicitudComponent,
-        AuditarSolicitudComponent,
-        AnularSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
@@ -371,9 +352,6 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         PucoComponent,
-        ReglasComponent,
-        ListaReglasComponent,
-        VisualizacionReglasTopComponent,
 
         // MPI
         NotaComponent,
