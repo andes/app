@@ -239,7 +239,7 @@ export class MapaCamasService {
         let camasDistintaUO = [];
         if (cama.id) {
             camas.map(c => {
-                if (c.estado === 'disponible') {
+                if (c.sala || c.estado === 'disponible') {
                     if (c.id !== cama.id) {
                         if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
                             camasMismaUO.push(c);
