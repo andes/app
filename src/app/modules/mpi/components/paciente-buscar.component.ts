@@ -82,7 +82,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                 this.searchSubscription.unsubscribe();
             }
             this.searchStart.emit();
-            this.pacienteBuscar.search(textoLibre).subscribe(respuesta => {
+            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient).subscribe(respuesta => {
                 if (respuesta) {
                     this.searchEnd.emit(respuesta);
                 }

@@ -1,13 +1,6 @@
 <plex-title justify titulo="INGRESAR PACIENTE">
     <ng-content></ng-content>
 </plex-title>
-<fieldset>
-    <div class="row">
-        <div class="col">
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)">
-            </paciente-buscar>
-        </div>
-    </div>
-    <paciente-listado [pacientes]="pacientes" (selected)="onPacienteSelected($event)">
-    </paciente-listado>
-</fieldset>
+
+<paciente-busqueda (searchEnd)="searchEnd($event)" (selected)="onPacienteSelected($event)">
+</paciente-busqueda>

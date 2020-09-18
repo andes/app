@@ -1,9 +1,7 @@
 <plex-layout main="8">
     <plex-layout-main>
         <form #form="ngForm">
-            <header>
-                <div class="page-title">Agregar Sobreturno</div>
-            </header>
+            <plex-title size="md" titulo="Agregar Sobreturno"></plex-title>
             <span *ngIf="showSobreturno && paciente">
                 <div *ngIf="paciente?.id" class="row">
                     <div class="col">
@@ -52,38 +50,27 @@
                     </div>
                 </div>
             </span>
-            <span *ngIf="!showSobreturno">
-                <div class="row" *ngIf="pacientesSearch">
-                    <div class="col">
-                        <div class="panel panel-default">
-                            <div class="clear"></div>
-                            <paciente-buscar (searchStart)="onSearchStart()"
-                                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
-                        </div>
-                    </div>
-                </div>
-                <plex-loader *ngIf="loading"></plex-loader>
-                <div class="row">
-                    <div class="col-12">
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                          (selected)="onSelect($event)"></paciente-listado>
-
-                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                            ¡No se encontró ningún paciente!
-                        </div>
-                    </div>
-                </div>
-            </span>
         </form>
+        <ng-container *ngIf="!showSobreturno && pacientesSearch">
+            <paciente-buscar (searchStart)="onSearchStart()"
+                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                             (searchClear)="onSearchClear()">
+            </paciente-buscar>
+
+            <plex-loader *ngIf="loading"></plex-loader>
+
+            <paciente-listado *ngIf="pacientes && pacientes.length" [height]="75" [pacientes]="pacientes"
+                              (selected)="onSelect($event)"></paciente-listado>
+
+            <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                ¡No se encontró ningún paciente!
+            </div>
+        </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <header>
-            <div class="page-title">Agenda seleccionada</div>
-        </header>
+        <plex-title size="md" titulo="Agenda seleccionada"></plex-title>
         <!--Agenda seleccionada-->
-        <div class="text-center" *ngIf="agenda">
+        <div class="text-center mt-4" *ngIf="agenda">
 
             <h4>
                 <span class="mdi mdi-calendar-today"> Hora Agenda </span>
@@ -93,7 +80,7 @@
                 {{ agenda.horaFin | date: 'HH:mm' }}
             </span>
             <br>
-            <h4>
+            <h4 class="pt-4">
                 <span class="mdi mdi-hospital">Prestación </span>
             </h4>
             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">

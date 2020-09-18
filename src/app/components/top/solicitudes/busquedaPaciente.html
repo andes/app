@@ -8,7 +8,7 @@
 </paciente-buscar>
 <plex-loader *ngIf="loading"></plex-loader>
 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                  [autoselect]="false" (selected)="seleccionarPaciente($event)" grow="full">
+                  (selected)="seleccionarPaciente($event)" grow="full">
 </paciente-listado>
 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="mt-1 alert alert-warning" grow="full">
     ¡No se encontró ningún paciente!

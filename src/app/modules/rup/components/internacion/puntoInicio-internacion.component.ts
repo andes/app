@@ -15,6 +15,7 @@ import { HUDSService } from '../../services/huds.service';
 export class PuntoInicioInternacionComponent implements OnInit {
 
     public listado: any;
+    public searchClear = true;
     public pacienteSeleccionado;
     public epicrisisPaciente = [];
     public showLoader = false;
@@ -42,24 +43,28 @@ export class PuntoInicioInternacionComponent implements OnInit {
     ngOnInit() {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
-
-
         });
     }
 
     /**
      * Funcionalidades del buscador de MPI
      */
-    searchStart() {
+    onSearchStart() {
         this.listado = null;
     }
 
-    searchEnd(resultado: PacienteBuscarResultado) {
+    onSearchEnd(resultado: PacienteBuscarResultado) {
+        this.searchClear = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
             this.listado = resultado.pacientes;
         }
+    }
+
+    onSearchClear() {
+        this.searchClear = true;
+        this.listado = null;
     }
 
     /**

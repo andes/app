@@ -1,23 +1,14 @@
 <plex-layout main="12">
     <plex-layout-main>
-        <div class="row">
-            <div class="col-12">
-                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                 (searchClear)="onSearchClear()">
-                </paciente-buscar>
-            </div>
-        </div>
+        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
+        </paciente-buscar>
         <plex-loader *ngIf="loading"></plex-loader>
-        <div class=" row">
-            <div class="col-12">
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  (selected)="onSelect($event)">
-                </paciente-listado>
+        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [height]="85"
+                          [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
+        </paciente-listado>
 
-                <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                    ¡No se encontró ningún paciente!
-                </div>
-            </div>
+        <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+            ¡No se encontró ningún paciente!
         </div>
 
         <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="onConfirmSelect($event)">

@@ -7,7 +7,8 @@ import { RupElement } from '.';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
-    templateUrl: 'informeActividadNoNominalizada.html'
+    templateUrl: 'informeActividadNoNominalizada.html',
+    styleUrls: ['informeActividadNoNominalizada.scss']
 })
 @RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
