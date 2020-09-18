@@ -1,0 +1,23 @@
+<ng-container class="mb-3">
+    <table class="table table-striped">
+        <tbody>
+            <tr *ngFor="let item of itemsHistorial">
+                <td *ngIf="item.createdAt">
+                    <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
+                    <br />
+                    Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b>
+                    <ng-container *ngIf="item.organizacionDestino">
+                        <br />
+                        <b>Organización destino:</b>
+                        {{ item.organizacionDestino.nombre }}
+                    </ng-container>
+                    <ng-container *ngIf='item.observacion'>
+                        <br />
+                        <b>OBSERVACIONES: </b>
+                        {{ item.observacion }}
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>

@@ -1,0 +1,24 @@
+<plex-title main titulo="Paciente a derivar">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<label grow="full">Paciente</label>
+<paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()"
+                 grow="full">
+</paciente-buscar>
+<plex-loader *ngIf="loading"></plex-loader>
+<paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                  [autoselect]="false" (selected)="seleccionarPaciente($event)" grow="full">
+</paciente-listado>
+<div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="mt-1 alert alert-warning" grow="full">
+    ¡No se encontró ningún paciente!
+</div>
+<div *ngIf="!resultadoBusqueda" class="mt-5" grow="full">
+    <plex-label size="lg" justify="center">
+        <h5 class="text-center text-muted" grow="full">
+            <plex-icon name="arrow-up" class=""></plex-icon><br><br>
+            Buscá un paciente en la barra superior<br>
+            <small>Podrás ver detalles del mismo y asociarlo a la nueva derivación</small>
+        </h5>
+    </plex-label>
+</div>

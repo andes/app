@@ -1,0 +1,64 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <plex-title main titulo="NUEVA DERIVACIÓN">
+            <plex-button class="float-left mr-1" position="left" type="danger" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
+                         (click)="guardarDerivacion($event)" [validateForm]="form"> </plex-button>
+        </plex-title>
+        <form #form="ngForm">
+            <plex-wrapper>
+                <plex-select [(ngModel)]="organizacionDestino" name="organizacionOrigen" [data]="organizacionesDestino"
+                             label="Organización destino" placeholder="Seleccione la organización destino"
+                             labelField="nombre" [required]="true" grow="full" [disabled]="true">
+                </plex-select>
+                <plex-select [(ngModel)]="modelo.profesionalSolicitante" name="profesionalOrigen"
+                             (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                             placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                             [required]="true" grow="full">
+                </plex-select>
+                <plex-text [(ngModel)]="modelo.detalle" label="Detalle" name="motivo" [required]="true" multiline="true"
+                           grow="full">
+                </plex-text>
+            </plex-wrapper>
+            <!-- Adjuntos -->
+            <plex-title titulo="Cargar adjuntos">
+                <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+                <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
+                </plex-button>
+            </plex-title>
+            <plex-wrapper>
+                <span *ngIf="!waiting">
+                    <span *ngIf="errorExt">
+                        <plex-badge type="danger"> Archivo inválido </plex-badge>
+                    </span>
+                </span>
+                <span *ngIf="waiting">
+                    <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+                    <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
+                    </plex-button>
+                </span>
+                <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                    <ng-container *ngFor="let doc of fotos; let i = index">
+                        <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
+                        <div class="image hover">
+                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                               (click)="visualizador.open(i)">
+                                {{ doc.ext }}
+                            </a>
+                            <div class="x-mark" (click)="imageRemoved(doc)">
+                                <span class="close"></span>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </plex-wrapper>
+            <!-- /Adjuntos -->
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="Detalle del paciente"></plex-title>
+        <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
+    </plex-layout-sidebar>
+</plex-layout>

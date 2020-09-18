@@ -1,0 +1,86 @@
+<plex-title main titulo="Detalle de Derivación">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<plex-options [items]="items" (activated)="cambiarOption($event)"></plex-options>
+<div *ngIf="mostrar === 'derivacion'">
+    <plex-detail size="md" direction="row">
+        <img [mpiFotoPaciente]="derivacion?.paciente" />
+        <plex-badge type="warning">
+            {{derivacion.fecha
+                            | fecha}} {{derivacion.fecha
+                            | hora}}
+        </plex-badge>
+        <plex-badge type="info">
+            {{derivacion.estado}}
+        </plex-badge>
+        <div title>
+            {{derivacion?.paciente | nombre }}
+        </div>
+        <div subtitle>
+            <plex-copy *ngIf="derivacion?.paciente?.documento" [value]="derivacion?.paciente?.documento">
+                {{ derivacion?.paciente?.documento | number  }}
+            </plex-copy>
+        </div>
+    </plex-detail>
+    <plex-title size="sm" titulo="Nota"></plex-title>
+    <plex-grid type="full" cols="1">
+        {{derivacion.detalle}}
+    </plex-grid>
+    <plex-grid type="full" *ngIf="this.derivacion.adjuntos.length > 0" cols="1">
+        <plex-title size="sm" titulo="Adjuntos"></plex-title>
+        <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+            <ng-container *ngFor="let doc of this.derivacion.adjuntos; let i = index">
+                <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+                <div class="image hover">
+                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                       (click)="visualizador.open(i)">
+                        {{ doc.ext }}
+                    </a>
+                </div>
+            </ng-container>
+        </div>
+    </plex-grid>
+    <plex-title size="sm" titulo="Datos de creación"></plex-title>
+    <plex-grid type="full" cols="2">
+        <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
+        </plex-label>
+        <plex-label titulo="Fecha de creación" subtitulo="{{derivacion.createdAt
+                                    | fecha}}  {{derivacion.fecha
+                            | hora}}">
+        </plex-label>
+    </plex-grid>
+    <div *ngIf="reglasDerivacion.length > 0">
+        <form #formEstado="ngForm">
+            <plex-title size="sm" titulo="Actualizar estado">
+            </plex-title>
+            <plex-wrapper>
+                <plex-select [(ngModel)]="reglaSeleccionada" grow="full" label="Nuevo estado" name="estado"
+                             placeholder="Seleccione un nuevo estado" idField="_id" labelField="estadoFinal"
+                             [data]="reglasDerivacion" [required]="true">
+                </plex-select>
+                <plex-select *ngIf="reglaSeleccionada?.modificaDestino" [(ngModel)]="nuevoEstado.organizacionDestino"
+                             name="organizacionOrigen" [data]="organizacionesDestino" label="Organización destino"
+                             placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
+                             [required]="true">
+                </plex-select>
+                <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
+                           grow="full">
+                </plex-text>
+            </plex-wrapper>
+            <div class="w-100" justify>
+                <plex-button type="danger" (click)="cerrar()">
+                    Cancelar
+                </plex-button>
+                <plex-button type="success" (click)="actualizarEstado($event)" [validateForm]="formEstado">
+                    Guardar
+                </plex-button>
+            </div>
+        </form>
+    </div>
+</div>
+<div *ngIf="mostrar === 'historial'">
+    <historial-derivacion *ngIf="derivacion && derivacion.historial.length > 0" [derivacion]="derivacion">
+    </historial-derivacion>
+</div>
