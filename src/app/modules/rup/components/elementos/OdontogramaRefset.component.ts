@@ -432,7 +432,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             // No es pieza completa (ver seleccionarPieza())
             dienteSel.piezaCompleta = false;
 
-            this.prestacion.ejecucion.registros[0].valor = {
+            this.registro.valor = {
                 odontograma: this.odontograma
             };
 
