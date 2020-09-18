@@ -318,7 +318,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     irASolicitudes() {
-        this.router.navigate(['/asignadas']);
+        this.router.navigate(['/solicitudes/asignadas']);
     }
 
     iniciarPrestacion(turno) {

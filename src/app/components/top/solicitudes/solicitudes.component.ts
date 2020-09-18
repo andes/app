@@ -65,6 +65,7 @@ export class SolicitudesComponent implements OnInit {
     public showAnular = false;
     public showCitar = false;
     public showDetalle = false;
+    public showNuevaSolicitud = false;
     public prestacionesDestino = [];
     public estado;
     public estadoEntrada;
@@ -116,11 +117,10 @@ export class SolicitudesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         if (!this.auth.getPermissions('solicitudes:?').length) {
-            this.router.navigate([this.auth.profesional ? 'asignadas' : 'inicio']);
+            this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
         } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*') {
-            this.router.navigate(['asignadas']);
+            this.router.navigate(['/solicitudes/asignadas']);
         }
 
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
@@ -128,7 +128,7 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         let currentUrl = this.router.url;
-        if (currentUrl === '/asignadas') {
+        if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
@@ -176,6 +176,7 @@ export class SolicitudesComponent implements OnInit {
         this.showCitar = false;
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
+        this.showNuevaSolicitud = false;
     }
 
     seleccionar(prestacion) {
@@ -201,6 +202,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAnular = false;
         this.showAuditar = false;
         this.showIniciarPrestacion = false;
+        this.showNuevaSolicitud = false;
     }
 
     darTurno(prestacionSolicitud) {
@@ -231,6 +233,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAuditar = false;
         this.showDetalle = false;
         this.showCitar = false;
+        this.showNuevaSolicitud = false;
         this.showIniciarPrestacion = false;
     }
 
@@ -242,6 +245,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAnular = false;
         this.showAuditar = false;
         this.showDetalle = false;
+        this.showNuevaSolicitud = false;
         this.showIniciarPrestacion = false;
     }
 
@@ -254,6 +258,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAnular = false;
         this.showAuditar = false;
         this.showDetalle = false;
+        this.showNuevaSolicitud = false;
     }
 
     volverDarTurno() {
@@ -276,6 +281,7 @@ export class SolicitudesComponent implements OnInit {
         this.showDetalle = false;
         this.showCitar = false;
         this.showIniciarPrestacion = false;
+        this.showNuevaSolicitud = false;
     }
 
     editarReglas() {
@@ -568,6 +574,7 @@ export class SolicitudesComponent implements OnInit {
         this.showDetalle = false;
         this.showCitar = false;
         this.showIniciarPrestacion = false;
+        this.showNuevaSolicitud = false;
     }
 
     returnAuditoria(event) {
@@ -750,6 +757,26 @@ export class SolicitudesComponent implements OnInit {
         this.modal.showed = false;
         this.prestacionDevolver = null;
         this.motivoRespuesta = null;
+    }
+
+    nuevaSolicitud() {
+        this.showNuevaSolicitud = true;
+        this.showAuditar = false;
+        this.showSidebar = true;
+        this.showAnular = false;
+        this.showDetalle = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
+    }
+
+    returnBusqueda(event) {
+        if (event.status) {
+            this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
+            this.router.navigate([`/solicitudes/${this.tipoSolicitud}/${event.paciente}`]);
+        } else {
+            this.showSidebar = false;
+            this.showNuevaSolicitud = false;
+        }
     }
 }
 

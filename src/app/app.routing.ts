@@ -45,13 +45,8 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
-// Solicitudes
-import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
-
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
-import { ReglasComponent } from './components/top/reglas/reglas.component';
-import { VisualizacionReglasTopComponent } from './components/top/reglas/visualizacionReglasTop.component';
 
 // Home de Estadisticas
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
@@ -62,7 +57,6 @@ import { VincularPacientesComponent } from './components/auditoria/vincular-paci
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 // Buscador de turnos y prestaciones
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
-import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 
 const appRoutes: Routes = [
@@ -135,17 +129,16 @@ const appRoutes: Routes = [
 
   { path: 'reportesDiarios', loadChildren: () => import('./components/reportesDiarios/reportes-diarios.module').then(m => m.ReportesDiariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // Solicitudes
-  { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'solicitudes/:tipo', component: NuevaSolicitudComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'asignadas', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
   // Buscador de turnos y prestaciones
-  { path: 'buscador', component: TurnosPrestacionesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'buscador', loadChildren: () => import('./components/buscadorTurnosPrestaciones/turnos-prestaciones.module').then(m => m.TurnosPrestacionesModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // TOP
-  { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'top/reglasVisualizacion', component: VisualizacionReglasTopComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  {
+    path: 'solicitudes',
+    loadChildren: () => import('./components/top/top.routing').then(m => m.TOPRouting),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
+  },
 
   // Principal
   { path: 'auth', loadChildren: () => import('./apps/auth/auth.module').then(m => m.AuthAppModule) },

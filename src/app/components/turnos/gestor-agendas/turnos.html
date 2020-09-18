@@ -289,7 +289,7 @@
                             </plex-badge>
                             <plex-badge *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'"
                                         size="sm" type="default">
-                                <popover-audit placement="left" [data]="turno" [showUpdate]="true"></popover-audit>
+                                <shared-popover-audit placement="left" [data]="turno" [showUpdate]="true"></shared-popover-audit>
                             </plex-badge>
                         </td>
                     </tr>
@@ -360,7 +360,7 @@
                         </plex-badge>
                         <plex-badge *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'"
                                     size="sm" type="default">
-                            <popover-audit placement="left" [data]="sobreturno" [showUpdate]="true"></popover-audit>
+                            <shared-popover-audit placement="left" [data]="sobreturno" [showUpdate]="true"></shared-popover-audit>
                         </plex-badge>
                     </td>
                 </tr>

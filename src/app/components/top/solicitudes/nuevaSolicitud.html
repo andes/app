@@ -7,45 +7,23 @@
                          (click)="guardarSolicitud($event)" [validateForm]="form"> </plex-button>
         </plex-title>
         <form #form="ngForm">
-            <div class="row">
-                <div *ngIf="showSeleccionarPaciente" class="col-12">
-                    <label *ngIf="showSeleccionarPaciente">Paciente</label>
-                    <!-- ----------- Búsqueda de pacientes -------------- -->
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
-                        </div>
-                    </div>
-                    <plex-loader *ngIf="loading"></plex-loader>
-                    <div class="row">
-                        <div class="col-12">
-                            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                              [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                              (selected)="seleccionarPaciente($event)">
-                            </paciente-listado>
-
-                            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                                ¡No se encontró ningún paciente!
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ------------------------------------------------ -->
-                </div>
-            </div>
             <!-- SOLICITUD ENTRADA -->
-            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'entrada'">
+            <ng-container *ngIf="tipoSolicitud == 'entrada'">
                 <plex-wrapper>
-                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
+                    <div class="mr-4 mb-3" justify="start">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
+                        hintType="info">
+                        </span>
+                    </div>
                     <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
                                  (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
                                  placeholder="Tipos de Prestación solicitada" [required]="true"
                                  (change)="onSelectPrestacionOrigen()">
                     </plex-select>
-                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
                                  name="organizacionOrigen" [data]="dataOrganizacionesOrigen" label="Organización origen"
                                  placeholder="Seleccione la organización" labelField="nombre"
                                  (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
@@ -83,17 +61,22 @@
             </ng-container>
             <!-- /SOLICITUD ENTRADA -->
             <!-- SOLICITUD SALIDA -->
-            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'salida'">
+            <ng-container *ngIf="tipoSolicitud == 'salida'">
                 <plex-wrapper>
-                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                    <plex-datetime class="mr-0" type="date" [(ngModel)]="modelo.solicitud.fecha"
                                    name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
                     </plex-datetime>
-                    <plex-select [plexWizard]="0" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                    <div class="mr-4  mb-3" justify="start">
+                        <span hint="Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema" 
+                        hintType="info">
+                        </span>
+                    </div>
+                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
                                  name="tipoPrestacionOrigen" (change)="onSelect()"
                                  (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
                                  placeholder="Tipos de Prestación Origen" [required]="true">
                     </plex-select>
-                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
+                    <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
                                  name="organizacionDestino" label="Organización destino"
                                  placeholder="Seleccione la organización" labelField="nombre"
                                  [data]="dataOrganizacionesDestino" [required]="true"
@@ -127,12 +110,12 @@
             </ng-container>
             <!-- /SOLICITUD SALIDA -->
             <!-- Adjuntar Archivos -->
-            <plex-title titulo="Cargar documentos" *ngIf="!showSeleccionarPaciente">
+            <plex-title titulo="Cargar documentos">
                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
                 <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
                 </plex-button>
             </plex-title>
-            <plex-wrapper *ngIf="!showSeleccionarPaciente">
+            <plex-wrapper>
                 <span *ngIf="!waiting">
                     <span *ngIf="errorExt">
                         <plex-badge type="danger"> Archivo inválido </plex-badge>
@@ -164,6 +147,7 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <plex-title titulo="Detalle del paciente"></plex-title>
-        <paciente-detalle *ngIf="!showSeleccionarPaciente" [paciente]="paciente"></paciente-detalle>
+        <paciente-detalle *ngIf="paciente" orientacion="vertical" [paciente]="paciente" [fields]="fieldsDetalle">
+        </paciente-detalle>
     </plex-layout-sidebar>
 </plex-layout>
