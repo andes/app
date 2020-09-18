@@ -12,7 +12,7 @@
             </plex-select>
             <ng-container *ngFor="let argumento of consultaSeleccionada?.argumentos">
                 <plex-bool *ngIf="argumento.tipo==='salida'" [(ngModel)]="argumento.check"
-                           [label]="argumento.label?argumento.label:argumento.key" name="nombreCompleto">
+                           [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
                 </plex-bool>
             </ng-container>
         </plex-grid>

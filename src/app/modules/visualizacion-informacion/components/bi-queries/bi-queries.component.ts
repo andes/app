@@ -32,10 +32,16 @@ export class BiQueriesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (!this.auth.check('visualizacionInformacion:biQueries')) {
+    const permisos = this.auth.getPermissions('visualizacionInformacion:biQueries:?');
+    if (permisos.length) {
+      if (permisos[0] === '*') {
+        this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
+      } else {
+        this.queries$ = this.queryService.getAllQueries({ _id: permisos });
+      }
+    } else {
       this.router.navigate(['./inicio']);
     }
-    this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
 
   }
 
