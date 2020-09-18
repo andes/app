@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, EMPTY } from 'rxjs';
 import { PacienteService } from './paciente.service';
 
 export interface PacienteEscaneado {
@@ -14,6 +14,10 @@ export interface PacienteEscaneado {
 
 @Injectable()
 export class PacienteBuscarService {
+    private searchText;
+    private skip = 0;
+    private limit = 10;
+    private scrollEnd = false;
     constructor(
         private pacienteService: PacienteService) { }
 
@@ -139,9 +143,12 @@ export class PacienteBuscarService {
     /**
      * Busca paciente cada vez que el campo de busqueda cambia su valor
      */
-    public search(searchText: string, skip?, limit?, returnScannedPatient = false) {
+    public search(searchText: string, returnScannedPatient = false) {
         // Inicia búsqueda
         if (searchText) {
+            this.searchText = searchText;
+            this.skip = 0;
+            this.scrollEnd = false;
             // Si matchea una expresión regular, busca inmediatamente el paciente
             let pacienteEscaneado = this.comprobarDocumentoEscaneado(searchText);
             if (pacienteEscaneado) {
@@ -162,7 +169,7 @@ export class PacienteBuscarService {
                 );
             } else {
                 // Busca por texto libre
-                return this.findByText(searchText, skip, limit);
+                return this.findByText();
             }
         }
     }
@@ -170,15 +177,23 @@ export class PacienteBuscarService {
     /**
      * Busca paciente cada vez que el campo de busqueda cambia su valor
      */
-    public findByText(searchText, skip?, limit?) {
+    public findByText() {
+        if (this.scrollEnd) {
+            return EMPTY;
+        }
         // Busca por texto libre
         return this.pacienteService.getMatch({
             type: 'multimatch',
-            cadenaInput: searchText,
-            limit: limit,
-            skip: skip
+            cadenaInput: this.searchText,
+            limit: this.limit,
+            skip: this.skip
         }).pipe(
-            map(resultado => {
+            map((resultado: any) => {
+                this.skip += resultado.length;
+                // si vienen menos resultado que {{ limit }} significa que ya se cargaron todos
+                if (!resultado.length || resultado.length < this.limit) {
+                    this.scrollEnd = true;
+                }
                 return { pacientes: resultado, err: null };
             },
                 err => { return { pacientes: [], err: err }; }

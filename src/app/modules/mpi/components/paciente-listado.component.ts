@@ -2,6 +2,7 @@ import { IPacienteMatch } from './../interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { PacienteBuscarService } from 'src/app/core/mpi/services/paciente-buscar.service';
 
 @Component({
     selector: 'paciente-listado',
@@ -39,6 +40,9 @@ export class PacienteListadoComponent {
         }
     }
 
+    // Indica la altura del listado respecto a su contenedor
+    @Input() height = 80;
+
     // Indica si debe aparecer el boton 'editar' en cada resultado
     @Input() editing = false;
 
@@ -48,7 +52,16 @@ export class PacienteListadoComponent {
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    constructor(private plex: Plex) {
+    constructor(
+        private plex: Plex,
+        private pacienteBuscar: PacienteBuscarService) { }
+
+    onScroll() {
+        this.pacienteBuscar.findByText().subscribe((resultado: any) => {
+            if (resultado) {
+                this.listado = this.listado.concat(resultado.pacientes);
+            }
+        });
     }
 
     public seleccionar(paciente: IPaciente) {
