@@ -9,7 +9,7 @@
         <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
             <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
                          [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
-                         placeholder="Elija cama" label="Cama" idField="idCama"
+                         placeholder="Elija cama" label="Cama" idField="id"
                          labelField="nombre + '(' + sectorName + ')'">
             </plex-select>
         </ng-container>

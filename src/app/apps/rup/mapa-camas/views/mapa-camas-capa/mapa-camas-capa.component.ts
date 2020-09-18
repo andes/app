@@ -108,7 +108,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.ambito = this.mapaCamasService.ambito;
 
         this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {
-            if (cama.idCama && !this.accion) {
+            if (cama.id && !this.accion) {
                 this.accion = 'verDetalle';
             }
             return cama;
@@ -186,7 +186,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
-        if (!selectedCama.idCama || selectedCama.idCama !== cama.idCama) {
+        if (!selectedCama.id || selectedCama.id !== cama.id) {
             this.mapaCamasService.select(cama);
             this.accion = 'verDetalle';
         } else {

@@ -54,7 +54,7 @@
                 <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
                     <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [capa]="capa"
                         [permisoIngreso]="permisoIngreso" (accionCama)="selectCama(cama, $event)"
-                        (click)="verDetalle(cama, selectedCama)" [class.invert]="(cama.estado === 'disponible') ? selectedCama.idCama === cama.idCama : cama.idInternacion === selectedCama.idInternacion">
+                        (click)="verDetalle(cama, selectedCama)" [class.invert]="(cama.estado === 'disponible') ? selectedCama.id === cama.id : cama.idInternacion === selectedCama.idInternacion">
                     </tr>
                 </ng-container>
             </table>

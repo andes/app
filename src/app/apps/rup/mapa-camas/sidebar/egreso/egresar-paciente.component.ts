@@ -95,7 +95,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
-        public salaComunService: SalaComunService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         private listadoInternacionService: ListadoInternacionService
     ) {
@@ -211,9 +210,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     egresoSimplificado(estado) {
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
+            let estadoPatch = {};
             if (!this.cama.sala) {
-                const estadoPatch = {
-                    _id: this.cama.idCama,
+                estadoPatch = {
+                    _id: this.cama.id,
                     estado: estado,
                     idInternacion: null,
                     paciente: null,
@@ -224,19 +224,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
                     }
                 };
-
-                this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
-                    this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-                    if (this.view === 'listado-internacion') {
-                        this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
-                    } else if (this.view === 'mapa-camas') {
-                        this.mapaCamasService.select(null);
-                        this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
-                    }
-                    this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al egresar paciente!');
-                });
             } else {
                 this.cama.estado = estado;
                 this.cama.extras = {
@@ -244,15 +231,21 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     idInternacion: this.cama.idInternacion,
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
                 };
-                this.salaComunService.egresarPaciente(this.cama, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
-                    this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                estadoPatch = this.cama;
+            }
+
+            this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
+                this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                if (this.view === 'listado-internacion') {
+                    this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                } else if (this.view === 'mapa-camas') {
                     this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
-                    this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al egresar paciente!');
-                });
-            }
+                }
+                this.onSave.emit();
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al egresar paciente!');
+            });
         }
     }
 
@@ -510,7 +503,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // La cama este disponible en la fecha que la quiero usar,
 
     checkEstadoCama() {
-        this.mapaCamasService.get(this.fecha, this.cama.idCama).subscribe((cama) => {
+        this.mapaCamasService.get(this.fecha, this.cama.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;

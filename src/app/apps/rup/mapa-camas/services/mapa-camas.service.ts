@@ -13,6 +13,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 
 
 @Injectable()
@@ -73,7 +74,8 @@ export class MapaCamasService {
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
         private pacienteService: PacienteService,
-        private maquinaEstadosHTTP: MaquinaEstadosHTTP
+        private maquinaEstadosHTTP: MaquinaEstadosHTTP,
+        private salaComunService: SalaComunService,
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -235,10 +237,10 @@ export class MapaCamasService {
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
         let camasMismaUO = [];
         let camasDistintaUO = [];
-        if (cama.idCama) {
+        if (cama.id) {
             camas.map(c => {
                 if (c.estado === 'disponible') {
-                    if (c.idCama !== cama.idCama) {
+                    if (c.id !== cama.id) {
                         if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
                             camasMismaUO.push(c);
                         } else {
@@ -421,9 +423,17 @@ export class MapaCamasService {
         return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
-    save(data, fecha, esMovimiento = true): Observable<ICama> {
-        data.esMovimiento = esMovimiento;
-        return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
+    save(data, fecha, esMovimiento = true): Observable<any> {
+        if (!data.sala) {
+            data.esMovimiento = esMovimiento;
+            return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
+        } else {
+            if (data.estado === 'ocupada') {
+                return this.salaComunService.ingresarPaciente(data, fecha);
+            } else {
+                return this.salaComunService.egresarPaciente(data, fecha);
+            }
+        }
     }
 
     changeTime(cama, fechaOriginal, nuevaFecha, idInternacion, ambito: string = null, capa: string = null) {

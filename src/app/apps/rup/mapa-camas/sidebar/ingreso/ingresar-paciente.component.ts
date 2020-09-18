@@ -199,7 +199,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         if (snap.paciente.id === this.paciente.id) {
                             if (!this.cama) {
                                 cama = snap;
-                            } else if (this.cama.idCama !== snap.idCama) {
+                            } else if (this.cama.id !== snap.id) {
                                 cama = snap;
                             }
                         }
@@ -474,7 +474,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     checkEstadoCama() {
         this.checkMovimientos();
-        this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.idCama).subscribe((cama) => {
+        this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
