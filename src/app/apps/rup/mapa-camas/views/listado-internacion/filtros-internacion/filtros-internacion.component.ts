@@ -55,10 +55,10 @@ export class FiltrosInternacionComponent implements OnInit {
 
     reporteInternaciones() {
         const params = {
-            ingresoDesde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
-            egresoDesde: moment(this.filtros.fechaEgresoDesde).startOf('d').format(),
-            ingresoHasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
-            egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
+            desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
+            hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
+            // egresoDesde: moment(this.filtros.fechaEgresoDesde).startOf('d').format(),
+            // egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
             organizacion: this.auth.organizacion.id
         };
         this.requestInProgress = true;
