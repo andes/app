@@ -55,7 +55,8 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
                     return this.cambiarCama(camaActual, this.nuevaCama, fechaCambio);
                 })
             ).subscribe(() => {
-                this.plex.info('success', 'Cambio de cama exitoso!');
+                const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
+                this.plex.info('success', mensaje);
                 this.mapaCamasService.setFecha(this.fecha);
                 this.onSave.emit();
             });
