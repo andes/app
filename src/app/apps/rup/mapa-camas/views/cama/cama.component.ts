@@ -246,7 +246,11 @@ export class CamaMainComponent implements OnInit {
     }
 
     onSectorSelect($event, organizacion) {
-        this.camaEditada.sectores = this.organizacionService.getRuta(organizacion, $event.value);
+        if ($event.value) {
+            this.camaEditada.sectores = this.organizacionService.getRuta(organizacion, $event.value);
+        } else {
+            this.camaEditada.sectores = null;
+        }
     }
 
     guardarCambios(datosCama, capa, fecha) {
