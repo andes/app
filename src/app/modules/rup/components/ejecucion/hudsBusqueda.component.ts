@@ -324,6 +324,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     estado: 'validada'
                 };
             });
+            this.cdas.forEach(d => d.data['solicitud'] = { ambitoOrigen: 'ambulatorio' });
             // filtramos las vacunas y laboratorios por ahora para que se listan por separado
             this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Vacunas_CDA_ID);
             this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Laboratorio_CDA_ID);
@@ -335,6 +336,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             // Filtramos por CDA para poder recargar los estudiosc
             this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            this.prestacionesCopia = this.prestaciones.slice();
         });
     }
 
