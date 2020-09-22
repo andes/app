@@ -30,12 +30,11 @@ export class ModalDisclaimerComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         public disclaimerService: DisclaimerService,
-        public usuarioService: UsuarioService,
-        private cd: ChangeDetectorRef
+        public usuarioService: UsuarioService
     ) { }
 
     ngOnInit() {
-        this.disclaimerService.get({ activo: true }).subscribe(data => {
+        this.disclaimerService.getActivos().subscribe(data => {
             if (data && data.length) {
                 this.disclaimer = data[0];
                 this.version = this.disclaimer.version;

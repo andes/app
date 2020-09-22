@@ -1,5 +1,5 @@
 import { distinctUntilChanged, map, scan, filter, publishReplay, refCount, tap } from 'rxjs/operators';
-import { pipe, OperatorFunction } from 'rxjs';
+import { pipe, OperatorFunction, Observable, Subscription } from 'rxjs';
 import { saveAs as saveAsFileSaver } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 import * as moment_ from 'moment';
@@ -63,4 +63,36 @@ export function saveAs(fileName: string, type: Extensiones, timestamp = true) {
             window.print();
         }
     });
+}
+
+export function cacheStorage(key: string) {
+    return function <T>(source: Observable<T>): Observable<T> {
+        return new Observable(subscriber => {
+            let subscription: Subscription;
+            const cacheValue = window.sessionStorage.getItem(key);
+            if (cacheValue) {
+                const _value: any = JSON.parse(cacheValue);
+                subscriber.next(_value);
+                subscriber.complete();
+            } else {
+                subscription = source.subscribe({
+                    next(value) {
+                        window.sessionStorage.setItem(key, JSON.stringify(value));
+                        subscriber.next(value);
+                    },
+                    error(error) {
+                        subscriber.error(error);
+                    },
+                    complete() {
+                        subscriber.complete();
+                    }
+                });
+            }
+            return () => {
+                if (subscription) {
+                    subscription.unsubscribe();
+                }
+            };
+        });
+    };
 }

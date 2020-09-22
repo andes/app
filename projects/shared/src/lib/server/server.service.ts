@@ -84,11 +84,11 @@ export class Server {
 
     private updateLoader(show: boolean, options: Options) {
         if (!options || options.showLoader || (options.showLoader === undefined)) {
-            if (show) {
-                this.plex.showLoader();
-            } else {
-                this.plex.hideLoader();
-            }
+            // if (show) {
+            //     this.plex.showLoader();
+            // } else {
+            //     this.plex.hideLoader();
+            // }
         }
     }
 
