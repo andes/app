@@ -40,7 +40,6 @@ export class InicioComponent implements AfterViewInit {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
                 registros => {
-                    this.secciones = registros.filter(x => (!x.submodulos || !x.submodulos.length));
 
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
@@ -59,8 +58,14 @@ export class InicioComponent implements AfterViewInit {
                         }
                     });
 
+                    this.secciones = this.modulos.filter(x => (!x.submodulos || !x.submodulos.length));
+
                     this.modulos.sort((a, b) => a.orden - b.orden);
-                    this.modulos.map(x => x.submodulos.sort((a, b) => a.orden - b.orden));
+                    this.modulos.map(x => {
+                        if (x.submodulos && x.submodulos.length > 0) {
+                            return x.submodulos.sort((a, b) => a.orden - b.orden);
+                        }
+                    });
 
 
                     if (this.modulos.length) {

@@ -1,12 +1,14 @@
 <plex-layout>
     <plex-layout-main>
-        <header class="logo-container mt-3 border-1" justify responsive>
+        <header justify responsive>
             <div class="marca" justify="start">
                 <div svgLogo></div>
                 <div svgAcronimo></div>
-                <div [class]="provinciaClass">{{ provincia }}</div>
+                <div class="provincia">
+                    <div [class]="provinciaClass">{{ provincia }}</div>
+                </div>
             </div>
-            <div class="bienvenida mr-4">
+            <div class="bienvenida">
                 <div class="hola">
                     Hola <b>{{ auth.usuario.nombre }}</b>
                 </div>
@@ -20,9 +22,9 @@
 
         </header>
         <hr>
-        <main responsive>
+        <main *ngIf="!denied && !loading" responsive>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
-            <div *ngIf="!denied && !loading" class="modulos">
+            <div class="modulos">
                 <ng-container *ngFor="let modulo of modulos">
 
                     <div *ngIf="modulo.activo" class="modulo">
@@ -32,7 +34,7 @@
                                       hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
                                       (click)="irANovedades(modulo._id)"></span>
                             </b>
-                            <div class="descripcion">{{modulo.descripcion}}</div>
+                            <div class="descripcion">{{ modulo.descripcion }}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
@@ -58,14 +60,14 @@
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
                         </div>
                         <div class="secundario">
-                            <div class="titulo ml-2">{{seccion.nombre}}</div>
-                            <div class="subtitulo ml-2">{{seccion.subtitulo}}</div>
+                            <div class="titulo ml-2">{{ seccion.nombre }}</div>
+                            <div class="subtitulo ml-2">{{ seccion.subtitulo }}</div>
                         </div>
                     </div>
                 </ng-container>
             </div>
         </main>
-        <div *ngIf="denied && !loading" class="w-100 h-75 d-flex justify-content-center align-items-center">
+        <div *ngIf="denied && !loading" class="denegado" justify="center">
             <main role="main" class="inner">
                 <plex-label icon="llave" type="warning" size="xl" direction="column"
                             titulo="No tenés permisos para ningún módulo de ANDES"

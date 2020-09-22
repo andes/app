@@ -1,26 +1,21 @@
 //
 // Variables
-$color-celeste: #039ac6;
-$color-violeta: #9b2a79;
-$color-rosa: #002b3a;
-$color-amarillo: #666600;
-$color-salmon: #e2917f;
-$color-coral: #ce803e;
-$color-verde-oscuro: #257300;
-
 $andes-azul-oscuro: #002838;
-$andes-azul: #0070cc;
-$andes-azul-claro: #00a8e0;
-$andes-celeste: #84cef0;
-$andes-violeta: #982f98;
-$andes-magenta: #e3007e;
-$andes-verde: #00b9b1;
-$andes-verde-claro: #63c7b7;
-$andes-naranja: #ff4a1a;
-$andes-naranja-claro: #f4a03b;
 
 header {
     border: 0;
+    margin-top: 1rem;
+    div[svgLogo] {
+        width: 117px;
+        height: 55px;
+        margin-right: 27px;
+    }
+
+    div[svgAcronimo] {
+        width: 332px;
+        height: 42px;
+        fill: $andes-azul-oscuro;
+    }
 
     &.size-sm,
     &.size-md {
@@ -34,10 +29,6 @@ header {
             width: 100%;
         }
 
-        .neuquen {
-            top: 0;
-        }
-
         .hola {
             font-size: 1.5rem;
         }
@@ -47,14 +38,17 @@ header {
         }
     }
 
-    .neuquen {
-        color: $andes-azul-claro;
+    .provincia {
+        color: var(--nav-bar-color);
         font-size: 1rem;
         text-transform: uppercase;
         position: relative;
         top: 12px;
         left: 10px;
     }
+
+    opacity: 0;
+    animation: header 0.5s ease-in 0s 1 forwards;
 }
 
 header,
@@ -67,25 +61,9 @@ main {
     justify-content: space-between;
 }
 
-//
-// Clases
-.logo-container {
-    div[svgLogo] {
-        width: 117px;
-        height: 55px;
-        margin-right: 27px;
-    }
-
-    div[svgAcronimo] {
-        width: 332px;
-        height: 42px;
-        fill: $andes-azul-oscuro;
-    }
-}
-
 .bienvenida {
     text-align: center;
-
+    margin-right: 1.5rem;
     .hola {
         font-size: 28px;
         color: $andes-azul-oscuro;
@@ -93,14 +71,14 @@ main {
 
     .mensaje {
         font-size: 18px;
-        color: $andes-azul-claro;
+        color: var(--nav-bar-color);
     }
 }
 
 .modulos {
     width: 73vw;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     flex-wrap: wrap;
 
     .modulo {
@@ -111,10 +89,12 @@ main {
 
         box-sizing: border-box;
         width: 245px;
+        margin-bottom: 1rem;
 
         .principal {
             width: 220px;
             height: 62px;
+            margin-bottom: 7px;
 
             .titulo {
                 color: rgb(56, 69, 85);
@@ -128,12 +108,21 @@ main {
         }
 
         .submodulos {
-            height: 140px;
+            width: 250px;
+            height: 145px;
             flex-wrap: wrap;
             justify-content: flex-start;
         }
 
+        opacity: 0;
+        @for $child from 1 through 10 {
+            &:nth-child(#{$child}) {
+                animation: submodulos #{$child/2}s ease-in-out 0.15s 1 forwards;
+            }
+        }
         .submodulo {
+            cursor: pointer;
+            box-sizing: content-box;
             width: 70px;
             height: 70px;
             border-radius: 0;
@@ -149,6 +138,7 @@ main {
 
             box-shadow: 4px 2px 6px #aaa;
             margin: 0 5px 5px 0;
+            padding-top: 5px;
 
             &.hover {
                 transition: all ease-in-out 0.25s;
@@ -162,10 +152,18 @@ main {
             .titulo {
                 font-size: 11px;
                 line-height: normal;
+                span {
+                    cursor: pointer;
+                }
             }
 
             .adi {
                 font-size: 327px !important;
+            }
+
+            // Aplica margin bottom sólo si tiene 2 renglones de submódulos
+            &:nth-child(4) {
+                margin-bottom: 1rem;
             }
         }
     }
@@ -181,6 +179,9 @@ main {
 .secciones {
     width: 20vw;
     flex-direction: column;
+    & > {
+        cursor: pointer;
+    }
 }
 
 .seccion {
@@ -189,7 +190,15 @@ main {
     align-items: center;
 
     padding-right: 40px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.1rem;
+
+    opacity: 0;
+
+    @for $child from 1 through 20 {
+        &:nth-child(#{$child}) {
+            animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
+        }
+    }
 
     .principal .band {
         width: 4px;
@@ -306,50 +315,85 @@ main {
     }
 }
 
+.denegado {
+    width: 100%;
+    height: 75%;
+}
+
 // Responsive
+
+header {
+    &.size-sm {
+        [svgLogo] {
+            height: 40px;
+            margin-right: 0px;
+        }
+    }
+}
+
 main {
     &.size-sm {
         flex-direction: column;
-
-        .modulos {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-
-            .modulo {
-                width: 30%;
-                margin-bottom: 2rem;
-
-                .principal {
-                    width: 100%;
-                    height: auto;
-
-                    .descripcion {
-                        display: none;
-                    }
-                }
-
-                .submodulos {
-                    height: auto;
-
-                    .submodulo {
-                        margin: 0 5px 5px 0;
-                    }
-                }
-            }
-        }
-
         .secciones {
             display: flex;
             justify-content: space-between;
             flex-flow: wrap;
             width: 80vw;
-
+            margin-top: 6rem;
             .seccion {
                 min-width: 225px;
                 padding-right: 0;
                 margin-bottom: 0.5rem;
             }
         }
+    }
+
+    &.size-sm,
+    &.size-md,
+    &.size-lg {
+        .modulos {
+            width: 55vw;
+        }
+        .secciones {
+            width: 35vw;
+        }
+    }
+}
+
+// Animaciones con keyframes
+@keyframes header {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes submodulos {
+    0% {
+        opacity: 0;
+        position: relative;
+        bottom: -15px;
+        height: 130px;
+    }
+    100% {
+        opacity: 1;
+        position: relative;
+        bottom: 0px;
+        height: 145px;
+    }
+}
+
+@keyframes seccion {
+    0% {
+        opacity: 0;
+        position: relative;
+        left: -15px;
+    }
+    100% {
+        opacity: 1;
+        position: relative;
+        left: 0px;
     }
 }
