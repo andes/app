@@ -27,6 +27,8 @@ export class SnomedSinonimoComponent implements OnChanges {
 
         if (this.concepto.term.trim() !== this.fsn.trim()) {
             this.sinonimo = true;
+        } else {
+            this.sinonimo = false;
         }
     }
 
