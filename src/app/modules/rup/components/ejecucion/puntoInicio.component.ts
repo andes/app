@@ -1,7 +1,5 @@
 import { Unsubscribe } from '@andes/shared';
-
 import { forkJoin as observableForkJoin } from 'rxjs';
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -300,7 +298,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     * Navega para ver seleccionar un paciente y ver la huds
     */
     verHuds() {
-        this.router.navigate(['/rup/huds']);
+        this.router.navigate(['/huds']);
     }
 
     cargarSolicitudes() {
@@ -318,7 +316,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     irASolicitudes() {
-        this.router.navigate(['/asignadas']);
+        this.router.navigate(['/solicitudes/asignadas']);
     }
 
     iniciarPrestacion(turno) {
@@ -522,10 +520,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     routeTo(action, id) {
-        if (id) {
-            this.router.navigate(['rup/' + action + '/', id]);
+        if (action === 'paciente') {
+            this.router.navigate(['huds', 'paciente', id]);
         } else {
-            this.router.navigate(['rup/' + action]);
+            if (id) {
+                this.router.navigate(['rup/' + action + '/', id]);
+            } else {
+                this.router.navigate(['rup/' + action]);
+            }
         }
     }
 

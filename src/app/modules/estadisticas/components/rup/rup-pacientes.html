@@ -14,7 +14,7 @@
                     <plex-select [data]="prestaciones" idField="conceptId" labelField="term" label="Prestacion"
                                  [(ngModel)]="prestacion" (change)="onPrestacionChange()"></plex-select>
                 </div>
-                <div class="col-1">
+                <div class="col-1" *ngIf="prestacionesHijas.length">
                     <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar" class="vertical-center">
                     </plex-bool>
                 </div>

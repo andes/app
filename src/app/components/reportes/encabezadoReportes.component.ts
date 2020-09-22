@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { QueriesService } from '../../services/query.service';
-import { Slug } from 'ng2-slugify';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -51,7 +50,6 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalMasculino = 0;
     public totalFemenino = 0;
     public totalOtro = 0;
-    private slug: Slug = new Slug('default');
     public queries;
 
     // Eventos

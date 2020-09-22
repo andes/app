@@ -5,9 +5,21 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '@andes/shared';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
+
 import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.component';
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
-import { DirectiveLibModule } from '../../directives/directives.module';
+import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
+
+
+export const TOP_COMPONENTS = [
+    VisualizacionReglasTopComponent,
+    VisualizacionReglasComponent,
+    HistorialSolicitudComponent,
+];
+
+export const TOP_PROVIDERS = [
+];
 
 @NgModule({
     imports: [
@@ -20,10 +32,13 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         DirectiveLibModule
     ],
     declarations: [
-        VisualizacionReglasComponent,
-        HistorialSolicitudComponent
+        ...TOP_COMPONENTS
+    ],
+    providers: [
+        ...TOP_PROVIDERS
     ],
     exports: [
+        VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         HistorialSolicitudComponent
     ],

@@ -47,6 +47,7 @@ import { IngresoPacienteWorkflowComponent } from './sidebar/ingreso/ingreso-paci
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { NgDragDropModule } from 'ng-drag-drop';
+import { RUPLibModule } from '../../../modules/rup/rup-lib.module';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -100,7 +101,8 @@ export const INTERNACION_PROVIDERS = [
         MitosModule,
         OrganizacionLibModule,
         ElementosRUPModule,
-        NgDragDropModule
+        NgDragDropModule,
+        RUPLibModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

@@ -1,11 +1,8 @@
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { Plex } from '@andes/plex';
-
-
 
 @Component({
-  selector: 'popover-audit',
+  selector: 'shared-popover-audit',
   templateUrl: 'popover-audit.html'
 })
 export class PopoverAuditComponent implements OnInit {

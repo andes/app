@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
-
 })
 
 export class TurnosPrestacionesComponent implements OnInit {

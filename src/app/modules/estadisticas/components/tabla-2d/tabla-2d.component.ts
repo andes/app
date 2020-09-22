@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { Slug } from 'ng2-slugify';
-import { saveAs } from 'file-saver';
 import { EstAgendasService } from '../../services/agenda.service';
 
 @Component({
@@ -14,7 +12,7 @@ export class Tabla2DComponent implements OnInit, OnChanges {
     @Input() filtros: any;
 
     constructor(public estService: EstAgendasService) { }
-
+    public requestInProgress: boolean;
     public columnas: any[];
     public datos: any[];
     public tipoTurno = {
@@ -40,8 +38,6 @@ export class Tabla2DComponent implements OnInit, OnChanges {
         }
     }
 
-    private slug = new Slug('default');
-
     descargar(value) {
         // ARMAR CSV para visualizar todos los datos
         let tabla = Object.keys(value).map(city => {
@@ -51,15 +47,11 @@ export class Tabla2DComponent implements OnInit, OnChanges {
         });
         // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv en la primer row
         Object.keys(this.filtros).map(filtro => tabla[0][filtro] = this.filtros[filtro] ? this.filtros[filtro] : '');
-        this.estService.descargarCSV(tabla).subscribe((data: any) => {
-            this.descargarArchivo(data, { type: 'text/csv' });
-        });
-    }
-
-    private descargarArchivo(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify('Dashboard Turnos' + '-' + this.titulo + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.csv';
-        saveAs(blob, nombreArchivo);
+        this.requestInProgress = true;
+        this.estService.descargarCSV(value, 'Dashboard Turnos' + '-' + this.titulo).subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
 
 }

@@ -10,7 +10,7 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { HUDSService } from '../../services/huds.service';
-
+import { Location } from '@angular/common';
 import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
 
 @Component({
@@ -28,10 +28,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public activeIndexResumen = 0;
 
     public registros = [];
-    // boton de volver cuando la ejecucion tiene motivo de internacion.
-    // Por defecto vuelve al mapa de camas
-    public btnVolver = 'VOLVER';
-    public rutaVolver;
 
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
@@ -47,7 +43,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
-        public seguimientoPacienteService: SeguimientoPacienteService
+        public seguimientoPacienteService: SeguimientoPacienteService,
+        private location: Location
     ) { }
 
     /**
@@ -74,14 +71,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.activeIndexPrestacion = this.activeIndexPrestacion - 1;
             }
             this.registros = [...datos];
-        });
-
-        // consultamos desde que pagina se ingreso para poder volver a la misma
-        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-            if (resp) {
-                this.btnVolver = resp.nombre;
-                this.rutaVolver = resp.ruta;
-            }
         });
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
@@ -138,12 +127,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     * @param ruta
     */
     volver() {
-        // this.location.back();
-        if (this.rutaVolver) {
-            this.router.navigate([this.rutaVolver]);
-        } else {
-            this.router.navigate(['/rup']);
-        }
+        this.location.back();
     }
 
     evtCambiaPaciente() {

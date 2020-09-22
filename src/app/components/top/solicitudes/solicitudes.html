@@ -3,15 +3,14 @@
         <header>
             <form #form="ngForm">
                 <plex-title main titulo="{{asignadas?'Solicitudes asignadas':'Módulo de solicitudes'}}">
-                    <plex-button *ngIf="!asignadas" type="success" label="Nueva Solicitud"
-                                 (click)="formularioSolicitud()">
+                    <plex-button *ngIf="!asignadas" type="success" label="Nueva Solicitud" (click)="nuevaSolicitud()">
                     </plex-button>
                     <plex-button *ngIf="permisosReglas && !asignadas" type="warning" label="Reglas"
                                  (click)="editarReglas()">
                     </plex-button>
 
                     <plex-button *ngIf="!asignadas" type="primary" label="Reglas Global"
-                                 routerLink="/top/reglasVisualizacion">
+                                 routerLink="/solicitudes/reglasVisualizacion">
                     </plex-button>
 
                 </plex-title>
@@ -119,9 +118,9 @@
                                                 {{prestacion.createdAt | fecha}}</td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.solicitud.fecha
                                         | fecha}}<br>
-                                                <popover-audit placement="right" [data]="prestacion"
-                                                               [showUpdate]="false">
-                                                </popover-audit>
+                                                <shared-popover-audit placement="right" [data]="prestacion"
+                                                                      [showUpdate]="false">
+                                                </shared-popover-audit>
 
                                             </td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.paciente
@@ -197,7 +196,7 @@
                                                     <span
                                                           *ngIf="prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
                                                         <plex-button icon="contacts" type="primary"
-                                                                     (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                                                     (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
                                                                      title="Ver Huds">
                                                         </plex-button>
                                                         <plex-button icon="check" type="success"
@@ -215,9 +214,10 @@
                                                         </plex-button>
                                                     </span>
                                                 </ng-container>
-                                                <span
-                                                    *ngIf="prestacion.estadoActual.tipo === 'asignada'">
-                                                    <plex-button type="info" icon="clipboard-arrow-left" (click)="devolver(prestacion)" title="{{ prestacion.solicitud.profesional?.id === auth.profesional ? 'Devolver' : 'Deshacer' }}">
+                                                <span *ngIf="prestacion.estadoActual.tipo === 'asignada'">
+                                                    <plex-button type="info" icon="clipboard-arrow-left"
+                                                                 (click)="devolver(prestacion)"
+                                                                 title="{{ prestacion.solicitud.profesional?.id === auth.profesional ? 'Devolver' : 'Deshacer' }}">
                                                     </plex-button>
                                                 </span>
                                                 <plex-badge *ngIf="prestacion.solicitud.organizacion.id !== auth.organizacion.id"
@@ -287,12 +287,10 @@
                                             <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
                                             <td>{{prestacion.solicitud.profesional | nombre}}</td>
                                             <td>
-                                                <ng-container
-                                                              *ngIf="prestacion.estadoActual.tipo === 'rechazada'">
+                                                <ng-container *ngIf="prestacion.estadoActual.tipo === 'rechazada'">
                                                     <plex-badge type="info">CONTRARREFERIDA</plex-badge>
                                                 </ng-container>
-                                                <ng-container
-                                                              *ngIf="prestacion.estadoActual.tipo !== 'rechazada'">
+                                                <ng-container *ngIf="prestacion.estadoActual.tipo !== 'rechazada'">
                                                     <span *ngIf="!prestacion.solicitud.turno">
                                                         <plex-badge type="danger">
                                                             {{prestacion.estadoActual.tipo}}
@@ -322,7 +320,7 @@
         </div>
 
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <div *ngIf="showDetalle">
             <plex-title main titulo="Solicitud de {{this.tipoSolicitud}}">
                 <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
@@ -338,6 +336,9 @@
         <div *ngIf="showAnular">
             <anular-solicitud [prestacionSeleccionada]="prestacionSeleccionada" (returnAnular)="returnAnular($event)">
             </anular-solicitud>
+        </div>
+        <div *ngIf="showNuevaSolicitud">
+            <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></top-busqueda-paciente>
         </div>
         <div *ngIf="showCitar">
             <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"

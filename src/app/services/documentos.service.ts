@@ -22,19 +22,27 @@ export class DocumentosService {
         return this.server.post('/modules/descargas/send/pdf', datos);
     }
 
-    descargarConstanciaPuco(params): Observable<any> {
-        return this.download('constanciaPuco/pdf', params);
+    descargarConstanciaPuco(params, nombreArchivo: string): Observable<any> {
+        return this.download('constanciaPuco/pdf', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
-    descargarCensoMensual(data): Observable<any> {
-        return this.download('censoMensual', data);
+    descargarCensoMensual(data, nombreArchivo: string): Observable<any> {
+        return this.download('censoMensual', data).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
-    descargarCenso(data): Observable<any> {
-        return this.download('censo', data);
+    descargarCenso(data, nombreArchivo: string): Observable<any> {
+        return this.download('censo', data).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
-    descargarReporteInternaciones(params): Observable<any> {
-        return this.server.post('/bi/queries/listado-internacion/csv', { params }, { responseType: 'blob' } as any);
+    descargarReporteInternaciones(params, nombreArchivo: string): Observable<any> {
+        return this.server.post('/bi/queries/listado-internacion/csv', { params }, { responseType: 'blob' } as any).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
     }
 }

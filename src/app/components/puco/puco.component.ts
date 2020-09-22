@@ -8,8 +8,6 @@ import { IProfe } from '../../interfaces/IProfe';
 import { forkJoin as observableForkJoin } from 'rxjs';
 import { DocumentosService } from '../../services/documentos.service';
 import { Auth } from '@andes/auth';
-import { saveAs } from 'file-saver';
-import { Slug } from 'ng2-slugify';
 
 @Component({
     selector: 'puco',
@@ -37,7 +35,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     private resPuco = [];
     private resProfe: IProfe[];
     private timeoutHandle: number;
-    private slug = new Slug('default'); // para documento pdf
+    public requestInProgress: boolean;
 
     @Input() autofocus: Boolean = true;
 
@@ -223,20 +221,12 @@ export class PucoComponent implements OnInit, OnDestroy {
             claveBeneficiario: usuario.claveBeneficiario
         };
 
-        this.documentosService.descargarConstanciaPuco(dto).subscribe((data: any) => {
-            if (data) {
-                data.nombre = dto.nombre;
-                // Generar descarga como PDF
-                this.descargarConstancia(data, { type: 'application/pdf' });
-            } else {
-                // Fallback a impresión normal desde el navegador
-                window.print();
-            }
-        });
+        this.requestInProgress = true;
+        this.documentosService.descargarConstanciaPuco(dto, dto.nombre).subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
+
     }
 
-    private descargarConstancia(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        saveAs(blob, this.slug.slugify(data.nombre + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
-    }
 }

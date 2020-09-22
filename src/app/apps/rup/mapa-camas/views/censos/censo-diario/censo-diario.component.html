@@ -17,7 +17,7 @@
                     <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
                                  (click)="generarCensoDiario()">
                     </plex-button>
-                    <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning"
+                    <plex-button [disabled]="!censo && requestInProgress" title="Descargar censo diario" type="warning"
                                  (click)="descargarCenso()">
                         <plex-icon name="download"></plex-icon>
                     </plex-button>

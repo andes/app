@@ -36,7 +36,7 @@ export class ModalDisclaimerComponent implements OnInit {
 
     ngOnInit() {
         this.disclaimerService.get({ activo: true }).subscribe(data => {
-            if (data) {
+            if (data && data.length) {
                 this.disclaimer = data[0];
                 this.version = this.disclaimer.version;
                 this.texto = this.disclaimer.texto;
