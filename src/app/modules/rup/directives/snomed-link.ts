@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 
 @Component({
@@ -8,8 +8,8 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
        title="ver detalle"
        class="snomed-link"
        href="https://browser.ihtsdotools.org/?perspective=full&conceptId1={{concepto.conceptId}}&edition=MAIN/SNOMEDCT-ES/SNOMEDCT-AR/2020-05-31&release=&languages=es">
-        {{concepto.term}}
-    </a>
+       {{concepto.term}}
+   </a>
     `,
     styles: [
         `
@@ -21,4 +21,5 @@ import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 })
 export class SnomedLinkComponent {
     @Input() concepto: ISnomedConcept;
+
 }

@@ -30,7 +30,7 @@ import { SnomedLinkComponent } from './directives/snomed-link';
 import { HUDSLibModule } from './huds-lib.module';
 import { BuscadorComponent } from './components/ejecucion/buscador.component';
 import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
-
+import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
 
 
 export const RUP_COMPONENTS = [
@@ -45,7 +45,11 @@ export const RUP_COMPONENTS = [
     AutocitarTurnoAgendasComponent,
     SnomedLinkComponent,
     BuscadorComponent,
-    RupRelacionesComponent
+    RupRelacionesComponent,
+    SnomedSinonimoComponent
+];
+
+export const RUP_PROVIDERS = [
 ];
 
 @NgModule({
