@@ -102,6 +102,13 @@ const appRoutes: Routes = [
   },
 
   {
+      path: 'huds',
+      loadChildren: () => import('./modules/rup/huds.module').then(m => m.HUDSModule),
+      canActivate: [RoutingNavBar, RoutingGuard],
+      runGuardsAndResolvers: 'always'
+  },
+
+  {
     path: 'tm/organizacion',
     loadChildren: () => import('./components/organizacion/organizacion.module').then(m => m.OrganizacionesModule),
     canActivate: [RoutingNavBar, RoutingGuard]

@@ -4,7 +4,6 @@ import { PlexModule } from '@andes/plex';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { RUPRouting } from './rup.routing';
 import { SharedModule } from '@andes/shared';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ElementosRUPModule } from './elementos-rup.module';
@@ -19,25 +18,8 @@ import { PuntoInicioComponent } from './components/ejecucion/puntoInicio.compone
 import { PrestacionCrearComponent } from './components/ejecucion/prestacionCrear.component';
 import { PrestacionEjecucionComponent } from './components/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/ejecucion/prestacionValidacion.component';
-import { VistaHudsComponent } from './components/ejecucion/vistaHuds.component';
-import { HudsBusquedaPacienteComponent } from './components/ejecucion/hudsBusquedaPaciente.component';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
-import { BuscadorComponent } from './components/ejecucion/buscador.component';
-import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
-import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
-import { VistaCDAComponent } from './components/huds/vistaCDA.component';
-import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
-import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
-import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
-import { SeguimientoPacienteComponent } from './components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
 import { HelpSolicitudComponent } from './components/ejecucion/help-solicitud.component';
-import { ChartComponent } from './components/ejecucion/resumen-paciente/chart.component';
-import { VistaRegistroComponent } from './components/huds/vistaRegistro';
-import { VistaProcedimientoComponent } from './components/huds/vistaProcedimiento';
-import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
-import { VistaDetalleRegistroComponent } from './components/huds/vistaDetalleRegistro';
-import { VistaAccesosHudsComponent } from './components/huds/vista-accesos-huds.component';
-import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
 import { SnomedBuscarComponent } from '../../components/snomed/snomed-buscar.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
@@ -45,6 +27,9 @@ import { CITASLibModule } from '../../components/turnos/citas.module';
 import { DinamicaFormComponent } from '../../components/turnos/autocitar/dinamica.component';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
 import { SnomedLinkComponent } from './directives/snomed-link';
+import { HUDSLibModule } from './huds-lib.module';
+import { BuscadorComponent } from './components/ejecucion/buscador.component';
+import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
 
 
 
@@ -53,39 +38,15 @@ export const RUP_COMPONENTS = [
     PrestacionCrearComponent,
     PrestacionEjecucionComponent,
     PrestacionValidacionComponent,
-    VistaHudsComponent,
-    VistaHudsComponent,
-    HudsBusquedaPacienteComponent,
     PlantillasRUPComponent,
-    BuscadorComponent,
-    HudsBusquedaComponent,
-    BuscadorComponent,
-    HudsBusquedaComponent,
-    RupRelacionesComponent,
-    VistaCDAComponent,
-    ResumenPacienteEstaticoComponent,
-    ResumenPacienteDinamicoComponent,
-    ResumenPacienteDinamicoNinoComponent,
-    SeguimientoPacienteComponent,
     HelpSolicitudComponent,
-    ChartComponent,
-    VistaRegistroComponent,
-    VistaProcedimientoComponent,
-    VistaContextoPrestacionComponent,
-    VistaDetalleRegistroComponent,
-    VistaAccesosHudsComponent,
-    VistaSolicitudTopComponent,
     SnomedBuscarComponent,
     DinamicaFormComponent,
     AutocitarTurnoAgendasComponent,
-    SnomedLinkComponent
+    SnomedLinkComponent,
+    BuscadorComponent,
+    RupRelacionesComponent
 ];
-
-export const RUP_PROVIDERS = [
-];
-
-
-
 
 @NgModule({
     imports: [
@@ -94,7 +55,6 @@ export const RUP_PROVIDERS = [
         FormsModule,
         RouterModule,
         HttpClientModule,
-        RUPRouting,
         SharedModule,
         MPILibModule,
         ElementosRUPModule,
@@ -102,16 +62,21 @@ export const RUP_PROVIDERS = [
         TOPLibModule,
         DirectiveLibModule,
         CITASLibModule,
-        NgDragDropModule.forRoot(),
+        NgDragDropModule,
         ScrollingModule,
         ChartsModule,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        HUDSLibModule,
+        RouterModule.forChild([
+            { path: '', component: PuntoInicioComponent, pathMatch: 'full' },
+            { path: 'crear/:opcion', component: PrestacionCrearComponent },
+            { path: 'ejecucion/:id', component: PrestacionEjecucionComponent },
+            { path: 'validacion/:id', component: PrestacionValidacionComponent },
+            { path: 'plantillas', component: PlantillasRUPComponent }
+        ])
     ],
     declarations: [
         ...RUP_COMPONENTS
-    ],
-    providers: [
-        ...RUP_PROVIDERS
     ],
     exports: [],
 })

@@ -143,13 +143,10 @@ const RUPComponentsArray = [
     entryComponents: [
         ...RUPComponentsArray
     ],
-    providers: [
-    ],
     exports: [
         ...RUPComponentsArray,
         RUPAccionesEnvioInformeComponent,
         ModalSeleccionEmailComponent,
-        // Por el momento en este modulo. Hay que armar un modulo HUDS.
         VistaPrestacionComponent,
         RelacionRUPPipe
     ],
