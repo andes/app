@@ -196,7 +196,7 @@
                                                     <span
                                                           *ngIf="prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
                                                         <plex-button icon="contacts" type="primary"
-                                                                     (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                                                     (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
                                                                      title="Ver Huds">
                                                         </plex-button>
                                                         <plex-button icon="check" type="success"

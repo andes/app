@@ -520,10 +520,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     routeTo(action, id) {
-        if (id) {
-            this.router.navigate(['rup/' + action + '/', id]);
+        if (action === 'paciente') {
+            this.router.navigate(['huds', 'paciente', id]);
         } else {
-            this.router.navigate(['rup/' + action]);
+            if (id) {
+                this.router.navigate(['rup/' + action + '/', id]);
+            } else {
+                this.router.navigate(['rup/' + action]);
+            }
         }
     }
 

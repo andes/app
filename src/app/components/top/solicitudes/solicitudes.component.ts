@@ -664,9 +664,9 @@ export class SolicitudesComponent implements OnInit {
 
     routeTo(action, id) {
         if (id) {
-            this.router.navigate(['rup/' + action + '/', id]);
+            this.router.navigate(['huds/' + action + '/', id]);
         } else {
-            this.router.navigate(['rup/' + action]);
+            this.router.navigate(['huds/' + action]);
         }
     }
 
