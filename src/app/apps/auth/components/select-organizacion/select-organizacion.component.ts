@@ -7,7 +7,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { HotjarService } from '../../../../shared/services/hotJar.service';
 import { UsuarioService } from '../../../../services/usuarios/usuario.service';
 import { DisclaimerService } from '../../../../services/disclaimer.service';
-import { filter, take } from 'rxjs/operators';
+import { filter, skip, take } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'select-organizacion.html',
@@ -45,7 +45,7 @@ export class SelectOrganizacionComponent implements OnInit {
 
     seleccionar(organizacion) {
         this.auth.setOrganizacion(organizacion).subscribe(() => {
-            this.auth.session().pipe(
+            this.auth.session(!!this.auth.usuario).pipe(
                 filter(session => typeof session.usuario === 'object'),
                 take(1)
             ).subscribe(() => {
