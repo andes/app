@@ -48,14 +48,14 @@
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
-                            <th style="width: 200px;" class="sortable" (click)="sortTable('estado')">
+                            <th class="sortable col-estado" (click)="sortTable('estado')">
                                 ESTADO
                                 <span *ngIf="sortBy === 'estado'">
                                     <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
-                            <th style="width: 130px;">ACCIONES</th>
+                            <th class="col-acciones">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
