@@ -10,7 +10,7 @@ export class ParentescoService {
 
     get(): Observable<any[]> {
         return this.server.get(this.parentescoUrl).pipe(
-            cacheStorage('parentescos')
+            cacheStorage({ key: 'parentescos', ttl: 60 * 24 })
         );
     }
 }

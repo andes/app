@@ -712,15 +712,11 @@ export class PrestacionesService {
      * @memberof BuscadorComponent
      */
     public getPlanes(idPrestacion, idPaciente, recarga = false) {
-        return this.getByPaciente(idPaciente, recarga).pipe(map(listadoPrestaciones => {
-            let prestacionPlanes = [];
-            if (this.cache[idPaciente]) {
-                prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
-                return prestacionPlanes;
-            } else {
-                return null;
-            }
-        }));
+        return this.getByPaciente(idPaciente, recarga).pipe(
+            map(listadoPrestaciones => {
+                return listadoPrestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+            })
+        );
     }
 
     /**

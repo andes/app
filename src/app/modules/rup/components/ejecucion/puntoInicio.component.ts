@@ -119,7 +119,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.ws.connect();
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
-            cacheStorage('punto-inicio-pantallas', this.auth.session(true))
+            cacheStorage({ key: 'punto-inicio-pantallas', until: this.auth.session(true) })
         ).subscribe((pantallas) => {
             this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
         });

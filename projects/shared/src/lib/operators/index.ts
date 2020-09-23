@@ -5,9 +5,7 @@ import { Slug } from 'ng2-slugify';
 import * as moment_ from 'moment';
 const moment = moment_;
 
-export function notNull<T>() {
-    return filter<T>(user => !!user);
-}
+
 
 export function onlyNull<T>() {
     return filter<T>(user => !user);
@@ -65,52 +63,5 @@ export function saveAs(fileName: string, type: Extensiones, timestamp = true) {
     });
 }
 
-const _cacheSource: { [key: string]: BehaviorSubject<any> } = {};
-export function cacheStorage(key: string, until$: Observable<any> = null) {
-    return function <T>(source: Observable<T>): Observable<T> {
-        if (until$) {
-            until$.subscribe(() => {
-                window.sessionStorage.removeItem(key);
-                delete _cacheSource[key];
-            });
-        }
-        return new Observable(subscriber => {
-            let subscription: Subscription;
-            let subscriptionSbuject: Subscription;
-            const cacheValue = window.sessionStorage.getItem(key);
-            if (cacheValue) {
-                const _value: any = JSON.parse(cacheValue);
-                subscriber.next(_value);
-                subscriber.complete();
-            } else {
-                if (!_cacheSource[key]) {
-                    _cacheSource[key] = new BehaviorSubject(null);
-
-                    subscription = source.subscribe({
-                        next(value) {
-                            window.sessionStorage.setItem(key, JSON.stringify(value));
-                            _cacheSource[key].next(value);
-                        },
-                        error(error) {
-                            _cacheSource[key].error(error);
-                        },
-                        complete() {
-                            _cacheSource[key].complete();
-                        }
-                    });
-                }
-
-                subscriptionSbuject = _cacheSource[key].pipe(notNull()).subscribe(subscriber);
-
-            }
-            return () => {
-                if (subscription) {
-                    subscription.unsubscribe();
-                }
-                if (subscriptionSbuject) {
-                    subscriptionSbuject.unsubscribe();
-                }
-            };
-        });
-    };
-}
+export * from './cache-storage';
+export * from './not-null';

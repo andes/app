@@ -17,7 +17,7 @@ export class LocalidadService {
 
     getXProvincia(provincia: String): Observable<ILocalidad[]> {
         return this.server.get(this.localidadUrl + '?provincia=' + provincia).pipe(
-            cacheStorage('localidades-' + provincia)
+            cacheStorage({ key: 'localidades-' + provincia, ttl: 60 * 24 })
         );
     }
 }

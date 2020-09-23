@@ -15,10 +15,10 @@ export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion
     getByPermisos(permisos?: string) {
         permisos = permisos || undefined;
         return this.search({ permisos }).pipe(
-            cacheStorage(
-                'conceptos-turneables-' + permisos,
-                this.auth.session(true)
-            )
+            cacheStorage({
+                key: 'conceptos-turneables-' + permisos,
+                until: this.auth.session(true)
+            })
         );
     }
 

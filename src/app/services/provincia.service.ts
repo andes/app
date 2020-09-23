@@ -14,7 +14,7 @@ export class ProvinciaService {
     get(params: any): Observable<IProvincia[]> {
         const key = (params.nombre || params.pais) || 'todos';
         return this.server.get(this.provinciaUrl, { params: params, showError: true }).pipe(
-            cacheStorage('provincias-' + key)
+            cacheStorage({ key: 'provincias-' + key, ttl: 60 * 24 })
         );
     }
 }

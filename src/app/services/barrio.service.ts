@@ -16,7 +16,7 @@ export class BarrioService {
 
     getXLocalidad(localidad: String): Observable<IBarrio[]> {
         return this.server.get(this.barrioUrl + '?localidad=' + localidad).pipe(
-            cacheStorage('barrios-' + localidad)
+            cacheStorage({ key: 'barrios-' + localidad, ttl: 60 * 24 })
         );
     }
 }

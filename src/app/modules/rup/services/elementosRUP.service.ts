@@ -75,7 +75,7 @@ export class ElementosRUPService {
      */
     get(): Observable<IElementoRUP[]> {
         return this.server.get(url, { showError: true }).pipe(
-            cacheStorage('elementos-rup')
+            cacheStorage({ key: 'elementos-rup', ttl: 60 * 8 })
         );
     }
 
