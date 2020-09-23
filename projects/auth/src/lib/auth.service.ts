@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { tap, publishReplay, refCount, switchMap, filter } from 'rxjs/operators';
+import { tap, publishReplay, refCount, switchMap, skip } from 'rxjs/operators';
 const shiroTrie = require('shiro-trie');
 
 interface IOrganizacion {
@@ -95,7 +95,7 @@ export class Auth {
         this.usuario = null;
         this.organizacion = null;
         this.permisos = null;
-        window.sessionStorage.removeItem('jwt');
+        window.sessionStorage.clear();
     }
 
     check(string: string): boolean {
@@ -114,7 +114,10 @@ export class Auth {
         return this.estado === Estado.inProgress;
     }
 
-    session() {
+    session(emitOnChange: boolean = false) {
+        if (emitOnChange) {
+            return this.session$.pipe(skip(1));
+        }
         return this.session$;
     }
 

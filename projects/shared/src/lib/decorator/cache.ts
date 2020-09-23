@@ -21,3 +21,4 @@ export function Cache({ key }: { key: string | boolean }) {
         return descriptor;
     };
 }
+
