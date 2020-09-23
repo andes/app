@@ -24,7 +24,7 @@ export class PerfilListComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (!(this.auth.check('usuarios:perfiles:write') || this.auth.check('global:usuarios:perfiles:write'))) {
+        if (!(this.auth.check('usuarios:perfiles') || this.auth.check('global:usuarios:perfiles'))) {
             this.router.navigate(['inicio']);
         }
         this.plex.updateTitle([{
