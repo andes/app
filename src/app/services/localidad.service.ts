@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ILocalidad } from './../interfaces/ILocalidad';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -16,6 +16,8 @@ export class LocalidadService {
     }
 
     getXProvincia(provincia: String): Observable<ILocalidad[]> {
-        return this.server.get(this.localidadUrl + '?provincia=' + provincia);
+        return this.server.get(this.localidadUrl + '?provincia=' + provincia).pipe(
+            cacheStorage('localidades-' + provincia)
+        );
     }
 }

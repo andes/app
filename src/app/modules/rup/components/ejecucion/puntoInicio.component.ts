@@ -1,5 +1,5 @@
-import { Unsubscribe } from '@andes/shared';
-import { forkJoin as observableForkJoin } from 'rxjs';
+import { cacheStorage, Unsubscribe } from '@andes/shared';
+import { forkJoin as observableForkJoin, pipe } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -118,7 +118,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         this.ws.connect();
-        this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).subscribe((pantallas) => {
+        this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
+            cacheStorage('punto-inicio-pantallas', this.auth.session(true))
+        ).subscribe((pantallas) => {
             this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
         });
     }

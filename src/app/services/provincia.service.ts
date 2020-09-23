@@ -1,6 +1,6 @@
 import { IProvincia } from './../interfaces/IProvincia';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -12,6 +12,9 @@ export class ProvinciaService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<IProvincia[]> {
-        return this.server.get(this.provinciaUrl, { params: params, showError: true });
+        const key = (params.nombre || params.pais) || 'todos';
+        return this.server.get(this.provinciaUrl, { params: params, showError: true }).pipe(
+            cacheStorage('provincias-' + key)
+        );
     }
 }

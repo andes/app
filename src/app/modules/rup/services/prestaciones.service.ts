@@ -3,7 +3,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';
+import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../apps/mitos';
@@ -137,7 +137,7 @@ export class PrestacionesService {
      */
     getByPaciente(idPaciente: any, recargarCache: boolean = false): Observable<any[]> {
         if (this.cache[idPaciente] && !recargarCache) {
-            return new Observable(resultado => resultado.next(this.cache[idPaciente]));
+            return this.cache[idPaciente];
         } else {
             const opt = {
                 params: {
@@ -150,10 +150,10 @@ export class PrestacionesService {
                     showError: true
                 }
             };
-            return this.server.get(this.prestacionesUrl, opt).pipe(map(data => {
-                this.cache[idPaciente] = data;
-                return this.cache[idPaciente];
-            }));
+            this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
+                cache()
+            );
+            return this.cache[idPaciente];
         }
 
     }
