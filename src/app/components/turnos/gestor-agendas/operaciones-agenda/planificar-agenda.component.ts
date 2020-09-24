@@ -48,6 +48,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
+    public alertaEspacioFisico = '';
+    public alertaProfesional = '';
     public fecha: Date;
     public autorizado = false;
     public today = new Date();
@@ -567,6 +569,58 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
+    verificarProfesional() {
+        this.alertaProfesional = '';
+        if (this.modelo.horaInicio && this.modelo.horaFin) {
+            let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+
+            // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
+            if (iniAgenda && finAgenda && this.modelo.profesionales) {
+                this.modelo.profesionales.forEach((profesional, index) => {
+                    this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+                        subscribe(agendas => {
+                            let agds = agendas.filter(agenda => {
+                                return agenda.id !== this.modelo.id || !this.modelo.id;
+                            });
+                            if (agds.length > 0) {
+                                this.alertaProfesional = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario';
+                            }
+                        });
+                });
+            }
+        }
+    }
+
+    verificarEspacioFisico() {
+        this.alertaEspacioFisico = '';
+        if (this.modelo.horaInicio && this.modelo.horaFin) {
+            let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+
+            // Verifica que el espacio fisico no esté ocupado en ese rango horario
+            if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
+                this.serviceAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+                    subscribe(agendas => {
+                        let agds = agendas.filter(agenda => {
+                            return agenda.id !== this.modelo.id || !this.modelo.id;
+                        });
+                        if (agds.length > 0) {
+
+                            let ef = this.modelo.espacioFisico.nombre;
+                            if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
+                                ef = ef + this.modelo.espacioFisico.servicio.nombre;
+                            }
+                            if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
+                                ef = ef + this.modelo.espacioFisico.edificio.descripcion;
+                            }
+                            this.alertaEspacioFisico = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
+                        }
+                    });
+            }
+        }
+    }
+
     validarTodo() {
         this.alertas = [];
         let alerta: string;
@@ -599,49 +653,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
 
-        // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
-        if (iniAgenda && finAgenda && this.modelo.profesionales) {
-            this.modelo.profesionales.forEach((profesional, index) => {
-                this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
-                    subscribe(agendas => {
-                        let agds = agendas.filter(agenda => {
-                            return agenda.id !== this.modelo.id || !this.modelo.id;
-                        });
-                        if (agds.length > 0) {
-                            alerta = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario';
-                            if (this.alertas.indexOf(alerta) < 0) {
-                                this.alertas = [... this.alertas, alerta];
-
-                            }
-                        }
-                    });
-            });
-        }
-        // Verifica que el espacio fisico no esté ocupado en ese rango horario
-        if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
-            this.serviceAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
-                subscribe(agendas => {
-                    let agds = agendas.filter(agenda => {
-                        return agenda.id !== this.modelo.id || !this.modelo.id;
-                    });
-                    if (agds.length > 0) {
-
-                        let ef = this.modelo.espacioFisico.nombre;
-                        // + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
-                        if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
-                            ef = ef + this.modelo.espacioFisico.servicio.nombre;
-                        }
-                        if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
-                            ef = ef + this.modelo.espacioFisico.edificio.descripcion;
-                        }
-                        alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
-                        if (this.alertas.indexOf(alerta) < 0) {
-                            this.alertas = [... this.alertas, alerta];
-                        }
-
-                    }
-                });
-        }
         // Verifica que la hora inicio y hora fin de la agenda sean correctas
         if (iniAgenda && finAgenda) {
             if (iniAgenda > finAgenda) {
