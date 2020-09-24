@@ -403,6 +403,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.data.solicitud.ambitoOrigen === this.ambitoOrigen);
         }
+        this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
     }
 
     setAmbitoOrigen(ambitoOrigen) {
