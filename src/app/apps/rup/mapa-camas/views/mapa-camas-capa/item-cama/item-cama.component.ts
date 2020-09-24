@@ -1,19 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
 import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
 
 @Component({
     selector: 'tr[app-item-cama]',
     templateUrl: './item-cama.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ItemCamaComponent implements OnInit {
+export class ItemCamaComponent implements OnChanges {
     @Input() cama: any;
     @Input() capa: any;
     @Input() permisoIngreso: boolean;
+    @Input() relacionesPosibles: any;
+    @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
 
     canEdit = this.auth.check('internacion:cama:edit');
@@ -24,9 +25,6 @@ export class ItemCamaComponent implements OnInit {
         respirador: false,
         monitorParamedico: false,
     };
-    public relacionesPosibles$: Observable<any>;
-    public estadoCama$: Observable<any>;
-    public puedeDesocupar$: Observable<string>;
 
     get sectorCama() {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
@@ -34,15 +32,16 @@ export class ItemCamaComponent implements OnInit {
 
     constructor(
         public auth: Auth,
-        private router: Router,
-        private mapaCamasService: MapaCamasService,
+        private router: Router
     ) {
     }
 
-    ngOnInit() {
-        this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
-        this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
-
+    ngOnChanges() {
+        this.equipos = {
+            aporteOxigeno: false,
+            respirador: false,
+            monitorParamedico: false,
+        };
         if (this.cama.equipamiento) {
             this.cama.equipamiento.map(equip => {
                 if (equip.conceptId === aporteOxigeno.conceptId) {
