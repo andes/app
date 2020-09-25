@@ -1,0 +1,44 @@
+<plex-list height="80%" [striped]="true" (scrolled)="onScroll()">
+    <ng-container *ngFor="let paciente of listado; let pos = index">
+
+        <plex-item (click)="seleccionar(paciente)" [selected]="paciente.id == seleccionado?.id">
+
+            <img [mpiFotoPaciente]="paciente" />
+
+            <plex-label *ngIf="!paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                        subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
+            </plex-label>
+
+            <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                        subtitulo="{{ paciente.numeroIdentificacion }}">
+            </plex-label>
+
+            <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
+            </plex-label>
+
+            <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+                {{ paciente.fechaFallecimiento | fecha:'utc'}}
+            </plex-badge>
+
+            <plex-badge type="{{ paciente.estado === 'validado' ? 'success' : 'warning'}}">
+                {{ paciente.estado }}
+            </plex-badge>
+
+            <plex-badge type="{{ paciente.activo ? 'primary' : 'danger'}}">
+                {{ paciente.activo ? 'activo' : 'inactivo' }}
+            </plex-badge>
+
+            <plex-badge *ngIf="!errorTab" size="sm" type="warning">
+                <plex-button class="ml-0" size="sm" type="warning" label="vinculaciones"
+                             (click)="verVinculados(paciente)">
+                </plex-button>
+                {{ getCantidadVinculados(paciente) || 0}}
+            </plex-badge>
+
+            <plex-dropdown #drop *ngIf="!errorTab" class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm"
+                           icon="dots-vertical" label="" (onOpen)="setDropDown(paciente, drop)">
+            </plex-dropdown>
+
+        </plex-item>
+    </ng-container>
+</plex-list>
