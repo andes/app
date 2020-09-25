@@ -1,14 +1,16 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="registro.valor"
-          name="tensionSistolica" label="Tensión Sistólica" suffix="mmHG" min="20" max="300" required="true"
-          (change)="emitChange()">
-</plex-int>
+<form #form="ngForm">
+    <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="registro.valor"
+              name="tensionSistolica" label="Tensión Sistólica" suffix="mmHG" min="20" max="300" required="true"
+              (change)="emitChange()">
+    </plex-int>
 
-<p *ngIf="soloValores === true" class="readonly">
-    <span>Tensión Sistólica</span> {{registro.valor}} mmHG
-</p>
+    <p *ngIf="soloValores === true" class="readonly">
+        <span>Tensión Sistólica</span> {{registro.valor}} mmHG
+    </p>
 
-<p *ngIf="mensaje?.texto">
-    <plex-badge type="{{mensaje.class}}">
-        {{mensaje.texto}}
-    </plex-badge>
-</p>
+    <p *ngIf="mensaje?.texto">
+        <plex-badge type="{{mensaje.class}}">
+            {{mensaje.texto}}
+        </plex-badge>
+    </p>
+</form>

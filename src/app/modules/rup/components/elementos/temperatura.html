@@ -1,19 +1,22 @@
-<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45" [(ngModel)]="registro.valor"
-            name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45" (change)="emitChange()">
-</plex-float>
+<form #form="ngForm">
+    <plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45"
+                [(ngModel)]="registro.valor" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45"
+                (change)="emitChange()" required>
+    </plex-float>
 
-<p *ngIf="soloValores" class="readonly">
-    <span>Temperatura</span>
-    <ng-container *ngIf="registro?.evoluciones?.length">
-        {{ registro.evoluciones[0].valor }} °C
-    </ng-container>
-    <ng-container *ngIf="registro?.valor">
-        {{ registro.valor }} °C
-    </ng-container>
-</p>
+    <p *ngIf="soloValores" class="readonly">
+        <span>Temperatura</span>
+        <ng-container *ngIf="registro?.evoluciones?.length">
+            {{ registro.evoluciones[0].valor }} °C
+        </ng-container>
+        <ng-container *ngIf="registro?.valor">
+            {{ registro.valor }} °C
+        </ng-container>
+    </p>
 
-<p *ngIf="mensaje?.texto">
-    <plex-badge type="{{mensaje.class}}">
-        {{mensaje.texto}}
-    </plex-badge>
-</p>
+    <p *ngIf="mensaje?.texto">
+        <plex-badge type="{{mensaje.class}}">
+            {{mensaje.texto}}
+        </plex-badge>
+    </p>
+</form>

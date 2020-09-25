@@ -1,12 +1,16 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 10 y 100" required="true" [(ngModel)]="registro.valor" name="frecuenciaRespiratoria" label="Frecuencia respiratoria" suffix="RPM" min="10" max="100" (change)="emitChange()">
-</plex-int>
+<form #form="ngForm">
+    <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 10 y 100" required="true"
+              [(ngModel)]="registro.valor" name="frecuenciaRespiratoria" label="Frecuencia respiratoria" suffix="RPM"
+              min="10" max="100" (change)="emitChange()">
+    </plex-int>
 
-<p *ngIf="soloValores" class="readonly">
-    <span>Frecuencia respiratoria</span> {{registro.valor}} RPM
-</p>
+    <p *ngIf="soloValores" class="readonly">
+        <span>Frecuencia respiratoria</span> {{registro.valor}} RPM
+    </p>
 
-<p *ngIf="mensaje.texto">
-    <plex-badge type="{{mensaje.class}}">
-    {{mensaje.texto}}
-    </plex-badge>
-</p>
+    <p *ngIf="mensaje.texto">
+        <plex-badge type="{{mensaje.class}}">
+            {{mensaje.texto}}
+        </plex-badge>
+    </p>
+</form>

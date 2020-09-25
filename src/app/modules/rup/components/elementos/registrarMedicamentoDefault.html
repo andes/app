@@ -1,46 +1,49 @@
-<ng-container *ngIf="!soloValores">
-    <div class="row">
-        <div class="col-6">
-            <plex-int label="Cantidad" *ngIf="registro.valor" prefix="Cantidad"
-                placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad" name="cantidad"
-                min="0" max="2000" (change)="emitChange()" required="true">
-            </plex-int>
+<form #form="ngForm">
+    <ng-container *ngIf="!soloValores">
+        <div class="row">
+            <div class="col-6">
+                <plex-int label="Cantidad" *ngIf="registro.valor" prefix="Cantidad"
+                          placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad"
+                          name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
+                </plex-int>
+            </div>
+            <div class="col-6">
+                <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad"
+                             name="unidad" [data]="unidades" [required]="true" (change)="formatearUnidad()">
+                </plex-select>
+            </div>
         </div>
-        <div class="col-6">
-            <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad"
-                name="unidad" [data]="unidades" [required]="true" (change)="formatearUnidad()">
-            </plex-select>
+        <div class="row">
+            <div class="col-6">
+                <plex-int label="Duración" [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad"
+                          [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
+            </div>
+            <div class="col-6">
+                <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad"
+                             name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"
+                             (change)="formatearDuracion()">
+                </plex-select>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <plex-int label="Duración" [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad"
-                [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
+        <div class="row">
+            <div class="col-6">
+                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado"
+                             name="estado" [data]="estados" [required]="true" (change)="formateaEstado()">
+                </plex-select>
+            </div>
+            <div class="col-6">
+                <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" display="block"
+                           [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
+            </div>
         </div>
-        <div class="col-6">
-            <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad"
-                name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()">
-            </plex-select>
+        <div class="row">
+            <div class="col-12">
+                <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion"
+                           name="indicacion" (change)="emitChange()" class="indicacion-default"></plex-text>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado"
-                [data]="estados" [required]="true" (change)="formateaEstado()">
-            </plex-select>
-        </div>
-        <div class="col-6">
-            <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" display="block"
-                [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion"
-                (change)="emitChange()" class="indicacion-default"></plex-text>
-        </div>
-    </div>
-</ng-container>
+    </ng-container>
+</form>
 <!--Listado de evoluciones-->
 <ng-container *ngIf="!soloValores && evoluciones && evoluciones.length > 0">
     <div class="row">
@@ -51,7 +54,7 @@
     <div class="row anteriores mr-0 pr-0 ml-0">
         <div class="col-5 text-left border border-right-0 border-secondary pl-0">
             <plex-button *ngIf="indice > 0" type="info" icon="chevron-left" class="mdi-18px"
-                (click)="cambiarEvolucion('-') "></plex-button>
+                         (click)="cambiarEvolucion('-') "></plex-button>
             <plex-button *ngIf="indice === 0" type="default" icon="chevron-left" class="mdi-18px"></plex-button>
         </div>
         <div class="col-2 text-center border border-left-0 border-right-0 border-secondary pt-2">
@@ -59,9 +62,9 @@
         </div>
         <div class="col-5 text-right border border-left-0 border-secondary pr-0">
             <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info"
-                icon="chevron-right" class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+                         icon="chevron-right" class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
             <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default"
-                icon="chevron-right" class="mdi-18px"></plex-button>
+                         icon="chevron-right" class="mdi-18px"></plex-button>
         </div>
     </div>
     <div class="row">
@@ -112,7 +115,8 @@
                             <strong>Estado</strong> {{evolucionM.estado}} /
                             <strong>Cantidad</strong> {{evolucionM.valor.cantidad}} {{evolucionM.valor.unidad}}
                             <br>
-                            <strong>Durante</strong> {{evolucionM.valor.duracion.cantidad}} {{evolucionM.valor.duracion.unidad}} /
+                            <strong>Durante</strong> {{evolucionM.valor.duracion.cantidad}}
+                            {{evolucionM.valor.duracion.unidad}} /
                             <strong>{{evolucionM.valor.recetable ? 'Recetable' : 'No recetable' }}</strong>
                             <br>
                             <strong>Indicación:</strong> {{evolucionM.valor.indicacion}}
