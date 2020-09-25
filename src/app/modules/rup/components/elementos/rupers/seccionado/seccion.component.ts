@@ -94,22 +94,23 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
             this.registro.noIndex = this.params.noIndex;
         }
 
-
-        this.ejecucionService.conceptosStream().pipe(
-            filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
-            takeUntil(this.onDestroy$)
-        ).subscribe((registro) => {
-            if (this.params.whitelist) {
-                const query = `(${this.params.whitelist}) AND ${registro.concepto.conceptId}`;
-                this.snomedService.getQuery({ expression: query }).subscribe((conceptos) => {
-                    if (conceptos.length > 0) {
-                        this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
-                    }
-                });
-            } else {
-                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
-            }
-        });
+        if (this.ejecucionService) {
+            this.ejecucionService.conceptosStream().pipe(
+                filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
+                takeUntil(this.onDestroy$)
+            ).subscribe((registro) => {
+                if (this.params.whitelist) {
+                    const query = `(${this.params.whitelist}) AND ${registro.concepto.conceptId}`;
+                    this.snomedService.getQuery({ expression: query }).subscribe((conceptos) => {
+                        if (conceptos.length > 0) {
+                            this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
+                        }
+                    });
+                } else {
+                    this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
+                }
+            });
+        }
 
 
     }

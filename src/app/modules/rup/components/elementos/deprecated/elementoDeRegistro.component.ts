@@ -81,14 +81,15 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
         if (this.params.noIndex) {
             this.registro.noIndex = this.params.noIndex;
         }
+        if (this.ejecucionService) {
+            this.ejecucionService.conceptosStream().pipe(
+                filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
+                takeUntil(this.onDestroy$)
 
-        this.ejecucionService.conceptosStream().pipe(
-            filter(r => r.seccion && r.seccion.conceptId === this.registro.concepto.conceptId),
-            takeUntil(this.onDestroy$)
-
-        ).subscribe((registro) => {
-            this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
-        });
+            ).subscribe((registro) => {
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
+            });
+        }
 
     }
 
