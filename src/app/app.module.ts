@@ -34,6 +34,7 @@ import { AgmCoreModule } from '@agm/core';
 import { MitosModule } from './apps/mitos';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
+import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 
 
 import { MapsComponent } from './utils/mapsComponent';
@@ -178,11 +179,6 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 
-// AUDITORIA
-import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
-
-
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
@@ -296,7 +292,8 @@ registerLocaleData(localeEs, 'es');
         TOPLibModule,
         DirectiveLibModule,
         CITASLibModule,
-        RUPLibModule
+        RUPLibModule,
+        AuditoriaModule
     ],
     declarations: [
         AppComponent,
@@ -316,9 +313,7 @@ registerLocaleData(localeEs, 'es');
         AgregarPacienteComponent,
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent,
         PermisosComponent,
-        VincularPacientesComponent,
         PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent,

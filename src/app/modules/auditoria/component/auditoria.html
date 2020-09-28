@@ -1,0 +1,112 @@
+<plex-layout main="{{ mainSize }}">
+    <plex-layout-main>
+
+        <plex-tabs (change)="closeSidebar()">
+            <plex-tab *ngIf="permisoVincular" label="Búsqueda de Pacientes" icon="account-search">
+
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" name='buscadorAuditoria' [debounce]="500"
+                           [autoFocus]="true" prefix="<i class='mdi mdi-barcode-scan'></i>"
+                           placeholder="Escriba un documento / apellido / nombre">
+                </plex-text>
+
+                <plex-loader *ngIf="loading"></plex-loader>
+
+                <auditoria-listado class="pb-4" *ngIf="resultadoBusqueda?.length" [pacientes]="resultadoBusqueda"
+                                   [autoselect]="false" (selected)="onSelect($event)" (link)="vincular($event)"
+                                   (showLinked)="showVinculados($event)" (setActive)="setEstadoActivo($event)"
+                                   (scrolled)="onScroll()">
+                </auditoria-listado>
+
+                <div *ngIf="!resultadoBusqueda?.length && !searchClear" class="alert alert-danger">
+                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+                </div>
+            </plex-tab>
+
+            <plex-tab *ngIf="permisoEdicion" label="Errores reportados" icon="account-details">
+                <auditoria-listado *ngIf="pacientesReportados && pacientesReportados.length"
+                                   [pacientes]="pacientesReportados" [autoselect]="false" [errorTab]="true"
+                                   (selected)="onSelectReportados($event)">
+                </auditoria-listado>
+
+                <div *ngIf="pacientesReportados && !pacientesReportados.length" class="alert alert-default">
+                    <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
+                </div>
+            </plex-tab>
+        </plex-tabs>
+
+    </plex-layout-main>
+
+
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="{{tituloSidebar}}" size="sm">
+            <plex-button type="danger" icon="close" class="ml-2" size="sm" (click)="closeSidebar()">
+            </plex-button>
+        </plex-title>
+
+        <paciente-detalle *ngIf="showDetallePaciente" [paciente]="pacienteSelected" [showRelaciones]="true"
+                          reload="true">
+        </paciente-detalle>
+
+
+        <!-- ######  Cabecera de detalle  ######  -->
+
+        <ng-container *ngIf="showCabeceraDetalle || showReporteError">
+            <plex-detail direction="row" size="md" justify="start">
+                <img [mpiFotoPaciente]="pacienteSelected" />
+
+                <plex-badge [type]="(pacienteSelected.estado === 'validado') ? 'success' : 'warning'"
+                            *ngIf="pacienteSelected.estado">
+                    {{ pacienteSelected.estado | uppercase }}
+                </plex-badge>
+
+                <plex-badge *ngIf="pacienteSelected.fechaFallecimiento" type="danger">Fallecido:
+                    {{ pacienteSelected.fechaFallecimiento | fecha:'utc'}}
+                </plex-badge>
+
+                <div title>{{ pacienteSelected | nombre }}</div>
+
+                <div subtitle>
+                    <plex-copy *ngIf="pacienteSelected.documento" [value]="pacienteSelected.documento">
+                        {{ pacienteSelected.documento | number }}
+                    </plex-copy>
+                    <plex-copy *ngIf="pacienteSelected.numeroIdentificacion"
+                               [value]="pacienteSelected.numeroIdentificacion">
+                        {{ pacienteSelected.numeroIdentificacion }}
+                    </plex-copy>
+                    <span *ngIf="!pacienteSelected.numeroIdentificacion && !pacienteSelected.documento">Sin DNI</span>
+                </div>
+            </plex-detail>
+        </ng-container>
+
+
+        <!--  ######  Visualizacion de pacientes vincualdos  ######  -->
+
+        <vincular-pacientes #vincularComponent [pacienteBase]="pacienteSelected" (setLink)="showVinculados($event)"
+                            (askUnlink)="desvincular($event)">
+        </vincular-pacientes>
+
+
+        <!--  ###### Para pestaña  de reporte de errores  ###### -->
+
+        <ng-container *ngIf="showReporteError" justify="center">
+
+            <plex-text *ngIf="pacienteSelected.notaError" readonly="true" multiline="true" name="motivo"
+                       [(ngModel)]="pacienteSelected.notaError">
+            </plex-text>
+
+            <plex-label *ngIf="!pacienteSelected.notaError">
+                No se ha encontrado alguna descripción del error
+            </plex-label>
+            <br>
+            <plex-button type="warning" position="right" *ngIf="permisoEdicion" (click)="onSelectCorregir()">
+                Corregir
+            </plex-button>
+
+            <modal-correccion-paciente #modalCorreccion [paciente]="pacienteSelected"
+                                       (patientCorrected)="savePatient($event)">
+            </modal-correccion-paciente>
+        </ng-container>
+
+    </plex-layout-sidebar>
+
+</plex-layout>

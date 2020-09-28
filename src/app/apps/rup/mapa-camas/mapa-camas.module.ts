@@ -6,7 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlexModule } from '@andes/plex';
 import { SharedModule } from '@andes/shared';
 import { MPILibModule } from '../../../modules/mpi/mpi-lib.module';
-
+import { ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkTableModule } from '@angular/cdk/table';
 
 import { MapaCamasRouting } from './mapa-camas.routing';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
@@ -86,6 +87,7 @@ export const INTERNACION_PROVIDERS = [
     MaquinaEstadosHTTP,
     ListadoInternacionService,
     SalaComunService,
+    ScrollDispatcher,
 ];
 
 @NgModule({
@@ -102,7 +104,9 @@ export const INTERNACION_PROVIDERS = [
         OrganizacionLibModule,
         ElementosRUPModule,
         NgDragDropModule,
-        RUPLibModule
+        RUPLibModule,
+        ScrollingModule,
+        CdkTableModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

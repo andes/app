@@ -353,12 +353,6 @@ export class NuevaSolicitudComponent implements OnInit, OnDestroy {
         }
     }
 
-    loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            event.callback(data);
-        });
-    }
-
     // Adjuntar archivo
     changeListener($event): void {
         this.readThis($event.target);

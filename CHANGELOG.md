@@ -1,3 +1,25 @@
+# [5.14.0](https://github.com/andes/app/compare/v5.13.0...v5.14.0) (2020-09-23)
+
+
+### Bug Fixes
+
+* **mapa-camas:** handler null ubicacion ([#1916](https://github.com/andes/app/issues/1916)) ([a86b1e8](https://github.com/andes/app/commit/a86b1e80bab53678dde70fedfa7264c7e66e00e8))
+* **rup:** fix sinonimo components ([24a06b0](https://github.com/andes/app/commit/24a06b00bfa64c0314521c54e60078ec9d5cc92e))
+* **rup:** odontrograma no se podia usar como segungo registro ([#1909](https://github.com/andes/app/issues/1909)) ([1be48b8](https://github.com/andes/app/commit/1be48b86e97fa764c009ddafaede107206fdd52d))
+* **rup:** permitir ver y continuar prestación si el usuario no tiene acceso a huds ([#1911](https://github.com/andes/app/issues/1911)) ([4a590c4](https://github.com/andes/app/commit/4a590c4ff95de40b85ae0f5bcf3ee58bda81c335))
+* **TOP:** no se visualizaban  indicaciones de RUP ([#1919](https://github.com/andes/app/issues/1919)) ([ac32a00](https://github.com/andes/app/commit/ac32a0042cc88ee9e50a731a75cd23ec52b11326))
+
+
+### Features
+
+* **GDU:** actualiza control de permisos de GDU ([#1912](https://github.com/andes/app/issues/1912)) ([6ba3b06](https://github.com/andes/app/commit/6ba3b06fd740150f1e145266c3081d8084ee5f9d))
+* **huds:** change to /huds routes ([#1908](https://github.com/andes/app/issues/1908)) ([0ce0936](https://github.com/andes/app/commit/0ce093668ede5875b89241b50b26edd03261e11e))
+* **mapa-camas:** agrega UO origen al extra al hacer movimiento ([#1820](https://github.com/andes/app/issues/1820)) ([b963efc](https://github.com/andes/app/commit/b963efc3da208bcb5d97b65d78a014034f1f208f))
+* **mapa-camas:** renombra 'cambiar UO' a 'pase de UO' ([#1836](https://github.com/andes/app/issues/1836)) ([689045e](https://github.com/andes/app/commit/689045e9e8a2b0fb86e62ae58f28ab901aa06880))
+* **rup:** buscador mostrar fsn en los sinónimos ([#1896](https://github.com/andes/app/issues/1896)) ([4dda328](https://github.com/andes/app/commit/4dda328d8a0df3dffc99afa45fcd7ce516f41272))
+* **TOP:** observaciones al iniciar prestacion ([#1906](https://github.com/andes/app/issues/1906)) ([ac8343f](https://github.com/andes/app/commit/ac8343ffe9b6145868f56b6115fe99d4461dbaef))
+* **TOP:** refactor visual en busqueda de paciente ([#1913](https://github.com/andes/app/issues/1913)) ([2a4db01](https://github.com/andes/app/commit/2a4db01b9486a4549cdb9d8cc831a463d19476b6))
+
 # [5.13.0](https://github.com/andes/app/compare/v5.12.0...v5.13.0) (2020-09-16)
 
 

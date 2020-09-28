@@ -17,7 +17,7 @@ import { ArbolPermisosComponent } from './arbol-permisos/arbol-permisos.componen
 export class PerfilDetailComponent implements OnInit {
     @ViewChild(ArbolPermisosComponent, { static: false }) arbol: ArbolPermisosComponent;
 
-    public canGlobal = this.auth.check('global:usuarios:perfiles:write');
+    public canGlobal = this.auth.check('global:usuarios:perfiles');
     public perfil = null;
     public esGlobal = false;
 
