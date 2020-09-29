@@ -105,7 +105,6 @@ export const listaTipoEgreso = [
     { id: 'Defunción', nombre: 'Defunción' },
     { id: 'Traslado', nombre: 'Traslado' },
     { id: 'Retiro Voluntario', nombre: 'Retiro Voluntario' },
-    { id: 'Otro', nombre: 'Otro' }
 ];
 
 export const causaExterna = {
