@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit } from '@angular/core';
+import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit, Optional } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -7,6 +7,7 @@ import { TipoPrestacionService } from '../../../../services/tipoPrestacion.servi
 
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
+import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -33,7 +34,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     @Input() paciente: any;
 
-    @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
 
@@ -46,11 +46,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
-    /**
-     * Devuelve un elemento seleccionado que puede ser
-     * una prestacion o un ?????
-     */
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
 
     /**
@@ -120,7 +115,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
         public auth: Auth,
-        public huds: HUDSService
+        public huds: HUDSService,
+        @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
 
@@ -170,37 +166,19 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     }
 
-    devolverPrestacion(prestacion) {
-        let resultado = {
-            tipo: 'prestacion',
-            data: prestacion
-        };
-        this.evtData.emit(resultado);
+    agregarRegistro(registro) {
+        if (this.ejecucionService) {
+            const data: EmitConcepto = {
+                concepto: registro.concepto,
+                esSolicitud: false,
+                valor: {
+                    idRegistroOrigen: registro.evoluciones[0].idRegistro
+                }
+            };
+            this.ejecucionService.agregarConcepto(data.concepto, false, null, data.valor);
+        }
     }
 
-    devolverHallazgo(hallazgo) {
-        let resultado = {
-            tipo: 'hallazgo',
-            data: hallazgo
-        };
-        this.evtData.emit(resultado);
-    }
-
-    devolverMedicamento(medicamento) {
-        let resultado = {
-            tipo: 'medicamento',
-            data: medicamento
-        };
-        this.evtData.emit(resultado);
-    }
-
-    devolverLaboratorio(laboratorio) {
-        let resultado = {
-            tipo: 'laboratorio',
-            data: laboratorio
-        };
-        this.evtData.emit(resultado);
-    }
 
     emitTabs(registro, tipo, index: number) {
         switch (tipo) {

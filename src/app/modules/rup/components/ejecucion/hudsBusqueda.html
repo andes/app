@@ -313,7 +313,7 @@
                                                 </ng-container>
                                                 <button class="btn btn-sm btn-primary btn-icon-rup p-0"
                                                         *ngIf="emitirConceptos"
-                                                        (click)="$event.stopPropagation(); devolverHallazgo(registro, 'hallazgo')"
+                                                        (click)="$event.stopPropagation(); agregarRegistro(registro)"
                                                         title="Agregar a la consulta" titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
                                                 </button>
@@ -470,16 +470,7 @@
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
-                                                <ng-container *ngIf="emitirConceptos">
-                                                    <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                         [dragClass]="_dragOverClass"
-                                                         [dragData]="{'tipo': 'producto','data': registro, 'huds': true}"
-                                                         (onDragStart)="dragStart($event)"
-                                                         (onDragEnd)="dragEnd($event)">
-                                                        <i class="adi adi-pildoras"></i>
-                                                    </div>
-                                                </ng-container>
-                                                <ng-container *ngIf="!emitirConceptos">
+                                                <ng-container>
                                                     <div class="icon-rup">
                                                         <i class="adi adi-pildoras"></i>
                                                     </div>
@@ -538,16 +529,7 @@
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
-                                                    <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                             [dragClass]="_dragOverClass"
-                                                             [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
-                                                             (onDragStart)="dragStart($event)"
-                                                             (onDragEnd)="dragEnd($event)">
-                                                            <i class="adi adi-recipiente"></i>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="!emitirConceptos">
+                                                    <ng-container>
                                                         <div class="icon-rup">
                                                             <i class="adi adi-recipiente"></i>
                                                         </div>
@@ -598,16 +580,7 @@
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
-                                                    <ng-container *ngIf="emitirConceptos">
-                                                        <div justify="center" class="icon-rup" draggable
-                                                             [dragScope]="_dragScope" [dragClass]="_dragOverClass"
-                                                             [dragData]="{'tipo': 'vacuna','data': unaVacuna, 'huds': true}"
-                                                             (onDragStart)="dragStart($e)"
-                                                             (onDragEnd)="dragEnd($event)">
-                                                            <i class="adi adi-vacuna"></i>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="!emitirConceptos">
+                                                    <ng-container>
                                                         <div justify="center" class="icon-rup">
                                                             <i class="adi adi-vacuna"></i>
                                                         </div>

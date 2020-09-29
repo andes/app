@@ -1,6 +1,6 @@
 
 import { map, switchMap } from 'rxjs/operators';
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
@@ -32,52 +32,26 @@ export class PrestacionesService {
         term: 'internación'
     };
 
-    @Output() notifySelection: EventEmitter<any> = new EventEmitter<any>();
-
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
 
+
+    /**
+     * [TODO] cambiar nombres
+     * Se usa solo para le odontograma.
+     */
+
     private datosRefSet = new BehaviorSubject<any>(null);
-    private concepto = new BehaviorSubject<any>(null);
-
-    public esSolicitud = new BehaviorSubject<boolean>(false);
-
-    setEsSolicitud(esSolicitud) {
-        this.esSolicitud.next(esSolicitud);
-    }
-
-    getEsSolicitud() {
-        return this.esSolicitud.asObservable();
-    }
-
-    /**
-     * [TODO] cambiar nombres
-     * Se usan para las secciones de epicrisis y otros.
-     */
-
-    setData(concepto: IPrestacion) {
-        this.concepto.next({ concepto });
-        this.notifySelection.emit(true);
-    }
-
-    getData(): any {
-        return this.concepto.getValue();
-    }
-
-    clearData() {
-        this.concepto.next(null);
-    }
-
-    /**
-     * [TODO] cambiar nombres
-     * RefSetData se usa para notificar el seccionado actual.
-     */
 
     setRefSetData(datos: IPrestacion[], refsetId?) {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
+    }
+
+    getRefSet() {
+        return this.datosRefSet.asObservable();
     }
 
     getRefSetData(): any {
@@ -88,17 +62,10 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
-    public elementosRegistros = {
-        odontograma: '3561000013109'
-    };
-
-    // Ids de conceptos que refieren que un paciente no concurrió a la consulta
-    // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
-
     constructor(
         private server: Server,
-        public auth: Auth,
-        public snomed: SnomedService,
+        private auth: Auth,
+        private snomed: SnomedService,
         private servicioReglas: ReglaService,
         private hudsService: HUDSService,
         private plex: Plex
