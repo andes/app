@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { HotjarService } from '../../../../shared/services/hotJar.service';
 
 @Component({
     templateUrl: 'login.html',
@@ -14,7 +13,6 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public loading = false;
-    public regionesValidas = ['America/Buenos_Aires', 'America/Catamarca', 'America/Cordoba', 'America/Jujuy', 'America/Argentina/La_Rioja', 'America/Mendoza', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Salta', 'America/Argentina/San_Juan', 'America/Argentina/San_Luis', 'America/Argentina/Tucuman', 'America/Argentina/Ushuaia'];
 
     constructor(
         private plex: Plex,
@@ -28,22 +26,16 @@ export class LoginComponent implements OnInit {
         this.ws.close();
     }
 
-    husoHorarioCorrecto() {
-        let timeZone;
-        let result = false;
-        if (typeof Intl === 'object' && typeof Intl.DateTimeFormat === 'function') {
-            timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            if (this.regionesValidas.indexOf(timeZone) === -1) {
-                this.plex.info('danger', 'Su computadora está configurada en una región no válida. Por favor, verifique y vuelva a intentar.');
-                this.loading = false;
-            } else {
-                result = true;
-            }
-        }
-        return result;
+    checkTimezone() {
+        const timeZone = new Date().getTimezoneOffset();
+        return timeZone === 180;
     }
 
     login(event) {
+        if (!this.checkTimezone()) {
+            this.plex.info('danger', 'La hora de la computadora es incorrecta. Chequea el huso horario.');
+            return;
+        }
         if (event.formValid) {
             this.loading = true;
             this.auth.login(this.usuario.toString(), this.password)
