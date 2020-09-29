@@ -50,6 +50,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     public sortOrder = 'desc';
 
     public permisoIngreso = false;
+    public permisoBloqueo = false;
     public permisoCenso = false;
     public permisoCrearCama = false;
     public get inverseOfTranslation(): string {
@@ -108,6 +109,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.capa$.subscribe();
 
         this.permisoIngreso = this.auth.check('internacion:ingreso');
+        this.permisoBloqueo = this.auth.check('internacion:bloqueo');
         this.permisoCenso = this.auth.check('internacion:censo');
         this.permisoCrearCama = this.auth.check('internacion:cama:create');
 

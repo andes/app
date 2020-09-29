@@ -13,6 +13,7 @@ export class ItemCamaComponent implements OnChanges {
     @Input() cama: any;
     @Input() capa: any;
     @Input() permisoIngreso: boolean;
+    @Input() permisoBloqueo: boolean;
     @Input() relacionesPosibles: any;
     @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
