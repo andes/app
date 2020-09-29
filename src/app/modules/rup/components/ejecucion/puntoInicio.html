@@ -128,6 +128,7 @@
         </table>
     </plex-layout-main>
     <plex-layout-sidebar>
+
         <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
         </dinamica>
 
@@ -257,12 +258,14 @@
                                     <plex-badge type="danger" *ngIf="turno && turno.estado === 'suspendido'">
                                         Suspendido</plex-badge>
                                     <span *ngIf="turno && turno.nota">
-                                        <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                        <i title="{{turno.nota}}"
+                                           class="text-warning warning mdi mdi-message"></i>
                                     </span>
 
                                     <div *ngIf="turno && turno.confirmatedAt">
                                         <br />
-                                        <plex-badge type="default" title="{{turno.confirmatedAt | date: 'medium'}}">
+                                        <plex-badge type="default"
+                                                    title="{{turno.confirmatedAt | date: 'medium'}}">                                            
                                             Confirmado
                                         </plex-badge>
                                     </div>
@@ -270,7 +273,7 @@
                                 <td>
                                     <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
                                         <plex-button size="block" *ngIf='tieneAccesoHUDS'
-                                                     (click)="setRouteToParams(['vista', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
+                                                     (click)="setRouteToParams(['paciente', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
                                                      label="VER HUDS" type="primary btn-sm">
                                         </plex-button>
 
@@ -355,7 +358,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngFor="let sobreturno of agendaSeleccionada.sobreturnos; let j=index">
+                            <ng-container
+                                          *ngFor="let sobreturno of agendaSeleccionada.sobreturnos; let j=index">
                                 <tr *ngIf="sobreturno" class="hover">
                                     <td>
                                         <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
@@ -439,9 +443,10 @@
                                     </td>
                                     <td>
                                     <td>
-                                        <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
+                                        <ng-container 
+                                                      *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                             <plex-button size="block" *ngIf='tieneAccesoHUDS'
-                                                         (click)="setRouteToParams(['vista', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
+                                                         (click)="setRouteToParams(['paciente', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                          label="VER HUDS" type="primary btn-sm">
                                             </plex-button>
                                             <plex-button size="block"
@@ -490,7 +495,8 @@
                     <tbody>
                         <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
                             <td>
-                                <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
+                                <strong 
+                                        *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                 <br>
                                 <plex-badge
                                             type="{{ prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' ? 'success' : (
@@ -527,7 +533,7 @@
                             <td>
                                 <plex-button size="block"
                                              *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
-                                             (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                             (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
                                              label="VER HUDS" type="primary btn-sm">
                                 </plex-button>
 
@@ -539,8 +545,8 @@
 
                                 <plex-button size="block"
                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                             (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
-                                             type="success btn-sm">
+                                             (click)="onVerResumenClick('validacion', prestacion)" 
+                                             label="VER RESUMEN" type="success btn-sm">
                                 </plex-button>
                             </td>
                         </tr>
@@ -550,6 +556,7 @@
             </ng-container>
 
         </ng-container>
+
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
         <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary"
