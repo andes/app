@@ -24,7 +24,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
-    fotos: any[] = [];
     fileToken: String = null;
     timeout = null;
     adjuntos = [];
@@ -183,10 +182,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             (this.childsComponents.first as any).nativeElement.value = '';
             let metadata = {};
             this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.fotos.push({
-                    ext,
-                    id: data._id
-                });
                 this.adjuntos.push({
                     ext,
                     id: data._id
@@ -210,20 +205,20 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    imageUploaded($event) {
+    subirArchivo($event) {
         let foto = {
             ext: this.fileExtension($event.file.name),
             file: $event.src,
         };
-        this.fotos.push(foto);
+        this.adjuntos.push(foto);
     }
 
-    imageRemoved($event) {
-        let index = this.fotos.indexOf($event);
-        this.fotos.splice(index, 1);
+    eliminarArchivo($event) {
+        let index = this.adjuntos.indexOf($event);
+        this.adjuntos.splice(index, 1);
     }
 
-    get documentosUrl() {
+    get adjuntosUrl() {
         return this.adjuntos.map((doc) => {
             doc.url = this.createUrl(doc);
             return doc;

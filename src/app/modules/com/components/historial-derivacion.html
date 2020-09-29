@@ -5,17 +5,32 @@
                 <td *ngIf="item.createdAt">
                     <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
                     <br />
-                    Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b>
+                    Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
+                        {{ item.createdBy.organizacion.nombre }}</b>
                     <ng-container *ngIf="item.organizacionDestino">
                         <br />
-                        <b>Organización destino:</b>
-                        {{ item.organizacionDestino.nombre }}
+                        <b>Destino:</b> {{ item.createdBy.organizacion.nombre }}
                     </ng-container>
                     <ng-container *ngIf='item.observacion'>
                         <br />
                         <b>OBSERVACIONES: </b>
                         {{ item.observacion }}
                     </ng-container>
+                    <plex-grid type="full" *ngIf="item.adjuntos?.length > 0" cols="1">
+                        <div class="image-container hr-inline-group" *ngIf="item.adjuntos && fileToken">
+                            <ng-container *ngFor="let doc of this.item.adjuntos; let i = index">
+                                <plex-visualizador [files]="adjuntos[item.id]" #visualizador></plex-visualizador>
+                                <div class="image hover">
+                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
+                                         (click)="visualizador.open(i)">
+                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
+                                       class="adjunto" (click)="visualizador.open(i)">
+                                        {{ doc.ext }}
+                                    </a>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </plex-grid>
                 </td>
             </tr>
         </tbody>

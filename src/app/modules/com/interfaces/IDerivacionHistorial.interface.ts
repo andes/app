@@ -5,4 +5,5 @@ export interface IDerivacionHistorial {
         nombre: String
     };
     observacion: String;
+    adjuntos: any;
 }
