@@ -12,7 +12,8 @@ import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
-import { concat } from 'rxjs';
+import { concat, forkJoin } from 'rxjs';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
@@ -74,6 +75,7 @@ export class PrestacionCrearComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         private location: Location,
         private osService: ObraSocialCacheService,
+        private pacienteService: PacienteService,
         private hudsService: HUDSService) { }
 
     ngOnInit() {
@@ -228,7 +230,12 @@ export class PrestacionCrearComponent implements OnInit {
             organizacion: this.auth.organizacion.id,
             profesionales: [this.auth.profesional]
         };
-        this.servicioAgenda.get(params).subscribe(agendas => {
+
+        forkJoin([
+            this.pacienteService.getById(this.paciente.id),
+            this.servicioAgenda.get(params)
+        ]).subscribe(([paciente, agendas]) => {
+            this.paciente = paciente;
             this.agendasAutocitar = agendas;
             this.prestacionAutocitar = this.tipoPrestacionSeleccionada;
             this.showAutocitar = true;
