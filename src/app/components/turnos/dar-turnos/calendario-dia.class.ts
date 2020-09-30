@@ -58,7 +58,17 @@ export class CalendarioDia {
                         bloquesPrestacion.forEach(unBloque => {
                             this.turnosDisponibles += unBloque.restantesProgramados + unBloque.restantesDelDia;
                         });
-                        this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
+
+                        /* Quedan en estado 'disponible' (Para mostrarse en el calendario) las agendas que ..
+                           - Sean exclusivas de gestión y tengan turnos disponibles
+                           - Tengan tusnos del dia o programados disponibles
+                        */
+                        if (this.contieneExclusivoGestion(unaAgenda)) {
+                            this.estado = (unaAgenda.turnosRestantesGestion > 0) ? 'disponible' : 'ocupado';
+                            this.turnosDisponibles = unaAgenda.turnosRestantesGestion;
+                        } else {
+                            this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
+                        }
 
                     } else {
                         // En caso contrario, se calculan los contadores por separado
@@ -139,5 +149,10 @@ export class CalendarioDia {
             });
 
         }
+    }
+
+    // retorna true si algun bloque de la agenda es exclusivo de gestión
+    contieneExclusivoGestion(agenda: any): boolean {
+        return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
     }
 }

@@ -16,6 +16,8 @@ export interface IBloque {
     restantesProgramados: number;
     restantesGestion: number;
     restantesProfesional: number;
+    restantesMobile: number;
+    cupoMobile: number;
     pacienteSimultaneos: Boolean;
     cantidadSimultaneos: number;
     citarPorBloque: Boolean;

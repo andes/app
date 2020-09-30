@@ -136,7 +136,7 @@
                                   *ngIf="!delDia && bloque.restantesMobile>0 && bloque.restantesProgramados>0 && bloque.restantesProgramados<bloque.restantesMobile">&nbsp;({{bloque.restantesProgramados}}
                                 virtual)</span>
                         </td>
-                        <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
+                        <td>{{delDia && !contieneExclusivoGestion(agenda) ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
                     </tr>
                 </tbody>
@@ -289,7 +289,8 @@
                             </plex-badge>
                             <plex-badge *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'"
                                         size="sm" type="default">
-                                <shared-popover-audit placement="left" [data]="turno" [showUpdate]="true"></shared-popover-audit>
+                                <shared-popover-audit placement="left" [data]="turno" [showUpdate]="true">
+                                </shared-popover-audit>
                             </plex-badge>
                         </td>
                     </tr>
@@ -360,7 +361,8 @@
                         </plex-badge>
                         <plex-badge *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'"
                                     size="sm" type="default">
-                            <shared-popover-audit placement="left" [data]="sobreturno" [showUpdate]="true"></shared-popover-audit>
+                            <shared-popover-audit placement="left" [data]="sobreturno" [showUpdate]="true">
+                            </shared-popover-audit>
                         </plex-badge>
                     </td>
                 </tr>
