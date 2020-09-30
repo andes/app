@@ -317,7 +317,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
                 let planes = [];
                 planesCopia.forEach(unPlan => {
-                    unPlan.plan = true;
+                    unPlan.esSolicitud = true;
                     planes.push(unPlan);
                 });
                 // agregamos los planes
@@ -367,6 +367,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public filtroBuscadorSnomed(key) {
         this.filtroActual = key;
+
     }
 
     /**
@@ -376,7 +377,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      */
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
-
+        concepto.esSolicitud = concepto.esSolicitud || this.filtroActual === 'planes';
         this.ejecucionService.agregarConcepto(
             {
                 term: concepto.term,
