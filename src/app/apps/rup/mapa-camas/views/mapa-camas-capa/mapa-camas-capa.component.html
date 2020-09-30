@@ -63,7 +63,7 @@
                             <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama" [capa]="capa"
                                 [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
-                                [permisoIngreso]="permisoIngreso" (accionCama)="selectCama(cama, $event)"
+                                [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo" (accionCama)="selectCama(cama, $event)"
                                 (click)="verDetalle(cama, selectedCama)" [class.invert]="cama._id === selectedCama._id">
                             </tr>
                         </ng-container>
