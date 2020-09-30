@@ -4,7 +4,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
@@ -24,6 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { PlantillasService } from '../../services/plantillas.service';
+import { RupEjecucionService } from '../../services/ejecucion.service';
 
 @Component({
     selector: 'rup',
@@ -125,7 +126,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public organizacionservice: OrganizacionService,
         public servicioReglas: ReglaService,
         public conceptosTurneablesService: ConceptosTurneablesService,
-        public plantillasService: PlantillasService
+        public plantillasService: PlantillasService,
+        @Optional() public ejecucionService: RupEjecucionService
     ) {
     }
 

@@ -9,7 +9,6 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { RUPComponent } from '../core/rup.component';
@@ -20,27 +19,27 @@ import { HUDSService } from '../../services/huds.service';
 import { PlantillasService } from '../../services/plantillas.service';
 
 import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
+import { RupEjecucionService } from '../../services/ejecucion.service';
+import { takeUntil, filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
     styleUrls: ['prestacionEjecucion.scss'],
     // Use to disable CSS Encapsulation for this component
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        RupEjecucionService
+    ]
 })
 export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
-    @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
-    public prestacionSolicitud;
-
-    public showPlanes = false;
-    public relacion = null;
-    public conceptoARelacionar = [];
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -50,7 +49,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Opciones del desplegable para vincular y desvincular
     public itemsRegistros = {};
-    public showVincular = false;
 
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
@@ -60,17 +58,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public scopeEliminar: any;
 
     // Mustro mpi para cambiar de paciente.
-    public showCambioPaciente = false;
-    public showDatosSolicitud = false;
-    public showPrestacion = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
-    // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
-    public copiaRegistro: any;
-    // errores
-    public errores: any[] = [];
-
-    public registroATransformar: IPrestacionRegistro;
 
     public masFrecuentes: any[] = [];
 
@@ -78,8 +67,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public activeIndex = 0;
     public panelIndex = 0;
 
-    public prestacionValida = true;
-    public mostrarMensajes = false;
     // Seteamos el concepto desde el cual se buscan sus frecuentes
     public conceptoFrecuente: any;
 
@@ -109,6 +96,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     verMasRelaciones: any[] = [];
 
     public activeIndexResumen = 0;
+    onDestroy$ = new Subject();
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -123,7 +111,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
         public ps: PlantillasService,
-        public seguimientoPacienteService: SeguimientoPacienteService
+        public seguimientoPacienteService: SeguimientoPacienteService,
+        public ejecucionService: RupEjecucionService
     ) {
     }
 
@@ -166,9 +155,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
-                    this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+                        this.ejecucionService.prestacion = prestacion;
 
                         this.plex.updateTitle([{
                             route: '/',
@@ -191,6 +180,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
+                                    this.ejecucionService.paciente = paciente;
+
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                     if (paciente) {
                                         this.registroSeguimiento();
@@ -206,6 +197,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                 }
                             }
+                            this.ejecucionService.elementoRupPrestacion = this.elementoRUP;
 
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
@@ -222,7 +214,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
                                     if (!registoExiste) {
                                         this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
-                                        this.ejecutarConcepto(elementoRequerido.concepto);
+                                        this.ejecucionService.agregarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
                                         this.itemsRegistros[registoExiste.id].collapse = false;
@@ -240,9 +232,22 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 }
             });
         });
+
+        this.ejecucionService.conceptosStream().pipe(
+            filter(r => !r.seccion),
+            takeUntil(this.onDestroy$),
+        ).subscribe((registro) => {
+            const dientesOdontograma = this.servicioPrestacion.getRefSetData();
+            if (dientesOdontograma && dientesOdontograma.refsetId) {
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, dientesOdontograma.conceptos);
+            } else {
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
+            }
+        });
     }
 
     ngOnDestroy() {
+        this.onDestroy$.next();
         this.huds.clear();
     }
 
@@ -419,8 +424,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
-
-            this.errores[this.indexEliminar] = null;
             this.indexEliminar = null;
             this.confirmarEliminar = false;
             this.scopeEliminar = '';
@@ -448,24 +451,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.confirmarEliminar = true;
     }
 
-    cargarNuevoRegistro(snomedConcept, valor = null) {
-        // Si proviene del drag and drop
-        if (snomedConcept.dragData) {
-            snomedConcept = snomedConcept.dragData;
-        }
-
-        // Si proviene del drag and drop
-        if (typeof snomedConcept.conceptId === 'undefined') {
-            snomedConcept = snomedConcept[1];
-        }
-        // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-        let esSolicitud = false;
-
-        // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (snomedConcept.semanticTag === 'plan') {
-            esSolicitud = true;
-        }
-        let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+    cargarNuevoRegistro(snomedConcept, esSolicitud: boolean, valor = null, relaciones) {
+        const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
         if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
@@ -483,104 +470,23 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         }
         nuevoRegistro.valor = valor;
 
-        if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
-            // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
-            const registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
-            if (registroRequerido) {
-                nuevoRegistro.relacionadoCon.push(registroRequerido);
+        if (!relaciones) {
+            if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
+                const registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
+                if (registroRequerido) {
+                    nuevoRegistro.relacionadoCon.push(registroRequerido);
+                }
             }
+        } else {
+            nuevoRegistro.relacionadoCon = [...relaciones];
         }
-        //
 
-
-        //
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
-        this.showDatosSolicitud = false;
-        // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
 
 
-    /**
-     * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
-     * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
-     * a dicho concepto de snomed
-     * @param {any} snomedConcept
-     */
-    ejecutarConcepto(snomedConcept) {
-        if (snomedConcept[0] && snomedConcept[0][0] === 'planes') {
-            snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
-            snomedConcept.semanticTag = 'plan';
-        } else {
-            if (snomedConcept[1]) {
-                snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
-            }
-        }
-
-        const dientesOdontograma = this.servicioPrestacion.getRefSetData();
-
-        let valor;
-        let resultado;
-        this.isDraggingConcepto = false;
-        let registros = this.prestacion.ejecucion.registros;
-        // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
-        if (registros.length > 0) {
-            this.showVincular = true;
-        }
-
-        // El concepto ya aparece en los registros?
-        let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-
-
-        if (registoExiste) {
-            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-            return false;
-        }
-
-        // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
-
-        if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
-            this.servicioPrestacion.getUnTrastornoPaciente(this.paciente.id, snomedConcept)
-                .subscribe(dato => {
-                    if (dato) {
-                        if (dato.evoluciones[0].estado === 'activo') {
-                            this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
-                                if (confirmar) {
-
-                                    valor = {
-                                        idRegistroOrigen: dato.evoluciones[0].idRegistro
-                                    };
-
-                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-
-                                    if (dientesOdontograma && dientesOdontograma.refsetId) {
-                                        resultado.relacionadoCon = dientesOdontograma.conceptos;
-                                    }
-
-                                } else {
-
-                                    resultado = this.cargarNuevoRegistro(snomedConcept);
-                                    if (resultado && dientesOdontograma && dientesOdontograma.refsetId) {
-                                        resultado.relacionadoCon = dientesOdontograma.conceptos;
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        resultado = this.cargarNuevoRegistro(snomedConcept);
-                        if (resultado && dientesOdontograma && dientesOdontograma.refsetId) {
-                            resultado.relacionadoCon = dientesOdontograma.conceptos;
-                        }
-                    }
-                });
-        } else {
-            resultado = this.cargarNuevoRegistro(snomedConcept);
-            if (dientesOdontograma && dientesOdontograma.conceptos && dientesOdontograma.refsetId) {
-                resultado.relacionadoCon = dientesOdontograma.conceptos;
-            }
-        }
-    }
 
     /**
      * Recibe un conpecto de la HUDS para ejecutarlo
@@ -588,7 +494,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      */
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
-            this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
+            // this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
             let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
 
@@ -599,7 +505,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
-                    let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                    // let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
                 });
             } else {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
@@ -738,37 +644,18 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     onConceptoDrop(e: any) {
-        if (e.dragData.huds) {
-            window.setTimeout(() => {
-                this.ejecutarConceptoHuds(e.dragData);
-            });
-        } else {
-            if (e.dragData.tipo) {
-                switch (e.dragData.tipo) {
-                    case 'prestacion':
-                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
-                        break;
-                    case 'hallazgo':
-                    case 'trastorno':
-                    case 'situación':
-                        this.ejecutarConcepto(e.dragData.data.concepto);
-                        break;
-                    default:
-                        this.ejecutarConcepto(e.dragData);
-                        break;
-                }
-
-            } else {
-                window.setTimeout(() => {
-                    this.ejecutarConcepto(e.dragData);
-                });
-            }
-        }
+        const { esSolicitud, term, fsn, semanticTag, conceptId } = e.dragData;
+        this.ejecucionService.agregarConcepto(
+            {
+                fsn, term, semanticTag, conceptId
+            },
+            esSolicitud,
+            false
+        );
     }
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
-        this.showDatosSolicitud = false;
     }
 
 
@@ -808,18 +695,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         });
     }
 
-    cambioDePaciente($event) {
-        this.showCambioPaciente = $event;
-    }
-
-    cancelarCambioPaciente() {
-        this.showCambioPaciente = false;
-    }
-
-    mostrarDatosSolicitud(bool) {
-        this.showDatosSolicitud = bool;
-    }
-
     cambiaValorCollapse(indice) {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
@@ -830,7 +705,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     toggleCollapse() {
         this.collapse = !this.collapse;
         if (this.prestacion.ejecucion.registros) {
-            this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
                 if (this.itemsRegistros[element.id]) {
                     this.itemsRegistros[element.id].collapse = this.collapse;

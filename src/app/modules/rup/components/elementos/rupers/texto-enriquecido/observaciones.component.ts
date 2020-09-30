@@ -65,15 +65,6 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
                     this.emitChange(false);
                 }
             });
-
-            this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
-                this.seleccionado = this.prestacionesService.getRefSetData();
-                // Estamos en la sección que tiene el foco actual?
-                if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
-                    this.plex.toast('danger', 'No se pueden agregar conceptos a esta sección', 'Acción no permitida');
-                    return false;
-                }
-            });
         }
     }
 

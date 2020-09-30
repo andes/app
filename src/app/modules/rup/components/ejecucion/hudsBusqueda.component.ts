@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit } from '@angular/core';
+import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit, Optional } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -7,6 +7,7 @@ import { TipoPrestacionService } from '../../../../services/tipoPrestacion.servi
 
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
+import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -33,7 +34,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     @Input() paciente: any;
 
-    @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
 
@@ -46,11 +46,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
-    /**
-     * Devuelve un elemento seleccionado que puede ser
-     * una prestacion o un ?????
-     */
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
 
     /**
@@ -120,7 +115,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
         public auth: Auth,
-        public huds: HUDSService
+        public huds: HUDSService,
+        @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
 
@@ -170,37 +166,19 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     }
 
-    devolverPrestacion(prestacion) {
-        let resultado = {
-            tipo: 'prestacion',
-            data: prestacion
-        };
-        this.evtData.emit(resultado);
+    agregarRegistro(registro) {
+        if (this.ejecucionService) {
+            const data: EmitConcepto = {
+                concepto: registro.concepto,
+                esSolicitud: false,
+                valor: {
+                    idRegistroOrigen: registro.evoluciones[0].idRegistro
+                }
+            };
+            this.ejecucionService.agregarConcepto(data.concepto, false, null, data.valor);
+        }
     }
 
-    devolverHallazgo(hallazgo) {
-        let resultado = {
-            tipo: 'hallazgo',
-            data: hallazgo
-        };
-        this.evtData.emit(resultado);
-    }
-
-    devolverMedicamento(medicamento) {
-        let resultado = {
-            tipo: 'medicamento',
-            data: medicamento
-        };
-        this.evtData.emit(resultado);
-    }
-
-    devolverLaboratorio(laboratorio) {
-        let resultado = {
-            tipo: 'laboratorio',
-            data: laboratorio
-        };
-        this.evtData.emit(resultado);
-    }
 
     emitTabs(registro, tipo, index: number) {
         switch (tipo) {
@@ -312,9 +290,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
+
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
             this.cdas = registros.map(cda => {
                 cda.id = cda.cda_id;
+                cda['solicitud'] = { ambitoOrigen: 'ambulatorio' };
                 return {
                     data: cda,
                     tipo: 'cda',
@@ -324,6 +304,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     estado: 'validada'
                 };
             });
+            this.prestaciones = this.prestacionesCopia;
             // filtramos las vacunas y laboratorios por ahora para que se listan por separado
             this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Vacunas_CDA_ID);
             this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Laboratorio_CDA_ID);
@@ -335,6 +316,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
             // Filtramos por CDA para poder recargar los estudiosc
             this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            this.prestacionesCopia = this.prestaciones.slice();
+            this.filtrar();
         });
     }
 
@@ -398,6 +381,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.data.solicitud.ambitoOrigen === this.ambitoOrigen);
         }
+        this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
     }
 
     setAmbitoOrigen(ambitoOrigen) {
