@@ -746,7 +746,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, esSolicitud) {
         let clase = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.esSolicitud || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
@@ -774,7 +774,7 @@ export class PrestacionesService {
     public getIcon(conceptoSNOMED, esSolicitud) {
         let icon = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.esSolicitud || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             icon = 'plan';
         } else {
             switch (conceptoSNOMED.semanticTag) {
