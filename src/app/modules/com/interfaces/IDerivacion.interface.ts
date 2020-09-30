@@ -31,4 +31,5 @@ export interface IDerivacion {
     detalle: String;
     adjuntos: any;
     historial: [IDerivacionHistorial];
+    cancelada: Boolean;
 }

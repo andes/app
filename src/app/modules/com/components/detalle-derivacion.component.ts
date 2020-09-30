@@ -127,7 +127,7 @@ export class DetalleDerivacionComponent implements OnInit {
 
     getReglasDerivaciones() {
         // los efectores no pueden cambiar el estado de las derivaciones solicitadas
-        if (!(this.derivacion.organizacionOrigen.id === this.auth.organizacion.id)) {
+        if (!(this.derivacion.organizacionOrigen.id === this.auth.organizacion.id) || this.esCOM) {
             let query: any = {
                 estadoInicial: this.derivacion.estado,
                 soloCOM: this.esCOM

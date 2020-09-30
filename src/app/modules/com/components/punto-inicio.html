@@ -99,6 +99,10 @@
                                     <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
                                                 subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                     </plex-label>
+                                    <plex-button *ngIf="derivacion.estado === 'pendiente' && !esCOM" type="danger"
+                                                 size="sm" (click)="cancelar(derivacion);$event.stopPropagation()">
+                                        CANCELAR
+                                    </plex-button>
                                     <plex-badge
                                                 type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                         {{ derivacion.estado }}</plex-badge>

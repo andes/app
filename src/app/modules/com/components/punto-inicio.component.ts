@@ -7,6 +7,7 @@ import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { cache } from '@andes/shared';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -39,11 +40,11 @@ export class ComPuntoInicioComponent implements OnInit {
     ];
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router) { }
+        public router: Router, public plex: Plex) { }
 
     ngOnInit() {
         this.organizacionActual = this.auth.organizacion as any;
-        this.derivaciones$ = this.derivacionesService.search({}).pipe(cache());
+        this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             if (org.esCOM) {
                 this.esCOM = true;
@@ -65,7 +66,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     actualizarTabla() {
         this.derivaciones$.subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = derivaciones;
+            this.derivaciones = derivaciones.filter(e => !e.cancelada);
             if (this.tabIndex === 0) {
                 this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id === this.auth.organizacion.id);
                 if (this.organizacionOrigen) {
@@ -139,6 +140,19 @@ export class ComPuntoInicioComponent implements OnInit {
         this.ocultarSidebars();
         this.actualizarTabla();
         this.tabIndex = index;
+    }
+
+    cancelar(derivacion) {
+        this.plex.confirm('¿Está seguro de querer cancelar la derivación?').then((resultado) => {
+            if (resultado) {
+                derivacion.cancelada = true;
+                this.derivacionesService.update(derivacion._id, derivacion).subscribe(() => {
+                    this.plex.toast('success', 'Derivación cancelada');
+                    this.actualizarTabla();
+                });
+            }
+            this.ocultarSidebars();
+        });
     }
 }
 
