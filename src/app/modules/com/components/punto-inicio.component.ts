@@ -19,6 +19,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public showSidebar = false;
     public showNuevaDerivacion = false;
     public showDetalle = false;
+    public verAyuda = false;
     derivacionSeleccionada: IDerivacion;
     derivaciones$: Observable<any[]>;
     derivaciones: any[];
@@ -153,6 +154,10 @@ export class ComPuntoInicioComponent implements OnInit {
             }
             this.ocultarSidebars();
         });
+    }
+
+    cambiarVerAyuda(mostrar) {
+        this.verAyuda = mostrar;
     }
 }
 

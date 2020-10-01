@@ -4,7 +4,8 @@
             <plex-button class="float-left mr-1" position="left" type="danger" label="Cancelar" (click)="cancelar()">
             </plex-button>
             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
-                         (click)="guardarDerivacion($event)" [validateForm]="form"> </plex-button>
+                         (click)="guardarDerivacion($event)" [validateForm]="form" [disabled]="form.invalid">
+            </plex-button>
         </plex-title>
         <form #form="ngForm">
             <plex-wrapper>
