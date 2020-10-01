@@ -7,39 +7,30 @@
                          [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada" class="ml-1">
             </plex-button>
         </plex-title>
-        <div class="row">
-            <div class="col-6">
-                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora">
-                </plex-datetime>
-            </div>
-            <div class="col-6">
-                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                             label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
-                             [required]="true" (change)="seleccionarTipoPrestacion()">
-                </plex-select>
-            </div>
-        </div>
+        <plex-wrapper>
+            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
+                           grow="2">
+            </plex-datetime>
+            <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
+                         label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
+                         [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
+            </plex-select>
+        </plex-wrapper>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group" *ngIf="mostrarPaciente">
-                    <label for="paciente-buscar" class="form-control-label">Paciente</label>
-                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                     (searchClear)="onSearchClear()">
-                    </paciente-buscar>
-                </div>
+        <ng-container class="form-group" *ngIf="mostrarPaciente">
+            <label for="paciente-buscar" class="form-control-label">Paciente</label>
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                             (searchClear)="onSearchClear()">
+            </paciente-buscar>
 
-                <!-- Tabla / listado de pacientes -->
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onSelect($event)">
-                </paciente-listado>
+            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [height]="55"
+                              [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
+            </paciente-listado>
 
-                <div *ngIf="buscandoPaciente && resultadoBusqueda && !resultadoBusqueda.length"
-                     class="alert alert-default">
-                    ¡No se encontró ningún paciente!
-                </div>
+            <div *ngIf="buscandoPaciente && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                ¡No se encontró ningún paciente!
             </div>
-        </div>
+        </ng-container>
 
     </plex-layout-main>
     <plex-layout-sidebar>

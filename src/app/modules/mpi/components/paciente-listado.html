@@ -1,4 +1,4 @@
-<plex-list>
+<plex-list height="{{height}}%" (scrolled)="onScroll()">
     <plex-item *ngFor="let paciente of listado" class=""
                [class.pacienteFallecido]="paciente.fechaFallecimiento && paciente.fechaFallecimiento !== null"
                [selected]="pacienteSeleccionado?.id === paciente.id" (click)="seleccionar(paciente)">

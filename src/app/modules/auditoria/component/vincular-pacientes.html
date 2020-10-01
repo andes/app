@@ -45,7 +45,7 @@
 
         <plex-loader *ngIf="loading"></plex-loader>
 
-        <paciente-listado *ngIf="resultadoPacientes?.length" [pacientes]="resultadoPacientes" [autoselect]="false"
+        <paciente-listado *ngIf="resultadoPacientes?.length" [pacientes]="resultadoPacientes"
                           (selected)="showModal($event)">
         </paciente-listado>
 

@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { PacienteBuscarComponent } from './components/paciente-buscar.component';
 import { PacienteListadoComponent } from './components/paciente-listado.component';
+import { PacienteBusquedaComponent } from './components/paciente-busqueda.component';
 import { FotoDirective } from './components/paciente-detalle-foto.directive';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
@@ -30,6 +31,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
     declarations: [
         PacienteBuscarComponent,
         PacienteListadoComponent,
+        PacienteBusquedaComponent,
         PacientePanelComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
@@ -41,6 +43,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
     exports: [
         PacienteBuscarComponent,
         PacienteListadoComponent,
+        PacienteBusquedaComponent,
         PacientePanelComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,

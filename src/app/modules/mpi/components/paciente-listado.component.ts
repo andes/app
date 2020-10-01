@@ -2,6 +2,7 @@ import { IPacienteMatch } from './../interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { PacienteBuscarService } from 'src/app/core/mpi/services/paciente-buscar.service';
 
 @Component({
     selector: 'paciente-listado',
@@ -37,14 +38,10 @@ export class PacienteListadoComponent {
         } else {
             this.listado = [];
         }
-        // Selecciona el primero
-        if (this.autoselect && this.listado && this.listado.length) {
-            this.seleccionar(this.listado[0]);
-        }
     }
 
-    // Indica si selecciona automáticamente el primer paciente de la lista
-    @Input() autoselect = false;
+    // Indica la altura del listado respecto a su contenedor
+    @Input() height = 80;
 
     // Indica si debe aparecer el boton 'editar' en cada resultado
     @Input() editing = false;
@@ -55,10 +52,16 @@ export class PacienteListadoComponent {
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    // Evento que se emite cuando el mouse está sobre un paciente
-    @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    constructor(
+        private plex: Plex,
+        private pacienteBuscar: PacienteBuscarService) { }
 
-    constructor(private plex: Plex) {
+    onScroll() {
+        this.pacienteBuscar.findByText().subscribe((resultado: any) => {
+            if (resultado) {
+                this.listado = this.listado.concat(resultado.pacientes);
+            }
+        });
     }
 
     public seleccionar(paciente: IPaciente) {
@@ -67,10 +70,6 @@ export class PacienteListadoComponent {
 
     public editar(paciente: IPaciente) {
         (paciente.id) ? this.edit.emit(paciente) : this.edit.emit(null);
-    }
-
-    public hoverPaciente(paciente: IPaciente) {
-        this.hover.emit(paciente);
     }
 
     /**

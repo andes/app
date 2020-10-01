@@ -29,28 +29,20 @@
 
         <!-- ----------- Búsqueda de pacientes -------------- -->
         <ng-container *ngIf="pacientesSearch">
-            <fieldset>
-                <legend>Buscar Paciente</legend>
-                <div class="row">
-                    <div class="col">
-                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                         (searchClear)="onSearchClear()">
-                        </paciente-buscar>
-                    </div>
-                </div>
-                <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
-                <div class="row">
-                    <div class="col">
-                        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                          [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                          (selected)="onSelectPaciente($event)">
-                        </paciente-listado>
-                        <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                            ¡No se encontró ningún paciente!
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+            <plex-title titulo="Buscar Paciente" size="md"></plex-title>
+
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                             (searchClear)="onSearchClear()">
+            </paciente-buscar>
+
+            <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
+
+            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                              (selected)="onSelectPaciente($event)">
+            </paciente-listado>
+            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                ¡No se encontró ningún paciente!
+            </div>
         </ng-container>
 
         <app-prestar-hc *ngIf="verPrestar" [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="hideSidebar($event)"

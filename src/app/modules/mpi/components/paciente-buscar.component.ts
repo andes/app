@@ -20,7 +20,6 @@ interface PacienteEscaneado {
     styleUrls: []
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
-    private timeoutHandle: number;
     public textoLibre: string = null;
     public autoFocus = 0;
     public routes;
@@ -37,14 +36,13 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     @Input() returnScannedPatient = false;
 
     // Eventos
-    @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
+    @Output() searchStart: EventEmitter<null> = new EventEmitter<null>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
-    @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
+    @Output() searchClear: EventEmitter<null> = new EventEmitter<null>();
 
 
     constructor(
         private plex: Plex,
-        private pacienteService: PacienteService,
         private pacienteBuscar: PacienteBuscarService) {
     }
 
@@ -59,42 +57,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        clearInterval(this.timeoutHandle);
-    }
-
-    /**
-     * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
-     *
-     * @private
-     * @returns {boolean} Indica si está bien configurado
-     */
-    private controlarScanner(): boolean {
-        if (this.textoLibre) {
-            let index = this.textoLibre.indexOf('"');
-            if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
-                /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
-                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
-                this.textoLibre = null;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private buscarPorTexto() {
-        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-
         if (this.searchSubscription) {
             this.searchSubscription.unsubscribe();
         }
-        this.searchSubscription = this.pacienteService.getMatch({
-            type: 'multimatch',
-            cadenaInput: textoLibre
-        }).subscribe(resultado => {
-            this.searchEnd.emit({ pacientes: resultado, err: null });
-        },
-            (err) => this.searchEnd.emit({ pacientes: [], err: err })
-        );
     }
 
     /**
@@ -105,44 +70,23 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if ($event.type) {
             return;
         }
-        // Cancela la búsqueda anterior
-        if (this.timeoutHandle) {
-            window.clearTimeout(this.timeoutHandle);
-        }
+        if (this.textoLibre && this.textoLibre.length) {
+            let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
 
-        // Controla el scanner
-        if (!this.controlarScanner()) {
-            return;
-        }
-
-        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-        // Inicia búsqueda
-        if (textoLibre) {
-            this.timeoutHandle = window.setTimeout(() => {
-                this.searchStart.emit();
-                this.timeoutHandle = null;
-
-                // Si matchea una expresión regular, busca inmediatamente el paciente
-                let pacienteEscaneado = this.pacienteBuscar.comprobarDocumentoEscaneado(textoLibre);
-                if (pacienteEscaneado) {
-                    this.pacienteBuscar.findByScan(pacienteEscaneado).subscribe(resultadoPacientes => {
-                        if (resultadoPacientes.pacientes.length) {
-                            return this.searchEnd.emit(resultadoPacientes);
-                        } else {
-                            // Si el paciente no fue encontrado ..
-                            if (this.returnScannedPatient) {
-                                // Ingresa a registro de pacientes ya que es escaneado
-                                return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
-                            } else {
-                                return this.searchEnd.emit({ pacientes: [], err: null });
-                            }
-                        }
-                    });
-                } else {
-                    // 2. Busca por texto libre
-                    this.buscarPorTexto();
+            // Controla el scanner
+            if (!this.pacienteBuscar.controlarScanner(textoLibre)) {
+                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+                return;
+            }
+            if (this.searchSubscription) {
+                this.searchSubscription.unsubscribe();
+            }
+            this.searchStart.emit();
+            this.pacienteBuscar.search(textoLibre, this.returnScannedPatient).subscribe(respuesta => {
+                if (respuesta) {
+                    this.searchEnd.emit(respuesta);
                 }
-            }, 500);
+            });
         } else {
             this.searchClear.emit();
         }

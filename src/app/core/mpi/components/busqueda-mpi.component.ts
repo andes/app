@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { Auth } from '@andes/auth';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
-import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'busqueda-mpi',
@@ -13,11 +12,6 @@ import { PacienteBuscarComponent } from '../../../modules/mpi/components/pacient
 })
 export class BusquedaMpiComponent implements OnInit {
 
-    @ViewChild('buscador', { static: false }) buscador: PacienteBuscarComponent;
-    public disableNuevoPaciente = true;
-    loading = false;
-    resultadoBusqueda: IPaciente[] = [];
-    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     historialSeleccionados: IPaciente[] = [];
     escaneado: boolean;
     sidebar = 8;
@@ -55,28 +49,14 @@ export class BusquedaMpiComponent implements OnInit {
 
     // -------------- SOBRE BUSCADOR ----------------
 
-    onSearchStart() {
-        this.disableNuevoPaciente = false;
-        this.loading = true;
-    }
 
     onSearchEnd(pacientes: any[], escaneado: boolean) {
-        this.searchClear = false;
         this.escaneado = escaneado;
-        this.loading = false;
         if (escaneado) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(this.escaneado);
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
-        } else {
-            this.resultadoBusqueda = pacientes;
         }
-    }
-
-    onSearchClear() {
-        this.disableNuevoPaciente = true;
-        this.searchClear = true;
-        this.resultadoBusqueda = [];
     }
 
 

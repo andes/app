@@ -13,7 +13,7 @@ import { PacienteService } from '../services/paciente.service';
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
-    styleUrls: []
+    styleUrls: ['datos-basicos.scss']
 })
 
 export class DatosBasicosComponent implements OnInit {
