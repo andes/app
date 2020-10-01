@@ -1,8 +1,10 @@
-<div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && validacion === false" class="row bg-faded"
+<div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && !validacion" class="row bg-faded"
      class="d-flex justify-content-start">
     <div class="col m-0 p-0 bg-registro-anterior">
-        <span>Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }}, por {{ ultimaConsulta.createdBy
-            | nombre }}</span>
+        <span>
+            Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }},
+            por
+            {{ ultimaConsulta.createdBy | nombre }}</span>
     </div>
 </div>
 
