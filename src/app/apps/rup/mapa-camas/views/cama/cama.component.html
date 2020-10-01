@@ -66,7 +66,7 @@
                     <div class="col-12">
                         <ng-container *ngIf="organizacion$ | async as organizacion">
                             <plex-select name="sectores" [data]="sectores$ | async" label="Ubicación" idField="_id"
-                                         labelField="nombre" [required]="true" [(ngModel)]="camaEditada.sectores" 
+                                         labelField="nombre + sectorName" [required]="true" [(ngModel)]="camaEditada.sectores" 
                                          (change)="onSectorSelect($event, organizacion)">
                             </plex-select>
                         </ng-container>
