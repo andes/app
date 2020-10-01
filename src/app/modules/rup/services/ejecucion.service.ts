@@ -8,6 +8,7 @@ import { PrestacionesService } from './prestaciones.service';
 import { switchMap, map, filter } from 'rxjs/operators';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { cache } from '@andes/shared';
+import { ElementosRUPService } from './elementosRUP.service';
 
 
 @Injectable()
@@ -35,7 +36,8 @@ export class RupEjecucionService {
 
     constructor(
         private plex: Plex,
-        private prestacionService: PrestacionesService
+        private prestacionService: PrestacionesService,
+        private elementosRUPService: ElementosRUPService
     ) {
 
     }
@@ -75,7 +77,13 @@ export class RupEjecucionService {
     }
 
     chequearRepetido(data: EmitConcepto) {
-        const { concepto } = data;
+        const { concepto, esSolicitud } = data;
+
+        const elementoRUP = this.elementosRUPService.buscarElemento(concepto, esSolicitud);
+        if (elementoRUP.permiteRepetidos) {
+            return true;
+        }
+
         const registros = this.getPrestacionRegistro();
         const registoExiste = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
         if (registoExiste) {

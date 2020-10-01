@@ -44,6 +44,11 @@ export interface IElementoRUP {
     frecuentes: ISnomedConcept[];
 
     inactiveAt?: Date;
+
+    /**
+     * Puede repetirse el concepto mas de una vez en la prestación.
+     */
+    permiteRepetidos?: boolean;
 }
 
 export interface IElementoRUPRequeridos {
