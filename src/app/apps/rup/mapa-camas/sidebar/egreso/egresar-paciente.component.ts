@@ -533,6 +533,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 if (moment(fecha).isSameOrAfter(moment(this.fechaMax))) {
                     this.fecha = moment(this.fechaMax).add(-1, 'h').toDate();
+                    this.plex.info('warning', `La fecha máxima para este egreso es: ${this.fecha.toLocaleDateString('es-ES')}`, 'Cambio de Fecha');
                 } else {
                     this.fecha = fecha;
                 }
