@@ -97,13 +97,7 @@ export class CamaMainComponent implements OnInit {
         );
         this.sectores$ = this.organizacion$.pipe(
             map(organizacion => {
-                const sectores = this.organizacionService.getFlatTree(organizacion);
-                for (const sector of sectores) {
-                    let sectorRuta = this.organizacionService.getRuta(organizacion, sector);
-                    sectorRuta.pop();
-                    sector['sectorName'] = (sectorRuta.length > 0) ? '(' + [...sectorRuta].reverse().map(s => s.nombre).join(', ') + ')' : '';
-                }
-                return sectores;
+                return this.organizacionService.getSectoresNombreCompleto(organizacion);
             })
         );
         this.mapaSectores$ = this.organizacion$.pipe(pluck('mapaSectores'));

@@ -147,4 +147,14 @@ export class OrganizacionService {
     getOrgSisa(cod: string): Observable<any> {
         return this.server.get(this.organizacionUrl + '/sisa/' + cod);
     }
+
+    getSectoresNombreCompleto(organizacion: IOrganizacion) {
+        const sectores = this.getFlatTree(organizacion);
+        for (const sector of sectores) {
+            let sectorRuta = this.getRuta(organizacion, sector);
+            sectorRuta.pop();
+            sector['sectorName'] = (sectorRuta.length > 0) ? '(' + [...sectorRuta].reverse().map(s => s.nombre).join(', ') + ')' : '';
+        }
+        return sectores;
+    }
 }
