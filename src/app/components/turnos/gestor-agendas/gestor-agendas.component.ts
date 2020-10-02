@@ -499,15 +499,16 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showTurnos = false;
             this.showSuspendida = false;
             if (agenda && agenda.id) {
+                if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
+                    this.showEditarAgendaPanel = false;
+                    this.showTurnos = true;
+                    return;
+                }
                 this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                     // Actualizo la agenda local
                     agenda = ag;
                     // Actualizo la agenda global (modelo)
                     this.agenda = ag;
-                    if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
-                        this.plex.info('danger', '', 'No es posible editar la agenda seleccionada.', 3000);
-                        return;
-                    }
 
                     if (!multiple) {
                         this.onSeleccionAgendaNoMultiple(ag);
