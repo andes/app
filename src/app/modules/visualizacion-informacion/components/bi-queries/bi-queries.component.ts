@@ -106,7 +106,7 @@ export class BiQueriesComponent implements OnInit {
         const valor = this.argumentos[key];
         params[key] = valor;
         if (valor instanceof Date) {
-          params[key] = moment(valor).format();
+          params[key] = valor;
         } else {
           if (valor && valor.id) {
             params[key] = valor.id;

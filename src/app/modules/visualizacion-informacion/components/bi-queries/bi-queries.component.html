@@ -1,23 +1,22 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ejecutar consultas">
-            <plex-button size="sm" type="success" (click)="descargar()"
-                         [disabled]="form.invalid || !consultaSeleccionada">
+            <plex-button size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
                 Descargar CSV
             </plex-button>
         </plex-title>
-        <plex-grid type="full" size="sm">
-            <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="false" [data]="queries$ | async"
-                         labelField="nombre" idField="_id" placeholder="Seleccione consulta" (change)="getArgumentos()">
-            </plex-select>
-            <ng-container *ngFor="let argumento of consultaSeleccionada?.argumentos">
-                <plex-bool *ngIf="argumento.tipo==='salida'" [(ngModel)]="argumento.check"
-                           [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
-                </plex-bool>
-            </ng-container>
-        </plex-grid>
         <form #form="ngForm">
-
+            <plex-grid type="full" size="sm">
+                <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="true"
+                             [data]="queries$ | async" labelField="nombre" idField="_id"
+                             placeholder="Seleccione consulta" (change)="getArgumentos()">
+                </plex-select>
+                <ng-container *ngFor="let argumento of consultaSeleccionada?.argumentos">
+                    <plex-bool *ngIf="argumento.tipo==='salida'" [(ngModel)]="argumento.check"
+                               [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
+                    </plex-bool>
+                </ng-container>
+            </plex-grid>
             <ng-container *ngIf="consultaSeleccionada">
                 <plex-title titulo="Argumentos"></plex-title>
                 <plex-wrapper>
