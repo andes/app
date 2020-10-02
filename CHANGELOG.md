@@ -1,3 +1,19 @@
+# [5.15.0](https://github.com/andes/app/compare/v5.14.0...v5.15.0) (2020-09-30)
+
+
+### Bug Fixes
+
+* **citas:** Corrige consulta repetitiva a api ([#1915](https://github.com/andes/app/issues/1915)) ([a40a233](https://github.com/andes/app/commit/a40a233fe2b53d22234999462dcb818182ebb83d))
+* **huds:** error al visualizar prestaciones de un paciente inicialmente ([#1918](https://github.com/andes/app/issues/1918)) ([11fc741](https://github.com/andes/app/commit/11fc741b9fcc5cfaa60ef75a5df92b50168e1d41))
+
+
+### Features
+
+* **core:** check timezone ([#1925](https://github.com/andes/app/issues/1925)) ([f178ae0](https://github.com/andes/app/commit/f178ae0647f18e2d92b36543878d7486bf73c4d2))
+* **mapa-camas:** saca "otros" de razon de alta y motivo de bloqueo ([#1835](https://github.com/andes/app/issues/1835)) ([2ab630b](https://github.com/andes/app/commit/2ab630b0fbdc22cd115cd9e5cf2f14de41ab3c4b))
+* **mapa-camas:** virtual scroll en tabla de camas ([#1710](https://github.com/andes/app/issues/1710)) ([623650b](https://github.com/andes/app/commit/623650b8e6c6a913a7483bad62741f97f3c54828))
+* **rup:** flujo de datos al ejecutar un concepto ([#1900](https://github.com/andes/app/issues/1900)) ([245d163](https://github.com/andes/app/commit/245d1636f35ef02b6b0698790c58617d9d8f5099))
+
 # [5.14.0](https://github.com/andes/app/compare/v5.13.0...v5.14.0) (2020-09-23)
 
 

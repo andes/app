@@ -7,8 +7,8 @@
 - Profesionales intervinientes
 - Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
 -->
-<form #form="ngForm">
-    <ng-container *ngIf="!soloValores && registro.valor">
+<ng-container *ngIf="!soloValores && registro.valor">
+    <form #form="ngForm">
         <div class="row">
             <div class="col-4 ">
                 <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true"
@@ -62,42 +62,43 @@
                 </plex-text>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <th class="col-10">Pacientes</th>
-                        <th class="col-2">&nbsp;</th>
-                    </thead>
-                    <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
-                        <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
-                            <td>{{ paciente | nombre }}</td>
-                            <td>
-                                <plex-button icon="delete" class="btn btn-sm" type="danger" (click)="deletePaciente(i)">
-                                </plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                                 (searchClear)="searchClear()"></paciente-buscar>
-                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                                  [autoselect]="false" (selected)="seleccionarPaciente($event)">
-                                </paciente-listado>
-                                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                                    ¡No se encontró ningún paciente!
-                                </div>
-                            </td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </ng-container>
-</form>
+    </form>
+
+    <table class="table table-striped table-sm">
+        <thead>
+            <th class="col-10">Pacientes</th>
+            <th class="col-2">&nbsp;</th>
+        </thead>
+        <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
+            <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
+                <td>{{ paciente | nombre }}</td>
+                <td>
+                    <plex-button icon="delete" class="btn btn-sm" type="danger" (click)="deletePaciente(i)">
+                    </plex-button>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                     (searchClear)="searchClear()"></paciente-buscar>
+
+                    <div class="height-fix" *ngIf="pacientes && pacientes.length">
+                        <paciente-listado [height]="100" [pacientes]="pacientes"
+                                          (selected)="seleccionarPaciente($event)">
+                        </paciente-listado>
+                    </div>
+
+                    <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                        ¡No se encontró ningún paciente!
+                    </div>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+</ng-container>
 
 <ng-container *ngIf="soloValores && registro.valor && registro.valor.informe ">
     <div class="row">

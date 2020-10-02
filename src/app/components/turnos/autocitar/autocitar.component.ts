@@ -72,8 +72,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         // Agenda con el turno que necesitamos
         this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
         this.obraSocialPaciente = null;
-        if (this.paciente && this.paciente.financiador) {
-            this.obraSocialPaciente = this.paciente.financiador;
+        if (this.paciente && this.paciente.financiador && this.paciente.financiador.length > 0) {
+            this.obraSocialPaciente = this.paciente.financiador[0];
             this.confirmarTurno(bloque, turno);
         } else {
             this.confirmarTurno(bloque, turno);

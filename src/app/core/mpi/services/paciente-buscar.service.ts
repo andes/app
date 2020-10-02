@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, EMPTY } from 'rxjs';
 import { PacienteService } from './paciente.service';
 
 export interface PacienteEscaneado {
@@ -14,8 +14,30 @@ export interface PacienteEscaneado {
 
 @Injectable()
 export class PacienteBuscarService {
+    private searchText;
+    private skip = 0;
+    private limit = 10;
+    private scrollEnd = false;
     constructor(
         private pacienteService: PacienteService) { }
+
+    /**
+* Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
+*
+* @public
+* @returns {boolean} Indica si está bien configurado
+*/
+    public controlarScanner(scan): boolean {
+        if (scan) {
+            let index = scan.indexOf('"');
+            if (index >= 0 && index < 20 && scan.length > 5) {
+                /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
@@ -94,7 +116,7 @@ export class PacienteBuscarService {
                             return { pacientes: [], err: null };
                         }
                         // 1.3.2. Busca a uno con el mismo código de barras
-                        let candidato = resultadoSuggest.find(paciente => paciente.scan && paciente.scan === textoLibre);
+                        let candidato = resultadoSuggest.find(elto => elto.paciente.scan && elto.paciente.scan === textoLibre);
                         if (candidato) {
                             return { escaneado: true, pacientes: [candidato], err: null };
                         } else {
@@ -116,7 +138,67 @@ export class PacienteBuscarService {
                 );
             })
         );
+    }
 
+    /**
+     * Busca paciente cada vez que el campo de busqueda cambia su valor
+     */
+    public search(searchText: string, returnScannedPatient = false) {
+        // Inicia búsqueda
+        if (searchText) {
+            this.searchText = searchText;
+            this.skip = 0;
+            this.scrollEnd = false;
+            // Si matchea una expresión regular, busca inmediatamente el paciente
+            let pacienteEscaneado = this.comprobarDocumentoEscaneado(searchText);
+            if (pacienteEscaneado) {
+                return this.findByScan(pacienteEscaneado).pipe(
+                    map(resultadoPacientes => {
+                        if (resultadoPacientes.pacientes.length) {
+                            return resultadoPacientes;
+                        } else {
+                            // Si el paciente no fue encontrado ..
+                            if (returnScannedPatient) {
+                                // Ingresa a registro de pacientes ya que es escaneado
+                                return { pacientes: [pacienteEscaneado], escaneado: true, scan: searchText, err: null };
+                            } else {
+                                return { pacientes: [], err: null };
+                            }
+                        }
+                    })
+                );
+            } else {
+                // Busca por texto libre
+                return this.findByText();
+            }
+        }
+    }
+
+    /**
+     * Busca paciente cada vez que el campo de busqueda cambia su valor
+     */
+    public findByText() {
+        if (this.scrollEnd) {
+            return EMPTY;
+        }
+        // Busca por texto libre
+        return this.pacienteService.getMatch({
+            type: 'multimatch',
+            cadenaInput: this.searchText,
+            limit: this.limit,
+            skip: this.skip
+        }).pipe(
+            map((resultado: any) => {
+                this.skip += resultado.length;
+                // si vienen menos resultado que {{ limit }} significa que ya se cargaron todos
+                if (!resultado.length || resultado.length < this.limit) {
+                    this.scrollEnd = true;
+                }
+                return { pacientes: resultado, err: null };
+            },
+                err => { return { pacientes: [], err: err }; }
+            ),
+        );
     }
 
 }

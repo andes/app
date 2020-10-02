@@ -1,0 +1,131 @@
+.image-container {
+    padding: 0 10px 0 10px;
+}
+
+.image {
+    position: relative;
+    display: inline-block;
+    margin: 6px;
+}
+
+.app-waiting {
+    display: inline-block;
+}
+
+a.adjunto {
+    display: inline-block;
+    width: 60px;
+    height: 86px;
+    color: white;
+    background-color: #b9c512;
+    border-radius: 10px 1px 1px 1px;
+    padding-top: 25px !important;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.image img {
+    height: auto;
+    width: auto;
+    max-width: 200px;
+    max-height: 86px;
+}
+
+.x-mark {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2px;
+    float: right;
+    background-color: black;
+    opacity: .7;
+    color: white;
+    margin: 2px;
+}
+
+.close {
+    width: 20px;
+    height: 20px;
+    opacity: .7;
+    position: relative;
+    padding-right: 3px;
+}
+
+.x-mark:hover .close {
+    opacity: 1;
+}
+
+.close:before,
+.close:after {
+    border-radius: 2px;
+    position: absolute;
+    content: '';
+    height: 16px;
+    width: 2px;
+    top: 2px;
+    background-color: #FFFFFF;
+}
+
+.close:before {
+    transform: rotate(45deg);
+}
+
+.close:after {
+    transform: rotate(-45deg);
+}
+
+.thumbnail {
+    max-width: 40%;
+}
+
+.parpadeo {
+    animation-name: parpadeo;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: parpadeo;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}

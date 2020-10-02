@@ -90,7 +90,7 @@ export class TurnosPacienteComponent implements OnInit {
     }
     loadObraSocial() {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!this._paciente || !this._paciente.documento) {
+        if (!this._paciente) {
             return;
         } else {
             this._obraSocial = this._paciente.financiador || [];
@@ -137,7 +137,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (turno.obraSocial === 'prepaga' && turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
-            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : (turno.paciente.obraSocial) ? turno.paciente.obraSocial.nombre : turno.prepaga.nombre;
+            this.obraSocialSeleccionada = turno.obraSocial || (turno.paciente.obraSocial && turno.paciente.obraSocial.nombre) || (turno.prepaga.nombre);
         }
 
         if (!this.obraSocialSeleccionada) {

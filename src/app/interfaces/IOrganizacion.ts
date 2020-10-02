@@ -56,4 +56,6 @@ export interface IOrganizacion {
      * @memberof IOrganizacion
      */
     showMapa?: boolean;
+    aceptaDerivacion?: boolean;
+    esCOM?: boolean;
 }

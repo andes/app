@@ -1,0 +1,150 @@
+<plex-layout main="{{showSidebar? 7 : 12}}">
+    <plex-layout-main>
+        <plex-title main titulo="CENTRO OPERATIVO MÉDICO">
+            <plex-button type="info" class="ml-2" (click)="cambiarVerAyuda(true)" icon="help-circle">
+            </plex-button>
+            <plex-button position="right" class="float-right mr-1" type="success" label="Nueva derivación"
+                         (click)="nuevaDerivacion()">
+            </plex-button>
+        </plex-title>
+        <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+            <plex-tab label="DERIVACIONES ENTRANTES">
+                <plex-wrapper>
+                    <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
+                                 label="Organización origen" placeholder="Seleccione la organización"
+                                 (change)="actualizarTabla()">
+                    </plex-select>
+                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="actualizarTabla()"
+                               label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
+                                 label="Estado">
+                    </plex-select>
+                </plex-wrapper>
+                <div *ngIf="!derivaciones?.length" class="alert alert-default">
+                    No hay resultados que coincidan con los filtros de búsqueda
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ng-container *ngIf="derivaciones?.length">
+                            <plex-list [striped]="true">
+                                <plex-item>
+                                    <b label> Organización origen </b>
+                                    <b label> Organización destino </b>
+                                    <b label> Paciente </b>
+                                    <b></b>
+                                </plex-item>
+                                <plex-item *ngFor="let derivacion of derivaciones" (click)="seleccionar(derivacion)">
+                                    <div class="elementos-graficos w-100">
+                                        <plex-icon name="hospital-building" size="lg" type="info"></plex-icon>
+                                        <plex-label [tituloBold]="true"
+                                                    titulo="{{ derivacion.organizacionOrigen.nombre }}"
+                                                    subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
+                                        </plex-label>
+                                    </div>
+                                    <div class="elementos-graficos w-100">
+                                        <plex-icon name="hospital-building" size="lg" type="success"></plex-icon>
+                                        <plex-label titulo="{{ derivacion.organizacionDestino.nombre }}"
+                                                    subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
+                                        </plex-label>
+                                    </div>
+                                    <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                    </plex-label>
+                                    <plex-badge
+                                                type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                        {{ derivacion.estado }}</plex-badge>
+                                </plex-item>
+                            </plex-list>
+                        </ng-container>
+                    </div>
+                </div>
+            </plex-tab>
+            <plex-tab label="DERIVACIONES SOLICITADAS">
+                <plex-wrapper>
+                    <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
+                                 label="Organización destino" placeholder="Seleccione la organización"
+                                 (change)="actualizarTabla()">
+                    </plex-select>
+                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="actualizarTabla()"
+                               label="Buscar paciente" debounce="400"></plex-text>
+                    <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
+                                 label="Estado">
+                    </plex-select>
+                </plex-wrapper>
+                <div *ngIf="!derivaciones?.length" class="alert alert-default">
+                    No hay resultados que coincidan con los filtros de búsqueda
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ng-container *ngIf="derivaciones?.length">
+                            <plex-list [striped]="true">
+                                <plex-item>
+                                    <b label> Organización origen </b>
+                                    <b label> Organización destino </b>
+                                    <b label> Paciente </b>
+                                    <b></b>
+                                </plex-item>
+                                <plex-item *ngFor="let derivacion of derivaciones" (click)="seleccionar(derivacion)">
+                                    <div class="elementos-graficos w-100">
+                                        <plex-icon name="hospital-building" size="lg" type="info"></plex-icon>
+                                        <plex-label [tituloBold]="true"
+                                                    titulo="{{ derivacion.organizacionOrigen.nombre }}"
+                                                    subtitulo="Solicitante: {{ derivacion.profesionalSolicitante.apellido }}, {{ derivacion.profesionalSolicitante.nombre }}">
+                                        </plex-label>
+                                    </div>
+                                    <div class="elementos-graficos w-100">
+                                        <plex-icon name="hospital-building" size="lg" type="success"></plex-icon>
+                                        <plex-label titulo="{{ derivacion.organizacionDestino.nombre }}"
+                                                    subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
+                                        </plex-label>
+                                    </div>
+                                    <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                    </plex-label>
+                                    <plex-button *ngIf="derivacion.estado === 'pendiente' && !esCOM" type="danger"
+                                                 size="sm" (click)="cancelar(derivacion);$event.stopPropagation()">
+                                        CANCELAR
+                                    </plex-button>
+                                    <plex-badge
+                                                type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                        {{ derivacion.estado }}</plex-badge>
+                                </plex-item>
+                            </plex-list>
+                        </ng-container>
+                    </div>
+                </div>
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <div *ngIf="showNuevaDerivacion">
+            <com-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></com-busqueda-paciente>
+        </div>
+        <div *ngIf="showDetalle">
+            <detalle-derivacion [derivacion]="derivacionSeleccionada" (returnDetalle)="returnDetalle($event)">
+            </detalle-derivacion>
+        </div>
+    </plex-layout-sidebar>
+</plex-layout>
+<plex-modal *ngIf="verAyuda" [allowClose]="true" [allowEscClose]="false" #modal [startOpen]="true"
+            (closed)="cambiarVerAyuda(false)">
+    <plex-icon name="help-circle" type="info"></plex-icon>
+    <plex-modal-title type="info">Descripción de los estados</plex-modal-title>
+    <main>
+        <div class="pr-5 pl-5">
+            <b>Pendiente: </b>El primer estado de una derivación. Cuando un efector (Origen) genera una derivación su
+            estado será pendiente. El origen puede ser también el Centro Operativo Médico.<br>
+            <b>Aprobada: </b>Sólo el COM puede aprobar una derivación pendiente. Esto significa validarla,
+            habilitarla para
+            poder asignarle un destino.<br>
+            <b>Denegada:</b>El COM no considera válida la derivación.<br>
+            <b>Asignada: </b>Sólo el COM puede asignar una derivación aprobada, en dicho caso deberá seleccionar el
+            destino.<br>
+            <b>Aceptada: </b>El Destino acepta la derivación.<br>
+            <b>Rechazada: </b>El Destino rechaza la derivación.<br>
+            <b>Finalizada: </b>El COM finaliza la derivación. Ya no podrán realizarse más cambios de estados.<br>
+            <b>Aceptada por Omisión: </b>El COM acepta la derivación a un destino de manera forzada.
+            <br>
+        </div>
+    </main>
+</plex-modal>

@@ -11,7 +11,6 @@ import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paci
 })
 
 export class ElegirPacienteComponent implements OnInit, OnDestroy {
-    public pacientes;
     public snapshot;
     public selectedCama;
 
@@ -62,15 +61,9 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
         return cama;
     }
 
-    searchStart() {
-        this.pacientes = null;
-    }
-
     searchEnd(resultado: any) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
-        } else {
-            this.pacientes = resultado.pacientes;
         }
     }
 }

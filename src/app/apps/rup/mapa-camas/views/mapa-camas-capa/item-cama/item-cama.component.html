@@ -47,7 +47,8 @@
         <ng-container *ngIf="canMovimientos">
             <ng-container *ngFor="let relacion of relacionesPosibles">
                 <ng-container
-                              *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                              *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
+                              || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
                     <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
                                  (click)="accion(relacion, $event)">
                     </plex-button>
