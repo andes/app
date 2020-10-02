@@ -44,6 +44,9 @@ export class ComPuntoInicioComponent implements OnInit {
         public router: Router, public plex: Plex) { }
 
     ngOnInit() {
+        if (!(this.auth.getPermissions('com:?').length > 0)) {
+            this.router.navigate(['./inicio']);
+        }
         this.organizacionActual = this.auth.organizacion as any;
         this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
