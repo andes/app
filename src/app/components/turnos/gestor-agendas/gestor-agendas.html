@@ -148,8 +148,8 @@
                                     <plex-badge type="{{estadosAgenda[agenda.estado]?.class}}">
                                         {{estadosAgenda[agenda.estado]?.nombre}}</plex-badge>
                                     <plex-badge type="danger bg-danger"
-                                          *ngIf=" turnosSuspendidos && turnosSuspendidos[i].count > 0"
-                                          title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
+                                                *ngIf=" turnosSuspendidos && turnosSuspendidos[i].count > 0"
+                                                title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
                                         <span class="text-white">
                                             <strong>{{ turnosSuspendidos[i].count }}</strong>
                                         </span>
@@ -172,7 +172,7 @@
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
                                 (recargarAgendas)="loadAgendas($event)"></turnos>
                     </div>
-                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
+                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]"
                                       (showVistaTurnosEmit)="showVistaTurnos($event)"
                                       (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
@@ -190,12 +190,6 @@
                         <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)">
                         </suspender-agenda>
                     </div>
-
-                    <!-- FUNCINALIDAD REASIGNACION AUTOMATICA QUEDA AFUERA DEL RELEASE DOMUYO -->
-                    <!-- Panel Reasignar Turnos Automático -->
-                    <!-- <div *ngIf="showReasignarTurnoAutomatico && !showSuspenderTurnos">
-                            <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
-                        </div> -->
                 </plex-box>
             </div>
 

@@ -499,16 +499,19 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showTurnos = false;
             this.showSuspendida = false;
             if (agenda && agenda.id) {
-                if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
-                    this.showEditarAgendaPanel = false;
-                    this.showTurnos = true;
-                    return;
-                }
                 this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                     // Actualizo la agenda local
                     agenda = ag;
+
                     // Actualizo la agenda global (modelo)
                     this.agenda = ag;
+
+                    // Compruebo si la agenda es editable
+                    if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
+                        this.showEditarAgendaPanel = false;
+                        this.showTurnos = true;
+                        return;
+                    }
 
                     if (!multiple) {
                         this.onSeleccionAgendaNoMultiple(ag);
