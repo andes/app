@@ -1,3 +1,4 @@
+import { SemanticTag } from './../../../interfaces/semantic-tag.type';
 import { Component } from '@angular/core';
 import { RupElement } from '..';
 import { SelectBaseComponent } from './select-base.component';
@@ -29,11 +30,15 @@ export class SelectSnomedComponent extends SelectBaseComponent {
         const query: any = {
             expression: this.params.query
         };
-        if (input && input.length > 0) {
-            query.field = 'term';
-            query.words = input;
+        if (this.params.preload) {
+            query.search = '';
+        } else {
+            query.search = input;
         }
-        return this.snomedService.getQuery(query);
+        if (this.params.semanticTag) {
+            query.semanticTag = this.params.semanticTag;
+        }
+        return this.snomedService.get(query);
     }
 
     displayName(item) {
