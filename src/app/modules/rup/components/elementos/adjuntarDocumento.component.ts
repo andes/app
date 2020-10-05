@@ -67,7 +67,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     onValidate() {
-        if (!this.params) {
+        if (!this.params?.required) {
             this.uploadValid = this.registro.valor.documentos.length > 0;
             return this.uploadValid;
         }
