@@ -35,11 +35,21 @@
             {{item.title}}
             <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
         </h5>
-        <plex-wrapper>
-            <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" *ngIf="!loading"
+        <plex-wrapper *ngIf="!loading">
+            <plex-select *ngIf="item.type === 'queries'" [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados"
                          (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
-                         name="plexSelect" idField="id" (change)="parseSelecionados()"
+                         name="plexSelect" idField="_id" (change)="parseSelecionados()"
                          (paste)="$event.preventDefault();onPaste($event);">
+            </plex-select>
+            <plex-select *ngIf="item.type === 'prestacion'" [multiple]="true" [readonly]="all"
+                         [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
+                         placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
+                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);">
+            </plex-select>
+            <plex-select *ngIf="item.type === 'organizacion'" [multiple]="true" [readonly]="all"
+                         [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
+                         placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
+                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);">
             </plex-select>
             <plex-copy *ngIf="!loading && item.type === 'prestacion'" [value]="seleccionadosJson">
             </plex-copy>
