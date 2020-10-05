@@ -106,7 +106,7 @@
                                     <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
                                                 subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                     </plex-label>
-                                    <plex-button *ngIf="derivacion.estado === 'pendiente' && !esCOM" type="danger"
+                                    <plex-button *ngIf="derivacion.estado === 'solicitada' && !esCOM" type="danger"
                                                  size="sm" (click)="cancelar(derivacion);$event.stopPropagation()">
                                         CANCELAR
                                     </plex-button>
@@ -146,18 +146,23 @@
     <plex-modal-title type="info">Descripción de los estados</plex-modal-title>
     <main>
         <div class="pr-5 pl-5">
-            <b>Pendiente: </b>El primer estado de una derivación. Cuando un efector (Origen) genera una derivación su
-            estado será pendiente. El origen puede ser también el Centro Operativo Médico.<br>
-            <b>Aprobada: </b>Sólo el COM puede aprobar una derivación pendiente. Esto significa validarla,
-            habilitarla para
-            poder asignarle un destino.<br>
-            <b>Denegada:</b>El COM no considera válida la derivación.<br>
-            <b>Asignada: </b>Sólo el COM puede asignar una derivación aprobada, en dicho caso deberá seleccionar el
-            destino.<br>
-            <b>Aceptada: </b>El Destino acepta la derivación.<br>
+            <b>Solicitada: </b>El primer estado de una derivación. Cuando un efector (Origen) genera una derivación su
+            estado será solicitada. El origen puede ser también el Centro Operativo Médico.<br>
+            <b>Habilitada: </b>Sólo el COM puede habilitar una solicitud de derivación para que se le busque y asigne un
+            efector destino
+            <br>
+            <b>Inhabilitada: </b>El COM considera que no están dadas las condiciones para habilitar la solicitud y no
+            procede la derivación. Se cierra.
+            <br>
+            <b>Asignada: </b>Sólo el COM puede asignar un efector destino para la solicitud habilitada.
+            <br>
+            <b>Aceptada: </b>El efector destino al que se le asignó la derivación la acepta y mantiene en reserva la
+            cama hasta el arribo del paciente.
+            <br>
             <b>Rechazada: </b>El Destino rechaza la derivación.<br>
             <b>Finalizada: </b>El COM finaliza la derivación. Ya no podrán realizarse más cambios de estados.<br>
-            <b>Aceptada por Omisión: </b>El COM acepta la derivación a un destino de manera forzada.
+            <b>Encomendada: </b>El COM ordena derivación a un efector destino cuando hay cama disponible y se retrasa u
+            omite una respuesta por un tiempo superior al que tolera la situación clínica del paciente
             <br>
         </div>
     </main>
