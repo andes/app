@@ -97,7 +97,7 @@ export class CamaMainComponent implements OnInit {
         );
         this.sectores$ = this.organizacion$.pipe(
             map(organizacion => {
-                return this.organizacionService.getFlatTree(organizacion);
+                return this.organizacionService.getSectoresNombreCompleto(organizacion);
             })
         );
         this.mapaSectores$ = this.organizacion$.pipe(pluck('mapaSectores'));
