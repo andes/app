@@ -61,7 +61,11 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     goTo() {
-        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
+        if (this.cama.sala) {
+            this.router.navigate([`/internacion/sala-comun/${this.cama.id}`]);
+        } else {
+            this.router.navigate([`/internacion/cama/${this.cama.id}`]);
+        }
     }
 
     accion(relacion, $event) {
