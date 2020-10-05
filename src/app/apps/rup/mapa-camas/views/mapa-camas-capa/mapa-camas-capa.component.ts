@@ -20,7 +20,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 })
 
 export class MapaCamasCapaComponent implements OnInit, OnDestroy {
-    @ViewChild(CdkVirtualScrollViewport, {static: false})
+    @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
     capa$: Observable<string>;
@@ -52,14 +52,18 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     public permisoIngreso = false;
     public permisoBloqueo = false;
     public permisoCenso = false;
-    public permisoCrearCama = false;
+    public permisoCrearCama = this.auth.check('internacion:cama:create');
+    public permisoCrearSala = this.auth.check('internacion:sala:create');
+
+    itemsCrearDropdown = [];
+
     public get inverseOfTranslation(): string {
         if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
-          return '-0px';
+            return '-0px';
         }
         let offset = this.viewPort['_renderedContentOffset'];
         return `-${offset}px`;
-      }
+    }
 
     constructor(
         public auth: Auth,
@@ -111,7 +115,18 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.permisoIngreso = this.auth.check('internacion:ingreso');
         this.permisoBloqueo = this.auth.check('internacion:bloqueo');
         this.permisoCenso = this.auth.check('internacion:censo');
-        this.permisoCrearCama = this.auth.check('internacion:cama:create');
+
+        if (this.permisoCrearCama) {
+            this.itemsCrearDropdown.push(
+                { label: 'CAMA', route: `/internacion/cama` }
+            );
+        }
+
+        if (this.permisoCrearSala) {
+            this.itemsCrearDropdown.push(
+                { label: 'SALA COMUN', route: `/internacion/sala-comun` }
+            );
+        }
 
         this.mapaCamasService.setView('mapa-camas');
 

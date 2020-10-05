@@ -16,12 +16,12 @@
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
-                <plex-button *ngIf="permisoIngreso" class="mr-1" label="INTERNAR PACIENTE" type="info" size="sm"
+                <plex-button *ngIf="permisoIngreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
-                <plex-button *ngIf="permisoCrearCama" label="AGREGAR CAMA" type="success" size="sm"
-                             (click)="agregarCama()">
-                </plex-button>
+                <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
+                               class="d-inline-block" [right]="true" [items]="itemsCrearDropdown">
+                </plex-dropdown>
             </plex-title>
 
         </header>

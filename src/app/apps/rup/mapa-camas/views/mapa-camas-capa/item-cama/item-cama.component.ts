@@ -18,7 +18,7 @@ export class ItemCamaComponent implements OnChanges {
     @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
 
-    canEdit = this.auth.check('internacion:cama:edit');
+    canEdit = false;
     canMovimientos = this.auth.check('internacion:movimientos');
 
     public equipos = {
@@ -38,6 +38,8 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     ngOnChanges() {
+        this.canEdit = this.cama.sala ? this.auth.check('internacion:sala:edit') : this.auth.check('internacion:cama:edit');
+
         this.equipos = {
             aporteOxigeno: false,
             respirador: false,
