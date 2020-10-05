@@ -47,6 +47,11 @@
                                                     subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                     </div>
+                                    <plex-button *ngIf="derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id"
+                                                 type="info" size="sm"
+                                                 (click)="actualizarEstado(derivacion);$event.stopPropagation()">
+                                        SUMAR NOTA/ADJUNTO
+                                    </plex-button>
                                     <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
                                                 subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                     </plex-label>
@@ -105,6 +110,11 @@
                                                  size="sm" (click)="cancelar(derivacion);$event.stopPropagation()">
                                         CANCELAR
                                     </plex-button>
+                                    <plex-button *ngIf="derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id"
+                                                 type="info" size="sm"
+                                                 (click)="actualizarEstado(derivacion);$event.stopPropagation()">
+                                        SUMAR NOTA/ADJUNTO
+                                    </plex-button>
                                     <plex-badge
                                                 type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                         {{ derivacion.estado }}</plex-badge>
@@ -123,6 +133,10 @@
         <div *ngIf="showDetalle">
             <detalle-derivacion [derivacion]="derivacionSeleccionada" (returnDetalle)="returnDetalle($event)">
             </detalle-derivacion>
+        </div>
+        <div *ngIf="showEditarEstado">
+            <actualizar-estado [derivacion]="derivacionSeleccionada" (returnEditarEstado)="returnDetalle($event)">
+            </actualizar-estado>
         </div>
     </plex-layout-sidebar>
 </plex-layout>

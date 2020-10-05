@@ -28,7 +28,7 @@ export class HistorialDerivacionComponent {
     ) { }
 
     cargarItemsHistorial() {
-        let historial = this.derivacion.historial;
+        let historial = [...this.derivacion.historial];
         if (!historial) {
             historial = [];
         }

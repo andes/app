@@ -1,0 +1,71 @@
+<plex-title main titulo="Sumar observación/adjunto">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<plex-detail size="md" direction="row">
+    <img [mpiFotoPaciente]="derivacion?.paciente" />
+    <plex-badge type="warning">
+        {{derivacion.fecha
+                            | fecha}} {{derivacion.fecha
+                            | hora}}
+    </plex-badge>
+    <plex-badge type="info">
+        {{derivacion.estado}}
+    </plex-badge>
+    <div title>
+        {{derivacion?.paciente | nombre }}
+    </div>
+    <div subtitle>
+        <plex-copy *ngIf="derivacion?.paciente?.documento" [value]="derivacion?.paciente?.documento">
+            {{ derivacion?.paciente?.documento | number  }}
+        </plex-copy>
+    </div>
+</plex-detail>
+<form #formEstado="ngForm">
+    <plex-title size="sm" titulo="Actualizar estado">
+    </plex-title>
+    <plex-wrapper>
+        <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
+                   grow="full" required="true">
+        </plex-text>
+        <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+        <plex-button class="mt-2" *ngIf="!waiting" type="primary" size="sm" label="Subir archivo"
+                     (click)="upload.click()">
+        </plex-button>
+    </plex-wrapper>
+    <plex-wrapper *ngIf="adjuntosEstado.length > 0">
+        <span *ngIf="!waiting">
+            <span *ngIf="errorExt">
+                <plex-badge type="danger"> Archivo inválido </plex-badge>
+            </span>
+        </span>
+        <span *ngIf="waiting">
+            <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+            <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
+            </plex-button>
+        </span>
+        <div class="image-container hr-inline-group" *ngIf="adjuntosEstado && fileToken">
+            <ng-container *ngFor="let doc of adjuntosEstado; let i = index">
+                <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
+                <div class="image hover">
+                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                       (click)="visualizador.open(i)">
+                        {{ doc.ext }}
+                    </a>
+                    <div class="x-mark" (click)="removeFile(doc)">
+                        <span class="close"></span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </plex-wrapper>
+    <div class="w-100" justify>
+        <plex-button type="danger" (click)="cerrar()">
+            Cancelar
+        </plex-button>
+        <plex-button type="success" (click)="actualizarEstado($event)" [validateForm]="formEstado">
+            Guardar
+        </plex-button>
+    </div>
+</form>

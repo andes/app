@@ -1,3 +1,4 @@
+import { ActualizarEstadoDerivacionComponent } from './components/actualizar-estado.component';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
 import { COMAdjuntosService } from './../../services/com/adjuntos.service';
 import { HistorialDerivacionComponent } from './components/historial-derivacion.component';
@@ -23,7 +24,8 @@ export const COM_COMPONENTS = [
     ComBusquedaPacienteComponent,
     NuevaDerivacionComponent,
     DetalleDerivacionComponent,
-    HistorialDerivacionComponent
+    HistorialDerivacionComponent,
+    ActualizarEstadoDerivacionComponent
 ];
 
 export const COM_PROVIDERS = [
