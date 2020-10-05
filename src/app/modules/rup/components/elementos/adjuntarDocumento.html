@@ -87,3 +87,11 @@
         </div>
     </div>
 </form>
+
+<ng-container>
+    <div class="col">
+        <plex-badge *ngIf="!uploadValid" type="danger float-right">
+            No se adjunto ningun archivo
+        </plex-badge>
+    </div>
+</ng-container>

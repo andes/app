@@ -30,6 +30,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     waiting = false;
     timeout = null;
     errorExt = false;
+    uploadValid = true;
 
     // fotos: { file?: any, ext: string, id?: any, descripcion?: ISnomedConcept, fecha?: Date }[] = [];
     lightbox = false;
@@ -63,6 +64,14 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
         });
+    }
+
+    onValidate() {
+        if (!this.params) {
+            this.uploadValid = this.registro.valor.documentos.length > 0;
+            return this.uploadValid;
+        }
+        return true;
     }
 
     isEmpty() {
@@ -101,6 +110,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
         };
         myReader.readAsDataURL(file);
+        this.uploadValid = true;
     }
 
 
