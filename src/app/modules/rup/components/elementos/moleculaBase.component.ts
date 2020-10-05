@@ -8,7 +8,7 @@ import { RupElement } from '.';
 })
 @RupElement('MoleculaBaseComponent')
 export class MoleculaBaseComponent extends RUPComponent implements OnInit {
-    flag = false;
+    contentLoaded = false;
     ultimaConsulta;
     validacion = false;
 
@@ -16,22 +16,11 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
         if (this.params && this.params.hasSections) {
             this.registro.hasSections = true;
         }
-        // this.route.url.subscribe(urlParts => {
-        //     if (urlParts.length > 1) {
-        //         if (urlParts[1].path === 'validacion') {
-        //             this.validacion = true;
-        //         }
-        //     } else {
-        //         this.validacion = false;
-        //     }
-        // });
         this.validacion = !this.ejecucionService;
 
         const buscarAnterior = this.params && this.params.buscarAnterior;
         if (!this.validacion && !this.soloValores && buscarAnterior) {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, this.registro.concepto.conceptId).subscribe(consulta => {
-                // ordeno por fecha desde lo mas actual hasta infinito
-
                 consulta.sort(function (a, b) {
                     let dateA = new Date(a.fecha).getTime();
                     let dateB = new Date(b.fecha).getTime();
@@ -49,10 +38,10 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
                         this.registro.registros = JSON.parse(JSON.stringify(this.ultimaConsulta.registros));
                     }
                 }
-                this.flag = true;
+                this.contentLoaded = true;
             });
         } else {
-            this.flag = true;
+            this.contentLoaded = true;
         }
 
 

@@ -10,7 +10,7 @@
 
 
 <!-- Moléculas -->
-<ng-container *ngIf="flag && elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div *ngIf="item.elementoRUP"
