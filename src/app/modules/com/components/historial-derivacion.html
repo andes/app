@@ -5,8 +5,14 @@
                 <td *ngIf="item.createdAt">
                     <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
                     <br />
-                    Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
-                        {{ item.createdBy.organizacion.nombre }}</b>
+                    <span *ngIf="item.estado">
+                        Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
+                            {{ item.createdBy.organizacion.nombre }}</b>
+                    </span>
+                    <span *ngIf="!item.estado">
+                        <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
+                            {{ item.createdBy.organizacion.nombre }}</b>
+                    </span>
                     <ng-container *ngIf="item.organizacionDestino">
                         <br />
                         <b>Destino:</b> {{ item.organizacionDestino.nombre }}
