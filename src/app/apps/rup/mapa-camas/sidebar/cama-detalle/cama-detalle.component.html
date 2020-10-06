@@ -62,6 +62,10 @@
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
                     <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
+                <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientos">
+                    <plex-button title="Deshacer Internacion" icon="account-off" type="danger" size="sm" (click)="deshacerInternacion(cama)">
+                    </plex-button>
+                </ng-container>
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">

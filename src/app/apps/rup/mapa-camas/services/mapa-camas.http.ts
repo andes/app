@@ -71,6 +71,16 @@ export class MapaCamasHTTP {
         }
     }
 
+    deshacerInternacion(ambito: string, capa: string, fecha: Date, data): Observable<ISnapshot> {
+        const params = {
+            ...data,
+            ambito: ambito,
+            capa: capa,
+            fecha,
+        };
+        return this.server.patch(`${this.url}/deshacer`, params);
+    }
+
     changeTime(ambito: string, capa: string, cama, idInternacion, fechaOriginal, nuevaFecha) {
         let params = {
             ambito: ambito,
