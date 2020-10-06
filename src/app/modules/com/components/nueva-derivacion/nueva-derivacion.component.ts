@@ -73,6 +73,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        if (!(this.auth.getPermissions('com:?').length > 0)) {
+            this.router.navigate(['./inicio']);
+        }
         this.plex.updateTitle([{
             route: '/com',
             name: 'COM'
