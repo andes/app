@@ -31,7 +31,7 @@ export class ObraSocialService {
 
     getPrepagas(): Observable<any[]> {
         return this.server.get(this.url + '/prepagas/').pipe(
-            cacheStorage('prepagas')
+            cacheStorage({ key: 'prepagas', ttl: 60 * 24 })
         );
     }
 
