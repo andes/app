@@ -298,7 +298,9 @@ export class BotonesAgendaComponent implements OnInit {
             if (agenda.estado === select.estado) {
                 this.editarAgendaEmit.emit(select);
             } else {
-                this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', 'Operacion no exitosa');
+                this.plex.info('warning',
+                    'Otro usuario ha modificado el estado de la Agenda seleccionada y la misma ya no es editable.',
+                    'No se puede editar la Agenda');
                 this.actualizarEstadoEmit.emit(agenda.estado);
             }
         });
