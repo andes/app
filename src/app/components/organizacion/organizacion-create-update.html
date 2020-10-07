@@ -57,6 +57,12 @@
                                            name="showMapa" [readonly]="!puedeEditarCompleto">
                                 </plex-bool>
                             </div>
+                            <div class="col-2 text-left">
+                                <plex-bool [(ngModel)]="organizacionModel.aceptaDerivacion" type="slide"
+                                           label="Acepta derivaciones" name="aceptaDerivacion"
+                                           [readonly]="!puedeEditarCompleto">
+                                </plex-bool>
+                            </div>
                         </div>
                     </fieldset>
                     <!-- DATOS BASICOS -->
@@ -72,8 +78,8 @@
                                                placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
                                     </plex-text>
                                     <plex-select name="provincia" [data]="provincias$ | async"
-                                                [(ngModel)]="organizacionModel.direccion.ubicacion.provincia"
-                                                (change)="onSelectProvincia()" label="Provincia">
+                                                 [(ngModel)]="organizacionModel.direccion.ubicacion.provincia"
+                                                 (change)="onSelectProvincia()" label="Provincia">
                                     </plex-select>
                                     <plex-select name="localidad" [data]="localidades$ | async"
                                                  [(ngModel)]="organizacionModel.direccion.ubicacion.localidad"
@@ -278,7 +284,8 @@
                                             <span *ngIf="unidadOrganizativa?.term">{{unidadOrganizativa.term}}</span>
                                         </div>
                                         <plex-button icon="delete" type="danger" (click)="deleteUO(unidadOrganizativa)"
-                                                     *ngIf="puedeEditarCompleto" [disabled]="checkUnidadOrganizativaCama(unidadOrganizativa)">
+                                                     *ngIf="puedeEditarCompleto"
+                                                     [disabled]="checkUnidadOrganizativaCama(unidadOrganizativa)">
                                         </plex-button>
                                     </div>
                                 </div>

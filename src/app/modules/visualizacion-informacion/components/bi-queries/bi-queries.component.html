@@ -1,1 +1,71 @@
-<p>bi-queries works!</p>
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Ejecutar consultas">
+            <plex-button size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
+                Descargar CSV
+            </plex-button>
+        </plex-title>
+        <form #form="ngForm">
+            <plex-grid type="full" size="sm">
+                <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="true"
+                             [data]="queries$ | async" labelField="nombre" idField="_id"
+                             placeholder="Seleccione consulta" (change)="getArgumentos()">
+                </plex-select>
+                <ng-container *ngFor="let argumento of consultaSeleccionada?.argumentos">
+                    <plex-bool *ngIf="argumento.tipo==='salida'" [(ngModel)]="argumento.check"
+                               [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
+                    </plex-bool>
+                </ng-container>
+            </plex-grid>
+            <ng-container *ngIf="consultaSeleccionada">
+                <plex-title titulo="Argumentos"></plex-title>
+                <plex-wrapper>
+                    <ng-container *ngFor="let argumento of consultaSeleccionada.argumentos" [ngSwitch]="argumento.tipo">
+                        <plex-datetime *ngSwitchCase="'date'" [label]="argumento.label?argumento.label:argumento.key"
+                                       grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                       [required]="argumento.required">
+                        </plex-datetime>
+                        <plex-select *ngSwitchCase="'organizacion'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow="2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" [data]="organizaciones$ |async">>
+                        </plex-select>
+                        <plex-select *ngSwitchCase="'conceptoTurneable'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow="2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     idField="conceptId" [required]="argumento.required"
+                                     (getData)="loadConceptosTurneables($event)">>
+                        </plex-select>
+                        <plex-text *ngSwitchCase="'string'" [label]="argumento.label?argumento.label:argumento.key"
+                                   grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                   [required]="argumento.required">
+                        </plex-text>
+                        <plex-select *ngSwitchCase="'profesional'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="nombreCompleto"
+                                     (getData)="loadProfesionales($event)">>
+                        </plex-select>
+                        <plex-select *ngSwitchCase="'estadoAgenda'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="nombre"
+                                     (getData)="loadEstadosAgenda($event)">>
+                        </plex-select>
+                        <plex-select *ngSwitchCase="'estadoTurno'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="nombre"
+                                     (getData)="loadEstadosTurno($event)">>
+                        </plex-select>
+                    </ng-container>
+                </plex-wrapper>
+            </ng-container>
+        </form>
+        <div justify="center" class="h-75">
+            <plex-label titulo="Comience seleccionando una consulta" direction="column"
+                        subtitulo="Complete los filtros requeridos y presione en el boton Descargar CSV para obtener su reporte "
+                        type="default" size="xl" icon="arrow-up"></plex-label>
+        </div>
+    </plex-layout-main>
+</plex-layout>

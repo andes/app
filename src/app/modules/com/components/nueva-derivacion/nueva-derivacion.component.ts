@@ -53,7 +53,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             fechaNacimiento: null
         },
         detalle: '',
-        estado: 'pendiente',
+        estado: 'solicitada',
         historial: []
     };
     organizacionesDestino = [];
@@ -73,6 +73,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        if (!(this.auth.getPermissions('com:?').length > 0)) {
+            this.router.navigate(['./inicio']);
+        }
         this.plex.updateTitle([{
             route: '/com',
             name: 'COM'
@@ -136,7 +139,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 nombre: this.organizacionDestino.nombre,
                 direccion: this.organizacionDestino.direccion
             };
-            this.modelo.historial.push({ estado: 'pendiente', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
+            this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
             this.modelo.adjuntos = this.adjuntos;
             this.derivacionesService.create(this.modelo).subscribe(respuesta => {
                 this.router.navigate(['/com']);

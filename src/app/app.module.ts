@@ -271,7 +271,7 @@ registerLocaleData(localeEs, 'es');
 @NgModule({
     imports: [
         BrowserAnimationsModule,
-        PlexModule,
+        PlexModule.forRoot({ networkLoading: true }),
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,

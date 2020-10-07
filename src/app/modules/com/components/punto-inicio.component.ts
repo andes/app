@@ -15,10 +15,12 @@ import { Plex } from '@andes/plex';
 })
 
 export class ComPuntoInicioComponent implements OnInit {
+    public orgActual;
     public esCOM = false;
     public showSidebar = false;
     public showNuevaDerivacion = false;
     public showDetalle = false;
+    public showEditarEstado = false;
     public verAyuda = false;
     derivacionSeleccionada: IDerivacion;
     derivaciones$: Observable<any[]>;
@@ -44,9 +46,13 @@ export class ComPuntoInicioComponent implements OnInit {
         public router: Router, public plex: Plex) { }
 
     ngOnInit() {
+        if (!(this.auth.getPermissions('com:?').length > 0)) {
+            this.router.navigate(['./inicio']);
+        }
         this.organizacionActual = this.auth.organizacion as any;
         this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
+            this.orgActual = org;
             if (org.esCOM) {
                 this.esCOM = true;
             }
@@ -100,6 +106,7 @@ export class ComPuntoInicioComponent implements OnInit {
         this.showSidebar = false;
         this.showDetalle = false;
         this.showNuevaDerivacion = false;
+        this.showEditarEstado = false;
     }
 
     // acciones relacionadas a una nueva derivación
@@ -125,10 +132,17 @@ export class ComPuntoInicioComponent implements OnInit {
         this.showSidebar = true;
     }
 
+    actualizarEstado(derivacion) {
+        this.ocultarSidebars();
+        this.derivacionSeleccionada = derivacion;
+        this.showEditarEstado = true;
+        this.showSidebar = true;
+    }
+
     returnDetalle(actualizada) {
         this.ocultarSidebars();
         if (actualizada) {
-            this.derivaciones$ = this.derivacionesService.search({}).pipe(cache());
+            this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
             this.actualizarTabla();
         }
     }

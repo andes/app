@@ -4,6 +4,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { QueriesService } from 'src/app/services/query.service';
 // import { IPermiso } from '../interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
 
@@ -39,6 +40,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     constructor(
         private servicioTipoPrestacion: TipoPrestacionService,
         private organizacionService: OrganizacionService,
+        private queryService: QueriesService,
         private auth: Auth,
         public plex: Plex
     ) { }
@@ -144,6 +146,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                     this.parseSelecionados();
                                 });
                                 break;
+                            case 'queries':
+                                this.queryService.getAllQueries({ _id: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
                         }
                     }
                 } else {
@@ -179,6 +188,10 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                     event.callback(data);
                 });
                 break;
+            case 'queries':
+                this.queryService.getAllQueries({ desdeAndes: true }).subscribe((data) => {
+                    event.callback(data);
+                });
         }
     }
 

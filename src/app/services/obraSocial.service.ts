@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { IObraSocial } from '../interfaces/IObraSocial';
 
@@ -30,7 +30,9 @@ export class ObraSocialService {
     }
 
     getPrepagas(): Observable<any[]> {
-        return this.server.get(this.url + '/prepagas/');
+        return this.server.get(this.url + '/prepagas/').pipe(
+            cacheStorage({ key: 'prepagas', ttl: 60 * 24 })
+        );
     }
 
     getObrasSociales(documento: string, showError = true): Observable<IObraSocial[]> {
