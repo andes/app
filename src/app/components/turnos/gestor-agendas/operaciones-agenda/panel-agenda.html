@@ -9,13 +9,15 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md">
+    <div class="col-6">
         <!-- Espacio Físico -->
-
-        <plex-bool [(ngModel)]="espacioFisicoPropio" name="espacioFisicoPropios" type="slide" label="{{textoEspacio}}"
+        <label>Tipo de espacio físico</label>
+        <plex-bool [(ngModel)]="espacioFisicoPropio" name="espacioFisicoPropios" label="{{textoEspacio}}"
                    (change)="filtrarEspacioFisico()">
         </plex-bool>
 
+    </div>
+    <div class="col-6">
         <plex-select *ngIf="espacioFisicoPropio" [(ngModel)]="agenda.espacioFisico" name="espacioFisico"
                      (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
                      labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion' : 'a' + ')'"
