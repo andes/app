@@ -35,7 +35,8 @@
                 <plex-icon name="content-paste"></plex-icon>
             </plex-button>
         </plex-title>
-        <arbol-permisos [permisos]="arbolPermisos" [organizacionId]="organizacionId" [userPermissions]="permisos$ | async" >
+        <arbol-permisos [permisos]="arbolPermisos" [userPermissions]="permisos$ | async"
+                        [organizacion]="organizacionId">
         </arbol-permisos>
     </plex-layout-sidebar>
 </plex-layout>

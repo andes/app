@@ -20,8 +20,7 @@
         <ng-container *ngIf="!allModule">
             <div *ngFor="let child of item.child; let indiceChild = index">
                 <arbol-permisos-item [item]="child" [parentPermission]="makePermission()"
-                                     [unidadesOrganizativas]="unidadesOrganizativas" [userPermissions]="userPermissions"
-                                     (change)="change.emit()">
+                                     [userPermissions]="userPermissions" [organizacion]="organizacion">
                 </arbol-permisos-item>
             </div>
         </ng-container>
@@ -39,24 +38,23 @@
         <plex-wrapper *ngIf="!loading">
             <plex-select *ngIf="item.type === 'queries'" [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados"
                          (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
-                         name="plexSelect" idField="_id" (change)="parseSelecionados()"
-                         (paste)="$event.preventDefault();onPaste($event);">
+                         name="plexSelect" idField="_id" (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>
             <plex-select *ngIf="item.type === 'prestacion'" [multiple]="true" [readonly]="all"
                          [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
                          placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
-                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);">
+                         (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>
             <plex-select *ngIf="item.type === 'organizacion'" [multiple]="true" [readonly]="all"
                          [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
                          placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
-                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);">
+                         (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>
-            <plex-select *ngIf="item.type === 'unidad-organizativa'" idField='id' labelField="term" [multiple]="true"
-                         [readonly]="all" [(ngModel)]="seleccionados" [data]="unidadesOrganizativas"
-                         placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
-                         (change)="parseSelecionados()" (paste)="$event.preventDefault();onPaste($event);"
-                         [disabled]="!unidadesOrganizativas.length">
+            <plex-select *ngIf="item.type === 'unidad-organizativa'" idField='conceptId' labelField="term"
+                         [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados"
+                         (getData)="loadData(item.type, $event)" placeholder=" Seleccione los elementos con permisos"
+                         name="plexSelect" (change)="parseSelecionados()" (paste)="onPaste($event);"
+                         [disabled]="!organizacion">
             </plex-select>
             <plex-copy *ngIf="!loading && item.type === 'prestacion'" [value]="seleccionadosJson">
             </plex-copy>

@@ -1,14 +1,11 @@
-import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { QueriesService } from 'src/app/services/query.service';
-// import { IPermiso } from '../interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
-
-type IPermiso = any;
 
 @Component({
     selector: 'arbol-permisos-item',
@@ -28,9 +25,9 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     @Input() item: any;
 
+    @Input() organizacion: string = null;
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
-    @Input() unidadesOrganizativas = [];
 
     @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
@@ -96,6 +93,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     }
 
     public onPaste(event: ClipboardEvent) {
+        event.preventDefault();
         if (this.item.type === 'prestacion') {
             try {
                 let clipboardData = event.clipboardData;
@@ -155,9 +153,11 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                 });
                                 break;
                             case 'unidad-organizativa':
-                                this.seleccionados = [...this.unidadesOrganizativas.filter(u => items.includes(u.id))];
-                                this.loading = false;
-                                this.parseSelecionados();
+                                this.organizacionService.unidadesOrganizativas(this.organizacion).subscribe((data) => {
+                                    this.seleccionados = data.filter(u => items.includes(u.id));
+                                    this.loading = false;
+                                    this.parseSelecionados();
+                                });
                                 break;
                         }
                     }
@@ -198,6 +198,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 this.queryService.getAllQueries({ desdeAndes: true }).subscribe((data) => {
                     event.callback(data);
                 });
+                break;
+            case 'unidad-organizativa':
+                this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id).subscribe((data) => {
+                    event.callback(data);
+
+                });
+                break;
         }
     }
 
@@ -246,3 +253,5 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     }
 
 }
+
+
