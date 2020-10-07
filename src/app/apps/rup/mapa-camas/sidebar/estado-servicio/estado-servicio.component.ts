@@ -34,7 +34,7 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         );
 
         this.sub = this.mapaCamasService.snapshotFiltrado$.pipe(
-            map(camas => camas.filter(c => !c.sala)),
+            map(camas => camas.filter(c => !c.sala && c.estado !== 'inactiva')),
             tap((snapshot) => {
                 this.total = snapshot.length;
                 this.camasXEstado = this.groupBy(snapshot, 'estado');

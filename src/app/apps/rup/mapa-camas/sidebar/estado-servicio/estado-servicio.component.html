@@ -20,20 +20,23 @@
                           [cantidad]="total">
         </app-icono-camita>
         <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
-            <app-icono-camita [icono]="estado.icon" [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
+            <app-icono-camita *ngIf="estado.key !== 'inactiva'" [icono]="estado.icon"
+                              [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
                               [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
             </app-icono-camita>
         </ng-container>
     </div>
 </ng-container>
-<plex-title justify titulo="ESTADO SALAS"></plex-title>
-<ng-container>
-    <div class="container-resumen" *ngIf="salas$ | async as salas">
-        <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Salas Totales"
-                          [cantidad]="salas.length">
-        </app-icono-camita>
-        <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Pacientes Totales"
-                          color="warning" [cantidad]="(salasPaciente$ | async).length">
-        </app-icono-camita>
-    </div>
+<ng-container *ngIf="salas$ | async as salas">
+    <plex-title justify titulo="ESTADO SALAS" *ngIf="salas.length > 0"></plex-title>
+    <ng-container *ngIf="salas.length > 0">
+        <div class="container-resumen">
+            <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Salas Totales"
+                              [cantidad]="salas.length">
+            </app-icono-camita>
+            <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Pacientes Totales"
+                              color="warning" [cantidad]="(salasPaciente$ | async).length">
+            </app-icono-camita>
+        </div>
+    </ng-container>
 </ng-container>
