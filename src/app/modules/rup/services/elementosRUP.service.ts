@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
@@ -41,7 +41,7 @@ export class ElementosRUPService {
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP
-        this.server.get(url).subscribe((data: IElementoRUP[]) => {
+        this.get().subscribe((data: IElementoRUP[]) => {
             this.cache = {};
             data.forEach(e => this.cacheById[e.id] = e);
             // Precalcula los defaults
@@ -73,52 +73,11 @@ export class ElementosRUPService {
      * Metodo get. Trae el objeto elementoRup.
      * @param {any} params Opciones de busqueda
      */
-    get(params: any): Observable<IElementoRUP[]> {
-        return this.server.get(url, { params: params, showError: true });
+    get(): Observable<IElementoRUP[]> {
+        return this.server.get(url, { showError: true }).pipe(
+            cacheStorage({ key: 'elementos-rup', ttl: 60 * 8 })
+        );
     }
-
-    /**
-     * Metodo getById. Trae el objeto elementoRup por su Id.
-     * @param {String} id Busca por Id
-     */
-    getById(id: String): Observable<IElementoRUP> {
-        return this.server.get(url + '/' + id, null);
-    }
-
-    /**
-     * Metodo post. Inserta un objeto elementoRup nuevo.
-     * @param {IElementoRUP} elementoRup Recibe IElementoRUP
-     */
-    post(elementoRup: IElementoRUP): Observable<IElementoRUP> {
-        return this.server.post(url, elementoRup);
-    }
-
-    /**
-     * Metodo put. Actualiza un objeto elementoRup nuevo.
-     * @param {IElementoRUP} elementoRup Recibe IElementoRUP
-     */
-    put(elementoRup: IElementoRUP): Observable<IElementoRUP> {
-        return this.server.put(url + '/' + elementoRup.id, elementoRup);
-    }
-
-    /**
-     * Metodo disable. deshabilita elementoRup.
-     * @param {IElementoRUP} elementoRup Recibe IElementoRUP
-     */
-    disable(elementoRup: IElementoRUP): Observable<IElementoRUP> {
-        elementoRup.activo = false;
-        return this.put(elementoRup);
-    }
-
-    /**
-     * Metodo enable. habilita elementoRup.
-     * @param {IElementoRUP} elementoRup Recibe IElementoRUP
-     */
-    enable(elementoRup: IElementoRUP): Observable<IElementoRUP> {
-        elementoRup.activo = true;
-        return this.put(elementoRup);
-    }
-
 
     /**
      * Busca el elementoRUP que implemente el concepto o la instancia que fue utilizada en su momento

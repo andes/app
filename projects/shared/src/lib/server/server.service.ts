@@ -81,17 +81,6 @@ export class Server {
         }
         return result;
     }
-
-    private updateLoader(show: boolean, options: Options) {
-        if (!options || options.showLoader || (options.showLoader === undefined)) {
-            if (show) {
-                this.plex.showLoader();
-            } else {
-                this.plex.hideLoader();
-            }
-        }
-    }
-
     private handleError(response: any, options: Options) {
         let message;
         if (response.error && response.error.message) {
@@ -124,45 +113,35 @@ export class Server {
     }
 
     get(url: string, options: Options = defaultOptions): Observable<any> {
-        this.updateLoader(true, options);
         return this.http.get(this.getAbsoluteURL(url), this.prepareOptions(options)).pipe(
-            finalize(() => this.updateLoader(false, options)),
             map((res: any) => this.parse(res)),
             catchError((err: any) => this.handleError(err, options))
         );
     }
 
     post(url: string, body: any, options: Options = null): Observable<any> {
-        this.updateLoader(true, options);
         return this.http.post(this.getAbsoluteURL(url), this.stringify(body), this.prepareOptions(options)).pipe(
-            finalize(() => this.updateLoader(false, options)),
             map((res: any) => this.parse(res)),
             catchError((err: any) => this.handleError(err, options))
         );
     }
 
     put(url: string, body: any, options: Options = defaultOptions): Observable<any> {
-        this.updateLoader(true, options);
         return this.http.put(this.getAbsoluteURL(url), this.stringify(body), this.prepareOptions(options)).pipe(
-            finalize(() => this.updateLoader(false, options)),
             map((res: any) => this.parse(res)),
             catchError((err: any) => this.handleError(err, options))
         );
     }
 
     patch(url: string, body: any, options: Options = defaultOptions): Observable<any> {
-        this.updateLoader(true, options);
         return this.http.patch(this.getAbsoluteURL(url), this.stringify(body), this.prepareOptions(options)).pipe(
-            finalize(() => this.updateLoader(false, options)),
             map((res: any) => this.parse(res)),
             catchError((err: any) => this.handleError(err, options))
         );
     }
 
     delete(url: string, options: Options = defaultOptions): Observable<any> {
-        this.updateLoader(true, options);
         return this.http.delete(this.getAbsoluteURL(url), this.prepareOptions(options)).pipe(
-            finalize(() => this.updateLoader(false, options)),
             map((res: any) => this.parse(res)),
             catchError((err: any) => this.handleError(err, options))
         );

@@ -3,7 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Server, cache } from '@andes/shared';
+import { Server, cache, cacheStorage } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
@@ -118,7 +118,10 @@ export class AppComponent {
                 }
             });
         }
-        this.modulos$ = this.modulosService.search({ activo: true }).pipe(cache());
+        this.modulos$ = this.modulosService.search({ activo: true }).pipe(
+            cacheStorage('modulos')
+        );
+
         this.modulos$.subscribe(registros => {
             registros.forEach((modulo) => {
                 modulo.permisos.forEach((permiso) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { IDisclaimer } from '../interfaces/IDisclaimer';
 
@@ -14,11 +14,15 @@ export class DisclaimerService {
      *
      * @param {*} version, periodo
      * @returns {Observable<IDisclaimer>}
-     * @memberof DisclaimerService
      */
 
     get(opciones: any, showError = true): Observable<IDisclaimer[]> {
         return this.server.get(this.url, { params: opciones, showError: showError });
     }
 
+    getActivos() {
+        return this.get({ activo: true }).pipe(
+            cacheStorage('disclaimers')
+        );
+    }
 }
