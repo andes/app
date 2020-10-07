@@ -1,3 +1,25 @@
+# [5.16.0](https://github.com/andes/app/compare/v5.15.0...v5.16.0) (2020-10-07)
+
+
+### Bug Fixes
+
+* **citas:** error obra social al autocitar ([#1930](https://github.com/andes/app/issues/1930)) ([f06ab27](https://github.com/andes/app/commit/f06ab27485e79dae1d3950b68b14ece12993e60f))
+* **rup:** ejecutar una solicitud ([#1931](https://github.com/andes/app/issues/1931)) ([00ddba6](https://github.com/andes/app/commit/00ddba6ed7692b471b6fd83bf915e331ba822b18))
+
+
+### Features
+
+* **com:** cambio de nombre de estado pendiente por solicitada ([#1941](https://github.com/andes/app/issues/1941)) ([d9cfbb7](https://github.com/andes/app/commit/d9cfbb7a642df31b6f7f2b8f3671adc5f474ad5a))
+* **com:** permitir sumar notas/adjuntos a estado actual ([#1940](https://github.com/andes/app/issues/1940)) ([d9c4a0f](https://github.com/andes/app/commit/d9c4a0fd2f3c4bee23dfd11dbd953afe4c3735e7))
+* **com:** redirigir a inicio si no tiene permisos ([#1937](https://github.com/andes/app/issues/1937)) ([3d948ed](https://github.com/andes/app/commit/3d948ed67131aa5ab9cd5641fa94f254efe7212e))
+* **core:** mejoras de performance  ([#1923](https://github.com/andes/app/issues/1923)) ([8755c26](https://github.com/andes/app/commit/8755c26b17cde8962f221a35dec398c199ec1a50))
+* **mapa-camas:** agrega sector completo al alta de cama ([#1934](https://github.com/andes/app/issues/1934)) ([57bd535](https://github.com/andes/app/commit/57bd535862697599e273230ac630447b9d0152ca))
+* **mapa-camas:** controla el permiso de bloqueo de camas ([#1929](https://github.com/andes/app/issues/1929)) ([5594fc0](https://github.com/andes/app/commit/5594fc08b5958bdf7268fa5b1f853fdca0b81c8a))
+* **rup:** filtros por semanticTag a SelectSnomedComponent ([#1899](https://github.com/andes/app/issues/1899)) ([67a7dfa](https://github.com/andes/app/commit/67a7dfabdf498fe4f1f4681458b09fcdc043fe35))
+* **rup:** molecula-base búsqueda de ultimo registro ([#1883](https://github.com/andes/app/issues/1883)) ([f8bd11c](https://github.com/andes/app/commit/f8bd11c1997cb039de7a9930ba2754eb7545d9c7))
+* **rup:** parámetro registrar conceptos repetidos en una prestación  ([#1895](https://github.com/andes/app/issues/1895)) ([e051e2e](https://github.com/andes/app/commit/e051e2e047be7637f4b5ef995fcc6d7efdfda502))
+* **tm:** configurar aceptaDerivacion en organizaciones ([#1936](https://github.com/andes/app/issues/1936)) ([a06d80e](https://github.com/andes/app/commit/a06d80e47b72bb2b30c424ddac7284d5d6d7379b))
+
 # [5.15.0](https://github.com/andes/app/compare/v5.14.0...v5.15.0) (2020-09-30)
 
 
