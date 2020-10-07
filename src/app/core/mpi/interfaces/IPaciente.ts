@@ -24,6 +24,7 @@ export interface IPaciente {
     fechaFallecimiento: Date;
     direccion: IDireccion[];
     estadoCivil: EstadoCivil;
+    fotoId: string;
     foto: string;
     relaciones: [IPacienteRelacion];
     financiador: [{

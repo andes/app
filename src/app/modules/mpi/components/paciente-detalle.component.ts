@@ -113,7 +113,8 @@ export class PacienteDetalleComponent implements OnInit {
                     nombre: rel.nombre,
                     documento: rel.documento,
                     numeroIdentificacion: rel.numeroIdentificacion,
-                    parentesco: (rel.relacion) ? rel.relacion.nombre : 'Relación S/D'
+                    parentesco: (rel.relacion) ? rel.relacion.nombre : 'Relación S/D',
+                    fotoId: rel.fotoId
                 };
             });
         }

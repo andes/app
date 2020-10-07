@@ -44,10 +44,10 @@
 <ng-container *ngIf="showRelaciones">
     <plex-title titulo="Relaciones" size="sm"></plex-title>
     <plex-list>
-        <plex-label *ngIf="!relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
+        <plex-label *ngIf="!paciente.relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
 
-        <plex-item *ngFor="let relacionado of relaciones; let i = index" class="">
-            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento}" [mpiFotoPaciente]="idPacientesRelacionados[i]" />
+        <plex-item *ngFor="let relacionado of paciente.relaciones; let i = index" class="">
+            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento}" [mpiFotoPaciente]="{ id: relacionado.referencia, fotoId: relacionado.fotoId}" />
 
             <plex-label *ngIf="!relacionado.numeroIdentificacion" titulo="{{ relacionado | nombre }}"
                         subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
