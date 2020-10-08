@@ -11,6 +11,7 @@ import { Auth } from '@andes/auth';
 })
 
 export class PerfilListComponent implements OnInit {
+    private selectedId;
 
     constructor(
         public perfilesHttp: PerfilesHttp,
@@ -38,11 +39,12 @@ export class PerfilListComponent implements OnInit {
     }
 
     select(perfil) {
+        this.selectedId = perfil.id;
         this.router.navigate([perfil.id], { relativeTo: this.route, replaceUrl: true });
     }
 
     isSelected(perfil) {
-        return this.perfilesHttp.selectID === perfil.id;
+        return this.selectedId === perfil.id;
     }
 
     remove(perfil) {
