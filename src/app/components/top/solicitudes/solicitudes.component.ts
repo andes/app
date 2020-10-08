@@ -8,27 +8,23 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { Unsubscribe } from '@andes/shared';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
-import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { concat } from 'rxjs';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'solicitudes',
-    templateUrl: './solicitudes.html',
-    styleUrls: ['./solicitudes.scss']
+    templateUrl: './solicitudes.html'
 })
 
 export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
-    paciente: any;
     fecha: any;
     turnoSeleccionado: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
-    labelVolver = 'Lista de Solicitudes';
     showAuditar = false;
     private scrollEnd = false;
     private skip = 0;
@@ -36,10 +32,9 @@ export class SolicitudesComponent implements OnInit {
     public permisos;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
+
     public prestaciones = [];
     public showIniciarPrestacion = false;
-    public fechaDesde: Date = moment().startOf('day').toDate();
-    public fechaHasta: Date = moment().startOf('day').toDate();
     public darTurnoArraySalida = [];
     public darTurnoArrayEntrada = [];
     public auditarArraySalida = [];
@@ -49,16 +44,10 @@ export class SolicitudesComponent implements OnInit {
     public tipoSolicitud = 'entrada';
     public prestacionesSalida = [];
     public prestacionesEntrada = [];
-    public salidaCache: any;
-    public entradaCache: any;
     public showEditarReglas = false;
     public panelIndex = 0;
-    public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
-    public mostrarMasOpciones = false;
-    public organizacionesOrigen = [];
-    public organizacionesDestino = [];
     public prestacionesPermisos = [];
     public permisosReglas;
     public permisoAnular = false;
@@ -68,9 +57,9 @@ export class SolicitudesComponent implements OnInit {
     public showNuevaSolicitud = false;
     public prestacionesDestino = [];
     public estado;
-    public estadoEntrada;
-    public estadoSalida;
     public asignadas = false;
+    itemsDropdown: any = [];  // Acciones del dropdown 'vincular
+    openedDropDown = null;
     public estadosEntrada = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
@@ -90,7 +79,6 @@ export class SolicitudesComponent implements OnInit {
         { id: 'anulada', nombre: 'ANULADA' }
     ];
 
-    public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
@@ -103,6 +91,23 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsTurno = null;
     public motivoRespuesta: String;
     public prestacionDevolver: any;
+    // filtros
+    public prioridadEntrada;
+    public prioridadSalida;
+    public estadoEntrada;
+    public estadoSalida;
+    public organizacionesDestino = [];
+    public organizacionesOrigen = [];
+    public fechaDesdeEntrada: Date = moment().startOf('day').toDate();
+    public fechaHastaEntrada: Date = moment().startOf('day').toDate();
+    public fechaDesdeSalida: Date = moment().startOf('day').toDate();
+    public fechaHastaSalida: Date = moment().startOf('day').toDate();
+    public pacienteEntrada: any;
+    public pacienteSalida: any;
+    public prestacionesDestinoEntrada = [];
+    public prestacionesDestinoSalida = [];
+    public mostrarMasOpcionesSalida = false;
+    public mostrarMasOpcionesEntrada = false;
 
     constructor(
         public auth: Auth,
@@ -113,7 +118,6 @@ export class SolicitudesComponent implements OnInit {
         public servicioOrganizacion: OrganizacionService,
         public router: Router, private route: ActivatedRoute,
         private hudsService: HUDSService,
-        private osService: ObraSocialCacheService,
     ) { }
 
     ngOnInit() {
@@ -133,10 +137,13 @@ export class SolicitudesComponent implements OnInit {
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
             ];
-            this.fechaDesde = null;
-            this.fechaHasta = null;
+            this.fechaDesdeEntrada = null;
+            this.fechaHastaEntrada = null;
+            this.fechaDesdeSalida = null;
+            this.fechaHastaSalida = null;
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
+        this.buscarSolicitudes();
     }
 
     loadOrganizacion(event) {
@@ -150,23 +157,13 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    onPacienteChange() {
-        if (!this.paciente || this.paciente.length >= 3) {
+    cambio(activeTab) {
+        if (activeTab !== this.activeTab) {
+            this.activeTab = activeTab;
+            this.showSidebar = false;
+            this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
             this.cargarSolicitudes();
         }
-    }
-
-    cambio(activeTab) {
-        this.activeTab = activeTab;
-        this.showSidebar = false;
-        this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
-        this.limpiarFiltros();
-        this.cargarSolicitudes();
-    }
-
-    private limpiarFiltros() {
-        this.organizacionesDestino = [];
-        this.organizacionesOrigen = [];
     }
 
     cerrar() {
@@ -184,7 +181,6 @@ export class SolicitudesComponent implements OnInit {
 
         prestacion.seleccionada = true;
         this.prestacionSeleccionada = prestacion;
-        this.pacienteSolicitud = prestacion.paciente;
         if (prestacion.solicitud && prestacion.solicitud.turno) {
             this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
                 this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
@@ -227,7 +223,6 @@ export class SolicitudesComponent implements OnInit {
 
     anular(prestacion) {
         this.prestacionSeleccionada = prestacion;
-        this.pacienteSolicitud = prestacion.paciente;
         this.showAnular = true;
         this.showSidebar = true;
         this.showAuditar = false;
@@ -239,7 +234,6 @@ export class SolicitudesComponent implements OnInit {
 
     citar(prestacion) {
         this.prestacionSeleccionada = prestacion;
-        this.pacienteSolicitud = prestacion.paciente;
         this.showCitar = true;
         this.showSidebar = true;
         this.showAnular = false;
@@ -251,7 +245,6 @@ export class SolicitudesComponent implements OnInit {
 
     onIniciarPrestacionClick(prestacion) {
         this.prestacionSeleccionada = prestacion;
-        this.pacienteSolicitud = prestacion.paciente;
         this.showIniciarPrestacion = true;
         this.showSidebar = true;
         this.showCitar = false;
@@ -274,7 +267,6 @@ export class SolicitudesComponent implements OnInit {
 
     auditar(prestacion) {
         this.prestacionSeleccionada = prestacion;
-        this.pacienteSolicitud = prestacion.paciente;
         this.showAuditar = true;
         this.showSidebar = true;
         this.showAnular = false;
@@ -288,18 +280,21 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = true;
     }
 
+    onPacienteChange() {
+        if ((!this.pacienteSalida || this.pacienteSalida.length >= 3) || (!this.pacienteEntrada || this.pacienteEntrada.length >= 3)) {
+            this.cargarSolicitudes();
+        }
+    }
+
     cargarSolicitudes() {
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
         this.scrollEnd = false;
-
         this.buscarSolicitudes();
     }
 
     getParams() {
         let params: any = {
-            solicitudDesde: this.fechaDesde,
-            solicitudHasta: this.fechaHasta,
             ordenFechaDesc: true,
             estados: [
                 'auditoria',
@@ -311,14 +306,13 @@ export class SolicitudesComponent implements OnInit {
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
+            params['solicitudDesde'] = this.fechaDesdeEntrada;
+            params['solicitudHasta'] = this.fechaHastaEntrada;
             params.referidas = true;
-
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
             }
-
             if (this.estadoEntrada) {
-
                 if (this.estadoEntrada.id === 'turnoDado') {
                     params['tieneTurno'] = true;
                     params.estados = params.estados.filter(e => e !== 'validada');
@@ -330,17 +324,30 @@ export class SolicitudesComponent implements OnInit {
                         params['tieneTurno'] = false;
                     }
                 }
-                if (this.prestacionesDestino && this.prestacionesDestino.length) {
-                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
+                if (this.prestacionesDestinoEntrada && this.prestacionesDestinoEntrada.length) {
+                    params['prestacionDestino'] = this.prestacionesDestinoEntrada.map(e => e.conceptId);
                 }
             }
-        }
-        if (this.tipoSolicitud === 'salida') {
+            if (this.prestacionesDestinoEntrada && this.prestacionesDestinoEntrada.length) {
+                params['prestacionDestino'] = this.prestacionesDestinoEntrada.map(e => e.conceptId);
+            } else {
+                if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+                    params['tipoPrestaciones'] = this.prestacionesPermisos;
+                }
+            }
+            if (this.prioridadEntrada) {
+                params['prioridad'] = this.prioridadEntrada.id;
+            }
+            if (this.pacienteEntrada && this.pacienteEntrada.length >= 3) {
+                params['paciente'] = this.pacienteEntrada;
+            }
+        } else {
+            params['solicitudDesde'] = this.fechaDesdeSalida;
+            params['solicitudHasta'] = this.fechaHastaSalida;
             if (this.asignadas) {
                 params['idProfesionalOrigen'] = this.auth.profesional;
             }
             if (this.estadoSalida) {
-
                 if (this.estadoSalida.id === 'turnoDado') {
                     params['tieneTurno'] = true;
                     params.estados = params.estados.filter(e => e !== 'validada');
@@ -352,30 +359,25 @@ export class SolicitudesComponent implements OnInit {
                         params['tieneTurno'] = false;
                     }
                 }
-                if (this.prestacionesDestino && this.prestacionesDestino.length) {
-                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
+                if (this.prestacionesDestinoSalida && this.prestacionesDestinoSalida.length) {
+                    params['prestacionDestino'] = this.prestacionesDestinoSalida.map(e => e.conceptId);
                 }
             }
-        }
-
-        if (this.prestacionesDestino && this.prestacionesDestino.length) {
-            params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
-        } else {
-            if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-                params['tipoPrestaciones'] = this.prestacionesPermisos;
+            if (this.prestacionesDestinoSalida && this.prestacionesDestinoSalida.length) {
+                params['prestacionDestino'] = this.prestacionesDestinoSalida.map(e => e.conceptId);
+            } else {
+                if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+                    params['tipoPrestaciones'] = this.prestacionesPermisos;
+                }
+            }
+            if (this.prioridadSalida) {
+                params['prioridad'] = this.prioridadSalida.id;
+            }
+            if (this.pacienteSalida && this.pacienteSalida.length >= 3) {
+                params['paciente'] = this.pacienteSalida;
             }
         }
-
-        if (this.prioridad) {
-            params['prioridad'] = this.prioridad.id;
-        }
-
         this.setOrganizacionesParams(params);
-
-        if (this.paciente && this.paciente.length >= 3) {
-            params['paciente'] = this.paciente;
-        }
-
         params['skip'] = this.skip;
         params['limit'] = this.limit;
         return params;
@@ -408,14 +410,11 @@ export class SolicitudesComponent implements OnInit {
                 this.prestacionesSalida = this.prestacionesSalida.concat(resultado);
                 this.skip = this.prestacionesSalida.length;
             }
-
             this.setearArreglos();
-
             // si vienen menos solicitudes que la cantidad límite significa que ya se cargaron todas
             if (!resultado.length || resultado.length < this.limit) {
                 this.scrollEnd = true;
             }
-
         });
     }
 
@@ -506,6 +505,9 @@ export class SolicitudesComponent implements OnInit {
                         this.visualizarEntrada[i] = false;
                     }
                     break;
+                case 'anulada':
+                    this.auditarArrayEntrada[i] = false;
+                    break;
                 case 'auditoria':
 
                     // Se puede dar turno?
@@ -561,12 +563,6 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-
-    formularioSolicitud() {
-        this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
-        this.router.navigate([`/solicitudes/${this.tipoSolicitud}`]);
-    }
-
     afterDetalleSolicitud(event) {
         this.showSidebar = false;
         this.showAnular = false;
@@ -580,41 +576,42 @@ export class SolicitudesComponent implements OnInit {
     returnAuditoria(event) {
         this.showAuditar = false;
         this.showSidebar = false;
-        const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
-        if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
-            let patch: any;
+        if (event.status !== false) {
+            const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
+            if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
+                let patch: any;
 
-            if (event.status !== 3) {
-                patch = {
-                    op: 'estadoPush',
-                    estado: { tipo: statuses[event.status], observaciones: event.observaciones }
-                };
+                if (event.status !== 3) {
+                    patch = {
+                        op: 'estadoPush',
+                        estado: { tipo: statuses[event.status], observaciones: event.observaciones }
+                    };
 
-                // DEPRECADO
-                if (!event.status) {
-                    patch.motivoRechazo = event.observaciones;
-                }
-                if (event.prioridad) {
-                    patch.prioridad = event.prioridad;
-                }
-                if (event.profesional) {
-                    patch.profesional = event.profesional;
-                }
+                    // DEPRECADO
+                    if (!event.status) {
+                        patch.motivoRechazo = event.observaciones;
+                    }
+                    if (event.prioridad) {
+                        patch.prioridad = event.prioridad;
+                    }
+                    if (event.profesional) {
+                        patch.profesional = event.profesional;
+                    }
 
-            } else {
-                patch = {
-                    op: 'referir',
-                    estado: event.estado,
-                    observaciones: event.observaciones,
-                    organizacion: event.organizacion,
-                    profesional: event.profesional,
-                    tipoPrestacion: event.prestacion
-                };
+                } else {
+                    patch = {
+                        op: 'referir',
+                        estado: event.estado,
+                        observaciones: event.observaciones,
+                        organizacion: event.organizacion,
+                        profesional: event.profesional,
+                        tipoPrestacion: event.prestacion
+                    };
+                }
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => this.cargarSolicitudes()
+                );
             }
-
-            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                respuesta => this.cargarSolicitudes()
-            );
         }
     }
 
@@ -643,6 +640,7 @@ export class SolicitudesComponent implements OnInit {
             this.buscarSolicitudes();
         }
     }
+
     returnCitar(event) {
         this.showCitar = false;
         this.showSidebar = false;
@@ -783,5 +781,70 @@ export class SolicitudesComponent implements OnInit {
             this.showNuevaSolicitud = false;
         }
     }
-}
 
+    setDropDown(prestacion, drop) {
+        if (this.openedDropDown) {
+            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        }
+        if (prestacion.id) {
+            this.openedDropDown = drop;
+            this.itemsDropdown = [];
+            if (prestacion.estadoActual.tipo === 'asignada') {
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente ) {
+                     this.itemsDropdown[1] = {
+                         icon: 'contacts', label: 'Ver Huds', handler: () => {
+                        this.setRouteToParams(['paciente', prestacion.paciente.id]);
+                        this.setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id);
+                    }};
+                }
+            }
+        }
+    }
+
+    verificarEstado(prestacion, i) {
+        if (prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'validada') {
+            return 'Turno dado';
+        }
+        if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id) {
+            if (this.darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'anulada') {
+                return 'pendiente';
+            }
+            if (this.auditarArrayEntrada[i]) {
+                return 'auditoria';
+            }
+            if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === this.auth.profesional) {
+                return 'asignada';
+            }
+        }
+        if (prestacion.solicitud.organizacion && prestacion.solicitud.organizacion.id !== this.auth.organizacion.id) {
+            return 'referida';
+        }
+        if (prestacion.estadoActual.tipo === 'validada') {
+            return 'validada';
+        }
+        if (prestacion.estadoActual.tipo === 'anulada') {
+            return 'anulada';
+        }
+        if (prestacion.estadoActual.tipo === 'ejecucion') {
+            return 'ejecucion';
+        }
+    }
+
+    mostrar(solicitud, i) {
+        switch (this.verificarEstado(solicitud, i)) {
+            case 'asignada':
+                return true;
+            case 'Turno dado':
+            case 'pendiente':
+            case 'auditoria':
+            case 'anulada':
+            case 'referida':
+            case 'validada':
+            case 'ejecucion':
+                return false;
+            default:
+                return true;
+        }
+    }
+}
