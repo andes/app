@@ -76,6 +76,11 @@
                     </app-ficha-epidemiologica-crud>
                 </plex-tab>
 
+                <plex-tab *ngIf="registro.tipo === 'dominio'" [allowClose]="true" [label]="registro.data.name"
+                          [class]="registro.data.class">
+                    <vista-ips [registro]="registro.data"></vista-ips>
+                </plex-tab>
+
             </ng-container>
         </plex-tabs>
     </plex-layout-main>

@@ -22,6 +22,7 @@ import { VistaDetalleRegistroComponent } from './components/huds/vistaDetalleReg
 import { VistaProcedimientoComponent } from './components/huds/vistaProcedimiento';
 import { VistaRegistroComponent } from './components/huds/vistaRegistro';
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
+import { VistaIPSComponent } from './components/huds/vistaIPS.component';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
 
@@ -45,6 +46,7 @@ import { RUPLibModule } from './rup-lib.module';
     ],
     declarations: [
         VistaCDAComponent,
+        VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
@@ -59,6 +61,7 @@ import { RUPLibModule } from './rup-lib.module';
     ],
     exports: [
         VistaCDAComponent,
+        VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,

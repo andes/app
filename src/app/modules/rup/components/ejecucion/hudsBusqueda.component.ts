@@ -9,6 +9,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
+import { DominiosNacionalesService } from './../../services/dominiosNacionales.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 
@@ -48,7 +49,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
-
 
 
     /**
@@ -99,6 +99,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        dominios: ['dominios']
     };
     public prestacionesTotales;
     public registrosTotales = {
@@ -115,6 +116,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         producto: []
     };
 
+    public dominios = [];
+
     public txtABuscar;
 
     constructor(
@@ -123,6 +126,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public auth: Auth,
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
+        public domNacional: DominiosNacionalesService,
         @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
@@ -136,6 +140,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.paciente) {
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDominios();
         }
         const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
@@ -231,6 +236,16 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 registro = registro.data;
                 registro.tipo = 'ficha-epidemiologica';
                 registro.class = 'plan';
+                break;
+            case 'dominio':
+                gtag('huds-open', tipo, registro.name, index);
+                const params = {
+                    custodian: registro.identifier.value,
+                    id: this.paciente.id
+                };
+                registro.tipo = tipo;
+                registro.class = 'plan';
+                registro.params = params;
                 break;
         }
 
@@ -346,6 +361,13 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
+    listarDominios() {
+        // Listar los dominios de ese paciente
+        this.domNacional.getDominiosIdPaciente(this.paciente.id).subscribe((resultado) => {
+            this.dominios = resultado;
+        });
+    }
+
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
@@ -439,6 +461,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 return this.vacunas.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
+            case 'dominios':
+                return this.dominios.length;
         }
     }
 

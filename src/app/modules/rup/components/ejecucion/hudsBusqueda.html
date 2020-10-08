@@ -110,6 +110,15 @@
                     VACUNAS
                 </button>
             </li>
+            <li>
+                <small *ngIf="getCantidadResultados('dominios')" class="contador badge-dominiosNac ml-1 float-right"
+                       [ngClass]="{'active': filtroActual === 'dominios'}">{{ getCantidadResultados('dominios') }}</small>
+                <button (click)="filtroBuscador('dominios')" [ngClass]="{'active': filtroActual === 'dominios'}"
+                        class="btn btn-block p-0 btn-dominiosNac">
+                    <i class="adi adi-hospital"></i>
+                    DOMINIOS NACIONALES
+                </button>
+            </li>
         </ul>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
@@ -632,6 +641,56 @@
                     </ng-container>
                 </ul>
                 <div *ngIf="vacunas && vacunas.length === 0">No hay vacunas registradas</div>
+            </div>
+        </ng-container>
+        <!-- Vista: DOMINIOS NACIONALES -->
+        <ng-container *ngIf="filtroActual === 'dominios'">
+            <div *ngIf="dominios && dominios.length > 0" class="conceptos hover list-unstyled">
+                <ul class="conceptos list-unstyled">
+                    <ng-container *ngFor="let unDominio of dominios; let iDominio = index">
+                        <li>
+                            <div class="rup-card mini dominiosNac" [ngClass]="{'active': huds.isOpen(unDominio, 'dominios')}">
+                                <div class="rup-header">
+                                    <div class="rup-border rup-border-otro">
+                                        <div class="row p-0 m-0 border-secondary border-left-0">
+                                            <div class="col-10 p-0 m-0">
+                                                <div class="row m-0 p-0">
+                                                    <ng-container>
+                                                        <div justify="center" class="icon-rup">
+                                                            <i class="adi adi-hospital"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <div class="col p-0 pl-2 float-left"
+                                                         (click)="emitTabs(unDominio, 'dominio', iDominio)">
+                                                         <small>Registro Nacional</small>
+                                                       <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <ng-container *ngIf="unDominio">
+                                                                    <div class="text-sm">Identificador:
+                                                                        <ng-container *ngIf="unDominio?.id">
+                                                                            {{unDominio?.id}}
+                                                                        </ng-container>
+                                                                    </div>
+                                                                    <div class="text-sm">Dominio:
+                                                                        <ng-container *ngIf="unDominio?.name">
+                                                                            {{unDominio?.name}}
+                                                                        </ng-container>
+                                                                    </div>
+                                                                    
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+                <div *ngIf="dominio && dominio.length === 0">No se encontraron dominios para este paciente</div>
             </div>
         </ng-container>
     </div>

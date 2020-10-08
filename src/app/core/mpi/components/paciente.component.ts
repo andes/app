@@ -51,6 +51,9 @@ export class PacienteComponent implements OnInit {
     loading = true;
     autoFocus = 0;
 
+    // PruebaFederador
+    public pacientesFederador: any = null;
+
     public contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -125,6 +128,7 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
+    private subscripcionGetFederador: Subscription = null;
 
     origen = '';
     tipoPaciente = '';
@@ -424,6 +428,10 @@ export class PacienteComponent implements OnInit {
     setMainSize(tabIndex) {
         if (this.pacientesSimilares && this.pacientesSimilares.length) {
             this.mainSize = 9;
+            return;
+        }
+        if (this.pacientesFederador && this.pacientesFederador.length) {
+            this.mainSize = 8;
             return;
         }
         if (tabIndex === 1) {

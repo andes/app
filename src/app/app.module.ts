@@ -149,6 +149,7 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { CDAService } from './modules/rup/services/CDA.service';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
+import { DominiosNacionalesService } from './modules/rup/services/dominiosNacionales.service';
 // ... RUP
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
 // RUP
@@ -212,8 +213,6 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-
-
 
 registerLocaleData(localeEs, 'es');
 
@@ -393,6 +392,7 @@ registerLocaleData(localeEs, 'es');
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,
+        DominiosNacionalesService,
         RiesgoCardiovascularService,
         FormulaBaseService,
         CampaniaSaludService,
