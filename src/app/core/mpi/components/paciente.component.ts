@@ -48,7 +48,7 @@ export class PacienteComponent implements OnInit {
     autoFocus = 0;
 
     // PruebaFederador
-    public pacientesFederador : any = null;
+    public pacientesFederador: any = null;
 
     public contacto: IContacto = {
         tipo: 'celular',
@@ -480,16 +480,14 @@ export class PacienteComponent implements OnInit {
                 } else {
                     this.plex.toast('info', 'El paciente que está buscando no está federado');
                 }
-                
             },
             () => {
                 this.loading = false;
                 this.plex.toast('danger', 'Federador no disponible');
                 this.disableValidar = false;
             }
-        )
+        );
     }
-
     validarPaciente() {
         if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
             this.plex.info('warning', 'La validación requiere ingresar documento y sexo..');
