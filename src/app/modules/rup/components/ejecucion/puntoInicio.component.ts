@@ -487,7 +487,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             fechaDesde: this.fecha ? this.fecha : new Date(),
             fechaHasta: new Date(),
             organizacion: this.auth.organizacion.id,
-            sinEstado: 'modificada',
+            sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
             tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
         });

@@ -1,7 +1,7 @@
 export class IPrestacionGetParams {
     id?: string;
     estado?: any;
-    sinEstado?: string;
+    sinEstado?: string | string[];
     fechaDesde?: Date;
     fechaHasta?: Date;
     idProfesional?: string;
