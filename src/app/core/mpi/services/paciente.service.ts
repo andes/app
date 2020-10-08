@@ -62,6 +62,16 @@ export class PacienteService {
      * @returns {Observable<any>}
      * @memberof PacienteService
      */
+    getFederador(paciente: any): Observable<any> {
+        return this.server.post(this.pacienteUrl + '/federador/get', paciente);
+    }
+    /**
+     * Consulta fuentes auténticas para obtener datos del paciente validados.
+     *
+     * @param {*} paciente
+     * @returns {Observable<any>}
+     * @memberof PacienteService
+     */
     validar(paciente: any): Observable<any> {
         return this.server.post(this.pacienteUrl + '/validar', paciente);
     }

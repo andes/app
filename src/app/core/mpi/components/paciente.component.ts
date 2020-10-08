@@ -47,6 +47,9 @@ export class PacienteComponent implements OnInit {
     loading = true;
     autoFocus = 0;
 
+    // PruebaFederador
+    public pacientesFederador : any = null;
+
     public contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -110,6 +113,7 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
+    private subscripcionGetFederador: Subscription = null;
 
     origen = '';
     tipoPaciente = '';
@@ -448,6 +452,43 @@ export class PacienteComponent implements OnInit {
     }
 
     // ---------------------------------------------------
+
+
+    pacienteFederado() {
+        if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
+            this.plex.info('warning', 'La búsqueda requiere ingresar documento y sexo..');
+            return;
+        }
+        let sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        if (sexoPaciente === 'otro') {
+            this.plex.info('warning', 'La búsqueda requiere sexo MASCULINO o FEMENINO.', 'Atención');
+            return;
+        }
+        this.disableValidar = true;
+        this.loading = true;
+
+        if (this.subscripcionGetFederador) {
+            this.subscripcionGetFederador.unsubscribe();
+        }
+
+        this.subscripcionGetFederador = this.pacienteService.getFederador(this.paciente).subscribe(
+            resultados => {
+                this.loading = false;
+                if (resultados && resultados.length > 0) {
+                    this.pacientesFederador = resultados;
+                    this.plex.toast('success', 'Paciente econtrado en Federador Nacional');
+                } else {
+                    this.plex.toast('info', 'El paciente que está buscando no está federado');
+                }
+                
+            },
+            () => {
+                this.loading = false;
+                this.plex.toast('danger', 'Federador no disponible');
+                this.disableValidar = false;
+            }
+        )
+    }
 
     validarPaciente() {
         if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
