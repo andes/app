@@ -502,10 +502,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                     // Actualizo la agenda local
                     agenda = ag;
+
                     // Actualizo la agenda global (modelo)
                     this.agenda = ag;
+
+                    // Compruebo si la agenda es editable
                     if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
-                        this.plex.info('danger', '', 'No es posible editar la agenda seleccionada.', 3000);
+                        this.showEditarAgendaPanel = false;
+                        this.showTurnos = true;
                         return;
                     }
 

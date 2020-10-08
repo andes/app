@@ -1,8 +1,8 @@
-<plex-tabs (change)="changeTab($event)" size="full" [activeIndex]="showTab">
+<plex-tabs size="full" [activeIndex]="showTab">
     <plex-tab icon="information" label="Datos">
         <!--Header de estadisticas-->
-        <ng-container *ngIf="paciente && _paciente">
-            <paciente-detalle [paciente]="_paciente" orientacion="horizontal" [fields]="pacienteFields">
+        <ng-container *ngIf="paciente">
+            <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
             <br>
             <update-contacto-direccion [pac]="paciente"></update-contacto-direccion>
@@ -10,14 +10,15 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" [paciente]='pacienteSeleccionado'
-                         (turnosPacienteChanged)="updateHistorial()" (showArancelamientoForm)="arancelamiento($event)">
+        <turnos-paciente [turnos]="turnosPaciente$ | async" [operacion]="'operacionTurnos'" [paciente]='paciente'
+                         (turnosPacienteChanged)="refresh()" (showArancelamientoForm)="arancelamiento($event)" *plTab>
         </turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
-        <fieldset>
+        <fieldset *plTab>
             <ul class="list-group">
-                <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
+                <li *ngFor="let turno of ultimosTurnos$ | async; let i=index" class="list-group-item"
+                    [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
                             <plex-badge *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
@@ -47,6 +48,6 @@
         </fieldset>
     </plex-tab>
     <plex-tab icon="folder-account" label="Carpetas">
-        <carpeta-paciente *ngIf="currentTab === 3" [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
+        <carpeta-paciente *plTab [pacienteSeleccionado]="paciente"> </carpeta-paciente>
     </plex-tab>
 </plex-tabs>

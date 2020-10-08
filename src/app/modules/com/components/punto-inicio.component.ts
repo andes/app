@@ -32,14 +32,14 @@ export class ComPuntoInicioComponent implements OnInit {
     estado: any;
     tabIndex = 0;
     public estados = [
-        { id: 'pendiente', nombre: 'PENDIENTE' },
-        { id: 'aprobada', nombre: 'APROBADA' },
-        { id: 'rechazada', nombre: 'RECHAZADA' },
+        { id: 'solicitada', nombre: 'SOLICITADA' },
+        { id: 'habilitada', nombre: 'HABILITADA' },
+        { id: 'inhabilitada', nombre: 'INHABILITADA' },
         { id: 'asignada', nombre: 'ASIGNADA' },
-        { id: 'denegada', nombre: 'DENEGADA' },
+        { id: 'rechazada', nombre: 'RECHAZADA' },
         { id: 'aceptada', nombre: 'ACEPTADA' },
         { id: 'finalizada', nombre: 'FINALIZADA' },
-        { id: 'aceptada por omision', nombre: 'ACEPTADA POR OMISIÓN' }
+        { id: 'encomendada', nombre: 'ENCOMENDADA' }
     ];
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
