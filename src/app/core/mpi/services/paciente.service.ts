@@ -1,10 +1,10 @@
-import { Observable, combineLatest } from 'rxjs';
-import { IPaciente } from '../interfaces/IPaciente';
-import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { map } from 'rxjs/operators';
 import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { IPaciente } from '../interfaces/IPaciente';
 
 @Injectable()
 export class PacienteService {
@@ -52,6 +52,7 @@ export class PacienteService {
      * Metodo post. Inserta un objeto paciente nuevo.
      * @param {IPaciente} paciente Recibe IPaciente
      */
+
     post(paciente: IPaciente, options?: any): Observable<IPaciente> {
         return this.server.post(this.pacienteV2, paciente, options);
     }

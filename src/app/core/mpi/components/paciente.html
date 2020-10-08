@@ -24,8 +24,8 @@
         <!-- loader -->
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}" class="h-100">
-
             <plex-tabs (change)="setMainSize($event)">
+
 
                 <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
@@ -53,6 +53,7 @@
                 <plex-tab label="Documentos" icon="file-multiple" *ngIf="documentacionPermiso">
                     <documentos-paciente [paciente]="pacienteModel"></documentos-paciente>
                 </plex-tab>
+
 
             </plex-tabs>
         </form>
@@ -97,6 +98,41 @@
                         <plex-label titulo="Similitud: {{elem._score * 100}} %"></plex-label>
 
                         <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem.paciente)">
+                        </plex-button>
+                    </plex-item>
+                </plex-list>
+            </div>
+            <!-- Pacientes del federador nacional-->
+            <div *ngIf='(pacientesFederador && pacientesFederador.length)'>
+                <plex-title titulo="Pacientes del Federador Nacional" size="md"></plex-title>
+                <plex-list>
+                    <plex-item *ngFor="let elem of pacientesFederador" class="">
+
+                        <plex-label *ngIf="!elem.documento" titulo="{{ elem.nombre | nombre }}"
+                                    subtitulo="{{ (elem.documento | number) || 'Sin DNI' }}">
+                        </plex-label>
+
+                        <plex-label *ngIf="elem.documento" titulo="{{ elem | nombre }}"
+                                    subtitulo="{{ elem.documento }}"></plex-label>
+
+                        <plex-label titulo="{{ elem | edad }}" subtitulo="{{ elem.fechaNacimiento | fecha:'utc' }}">
+                        </plex-label>
+
+                        <plex-label titulo="Id Federador" subtitulo="{{elem.idFederador}}">
+                        </plex-label>
+
+                        <plex-badge type="info">{{ elem | sexo }}
+                        </plex-badge>
+
+                        <plex-badge type="" class=""
+                                    [ngClass]="{'text-success' : elem.estado === 'validado' , 'text-warning' : elem.estado === 'temporal'} ">
+                            {{ elem.estado }}
+                        </plex-badge>
+
+                        <plex-badge type="success">{{ elem.percent | percent}}
+                        </plex-badge>
+
+                        <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem)">
                         </plex-button>
                     </plex-item>
                 </plex-list>
