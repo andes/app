@@ -16,9 +16,12 @@
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
-                <plex-button *ngIf="permisoCrearCama" label="AGREGAR CAMA" type="success" size="sm"
-                             (click)="agregarCama()">
+                <plex-button *ngIf="permisoIngreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
+                             (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
+                <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
+                               class="d-inline-block" [right]="true" [items]="itemsCrearDropdown">
+                </plex-dropdown>
             </plex-title>
 
         </header>
@@ -63,8 +66,9 @@
                             <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama" [capa]="capa"
                                 [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
-                                [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo" (accionCama)="selectCama(cama, $event)"
-                                (click)="verDetalle(cama, selectedCama)" [class.invert]="cama._id === selectedCama._id">
+                                [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo"
+                                (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
+                                [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
                             </tr>
                         </ng-container>
                     </tbody>

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subscription, timer, of } from 'rxjs';
-import { map, tap, defaultIfEmpty, startWith } from 'rxjs/operators';
+import { Observable, Subscription, timer, of, from } from 'rxjs';
+import { map, tap, defaultIfEmpty, startWith, switchMap, filter, distinct, toArray } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
@@ -19,6 +19,9 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
 
     private sub: Subscription;
 
+    salas$: Observable<ISnapshot[]>;
+    salasPaciente$: Observable<ISnapshot[]>;
+
     constructor(
         public mapaCamasService: MapaCamasService,
     ) { }
@@ -31,11 +34,31 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         );
 
         this.sub = this.mapaCamasService.snapshotFiltrado$.pipe(
+            map(camas => camas.filter(c => !c.sala && c.estado !== 'inactiva')),
             tap((snapshot) => {
                 this.total = snapshot.length;
                 this.camasXEstado = this.groupBy(snapshot, 'estado');
             })
         ).subscribe();
+
+        this.salas$ = this.mapaCamasService.snapshotFiltrado$.pipe(
+            switchMap((camas) => {
+                return from(camas).pipe(
+                    filter(c => c.sala),
+                    distinct(c => c.id),
+                    toArray()
+                );
+            })
+        );
+
+        this.salasPaciente$ = this.mapaCamasService.snapshotFiltrado$.pipe(
+            switchMap((camas) => {
+                return from(camas).pipe(
+                    filter(c => c.sala && !!c.paciente),
+                    toArray()
+                );
+            })
+        );
     }
 
     ngOnDestroy() {

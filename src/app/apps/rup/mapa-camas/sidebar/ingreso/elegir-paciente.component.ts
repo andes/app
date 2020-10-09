@@ -51,7 +51,7 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
         let cama = null;
         this.snapshot.map((snap) => {
             if (snap.estado === 'ocupada') {
-                if (snap.idCama !== this.selectedCama.idCama) {
+                if (snap.id !== this.selectedCama.id) {
                     if (snap.paciente.id === paciente.id) {
                         cama = snap;
                     }

@@ -18,7 +18,7 @@ export class ItemCamaComponent implements OnChanges {
     @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
 
-    canEdit = this.auth.check('internacion:cama:edit');
+    canEdit = false;
     canMovimientos = this.auth.check('internacion:movimientos');
 
     public equipos = {
@@ -38,6 +38,8 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     ngOnChanges() {
+        this.canEdit = this.cama.sala ? this.auth.check('internacion:sala:edit') : this.auth.check('internacion:cama:edit');
+
         this.equipos = {
             aporteOxigeno: false,
             respirador: false,
@@ -61,7 +63,11 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     goTo() {
-        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
+        if (this.cama.sala) {
+            this.router.navigate([`/internacion/sala-comun/${this.cama.id}`]);
+        } else {
+            this.router.navigate([`/internacion/cama/${this.cama.id}`]);
+        }
     }
 
     accion(relacion, $event) {

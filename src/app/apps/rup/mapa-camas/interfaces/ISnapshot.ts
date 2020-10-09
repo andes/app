@@ -32,10 +32,12 @@ export interface ISnapshot {
         _id: String,
         nombre: String
     };
+    sala?: boolean;
     extras: {
         ingreso?: boolean,
         egreso?: boolean,
-        idInternacion?: boolean
+        idInternacion?: String,
+        tipo_egreso?: String,
     };
     nota: String;
     createdAt?: Date;

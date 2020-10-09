@@ -12,6 +12,7 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -166,7 +167,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     });
                 }
             }
-            if (cama.idCama) {
+            if (cama.id) {
                 this.cama = cama;
                 this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
                 this.fecha = fecha;
@@ -209,18 +210,29 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     egresoSimplificado(estado) {
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
-            const estadoPatch = {
-                _id: this.cama.idCama,
-                estado: estado,
-                idInternacion: null,
-                paciente: null,
-                extras: {
+            let estadoPatch = {};
+            if (!this.cama.sala) {
+                estadoPatch = {
+                    _id: this.cama.id,
+                    estado: estado,
+                    idInternacion: null,
+                    paciente: null,
+                    nota: null,
+                    extras: {
+                        egreso: true,
+                        idInternacion: this.cama.idInternacion,
+                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
+                    }
+                };
+            } else {
+                this.cama.estado = estado;
+                this.cama.extras = {
                     egreso: true,
                     idInternacion: this.cama.idInternacion,
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                },
-                nota: null,
-            };
+                };
+                estadoPatch = this.cama;
+            }
 
             this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
@@ -232,7 +244,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 this.onSave.emit();
             }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
+                this.plex.info('danger', err1, 'Error al egresar paciente!');
             });
         }
     }
@@ -491,7 +503,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // La cama este disponible en la fecha que la quiero usar,
 
     checkEstadoCama() {
-        this.mapaCamasService.get(this.fecha, this.cama.idCama).subscribe((cama) => {
+        this.mapaCamasService.get(this.fecha, this.cama.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;

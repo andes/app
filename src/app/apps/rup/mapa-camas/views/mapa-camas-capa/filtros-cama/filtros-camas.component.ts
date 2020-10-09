@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 function arrayToSet(array, key, itemFn) {
@@ -59,11 +59,11 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.tipoCamaList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.tipoCama))
+            map((camas) => arrayToSet(camas.filter( snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
         );
 
         this.equipamientoList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'conceptId', ((item) => item.equipamiento ? item.equipamiento : []))),
+            map((camas) => arrayToSet(camas.filter( snap => !snap.sala), 'conceptId', ((item) => item.equipamiento ? item.equipamiento : []))),
         );
 
         this.estadoList$ = this.mapaCamasService.snapshot$.pipe(

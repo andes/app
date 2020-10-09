@@ -64,26 +64,39 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
     }
 
     cambiarCama(camaActual, camaNueva, fecha) {
-        const camaDesocupada = {
-            _id: camaActual.idCama,
+        let camaDesocupada = {
+            _id: camaActual.id,
             estado: 'disponible',
             idInternacion: null,
-            paciente: null
+            paciente: null,
+            sala: camaActual.sala,
         };
-        const camaOcupada = {
-            _id: camaNueva.idCama,
+
+        let camaOcupada = {
+            _id: camaNueva.id,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
             paciente: camaActual.paciente,
-            nota: camaActual.nota
+            nota: (!camaActual.sala) ? camaActual.nota : null,
+            sala: camaNueva.sala,
         };
 
+        if (camaActual.sala) {
+            camaDesocupada = camaActual;
+            camaDesocupada.estado = 'disponible';
+        }
+
+        if (camaNueva.sala) {
+            camaOcupada = camaNueva;
+            camaOcupada.estado = 'ocupada';
+            camaOcupada.paciente = camaActual.paciente;
+            camaOcupada.idInternacion = camaActual.idInternacion;
+        }
         if (this.cambiarUO) {
             camaOcupada['extras'] = {
                 unidadOrganizativaOrigen: camaActual.unidadOrganizativa
             };
         }
-
         return forkJoin(
             this.mapaCamasService.save(camaOcupada, fecha),
             this.mapaCamasService.save(camaDesocupada, fecha)

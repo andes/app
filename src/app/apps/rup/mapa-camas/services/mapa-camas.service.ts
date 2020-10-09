@@ -13,6 +13,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 
 
 @Injectable()
@@ -73,7 +74,8 @@ export class MapaCamasService {
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
         private pacienteService: PacienteService,
-        private maquinaEstadosHTTP: MaquinaEstadosHTTP
+        private maquinaEstadosHTTP: MaquinaEstadosHTTP,
+        private salaComunService: SalaComunService,
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -235,10 +237,10 @@ export class MapaCamasService {
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
         let camasMismaUO = [];
         let camasDistintaUO = [];
-        if (cama.idCama) {
+        if (cama.id) {
             camas.map(c => {
-                if (c.estado === 'disponible') {
-                    if (c.idCama !== cama.idCama) {
+                if (c.sala || c.estado === 'disponible') {
+                    if (c.id !== cama.id) {
                         if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
                             camasMismaUO.push(c);
                         } else {
@@ -322,7 +324,7 @@ export class MapaCamasService {
         }
 
         if (tipoCama) {
-            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.tipoCama.conceptId === tipoCama.conceptId);
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => (snap.tipoCama && snap.tipoCama.conceptId === tipoCama.conceptId));
         }
 
         if (estado) {
@@ -397,7 +399,7 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama.pipe(filter(snap => !!snap.idCama)),
+            this.selectedCama.pipe(filter(snap => !!snap.id)),
             this.selectedPrestacion,
             this.view
         ).pipe(
@@ -406,9 +408,9 @@ export class MapaCamasService {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
+                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
                     } else if (view === 'listado-internacion' && selectedPrestacion.id) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
+                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
                     }
                     return of([]);
                 }
@@ -421,9 +423,17 @@ export class MapaCamasService {
         return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
-    save(data, fecha, esMovimiento = true): Observable<ICama> {
-        data.esMovimiento = esMovimiento;
-        return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
+    save(data, fecha, esMovimiento = true): Observable<any> {
+        if (!data.sala) {
+            data.esMovimiento = esMovimiento;
+            return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
+        } else {
+            if (data.estado === 'ocupada') {
+                return this.salaComunService.ingresarPaciente(data, fecha);
+            } else {
+                return this.salaComunService.egresarPaciente(data, fecha);
+            }
+        }
     }
 
     changeTime(cama, fechaOriginal, nuevaFecha, idInternacion, ambito: string = null, capa: string = null) {

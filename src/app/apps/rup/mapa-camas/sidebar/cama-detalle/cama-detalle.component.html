@@ -46,7 +46,8 @@
                     <plex-label titulo="Especialidades" subtitulo="{{ cama.especialidades | enumerar: ['term'] }}"
                                 *ngIf="cama.especialidades">
                     </plex-label>
-                    <plex-label titulo="Tipo de cama" subtitulo="{{ cama.tipoCama.term }}"></plex-label>
+                    <plex-label *ngIf="cama.tipoCama" titulo="Tipo de cama" subtitulo="{{ cama.tipoCama.term }}">
+                    </plex-label>
                     <plex-label titulo="Sector" subtitulo="{{ sector(cama) }}"></plex-label>
                     <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}"
                                 *ngIf="cama.equipamiento">
@@ -89,7 +90,7 @@
         <app-internacion-detalle (accion)="onAccion($event)">
         </app-internacion-detalle>
     </plex-tab>
-    <plex-tab label="HISTORIAL">
+    <plex-tab label="HISTORIAL" *ngIf="!cama.sala">
         <app-historial-detalle></app-historial-detalle>
     </plex-tab>
 </plex-tabs>
