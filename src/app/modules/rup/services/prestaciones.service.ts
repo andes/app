@@ -578,97 +578,7 @@ export class PrestacionesService {
         return this.post(prestacion);
     }
 
-    validarPrestacion(prestacion, planes): Observable<any> {
-        let planesCrear = undefined;
-        let planesAux = undefined;
-        let postRequest = [];
-
-        if (planes.length) {
-            planesCrear = [];
-            planesAux = [];
-            planes.forEach(plan => {
-                if (plan.semanticTag !== 'metadato fundacional') {
-                    // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
-                    let existePrestacion = null;
-                    if (this.cache[prestacion.paciente.id]) {
-                        existePrestacion = this.cache[prestacion.paciente.id].find(p => (p.estados[p.estados.length - 1].tipo === 'pendiente' || p.estados[p.estados.length - 1].tipo === 'auditoria') && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
-                    }
-                    if (!existePrestacion && plan.valor && (plan.valor.solicitudPrestacion.organizacionDestino || plan.valor.solicitudPrestacion.autocitado)) {
-                        if (!plan.valor.solicitudPrestacion.organizacionDestino) {
-                            plan.valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
-                        }
-                        planesAux.push(plan);
-                    }
-                }
-            });
-            planesAux.forEach(plan => {
-                let reglas = this.servicioReglas.get({
-                    organizacionOrigen: this.auth.organizacion.id,
-                    prestacionOrigen: prestacion.solicitud.tipoPrestacion.conceptId,
-                    prestacionDestino: plan.valor.solicitudPrestacion.prestacionSolicitada.conceptId,
-                    organizacionDestino: plan.valor.solicitudPrestacion.organizacionDestino.id
-                });
-                postRequest.push(reglas);
-            });
-        }
-        if (postRequest && postRequest.length) {
-            return forkJoin(postRequest).pipe(
-                switchMap((reglas: any) => {
-                    for (let i = 0; i < reglas.length; i++) {
-                        const regla = reglas[i][0];
-                        let prestacionOrigen;
-                        let prestacionDestino;
-                        if (regla) {
-                            prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
-                            prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
-                        } else {
-                            prestacionOrigen = prestacion.solicitud.tipoPrestacion;
-                            prestacionDestino = planesAux[i].valor.solicitudPrestacion.prestacionSolicitada; // para utilizar los datos de la regla y no un sinonimo
-                        }
-                        // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
-                        // asignamos el tipoPrestacionOrigen a la solicitud
-                        nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacionOrigen.prestacion ? prestacionOrigen.prestacion : prestacion.solicitud.tipoPrestacion;
-                        if (prestacionOrigen.auditable) {
-                            nuevaPrestacion['estados'] = [{
-                                fecha: new Date(),
-                                tipo: 'auditoria'
-                            }];
-                        }
-                        // asignamos la prestacion de origen
-                        nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
-
-                        // Asignamos organizacionOrigen y profesionalOrigen de la solicitud originada
-                        nuevaPrestacion.solicitud.organizacionOrigen = prestacion.solicitud.organizacion;
-                        nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional;
-
-                        // Si se asignó una organización destino desde la prestación que origina la solicitud
-                        if (planesAux[i].valor.solicitudPrestacion.organizacionDestino) {
-                            nuevaPrestacion.solicitud.organizacion = planesAux[i].valor.solicitudPrestacion.organizacionDestino;
-                        }
-                        // Si se asignó un profesional destino desde la prestación que origina la solicitud
-                        if (!planesAux[i].valor.solicitudPrestacion.autocitado) {
-                            nuevaPrestacion.solicitud.profesional = {};
-                        }
-                        if (planesAux[i].valor.solicitudPrestacion.profesionalesDestino) {
-                            nuevaPrestacion.solicitud.profesional = planesAux[i].valor.solicitudPrestacion.profesionalesDestino[0];
-                        }
-
-                        // agregamos los registros en la solicitud
-                        nuevaPrestacion.solicitud.registros.push(planesAux[i]);
-
-                        planesCrear.push(nuevaPrestacion);
-
-                    }
-                    return this.efectuarPatch(prestacion, planesCrear);
-                })
-            );
-        } else {
-            return this.efectuarPatch(prestacion, undefined);
-        }
-    }
-
-    private efectuarPatch(prestacion, planesCrear): Observable<any> {
+    validarPrestacion(prestacion): Observable<any> {
         prestacion.ejecucion.registros.forEach(x => {
             if (x.relacionadoCon && x.relacionadoCon.length) {
                 x.relacionadoCon.forEach(y => {
@@ -679,7 +589,6 @@ export class PrestacionesService {
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },
-            ...(planesCrear && planesCrear.length) && { planes: planesCrear },
             registros: prestacion.ejecucion.registros,
             registrarFrecuentes: true
         };

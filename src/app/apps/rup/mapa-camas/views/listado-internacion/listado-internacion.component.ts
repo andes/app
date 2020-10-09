@@ -53,10 +53,10 @@ export class InternacionListadoComponent implements OnInit {
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
             map((prestacion) => {
                 this.puedeValidar = (prestacion.ejecucion && prestacion.ejecucion.registros[1] &&
-                prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
-                prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso &&
-                prestacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso &&
-                prestacion.ejecucion.registros[1].valor.InformeEgreso.diagnosticoPrincipal);
+                    prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
+                    prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso &&
+                    prestacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso &&
+                    prestacion.ejecucion.registros[1].valor.InformeEgreso.diagnosticoPrincipal);
                 this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
                 return prestacion;
             })
@@ -150,7 +150,7 @@ export class InternacionListadoComponent implements OnInit {
                     if (egresoExiste && selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada') {
                         if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
                             egresoExiste.InformeEgreso.diagnosticoPrincipal) {
-                            this.prestacionService.validarPrestacion(selectedPrestacion, []).subscribe(prestacion => {
+                            this.prestacionService.validarPrestacion(selectedPrestacion).subscribe(prestacion => {
                                 this.listadoInternacionService.setFechaHasta(fechaHasta);
                                 this.mapaCamasService.selectPrestacion(prestacion);
                                 this.verificarPrestacion(prestacion);

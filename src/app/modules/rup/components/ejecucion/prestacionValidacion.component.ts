@@ -302,24 +302,9 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 return false;
             } else {
                 let seCreoSolicitud = false;
-                // cargar los conceptos mas frecuentes por profesional y tipo de prestación
-                // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                 let registros = this.prestacion.ejecucion.registros;
-                // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
 
-                let seccionesRegistros = [...registros];
-                registros.forEach(registro => {
-                    if (registro.hasSections) { // COLONO O EPICRISIS
-                        registro.registros.forEach(seccion => {
-                            if (seccion.isSection && !seccion.noIndex) {
-                                seccionesRegistros = [...seccionesRegistros, ...seccion.registros];
-                            }
-                        });
-                    }
-                });
-
-                let planes = seccionesRegistros.filter(r => r.esSolicitud);
-                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                this.servicioPrestacion.validarPrestacion(this.prestacion).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     let recorrerRegistros = registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
