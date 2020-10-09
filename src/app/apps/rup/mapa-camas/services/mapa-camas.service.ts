@@ -58,6 +58,8 @@ export class MapaCamasService {
 
     public fechaActual$: Observable<Date>;
 
+    public columnsMapa = new BehaviorSubject<any>([]);
+
     public mainView = new BehaviorSubject<any>('mapa-camas');
 
     public ambito = 'internacion';
@@ -362,6 +364,16 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            } else if (sortBy === 'fecha') {
+                snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+            } else if (sortBy === 'usuario') {
+                snapshots = snapshots.sort((a, b) => a.createdBy.nombreCompleto.localeCompare((b.createdBy.nombreCompleto as string)));
+            } else if (sortBy === 'sector') {
+                snapshots = snapshots.sort((a, b) => a.sectores[0].nombre.localeCompare((b.sectores[0].nombre as string)));
+            } else if (sortBy === 'documento') {
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            } else if (sortBy === 'sexo') {
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.sexo.localeCompare((b.paciente.sexo as string)));
             }
         }
 

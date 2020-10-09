@@ -46,6 +46,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     mainView;
     subscription: Subscription;
 
+    public columns: any = {};
+
     public sortBy: string;
     public sortOrder = 'desc';
 
@@ -239,4 +241,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         }
     }
 
+    toggleColumns() {
+        this.mapaCamasService.columnsMapa.next(this.columns);
+    }
 }

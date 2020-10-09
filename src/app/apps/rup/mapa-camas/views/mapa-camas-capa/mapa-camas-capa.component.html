@@ -20,7 +20,16 @@
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
-                               class="d-inline-block" [right]="true" [items]="itemsCrearDropdown">
+                               class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
+                </plex-dropdown>
+                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block">
+                    <plex-grid cols="3">
+                        <plex-bool label="Fecha Ultimo Movimiento" [(ngModel)]="columns.fechaMovimiento" (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"(change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Sector" [(ngModel)]="columns.sector"(change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Documento" [(ngModel)]="columns.documento"(change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Sexo" [(ngModel)]="columns.sexo"(change)="toggleColumns()"></plex-bool>
+                    </plex-grid>
                 </plex-dropdown>
             </plex-title>
 
@@ -51,6 +60,41 @@
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
+                            <th *ngIf="columns.fechaMovimiento" class="sortable" (click)="sortTable('fecha')">
+                                FECHA MOVIMIENTO
+                                <span *ngIf="sortBy === 'fecha'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
+                            <th *ngIf="columns.usuarioMovimiento" class="sortable" (click)="sortTable('usuario')">
+                                USUARIO MOVIMIENTO
+                                <span *ngIf="sortBy === 'usuario'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
+                            <th *ngIf="columns.sector" class="sortable" (click)="sortTable('sector')">
+                                SECTOR
+                                <span *ngIf="sortBy === 'sector'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
+                            <th *ngIf="columns.documento" class="sortable" (click)="sortTable('documento')">
+                                DOCUMENTO
+                                <span *ngIf="sortBy === 'documento'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
+                            <th *ngIf="columns.sexo" class="sortable" (click)="sortTable('sexo')">
+                                SEXO
+                                <span *ngIf="sortBy === 'sexo'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
                             <th class="sortable col-estado" (click)="sortTable('estado')">
                                 ESTADO
                                 <span *ngIf="sortBy === 'estado'">
@@ -68,7 +112,7 @@
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
                                 [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo"
                                 (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
-                                [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
+                                [class.invert]="(!cama.esSala || cama.estado !== 'ocupada') ? selectedCama.idCama === cama.idCama : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
                             </tr>
                         </ng-container>
                     </tbody>

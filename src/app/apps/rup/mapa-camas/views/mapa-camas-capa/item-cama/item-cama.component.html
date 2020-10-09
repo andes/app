@@ -26,6 +26,33 @@
         </span>
         <span class="d-block"></span>
     </td>
+    <ng-container *ngIf="columns$ | async as columns">
+        <td *ngIf="columns.fechaMovimiento">
+            <span>
+                {{cama.fecha | fecha}}
+            </span>
+        </td>
+        <td *ngIf="columns.usuarioMovimiento">
+            <span>
+                {{cama.createdBy?.nombreCompleto}}
+            </span>
+        </td>
+        <td *ngIf="columns.sector">
+            <span>
+                {{cama.sectores | enumerar: ['nombre']}}
+            </span>
+        </td>
+        <td *ngIf="columns.documento">
+            <span>
+                {{(cama.paciente) ? cama.paciente.documento : 'Sin Paciente'}}
+            </span>
+        </td>
+        <td *ngIf="columns.sexo">
+            <span>
+                {{(cama.paciente) ? cama.paciente.sexo : 'Sin Paciente'}}
+            </span>
+        </td>
+    </ng-container>
     <td class="d-flex align-items-center">
         <plex-badge [type]="estadoCama?.color">
             {{estadoCama?.label}}
