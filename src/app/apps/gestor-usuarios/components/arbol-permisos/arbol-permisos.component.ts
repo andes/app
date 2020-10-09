@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, AfterViewInit, Input, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { ArbolPermisosItemComponent } from './arbol-permisos-item.component';
 
 @Component({
@@ -9,9 +9,15 @@ import { ArbolPermisosItemComponent } from './arbol-permisos-item.component';
 export class ArbolPermisosComponent {
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
 
+    @Input() organizacion = null;
     @Input() permisos = [];
     @Input() userPermissions = [];
+
     @Output() change = new EventEmitter();
+
+    constructor() { }
+
+
 
     public getPermisos() {
         let permisos = [];
@@ -25,3 +31,4 @@ export class ArbolPermisosComponent {
         this.change.emit();
     }
 }
+

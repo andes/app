@@ -68,6 +68,10 @@ export class OrganizacionService {
         return this.server.get(`${this.organizacionUrl}/${id}/configuracion`);
     }
 
+    unidadesOrganizativas(id: String) {
+        return this.server.get(`${this.organizacionUrl}/${id}/unidadesOrganizativas`);
+    }
+
     /**
      * Funciones sobre sectores y unidades organizativas de la orgazacion
      */

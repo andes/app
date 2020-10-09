@@ -1,9 +1,9 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { PerfilesHttp } from '../services/perfiles.http';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
+
 
 @Component({
     selector: 'gestor-usarios-perfiles-list',
@@ -15,7 +15,6 @@ export class PerfilListComponent implements OnInit {
     constructor(
         public perfilesHttp: PerfilesHttp,
         public plex: Plex,
-        private location: Location,
         private router: Router,
         private route: ActivatedRoute,
         private auth: Auth
