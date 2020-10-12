@@ -1,7 +1,7 @@
 
 import { map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -720,28 +720,30 @@ export class PrestacionesService {
 
 
     /**
-        * Devuelve el texto del informe del encuentro asociado al registro
-        *
-        * @param {any} paciente un paciente
-        * @param {any} registro un registro de una prestación
-        * @returns  {string} Informe del encuentro relacionado al registro de entrada
-        * @memberof PrestacionesService
-        */
+    * Devuelve el texto del informe del encuentro asociado al registro
+    *
+    * @param {any} paciente un paciente
+    * @param {any} registro un registro de una prestación
+    * @returns  {string} Informe del encuentro relacionado al registro de entrada
+    * @memberof PrestacionesService
+    */
     mostrarInformeRelacionado(paciente, registro, concepto) {
-        let salida = '';
         if (registro.idPrestacion && concepto.conceptId !== PrestacionesService.InformeDelEncuentro) {
-            if (this.cache[paciente.id]) {
-                let unaPrestacion = this.cache[paciente.id].find(p => p.id === registro.idPrestacion);
-                if (unaPrestacion) {
-                    // vamos a buscar si en la prestación esta registrado un informe del encuentro
-                    let registroEncontrado = unaPrestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
-                    if (registroEncontrado) {
-                        salida = registroEncontrado.valor ? '<label>Informe del encuentro</label>' + registroEncontrado.valor : null;
+            return this.getByPaciente(paciente.id).pipe(
+                map(prestaciones => prestaciones.find(p => p.id === registro.idPrestacion)),
+                map((prestacion: any) => {
+                    if (prestacion) {
+                        // vamos a buscar si en la prestación esta registrado un informe del encuentro
+                        let registroEncontrado = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
+                        if (registroEncontrado) {
+                            return registroEncontrado.valor ? '<label>Informe del encuentro</label>' + registroEncontrado.valor : null;
+                        }
                     }
-                }
-            }
+                    return '';
+                })
+            );
         }
-        return salida;
+        return of('');
     }
 
     getFriendlyName(registro) {
