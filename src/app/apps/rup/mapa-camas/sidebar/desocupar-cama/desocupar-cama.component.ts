@@ -5,8 +5,6 @@ import { Subscription, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, map, switchMapTo } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
-import { c } from 'bowser';
-
 
 @Component({
     selector: 'app-desocupar-cama',
