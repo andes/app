@@ -49,7 +49,7 @@
                             <span [innerHTML]="registro.evoluciones[indice].evolucion"></span><br>
                         </ng-container>
                         <span
-                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
+                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto) | async"></span>
                     </div>
                     <div class="columna-completa align">
                         <b>Estado:</b>

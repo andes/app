@@ -44,7 +44,7 @@
                              [params]="elementosRUPService.elementoRegistro(registro).params" [soloValores]="true">
                         </rup>
                         <span
-                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
+                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto) | async"></span>
                     </div>
 
 

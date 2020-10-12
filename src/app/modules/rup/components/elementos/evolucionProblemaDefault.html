@@ -128,7 +128,7 @@
                         <div class="row ml-1">
                             <div class="col">
                                 <span
-                                      [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente,evolucion,registro.concepto)"></span>
+                                      [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente,evolucion,registro.concepto) | async"></span>
                             </div>
                         </div>
                         <div class="row ml-1">
