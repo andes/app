@@ -142,7 +142,6 @@ export class PrestacionesService {
             const opt = {
                 params: {
                     idPaciente: idPaciente,
-                    ordenFecha: true,
                     sinEstado: 'modificada',
                     hudsToken: this.hudsService.getHudsToken()
                 },
