@@ -1,0 +1,27 @@
+<form #form="ngForm">
+    <plex-list size="sm" *ngIf="!soloValores">
+        <plex-item *ngFor="let concepto of conceptos">
+            <plex-bool type="checkbox" name="opcion" [(ngModel)]=concepto.value (change)="selectCheck(concepto)">
+            </plex-bool>
+            <plex-label>{{concepto.term}}</plex-label>
+        </plex-item>
+    </plex-list>
+
+    <p *ngIf="soloValores" class="readonly">
+
+        <label class="text-capitalize">{{ registro.concepto.term }}</label>
+
+        <ng-container *ngIf="registro?.valor?.concepto || registro.valor.length === 1">
+            <p class="list-item-group text-capitalize">{{ registro.valor?.concepto ? registro.valor.concepto.term :
+                registro.valor[0].concepto.term }}</p>
+        </ng-container>
+        <ng-container *ngIf="registro.valor && registro.valor.length && registro.valor.length > 1">
+            <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">
+                <li class="list-item text-capitalize">{{ valor.concepto.term }}</li>
+            </ul>
+        </ng-container>
+        <ng-container *ngIf="!registro.valor.concepto && !registro.valor.length">
+            Sin datos
+        </ng-container>
+    </p>
+</form>

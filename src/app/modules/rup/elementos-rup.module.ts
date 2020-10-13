@@ -60,6 +60,7 @@ import { SelectStaticoComponent } from './components/elementos/rupers/select-sta
 import { SelectBaseComponent } from './components/elementos/rupers/select-base.component';
 import { SeccionadoComponent } from './components/elementos/rupers/seccionado/seccionado.component';
 import { SeccionComponent } from './components/elementos/rupers/seccionado/seccion.component';
+import { ChecklistComponent } from './components/elementos/checklist.component';
 
 import { RUPComponent } from './components/core/rup.component';
 import { RUPAccionesEnvioInformeComponent } from './components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
@@ -121,6 +122,7 @@ const RUPComponentsArray = [
     SeccionComponent,
     InternacionEgresoComponent,
     InternacionIngresoComponent,
+    ChecklistComponent
 ];
 
 @NgModule({
