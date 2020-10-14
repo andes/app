@@ -1,3 +1,20 @@
+# [5.17.0](https://github.com/andes/app/compare/v5.16.0...v5.17.0) (2020-10-14)
+
+
+### Bug Fixes
+
+* **COM:** Se modifican los filtros que habían quedado con los enumerados anteriores ([#1947](https://github.com/andes/app/issues/1947)) ([5f7b48a](https://github.com/andes/app/commit/5f7b48a2574ba3c11b872d197b1bdd3f160de164))
+* **huds:** cache es un observable ahora ([67d50fb](https://github.com/andes/app/commit/67d50fbf14abd893f168fe79cd4ddab0756a8338))
+
+
+### Features
+
+* **citas:** lazy load de historial ([#1855](https://github.com/andes/app/issues/1855)) ([797781c](https://github.com/andes/app/commit/797781cc83815d88e0b234f29c2fdc68949bddc3))
+* **citas:** mejora interactividad al editar agendas ([#1935](https://github.com/andes/app/issues/1935)) ([2adca7c](https://github.com/andes/app/commit/2adca7ca2f6df918dd3ff15353f133d57db6b442))
+* **gestor-usuario:** permisos unidad organizativa  ([#1914](https://github.com/andes/app/issues/1914)) ([ff4b7c3](https://github.com/andes/app/commit/ff4b7c3f95040352e02f56afc09bbe939bf0266c))
+* **mapa-camas:** sala común ([#1924](https://github.com/andes/app/issues/1924)) ([978f79f](https://github.com/andes/app/commit/978f79f4a2da5b1edb0daca0617a33474b7aea14))
+* **rup:** crear solicitudes en background ([#1942](https://github.com/andes/app/issues/1942)) ([d8e8171](https://github.com/andes/app/commit/d8e81718054771809dc8745ad910e97e65bb3133))
+
 # [5.16.0](https://github.com/andes/app/compare/v5.15.0...v5.16.0) (2020-10-07)
 
 
