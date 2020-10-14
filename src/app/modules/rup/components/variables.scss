@@ -18,6 +18,7 @@ $calificador: #660520;
 $laboratorio: #a0a0a0;
 $registro: #8bc43f; // elemento de registro
 $vacuna: #11910D;
+$dominiosNac: #11312D ;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 
@@ -36,6 +37,7 @@ $rup_colors: (problema: $problema,
     'medicamento.clínico': $producto,
     adjunto: $adjunto,
     vacuna: $vacuna,
+    dominiosNac: $dominiosNac,
     elemento: $registro,
     elementoderegistro: $registro,
     'estructura.corporal': $registro,

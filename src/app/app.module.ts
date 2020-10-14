@@ -93,6 +93,7 @@ import { CDAService } from './modules/rup/services/CDA.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 import { VacunasService } from './services/vacunas.service';
 import { PlantillasService } from './modules/rup/services/plantillas.service';
+import { DominiosNacionalesService } from './modules/rup/services/dominiosNacionales.service';
 
 // Seguimiento Pacientes SJ
 import { SeguimientoPacienteService } from './modules/rup/services/seguimientoPaciente.service';
@@ -423,6 +424,7 @@ registerLocaleData(localeEs, 'es');
         ResumenPacienteDinamicoService,
         SeguimientoPacienteService,
         VacunasService,
+        DominiosNacionalesService,
         RiesgoCardiovascularService,
         FormulaBaseService,
         CampaniaSaludService,

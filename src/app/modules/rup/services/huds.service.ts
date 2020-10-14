@@ -75,6 +75,7 @@ export class HUDSService {
                         break;
                     case 'rup':
                     case 'cda':
+                    case 'dominios':
                     case 'solicitud':
                         if (registro.id === _registro.id) {
                             return i;

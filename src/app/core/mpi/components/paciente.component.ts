@@ -470,8 +470,7 @@ export class PacienteComponent implements OnInit {
         if (this.subscripcionGetFederador) {
             this.subscripcionGetFederador.unsubscribe();
         }
-
-        this.subscripcionGetFederador = this.pacienteService.getFederador(this.paciente).subscribe(
+        this.subscripcionGetFederador = this.pacienteService.getFederador(this.pacienteModel).subscribe(
             resultados => {
                 this.loading = false;
                 if (resultados && resultados.length > 0) {

@@ -3,12 +3,12 @@ import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulatio
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { DominiosNacionalesService } from './../../services/dominiosNacionales.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -46,7 +46,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
-
 
 
     /**
@@ -93,6 +92,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        dominios: ['dominios']
     };
 
     public registrosTotales = {
@@ -109,6 +109,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         producto: []
     };
 
+    public dominios = [];
+
     public txtABuscar;
 
     constructor(
@@ -116,6 +118,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService,
+        public domNacional: DominiosNacionalesService,
         @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
@@ -129,6 +132,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.paciente) {
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDominios();
         }
         const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
@@ -215,6 +219,16 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
                 break;
+            case 'dominio':
+                gtag('huds-open', tipo, registro.name, index);
+                const params = {
+                    custodian: registro.identifier.value,
+                    id: this.paciente.id
+                };
+                registro.tipo = tipo;
+                registro.class = 'plan';
+                registro.params = params;
+                break;
         }
 
         this.huds.toogle(registro, tipo);
@@ -275,6 +289,13 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 });
             });
         });
+    }
+
+    listarDominios() {
+        // Listar los dominios de ese paciente
+        this.domNacional.getDominiosIdPaciente(this.paciente.id).subscribe((resultado) => {
+            this.dominios = resultado;
+        })
     }
 
     private cargarSolicitudesMezcladas() {
@@ -341,6 +362,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 return this.vacunas.length;
             case 'solicitudes':
                 return this.solicitudesMezcladas.length;
+            case 'dominios':
+                return this.dominios.length;
         }
     }
 
