@@ -12,9 +12,6 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
 
     public conceptos: any[] = [];
 
-    // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
-    public unique: number = new Date().getTime();
-
     ngOnInit() {
 
         if (!this.registro.valor) {
@@ -22,30 +19,21 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         }
 
         if (this.params) {
+            if (this.params.query) {
 
-            // Conceptos de Refset
-            if (this.params.refsetId) {
-                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
-                    this.conceptos = resultado;
-                    this.conceptos = this.conceptos.map(d => {
-                        let aux;
-                        aux = this.registro.valor.find(c => c.concepto.conceptId === d.conceptId);
-
-                        if (aux) {
-                            return d = aux.concepto;
-
-                        } else {
-
-                            return d;
-                        }
-
-                    });
-                });
-            } else if (this.params.query) {
                 // Soporte para cualquier tipo de query
                 this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
                     this.conceptos = resultado;
+                    this.conceptos.map(d => {
+                        this.registro.valor.map(c => {
+                            if (c.concepto.conceptId === d.conceptId) {
+                                d.value = true;
+                            }
+                            return d;
+                        });
+                    });
                 });
+
             }
             // Si params.ultimoValor es true, se traen los últimos datos validados de la HUDS
             // Sirve por ejemplo para pre-setear antecedentes y trastornos crónicos
