@@ -18,7 +18,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     waiting = false;
     fileToken: String = null;
     timeout = null;
-    adjuntosEstado = [];
+    adjuntosEstado;
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
         // Documentos
@@ -26,12 +26,14 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         // Otros
         'dat'
     ];
-    public nuevoEstado: any = {
-        observacion: ''
-    };
+    public nuevoEstado;
 
     @Input('derivacion')
     set _derivacion(value) {
+        this.nuevoEstado = {
+            observacion: ''
+        };
+        this.adjuntosEstado = [];
         this.derivacion = value;
     }
 
