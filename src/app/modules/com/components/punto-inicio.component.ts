@@ -82,7 +82,7 @@ export class ComPuntoInicioComponent implements OnInit {
             }
             if (this.tabIndex === 1) {
                 if (this.esCOM) {
-                    this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id);
+                    this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id || (e.estado === 'solicitada' && e.organizacionOrigen.id === this.auth.organizacion.id));
                 } else {
                     this.derivaciones = this.derivaciones.filter(e => e.organizacionOrigen.id === this.auth.organizacion.id);
                 }
