@@ -93,21 +93,12 @@
         </div>
     </div>
     <br />
-
-    <div class="row" *ngIf="!showConfirmar && !showPrioridad && !showCitar">
-        <div class="col-3">
-            <plex-button type="info btn-block" (click)="responder()">Responder</plex-button>
-        </div>
-        <div class="col-3">
-            <plex-button type="warning btn-block" (click)="asignar()">Asignar</plex-button>
-        </div>
-        <div class="col-3">
-            <plex-button type="warning btn-block" (click)="referir()">Referir</plex-button>
-        </div>
-        <div class="col-3">
-            <plex-button type="success btn-block" (click)="aceptar()">Aceptar</plex-button>
-        </div>
-    </div>
+    <plex-grid *ngIf="!showConfirmar && !showPrioridad && !showCitar" cols="4">
+        <plex-button type="info btn-block" (click)="responder()">Responder</plex-button>
+        <plex-button type="warning btn-block" (click)="asignar()">Asignar</plex-button>
+        <plex-button type="warning btn-block" (click)="referir()">Referir</plex-button>
+        <plex-button type="success btn-block" (click)="aceptar()">Aceptar</plex-button>
+    </plex-grid>
 
     <span *ngIf="showCitar">
         <div class="row">

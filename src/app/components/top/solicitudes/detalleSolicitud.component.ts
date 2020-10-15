@@ -30,6 +30,11 @@ export class DetalleSolicitudComponent implements OnInit {
     fileToken: String = null;
     lightbox = false;
     indice;
+    public items = [
+        { key: 'solicitud', label: 'SOLICITUD' },
+        { key: 'historial', label: 'HISTORIAL' }
+    ];
+    public mostrar;
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
@@ -57,6 +62,10 @@ export class DetalleSolicitudComponent implements OnInit {
             // Por si hay algún documento en la vieja versión.
             return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
         }
+    }
+
+    cambiarOpcion(opcion) {
+        this.mostrar = opcion;
     }
 
     get documentos() {
