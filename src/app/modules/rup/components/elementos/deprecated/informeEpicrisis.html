@@ -92,8 +92,7 @@
     <div class="grid-container">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
-                <div
-                     class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                <div class="rup-card rup-clear {{ item | semanticClass }}">
                     <div class="titulo d-flex align-items-start">
                         <i class="icon {{ item.params.icon }} mr-2"></i>
                         <strong> {{ item.params.titulo }}</strong>

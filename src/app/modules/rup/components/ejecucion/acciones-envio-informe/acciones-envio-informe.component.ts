@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { getSemanticTag, PrestacionesService } from '../../../services/prestaciones.service';
+import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { getSemanticTag } from '../../../pipes/semantic-class.pipes';
 
 /**
  * Cualquier cambio en esta componente implica testear en:

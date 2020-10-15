@@ -41,8 +41,7 @@
                                 </div>
 
                                 <!-- Contenedor del registro RUP -->
-                                <div
-                                     class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                <div class="rup-card {{ registro | semanticClass}}">
                                     <div class="rup-header">
                                         <div class="icon-rup drag-handle" draggable
                                              [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"

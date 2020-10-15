@@ -52,8 +52,7 @@
                 <div class="row" *ngFor="let plantilla of plantillas$ | async; let i = index">
                     <div class="col-12">
                         <div></div>
-                        <div
-                             class="rup-card {{plantilla.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(procedimiento)}}">
+                        <div class="rup-card {{ procedimiento | semanticClass: plantilla.esSolicitud }}">
                             <div class="rup-header">
                                 <div class="icon-rup drag-handle">
                                     <i class="adi {{ procedimiento | semanticIcon: plantilla.esSolicitud }}"></i>
@@ -114,7 +113,7 @@
             <ng-container *ngFor="let pr of procedimientos">
                 <plex-item class="hover" (click)="cargarPlantillas(pr)">
                     <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
-                    <plex-badge type="{{servicioPrestacion.getCssClass(pr)}}">
+                    <plex-badge type="{{  pr | semanticClass }}">
                         {{pr.semanticTag}}</plex-badge>
 
                 </plex-item>

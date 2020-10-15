@@ -46,8 +46,7 @@
     <div class="grid-container">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
-                <div
-                     class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                <div class="rup-card rup-clear {{ item | semanticClass }}">
                     <div class="titulo d-flex align-items-start">
                         <ng-container *ngIf="item.params.icon">
                             <plex-icon [prefix]="iconPrefix(item.params.icon)" [name]="iconName(item.params.icon)">

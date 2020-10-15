@@ -72,8 +72,7 @@
                     <plex-title size="sm" *ngIf="tipoOrden && esTipoOrden(elemento, ['elemento de registro'])"
                                 titulo="Adjuntos">
                     </plex-title>
-                    <div
-                         class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                    <div class="rup-card {{ elemento | semanticClass }} elementoRup">
                         <a name="{{ elemento.concepto.conceptId }}"></a>
                         <div class="rup-header">
                             <div class="icon-rup">
@@ -124,10 +123,12 @@
                             </div>
                             <div class="actions">
                                 <plex-badge
-                                            type="{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
-                                    {{elemento.concepto.semanticTag}}</plex-badge>
+                                            [type]=" elemento | semanticClass: (tipoOrden === ['planes'] || elemento.esSolicitud)">
+                                    {{ elemento.esSolicitud ? 'solicitud' : elemento.concepto.semanticTag }}
+                                </plex-badge>
                                 <plex-badge type="info" size="sm" *ngIf="elemento.esDiagnosticoPrincipal">
-                                    Procedimiento/diagnóstico principal</plex-badge>
+                                    Procedimiento/diagnóstico principal
+                                </plex-badge>
                                 <ng-container *ngIf="elemento.esSolicitud && validada && asignarTurno[elemento.id]">
                                     <span class="small text-secondary"
                                           *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">

@@ -37,7 +37,7 @@
             </div>
             <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros">
                 <span class="mb-1">
-                    <plex-badge type="{{ _prestacionesService.getCssClass(registro.concepto, false) }}">
+                    <plex-badge [type]="registro | semanticClass">
                         {{ registro.concepto.term }}
                     </plex-badge>
                 </span><br>

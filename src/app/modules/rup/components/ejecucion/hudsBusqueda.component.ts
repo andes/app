@@ -8,6 +8,7 @@ import { TipoPrestacionService } from '../../../../services/tipoPrestacion.servi
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
+import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -184,7 +185,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         switch (tipo) {
             case 'concepto':
                 gtag('huds-open', tipo, registro.concepto.term, index);
-                registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
+                registro.class = getSemanticClass(registro.concepto, false);
                 if (registro.esSolicitud) {
                     registro.tipo = 'solicitud';
                     registro.class = 'plan';

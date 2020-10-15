@@ -68,6 +68,7 @@ import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
 import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { RUPObservacionesModalComponent } from './components/elementos/components/observaciones-modal.component';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
+import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -139,7 +140,8 @@ const RUPComponentsArray = [
         VistaPrestacionComponent,
         RelacionRUPPipe,
         RUPObservacionesModalComponent,
-        SemanticIconPipe
+        SemanticIconPipe,
+        SemanticClassPipe
 
     ],
     entryComponents: [
@@ -151,7 +153,8 @@ const RUPComponentsArray = [
         ModalSeleccionEmailComponent,
         VistaPrestacionComponent,
         RelacionRUPPipe,
-        SemanticIconPipe
+        SemanticIconPipe,
+        SemanticClassPipe
     ],
 })
 export class ElementosRUPModule {

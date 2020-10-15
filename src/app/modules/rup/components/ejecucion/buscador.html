@@ -175,7 +175,7 @@
      class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]; let i = index" class="rup-card mini"
-             [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'planes')">
+             [ngClass]="item | semanticClass:  filtroActual === 'planes'">
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
                      [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
@@ -195,8 +195,7 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="d-flex justify-content-end">
-                                <plex-badge size="sm"
-                                            type="{{ servicioPrestacion.getCssClass(item, filtroActual === 'planes') }}">
+                                <plex-badge size="sm" [type]="item | semanticClass: filtroActual === 'planes'">
                                     {{ (item.plan || filtroActual === 'planes') ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
