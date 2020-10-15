@@ -112,7 +112,7 @@
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
                                 [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo"
                                 (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
-                                [class.invert]="(!cama.esSala || cama.estado !== 'ocupada') ? selectedCama.idCama === cama.idCama : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
+                                [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
                             </tr>
                         </ng-container>
                     </tbody>

@@ -1,9 +1,8 @@
 <ng-container *ngIf="cama">
     <ng-container *ngIf="columns$ | async as columns; else sinColumnas">
         <td *ngIf="columns.fechaMovimiento">
-            <span>
-                {{cama.fecha | fecha}}
-            </span>
+            <span class="d-block">{{ cama.fecha | fecha }}</span>
+            <span class="d-block">{{ cama.fecha | hora }} hs</span>
         </td>
         <td>
             <span class="d-block">
@@ -49,7 +48,7 @@
         </td>
         <td *ngIf="columns.usuarioMovimiento">
             <span>
-                {{cama.createdBy?.nombreCompleto}}
+                {{cama.createdBy | nombre }}
             </span>
         </td>
         <td class="d-flex align-items-center">

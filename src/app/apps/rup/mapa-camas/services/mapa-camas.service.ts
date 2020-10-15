@@ -367,11 +367,14 @@ export class MapaCamasService {
             } else if (sortBy === 'fecha') {
                 snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
             } else if (sortBy === 'usuario') {
-                snapshots = snapshots.sort((a, b) => a.createdBy.nombreCompleto.localeCompare((b.createdBy.nombreCompleto as string)));
+                snapshots = snapshots.sort((a, b) => {
+                    const compareApellido = a.createdBy.apellido.localeCompare((b.createdBy.apellido as string));
+                    return (compareApellido !== 0) ? compareApellido : a.createdBy.nombre.localeCompare((b.createdBy.nombre as string));
+                });
             } else if (sortBy === 'sector') {
                 snapshots = snapshots.sort((a, b) => a.sectores[0].nombre.localeCompare((b.sectores[0].nombre as string)));
             } else if (sortBy === 'documento') {
-                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.documento.localeCompare((b.paciente.documento as string)));
             } else if (sortBy === 'sexo') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.sexo.localeCompare((b.paciente.sexo as string)));
             }
