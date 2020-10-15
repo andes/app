@@ -105,7 +105,8 @@ export class AuditarSolicitudComponent implements OnInit {
     referir() {
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId })
+            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+        })
             .subscribe(
                 res => {
                     this.reglasTOP = res;
@@ -124,7 +125,7 @@ export class AuditarSolicitudComponent implements OnInit {
 
     confirmar() {
         if (this.corfirmarAuditoria) {
-            let data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional};
+            let data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional };
 
             if (this.estadoSolicitud === 3) {
                 data.organizacion = this.organizacionDestino;
@@ -132,7 +133,7 @@ export class AuditarSolicitudComponent implements OnInit {
                 data.prestacion = this.tipoPrestacionesDestino.find(e => e.conceptId === this.tipoPrestacionDestino.id);
                 // verifica si la solicitud es auditable, si no lo es, pasa el estado a pendiente
                 if (!this.esRemisionAuditable()) {
-                    data.estado = {tipo: 'pendiente' };
+                    data.estado = { tipo: 'pendiente' };
                 }
             }
 
@@ -144,13 +145,13 @@ export class AuditarSolicitudComponent implements OnInit {
 
     // Verifica si la regla para ver si la solicitud es auditable
     esRemisionAuditable() {
-        let regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id );
+        let regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id);
         let regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
         return regla2.auditable;
     }
 
     cerrar() {
-        this.returnAuditoria.emit({ status: true });
+        this.returnAuditoria.emit({ status: false });
     }
 
     cancelar() {
