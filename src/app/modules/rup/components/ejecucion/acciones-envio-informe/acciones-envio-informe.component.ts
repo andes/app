@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { PrestacionesService } from '../../../services/prestaciones.service';
+import { getSemanticTag, PrestacionesService } from '../../../services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { ActivatedRoute } from '@angular/router';
@@ -82,7 +82,7 @@ export class RUPAccionesEnvioInformeComponent {
             return false;
         }
         if (this.registro) {
-            const esProcedimientoSolicitud = this.servicioPrestacion.getIcon(this.registro.concepto, false) === 'procedimiento' || this.registro.esSolicitud;
+            const esProcedimientoSolicitud = getSemanticTag(this.registro.concepto, false) === 'procedimiento' || this.registro.esSolicitud;
             return this.validada && esProcedimientoSolicitud;
         } else {
             return this.validada && !this.noNominalizada;

@@ -49,8 +49,7 @@
                                              [dragClass]="'drag-target-border'" [dragData]="registro"
                                              (onDragStart)="draggingRegistro(i ,registro, true)"
                                              (onDragEnd)="draggingRegistro(i, registro, false)">
-                                            <i
-                                               class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getIcon(registro.concepto, 'planes') : servicioPrestacion.getIcon(registro.concepto)}}"></i>
+                                            <i class="adi {{ registro | semanticIcon }} "></i>
                                         </div>
 
                                         <div class="title text-capitalize">

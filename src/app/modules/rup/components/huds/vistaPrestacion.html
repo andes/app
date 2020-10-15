@@ -36,8 +36,7 @@
                          class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i
-                                   class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(elemento.concepto) }}"></i>
+                                <i class="adi {{ elemento | semanticIcon }}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">

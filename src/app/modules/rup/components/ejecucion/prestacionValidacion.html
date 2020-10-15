@@ -77,8 +77,7 @@
                         <a name="{{ elemento.concepto.conceptId }}"></a>
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i
-                                   class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                <i class="adi {{ elemento | semanticIcon }}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">

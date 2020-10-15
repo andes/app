@@ -56,8 +56,7 @@
                              class="rup-card {{plantilla.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(procedimiento)}}">
                             <div class="rup-header">
                                 <div class="icon-rup drag-handle">
-                                    <i
-                                       class="icon icon-rup-semantic-{{plantilla.esSolicitud ? 'plan': servicioPrestacion.getCssClass(procedimiento)}}"></i>
+                                    <i class="adi {{ procedimiento | semanticIcon: plantilla.esSolicitud }}"></i>
                                 </div>
                                 <div class="title text-capitalize">
                                     Template de: {{ procedimiento.term }}

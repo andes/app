@@ -10,6 +10,7 @@ import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
 import { Plex } from '@andes/plex';
+import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 
 
 @Injectable()
@@ -668,57 +669,6 @@ export class PrestacionesService {
     }
 
     /**
-     * Determina el icono a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
-     *
-     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
-     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
-     * @returns string Icono a ser utilizado por la font de RUP
-     * @memberof PrestacionesService
-     */
-    public getIcon(conceptoSNOMED, esSolicitud) {
-        let icon = conceptoSNOMED.semanticTag;
-
-        if (conceptoSNOMED.esSolicitud || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
-            icon = 'plan';
-        } else {
-            switch (conceptoSNOMED.semanticTag) {
-                case 'hallazgo':
-                case 'evento':
-                    icon = 'hallazgo';
-                    break;
-                case 'situación':
-                    icon = 'hallazgo';
-                    break;
-
-                case 'trastorno':
-                    icon = 'trastorno';
-                    break;
-
-                case 'procedimiento':
-                case 'entidad observable':
-                case 'régimen/tratamiento':
-                    icon = 'procedimiento';
-                    break;
-                case 'trastorno':
-                    icon = 'trastorno';
-                    break;
-                case 'producto':
-                case 'objeto físico':
-                case 'medicamento clínico':
-                case 'fármaco de uso clínico':
-                    icon = 'producto';
-                    break;
-                case 'elemento de registro':
-                    icon = 'elementoderegistro';
-                    break;
-            }
-        }
-
-        return icon;
-    }
-
-
-    /**
     * Devuelve el texto del informe del encuentro asociado al registro
     *
     * @param {any} paciente un paciente
@@ -797,3 +747,39 @@ export class PrestacionesService {
     }
 
 }
+
+
+export function getSemanticTag(concepto: ISnomedConcept, esSolicitud: boolean = false) {
+    if (esSolicitud) {
+        return 'solicitud';
+    } else {
+        switch (concepto.semanticTag) {
+            case 'hallazgo':
+            case 'evento':
+            case 'situación':
+                return 'hallazgo';
+
+            case 'trastorno':
+                return 'trastorno';
+
+            case 'procedimiento':
+            case 'entidad observable':
+            case 'régimen/tratamiento':
+                return 'procedimiento';
+
+            case 'producto':
+            case 'objeto físico':
+            case 'medicamento clínico':
+            case 'fármaco de uso clínico':
+                return 'producto';
+
+            case 'elemento de registro':
+                return 'elemento de registro';
+            default:
+                // No debería
+                return concepto.semanticTag;
+        }
+    }
+}
+
+
