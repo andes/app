@@ -10,7 +10,7 @@
             <plex-label [tituloBold]="true" titulo="Notas"
                         subtitulo="{{ reg.observaciones?  reg.observaciones :'Sin observaciones'}}"></plex-label>
             <plex-label *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true" titulo="Prestación Destino Original"
-                        subtitulo="{{ reg.tipoPrestacion.term? reg.tipoPrestacion.term : 'No indica prestación' }}">
+                        subtitulo="{{ reg.tipoPrestacion?.term? reg.tipoPrestacion.term : 'No indica prestación' }}">
             </plex-label>
             <plex-label *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true"
                         titulo="Organizacion Destino Original"
