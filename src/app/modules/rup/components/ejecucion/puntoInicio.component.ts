@@ -374,26 +374,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     invalidarPrestacion(prestacion, idTurno) {
         this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
             if (confirmacion) {
-                if (this.agendaSeleccionada && this.agendaSeleccionada.dinamica) {
-                    // Si es agenda dinámica, se elimina el turno y en caso de tener cupo maximo éste aumenta en uno
-                    let index = this.agendaSeleccionada.bloques[0].turnos.findIndex(t => t.id === idTurno);
-                    if (index >= 0) {
-                        this.agendaSeleccionada.bloques[0].turnos.splice(index, 1);
-                        if (this.agendaSeleccionada.cupo > -1) {
-                            this.agendaSeleccionada.cupo++;
-                        }
-                        this.servicioAgenda.save(this.agendaSeleccionada).subscribe();
-                    }
-                }
                 let data;
                 if (prestacion.solicitud.turno) {
-                    // Se desasocia el turno, de manera que puedan iniciar nuevamente la prestación
                     data = { op: 'desasociarTurno' };
                 } else {
-                    // Es prestación fuera de agenda
                     data = { op: 'estadoPush', estado: { tipo: 'anulada' } };
                 }
-                this.servicioPrestacion.patch(prestacion.id, data).subscribe(this.actualizar.bind(this));
+                this.servicioPrestacion.patch(prestacion.id, data).subscribe(() => this.actualizar());
             }
         });
     }
