@@ -14,7 +14,7 @@ de la siguiente manera:
 */
 
 // Angular
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,7 +25,7 @@ import { HttpClient } from '@angular/common/http';
 // Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
+import { Server, ServerErrorHandler } from '@andes/shared';
 import { AuthModule, Auth } from '@andes/auth';
 import { SharedModule } from '@andes/shared';
 import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
@@ -456,7 +456,8 @@ registerLocaleData(localeEs, 'es');
         DisclaimerService,
         InstitucionService,
         CommonNovedadesService,
-        QueriesService
+        QueriesService,
+        { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler }
     ]
 })
 

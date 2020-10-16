@@ -2,6 +2,7 @@
  * Public API Surface of shared
  */
 export * from './lib/server/server.service';
+export * from './lib/server/error-handler.service';
 export * from './lib/server/resource-base';
 export * from './lib/decorator/cache';
 export * from './lib/decorator/unsubscribe';
