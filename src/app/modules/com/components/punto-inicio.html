@@ -1,10 +1,10 @@
 <plex-layout main="{{showSidebar? 7 : 12}}">
     <plex-layout-main>
         <plex-title main titulo="CENTRO OPERATIVO MÉDICO">
-            <plex-button type="info" class="ml-2" (click)="cambiarVerAyuda(true)" icon="help-circle">
-            </plex-button>
-            <plex-button position="right" class="float-right mr-1" type="success" label="Nueva derivación"
+            <plex-button position="left" type="success" class="mr-1" label="Nueva derivación"
                          (click)="nuevaDerivacion()">
+            </plex-button>
+            <plex-button type="info" (click)="cambiarVerAyuda(true)" icon="help-circle">
             </plex-button>
         </plex-title>
         <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)">
@@ -28,12 +28,19 @@
                         <ng-container *ngIf="derivaciones?.length">
                             <plex-list [striped]="true">
                                 <plex-item>
+                                    <b label> Fecha </b>
                                     <b label> Organización origen </b>
                                     <b label> Organización destino </b>
                                     <b label> Paciente </b>
                                     <b></b>
                                 </plex-item>
                                 <plex-item *ngFor="let derivacion of derivaciones" (click)="seleccionar(derivacion)">
+                                    <plex-label>
+                                        <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
+                                                    subtitulo="Última actualización: {{derivacion.updatedAt
+                                                        | fecha}}">
+                                        </plex-label>
+                                    </plex-label>
                                     <div class="elementos-graficos w-100">
                                         <plex-icon name="hospital-building" size="lg" type="info"></plex-icon>
                                         <plex-label [tituloBold]="true"
@@ -84,12 +91,19 @@
                         <ng-container *ngIf="derivaciones?.length">
                             <plex-list [striped]="true">
                                 <plex-item>
+                                    <b label> Fecha </b>
                                     <b label> Organización origen </b>
                                     <b label> Organización destino </b>
                                     <b label> Paciente </b>
                                     <b></b>
                                 </plex-item>
                                 <plex-item *ngFor="let derivacion of derivaciones" (click)="seleccionar(derivacion)">
+                                    <plex-label>
+                                        <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
+                                                    subtitulo="Última actualización: {{derivacion.updatedAt
+                                                | fecha}}">
+                                        </plex-label>
+                                    </plex-label>
                                     <div class="elementos-graficos w-100">
                                         <plex-icon name="hospital-building" size="lg" type="info"></plex-icon>
                                         <plex-label [tituloBold]="true"
