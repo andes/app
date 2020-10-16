@@ -21,6 +21,9 @@
                     [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
+                            <plex-badge *ngIf="turno.estado === 'fuera-agenda'" 
+                                        type="warning">
+                                FUERA DE AGENDA</plex-badge>
                             <plex-badge *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
                                         type="success">
                                 ASIGNADO</plex-badge>
