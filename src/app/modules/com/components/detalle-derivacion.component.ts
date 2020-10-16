@@ -40,6 +40,8 @@ export class DetalleDerivacionComponent implements OnInit {
     @Input('derivacion')
     set _derivacion(value) {
         this.derivacion = value;
+        this.reglaSeleccionada = {};
+        this.adjuntosEstado = [];
         this.cargarEstado();
     }
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
