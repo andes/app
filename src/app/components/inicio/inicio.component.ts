@@ -17,7 +17,6 @@ export class InicioComponent implements AfterViewInit {
     public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
-    public provinciaClass = LABELS.provinciaClass;
     public modulos: any = [];
     public secciones: any = [];
     public novedades: any[] = [];
