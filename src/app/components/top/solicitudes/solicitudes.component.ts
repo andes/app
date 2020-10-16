@@ -791,12 +791,13 @@ export class SolicitudesComponent implements OnInit {
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
                 this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
-                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente ) {
-                     this.itemsDropdown[1] = {
-                         icon: 'contacts', label: 'Ver Huds', handler: () => {
-                        this.setRouteToParams(['paciente', prestacion.paciente.id]);
-                        this.setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id);
-                    }};
+                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
+                    this.itemsDropdown[1] = {
+                        icon: 'contacts', label: 'Ver Huds', handler: () => {
+                            this.setRouteToParams(['paciente', prestacion.paciente.id]);
+                            this.setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id);
+                        }
+                    };
                 }
             }
         }

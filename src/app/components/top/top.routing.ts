@@ -23,6 +23,7 @@ import { BusquedaPacienteComponent } from './solicitudes/busquedaPaciente.compon
 import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.component';
 import { PrestacionSolicitudComponent } from './solicitudes/prestacionSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
+import { EstadoSolicitudPipe } from './pipes/estado-solicitud.pipe';
 
 export const TOP_ROUTES = [
     { path: '', component: SolicitudesComponent, pathMatch: 'full' },
@@ -58,7 +59,8 @@ export const TOP_ROUTES = [
         AnularSolicitudComponent,
         ReglasComponent,
         ListaReglasComponent,
-        BusquedaPacienteComponent
+        BusquedaPacienteComponent,
+        EstadoSolicitudPipe
     ]
 })
 export class TOPRouting { }
