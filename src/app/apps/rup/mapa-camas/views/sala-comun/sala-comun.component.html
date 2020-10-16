@@ -19,7 +19,7 @@
                 </plex-select>
                 <ng-container *ngIf="organizacion$ | async as organizacion">
                     <plex-select name="sectores" [data]="sectores$ | async" label="Sectores" idField="_id"
-                                 labelField="nombre" [required]="true" [(ngModel)]="salaComun.sectores"
+                                 labelField="nombre + sectorName" [required]="true" [(ngModel)]="salaComun.sectores"
                                  [multiple]="true">
                     </plex-select>
                 </ng-container>
