@@ -2,7 +2,8 @@
     <plex-text label="Diagnóstico/Motivo" multiline="true" autoFocus="1"
                [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
     <plex-text label="Indicaciones" [html]="true" height=100
-               [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones"></plex-text>
+               [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones" *ngIf="afterInit">
+    </plex-text>
 
     <!-- <plex-select [(ngModel)]="registro.valor?.solicitudPrestacion?Prestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
         (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
@@ -28,7 +29,6 @@
         </div>
         <div>
             <span>Indicaciones</span>
-
             <span [innerHTML]="registro.valor.solicitudPrestacion.indicaciones"></span>
         </div>
         <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">

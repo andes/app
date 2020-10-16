@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { RupElement } from '.';
 
@@ -7,11 +7,18 @@ import { RupElement } from '.';
     templateUrl: 'solicitudPrestacionDefault.html'
 })
 @RupElement('SolicitudPrestacionDefaultComponent')
-export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
+export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit, AfterViewInit {
 
     private listaPlanes: any = [];
     public organizaciones: any[] = [];
+    afterInit = false;
     // public puedeAutocitar: Boolean = false;
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.afterInit = true;
+        }, 300);
+    }
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -28,6 +35,8 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 this.organizaciones = reglas.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
             });
         }
+
+
 
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
