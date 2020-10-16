@@ -9,7 +9,6 @@ export class EstadoSolicitudPipe implements PipeTransform {
     constructor(private auth: Auth) { }
     transform(prestacion: IPrestacion): any {
 
-        console.log(prestacion.id);
         if (prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'validada') {
             return 'Turno dado';
         }
@@ -19,7 +18,7 @@ export class EstadoSolicitudPipe implements PipeTransform {
             }
             const esAuditoria = prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada';
             if (esAuditoria) {
-                return 'auditoria';
+                return prestacion.estadoActual.tipo === 'auditoria' ? 'auditoria' : 'rechazada';
             }
             if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === this.auth.profesional) {
                 return 'asignada';
@@ -36,6 +35,9 @@ export class EstadoSolicitudPipe implements PipeTransform {
         }
         if (prestacion.estadoActual.tipo === 'ejecucion') {
             return 'ejecucion';
+        }
+        if (prestacion.estadoActual.tipo === 'rechazada') {
+            return 'rechazada';
         }
 
     }

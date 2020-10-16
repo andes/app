@@ -803,49 +803,4 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    verificarEstado(prestacion, i) {
-        if (prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'validada') {
-            return 'Turno dado';
-        }
-        if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id) {
-            if (this.darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'anulada') {
-                return 'pendiente';
-            }
-            if (this.auditarArrayEntrada[i]) {
-                return 'auditoria';
-            }
-            if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === this.auth.profesional) {
-                return 'asignada';
-            }
-        }
-        if (prestacion.solicitud.organizacion && prestacion.solicitud.organizacion.id !== this.auth.organizacion.id) {
-            return 'referida';
-        }
-        if (prestacion.estadoActual.tipo === 'validada') {
-            return 'validada';
-        }
-        if (prestacion.estadoActual.tipo === 'anulada') {
-            return 'anulada';
-        }
-        if (prestacion.estadoActual.tipo === 'ejecucion') {
-            return 'ejecucion';
-        }
-    }
-
-    mostrar(solicitud, i) {
-        switch (this.verificarEstado(solicitud, i)) {
-            case 'asignada':
-                return true;
-            case 'Turno dado':
-            case 'pendiente':
-            case 'auditoria':
-            case 'anulada':
-            case 'referida':
-            case 'validada':
-            case 'ejecucion':
-                return false;
-            default:
-                return true;
-        }
-    }
 }
