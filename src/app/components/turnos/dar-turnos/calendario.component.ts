@@ -107,7 +107,7 @@ export class CalendarioComponent implements OnInit {
     /** Devuelve las agendas correspondientes a un día determinado */
     public agendasPorFecha(fecha: moment.Moment): IAgenda[] {
         let ags = this.agendas.filter((value) => {
-            return (moment(fecha).isSame(value.horaInicio, 'day'));
+            return (moment(fecha).isSame(moment(value.horaInicio), 'day'));
         });
         return ags;
     }
@@ -133,34 +133,13 @@ export class CalendarioComponent implements OnInit {
 
                     let agendasPorFecha = this.agendasPorFecha(inicio);
                     let ag = null;
-
-                    // if (agendasPorFecha.length > 1) {
-
-                    //     ag = agendasPorFecha[0];
-
-                    //     if (this.agenda) {
-                    //         // Si hay una agenda seleccionada
-                    //         let i = agendasPorFecha.indexOf(this.agenda);
-                    //         if (i >= 0) {
-                    //             ag = agendasPorFecha[i];
-                    //         }
-                    //     }
-                    // }
-
-                    // if (agendasPorFecha.length === 1) {
-                    //     ag = this.agendaPorFecha(inicio);
-                    // }
                     let dia = new CalendarioDia(inicio.toDate(), agendasPorFecha, this._solicitudPrestacion, this.filtroPrestacion, this.filtroProfesional);
-                    // if (dia.estado === 'vacio' && this._solicitudPrestacion) {
+
                     if (dia.estado === 'vacio') {
                         //   dia.cantidadAgendas = 0;
                         dia.estado = 'vacio';
                         dia.agenda = null;
                     }
-                    // else if (dia.turnosDisponibles > 0) {
-                    //     dia.agendasDisponibles.push(dia.agenda);
-                    //     //    dia.cantidadAgendas = agendasPorFecha.length;
-                    // }
 
                     dia.weekend = inicio.isoWeekday() >= 6;
                     let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);

@@ -380,7 +380,11 @@ export class DarTurnosComponent implements OnInit {
                 // Filtrar agendas disponibles o publicadas
                 this.agendas = agendas.filter((data) => {
                     if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
-                        return (data.estado === 'publicada');
+                        if (this._solicitudPrestacion && this.contieneExclusivoGestion(data)) {
+                            return (data.estado === 'disponible' || data.estado === 'publicada');
+                        } else {
+                            return (data.estado === 'publicada');
+                        }
                     } else {
                         if (this._solicitudPrestacion) {
                             return (data.estado === 'disponible' || data.estado === 'publicada');
@@ -422,6 +426,11 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.mostrarCalendario = false;
         }
+    }
+
+    // retorna true si algun bloque de la agenda es exclusivo de gestión
+    contieneExclusivoGestion(agenda: IAgenda): boolean {
+        return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
     }
 
     hayTurnosEnHorario(agenda) {
@@ -527,7 +536,12 @@ export class DarTurnosComponent implements OnInit {
                             });
 
                             if (esAgendaDeHoy) {
-                                this.tiposTurnosSelect = 'delDia';
+                                if (this._solicitudPrestacion && this.contieneExclusivoGestion(this.agenda)) {
+                                    this.tiposTurnosSelect = 'gestion';
+                                    this.estadoT = 'seleccionada';
+                                } else {
+                                    this.tiposTurnosSelect = 'delDia';
+                                }
                                 if (this.agenda.estado === 'publicada') {
                                     this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
                                 }
@@ -599,15 +613,21 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (this.solicitudPrestacion) {
-            // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
-            this.bloques = this.bloques.filter(
-                function (value) {
-                    if (esAgendaDeHoy) {
-                        return (value.restantesDelDia) + (value.restantesProgramados) > 0;
-                    } else {
-                        return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
-                    }
-                });
+            if (!this.contieneExclusivoGestion(this.agenda)) {
+                // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
+                this.bloques = this.bloques.filter(
+                    function (value) {
+                        if (esAgendaDeHoy) {
+                            if (esAgendaDeHoy) {
+                                return (value.restantesDelDia) + (value.restantesProgramados) > 0;
+                            } else {
+                                return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
+                            }
+                        } else {
+                            return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
+                        }
+                    });
+            }
         } else {
             this.bloques = this.bloques.filter(
                 function (value) {

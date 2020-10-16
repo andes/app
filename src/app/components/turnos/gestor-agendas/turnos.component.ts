@@ -35,7 +35,7 @@ export class TurnosComponent implements OnInit {
             // Si la agenda es del día, resto los disponibles que ya pasaron
             if (this.delDia) {
                 let bloque = this.agenda.bloques[i];
-                this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados;
+                this.arrayDelDia[i] = this.contieneExclusivoGestion(this.agenda) ? 0 : bloque.restantesDelDia + bloque.restantesProgramados;
             }
             if (this.agenda.bloques[i].turnos) {
                 this.agenda.bloques[i].turnos.forEach((turno) => {
@@ -152,6 +152,11 @@ export class TurnosComponent implements OnInit {
         this.todos = !this.todos;
         this.cantSel = this.turnosSeleccionados.length;
         this.actualizarBotones();
+    }
+
+    // retorna true si algun bloque de la agenda es exclusivo de gestión
+    contieneExclusivoGestion(agenda: IAgenda): boolean {
+        return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
     }
 
     agendaNoSuspendida() {
