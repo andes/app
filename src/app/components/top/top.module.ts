@@ -1,3 +1,4 @@
+import { FormNuevaSolicitudComponent } from './solicitudes/formNuevaSolicitud.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
@@ -16,6 +17,7 @@ export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
+    FormNuevaSolicitudComponent
 ];
 
 export const TOP_PROVIDERS = [
@@ -40,7 +42,8 @@ export const TOP_PROVIDERS = [
     exports: [
         VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
-        HistorialSolicitudComponent
+        HistorialSolicitudComponent,
+        FormNuevaSolicitudComponent
     ],
 })
 export class TOPLibModule {

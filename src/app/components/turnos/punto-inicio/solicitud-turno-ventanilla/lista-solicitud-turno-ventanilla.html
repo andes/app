@@ -1,13 +1,8 @@
-<fieldset *ngIf="!showCargarSolicitud">
-    <legend>Solicitudes</legend>
-
-    <div class="row">
-        <div class="col-12">
-            <plex-button type="info" label="Cargar Solicitud nueva" (click)="formularioSolicitud()"></plex-button>
-        </div>
-    </div>
-
-    <div class="row">
+<div *ngIf="!showCargarSolicitud">
+    <plex-title main titulo="Solicitudes">
+        <plex-button type="success" label="Cargar Solicitud nueva" (click)="formularioSolicitud()"></plex-button>
+    </plex-title>
+    <div class="row mt-2">
         <div class="col-12">
             <ng-container *ngIf="solicitudesPrestaciones.length > 0; then lista else mensaje"></ng-container>
             <ng-template #lista>
@@ -56,8 +51,7 @@
             </ng-template>
         </div>
     </div>
-
-</fieldset>
+</div>
 <solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente"
                             (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)">
 </solicitud-turno-ventanilla>

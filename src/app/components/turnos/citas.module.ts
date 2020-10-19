@@ -19,7 +19,7 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         RouterModule,
         HttpClientModule,
         SharedModule,
-        DirectiveLibModule
+        DirectiveLibModule,
     ],
     declarations: [
         DarTurnosComponent,
@@ -31,8 +31,7 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         DarTurnosComponent,
         SortBloquesPipe,
         EspacioFisicoPipe,
-        CalendarioComponent,
-
+        CalendarioComponent
     ],
 })
 export class CITASLibModule {
