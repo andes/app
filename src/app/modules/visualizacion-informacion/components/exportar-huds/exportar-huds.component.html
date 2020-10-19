@@ -1,0 +1,86 @@
+<plex-layout [main]='6'>
+    <plex-layout-main>
+        <plex-title *ngIf="!pacienteSelected" titulo="búsqueda de paciente"></plex-title>
+        <div class="row" *ngIf="!pacienteSelected">
+            <div class="col-12">
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                 (searchClear)="onSearchClear()">
+                </paciente-buscar>
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-12">
+                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length && !pacienteSelected"
+                                  [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
+                </paciente-listado>
+            </div>
+        </div>
+        <div *ngIf="showLabel" justify="center" class="h-75">
+            <plex-label icon="arrow-up" type="default" size="xl" direction="column"
+                        titulo='Comience buscando y seleccionando un paciente en la barra superior'>
+            </plex-label>
+        </div>
+        <div *ngIf="modalAccepted">
+            <plex-title titulo="Paciente">
+                <plex-button type="danger btn-sm" icon="flecha-izquierda" (click)="onSearchClear()">
+                </plex-button>
+            </plex-title>
+            <paciente-detalle orientacion="horizontal" *ngIf="pacienteSelected" [paciente]="pacienteSelected"
+                              reload="true">
+            </paciente-detalle>
+            <form #form="ngForm">
+                <plex-title titulo="Filtrar solicitud de exportación">
+                    <plex-button size="sm" type="success" (click)="exportar()"
+                                 [disabled]="(form.invalid || !modalAccepted) && !hudsCompleta">
+                        Generar
+                    </plex-button>
+                </plex-title>
+                <plex-wrapper>
+                    <plex-datetime grow="auto" label="Desde" name="fechaDesde" [(ngModel)]="fechaDesde"
+                                   [disabled]="hudsCompleta" required>
+                    </plex-datetime>
+                    <plex-datetime grow="auto" label="Hasta" name="fechaHasta" [(ngModel)]="fechaHasta"
+                                   [disabled]="hudsCompleta" required>
+                    </plex-datetime>
+                    <plex-bool grow="auto" name="hudsCompleta" [(ngModel)]="hudsCompleta" label="HUDS Completa"
+                               type="slide">
+                    </plex-bool>
+                    <plex-select grow="full" label="Prestaciones" name="prestacion" idField="conceptId"
+                                 [(ngModel)]="prestacion" (getData)="loadConceptosTurneables($event)">>
+                    </plex-select>
+                </plex-wrapper>
+            </form>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar [type]="'invert'">
+        <plex-title titulo="Descargas pendientes">
+            <plex-button tooltip="Actualizar" type="success">
+                <plex-icon prefix="adi" name="reload" (click)="descargasPendientes()"></plex-icon>
+            </plex-button>
+        </plex-title>
+        <plex-list *ngIf="completed.length || pending.length; else noPendientes">
+            <plex-item *ngFor="let pendiente of completed">
+                <plex-label titulo="HUDS-{{pendiente.pacienteNombre}}">
+                </plex-label>
+                <plex-button type="info" size="sm" (click)="exportarHuds(pendiente)">
+                    Descargar
+                </plex-button>
+            </plex-item>
+            <plex-item *ngFor="let pendiente of pending">
+                <plex-label titulo="HUDS-{{pendiente.pacienteNombre}}">
+                </plex-label>
+                <plex-button type="info" size="sm" disabled="true">
+                    En proceso
+                </plex-button>
+            </plex-item>
+        </plex-list>
+        <ng-template #noPendientes>
+            <div justify="center" class="h-75">
+                <plex-label icon="information-variant" type="default" size="xl" direction="column"
+                            titulo='Usted no tiene descargas pendientes'
+                            subtitulo='Si generó un nuevo pedido de exportación, presione el botón ACTUALIZAR '>
+                </plex-label>
+            </div>
+        </ng-template>
+    </plex-layout-sidebar>
+</plex-layout>
