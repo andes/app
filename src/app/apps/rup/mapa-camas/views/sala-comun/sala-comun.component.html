@@ -19,26 +19,12 @@
                 </plex-select>
                 <ng-container *ngIf="organizacion$ | async as organizacion">
                     <plex-select name="sectores" [data]="sectores$ | async" label="Sectores" idField="_id"
-                                 labelField="nombre" [required]="true" [(ngModel)]="salaComun.sectores"
-                                 [multiple]="true">
+                                 labelField="nombre + sectorName" [required]="true" [(ngModel)]="salaComun.sectores"
+                                 (change)="onSectorSelect($event, organizacion)">
                     </plex-select>
                 </ng-container>
 
             </plex-wrapper>
-            <!-- <fieldset>
-                <div class="row">
-                    <div class="col-8">
-                    </div>
-                    <div class="col-4">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                    </div>
-                    <div class="col-6">
-                    </div>
-                </div>
-            </fieldset> -->
         </form>
     </plex-layout-main>
     <plex-layout-sidebar>
