@@ -553,6 +553,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
+
         this.flagValid = true;
         this.rupElements.forEach((item) => {
             let instance = item.rupInstance;
@@ -573,16 +574,26 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 registro.relacionadoCon.forEach((registroRel, key) => {
                     let esRegistro = this.prestacion.ejecucion.registros.find(r => {
                         if (r.id) {
-                            return r.id === registroRel;
+                            return r.id === registroRel.id;
                         } else {
-                            return r.concepto.conceptId === registroRel;
+                            return r.concepto.conceptId === registroRel.concepto.conceptId;
                         }
                     });
                     // Es registro RUP o es un concepto puro?
                     if (esRegistro) {
-                        registro.relacionadoCon[key] = esRegistro;
+                        registro.relacionadoCon[key] = {
+                            id: esRegistro.id,
+                            concepto: {
+                                term: esRegistro.concepto.term
+                            }
+                        };
                     } else {
-                        registro.relacionadoCon[key] = registroRel;
+                        registro.relacionadoCon[key] = {
+                            id: registroRel.id,
+                            concepto: {
+                                term: registroRel.concepto.term
+                            }
+                        };
                     }
                 });
             }
