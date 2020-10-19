@@ -14,6 +14,7 @@ import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
+import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
 
 
 @Injectable()
@@ -57,6 +58,8 @@ export class MapaCamasService {
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
     public fechaActual$: Observable<Date>;
+
+    public columnsMapa = new BehaviorSubject<MapaCamaListadoColumns>({} as any);
 
     public mainView = new BehaviorSubject<any>('mapa-camas');
 
@@ -362,6 +365,19 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            } else if (sortBy === 'fecha') {
+                snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+            } else if (sortBy === 'usuario') {
+                snapshots = snapshots.sort((a, b) => {
+                    const compareApellido = a.createdBy.apellido.localeCompare((b.createdBy.apellido as string));
+                    return (compareApellido !== 0) ? compareApellido : a.createdBy.nombre.localeCompare((b.createdBy.nombre as string));
+                });
+            } else if (sortBy === 'sector') {
+                snapshots = snapshots.sort((a, b) => a.sectores[0].nombre.localeCompare((b.sectores[0].nombre as string)));
+            } else if (sortBy === 'documento') {
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.documento.localeCompare((b.paciente.documento as string)));
+            } else if (sortBy === 'sexo') {
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.sexo.localeCompare((b.paciente.sexo as string)));
             }
         }
 

@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrat
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -21,6 +23,12 @@ export class ItemCamaComponent implements OnChanges {
     canEdit = false;
     canMovimientos = this.auth.check('internacion:movimientos');
 
+    columns$ = this.mapaCamasService.columnsMapa.pipe(
+        map((columns) => {
+            return columns;
+        })
+    );
+
     public equipos = {
         aporteOxigeno: false,
         respirador: false,
@@ -33,7 +41,8 @@ export class ItemCamaComponent implements OnChanges {
 
     constructor(
         public auth: Auth,
-        private router: Router
+        private router: Router,
+        private mapaCamasService: MapaCamasService,
     ) {
     }
 

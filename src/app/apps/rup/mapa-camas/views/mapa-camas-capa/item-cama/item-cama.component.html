@@ -1,61 +1,86 @@
 <ng-container *ngIf="cama">
-    <td>
-        <span class="d-block">
-            <strong>
-                {{cama.nombre}}
-            </strong>
-        </span>
-        <span class="d-block">
-            {{ sectorCama }}
-        </span>
-    </td>
-    <td>
-        <span *ngIf="!cama.paciente" class="d-block">
-            Sin paciente
-        </span>
-        <span *ngIf="cama.paciente" class="d-block">
-            <plex-icon *ngIf="cama.nota" name="documento" [tooltip]="cama.nota" type="info"></plex-icon>
-            {{cama.paciente.apellido}},
-            {{cama.paciente.nombre}}
-        </span>
-        <span class="d-block"></span>
-    </td>
-    <td>
-        <span *ngIf="cama.unidadOrganizativa" class="d-block">
-            {{cama.unidadOrganizativa.term}}
-        </span>
-        <span class="d-block"></span>
-    </td>
-    <td class="d-flex align-items-center">
-        <plex-badge [type]="estadoCama?.color">
-            {{estadoCama?.label}}
-        </plex-badge>
-        <plex-badge *ngIf="cama.sala" type="info" class="ml-1" tooltip="Sala común con varios pacientes">
-            <plex-icon name="paciente-medico"></plex-icon>
-        </plex-badge>
-        <plex-badge *ngIf="equipos.aporteOxigeno" size="sm" type="info" class="ml-1" title="Oxígeno">
-            O<sub>2</sub>
-        </plex-badge>
-        <plex-badge *ngIf="equipos.respirador" size="sm" type="info" class="ml-1" title="Respirador">
-            R
-        </plex-badge>
-        <plex-badge *ngIf="equipos.monitorParamedico" size="sm" type="info" class="ml-1" title="Monitor paramédico">
-            M
-        </plex-badge>
-    </td>
-    <td>
-        <ng-container *ngIf="canMovimientos">
-            <ng-container *ngFor="let relacion of relacionesPosibles">
-                <ng-container
-                              *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
-                              || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
-                    <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
-                                 (click)="accion(relacion, $event)">
-                    </plex-button>
+    <ng-container *ngIf="columns$ | async as columns ">
+        <td *ngIf="columns.fechaMovimiento">
+            <span class="d-block">{{ cama.fecha | fecha }}</span>
+            <span class="d-block">{{ cama.fecha | hora }} hs</span>
+        </td>
+        <td>
+            <span class="d-block">
+                <strong>
+                    {{cama.nombre}}
+                </strong>
+            </span>
+            <span class="d-block">
+                {{ sectorCama }}
+            </span>
+        </td>
+        <td *ngIf="columns.sector">
+            <span>
+                {{cama.sectores | enumerar: ['nombre']}}
+            </span>
+        </td>
+        <td>
+            <span *ngIf="!cama.paciente" class="d-block">
+                Sin paciente
+            </span>
+            <span *ngIf="cama.paciente" class="d-block">
+                <plex-icon *ngIf="cama.nota" name="documento" [tooltip]="cama.nota" type="info"></plex-icon>
+                {{cama.paciente.apellido}},
+                {{cama.paciente.nombre}}
+            </span>
+            <span class="d-block"></span>
+        </td>
+        <td *ngIf="columns.documento">
+            <span>
+                {{(cama.paciente) ? cama.paciente.documento : 'Sin Paciente'}}
+            </span>
+        </td>
+        <td *ngIf="columns.sexo">
+            <span>
+                {{(cama.paciente) ? cama.paciente.sexo : 'Sin Paciente'}}
+            </span>
+        </td>
+        <td>
+            <span *ngIf="cama.unidadOrganizativa" class="d-block">
+                {{cama.unidadOrganizativa.term}}
+            </span>
+            <span class="d-block"></span>
+        </td>
+        <td *ngIf="columns.usuarioMovimiento">
+            <span>
+                {{cama.createdBy | nombre }}
+            </span>
+        </td>
+        <td class="d-flex align-items-center">
+            <plex-badge [type]="estadoCama?.color">
+                {{estadoCama?.label}}
+            </plex-badge>
+            <plex-badge *ngIf="cama.sala" type="info" class="ml-1" tooltip="Sala común con varios pacientes">
+                <plex-icon name="paciente-medico"></plex-icon>
+            </plex-badge>
+            <plex-badge *ngIf="equipos.aporteOxigeno" size="sm" type="info" class="ml-1" title="Oxígeno">
+                O<sub>2</sub>
+            </plex-badge>
+            <plex-badge *ngIf="equipos.respirador" size="sm" type="info" class="ml-1" title="Respirador">
+                R
+            </plex-badge>
+            <plex-badge *ngIf="equipos.monitorParamedico" size="sm" type="info" class="ml-1" title="Monitor paramédico">
+                M
+            </plex-badge>
+        </td>
+        <td>
+            <ng-container *ngIf="canMovimientos">
+                <ng-container *ngFor="let relacion of relacionesPosibles">
+                    <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
+                                  || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
+                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                     size="sm" (click)="accion(relacion, $event)">
+                        </plex-button>
+                    </ng-container>
                 </ng-container>
             </ng-container>
-        </ng-container>
-        <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()" *ngIf="canEdit">
-        </plex-button>
-    </td>
+            <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()" *ngIf="canEdit">
+            </plex-button>
+        </td>
+    </ng-container>
 </ng-container>
