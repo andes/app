@@ -97,7 +97,7 @@ export class CamaDetalleComponent implements OnInit {
         ).pipe(
             map(([cama, historial]) => {
                 if (cama.extras && cama.extras.ingreso) {
-                    return historial.length === 1 && historial[0].extras.ingreso;
+                    return historial.length === 1 && historial[0].extras?.ingreso;
                 } else {
                     return false;
                 }
@@ -167,12 +167,12 @@ export class CamaDetalleComponent implements OnInit {
         this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
             if (resultado) {
                 this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.fecha, cama)
-                .subscribe((internacion) => {
-                    this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
-                    this.mapaCamasService.select(null);
-                    this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
-                    this.cancel.emit();
-                });
+                    .subscribe((internacion) => {
+                        this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
+                        this.mapaCamasService.select(null);
+                        this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
+                        this.cancel.emit();
+                    });
             }
         });
     }

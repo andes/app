@@ -4,8 +4,7 @@
             <plex-title titulo="DATOS DE CAMA">
                 <ng-container *ngIf="canMovimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
-                        <ng-container
-                                      *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
+                        <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
                                       || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
                             <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                          size="sm" (click)="accion(relacion)">
@@ -62,8 +61,9 @@
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
                     <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
-                <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientos">
-                    <plex-button title="Deshacer Internacion" icon="account-off" type="danger" size="sm" (click)="deshacerInternacion(cama)">
+                <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
+                    <plex-button title="Deshacer Internacion" icon="account-off" type="danger" size="sm"
+                                 (click)="deshacerInternacion(cama)">
                     </plex-button>
                 </ng-container>
             </plex-title>
@@ -72,7 +72,7 @@
                 </paciente-detalle>
             </fieldset>
         </ng-container>
-        <ng-container *ngIf="cama.estado === 'ocupada'">
+        <ng-container *ngIf="cama.estado === 'ocupada' && !cama.sala">
             <plex-title titulo="Nota">
                 <plex-button *ngIf="!editNota" size="sm" title="Editar nota" type="warning" icon="documento"
                              (click)="toggleEditNota(true, cama.nota)"></plex-button>
