@@ -283,6 +283,18 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     activarBloque(indice: number) {
         this.bloqueActivo = indice;
         this.elementoActivo = this.modelo.bloques[indice];
+
+        // verificamos si existen bloques inactivos para emitir una alerta
+        this.modelo.bloques.forEach((bloque, index) => {
+            if (!bloque.cantidadTurnos && !bloque.duracionTurno) {
+                if (this.bloqueActivo !== index) {
+                    let alerta = 'Existen bloques incompletos';
+                    if (this.alertas.indexOf(alerta) < 0) {
+                        this.alertas.push(alerta);
+                    }
+                }
+            }
+        });
     }
 
     addBloque() {
@@ -625,7 +637,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.alertas = [];
         let alerta: string;
         let indice: number;
-        let cantidad: number;
         let iniAgenda = null;
         let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
@@ -672,7 +683,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
                 if (bloque.cantidadTurnos && bloque.duracionTurno) {
                     totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
+                } else if (this.bloqueActivo !== index) {
+                    alerta = 'Existen bloques incompletos';
+                    if (this.alertas.indexOf(alerta) < 0) {
+                        this.alertas.push(alerta);
+                    }
                 }
+
                 if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
                     indice = this.alertas.indexOf(alerta);
