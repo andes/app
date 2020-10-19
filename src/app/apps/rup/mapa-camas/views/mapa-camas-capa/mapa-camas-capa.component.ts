@@ -11,6 +11,7 @@ import { take, pluck, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { timer, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -46,7 +47,13 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     mainView;
     subscription: Subscription;
 
-    public columns: any = {};
+    public columns: MapaCamaListadoColumns = {
+        fechaMovimiento: false,
+        documento: false,
+        sexo: false,
+        sector: false,
+        usuarioMovimiento: false,
+    };
 
     public sortBy: string;
     public sortOrder = 'desc';

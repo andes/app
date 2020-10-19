@@ -14,6 +14,7 @@ import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
+import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
 
 
 @Injectable()
@@ -58,7 +59,7 @@ export class MapaCamasService {
 
     public fechaActual$: Observable<Date>;
 
-    public columnsMapa = new BehaviorSubject<any>([]);
+    public columnsMapa = new BehaviorSubject<MapaCamaListadoColumns>({} as any);
 
     public mainView = new BehaviorSubject<any>('mapa-camas');
 
