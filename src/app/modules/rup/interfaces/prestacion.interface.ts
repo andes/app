@@ -66,6 +66,7 @@ export class IPrestacion {
     };
     // Historia de estado de la prestación
     estados: IPrestacionEstado[];
+    estadoActual: IPrestacionEstado;
 
     createdAt: Date;
     updatedAt: Date;
