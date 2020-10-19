@@ -16,9 +16,13 @@ export class EstadoSolicitudPipe implements PipeTransform {
             if (prestacion.estadoActual.tipo === 'pendiente' && prestacion?.paciente && !prestacion.solicitud.turno) {
                 return 'pendiente';
             }
-            const esAuditoria = prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada';
-            if (esAuditoria) {
-                return prestacion.estadoActual.tipo === 'auditoria' ? 'auditoria' : 'rechazada';
+
+            if (prestacion.estadoActual.tipo === 'auditoria') {
+                return prestacion.solicitud.historial.length > 1 ? 'auditoria' : 'auditoria-anulable';
+            }
+
+            if (prestacion.estadoActual.tipo === 'rechazada') {
+                return 'rechazada';
             }
             if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === this.auth.profesional) {
                 return 'asignada';
