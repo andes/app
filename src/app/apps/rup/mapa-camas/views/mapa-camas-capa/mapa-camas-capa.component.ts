@@ -24,18 +24,14 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
+    ambito$: Observable<string>;
     capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
     organizacion: string;
     fecha = moment().toDate();
-    ambito: string;
-    capa: string;
     camas: Observable<any[]>;
     snapshot: ISnapshot[];
-    itemsDropdown = [
-        { label: 'CENSO DIARIO', route: `/internacion/censo/diario` },
-        { label: 'CENSO MENSUAL', route: `/internacion/censo/mensual` },
-    ];
+    itemsCensoDropdown = [];
     estadoRelacion: any;
     estadosCama: any;
     maquinaEstados: IMaquinaEstados;
@@ -89,14 +85,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mapaCamasService.resetView();
-        this.plex.updateTitle([{
-            route: '/inicio',
-            name: 'Andes'
-        }, {
-            name: 'Internacion'
-        }, {
-            name: 'Mapa de Camas'
-        }]);
 
         // CROTADA: si uso ngIf en el layout se rompen los tooltips
         // tengo que averiguar
@@ -105,41 +93,49 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         });
         ////////////////////////////////////////////////////////////////////
 
-        this.capa$ = this.route.params.pipe(
-            take(1),
-            pluck('capa'),
-            tap((capa) => {
-                const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
-                if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
-                    this.capa = capa; // BORRAR
-                    this.mapaCamasService.setAmbito('internacion');
-                    this.mapaCamasService.setCapa(capa);
-                } else {
-                    this.router.navigate(['/inicio']);
-                }
-            })
-        );
-        this.capa$.subscribe();
+        const ambito = this.route.snapshot.paramMap.get('ambito');
+        this.mapaCamasService.setAmbito(ambito);
 
-        this.permisoIngreso = this.auth.check('internacion:ingreso');
-        this.permisoBloqueo = this.auth.check('internacion:bloqueo');
-        this.permisoCenso = this.auth.check('internacion:censo');
+        this.plex.updateTitle([{
+            route: '/inicio',
+            name: 'Andes'
+        }, {
+            name: 'Mapa de Camas'
+        }, {
+            name: ambito
+        }]);
+
+        this.itemsCensoDropdown.push(
+            { label: 'CENSO DIARIO', route: `/mapa-camas/${ambito}/censo/diario` },
+            { label: 'CENSO MENSUAL', route: `/mapa-camas/${ambito}/censo/mensual` },
+        );
 
         if (this.permisoCrearCama) {
             this.itemsCrearDropdown.push(
-                { label: 'CAMA', route: `/internacion/cama` }
+                { label: 'CAMA', route: `/mapa-camas/${ambito}/cama` }
             );
         }
 
         if (this.permisoCrearSala) {
             this.itemsCrearDropdown.push(
-                { label: 'SALA COMUN', route: `/internacion/sala-comun` }
+                { label: 'SALA COMUN', route: `/mapa-camas/${ambito}/sala-comun` }
             );
         }
 
-        this.mapaCamasService.setView('mapa-camas');
+        const capa = this.route.snapshot.paramMap.get('capa');
+        const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+        if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
+            this.mapaCamasService.setCapa(capa);
+        } else {
+            this.router.navigate(['/inicio']);
+        }
 
-        this.ambito = this.mapaCamasService.ambito;
+
+        this.permisoIngreso = this.auth.check('internacion:ingreso');
+        this.permisoBloqueo = this.auth.check('internacion:bloqueo');
+        this.permisoCenso = this.auth.check('internacion:censo');
+
+        this.mapaCamasService.setView('mapa-camas');
 
         this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {
             if (cama.id && !this.accion) {
@@ -169,12 +165,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         );
     }
 
-    agregarCama() {
-        this.router.navigate([`/internacion/cama`]);
-    }
-
     verListadoInternacion() {
-        this.router.navigate([`/internacion/listado-internacion`]);
+        this.router.navigate([`/mapa-camas/listado-internacion`]);
     }
 
     onEdit(accion) {
@@ -230,7 +222,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     gotoListaEspera() {
-        this.router.navigate([`/internacion/${this.ambito}/${this.capa}/lista-espera`]);
+        this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/${this.mapaCamasService.capa}/lista-espera`]);
     }
 
     trackByFn(item: ISnapshot) {

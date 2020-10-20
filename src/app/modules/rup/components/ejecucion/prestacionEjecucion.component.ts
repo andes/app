@@ -597,7 +597,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                     ruteo = ruta;
                 } else {
                     mensaje = 'Mapa de Camas';
-                    ruteo = '/internacion/mapa-camas';
+                    ruteo = '/mapa-camas';
                 }
                 break;
             default:

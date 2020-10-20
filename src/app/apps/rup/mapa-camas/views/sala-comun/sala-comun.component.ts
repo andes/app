@@ -46,6 +46,7 @@ export class SalaComunComponent implements OnInit {
         private location: Location,
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
+        private mapaCamasService: MapaCamasService,
         private salaComunService: SalaComunService,
     ) { }
 
@@ -54,7 +55,7 @@ export class SalaComunComponent implements OnInit {
             route: '/inicio',
             name: 'Andes'
         }, {
-            name: 'Internacion'
+            name: this.mapaCamasService.ambito
         }, {
             name: 'Sala Comun'
         }]);

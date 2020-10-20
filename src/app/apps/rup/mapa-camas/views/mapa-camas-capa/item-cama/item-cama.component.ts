@@ -13,7 +13,6 @@ import { map } from 'rxjs/operators';
 
 export class ItemCamaComponent implements OnChanges {
     @Input() cama: any;
-    @Input() capa: any;
     @Input() permisoIngreso: boolean;
     @Input() permisoBloqueo: boolean;
     @Input() relacionesPosibles: any;
@@ -73,9 +72,9 @@ export class ItemCamaComponent implements OnChanges {
 
     goTo() {
         if (this.cama.sala) {
-            this.router.navigate([`/internacion/sala-comun/${this.cama.id}`]);
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/sala-comun/${this.cama.id}`]);
         } else {
-            this.router.navigate([`/internacion/cama/${this.cama.id}`]);
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${this.cama.id}`]);
         }
     }
 
