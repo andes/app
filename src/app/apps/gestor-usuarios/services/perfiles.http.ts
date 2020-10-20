@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '@andes/shared';
+import { Server, cache } from '@andes/shared';
 import { BehaviorSubject, zip } from 'rxjs';
 import { switchMap, distinctUntilChanged, map, tap,  merge } from 'rxjs/operators';
-import { cache } from '@andes/shared';
 
 let shiroTrie = require('shiro-trie');
 
@@ -51,14 +50,6 @@ export class PerfilesHttp {
                 this.selected.next(perfil);
             })
         );
-    }
-
-    get selectID() {
-        const perfil = this.selected.getValue();
-        if (perfil) {
-            return perfil.id;
-        }
-        return null;
     }
 
     // *****************************************************************
