@@ -111,7 +111,12 @@ export class SalaComunComponent implements OnInit {
     }
 
     onSectorSelect($event, organizacion) {
-        this.salaComun.sectores = this.organizacionService.getRuta(organizacion, $event.value);
+        if ($event.value) {
+            this.salaComun.sectores = this.organizacionService.getRuta(organizacion, $event.value);
+        } else {
+            this.salaComun.sectores = null;
+
+        }
     }
 
     volver() {
