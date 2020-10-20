@@ -54,6 +54,7 @@ import { ItemInconsistenciaComponent } from './views/integridad/item-inconsisten
 import { IntegridadService } from './views/integridad/integridad.service';
 import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
+import { INSidebarOutletComponent } from './views/mapa-camas-capa/sidebar-outlet/sidebar-outlet.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -89,6 +90,7 @@ export const INTERNACION_COMPONENTS = [
     ItemInconsistenciaComponent,
     DetalleIntegridadComponent,
     FiltrosInconsistenciasComponent,
+    INSidebarOutletComponent
 ];
 
 export const INTERNACION_PROVIDERS = [

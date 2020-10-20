@@ -34,7 +34,6 @@ export class CamaDetalleComponent implements OnInit {
 
     @Output() cancel = new EventEmitter<any>();
     @Output() accionCama = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
     public cama: ISnapshot;
@@ -130,10 +129,6 @@ export class CamaDetalleComponent implements OnInit {
 
     onEdit(editar: boolean) {
         this.editar = editar;
-    }
-
-    refrescar(accion) {
-        this.refresh.emit(accion);
     }
 
     // [TODO] Revisar el tema bubble up

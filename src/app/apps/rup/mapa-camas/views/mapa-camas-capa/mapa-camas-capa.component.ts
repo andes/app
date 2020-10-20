@@ -182,11 +182,15 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     selectCama(cama, relacion) {
+        debugger;
         this.mapaCamasService.resetView();
         this.mapaCamasService.select(cama);
         if (relacion) {
-            this.estadoRelacion = relacion;
-            this.accion = relacion.accion;
+            this.router.navigate([relacion.accion], { relativeTo: this.route });
+            // this.estadoRelacion = relacion;
+            // this.accion = relacion.accion;
+        } else {
+            this.router.navigate(['verDetalle'], { relativeTo: this.route });
         }
     }
 
@@ -197,13 +201,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         } else {
             this.accion = accion.egresar;
         }
-    }
-
-    refresh(accion) {
-        let i = this.snapshot.findIndex((snap: ISnapshot) => snap.idCama === accion.cama._id);
-        this.snapshot[i] = accion.cama;
-        this.camas = Observable.of(this.snapshot);
-        this.volverAResumen();
     }
 
     volverAResumen() {
@@ -222,11 +219,16 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
         if (!selectedCama.id || cama !== selectedCama) {
             this.mapaCamasService.select(cama);
-            this.accion = 'verDetalle';
+            this.router.navigate(['verDetalle'], { relativeTo: this.route });
         } else {
-            this.accion = null;
             this.mapaCamasService.select(null);
+            this.router.navigate(['..'], { relativeTo: this.route });
+
         }
+    }
+
+    gotoFiltros() {
+        this.router.navigate(['filtros'], { relativeTo: this.route });
     }
 
     gotoListaEspera() {

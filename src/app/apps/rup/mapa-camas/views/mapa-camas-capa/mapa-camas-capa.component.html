@@ -1,4 +1,4 @@
-<plex-layout main="8">
+<plex-layout [aspect]="8">
     <plex-layout-main>
         <header [hidden]="mainView !== 'mapa-camas'">
             <plex-title titulo="Mapa de Camas">
@@ -11,9 +11,12 @@
                 <plex-dropdown *ngIf="capa === 'estadistica' && permisoCenso" size="sm" label="VER CENSO" type="primary"
                                class="d-inline-block" [right]="true" [items]="itemsDropdown">
                 </plex-dropdown>
+                <plex-button class=".d-block .d-sm-none" size="sm" type="primary" (click)="gotoFiltros()">
+                    <plex-icon name="table-search"></plex-icon>
+                </plex-button>
             </plex-title>
 
-            <app-filtros-camas></app-filtros-camas>
+            <app-filtros-camas class="d-none d-sm-block"></app-filtros-camas>
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
                 <plex-button *ngIf="permisoIngreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
@@ -24,11 +27,14 @@
                 </plex-dropdown>
                 <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true">
                     <plex-grid cols="3">
-                        <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento" (change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Sector" [(ngModel)]="columns.sector"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Documento" [(ngModel)]="columns.documento"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Sexo" [(ngModel)]="columns.sexo"(change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
+                                   (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"
+                                   (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Sector" [(ngModel)]="columns.sector" (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
+                        </plex-bool>
+                        <plex-bool label="Sexo" [(ngModel)]="columns.sexo" (change)="toggleColumns()"></plex-bool>
                     </plex-grid>
                 </plex-dropdown>
             </plex-title>
@@ -126,7 +132,8 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
+        <router-outlet></router-outlet>
+        <!-- <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
 
         <app-ingreso-paciente-workflow *ngIf="accion === 'internarPaciente'" (cancel)="volverADetalle()"
                                        (save)="volverAResumen()">
@@ -151,12 +158,12 @@
         </app-cama-destino-generico>
         <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
             <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()"
-                              (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
+                              (accionCama)="selectCama(selectedCama, $event)">
             </app-cama-detalle>
         </ng-container>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
-        </app-nuevo-registro-salud>
+        </app-nuevo-registro-salud> -->
     </plex-layout-sidebar>
 </plex-layout>

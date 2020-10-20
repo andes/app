@@ -1,4 +1,4 @@
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
@@ -9,11 +9,18 @@ import { InternacionListadoComponent } from './views/listado-internacion/listado
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { IntegridadCamasComponent } from './views/integridad/integridad-camas.component';
+import { INSidebarOutletComponent } from './views/mapa-camas-capa/sidebar-outlet/sidebar-outlet.component';
 
-export const INTERNACION_ROUTES = [
+export const INTERNACION_ROUTES: Routes = [
     { path: 'mapa-camas', component: MapaCamasMainComponent },
 
-    { path: 'mapa-camas/:capa', component: MapaCamasCapaComponent },
+    {
+        path: 'mapa-camas/:capa',
+        component: MapaCamasCapaComponent,
+        children: [
+            { path: ':action', component: INSidebarOutletComponent }
+        ]
+    },
 
     { path: 'cama/:id', component: CamaMainComponent },
 

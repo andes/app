@@ -1,0 +1,38 @@
+<ng-container *ngIf="action$ | async as action">
+    <app-estado-servicio *ngIf="!action"></app-estado-servicio>
+
+    <app-ingreso-paciente-workflow *ngIf="action === 'internarPaciente'" (cancel)="volverADetalle()"
+                                   (save)="volverAResumen()">
+    </app-ingreso-paciente-workflow>
+    <app-desocupar-cama *ngIf="action === 'desocuparCama'" (accionDesocupar)="accionDesocupar($event)">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+        </plex-button>
+    </app-desocupar-cama>
+    <app-cambiar-cama *ngIf="action === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+        </plex-button>
+    </app-cambiar-cama>
+    <app-egresar-paciente *ngIf="action === 'egresarPaciente'" (onSave)="volverAResumen()" (cancel)="volverAResumen()">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()">
+        </plex-button>
+    </app-egresar-paciente>
+    <app-cama-destino-generico *ngIf="action === 'accionGenerica'" [relacion]="relacion$ | async"
+                               (onSave)="volverAResumen()">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+        </plex-button>
+    </app-cama-destino-generico>
+    <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+        <app-cama-detalle *ngIf="action === 'verDetalle'" (cancel)="volverAResumen()"
+                          (accionCama)="selectCama(selectedCama, $event)">
+        </app-cama-detalle>
+    </ng-container>
+    <app-nuevo-registro-salud *ngIf="action === 'nuevo-registro'">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+        </plex-button>
+    </app-nuevo-registro-salud>
+    <ng-container *ngIf="action === 'filtros'">
+        <plex-title titulo="Filtros"></plex-title>
+        <app-filtros-camas></app-filtros-camas>
+        <plex-button label="Buscar" type="info" (click)="bakc()" size="block"></plex-button>
+    </ng-container>
+</ng-container>
