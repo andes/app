@@ -92,7 +92,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
-        this.permisosMapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
             route: '/inicio',
