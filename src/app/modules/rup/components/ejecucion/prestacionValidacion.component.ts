@@ -17,6 +17,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
+
 @Component({
     selector: 'rup-prestacionValidacion',
     templateUrl: 'prestacionValidacion.html',
@@ -252,9 +253,9 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                         registro.relacionadoCon.forEach((registroRel, key) => {
                             let esRegistro = this.prestacion.ejecucion.registros.find(r => {
                                 if (r.id) {
-                                    return r.id === registroRel;
+                                    return r.id === registroRel.id;
                                 } else {
-                                    return r.concepto.conceptId === registroRel;
+                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
                                 }
                             });
                             // Es registro RUP o es un concepto puro?
@@ -302,15 +303,34 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 return false;
             } else {
                 let seCreoSolicitud = false;
-                let registros = this.prestacion.ejecucion.registros;
+                this.prestacion.ejecucion.registros.forEach(registro => {
 
+                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        registro.relacionadoCon.forEach((registroRel, key) => {
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                                if (r.id) {
+                                    return r.id === registroRel.id;
+                                } else {
+                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
+                                }
+                            });
+                            // Es registro RUP o es un concepto puro?
+                            if (esRegistro) {
+                                registro.relacionadoCon[key] = { id: esRegistro.id };
+                            } else {
+                                registro.relacionadoCon[key] = { id: registroRel.id };
+                            }
+                        });
+                    }
+                });
+                // console.log(this.prestacion);
                 this.servicioPrestacion.validarPrestacion(this.prestacion).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     let recorrerRegistros = registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
+                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0].id === 'string')) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel.id);
                                 });
                             }
                         }

@@ -274,7 +274,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon.forEach((registroRel, key) => {
-                        let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
+                        let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel.id);
                         // Es registro RUP o es un concepto puro?
                         if (esRegistro) {
                             registro.relacionadoCon[key] = esRegistro;
@@ -288,6 +288,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
             this.armarRelaciones(this.prestacion.ejecucion.registros);
         }
+
     }
 
     /**
@@ -581,19 +582,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                     });
                     // Es registro RUP o es un concepto puro?
                     if (esRegistro) {
-                        registro.relacionadoCon[key] = {
-                            id: esRegistro.id,
-                            concepto: {
-                                term: esRegistro.concepto.term
-                            }
-                        };
+                        registro.relacionadoCon[key] = { id: esRegistro.id };
                     } else {
-                        registro.relacionadoCon[key] = {
-                            id: registroRel.id,
-                            concepto: {
-                                term: registroRel.concepto.term
-                            }
-                        };
+                        registro.relacionadoCon[key] = { id: registroRel.id };
                     }
                 });
             }
