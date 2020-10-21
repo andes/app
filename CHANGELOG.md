@@ -1,3 +1,32 @@
+# [5.18.0](https://github.com/andes/app/compare/v5.17.0...v5.18.0) (2020-10-21)
+
+
+### Bug Fixes
+
+* **com:** limpiar sidebars al cambiar de derivacion ([#1953](https://github.com/andes/app/issues/1953)) ([4f0da19](https://github.com/andes/app/commit/4f0da19efe684646a068ef02863ee52686cb464c))
+* **com:** permitir al com cancelar sus derivaciones solicitadas ([#1955](https://github.com/andes/app/issues/1955)) ([4f750f8](https://github.com/andes/app/commit/4f750f87158350c382611bf43aafea2c17760777))
+* **GDU:** ExpressionChangedAfterItHasBeenCheckedError perfiles ([#1948](https://github.com/andes/app/issues/1948)) ([62c2b06](https://github.com/andes/app/commit/62c2b06691ef686fec506283c8bdcea91e4cdb4c))
+* **mapa-camas:** handle null al borrar sector ([#1974](https://github.com/andes/app/issues/1974)) ([2390ee8](https://github.com/andes/app/commit/2390ee831c66ae2ae48504855fe259096a57e4ed))
+* **rup:** solicitudes pierde el formato ([#1957](https://github.com/andes/app/issues/1957)) ([f7129e3](https://github.com/andes/app/commit/f7129e30f432a9f1a838d0be239b895294c59737))
+
+
+### Features
+
+* **CITAS:** Habilita turnos de gestion en agendas del dia ([#1932](https://github.com/andes/app/issues/1932)) ([4c6dc5a](https://github.com/andes/app/commit/4c6dc5a1d9cc3649cd878284f991dfb37dc97bdd))
+* **com:** marcar derivación seleccionada en plex-list ([#1975](https://github.com/andes/app/issues/1975)) ([981daa8](https://github.com/andes/app/commit/981daa848ac3ffd46e9d22099db5e6e134b24ba9))
+* **com:** se suma fecha de creación/actualización a listado derivaciones ([#1959](https://github.com/andes/app/issues/1959)) ([1af2284](https://github.com/andes/app/commit/1af228401a074a9552b30e7b45562d3f6028d917))
+* **mapa-camas:** agrega sector completo al abm de sala común ([#1963](https://github.com/andes/app/issues/1963)) ([43f3e07](https://github.com/andes/app/commit/43f3e074297270c8d89f792bea8294c857ec913b))
+* **mapa-camas:** columnas dinamicas ([#1949](https://github.com/andes/app/issues/1949)) ([a0b9dce](https://github.com/andes/app/commit/a0b9dce73a30ec95570d36b93bda26dae614c41f))
+* **mapa-camas:** componente de inconsistencias de camas ([#1746](https://github.com/andes/app/issues/1746)) ([a2232e3](https://github.com/andes/app/commit/a2232e3fee37d8e71ea714eab8eeb40238062248))
+* **mapa-camas:** control historial de cama al egresar ([#1880](https://github.com/andes/app/issues/1880)) ([7b6c74e](https://github.com/andes/app/commit/7b6c74eed992f476a480e13e87a6fe008a948c42))
+* **mapa-camas:** deshacer internación  ([#1945](https://github.com/andes/app/issues/1945)) ([67ea6a4](https://github.com/andes/app/commit/67ea6a44dfad887be4c2892a121e4b592fe967df))
+
+
+### Performance Improvements
+
+* **huds:** quita sort inecesario ([#1952](https://github.com/andes/app/issues/1952)) ([55ae989](https://github.com/andes/app/commit/55ae9891c1ba5752ffafe2e3e91116be05c0d0d7))
+* **top:** evita calcular estado todo el tiempo ([#1962](https://github.com/andes/app/issues/1962)) ([3b358ae](https://github.com/andes/app/commit/3b358ae9894a4c21588c65495e785de58e739635))
+
 # [5.17.0](https://github.com/andes/app/compare/v5.16.0...v5.17.0) (2020-10-14)
 
 
