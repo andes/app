@@ -9,7 +9,7 @@
                              label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
                              (click)="validarPaciente()">
                 </plex-button>
-                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
+                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni')"
                              label="Buscar paciente federado" type="info" position="right" (click)="pacienteFederado()">
                 </plex-button>
                 <plex-button *ngIf="showDeshacer" label="Deshacer Validación" type="warning" position="right"

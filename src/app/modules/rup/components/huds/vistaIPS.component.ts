@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation, Input } from '@angular/core';
 import { DominiosNacionalesService } from './../../services/dominiosNacionales.service';
-// import { environment } from '../../../../../environments/environment';
 
 @Component({
     selector: 'vista-ips',
@@ -10,17 +9,28 @@ import { DominiosNacionalesService } from './../../services/dominiosNacionales.s
 
 export class VistaIPSComponent implements OnInit {
     @Input() registro: any = {};
-    public ips = null;
+    public ips = {
+        title: '',
+        custodian: '',
+        entry: []
+    }
     constructor(public domNacional: DominiosNacionalesService) { }
 
     ngOnInit() {
     this.domNacional.getDocumentos(this.registro.params).subscribe(result => {
-        this.ips = {
-            title: result[0].title,
-            custodian : result[0].custodian.reference,
-            sections : result[0].section
+        if (result && result.resourceType) {
+            this.ips = {
+                title: result.id,
+                custodian : this.registro.params.custodian,
+                entry : result.entry
+            }
+        } else {
+            this.ips = {
+                title: 'No existen registros',
+                custodian: '',
+                entry: []
+            }
         }
-        debugger;
     });
     }
 

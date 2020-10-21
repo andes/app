@@ -4,7 +4,7 @@
             <div class="columna">
                 <div class="concepto prestacion-offset">
                     <h4 *ngIf="ips.title">
-                        {{ ips.title }}
+                        Registros de dominio {{ ips.custodian }}
                     </h4>
                 </div>
                 <div class="divisor">
@@ -19,19 +19,74 @@
                             <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
                                         8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
                         </svg>
-                        <h5 class="ml-1 text-primary evoluciones">Registros</h5>
+                        <h5 class="ml-1 text-primary evoluciones">Registros: {{ ips.title }}</h5>
                         
                     </div>
                     <div class="justify-content-end nav-fecha d-flex align-items-end">
                     </div>
                 </div>
-                <div>Custodio: {{ ips.custodian }}</div>
-                <ng-container *ngFor="let section of ips.sections">
-                    <div>Sección: {{section.title}}</div>
-                    <small>{{section.code.coding[0].system}}</small>
-                    <small>{{section.code.coding[0].code}}</small>
-                    <div>{{section.code.coding[0].display}}</div>
-                </ng-container>            
+                <!-- Template a mejorar-->
+                <div *ngIf="ips.entry.length > 0">
+                <ng-container *ngFor="let e of ips.entry">
+                    <div *ngIf="e.resource.resourceType == 'Composition'">
+                        <plex-title titulo="Composition"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                                <plex-label titulo="Titulo" subtitulo="{{e.resource.title}}"></plex-label>
+                                <plex-label titulo="Fecha del registro generado" subtitulo="{{e.resource.date |  date}}"></plex-label>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'Patient'">
+                        <plex-title titulo="Paciente"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                                <plex-label titulo="Nombre" subtitulo="{{e.resource.name[0].family}} {{e.resource.name[0].given}}"></plex-label>
+                                <plex-label titulo="Fecha Nacimiento" subtitulo="{{e.resource.birthDate |  date}}"></plex-label>
+                                <plex-label titulo="Género" subtitulo="{{e.resource.gender}}"></plex-label>
+                                <div *ngFor="let r of e.resource.identifier ">
+                                    <plex-label titulo="Fuente" subtitulo="{{r.system}} | {{r.value}}"></plex-label>
+                                </div>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'Device'">
+                        <plex-title titulo="Dispositivo"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                                <plex-label titulo="Identificado" subtitulo="{{e.resource.id}}"></plex-label>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'Condition'">
+                        <plex-title titulo="Condition"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                        <div *ngFor="let r of e.resource.code.coding ">    
+                            <plex-label titulo="Snomed" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
+                        </div>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'AllergyIntolerance'">
+                        <plex-title titulo="Alergias e Intolerancias"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                            <div *ngFor="let r of e.resource.code.coding ">
+                                <plex-label titulo="Snomed" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
+                            </div>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'MedicationStatement'">
+                        <plex-title titulo="Medicamentos"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                                <plex-label titulo="Fecha" subtitulo="{{e.resource.effectiveDateTime | date}}"></plex-label>
+                                <plex-label titulo="Estado" subtitulo="{{e.resource.status}}"></plex-label>
+                                <plex-label titulo="Descripcion" subtitulo="{{e.resource.text.div}}"></plex-label>
+                                <div *ngFor="let r of e.resource.medicationCodeableConcept.coding ">
+                                    <plex-label titulo="Medicamento" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
+                                </div>
+                    </div>
+                    <div *ngIf="e.resource.resourceType == 'Immunization'">
+                        <plex-title titulo="Vacunas"></plex-title>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
+                                <plex-label titulo="Fecha" subtitulo="{{e.resource.occurrenceDateTime | date}}"></plex-label>
+                                <plex-label titulo="Estado" subtitulo="{{e.resource.status}}"></plex-label>
+                                <div *ngFor="let r of e.resource.vaccineCode.coding ">
+                                    <plex-label titulo="Vacuna(s)" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
+                                </div>
+                                <div *ngFor="let p of e.resource.protocolApplied ">
+                                    <plex-label titulo="Esquema" subtitulo="{{p.doseNumberPositiveInt}} | {{p.series}}"></plex-label>
+                                </div>
+                    </div>
+                </ng-container>    
+            </div>        
             </div>
         </ng-container>
     </div>
