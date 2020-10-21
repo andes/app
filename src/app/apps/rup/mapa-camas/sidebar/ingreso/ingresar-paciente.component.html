@@ -1,3 +1,4 @@
+
 <form #formIngreso="ngForm">
     <ng-container *ngIf="paciente">
         <plex-title justify titulo="INGRESO">
@@ -6,149 +7,99 @@
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
-        <fieldset>
-            <ng-container>
-                <fieldset>
-                    <fieldset>
-                        <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-                        <div class="row" *ngIf="capa === 'estadistica'">
-                            <div class="col">
-                                <br>
-                                <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
-                                                  (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
-                                </carpeta-paciente>
-                                <br>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN"></plex-title>
-                    <fieldset>
-                        <div class="row">
-                            <div class="col-md">
-                                <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
-                                               name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async"
-                                               required label="Fecha Ingreso" [debounce]="600" (change)="setFecha()">
-                                </plex-datetime>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md">
-                                <ng-container *ngIf="camas$ | async as camas">
-                                    <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama"
-                                                 [data]="camas" placeholder="Elija cama" label="Cama" idField="id"
-                                                 labelField="nombre + '(' + sectorName + ')'"
-                                                 (change)="selectCama(cama)">
-                                    </plex-select>
-                                </ng-container>
-                                <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama"
-                                           name="cama" [(ngModel)]="cama.nombre">
-                                </plex-text>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <ng-container *ngIf="capa === 'estadistica'">
-                        <div class="row">
-                            <div class="col-md">
-                                <plex-select [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
-                                             [data]="origenHospitalizacion" placeholder="Seleccione..."
-                                             label="Origen hospitalización" idField="nombre" labelField="nombre"
-                                             (change)="changeOrigenHospitalizacion($event)">
-                                </plex-select>
-                            </div>
-                            <div class="col-md">
-                                <plex-select label="Profesional" [(ngModel)]="informeIngreso.profesional"
-                                             name="profesional" (getData)="loadProfesionales($event)" [required]="true"
-                                             labelField="apellido+' '+nombre">
-                                </plex-select>
-
-                            </div>
-                        </div>
-
-                        <div class="row" *ngIf="origenExterno">
-                            <div class="col-md">
-                                <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="check"
-                                           (change)="onchange($event)">
-                                </plex-bool>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="origenExterno">
-                            <div class="col-md" *ngIf="!check">
-                                <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
-                                             (getData)="loadOrganizacion($event)" label="Organización origen"
-                                             placeholder="Seleccione la organización" labelField="nombre"
-                                             [required]="true">
-                                </plex-select>
-                            </div>
-                            <div class="col-md" *ngIf="check">
-                                <plex-text label="Otro" name="otraOrganizacion"
-                                           [(ngModel)]="informeIngreso.organizacionOrigen" [required]="true">
-                                </plex-text>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md">
-                                <plex-text label="Motivo de Internación" name="motivo"
-                                           [(ngModel)]="informeIngreso.motivo">
-                                </plex-text>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md">
-                                <plex-select name="especialidad" [required]="true"
-                                             [snomedExpression]="expr.Especialidades" [preload]="false"
-                                             [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
-                                             label="Especialidad/es">
-                                </plex-select>
-                            </div>
-                        </div>
-                    </ng-container>
-                </fieldset>
-                <ng-container *ngIf="capa === 'estadistica'">
-                    <fieldset>
-                        <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
-                        <div class="row">
-                            <div class="col-md">
-                                <plex-select *ngIf="!informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado"
-                                             name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... "
-                                             label="Cobertura" idField="nombre" labelField="nombre">
-                                </plex-select>
-                                <plex-text *ngIf="informeIngreso.obraSocial"
-                                           [(ngModel)]="informeIngreso.obraSocial.nombre" label="Obra Social"
-                                           name="obraSocial" [readonly]="true"></plex-text>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-
-                        <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
-                        <div class="row">
-                            <div class="col-6" *ngIf="situacionesLaborales">
-                                <plex-select label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
-                                             name="situacionLaboral" [data]="situacionesLaborales"
-                                             placeholder="Seleccione... " labelField="nombre">
-                                </plex-select>
-                            </div>
-                            <div class="col-6 ">
-                                <plex-select label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
-                                             name="ocupacionHabitual" (getData)="getOcupaciones($event)"
-                                             placeholder="Seleccione... " labelField="'(' + codigo + ') ' + nombre">
-                                </plex-select>
-
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <plex-select [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
-                                             [data]="nivelesInstruccion" placeholder="Seleccione..."
-                                             label="Nivel instrucción" idField="nombre" labelField="nombre">
-                                </plex-select>
-                            </div>
-                        </div>
-                    </fieldset>
-                </ng-container>
-
+        <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
+        <ng-container *ngIf="capa === 'estadistica'">
+            <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
+                              (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
+            </carpeta-paciente>
+        </ng-container>
+        <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN"></plex-title>
+        <plex-wrapper>
+            <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
+                           name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required
+                           label="Fecha Ingreso" [debounce]="600" (change)="setFecha()">
+            </plex-datetime>
+            <ng-container *ngIf="camas$ | async as camas">
+                <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama" [data]="camas"
+                             placeholder="Elija cama" label="Cama" idField="id"
+                             labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)">
+                </plex-select>
             </ng-container>
-        </fieldset>
+            <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama" name="cama"
+                       [(ngModel)]="cama.nombre">
+            </plex-text>
+        </plex-wrapper>
+
+        <plex-wrapper>
+            <ng-container *ngIf="capa === 'estadistica'">
+                <plex-select grow="2" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
+                             [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
+                             idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
+                </plex-select>
+
+                <plex-select grow="2" label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional"
+                             (getData)="loadProfesionales($event)" [required]="true" labelField="apellido+' '+nombre">
+                </plex-select>
+
+                <ng-container *ngIf="origenExterno">
+                    <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="check" (change)="onchange($event)">
+                    </plex-bool>
+                </ng-container>
+                <ng-container *ngIf="origenExterno">
+                    <ng-container *ngIf="!check">
+                        <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
+                                     (getData)="loadOrganizacion($event)" label="Organización origen"
+                                     placeholder="Seleccione la organización" labelField="nombre" [required]="true">
+                        </plex-select>
+                        <ng-container *ngIf="check">
+                            <plex-text label="Otro" name="otraOrganizacion"
+                                       [(ngModel)]="informeIngreso.organizacionOrigen" [required]="true">
+                            </plex-text>
+                        </ng-container>
+
+                        <plex-text label="Motivo de Internación" name="motivo" [(ngModel)]="informeIngreso.motivo">
+                        </plex-text>
+
+
+                        <plex-select name="especialidad" [required]="true" [snomedExpression]="expr.Especialidades"
+                                     [preload]="false" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
+                                     label="Especialidad/es">
+                        </plex-select>
+
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </plex-wrapper>
+        <ng-container *ngIf="capa === 'estadistica'">
+            <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
+            <plex-wrapper>
+                <plex-select *ngIf="!informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado" name="asociado"
+                             [data]="pacienteAsociado" placeholder="Seleccione... " label="Cobertura" idField="nombre"
+                             labelField="nombre">
+                </plex-select>
+                <plex-text *ngIf="informeIngreso.obraSocial" [(ngModel)]="informeIngreso.obraSocial.nombre"
+                           label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
+            </plex-wrapper>
+            <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
+            <plex-wrapper>
+                <ng-container *ngIf="situacionesLaborales">
+                    <plex-select label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
+                                 name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... "
+                                 labelField="nombre">
+                    </plex-select>
+                </ng-container>
+                <ng-container>
+                    <plex-select label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
+                                 name="ocupacionHabitual" (getData)="getOcupaciones($event)"
+                                 placeholder="Seleccione... " labelField="'(' + codigo + ') ' + nombre">
+                    </plex-select>
+
+                </ng-container>
+                <plex-select [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
+                             [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción"
+                             idField="nombre" labelField="nombre">
+                </plex-select>
+            </plex-wrapper>
+        </ng-container>
     </ng-container>
 </form>
