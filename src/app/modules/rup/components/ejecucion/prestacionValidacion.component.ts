@@ -542,7 +542,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         }
     }
 
-    registroAuxDeTipo(registro, tipos: any[], tipo: any = null) {
+    esRegistroDeTipo(registro, tipos: any[], tipo: any = null) {
         if (registro.id) {
             if (!tipo) {
                 return tipos.find(y => (!registro.esSolicitud && y === registro.concepto.semanticTag));
