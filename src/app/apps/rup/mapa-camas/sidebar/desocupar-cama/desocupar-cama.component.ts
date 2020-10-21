@@ -6,7 +6,6 @@ import { switchMap, map, switchMapTo } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
-
 @Component({
     selector: 'app-desocupar-cama',
     templateUrl: 'desocupar-cama.component.html'
@@ -43,6 +42,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public movimientoEgreso$: Observable<ISnapshot>;
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
+    public camaOcupada$: Observable<Boolean>;
     public view$ = this.mapaCamasService.view;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
@@ -89,6 +89,16 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         ).pipe(
             map(([fechaElegida, fechaMinima]) => {
                 return moment(fechaElegida).isBefore(moment(fechaMinima));
+            })
+        );
+
+        this.camaOcupada$ = combineLatest(
+            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.snapshot$,
+        ).pipe(
+            map(([selectedCama, snapshots]) => {
+                const cama = snapshots.find( snap => snap.idCama === selectedCama.idCama);
+                return cama.estado !== 'ocupada';
             })
         );
 

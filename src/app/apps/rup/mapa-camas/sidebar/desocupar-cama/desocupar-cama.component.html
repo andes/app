@@ -19,9 +19,14 @@
             </div>
             <fieldset>
                 <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
-                    <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientosAt; else puedeEgresarDefinitivo">
+                    <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientosAt; else checkOcupada">
                         Hay movimientos posteriores a la fecha ingresada
                     </ng-container>
+                    <ng-template #checkOcupada>
+                        <ng-container *ngIf="camaOcupada$ | async as camaOcupada; else puedeEgresarDefinitivo">
+                            La cama actualmente no está ocupada.
+                        </ng-container>
+                    </ng-template>
                     <ng-template #puedeEgresarDefinitivo>
                         <plex-button label="Cambiar de cama" type="primary" size="block"
                                      title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
