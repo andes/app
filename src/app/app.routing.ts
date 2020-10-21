@@ -1,5 +1,3 @@
-import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
-
 // Angular
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
@@ -94,7 +92,6 @@ const appRoutes: Routes = [
     { path: 'citas/revision_agenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     {
         path: 'rup',

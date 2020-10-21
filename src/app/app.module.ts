@@ -1,4 +1,3 @@
-import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -310,7 +309,6 @@ registerLocaleData(localeEs, 'es');
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
-        AgregarPacienteComponent,
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         PermisosComponent,
