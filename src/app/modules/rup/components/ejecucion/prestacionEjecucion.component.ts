@@ -274,10 +274,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon.forEach((registroRel, key) => {
-                        let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel.id);
+                        let registroAux = this.prestacion.ejecucion.registros.find(r => r.id === registroRel.id);
                         // Es registro RUP o es un concepto puro?
-                        if (esRegistro) {
-                            registro.relacionadoCon[key] = esRegistro;
+                        if (registroAux) {
+                            registro.relacionadoCon[key] = registroAux;
                         } else {
                             registro.relacionadoCon[key] = registroRel;
                         }
@@ -573,7 +573,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon.forEach((registroRel, key) => {
-                    let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                    let registroAux = this.prestacion.ejecucion.registros.find(r => {
                         if (r.id) {
                             return r.id === registroRel.id;
                         } else {
@@ -581,8 +581,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                         }
                     });
                     // Es registro RUP o es un concepto puro?
-                    if (esRegistro) {
-                        registro.relacionadoCon[key] = { id: esRegistro.id };
+                    if (registroAux) {
+                        registro.relacionadoCon[key] = { id: registroAux.id };
                     } else {
                         registro.relacionadoCon[key] = { id: registroRel.id };
                     }

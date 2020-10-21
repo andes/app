@@ -251,7 +251,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                         registro.relacionadoCon.forEach((registroRel, key) => {
-                            let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
                                 if (r.id) {
                                     return r.id === registroRel.id;
                                 } else {
@@ -259,8 +259,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                                 }
                             });
                             // Es registro RUP o es un concepto puro?
-                            if (esRegistro) {
-                                registro.relacionadoCon[key] = esRegistro;
+                            if (registroAux) {
+                                registro.relacionadoCon[key] = registroAux;
                             } else {
                                 registro.relacionadoCon[key] = registroRel;
                             }
@@ -307,7 +307,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                         registro.relacionadoCon.forEach((registroRel, key) => {
-                            let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
                                 if (r.id) {
                                     return r.id === registroRel.id;
                                 } else {
@@ -315,8 +315,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                                 }
                             });
                             // Es registro RUP o es un concepto puro?
-                            if (esRegistro) {
-                                registro.relacionadoCon[key] = { id: esRegistro.id };
+                            if (registroAux) {
+                                registro.relacionadoCon[key] = { id: registroAux.id };
                             } else {
                                 registro.relacionadoCon[key] = { id: registroRel.id };
                             }
@@ -542,7 +542,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         }
     }
 
-    esRegistroDeTipo(registro, tipos: any[], tipo: any = null) {
+    registroAuxDeTipo(registro, tipos: any[], tipo: any = null) {
         if (registro.id) {
             if (!tipo) {
                 return tipos.find(y => (!registro.esSolicitud && y === registro.concepto.semanticTag));
