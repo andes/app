@@ -1,0 +1,20 @@
+<plex-wrapper>
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaOrigenDesde" name='fechaOrigenDesde' label="Origen desde"
+                    (change)="filtrar()" [max]="filtros.fechaOrigenHasta" [debounce]="600">
+    </plex-datetime>
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaOrigenHasta" name='fechaOrigenHasta' label="Origen hasta"
+                    (change)="filtrar()" [min]="filtros.fechaOrigenDesde" [debounce]="600">
+    </plex-datetime>
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaDestinoDesde" name='fechaDestinoDesde' label="Destino desde"
+                    (change)="filtrar()" [max]="filtros.fechaDestinoHasta" [debounce]="600">
+    </plex-datetime>
+    <plex-datetime type="date" [(ngModel)]="filtros.fechaDestinoHasta" name='fechaDestinoHasta' label="Destino hasta"
+                    (change)="filtrar()" [min]="filtros.fechaDestinoDesde" [debounce]="600">
+    </plex-datetime>
+    <plex-select label="Sector" [(ngModel)]="filtros.sector" idField="nombre" labelField="nombre"
+                 [data]="sectorList$ | async" (change)="filtrar()">
+    </plex-select>
+    <plex-select label="Cama" [(ngModel)]="filtros.cama" idField="nombre" labelField="nombre"
+                 [data]="camaList$ | async" (change)="filtrar()">
+    </plex-select>
+</plex-wrapper>
