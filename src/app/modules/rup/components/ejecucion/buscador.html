@@ -201,10 +201,12 @@
                                     {{ (item.plan || filtroActual === 'planes') ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
-                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)">
+                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)"
+                                             tooltip="agregar a la consulta" tooltipPosition="left">
                                 </plex-button>
                                 <plex-button class="ml-1" type="info" size="sm" icon="graph"
-                                             title="filtrar por descendientes" (click)="filtrarPorDescendientes(item)">
+                                             tooltip="filtrar por descendientes" tooltipPosition="left"
+                                             (click)="filtrarPorDescendientes(item)">
                                 </plex-button>
                             </div>
                         </div>

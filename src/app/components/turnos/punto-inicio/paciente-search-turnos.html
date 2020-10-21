@@ -4,7 +4,7 @@
         <div class="col">
             <plex-box type="primary">
                 <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus"
-                           prefix="account-details" placeholder="Ingrese un paciente o escanee un DNI">
+                           prefix="card-account-details" placeholder="Ingrese un paciente o escanee un DNI">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>

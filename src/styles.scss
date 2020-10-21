@@ -2,7 +2,6 @@
  * Codigo repetido hasta que acomodemos la paleta de colores de PLEX y RUP.
  * Faltan algunas tareas de refactor más.
  **/
-
 $problema: #f1930d; // deprecated
 $trastorno: #ff4a1a;
 $hallazgo: #f4a03b;
@@ -35,13 +34,12 @@ $plex-tabs-color-extend: (
     elementoderegistro: $registro,
     invert: $invert,
     todos: $todos,
-    otro: $otro
+    otro: $otro,
 );
 
 .logo-nav {
     float: left;
     background-color: var(--nav-bar-icon-color);
-    ;
     width: 100px;
     height: 50px;
     padding: 7px;
@@ -51,13 +49,20 @@ nav .actions {
     right: 0;
 }
 
-@import 'app/modules/rup/assets/font.css';
+$adi-font-path: "~@andes/icons/fonts/";
+@import "~@andes/icons/scss/andes-icons";
 
-$adi-font-path: '~@andes/icons/fonts/';
-@import '~@andes/icons/scss/andes-icons';
+// [TODO]: Migrar a adi y eliminar
+$mdi-font-path: "~@mdi/font/fonts/";
+@import "~@mdi/font/scss/materialdesignicons";
+
 // Plex
-@import '~@andes/plex/src/lib/styles.scss';
-@import './src/app/components/novedades/novedades.scss';
+@import "~@andes/plex/src/lib/styles.scss";
+@import "./src/app/components/novedades/novedades.scss";
+
+// [TODO]: Migrar a adi y eliminar
+@import "app/modules/rup/assets/font.css";
+
 // IMPORTS DE MÓDULOS
 // RUP
 // @andrrrl ver con @jfgabriel

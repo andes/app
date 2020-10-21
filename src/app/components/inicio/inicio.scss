@@ -1,57 +1,303 @@
 //
 // Variables
-$color-celeste: #039ac6;
-$color-violeta: #9B2A79;
-$color-rosa: #002B3A;
-$color-amarillo: #666600;
-$color-salmon: #E2917F;
-$color-coral: #ce803e;
-$color-verde-oscuro: #257300;
-
 $andes-azul-oscuro: #002838;
-$andes-azul: #0070cc;
-$andes-azul-claro: #00A8E0;
-$andes-celeste: #84cef0;
-$andes-violeta: #982f98;
-$andes-magenta: #e3007e;
-$andes-verde: #00b9b1;
-$andes-verde-claro: #63c7b7;
-$andes-naranja: #ff4a1a;
-$andes-naranja-claro: #f4a03b;
 
+header {
+    border: 0;
+    margin-top: 1rem;
+    div[svgLogo] {
+        width: 117px;
+        height: 55px;
+        margin-right: 27px;
+    }
 
-//
-// Clases
-.logo {
-    background-image: url('../../assets/img/logo-wide.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 60%;
-    max-width: 600px;
-    min-height: 100px;
-    display: inline-block;
-    margin-top: 3em;
-    margin-bottom: 3em;
+    div[svgAcronimo] {
+        width: 332px;
+        height: 42px;
+        fill: $andes-azul-oscuro;
+    }
+
+    &.size-sm,
+    &.size-md {
+        flex-direction: column;
+
+        div {
+            width: 100%;
+        }
+
+        .bienvenida {
+            width: 100%;
+        }
+
+        .hola {
+            font-size: 1.5rem;
+        }
+
+        .mensaje {
+            font-size: 1rem;
+        }
+    }
+
+    .provincia {
+        color: var(--nav-bar-color);
+        font-size: 1rem;
+        text-transform: uppercase;
+        position: relative;
+        top: 12px;
+        left: 10px;
+    }
+
+    opacity: 0;
+    animation: header 0.5s ease-in 0s 1 forwards;
+}
+
+header,
+main {
+    margin-left: 20px;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bienvenida {
+    text-align: center;
+    margin-right: 1.5rem;
+    .hola {
+        font-size: 28px;
+        color: $andes-azul-oscuro;
+    }
+
+    .mensaje {
+        font-size: 18px;
+        color: var(--nav-bar-color);
+    }
+}
+
+.modulos {
+    width: 73vw;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    .modulo {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+
+        box-sizing: border-box;
+        width: 245px;
+        margin-bottom: 1rem;
+
+        .principal {
+            width: 220px;
+            height: 62px;
+            margin-bottom: 7px;
+
+            .titulo {
+                color: rgb(56, 69, 85);
+                font-size: 22px;
+            }
+
+            .descripcion {
+                color: grey;
+                font-size: 13px;
+            }
+        }
+
+        .submodulos {
+            width: 250px;
+            height: 145px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        opacity: 0;
+        @for $child from 1 through 10 {
+            &:nth-child(#{$child}) {
+                animation: submodulos #{$child/2}s ease-in-out 0.15s 1 forwards;
+            }
+        }
+        .submodulo {
+            cursor: pointer;
+            box-sizing: content-box;
+            width: 70px;
+            height: 70px;
+            border-radius: 0;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            text-align: center;
+            font-size: 0.75rem;
+
+            box-shadow: 4px 2px 6px #aaa;
+            margin: 0 5px 5px 0;
+            padding-top: 5px;
+
+            &.hover {
+                transition: all ease-in-out 0.25s;
+
+                &:hover {
+                    mix-blend-mode: multiply;
+                    width: 90px;
+                }
+            }
+
+            .titulo {
+                font-size: 11px;
+                line-height: normal;
+                span {
+                    cursor: pointer;
+                }
+            }
+
+            .adi {
+                font-size: 327px !important;
+            }
+
+            // Aplica margin bottom sólo si tiene 2 renglones de submódulos
+            &:nth-child(4) {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.divisor {
+    box-sizing: content-box;
+    width: 100%;
+    height: 1px;
+    margin: 20px 0 30px;
+}
+
+.secciones {
+    width: 20vw;
+    flex-direction: column;
+    & > {
+        cursor: pointer;
+    }
+}
+
+.seccion {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding-right: 40px;
+    margin-bottom: 1.1rem;
+
+    opacity: 0;
+
+    @for $child from 1 through 20 {
+        &:nth-child(#{$child}) {
+            animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
+        }
+    }
+
+    .principal .band {
+        width: 4px;
+        height: 50px;
+        background-color: white;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .principal plex-icon {
+        transition: all 0.5s ease-in-out;
+
+        margin-left: 0px;
+        margin-right: 0px;
+
+        &.animated {
+            position: relative;
+            right: 0px;
+            width: 0px;
+            opacity: 0;
+        }
+    }
+
+    &:hover {
+        .band {
+            margin-left: -10px !important;
+        }
+
+        .principal {
+            plex-icon {
+                &.animated {
+                    width: 10px;
+                    opacity: 1;
+                    right: 7px;
+                    transition: all 0.25s ease-in-out;
+                    animation-direction: reverse;
+                }
+            }
+        }
+    }
+
+    .principal {
+        transition: width ease-in-out 0.5s, margin ease-in 0.5s;
+
+        width: 50px;
+        height: 40px;
+        border-radius: 0;
+        color: white;
+
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-evenly;
+
+        text-align: center;
+        font-size: 11px;
+        line-height: 11px;
+
+        box-shadow: 4px 2px 6px #aaa;
+
+        .icono {
+            font-size: 1.25rem;
+            color: white;
+        }
+    }
+
+    .titulo {
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-style: oblique;
+    }
+
+    .secundario {
+        font-size: 0.65rem;
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .boton {
     min-height: 266px;
-    padding: .5em;
+    padding: 0.5em;
     color: white;
     cursor: pointer;
-    transition: all .5s;
+    transition: all 0.5s;
     margin-top: 15px;
+
     // Contenido
     .icono {
         font-size: 3em;
     }
+
     .titulo {
         text-transform: uppercase;
         font-size: 2em;
         font-weight: 400;
-        line-height: .8em;
+        line-height: 0.8em;
         padding-bottom: 1em;
     }
+
     .subtitulo {
         text-transform: uppercase;
         font-size: 1.5em;
@@ -59,71 +305,95 @@ $andes-naranja-claro: #f4a03b;
         line-height: 1em;
         padding-bottom: 1em;
     }
+
     .detalle {
         font-weight: 100;
     }
+
     &:hover {
-        box-shadow: inset 0 0 0 1000px rgba(0,0,0,.4);
+        box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
     }
 }
 
-.contenedor-marca-h {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
+.denegado {
+    width: 100%;
+    height: 75%;
+}
 
-    [svgLogo] {
-        height: 7.5rem;
-    }
+// Responsive
 
-    div.bloque-texto {
-        [svgAcronimo] {
-            width: 100%;
+header {
+    &.size-sm {
+        [svgLogo] {
+            height: 40px;
+            margin-right: 0px;
         }
-
-        .suffix-provincia {
-            letter-spacing: 0.9rem;
-            font-size: 2.5vw;
-            font-weight: 400;
-            text-align: right;
-            text-transform: uppercase;
-            margin-right: -0.9rem;
-            color: var(--nav-bar-color);
-        }
-
     }
 }
-@keyframes tintin {
-    0%
 
-    { transform: rotate(0deg); }
-    1%
-
-    { transform: rotate(20deg); }
-    2%
-
-    { transform: rotate(-20deg); }
-    3%
-
-    { transform: rotate(15deg); }
-    4%
-
-    { transform: rotate(-15deg); }
-    5%
-
-    { transform: rotate(0deg); }
-    50%
-
-    { transform: rotate(0deg); }
+main {
+    &.size-sm {
+        flex-direction: column;
+        .secciones {
+            display: flex;
+            justify-content: space-between;
+            flex-flow: wrap;
+            width: 80vw;
+            margin-top: 6rem;
+            .seccion {
+                min-width: 225px;
+                padding-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
     }
-    .notificacion {
-    position: absolute;
-    top: 3px;
-    right: 20px;
-    width: 27px;
-    height: 30px;
-    div
 
-    { color: white; border: 3pxsolidwhite; border-radius: 50%; -webkit-offset-keyword: topcenter; animation: tintin 7sease-in-outinfinite; }
+    &.size-sm,
+    &.size-md,
+    &.size-lg {
+        .modulos {
+            width: 55vw;
+        }
+        .secciones {
+            width: 35vw;
+        }
     }
+}
+
+// Animaciones con keyframes
+@keyframes header {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes submodulos {
+    0% {
+        opacity: 0;
+        position: relative;
+        bottom: -15px;
+        height: 130px;
+    }
+    100% {
+        opacity: 1;
+        position: relative;
+        bottom: 0px;
+        height: 145px;
+    }
+}
+
+@keyframes seccion {
+    0% {
+        opacity: 0;
+        position: relative;
+        left: -15px;
+    }
+    100% {
+        opacity: 1;
+        position: relative;
+        left: 0px;
+    }
+}

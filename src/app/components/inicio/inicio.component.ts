@@ -1,5 +1,4 @@
 import { CommonNovedadesService } from './../novedades/common-novedades.service';
-import { ModulosService } from '../../services/novedades/modulos.service';
 import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
@@ -18,7 +17,8 @@ export class InicioComponent implements AfterViewInit {
     public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
-    public cajasModulos: any = [];
+    public modulos: any = [];
+    public secciones: any = [];
     public novedades: any[] = [];
 
     constructor(
@@ -26,7 +26,6 @@ export class InicioComponent implements AfterViewInit {
         public appComponent: AppComponent,
         private plex: Plex,
         private commonNovedadesService: CommonNovedadesService,
-        private modulosService: ModulosService,
         private route: ActivatedRoute,
         private router: Router
     ) { }
@@ -40,21 +39,37 @@ export class InicioComponent implements AfterViewInit {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
                 registros => {
+
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
-                        modulo.permisos.forEach((permiso) => {
-                            if (this.auth.getPermissions(permiso).length > 0) {
+                        if (modulo.activo) {
+                            modulo.permisos.forEach((permiso) => {
                                 if (!tienePermiso) {
-                                    this.cajasModulos.push(modulo);
-                                    tienePermiso = true;
+                                    if (this.auth.getPermissions(permiso).length > 0) {
+                                        this.modulos.push(modulo);
+                                        tienePermiso = true;
+                                        if (modulo.submodulos && modulo.submodulos.length > 0) {
+                                            modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                                        }
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
-                    if (this.cajasModulos.length) {
-                        this.cajasModulos = this.cajasModulos.sort((a, b) => a.orden - b.orden);
+
+                    this.secciones = this.modulos.filter(x => (!x.submodulos || !x.submodulos.length));
+
+                    this.modulos.sort((a, b) => a.orden - b.orden);
+                    this.modulos.map(x => {
+                        if (x.submodulos && x.submodulos.length > 0) {
+                            return x.submodulos.sort((a, b) => a.orden - b.orden);
+                        }
+                    });
+
+
+                    if (this.modulos.length) {
                         this.denied = false;
-                        let modulos = this.cajasModulos.map(p => {
+                        let modulos = this.modulos.map(p => {
                             return p._id;
                         });
                         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
@@ -66,6 +81,9 @@ export class InicioComponent implements AfterViewInit {
                         this.denied = true;
                     }
                     this.loading = false;
+
+                    this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
+
                 }, (err) => {
                 }
             );
