@@ -124,16 +124,18 @@ export class AppComponent {
 
         this.modulos$.subscribe(registros => {
             registros.forEach((modulo) => {
-                modulo.permisos.forEach((permiso) => {
+                modulo.permisos.forEach((permiso, index) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
 
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
-                                modulo.submodulos.forEach(submodulo => {
+                                modulo.submodulos.forEach((submodulo) => {
                                     modulos.push(submodulo._id);
-                                    const menuOptionSub = { label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
-                                    this.menuList.push(menuOptionSub);
+                                    const menuOptionSub = { label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
+                                    if (index === 0) {
+                                        this.menuList.push(menuOptionSub);
+                                    }
                                 });
                             } else {
                                 modulos.push(modulo._id);
