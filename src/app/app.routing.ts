@@ -27,6 +27,7 @@ import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/o
 // import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
+import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -92,6 +93,7 @@ const appRoutes: Routes = [
     { path: 'citas/revision_agenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     {
         path: 'rup',
