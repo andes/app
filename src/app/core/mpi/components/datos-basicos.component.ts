@@ -57,7 +57,8 @@ export class DatosBasicosComponent implements OnInit {
         fechaNacimiento: null,
         fechaFallecimiento: null,
         sexo: '',
-        foto: ''
+        foto: null,
+        fotoId: null
     };
 
 
@@ -160,7 +161,7 @@ export class DatosBasicosComponent implements OnInit {
                 this.relacionBebe.fechaNacimiento = paciente.fechaNacimiento;
                 this.relacionBebe.fechaFallecimiento = paciente.fechaFallecimiento;
                 this.relacionBebe.sexo = paciente.sexo;
-                this.relacionBebe.foto = paciente.foto ? paciente.foto : null;
+                this.relacionBebe.fotoId = paciente.fotoId ? paciente.fotoId : null;
                 this.relacionBebe.referencia = paciente.id;
                 let rel = this.parentescoModel.find((elem) => {
                     if (elem.nombre === 'progenitor/a') {

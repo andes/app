@@ -91,6 +91,7 @@ export class PacienteComponent implements OnInit {
         fechaFallecimiento: undefined,
         direccion: [this.direccion],
         estadoCivil: undefined,
+        fotoId: null,
         foto: null,
         relaciones: null,
         financiador: [null],
@@ -361,7 +362,8 @@ export class PacienteComponent implements OnInit {
                         apellido: unPacienteSave.apellido,
                         documento: (unPacienteSave.documento) ? unPacienteSave.documento : null,
                         numeroIdentificacion: (unPacienteSave.numeroIdentificacion) ? unPacienteSave.numeroIdentificacion : null,
-                        foto: unPacienteSave.foto ? unPacienteSave.foto : null
+                        foto: unPacienteSave.foto ? unPacienteSave.foto : null,
+                        fotoId: unPacienteSave.fotoId ? unPacienteSave.fotoId : null
                     };
                     if (dto.referencia) {
                         this.pacienteService.patch(rel.referencia, {
@@ -485,6 +487,7 @@ export class PacienteComponent implements OnInit {
                     }
                     this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.foto = resultado.paciente.foto;
+                    this.pacienteModel.fotoId = null;
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
                         this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).toDate();

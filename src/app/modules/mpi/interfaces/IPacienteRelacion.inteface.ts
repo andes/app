@@ -14,5 +14,6 @@ export interface IPacienteRelacion {
     fechaNacimiento?: Date;
     fechaFallecimiento?: Date;
     sexo?: string;
-    foto: string;
+    foto: any;
+    fotoId: any;
 }

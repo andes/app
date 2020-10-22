@@ -50,14 +50,6 @@ export class PacientePanelComponent {
         return this.direction === 'column' ? 'center' : 'start';
     }
 
-    get relaciones() {
-        this.idPacientesRelacionados = [];
-        if (this.paciente.relaciones) {
-            this.paciente.relaciones.map(rel => this.idPacientesRelacionados.push({ id: rel.referencia }));
-        }
-        return this.paciente.relaciones;
-    }
-
     get estadoBadgeType() {
         return this.paciente.estado === 'validado' ? 'success' : 'warning';
     }
