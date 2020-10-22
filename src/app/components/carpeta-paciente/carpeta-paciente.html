@@ -1,71 +1,47 @@
-<fieldset>
-    <div class="col-12" *ngIf="showList">
-        <h5 *ngIf="carpetaEfectores?.length > 0">Organización | Número de carpeta</h5>
-        <ul class="list-group">
-            <ng-container *ngFor="let carpeta of carpetaEfectores">
-                <li *ngIf="carpeta.nroCarpeta"
-                    [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }"
-                    class="list-group-item default">
-                    <div class="row">
-                        <div class="col-11">
-                            {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
-                        </div>
-                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado"
-                             class="col-1">
-                            <plex-button type="info" title="Editar" icon="pencil" (click)="editar()">
-                            </plex-button>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
-                        <div class="col-12">
-                            <plex-text label="Nuevo Nro. carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
-                            </plex-text>
-                        </div>
-                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
-                            <plex-button type="danger" icon="close-circle-outline" title="Cancelar"
-                                         (click)="cerrarEdicion()">
-                            </plex-button>
-                        </div>
-                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
-                            <plex-button [disabled]="nroCarpetaOriginal === nuevoNroCarpeta" type="success"
-                                         icon="content-save" title="Guardar" (click)="guardarCarpetaPaciente()">
-                            </plex-button>
-                        </div>
-                    </div>
-                </li>
-            </ng-container>
-        </ul>
-        <div class="row" *ngIf="showNuevaCarpeta">
-            <div class="col-12">
-                <h6>
-                    <strong>
-                        No existe un Nro. de carpeta en la organización actual
-                    </strong>
-                </h6>
-            </div>
-            <br>
-            <div class="col-12">
-                <plex-button type="success" label="Nueva Carpeta" (click)="crearCarpetaPaciente()"
-                             title="Nueva Carpeta">
-                </plex-button>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12" *ngIf="!showList">
-        <div class="row">
-            <div class="col-12">
-                <plex-text label="Número de Carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
+<section class="w-100" *ngIf="showList">
+    <plex-title size="sm" titulo="número de carpeta y organización" *ngIf="carpetaEfectores?.length > 0">
+    </plex-title>
+    <plex-wrapper class="w-100 align-items-center" *ngFor="let carpeta of carpetaEfectores">
+        <ng-container *ngIf="carpeta.nroCarpeta">
+            <plex-label grow="4" size="lg" icon="folder-account" type="info" titulo="{{carpeta.nroCarpeta}}"
+                        subtitulo="{{carpeta.organizacion.nombre}}">
+            </plex-label>
+            <plex-button grow="auto" size="sm"
+                         *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" type="warning"
+                         tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
+                         class="d-flex align-self-center ml-2">
+            </plex-button>
+            <plex-wrapper class="w-100" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
+                <plex-text label="Editar número de carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
                 </plex-text>
-            </div>
-            <br>
-            <div class="col-12 float-right">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+                <plex-button *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" type="danger"
+                             tooltipPosition="left" tooltip="Cancelar edición" icon="close" (click)="cerrarEdicion()">
                 </plex-button>
-                <plex-button type="success" label="Guardar" (click)="guardarCarpetaPaciente(true)"
-                             title="Guardar Carpeta">
+                <plex-button class="ml-2" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit"
+                             [disabled]="nroCarpetaOriginal === nuevoNroCarpeta" type="success" tooltipPosition="left"
+                             tooltip="Confirmar edición" icon="check" (click)="guardarCarpetaPaciente()">
                 </plex-button>
-            </div>
-        </div>
-    </div>
-</fieldset>
+            </plex-wrapper>
+        </ng-container>
+    </plex-wrapper>
+</section>
+<ng-container *ngIf="showNuevaCarpeta">
+    <plex-title titulo="carpeta del paciente" size="sm">
+        <plex-button type="success" size="sm" label="registrar nueva carpeta" (click)="crearCarpetaPaciente()"
+                     tooltipPosition="left" tooltip="registrar número de carpeta">
+        </plex-button>
+    </plex-title>
+    <plex-badge *ngIf="showList" type="warning" size="block" class="my-4">
+        número de carpeta inexistente en la organización actual
+    </plex-badge>
+</ng-container>
+<plex-wrapper class="w-100" *ngIf="!showList">
+    <plex-text label="Nuevo número de Carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
+    </plex-text>
+    <plex-button size="md" type="danger" tooltipPosition="left" tooltip="Cancelar edición" (click)="cancelar()"
+                 icon="close">
+    </plex-button>
+    <plex-button size="md" type="success" tooltipPosition="left" tooltip="Confirmar edición"
+                 (click)="guardarCarpetaPaciente(true)" icon="check" class="ml-2">
+    </plex-button>
+</plex-wrapper>
