@@ -1,0 +1,111 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <form #form="ngForm">
+            <header>
+                <div class="page-title">Agregar Paciente</div>
+            </header>
+            <span *ngIf="showPaciente && paciente">
+                <div *ngIf="paciente?.id" class="row">
+                    <div class="col">
+                        <label>Paciente</label>
+                        <div>{{paciente | nombre }}</div>
+                    </div>
+                    <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
+                        <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
+                                    (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                        </plex-radio>
+                        <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
+                                     [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
+                                     labelField="nombre">
+                        </plex-select>
+                    </div>
+                    <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
+                        <label>Programa</label>
+                        <div>{{modelo.obraSocial}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono"
+                                    (change)="cambioTelefono=true" name="telefono"></plex-phone>
+                        <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
+                                   name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                    </div>
+                    <div class="col">
+                        <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
+                                   (change)="verificarNota()"></plex-text>
+                    </div>
+                </div>
+                <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
+                    <div class="col">
+                        <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
+                                     [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
+                                     [required]="true">
+                        </plex-select>
+                    </div>
+                </div>
+            </span>
+            <span *ngIf="!showPaciente">
+                <div class="row" *ngIf="pacientesSearch">
+                    <div class="col">
+                        <div class="panel panel-default">
+                            <div class="clear"></div>
+                            <paciente-buscar (searchStart)="onSearchStart()"
+                                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                             (searchClear)="onSearchClear()">
+                            </paciente-buscar>
+                        </div>
+                    </div>
+                </div>
+                <plex-loader *ngIf="loading"></plex-loader>
+                <div class="row">
+                    <div class="col-12">
+                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                          (selected)="onSelect($event)"></paciente-listado>
+
+                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                            ¡No se encontró ningún paciente!
+                        </div>
+                    </div>
+                </div>
+            </span>
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <header>
+            <div class="page-title">Agenda seleccionada</div>
+        </header>
+        <!--Agenda seleccionada-->
+        <div class="text-center" *ngIf="agenda">
+
+            <h4>
+                <span class="mdi mdi-calendar-today"> Hora Agenda </span>
+            </h4>
+            <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio:
+                {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
+                {{ agenda.horaFin | date: 'HH:mm' }}
+            </span>
+            <br>
+            <h4>
+                <span class="mdi mdi-hospital">Prestación </span>
+            </h4>
+            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                {{ tipoPrestacion.nombre }}
+            </div>
+            <br>
+            <h4>
+                <span class="mdi mdi-account">Equipo de Salud </span>
+            </h4>
+            <div *ngFor="let profesional of agenda.profesionales let i = index">
+                {{profesional | nombre}}
+            </div>
+        </div>
+    </plex-layout-sidebar>
+    <plex-layout-footer>
+        <plex-button position="left" type="danger" label="Cancelar" (click)="volver()">
+        </plex-button>
+        <plex-button position="right" *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
+                     (click)="guardar($event)">
+        </plex-button>
+    </plex-layout-footer>
+</plex-layout>
