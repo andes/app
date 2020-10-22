@@ -371,6 +371,19 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
+    invalidarPrestacion(prestacion, idTurno) {
+        this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
+            if (confirmacion) {
+                let data;
+                if (prestacion.solicitud.turno) {
+                    data = { op: 'desasociarTurno' };
+                } else {
+                    data = { op: 'estadoPush', estado: { tipo: 'anulada' } };
+                }
+                this.servicioPrestacion.patch(prestacion.id, data).subscribe(() => this.actualizar());
+            }
+        });
+    }
 
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         const msg = operacion === 'noAsistio' ?
@@ -461,7 +474,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             fechaDesde: this.fecha ? this.fecha : new Date(),
             fechaHasta: new Date(),
             organizacion: this.auth.organizacion.id,
-            sinEstado: 'modificada',
+            sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
             tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
         });
