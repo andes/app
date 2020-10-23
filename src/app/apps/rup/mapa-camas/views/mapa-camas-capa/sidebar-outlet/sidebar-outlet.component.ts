@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
@@ -19,7 +20,8 @@ export class INSidebarOutletComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private location: Location
     ) {
 
         this.action$ = this.route.params.pipe(pluck('action'));
@@ -39,21 +41,17 @@ export class INSidebarOutletComponent {
         if (!accion.egresar) {
             this.cambiarUO = accion.cambiarUO;
             this.router.navigate(['..', 'cambiarCama'], { relativeTo: this.route });
-
-            // this.action = 'cambiarCama';
         } else {
             this.router.navigate(['..', accion.egresar], { relativeTo: this.route });
-
-            // this.action = accion.egresar;
         }
     }
 
     volverADetalle() {
-        this.router.navigate(['..', 'verDetalle'], { relativeTo: this.route });
+        this.location.back();
     }
 
-    bakc() {
-        this.router.navigate(['..'], { relativeTo: this.route });
+    back() {
+        this.location.back();
     }
 
     volverADesocupar() {
@@ -61,7 +59,7 @@ export class INSidebarOutletComponent {
     }
 
     volverAResumen() {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.location.back();
         this.mapaCamasService.select(null);
     }
 

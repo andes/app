@@ -12,6 +12,7 @@ import { SexoPipe } from './pipes/sexo.pipe';
 import { FormAutoSaveDirective } from './directives/autosave.directives';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { PlexModule } from '@andes/plex';
+import { MobileDirective } from './directives/mobile.directives';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { PlexModule } from '@andes/plex';
         PluralizarPipe,
         SexoPipe,
         FormAutoSaveDirective,
-        PopoverAuditComponent
+        PopoverAuditComponent,
+        MobileDirective
     ],
     exports: [
         FechaPipe,
@@ -41,7 +43,8 @@ import { PlexModule } from '@andes/plex';
         PluralizarPipe,
         SexoPipe,
         FormAutoSaveDirective,
-        PopoverAuditComponent
+        PopoverAuditComponent,
+        MobileDirective
     ]
 })
 export class SharedModule {

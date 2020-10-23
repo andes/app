@@ -55,6 +55,7 @@ import { IntegridadService } from './views/integridad/integridad.service';
 import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
 import { INSidebarOutletComponent } from './views/mapa-camas-capa/sidebar-outlet/sidebar-outlet.component';
+import { MapaCamaMobileGuard } from './guards/mobile.guard';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -99,7 +100,8 @@ export const INTERNACION_PROVIDERS = [
     ListadoInternacionService,
     SalaComunService,
     ScrollDispatcher,
-    IntegridadService
+    IntegridadService,
+    MapaCamaMobileGuard
 ];
 
 @NgModule({

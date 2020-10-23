@@ -10,6 +10,7 @@ import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espe
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { IntegridadCamasComponent } from './views/integridad/integridad-camas.component';
 import { INSidebarOutletComponent } from './views/mapa-camas-capa/sidebar-outlet/sidebar-outlet.component';
+import { MapaCamaMobileGuard } from './guards/mobile.guard';
 
 export const INTERNACION_ROUTES: Routes = [
     { path: 'mapa-camas', component: MapaCamasMainComponent },
@@ -19,7 +20,8 @@ export const INTERNACION_ROUTES: Routes = [
         component: MapaCamasCapaComponent,
         children: [
             { path: ':action', component: INSidebarOutletComponent }
-        ]
+        ],
+        canActivate: [MapaCamaMobileGuard]
     },
 
     { path: 'cama/:id', component: CamaMainComponent },

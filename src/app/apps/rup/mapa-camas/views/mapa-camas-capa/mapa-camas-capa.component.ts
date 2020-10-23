@@ -12,6 +12,7 @@ import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { timer, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -80,6 +81,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
+        private breakpointObserver: BreakpointObserver
     ) { }
 
 
@@ -155,6 +157,10 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.organizacion = this.auth.organizacion.id;
 
         this.getSnapshot();
+
+        if (!this.breakpointObserver.isMatched('(max-width: 599px)')) {
+            this.router.navigate(['estado'], { relativeTo: this.route });
+        }
     }
 
     getSnapshot(fecha = null) {
@@ -182,7 +188,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     selectCama(cama, relacion) {
-        debugger;
         this.mapaCamasService.resetView();
         this.mapaCamasService.select(cama);
         if (relacion) {

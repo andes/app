@@ -1,5 +1,5 @@
 <ng-container *ngIf="action$ | async as action">
-    <app-estado-servicio *ngIf="!action"></app-estado-servicio>
+    <app-estado-servicio *ngIf="action === 'estado'"></app-estado-servicio>
 
     <app-ingreso-paciente-workflow *ngIf="action === 'internarPaciente'" (cancel)="volverADetalle()"
                                    (save)="volverAResumen()">
@@ -33,6 +33,6 @@
     <ng-container *ngIf="action === 'filtros'">
         <plex-title titulo="Filtros"></plex-title>
         <app-filtros-camas></app-filtros-camas>
-        <plex-button label="Buscar" type="info" (click)="bakc()" size="block"></plex-button>
+        <plex-button label="Buscar" type="info" (click)="back()" size="block"></plex-button>
     </ng-container>
 </ng-container>
