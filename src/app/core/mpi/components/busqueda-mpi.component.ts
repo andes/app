@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { Auth } from '@andes/auth';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { PacienteService } from '../services/paciente.service';
 
 @Component({
     selector: 'busqueda-mpi',
@@ -22,6 +23,7 @@ export class BusquedaMpiComponent implements OnInit {
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private pacienteCache: PacienteCacheService,
+        private pacienteService: PacienteService,
         private plex: Plex,
         private router: Router,
         private auth: Auth
@@ -65,13 +67,26 @@ export class BusquedaMpiComponent implements OnInit {
     toEdit(paciente: IPaciente) {
         if (paciente) {
             this.historialBusquedaService.add(paciente);
-            this.pacienteCache.setPaciente(paciente);
-            this.pacienteCache.setScanState(this.escaneado);
-            if (paciente.numeroIdentificacion || paciente.tipoIdentificacion) {
-                this.router.navigate(['apps/mpi/paciente/extranjero/mpi']);  // abre formulario paciente extranjero
-            } else {
-                this.router.navigate(['apps/mpi/paciente']);  // abre formulario paciente con/sin-dni
-            }
+            // obtenemos el paciente actualizado (si es inactivo, no se puede editar)
+            this.pacienteService.getById(paciente.id).subscribe(
+                resultado => {
+                    if (resultado) {
+                        paciente = resultado;
+                        if (paciente.activo) {
+                            this.pacienteCache.setPaciente(paciente);
+                            this.pacienteCache.setScanState(this.escaneado);
+                            if (paciente.numeroIdentificacion || paciente.tipoIdentificacion) {
+                                this.router.navigate(['apps/mpi/paciente/extranjero/mpi']);  // abre formulario paciente extranjero
+                            } else {
+                                this.router.navigate(['apps/mpi/paciente']);  // abre formulario paciente con/sin-dni
+                            }
+                        } else {
+                            this.plex.toast('info', 'No es posible editar un paciente Inactivo');
+                        }
+                    }
+
+                });
+
         }
     }
 
