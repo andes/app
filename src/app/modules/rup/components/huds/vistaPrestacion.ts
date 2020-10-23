@@ -65,6 +65,25 @@ export class VistaPrestacionComponent implements OnInit {
         this._idPrestacion = value;
         this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                prestacion.ejecucion.registros.forEach(registro => {
+
+                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        registro.relacionadoCon.forEach((registroRel, key) => {
+                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
+                                if (r.id) {
+                                    return r.id === registroRel.id;
+                                } else {
+                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
+                                }
+                            });
+                            if (registroAux) {
+                                registro.relacionadoCon[key] = registroAux;
+                            } else {
+                                registro.relacionadoCon[key] = registroRel;
+                            }
+                        });
+                    }
+                });
                 this.prestacion = prestacion;
                 this.paciente = paciente;
             });
