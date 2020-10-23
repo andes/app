@@ -36,8 +36,6 @@ export class PacienteBusquedaComponent {
     /* fixContainer en true agrega un contenedor de altura fija al listado, para que funcione correctamente
         el scroll infinito. Util en caso de un componente padre con altura flexible */
     @Input() fixContainer = false;
-    // Indica la altura del listado respecto a su contenedor
-    @Input() listHeight = 80;
 
     public onSearchStart() {
         this.loading = true;
