@@ -5,7 +5,7 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'paciente-busqueda',
     templateUrl: 'paciente-busqueda.html',
-    styleUrls: []
+    styleUrls: ['paciente-busqueda.scss']
 })
 
 export class PacienteBusquedaComponent {
@@ -33,6 +33,11 @@ export class PacienteBusquedaComponent {
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    /* fixContainer en true agrega un contenedor de altura fija al listado, para que funcione correctamente
+        el scroll infinito. Util en caso de un componente padre con altura flexible */
+    @Input() fixContainer = false;
+    // Indica la altura del listado respecto a su contenedor
+    @Input() listHeight = 80;
 
     public onSearchStart() {
         this.loading = true;
