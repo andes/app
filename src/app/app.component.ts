@@ -108,6 +108,7 @@ export class AppComponent {
 
     public checkPermissions() {
         let modulos = [];
+        let modulosNovedades = [];
         this.menuList = [];
         this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
@@ -129,6 +130,7 @@ export class AppComponent {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
 
+                            modulosNovedades.push(modulo._id);
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
                                 modulo.submodulos.forEach((submodulo, key) => {
@@ -147,8 +149,8 @@ export class AppComponent {
                     }
                 });
             });
-            if (modulos.length) {
-                this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
+            if (modulosNovedades.length) {
+                this.commonNovedadesService.setNovedadesSinFiltrar(modulosNovedades);
                 this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
                     this.tieneNovedades = novedades.length > 0;
                 });

@@ -50,11 +50,8 @@
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
-                    <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
-                          hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
-                          (click)="irANovedades(seccion._id)"></span>
-                    <div class="seccion hover" (click)="redirect(seccion)">
-                        <div class="principal hover" [style.background]="seccion.color">
+                    <div class="seccion">
+                        <div class="principal hover" [style.background]="seccion.color" (click)="redirect(seccion)">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
@@ -63,6 +60,9 @@
                             <div class="titulo ml-2">{{ seccion.nombre }}</div>
                             <div class="subtitulo ml-2">{{ seccion.subtitulo }}</div>
                         </div>
+                        <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
+                              hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
+                              (click)="irANovedades(seccion._id)"></span>
                     </div>
                 </ng-container>
             </div>
