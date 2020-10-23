@@ -91,17 +91,14 @@ export class InicioComponent implements AfterViewInit {
     }
 
     redirect(caja) {
-        if (caja.nombre === 'ANALYTICS') {
+        const url: string = caja.linkAcceso;
+        if (url.startsWith('http')) {
+            // [TODO] Agregar parametro de configuracion, no siempre hay que exponer el token.
             const token = this.auth.getToken();
-            window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
+            window.open(`${url}?token=${token}`);
         } else {
             this.router.navigate([caja.linkAcceso]);
         }
-    }
-
-    anlytics() {
-        const token = this.auth.getToken();
-        window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
     }
 
     irANovedades(modulo) {
