@@ -37,7 +37,7 @@
                     <div *ngIf="e.resource.resourceType == 'Patient'">
                         <plex-title titulo="Paciente"></plex-title>
                         <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Nombre" subtitulo="{{e.resource.name[0].family}} {{e.resource.name[0].given}}"></plex-label>
+                                <plex-label titulo="Nombre" subtitulo="{{e.resource.name[0].text}}"></plex-label>
                                 <plex-label titulo="Fecha Nacimiento" subtitulo="{{e.resource.birthDate |  date}}"></plex-label>
                                 <plex-label titulo="Género" subtitulo="{{e.resource.gender}}"></plex-label>
                                 <div *ngFor="let r of e.resource.identifier ">
@@ -68,10 +68,10 @@
                         <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
                                 <plex-label titulo="Fecha" subtitulo="{{e.resource.effectiveDateTime | date}}"></plex-label>
                                 <plex-label titulo="Estado" subtitulo="{{e.resource.status}}"></plex-label>
-                                <plex-label titulo="Descripcion" subtitulo="{{e.resource.text.div}}"></plex-label>
-                                <div *ngFor="let r of e.resource.medicationCodeableConcept.coding ">
-                                    <plex-label titulo="Medicamento" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
-                                </div>
+                                <!-- <div *ngFor="let m of e.resource.medicationCodeableConcept.coding ">
+                                    <plex-label titulo="Medicamento" subtitulo="{{r.code}} {{r.display}}"></plex-label>
+                                </div> -->
+                                <plex-label *ngIf="e.resource.text" titulo="Descripcion" subtitulo="{{e.resource.text?.div}}"></plex-label>
                     </div>
                     <div *ngIf="e.resource.resourceType == 'Immunization'">
                         <plex-title titulo="Vacunas"></plex-title>

@@ -464,7 +464,7 @@ export class PacienteComponent implements OnInit {
             this.plex.info('warning', 'La búsqueda requiere sexo MASCULINO o FEMENINO.', 'Atención');
             return;
         }
-        this.disableValidar = true;
+        // this.disableValidar = true;
         this.loading = true;
 
         if (this.subscripcionGetFederador) {

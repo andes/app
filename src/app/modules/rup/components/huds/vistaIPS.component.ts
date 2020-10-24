@@ -13,7 +13,7 @@ export class VistaIPSComponent implements OnInit {
         title: '',
         custodian: '',
         entry: []
-    }
+    };
     constructor(public domNacional: DominiosNacionalesService) { }
 
     ngOnInit() {
@@ -23,13 +23,13 @@ export class VistaIPSComponent implements OnInit {
                 title: result.id,
                 custodian : this.registro.params.custodian,
                 entry : result.entry
-            }
+            };
         } else {
             this.ips = {
                 title: 'No existen registros',
                 custodian: '',
                 entry: []
-            }
+            };
         }
     });
     }

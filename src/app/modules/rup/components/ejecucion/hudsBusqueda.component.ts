@@ -295,7 +295,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         // Listar los dominios de ese paciente
         this.domNacional.getDominiosIdPaciente(this.paciente.id).subscribe((resultado) => {
             this.dominios = resultado;
-        })
+        });
     }
 
     private cargarSolicitudesMezcladas() {
