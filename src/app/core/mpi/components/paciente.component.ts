@@ -88,7 +88,7 @@ export class PacienteComponent implements OnInit {
         numeroIdentificacion: null,
         edad: null,
         edadReal: null,
-        fechaFallecimiento: undefined,
+        fechaFallecimiento: null,
         direccion: [this.direccion],
         estadoCivil: undefined,
         fotoId: null,
@@ -527,6 +527,7 @@ export class PacienteComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.pacienteModel.fechaNacimiento;
         this.backUpDatos['foto'] = this.pacienteModel.foto;
         this.backUpDatos['cuil'] = this.pacienteModel.cuil;
+        this.backUpDatos['fechaFallecimiento'] = this.pacienteModel.fechaFallecimiento;
         if (this.pacienteModel.direccion) {
             this.backUpDatos['direccion'] = this.pacienteModel.direccion[0].valor;
             this.backUpDatos['codigoPostal'] = this.pacienteModel.direccion[0].codigoPostal;
@@ -546,6 +547,7 @@ export class PacienteComponent implements OnInit {
             this.pacienteModel.cuil = this.backUpDatos['cuil'];
             this.pacienteModel.estado = this.backUpDatos['estado'];
             this.pacienteModel.genero = this.backUpDatos['genero'];
+            this.pacienteModel.fechaFallecimiento = this.backUpDatos['fechaFallecimiento'];
             this.validado = false;
         }
         this.disableValidar = false;
