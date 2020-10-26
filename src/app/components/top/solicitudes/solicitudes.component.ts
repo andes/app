@@ -731,7 +731,10 @@ export class SolicitudesComponent implements OnInit {
     private iniciarPrestacion(fecha, observaciones?) {
         let patch: any = {
             op: 'estadoPush',
-            ejecucion: { fecha },
+            ejecucion: {
+                fecha,
+                organizacion: this.auth.organizacion
+            },
             estado: {
                 fecha: new Date(),
                 tipo: 'ejecucion'
