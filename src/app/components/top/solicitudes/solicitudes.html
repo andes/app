@@ -110,7 +110,7 @@
                                 </plex-badge>
                                 <plex-badge type="warning"
                                             *ngIf=" !prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
-                                    {{prestacion.estadoActual.tipo}} 
+                                    {{prestacion.estadoActual.tipo}}
                                 </plex-badge>
                                 <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
@@ -122,15 +122,16 @@
                                              type="success" (click)="$event.stopPropagation();darTurno(prestacion)"
                                              title="Dar Turno">
                                 </plex-button>
-                                <plex-button size="sm" *ngIf="estado === 'auditoria' || estado === 'rechazada'" icon="lock-alert" type="info"
+                                <plex-button size="sm" *ngIf="estado === 'auditoria' || estado === 'rechazada'"
+                                             icon="lock-alert" type="info"
                                              (click)="$event.stopPropagation();auditar(prestacion)"
                                              title="Auditar Solicitud">
                                 </plex-button>
-                                <plex-button size="sm" *ngIf="estado === 'asignada'" icon="check" type="success"
+                                <plex-button size="sm" *ngIf="estado === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional" icon="check" type="success"
                                              (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
                                              title="Iniciar prestación">
                                 </plex-button>
-                                <plex-button size="sm" *ngIf=" estado === 'asignada'" icon="calendar" type="warning"
+                                <plex-button size="sm" *ngIf="estado === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional" icon="calendar" type="warning"
                                              (click)="$event.stopPropagation();citar(prestacion)"
                                              title="Citar paciente">
                                 </plex-button>
@@ -138,7 +139,7 @@
                                              (click)="$event.stopPropagation();anular(prestacion)" title="Anular"
                                              *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id && permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'anulada'">
                                 </plex-button>
-                                <plex-dropdown *ngIf="estado === 'asignada'" class="pl-2 mr-0" [right]="true"
+                                <plex-dropdown #drop *ngIf="estado === 'asignada'" class="pl-2 mr-0" [right]="true"
                                                [items]="itemsDropdown" size="sm" icon="dots-vertical" label=""
                                                (onOpen)="setDropDown(prestacion, drop)">
                                 </plex-dropdown>
