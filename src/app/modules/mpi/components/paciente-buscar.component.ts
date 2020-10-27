@@ -70,9 +70,8 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if ($event.type) {
             return;
         }
-        if (this.textoLibre && this.textoLibre.length) {
-            let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
-
+        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
+        if (textoLibre && textoLibre.length) {
             // Controla el scanner
             if (!this.pacienteBuscar.controlarScanner(textoLibre)) {
                 this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');

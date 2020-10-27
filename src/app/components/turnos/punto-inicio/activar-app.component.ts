@@ -157,6 +157,10 @@ export class ActivarAppComponent {
         if (!this.showCampoCelular) {
             this.celular = this.contacto('celular');
         }
+        this.paciente.contacto.map(elem => {
+            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+            return elem;
+        });
         if (this.celular && this.email) {
             this.addContacto('celular', this.celular);
             this.addContacto('email', this.email);
