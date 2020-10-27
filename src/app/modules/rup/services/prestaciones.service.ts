@@ -10,6 +10,7 @@ import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
 import { Plex } from '@andes/plex';
+import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 
 
 @Injectable()
@@ -638,85 +639,6 @@ export class PrestacionesService {
         return this.snomed.getQuery({ expression: '<<281399006' });
 
     }
-
-    /**
-     * Determina la clase a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
-        *
-     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
-     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
-     * @returns string Clase a ser utilizado para estilizar las cards de RUP
-     * @memberof PrestacionesService
-     */
-    public getCssClass(conceptoSNOMED, esSolicitud) {
-        let clase = conceptoSNOMED.semanticTag;
-
-        if (conceptoSNOMED.esSolicitud || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
-            clase = 'solicitud';
-        } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
-            clase = 'regimen';
-        } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
-            clase = 'elementoderegistro';
-        } else if (conceptoSNOMED.semanticTag === 'evento') {
-            clase = 'hallazgo';
-        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico' || conceptoSNOMED.semanticTag === 'fármaco de uso clínico') {
-            clase = 'producto';
-        } else if (conceptoSNOMED.semanticTag === 'entidad observable') {
-            clase = 'procedimiento';
-        }
-
-        return clase;
-    }
-
-    /**
-     * Determina el icono a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
-     *
-     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
-     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
-     * @returns string Icono a ser utilizado por la font de RUP
-     * @memberof PrestacionesService
-     */
-    public getIcon(conceptoSNOMED, esSolicitud) {
-        let icon = conceptoSNOMED.semanticTag;
-
-        if (conceptoSNOMED.esSolicitud || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
-            icon = 'plan';
-        } else {
-            switch (conceptoSNOMED.semanticTag) {
-                case 'hallazgo':
-                case 'evento':
-                    icon = 'hallazgo';
-                    break;
-                case 'situación':
-                    icon = 'hallazgo';
-                    break;
-
-                case 'trastorno':
-                    icon = 'trastorno';
-                    break;
-
-                case 'procedimiento':
-                case 'entidad observable':
-                case 'régimen/tratamiento':
-                    icon = 'procedimiento';
-                    break;
-                case 'trastorno':
-                    icon = 'trastorno';
-                    break;
-                case 'producto':
-                case 'objeto físico':
-                case 'medicamento clínico':
-                case 'fármaco de uso clínico':
-                    icon = 'producto';
-                    break;
-                case 'elemento de registro':
-                    icon = 'elementoderegistro';
-                    break;
-            }
-        }
-
-        return icon;
-    }
-
 
     /**
     * Devuelve el texto del informe del encuentro asociado al registro

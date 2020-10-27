@@ -41,16 +41,14 @@
                                 </div>
 
                                 <!-- Contenedor del registro RUP -->
-                                <div
-                                     class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                <div class="rup-card {{ registro | semanticClass}}">
                                     <div class="rup-header">
                                         <div class="icon-rup drag-handle" draggable
                                              [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                              [dragClass]="'drag-target-border'" [dragData]="registro"
                                              (onDragStart)="draggingRegistro(i ,registro, true)"
                                              (onDragEnd)="draggingRegistro(i, registro, false)">
-                                            <i
-                                               class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getIcon(registro.concepto, 'planes') : servicioPrestacion.getIcon(registro.concepto)}}"></i>
+                                            <i class="adi {{ registro | semanticIcon }} "></i>
                                         </div>
 
                                         <div class="title text-capitalize">

@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '@andes/shared';
 import { ModalMotivoAccesoHudsComponent } from './components/huds/modal-motivo-acceso-huds.component';
+import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 
 @NgModule({
     imports: [
@@ -17,7 +18,7 @@ import { ModalMotivoAccesoHudsComponent } from './components/huds/modal-motivo-a
         SharedModule,
     ],
     declarations: [
-        ModalMotivoAccesoHudsComponent,
+        ModalMotivoAccesoHudsComponent
     ],
     providers: [
 

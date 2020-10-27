@@ -41,14 +41,12 @@
                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)"
                          [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
                         <div class="branch"></div>
-                        <div
-                             class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
+                        <div class="rup-card {{ registro | semanticClass}}">
                             <div class="rup-header">
                                 <div class="icon-rup drag-handle" draggable
                                      [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                      [dragClass]="'drag-target-border'" [dragData]="registro">
-                                    <i
-                                       class="icon icon-rup-semantic-{{(registro.esSolicitud) ? prestacionesService.getIcon(registro.concepto, 'planes') : prestacionesService.getIcon(registro.concepto)}}"></i>
+                                    <i class="adi {{ registro | semanticIcon }}"></i>
                                 </div>
                                 <div class="title">
                                     {{registro.nombre}}
@@ -76,9 +74,8 @@
                                             Registro Privado
                                         </plex-badge>
                                     </ng-container>
-                                    <plex-badge
-                                                [type]="(registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto)">
-                                        {{registro.esSolicitud ?'solicitud':registro.concepto.semanticTag}}
+                                    <plex-badge [type]="registro | semanticClass">
+                                        {{ registro.esSolicitud ? 'solicitud': registro.concepto.semanticTag }}
                                     </plex-badge>
                                     <plex-badge type="info"
                                                 *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>

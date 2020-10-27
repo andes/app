@@ -9,6 +9,7 @@ import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { getSemanticTag } from '../../../pipes/semantic-class.pipes';
 
 /**
  * Cualquier cambio en esta componente implica testear en:
@@ -82,7 +83,7 @@ export class RUPAccionesEnvioInformeComponent {
             return false;
         }
         if (this.registro) {
-            const esProcedimientoSolicitud = this.servicioPrestacion.getIcon(this.registro.concepto, false) === 'procedimiento' || this.registro.esSolicitud;
+            const esProcedimientoSolicitud = getSemanticTag(this.registro.concepto, false) === 'procedimiento' || this.registro.esSolicitud;
             return this.validada && esProcedimientoSolicitud;
         } else {
             return this.validada && !this.noNominalizada;

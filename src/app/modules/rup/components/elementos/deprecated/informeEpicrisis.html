@@ -29,7 +29,7 @@
                         (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
                 <div plex-accordion-title class="d-flex justify-content-between">
                     <span class="contenedor-icono">
-                        <i class="icon {{ item.params.icon }}"></i>
+                        <i class="adi {{ item.params.icon }}"></i>
                     </span>
                     <span class="titulo align-self-center mr-auto ml-2 text-bold">
                         {{ item.concepto.term }}
@@ -92,10 +92,9 @@
     <div class="grid-container">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
-                <div
-                     class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                <div class="rup-card rup-clear {{ item | semanticClass }}">
                     <div class="titulo d-flex align-items-start">
-                        <i class="icon {{ item.params.icon }} mr-2"></i>
+                        <i class="adi {{ item.params.icon }} mr-2"></i>
                         <strong> {{ item.params.titulo }}</strong>
                     </div>
                     <div class="contenedor-conceptos ml-3 pl-3">
