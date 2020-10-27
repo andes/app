@@ -97,8 +97,8 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
             this.mapaCamasService.snapshot$,
         ).pipe(
             map(([selectedCama, snapshots]) => {
-                const cama = snapshots.find( snap => snap.idCama === selectedCama.idCama);
-                return cama.estado !== 'ocupada';
+                const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
+                return cama.estado !== 'ocupada' && !cama.sala;
             })
         );
 
