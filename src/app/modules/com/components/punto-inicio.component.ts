@@ -5,8 +5,6 @@ import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Auth } from '@andes/auth';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { cache } from '@andes/shared';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -23,7 +21,6 @@ export class ComPuntoInicioComponent implements OnInit {
     public showEditarEstado = false;
     public verAyuda = false;
     derivacionSeleccionada: IDerivacion;
-    derivaciones$: Observable<any[]>;
     derivaciones: any[];
     organizacionActual: any[];
     organizacionOrigen: IOrganizacion;
@@ -31,6 +28,7 @@ export class ComPuntoInicioComponent implements OnInit {
     paciente: any;
     estado: any;
     tabIndex = 0;
+    public loading = false;
     public estados = [
         { id: 'solicitada', nombre: 'SOLICITADA' },
         { id: 'habilitada', nombre: 'HABILITADA' },
@@ -50,7 +48,6 @@ export class ComPuntoInicioComponent implements OnInit {
             this.router.navigate(['./inicio']);
         }
         this.organizacionActual = this.auth.organizacion as any;
-        this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             this.orgActual = org;
             if (org.esCOM) {
@@ -72,33 +69,35 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     actualizarTabla() {
-        this.derivaciones$.subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = derivaciones.filter(e => !e.cancelada);
-            if (this.tabIndex === 0) {
-                this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id === this.auth.organizacion.id);
-                if (this.organizacionOrigen) {
-                    this.derivaciones = this.derivaciones.filter(e => e.organizacionOrigen.id === this.organizacionOrigen.id);
-                }
+        this.loading = true;
+        let query: any = { cancelada: false };
+        if (this.estado) {
+            query.estado = this.estado.id;
+        } else {
+            query.estado = ['asignada', 'solicitada', 'inhabilitada', 'habilitada', 'asignada', 'rechazada', 'aceptada', 'encomendada'];
+        }
+        if (this.tabIndex === 0) {
+            query.organizacionDestino = this.auth.organizacion.id;
+            if (this.organizacionOrigen) {
+                query.organizacionOrigen = this.organizacionOrigen.id;
             }
-            if (this.tabIndex === 1) {
-                if (this.esCOM) {
-                    this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id || (e.estado === 'solicitada' && e.organizacionOrigen.id === this.auth.organizacion.id));
-                } else {
-                    this.derivaciones = this.derivaciones.filter(e => e.organizacionOrigen.id === this.auth.organizacion.id);
-                }
-                if (this.organizacionDestino) {
-                    this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id === this.organizacionDestino.id);
-                }
+        } else {
+            if (!this.esCOM) {
+                query.organizacionOrigen = this.auth.organizacion.id;
             }
-            // por defecto no muestra las derivaciones finalizadas
-            if (this.estado) {
-                this.derivaciones = this.derivaciones.filter(e => e.estado === this.estado.id);
-            } else {
-                this.derivaciones = this.derivaciones.filter(e => e.estado !== 'finalizada');
+            if (this.organizacionDestino) {
+                query.organizacionDestino = this.organizacionDestino.id;
             }
-            if (this.paciente) {
-                this.derivaciones = this.derivaciones.filter(e => e.paciente.documento.includes(this.paciente) || e.paciente.apellido.includes(this.paciente.toUpperCase()) || e.paciente.nombre.includes(this.paciente.toUpperCase()));
+        }
+        if (this.paciente) {
+            query.paciente = `^${this.paciente}`;
+        }
+        this.derivacionesService.search(query).subscribe((derivaciones: [IDerivacion]) => {
+            this.derivaciones = derivaciones.sort((a, b) => moment(a.fecha).diff(moment(b.fecha)));
+            if (this.tabIndex === 1 && this.esCOM) {
+                this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id);
             }
+            this.loading = false;
         });
     }
 
@@ -142,7 +141,6 @@ export class ComPuntoInicioComponent implements OnInit {
     returnDetalle(actualizada) {
         this.ocultarSidebars();
         if (actualizada) {
-            this.derivaciones$ = this.derivacionesService.search({ cancelada: false }).pipe(cache());
             this.actualizarTabla();
         }
     }
@@ -152,9 +150,11 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     cambiarTab(index) {
-        this.ocultarSidebars();
-        this.actualizarTabla();
-        this.tabIndex = index;
+        if (index !== this.tabIndex) {
+            this.tabIndex = index;
+            this.ocultarSidebars();
+            this.actualizarTabla();
+        }
     }
 
     cancelar(derivacion) {
