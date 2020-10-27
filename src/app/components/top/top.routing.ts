@@ -24,6 +24,8 @@ import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.compon
 import { PrestacionSolicitudComponent } from './solicitudes/prestacionSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { EstadoSolicitudPipe } from './pipes/estado-solicitud.pipe';
+import { BotonesSolicitudPipe } from './pipes/botones.pipe';
+
 
 export const TOP_ROUTES = [
     { path: '', component: SolicitudesComponent, pathMatch: 'full' },
@@ -60,7 +62,8 @@ export const TOP_ROUTES = [
         ReglasComponent,
         ListaReglasComponent,
         BusquedaPacienteComponent,
-        EstadoSolicitudPipe
+        EstadoSolicitudPipe,
+        BotonesSolicitudPipe
     ]
 })
 export class TOPRouting { }
