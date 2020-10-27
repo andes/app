@@ -9,16 +9,7 @@
                 </div>
                 <div class="divisor">
                     <div class="datos-prestacion">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
-                             viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
-                            <path fill="#10A6E0"
-                                  d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
-                                                c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
-                                                c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
-                            <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
-                                                8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
-                        </svg>
+                        <plex-icon name="historial" class="text-info" size="xl"></plex-icon>
                         <h5 class="ml-1 text-primary evoluciones">Datos de la Solicitud</h5>
                     </div>
                     <div class="justify-content-end nav-fecha">
@@ -51,14 +42,15 @@
                         <ng-container *ngIf="observaciones">
                             <b>Observaciones</b>
                             <span>{{observaciones}}</span>
-                            </ng-container>
+                        </ng-container>
                         <b>Archivos Adjuntos</b>
                         <rup-adjuntar-documento *ngIf="registro?.solicitud?.registros[0].valor.documentos?.length"
                                                 [permiteCarga]="false"
                                                 [parametroRegistro]="registro.solicitud.registros[0]">
                         </rup-adjuntar-documento>
-                        <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos adjuntos)</small>
-                        <historial-solicitud [prestacion]="registro" [turno]='turno' ></historial-solicitud>
+                        <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos
+                            adjuntos)</small>
+                        <historial-solicitud [prestacion]="registro" [turno]='turno'></historial-solicitud>
                     </div>
                 </div>
             </div>
