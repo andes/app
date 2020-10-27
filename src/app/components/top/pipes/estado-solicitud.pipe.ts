@@ -13,14 +13,14 @@ export class EstadoSolicitudPipe implements PipeTransform {
             return 'Turno dado';
         }
         if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id) {
-            if (prestacion.estadoActual.tipo === 'pendiente' && prestacion?.paciente && !prestacion.solicitud.turno) {
+            if (prestacion.estadoActual.tipo === 'pendiente' && prestacion ?.paciente && !prestacion.solicitud.turno) {
                 return 'pendiente';
             }
             const esAuditoria = prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada';
             if (esAuditoria) {
                 return prestacion.estadoActual.tipo === 'auditoria' ? 'auditoria' : 'rechazada';
             }
-            if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada' && prestacion.solicitud.profesional?.id === this.auth.profesional) {
+            if (prestacion.paciente && prestacion.estadoActual.tipo === 'asignada') {
                 return 'asignada';
             }
         }
