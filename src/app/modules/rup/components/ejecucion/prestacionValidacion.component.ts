@@ -11,11 +11,12 @@ import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { forkJoin, of, combineLatest, Subscription } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { HUDSService } from '../../services/huds.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { populateRelaciones, unPopulateRelaciones } from '../../operators/populate-relaciones';
 
 
 @Component({
@@ -149,7 +150,9 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.prestacionSubscription = combineLatest(
             this.conceptosTurneablesService.getAll(),
-            this.servicioPrestacion.getById(id)
+            this.servicioPrestacion.getById(id).pipe(
+                map(prestacion => populateRelaciones(prestacion))
+            )
         ).subscribe(([conceptosTurneables, prestacion]) => {
             this.conceptosTurneables = conceptosTurneables;
             this.prestacion = prestacion;
@@ -245,30 +248,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
                 });
             }
-
-            if (this.prestacion) {
-                this.prestacion.ejecucion.registros.forEach(registro => {
-
-                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon.forEach((registroRel, key) => {
-                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
-                                if (r.id) {
-                                    return r.id === registroRel.id;
-                                } else {
-                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
-                                }
-                            });
-                            // Es registro RUP o es un concepto puro?
-                            if (registroAux) {
-                                registro.relacionadoCon[key] = registroAux;
-                            } else {
-                                registro.relacionadoCon[key] = registroRel;
-                            }
-                        });
-                    }
-                });
-            }
-
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
         });
@@ -303,37 +282,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 return false;
             } else {
                 let seCreoSolicitud = false;
-                this.prestacion.ejecucion.registros.forEach(registro => {
-
-                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon.forEach((registroRel, key) => {
-                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
-                                if (r.id) {
-                                    return r.id === registroRel.id;
-                                } else {
-                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
-                                }
-                            });
-                            // Es registro RUP o es un concepto puro?
-                            if (registroAux) {
-                                registro.relacionadoCon[key] = { id: registroAux.id };
-                            } else {
-                                registro.relacionadoCon[key] = { id: registroRel.id };
-                            }
-                        });
-                    }
-                });
-                // console.log(this.prestacion);
-                this.servicioPrestacion.validarPrestacion(this.prestacion).subscribe(prestacion => {
+                unPopulateRelaciones(this.prestacion);
+                this.servicioPrestacion.validarPrestacion(this.prestacion).pipe(
+                    map(prestacion => populateRelaciones(prestacion))
+                ).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    let recorrerRegistros = registro => {
-                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0].id === 'string')) {
-                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel.id);
-                                });
-                            }
-                        }
+                    const recorrerRegistros = registro => {
                         if (!seCreoSolicitud && registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
                             seCreoSolicitud = true;
                             this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');

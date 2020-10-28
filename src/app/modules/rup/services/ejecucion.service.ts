@@ -9,6 +9,7 @@ import { switchMap, map, filter } from 'rxjs/operators';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { cache } from '@andes/shared';
 import { ElementosRUPService } from './elementosRUP.service';
+import { getRegistros } from '../operators/populate-relaciones';
 
 
 @Injectable()
@@ -94,18 +95,7 @@ export class RupEjecucionService {
     }
 
     getPrestacionRegistro() {
-        const registros = this.prestacion.ejecucion.registros;
-        let rs = [...registros];
-        registros.forEach(registro => {
-            if (registro.hasSections) {
-                registro.registros.forEach(seccion => {
-                    if (seccion.isSection) {
-                        rs = [...rs, ...seccion.registros];
-                    }
-                });
-            }
-        });
-        return rs;
+        return getRegistros(this.prestacion);
     }
 
 

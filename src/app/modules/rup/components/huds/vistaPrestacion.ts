@@ -7,6 +7,8 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { DocumentosService } from '../../../../services/documentos.service';
+import { map } from 'rxjs/operators';
+import { populateRelaciones } from '../../operators/populate-relaciones';
 
 @Component({
     selector: 'vista-prestacion',
@@ -25,36 +27,22 @@ export class VistaPrestacionComponent implements OnInit {
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
-    private requestInProgress: boolean;
+    public requestInProgress: boolean;
+
     constructor(
         private auth: Auth,
         private servicioDocumentos: DocumentosService,
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
-        public elementosRUPService: ElementosRUPService) {
+        public elementosRUPService: ElementosRUPService
+    ) {
     }
 
     ngOnInit() {
-        this.prestacion.ejecucion.registros.forEach(registro => {
-
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                registro.relacionadoCon.forEach((registroRel, key) => {
-                    let registroAux = this.prestacion.ejecucion.registros.find(r => {
-                        if (r.id) {
-                            return r.id === registroRel.id;
-                        } else {
-                            return r.concepto.conceptId === registroRel.concepto.conceptId;
-                        }
-                    });
-                    if (registroAux) {
-                        registro.relacionadoCon[key] = registroAux;
-                    } else {
-                        registro.relacionadoCon[key] = registroRel;
-                    }
-                });
-            }
-        });
         this.puedeDescargarInforme = this.auth.check('huds:impresion');
+        if (this.prestacion) {
+            populateRelaciones(this.prestacion);
+        }
     }
 
     private _idPrestacion;
@@ -63,27 +51,10 @@ export class VistaPrestacionComponent implements OnInit {
         this.paciente = null;
         this.prestacion = null;
         this._idPrestacion = value;
-        this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
+        this.servicioPrestacion.getById(this.idPrestacion).pipe(
+            map(prestacion => populateRelaciones(prestacion))
+        ).subscribe(prestacion => {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                prestacion.ejecucion.registros.forEach(registro => {
-
-                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon.forEach((registroRel, key) => {
-                            let registroAux = this.prestacion.ejecucion.registros.find(r => {
-                                if (r.id) {
-                                    return r.id === registroRel.id;
-                                } else {
-                                    return r.concepto.conceptId === registroRel.concepto.conceptId;
-                                }
-                            });
-                            if (registroAux) {
-                                registro.relacionadoCon[key] = registroAux;
-                            } else {
-                                registro.relacionadoCon[key] = registroRel;
-                            }
-                        });
-                    }
-                });
                 this.prestacion = prestacion;
                 this.paciente = paciente;
             });

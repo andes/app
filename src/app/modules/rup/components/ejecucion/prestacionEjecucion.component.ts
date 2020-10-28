@@ -20,8 +20,10 @@ import { PlantillasService } from '../../services/plantillas.service';
 
 import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { type } from 'os';
+import { getRegistros, populateRelaciones, unPopulateRelaciones } from '../../operators/populate-relaciones';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -155,7 +157,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
-                    this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                    this.servicioPrestacion.getById(id).pipe(
+                        map(prestacion => populateRelaciones(prestacion))
+                    ).subscribe(prestacion => {
                         this.prestacion = prestacion;
                         this.ejecucionService.prestacion = prestacion;
 
@@ -266,26 +270,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
-
         if (this.prestacion) {
-            // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: true, items: null };
-                // Si el registro actual tiene registros vinculados, los "populamos"
-                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                    registro.relacionadoCon.forEach((registroRel, key) => {
-                        let registroAux = this.prestacion.ejecucion.registros.find(r => r.id === registroRel.id);
-                        // Es registro RUP o es un concepto puro?
-                        if (registroAux) {
-                            registro.relacionadoCon[key] = registroAux;
-                        } else {
-                            registro.relacionadoCon[key] = registroRel;
-                        }
-                    });
-                }
-
             });
-
             this.armarRelaciones(this.prestacion.ejecucion.registros);
         }
 
@@ -567,30 +555,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        unPopulateRelaciones(this.prestacion);
+        const registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
 
-        registros.forEach(registro => {
-
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                registro.relacionadoCon.forEach((registroRel, key) => {
-                    let registroAux = this.prestacion.ejecucion.registros.find(r => {
-                        if (r.id) {
-                            return r.id === registroRel.id;
-                        } else {
-                            return r.concepto.conceptId === registroRel.concepto.conceptId;
-                        }
-                    });
-                    // Es registro RUP o es un concepto puro?
-                    if (registroAux) {
-                        registro.relacionadoCon[key] = { id: registroAux.id };
-                    } else {
-                        registro.relacionadoCon[key] = { id: registroRel.id };
-                    }
-                });
-            }
-        });
-
-        let params: any = {
+        const params: any = {
             op: 'registros',
             solicitud: this.prestacion.solicitud,
             registros: registros
@@ -674,7 +642,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clickeo y filtro para no mostrar su autovinculación.
-        let registros = this.prestacion.ejecucion.registros;
+        const registros = getRegistros(this.prestacion);
         this.itemsRegistros[registroActual.id].items = [];
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
             if (registro.id !== registroActual.id) {
@@ -741,9 +709,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Actualiza ambas columnas de registros según las relaciones
     armarRelaciones(registros) {
-
         registros = this.prestacion.ejecucion.registros;
-
         let relacionesOrdenadas = [];
 
         registros.forEach((cosa, index) => {
