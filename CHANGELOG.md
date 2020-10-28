@@ -1,3 +1,21 @@
+# [5.19.0](https://github.com/andes/app/compare/v5.18.0...v5.19.0) (2020-10-28)
+
+
+### Bug Fixes
+
+* **citas:** revision de agenda dinámicas ([#1980](https://github.com/andes/app/issues/1980)) ([a5c445a](https://github.com/andes/app/commit/a5c445a44c6548dd5dc4e629ff490ebeb5483469))
+* **inicio:** soporte para links externos ([#1983](https://github.com/andes/app/issues/1983)) ([f484754](https://github.com/andes/app/commit/f484754c0800578e38db5f8fab88f997df940297))
+* **mapa-cama:** control desocupada ([5ef650b](https://github.com/andes/app/commit/5ef650b71959264f92cc63e2f1f55465f93b0b4b))
+* **menu:** se evitan items repetidos ([#1979](https://github.com/andes/app/issues/1979)) ([d604ed4](https://github.com/andes/app/commit/d604ed47935b8ddccea9b0a9272dd4864b7c69ad))
+* **mpi:** setea fecha de fallecimiento ([#1988](https://github.com/andes/app/issues/1988)) ([816578a](https://github.com/andes/app/commit/816578a6bf0738d7d8605ee00fd66f67f75dbe80))
+* **top:** arreglo de dropdown en estado asignada ([#1992](https://github.com/andes/app/issues/1992)) ([5d385e4](https://github.com/andes/app/commit/5d385e4ee07446223828fb034baaccbbaafa08c2))
+
+
+### Features
+
+* **core:** logging de errores de angular ([#1964](https://github.com/andes/app/issues/1964)) ([efafb5e](https://github.com/andes/app/commit/efafb5e2c0d7e85a60dd82815731fd80de304b4d))
+* **rup:** anular prestación ([#1928](https://github.com/andes/app/issues/1928)) ([f60ea4d](https://github.com/andes/app/commit/f60ea4dae4541700144f20ca60e47bb805b33eef))
+
 # [5.18.0](https://github.com/andes/app/compare/v5.17.0...v5.18.0) (2020-10-21)
 
 
