@@ -545,9 +545,10 @@
 
                                 <plex-button size="block"
                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
                                              label="CONTINUAR REGISTRO" type="success btn-sm">
                                 </plex-button>
+
 
                                 <plex-button size="block"
                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"

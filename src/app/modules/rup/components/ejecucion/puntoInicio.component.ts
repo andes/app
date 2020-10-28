@@ -69,6 +69,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
     public routeToParams = [];
     public accesoHudsPrestacion = null;
+    public prestacionNominalizada;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
     public tieneAccesoHUDS: Boolean;
@@ -613,6 +614,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     preAccesoHuds(motivoAccesoHuds) {
         const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
         if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivoAccesoHuds) && motivoAccesoHuds) {
+            if (this.prestacionNominalizada) {
+                this.accesoHudsPaciente = {};
+            }
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
