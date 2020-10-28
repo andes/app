@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
@@ -13,17 +13,21 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
+    styleUrls: ['./turnos-prestaciones.scss']
+
 })
 
 export class TurnosPrestacionesComponent implements OnInit {
-    public busquedas;
+    public busqueda$: Observable<any[]>;
+    public seleccionada$: Observable<boolean>;
+    public lastSelect$ = new BehaviorSubject<string>(null);
+
     public mostrarMasOpciones;
     private parametros;
     private hoy;
     public fechaDesde: any;
     public fechaHasta: any;
     private sumar;
-    private sinOS;
     public showPrestacion;
     public loading;
     public arrayEstados;
@@ -38,6 +42,9 @@ export class TurnosPrestacionesComponent implements OnInit {
     public profesional: any;
     public botonBuscarDisabled: Boolean = false;
 
+    public sortBy: String;
+    public sortOrder = 'desc';
+
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
@@ -50,7 +57,6 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.mostrarMasOpciones = false;
         this.sumarB = false;
         this.sumar = false;
-        this.sinOS = false;
         this.loading = true;
         this.parametros = {
             fechaDesde: '',
@@ -133,7 +139,8 @@ export class TurnosPrestacionesComponent implements OnInit {
 
     private busquedaPrestaciones(params) {
         this.turnosPrestacionesService.get(params).subscribe((data) => {
-            this.busquedas = this.ordenarPorFecha(data);
+            this.turnosPrestacionesService.prestacionesFiltrada$.next(data);
+            this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$;
             this.loading = false;
         });
     }
@@ -146,7 +153,8 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.showPrestacion = false;
         this.loading = true;
         return this.turnosPrestacionesService.get(parametros).subscribe((data) => {
-            this.busquedas = this.ordenarPorFecha(data);
+            this.turnosPrestacionesService.prestacionesFiltrada$.next(data);
+            this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$;
             this.loading = false;
         });
     }
@@ -206,15 +214,7 @@ export class TurnosPrestacionesComponent implements OnInit {
         }
 
     }
-    ordenarPorFecha(registros) {
-        return registros.sort((a, b) => {
-            let inia = a.fecha ? new Date(a.fecha) : null;
-            let inib = b.fecha ? new Date(b.fecha) : null;
-            if (inia && inib) {
-                return (inia.getTime() - inib.getTime());
-            }
-        });
-    }
+
     loadPrestaciones(event) {
         this.servicioPrestacion.get({
             turneable: 1
@@ -234,12 +234,15 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
+            const aux: any = this.lastSelect$;
+            if (aux._value) {
+                aux._value.seleccionada = false;
+            }
+            this.lastSelect$.next(datos);
+            datos.seleccionada = true;
             this.showPrestacion = true;
             this.prestacion = datos;
-            this.busquedas.map(item => {
-                item.seleccionada = false;
-            });
-            datos.seleccionada = true;
+
         });
     }
 
@@ -254,6 +257,17 @@ export class TurnosPrestacionesComponent implements OnInit {
                 this.plex.info('info', respuesta.message);
             }
         });
+    }
+
+    sortTable(event: string) {
+        this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+        if (this.sortBy === event) {
+            this.turnosPrestacionesService.sortOrder$.next(this.sortOrder);
+        } else {
+            this.sortBy = event;
+            this.turnosPrestacionesService.sortBy$.next(event);
+            this.turnosPrestacionesService.sortOrder$.next(this.sortOrder);
+        }
     }
 
     onClose() {
