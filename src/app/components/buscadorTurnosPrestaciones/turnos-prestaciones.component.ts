@@ -6,10 +6,11 @@ import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { Subscription } from 'rxjs';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
-
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
+
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',

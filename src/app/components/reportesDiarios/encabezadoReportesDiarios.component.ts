@@ -6,6 +6,7 @@ import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
 import { ProfesionalService } from '../../services/profesional.service';
 import { ExcelService } from '../../services/xlsx.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'encabezadoReportesDiarios',

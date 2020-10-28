@@ -12,6 +12,7 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'mapa-espacio-fisico-vista',

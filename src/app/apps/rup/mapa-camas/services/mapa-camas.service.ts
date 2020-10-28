@@ -15,7 +15,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
-
+import * as moment from 'moment';
 
 @Injectable()
 export class MapaCamasService {

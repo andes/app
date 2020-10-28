@@ -11,7 +11,7 @@ import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Plex } from '@andes/plex';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-cama-detalle',

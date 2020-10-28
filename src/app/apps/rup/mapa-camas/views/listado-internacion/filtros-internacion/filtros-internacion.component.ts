@@ -3,6 +3,7 @@ import * as enumerados from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-filtros-internacion',

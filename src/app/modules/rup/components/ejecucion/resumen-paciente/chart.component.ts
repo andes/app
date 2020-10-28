@@ -3,6 +3,7 @@ import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../services/prestaciones.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'radio-chart',

@@ -1,23 +1,17 @@
-import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
-import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-// import { FORM_DIRECTIVES } from '@angular/common';
 import { ProfesionalService } from './../../services/profesional.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IProfesional } from './../../interfaces/IProfesional';
-import { IMatricula } from './../../interfaces/IMatricula';
 import { IPais } from './../../interfaces/IPais';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import * as enumerados from './../../utils/enumerados';
-import {
-    IContacto
-} from './../../interfaces/IContacto';
+import { IContacto } from './../../interfaces/IContacto';
 import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
 import { Plex } from '@andes/plex';
 import { Matching } from '@andes/match';
@@ -25,6 +19,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SIISAService } from '../../services/siisa.service';
 import { ISiisa } from './../../interfaces/ISiisa';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as moment from 'moment';
+
 @Component({
     selector: 'profesional-create-update',
     templateUrl: 'profesional-create-update.html',

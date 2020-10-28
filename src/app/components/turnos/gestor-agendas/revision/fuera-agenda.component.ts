@@ -2,7 +2,7 @@ import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/c
 import { Plex } from '@andes/plex';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
-
+import * as moment from 'moment';
 
 @Component({
     selector: 'fuera-agenda',
@@ -35,8 +35,8 @@ export class RevisionFueraAgendaComponent implements OnInit {
     ngOnInit() {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        this.fechaDesde = moment(this.fechaDesde).startOf('day') as any; // [TODO] Fix tipado
+        this.fechaHasta = moment(this.fechaHasta).endOf('day') as any;
         this.cargarPrestaciones();
     }
 

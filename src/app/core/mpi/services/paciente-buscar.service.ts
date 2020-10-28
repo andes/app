@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
 import { of, EMPTY } from 'rxjs';
 import { PacienteService } from './paciente.service';
+import * as moment from 'moment';
 
 export interface PacienteEscaneado {
     documento: string;

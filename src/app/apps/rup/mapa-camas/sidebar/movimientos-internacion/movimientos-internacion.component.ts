@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
-import { ISnapshot } from '../../interfaces/ISnapshot';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-movimientos-internacion',

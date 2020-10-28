@@ -1,6 +1,6 @@
 import { OnInit, Input, ViewContainerRef, Directive, OnDestroy } from '@angular/core';
 import { OrganizacionService } from '../services/organizacion.service';
-import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
+import { PlexSelectComponent } from '@andes/plex';
 import { Subscription } from 'rxjs';
 
 /**

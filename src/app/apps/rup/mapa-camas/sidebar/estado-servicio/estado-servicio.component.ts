@@ -3,6 +3,8 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subscription, timer, of, from } from 'rxjs';
 import { map, tap, defaultIfEmpty, startWith, switchMap, filter, distinct, toArray } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import * as moment from 'moment';
+
 
 @Component({
     selector: 'app-estado-servicio',

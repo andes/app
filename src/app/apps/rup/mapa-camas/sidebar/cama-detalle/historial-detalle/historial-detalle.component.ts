@@ -4,7 +4,7 @@ import { map, switchMap, startWith } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { ISnapshot } from '../../../interfaces/ISnapshot';
 import { IMAQEstado } from '../../../interfaces/IMaquinaEstados';
-
+import * as moment from 'moment';
 @Component({
     selector: 'app-historial-detalle',
     templateUrl: './historial-detalle.component.html'

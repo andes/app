@@ -9,6 +9,7 @@ import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRela
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'datos-basicos',

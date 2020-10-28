@@ -4,6 +4,7 @@ import { RUPComponent } from './../core/rup.component';
 import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RupElement } from '.';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-OdontogramaRefset',

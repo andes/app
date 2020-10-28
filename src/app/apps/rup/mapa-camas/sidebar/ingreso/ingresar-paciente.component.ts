@@ -18,6 +18,7 @@ import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
 import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -48,7 +49,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public pacientes = [];
     public paciente = null;
     public view;
-    public fechaHasta = moment().toDate();
     private fechaIngresoOriginal: Date;
 
     public get origenExterno() {
@@ -122,7 +122,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
-        this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
 
         const pacienteID$ = this.handlerPacienteID();
 

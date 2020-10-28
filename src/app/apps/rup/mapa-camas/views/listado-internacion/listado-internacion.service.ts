@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { switchMap, map } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import * as moment from 'moment';
 
 @Injectable()
 export class ListadoInternacionService {
@@ -28,7 +29,7 @@ export class ListadoInternacionService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
-            ).pipe(
+        ).pipe(
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     const filtros = {
@@ -63,7 +64,7 @@ export class ListadoInternacionService {
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
                     (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }

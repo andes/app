@@ -9,7 +9,8 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { Unsubscribe } from '@andes/shared';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { concat } from 'rxjs';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
+import * as moment from 'moment';
 
 @Component({
     selector: 'solicitudes',

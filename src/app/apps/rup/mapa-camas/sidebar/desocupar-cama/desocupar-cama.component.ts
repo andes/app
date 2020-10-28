@@ -5,7 +5,7 @@ import { Subscription, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, map, switchMapTo } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
-
+import * as moment from 'moment';
 @Component({
     selector: 'app-desocupar-cama',
     templateUrl: 'desocupar-cama.component.html'
@@ -81,7 +81,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                     );
                 }
             }),
-        );
+        ) as any;
 
         this.hayMovimientosAt$ = combineLatest(
             this.mapaCamasService.fecha2,

@@ -3,6 +3,7 @@ import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import * as enumerados from './../../utils/enumerados';
+import * as moment from 'moment';
 
 // Services
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';

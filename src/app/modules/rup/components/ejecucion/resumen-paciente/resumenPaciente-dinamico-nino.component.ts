@@ -5,6 +5,7 @@ import { ResumenPacienteDinamicoService } from '../../../services/resumenPacient
 import { VacunasService } from '../../../../../services/vacunas.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',

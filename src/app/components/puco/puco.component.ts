@@ -8,6 +8,7 @@ import { IProfe } from '../../interfaces/IProfe';
 import { forkJoin as observableForkJoin } from 'rxjs';
 import { DocumentosService } from '../../services/documentos.service';
 import { Auth } from '@andes/auth';
+import * as moment from 'moment';
 
 @Component({
     selector: 'puco',
@@ -87,7 +88,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
                     }
                 }
-                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
+                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc() as any;
             }
 
 

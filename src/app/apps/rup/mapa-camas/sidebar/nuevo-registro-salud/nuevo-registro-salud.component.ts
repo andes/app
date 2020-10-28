@@ -7,6 +7,7 @@ import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
 import { ISnomedConcept } from '../../../../../modules/rup/interfaces/snomed-concept.interface';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-nuevo-registro-salud',

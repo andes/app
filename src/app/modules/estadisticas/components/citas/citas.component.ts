@@ -2,7 +2,6 @@ import * as moment from 'moment';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
 import { EstAgendasService } from '../../services/agenda.service';
 import { getRefactorNombre } from '../../utils/comboLabelFiltro.component';
 
@@ -69,10 +68,10 @@ export class CitasComponent implements OnInit {
 
 
     cargarLosFiltros() {
-        this.profesionales =  this.data.profesionales;
-        this.prestaciones =  this.data.prestacion;
-        this.estadoTurno =  getRefactorNombre(this.data.estado_turno);
-        this.estadoAgenda =  getRefactorNombre(this.data.estado_agenda);
-        this.tipoTurno =  getRefactorNombre(this.data.tipoTurno);
+        this.profesionales = this.data.profesionales;
+        this.prestaciones = this.data.prestacion;
+        this.estadoTurno = getRefactorNombre(this.data.estado_turno);
+        this.estadoAgenda = getRefactorNombre(this.data.estado_agenda);
+        this.tipoTurno = getRefactorNombre(this.data.tipoTurno);
     }
 }

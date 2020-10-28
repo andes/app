@@ -12,6 +12,8 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import * as moment from 'moment';
+
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
@@ -133,7 +135,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         ).pipe(
             map(([prestaciones, desde, hasta, tipoPrestacion, min]) => {
                 desde = desde.getTime() < min.getTime() ? min : desde;
-                desde = moment(desde);
+                desde = moment(desde) as any;
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
                     if (tipoPrestacion) {

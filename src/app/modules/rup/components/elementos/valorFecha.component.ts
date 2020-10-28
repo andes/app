@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
-
+import * as moment from 'moment';
 @Component({
     selector: 'rup-valor-fecha',
     templateUrl: 'valorFecha.html'

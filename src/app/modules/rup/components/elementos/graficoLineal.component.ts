@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import * as moment from 'moment';
-import { isNumber } from 'util';
 import { RupElement } from '.';
+import { isNumber } from 'util';
 
 @Component({
     selector: 'rup-grafico-lineal',

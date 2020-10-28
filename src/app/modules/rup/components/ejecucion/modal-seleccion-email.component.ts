@@ -1,5 +1,5 @@
 import { Component, Output, ViewChild, Input, EventEmitter, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PlexModalComponent } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 

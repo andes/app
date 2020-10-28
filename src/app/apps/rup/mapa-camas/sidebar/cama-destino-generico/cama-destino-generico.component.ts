@@ -3,6 +3,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { Observable, Subscription, combineLatest } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-cama-destino-generico',

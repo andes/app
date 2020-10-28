@@ -13,6 +13,7 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-egresar-paciente',

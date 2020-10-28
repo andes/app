@@ -1,5 +1,5 @@
-import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
-import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
+import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import { PlexPanelComponent } from '@andes/plex';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';

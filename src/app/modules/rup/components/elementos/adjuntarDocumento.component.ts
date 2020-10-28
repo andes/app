@@ -4,6 +4,8 @@ import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { isUndefined } from 'util';
+import * as moment from 'moment';
+
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',

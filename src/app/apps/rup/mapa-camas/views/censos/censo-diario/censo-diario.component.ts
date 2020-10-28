@@ -4,6 +4,7 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-censo-diario',

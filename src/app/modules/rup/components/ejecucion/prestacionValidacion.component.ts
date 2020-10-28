@@ -16,6 +16,7 @@ import { HUDSService } from '../../services/huds.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-prestacionValidacion',

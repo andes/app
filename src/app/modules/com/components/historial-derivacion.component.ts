@@ -1,6 +1,7 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 @Component({
     selector: 'historial-derivacion',

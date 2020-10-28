@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, switchMapTo } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-internacion-lista-espera',

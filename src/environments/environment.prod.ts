@@ -4,7 +4,7 @@ import { apiKeys, hotjar, analytics } from './apiKeyMaps';
 export const environment = {
     production: true,
     environmentName: 'produccion',
-    API: '/api',
+    API: 'https://demo.andes.gob.ar/api',
     WS: '/',
     APIStatusCheck: true,
     version: _package.version,
