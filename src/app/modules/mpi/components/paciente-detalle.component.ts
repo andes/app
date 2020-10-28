@@ -162,7 +162,7 @@ export class PacienteDetalleComponent implements OnInit {
             this.obraSocial = null;
             return;
         }
-        if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0].nombre) {
+        if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0] && this.paciente.financiador[0].nombre) {
             this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
