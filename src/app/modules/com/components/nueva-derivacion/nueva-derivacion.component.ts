@@ -87,6 +87,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             if (params['paciente']) {
                 this.seleccionarPaciente(params['paciente']);
                 this.modelo.organizacionOrigen = this.auth.organizacion;
+                this.seleccionarProfesional(this.auth.profesional);
             } else {
 
             }
@@ -104,14 +105,25 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         }
     }
 
-    seleccionarPaciente(paciente): void {
-        this.pacienteService.getById(paciente).subscribe(
-            resultado => {
-                this.paciente = resultado;
+    seleccionarPaciente(idPaciente): void {
+        this.pacienteService.getById(idPaciente).subscribe(
+            paciente => {
+                this.paciente = paciente;
             },
             () => {
                 this.plex.info('danger', 'Intente nuevamente', 'Error en la búsqueda de paciente');
-                this.router.navigate(['/solicitudes']);
+                this.router.navigate(['/derivaciones']);
+            }
+        );
+    }
+
+    seleccionarProfesional(idProfesional): void {
+        this.profesionalService.getProfesional({ id: idProfesional }).subscribe(
+            profesional => {
+                this.modelo.profesionalSolicitante = profesional[0];
+            },
+            () => {
+                this.plex.info('danger', 'Intente nuevamente', 'Error al asignar profesional por defecto');
             }
         );
     }
