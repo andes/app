@@ -615,7 +615,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
         if ((this.tieneAccesoHUDS || this.motivoVerContinuarPrestacion === motivoAccesoHuds) && motivoAccesoHuds) {
             if (this.prestacionNominalizada) {
-                this.accesoHudsPaciente = {};
+                this.accesoHudsPaciente = null;
             }
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
@@ -631,7 +631,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     this.accesoHudsTurno = null;
                     this.accesoHudsPrestacion = null;
                 });
+            } else {
+                window.sessionStorage.setItem('huds-token', null);
+                doRoute();
             }
+
         }
         this.showModalMotivo = false;
     }
