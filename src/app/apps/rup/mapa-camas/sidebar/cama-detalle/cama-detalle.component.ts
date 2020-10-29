@@ -170,12 +170,14 @@ export class CamaDetalleComponent implements OnInit {
             if (resultado) {
                 this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.fecha, cama)
                     .subscribe((internacion) => {
-                        this.prestacionesService.invalidarPrestacion({ id: internacion.idInternacion, solicitud: { turno: null } }).subscribe((prestacion) => {
-                            this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
-                            this.mapaCamasService.select(null);
-                            this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
-                            this.cancel.emit();
-                        });
+                        if (this.mapaCamasService.capa === 'estadistica') {
+                            const prestacion = { id: internacion.idInternacion, solicitud: { turno: null } };
+                            this.prestacionesService.invalidarPrestacion(prestacion).subscribe();
+                        }
+                        this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
+                        this.mapaCamasService.select(null);
+                        this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
+                        this.cancel.emit();
                     });
             }
         });
