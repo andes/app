@@ -142,6 +142,13 @@ export class DinamicaFormComponent implements OnInit {
     * Guarda el turno en la agenda y crea la prestación
     */
     guardarDatosTurno() {
+        setTimeout(() => {
+            this.guardarDatosTurnoAux();
+        }, 1500);
+
+    }
+
+    private guardarDatosTurnoAux() {
         const paciente = this.datosTurno.paciente;
         if (this.agenda.dinamica) {
             this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
