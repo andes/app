@@ -126,8 +126,8 @@
                     <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
                     </plex-button>
                 </span>
-                <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                    <ng-container *ngFor="let doc of fotos; let i = index">
+                <div class="image-container hr-inline-group" *ngIf="documentos && fileToken">
+                    <ng-container *ngFor="let doc of documentos; let i = index">
                         <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
                         <div class="image hover">
                             <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
