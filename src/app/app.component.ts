@@ -12,6 +12,7 @@ import { GoogleTagManagerService } from './shared/services/analytics.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
 import { Observable } from 'rxjs';
+import { keyframes } from '@angular/animations';
 
 // import { RxSocket } from 'rx-socket.io-client';
 
@@ -130,16 +131,16 @@ export class AppComponent {
 
                             if (modulo.submodulos && modulo.submodulos.length > 0) {
                                 modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
-                                modulo.submodulos.forEach((submodulo) => {
+                                modulo.submodulos.forEach((submodulo, key) => {
                                     modulos.push(submodulo._id);
-                                    const menuOptionSub = { label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
-                                    if (index === 0) {
+                                    const menuOptionSub = { id: key, label: `${modulo.nombre}: ${submodulo.nombre.replace(/<[^>]*>?/gm, ' ').replace('- ', '')}`, icon: `${submodulo.icono}`, route: submodulo.linkAcceso };
+                                    if (this.menuList.findIndex(x => x.label === menuOptionSub.label) === -1) {
                                         this.menuList.push(menuOptionSub);
                                     }
                                 });
                             } else {
                                 modulos.push(modulo._id);
-                                const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
+                                const menuOption = { id: index, label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
                                 this.menuList.push(menuOption);
                             }
                         }
