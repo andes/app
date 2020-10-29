@@ -173,29 +173,30 @@ export class TurnosPrestacionesComponent implements OnInit {
                     this.parametros['organizacion'] = this.auth.organizacion.id;
                 }
             }
+            const data = value.value;
             if (tipo === 'prestaciones') {
-                value.value ? this.parametros['prestacion'] = value.value.conceptId : this.parametros['prestacion'] = '';
+                this.parametros['prestacion'] = data ? data.conceptId : '';
             }
             if (tipo === 'profesionales') {
-                value.value ? this.parametros['idProfesional'] = value.value.id : this.parametros['idProfesional'] = '';
+                this.parametros['idProfesional'] = data ? data.id : '';
             }
             if (tipo === 'estado') {
-                value.value ? this.parametros['estado'] = value.value.id : this.parametros['estado'] = '';
+                this.parametros['estado'] = data ? data.id : '';
             }
             if (tipo === 'financiador') {
-                value.value ? this.parametros['financiador'] = value.value.nombre : this.parametros['financiador'] = '';
+                this.parametros['financiador'] = data ? data.nombre : '';
             }
             if (tipo === 'sumar') {
-                value.value ? this.parametros['financiador'] = 'SUMAR' : this.parametros['financiador'] = '';
+                this.parametros['financiador'] = data ? 'SUMAR' : '';
             }
             if (tipo === 'sinOS') {
-                value.value ? this.parametros['financiador'] = 'No posee' : this.parametros['financiador'] = '';
+                this.parametros['financiador'] = data ? 'No posee' : '';
             }
             if (tipo === 'estadoFacturacion') {
-                value.value ? this.parametros['estadoFacturacion'] = value.value.id : this.parametros['estadoFacturacion'] = '';
+                this.parametros['estadoFacturacion'] = data ? data.id : '';
             }
             if (tipo === 'documento') {
-                value.value ? this.parametros['documento'] = value.value : this.parametros['documento'] = '';
+                this.parametros['documento'] = data ? data : '';
             }
             if (tipo === 'filter') {
                 this.buscar(this.parametros);
