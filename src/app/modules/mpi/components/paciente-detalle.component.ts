@@ -13,7 +13,7 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
 export class PacienteDetalleComponent implements OnInit {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input() paciente: IPaciente;
-    @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
+    @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
 
