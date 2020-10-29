@@ -2,7 +2,7 @@
     <table class="table table-striped">
         <tbody>
             <tr *ngFor="let item of itemsHistorial">
-                <td *ngIf="item.createdAt">
+                <td>
                     <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
                     <br />
                     <span *ngIf="item.estado">
@@ -23,7 +23,7 @@
                         {{ item.observacion }}
                     </ng-container>
                     <plex-grid type="full" *ngIf="item.adjuntos?.length > 0" cols="1">
-                        <div class="image-container hr-inline-group" *ngIf="item.adjuntos && fileToken">
+                        <div class="image-container" *ngIf="item.adjuntos && fileToken">
                             <ng-container *ngFor="let doc of this.item.adjuntos; let i = index">
                                 <plex-visualizador [files]="adjuntos[item.id]" #visualizador></plex-visualizador>
                                 <div class="image hover">
@@ -37,6 +37,11 @@
                             </ng-container>
                         </div>
                     </plex-grid>
+                </td>
+                <td>
+                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" label=""
+                                 type="danger btn-sm" icon="trash-can" (click)="eliminarNota(item)">
+                    </plex-button>
                 </td>
             </tr>
         </tbody>
