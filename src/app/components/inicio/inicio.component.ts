@@ -57,17 +57,16 @@ export class InicioComponent implements AfterViewInit {
                         }
                     });
 
-                    this.secciones = this.modulos.filter(x => (!x.submodulos || !x.submodulos.length));
-
-                    this.modulos.sort((a, b) => a.orden - b.orden);
-                    this.modulos.map(x => {
-                        if (x.submodulos && x.submodulos.length > 0) {
-                            return x.submodulos.sort((a, b) => a.orden - b.orden);
-                        }
-                    });
-
-
                     if (this.modulos.length) {
+                        this.secciones = this.modulos.filter(x => (!x.submodulos || !x.submodulos.length));
+
+                        this.modulos.sort((a, b) => a.orden - b.orden);
+                        this.modulos.map(x => {
+                            if (x.submodulos && x.submodulos.length > 0) {
+                                return x.submodulos.sort((a, b) => a.orden - b.orden);
+                            }
+                        });
+
                         this.denied = false;
                         let modulos = this.modulos.map(p => {
                             return p._id;
