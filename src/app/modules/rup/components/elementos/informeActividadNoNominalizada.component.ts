@@ -98,6 +98,7 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
+            resultado.pacientes = resultado.pacientes.filter((pac: any) => !this.registro.valor.informe.pacientes.find((pacInf: any) => pac.id === pacInf.id));
             this.pacientes = resultado.pacientes;
         }
     }
