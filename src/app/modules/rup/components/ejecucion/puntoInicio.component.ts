@@ -375,13 +375,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     invalidarPrestacion(prestacion, idTurno) {
         this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
             if (confirmacion) {
-                let data;
-                if (prestacion.solicitud.turno) {
-                    data = { op: 'desasociarTurno' };
-                } else {
-                    data = { op: 'estadoPush', estado: { tipo: 'anulada' } };
-                }
-                this.servicioPrestacion.patch(prestacion.id, data).subscribe(() => this.actualizar());
+                this.servicioPrestacion.invalidarPrestacion(prestacion).subscribe(() => this.actualizar());
             }
         });
     }

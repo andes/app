@@ -595,6 +595,17 @@ export class PrestacionesService {
         return this.patch(prestacion.id, dto);
 
     }
+
+    invalidarPrestacion(prestacion): Observable<any> {
+        let data;
+        if (prestacion.solicitud.turno) {
+            data = { op: 'desasociarTurno' };
+        } else {
+            data = { op: 'estadoPush', estado: { tipo: 'anulada' } };
+        }
+        return this.patch(prestacion.id, data);
+    }
+
     /**
     * Método clonar. Inserta una copia de una prestacion.
     * @param {any} prestacionCopia Recibe una copia de una prestacion

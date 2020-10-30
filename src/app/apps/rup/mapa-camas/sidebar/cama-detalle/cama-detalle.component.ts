@@ -11,6 +11,7 @@ import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Plex } from '@andes/plex';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 
 @Component({
@@ -69,6 +70,7 @@ export class CamaDetalleComponent implements OnInit {
         private router: Router,
         private mapaCamasService: MapaCamasService,
         private mapaCamasHTTP: MapaCamasHTTP,
+        private prestacionesService: PrestacionesService,
     ) {
     }
 
@@ -168,6 +170,10 @@ export class CamaDetalleComponent implements OnInit {
             if (resultado) {
                 this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.fecha, cama)
                     .subscribe((internacion) => {
+                        if (this.mapaCamasService.capa === 'estadistica') {
+                            const prestacion = { id: internacion.idInternacion, solicitud: { turno: null } };
+                            this.prestacionesService.invalidarPrestacion(prestacion).subscribe();
+                        }
                         this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
                         this.mapaCamasService.select(null);
                         this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
