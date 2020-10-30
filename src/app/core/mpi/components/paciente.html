@@ -123,6 +123,9 @@
                             {{ elem.estado }}
                         </plex-badge>
 
+                        <plex-badge type="success">{{ elem.percent | percent}}
+                        </plex-badge>
+
                         <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem)">
                         </plex-button>
                     </plex-item>
