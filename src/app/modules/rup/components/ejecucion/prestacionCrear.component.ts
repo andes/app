@@ -61,7 +61,12 @@ export class PrestacionCrearComponent implements OnInit {
 
     btnClick() {
         if (this.opcion === 'fueraAgenda') {
-            this.iniciarPrestacion();
+            if (this.fecha.getTime() < Date.now()) {
+                this.iniciarPrestacion();
+            } else {
+                this.plex.info('warning', 'error fecha, no se puede ingresar fecha futura');
+            }
+
         } else {
             this.darTurnoAutocitado();
         }
