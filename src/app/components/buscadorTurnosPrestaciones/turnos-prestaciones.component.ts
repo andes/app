@@ -173,61 +173,30 @@ export class TurnosPrestacionesComponent implements OnInit {
                     this.parametros['organizacion'] = this.auth.organizacion.id;
                 }
             }
+            const data = value.value;
             if (tipo === 'prestaciones') {
-                if (value.value !== null) {
-                    this.parametros['prestacion'] = value.value.conceptId;
-                } else {
-                    this.parametros['prestacion'] = '';
-                }
+                this.parametros['prestacion'] = data ? data.conceptId : '';
             }
             if (tipo === 'profesionales') {
-                if (value.value) {
-                    this.parametros['idProfesional'] = value.value.id;
-                } else {
-                    this.parametros['idProfesional'] = '';
-                }
+                this.parametros['idProfesional'] = data ? data.id : '';
             }
             if (tipo === 'estado') {
-                if (value.value) {
-                    this.parametros['estado'] = value.value.id;
-                } else {
-                    this.parametros['estado'] = '';
-                }
+                this.parametros['estado'] = data ? data.id : '';
             }
             if (tipo === 'financiador') {
-                if (value.value) {
-                    this.parametros['financiador'] = value.value.nombre;
-                } else {
-                    this.parametros['financiador'] = '';
-                }
+                this.parametros['financiador'] = data ? data.nombre : '';
             }
             if (tipo === 'sumar') {
-                if (value.value) {
-                    this.parametros['financiador'] = 'SUMAR';
-                } else {
-                    this.parametros['financiador'] = '';
-                }
+                this.parametros['financiador'] = data ? 'SUMAR' : '';
             }
             if (tipo === 'sinOS') {
-                if (value.value) {
-                    this.parametros['financiador'] = 'No posee';
-                } else {
-                    this.parametros['financiador'] = '';
-                }
+                this.parametros['financiador'] = data ? 'No posee' : '';
             }
             if (tipo === 'estadoFacturacion') {
-                if (value.value) {
-                    this.parametros['estadoFacturacion'] = value.value.id;
-                } else {
-                    this.parametros['estadoFacturacion'] = '';
-                }
+                this.parametros['estadoFacturacion'] = data ? data.id : '';
             }
             if (tipo === 'documento') {
-                if (value.value) {
-                    this.parametros['documento'] = value.value;
-                } else {
-                    this.parametros['documento'] = '';
-                }
+                this.parametros['documento'] = data ? data : '';
             }
             if (tipo === 'filter') {
                 this.buscar(this.parametros);
