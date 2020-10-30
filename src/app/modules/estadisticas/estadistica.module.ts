@@ -6,7 +6,6 @@ import { EstAgendasService } from './services/agenda.service';
 import { SolicitudesTopService } from './services/top.service';
 
 // Components
-import { HomeComponent } from './components/home.component';
 import { FiltrosComponent } from './components/citas/filtros.component';
 import { GraficosComponent } from './components/citas/graficos.component';
 import { FiltrosSolicitudesComponent } from './components/top/filtrosSolicitudes.component';
@@ -36,7 +35,6 @@ import { SumPipe } from './pipes/sum.pipe';
     ],
     declarations: [
         SumPipe,
-        HomeComponent,
         FiltrosComponent,
         FiltrosSolicitudesComponent,
         CitasComponent,
@@ -46,7 +44,6 @@ import { SumPipe } from './pipes/sum.pipe';
         TopComponent
     ],
     entryComponents: [
-        HomeComponent,
         FiltrosComponent,
         FiltrosSolicitudesComponent,
         CitasComponent,
