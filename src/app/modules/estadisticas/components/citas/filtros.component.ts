@@ -70,8 +70,8 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public estadosAgendas = [];
 
     // Permisos
-    public verProfesionales = this.auth.check('dashboard:citas:verProfesionales');
-    private idPermisoPrestaciones = this.auth.getPermissions('dashboard:citas:tipoPrestacion:?');
+    public verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
+    private idPermisoPrestaciones = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:tipoPrestacion:?');
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
 
