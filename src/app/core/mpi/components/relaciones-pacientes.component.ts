@@ -18,7 +18,6 @@ import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRela
     styleUrls: ['relaciones-pacientes.scss']
 })
 export class RelacionesPacientesComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true; //  Permite el uso de flex-box en el componente
     @Input()
     set paciente(valor: IPaciente) {
         this._paciente = valor;

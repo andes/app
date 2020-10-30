@@ -3,7 +3,7 @@
         <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
         </paciente-buscar>
         <plex-loader *ngIf="loading"></plex-loader>
-        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [height]="85"
+        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="90"
                           [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
         </paciente-listado>
 

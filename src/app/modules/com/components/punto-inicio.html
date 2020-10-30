@@ -150,9 +150,9 @@
         </plex-tabs>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <div *ngIf="showNuevaDerivacion">
+        <ng-container *ngIf="showNuevaDerivacion">
             <com-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></com-busqueda-paciente>
-        </div>
+        </ng-container>
         <div *ngIf="showDetalle">
             <detalle-derivacion [derivacion]="derivacionSeleccionada" (returnDetalle)="returnDetalle($event)">
             </detalle-derivacion>

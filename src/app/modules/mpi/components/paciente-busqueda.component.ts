@@ -33,9 +33,10 @@ export class PacienteBusquedaComponent {
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-    /* fixContainer en true agrega un contenedor de altura fija al listado, para que funcione correctamente
-        el scroll infinito. Util en caso de un componente padre con altura flexible */
-    @Input() fixContainer = false;
+
+    @Input() height: string;
+
+    @Input() offset: string;
 
     public onSearchStart() {
         this.loading = true;

@@ -1,9 +1,8 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <form #form="ngForm">
-            <header>
-                <div class="page-title">Agregar Paciente</div>
-            </header>
+        <form #form="ngForm" class="h-100">
+            <plex-title titulo="Agregar Paciente"></plex-title>
+
             <span *ngIf="showPaciente && paciente">
                 <div *ngIf="paciente?.id" class="row">
                     <div class="col">
@@ -46,9 +45,9 @@
                 </div>
             </span>
             <ng-container *ngIf="!showPaciente && pacientesSearch">
-                <paciente-busqueda [fixContainer]="true" (searchStart)="onSearchStart()"
+                <paciente-busqueda (searchStart)="onSearchStart()"
                                    (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                   (searchClear)="onSearchClear()" (selected)="onSelect($event)">
+                                   (searchClear)="onSearchClear()" (selected)="onSelect($event)" [offset]="110">
                 </paciente-busqueda>
             </ng-container>
         </form>

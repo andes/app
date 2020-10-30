@@ -3,12 +3,11 @@
                  grow="full">
 </paciente-buscar>
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-<div *ngIf="fixContainer" class="height-fix">
-    <paciente-listado *ngIf="resultados?.length" [pacientes]="resultados" [editing]="editing" [height]="100"
-                      (selected)="onSelected($event)" (edit)="onEdit($event)" grow="full"></paciente-listado>
-</div>
-<paciente-listado *ngIf="!fixContainer && resultados?.length" [pacientes]="resultados" [editing]="editing"
-                  (selected)="onSelected($event)" (edit)="onEdit($event)" grow="full"></paciente-listado>
+
+<paciente-listado *ngIf="resultados?.length" [pacientes]="resultados" [editing]="editing"
+                  (selected)="onSelected($event)" (edit)="onEdit($event)" grow="full" [height]="height"
+                  [offset]="offset">
+</paciente-listado>
 <div *ngIf="resultados && !resultados.length && !searchAreaCleared" class="alert alert-danger" grow="full">
     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
 </div>

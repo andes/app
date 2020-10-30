@@ -23,7 +23,7 @@
         </header>
         <!-- loader -->
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
-        <form #formulario="ngForm" [ngClass]="{'loadMode': loading}">
+        <form #formulario="ngForm" [ngClass]="{'loadMode': loading}" class="h-100">
 
             <plex-tabs [activeIndex]="tabIndex" (change)="setMainSize($event)">
 
