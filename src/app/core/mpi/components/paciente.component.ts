@@ -397,6 +397,10 @@ export class PacienteComponent implements OnInit {
             this.mainSize = 9;
             return;
         }
+        if (this.pacientesFederador && this.pacientesFederador.length) {
+            this.mainSize = 8;
+            return;
+        }
         if (tabIndex === 1) {
             this.datosContacto.refreshMap();
         }
@@ -475,7 +479,8 @@ export class PacienteComponent implements OnInit {
                 this.loading = false;
                 if (resultados && resultados.length > 0) {
                     this.pacientesFederador = resultados;
-                    this.plex.toast('success', 'Paciente econtrado en Federador Nacional');
+                    this.plex.toast('success', 'Paciente encontrado en Federador Nacional');
+                    this.setMainSize(null);
                 } else {
                     this.plex.toast('info', 'El paciente que está buscando no está federado');
                 }

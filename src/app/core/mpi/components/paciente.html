@@ -101,12 +101,10 @@
             </div>
             <!-- Pacientes del federador nacional-->
             <div *ngIf='(pacientesFederador && pacientesFederador.length)'>
-                <header>
-                    <plex-title titulo="Pacientes del Federador Nacional" size="md"></plex-title>
-                </header>
+                <plex-title titulo="Pacientes del Federador Nacional" size="md"></plex-title>
                 <plex-list>
                     <plex-item *ngFor="let elem of pacientesFederador" class="">
-                        
+
                         <plex-label *ngIf="!elem.documento" titulo="{{ elem.nombre | nombre }}"
                                     subtitulo="{{ (elem.documento | number) || 'Sin DNI' }}">
                         </plex-label>
@@ -114,8 +112,7 @@
                         <plex-label *ngIf="elem.documento" titulo="{{ elem | nombre }}"
                                     subtitulo="{{ elem.documento }}"></plex-label>
 
-                        <plex-label titulo="{{ elem | edad }}"
-                                    subtitulo="{{ elem.fechaNacimiento | fecha:'utc' }}">
+                        <plex-label titulo="{{ elem | edad }}" subtitulo="{{ elem.fechaNacimiento | fecha:'utc' }}">
                         </plex-label>
 
                         <plex-badge type="info">{{ elem | sexo }}
