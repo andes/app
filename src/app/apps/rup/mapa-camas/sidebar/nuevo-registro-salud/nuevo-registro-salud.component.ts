@@ -7,6 +7,7 @@ import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
 import { ISnomedConcept } from '../../../../../modules/rup/interfaces/snomed-concept.interface';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
@@ -32,9 +33,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     ngOnInit() {
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
-        this.paciente$ = this.mapaCamasService.selectedCama.pipe(
-            pluck('paciente')
-        );
+        this.paciente$ = this.mapaCamasService.selectedCama;
     }
 
     onIniciar($event) {
@@ -43,8 +42,8 @@ export class NuevoRegistroSaludComponent implements OnInit {
             const concepto = this.registro.parametros.concepto;
             this.paciente$.pipe(
                 take(1),
-                switchMap(paciente => {
-                    return this.crearPrestacion(paciente, concepto, dateTime);
+                switchMap(cama => {
+                    return this.crearPrestacion(cama, concepto, dateTime);
                 }),
                 switchMap(prestacion => {
                     return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
@@ -59,10 +58,11 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     }
 
-    crearPrestacion(paciente, concepto, fecha: Date) {
+    crearPrestacion(cama: ISnapshot, concepto, fecha: Date) {
         const nuevaPrestacion = this.prestacionService.inicializarPrestacion(
-            paciente, concepto, 'ejecucion', 'internacion', fecha
+            cama.paciente, concepto, 'ejecucion', 'internacion', fecha
         );
+        nuevaPrestacion.trackId = cama.idInternacion;
         return this.prestacionService.post(nuevaPrestacion);
     }
 

@@ -5,6 +5,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 export class IPrestacion {
     id: string;
+    trackId: string;
     elementoRUP: string;
     // Datos principales del paciente
     paciente: {
