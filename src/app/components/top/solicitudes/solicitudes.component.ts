@@ -35,12 +35,6 @@ export class SolicitudesComponent implements OnInit {
 
     public prestaciones = [];
     public showIniciarPrestacion = false;
-    public darTurnoArraySalida = [];
-    public darTurnoArrayEntrada = [];
-    public auditarArraySalida = [];
-    public auditarArrayEntrada = [];
-    public visualizarSalida = [];
-    public visualizarEntrada = [];
     public tipoSolicitud = 'entrada';
     public prestacionesSalida = [];
     public prestacionesEntrada = [];
@@ -410,157 +404,11 @@ export class SolicitudesComponent implements OnInit {
                 this.prestacionesSalida = this.prestacionesSalida.concat(resultado);
                 this.skip = this.prestacionesSalida.length;
             }
-            this.setearArreglos();
             // si vienen menos solicitudes que la cantidad límite significa que ya se cargaron todas
             if (!resultado.length || resultado.length < this.limit) {
                 this.scrollEnd = true;
             }
         });
-    }
-
-    // TODO: Refactor
-    setearArreglos() {
-        for (let i = 0; i < this.prestacionesSalida.length; i++) {
-
-            switch (this.prestacionesSalida[i].estadoActual.tipo) {
-                case 'pendiente':
-
-                    // Se puede auditar?
-                    this.auditarArraySalida[i] = false;
-
-                    // Hay turno?
-                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarSalida[i] = true;
-                    } else {
-                        // Se puede dar turno?
-                        this.darTurnoArraySalida[i] = true;
-
-                        // Se puede visualizar?
-                        this.visualizarSalida[i] = false;
-                    }
-                    break;
-                case 'auditoria':
-
-                    // Se puede dar turno?
-                    this.darTurnoArraySalida[i] = false;
-
-                    // Se puede visualizar?
-                    this.visualizarSalida[i] = false;
-
-                    // Se puede auditar?
-                    this.auditarArraySalida[i] = true;
-
-                    // Hay turno?
-                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarSalida[i] = true;
-                    } else {
-                        // Se puede visualizar?
-                        this.visualizarSalida[i] = false;
-                    }
-                    break;
-                case 'rechazada':
-
-                    // Se puede dar turno?
-                    this.darTurnoArraySalida[i] = false;
-
-                    // Se puede visualizar?
-                    this.visualizarSalida[i] = false;
-
-                    // Se puede auditar?
-                    this.auditarArraySalida[i] = false;
-                    break;
-                case 'validada':
-
-                    // Hay turno?
-                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarSalida[i] = true;
-                    }
-                    // Se puede dar turno?
-                    this.darTurnoArraySalida[i] = false;
-                    // Se puede auditar?
-                    this.auditarArraySalida[i] = false;
-                    break;
-            }
-        }
-        for (let i = 0; i < this.prestacionesEntrada.length; i++) {
-
-            switch (this.prestacionesEntrada[i].estadoActual.tipo) {
-                case 'pendiente':
-
-                    // Se puede auditar?
-                    this.auditarArrayEntrada[i] = false;
-
-                    // Hay turno?
-                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = true;
-                    } else {
-                        // Se puede dar turno?
-                        this.darTurnoArrayEntrada[i] = true;
-
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = false;
-                    }
-                    break;
-                case 'anulada':
-                    this.auditarArrayEntrada[i] = false;
-                    break;
-                case 'auditoria':
-
-                    // Se puede dar turno?
-                    this.darTurnoArrayEntrada[i] = false;
-
-                    // Se puede visualizar?
-                    this.visualizarEntrada[i] = false;
-
-                    // Se puede auditar?
-                    this.auditarArrayEntrada[i] = true;
-
-                    // Hay turno?
-                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = true;
-                    } else {
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = false;
-                    }
-                    break;
-                case 'rechazada':
-
-                    // Se puede dar turno?
-                    this.darTurnoArrayEntrada[i] = false;
-
-                    // Se puede visualizar?
-                    this.visualizarEntrada[i] = true;
-
-                    // Se puede auditar?
-                    this.auditarArrayEntrada[i] = true;
-                    break;
-                case 'validada':
-
-                    // Hay turno?
-                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = true;
-                    }
-                    // Se puede dar turno?
-                    this.darTurnoArrayEntrada[i] = false;
-                    // Se puede auditar?
-                    this.auditarArrayEntrada[i] = false;
-                    break;
-                case 'asignada':
-                    // Se puede visualizar?
-                    this.visualizarEntrada[i] = true;
-                    // Se puede dar turno?
-                    this.darTurnoArrayEntrada[i] = false;
-                    // Se puede auditar?
-                    this.auditarArrayEntrada[i] = false;
-                    break;
-            }
-        }
     }
 
     afterDetalleSolicitud(event) {

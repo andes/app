@@ -118,27 +118,29 @@
                                 <plex-badge *ngIf="estado === 'referida'" type="warning">
                                     REFERIDA
                                 </plex-badge>
-                                <plex-button size="sm" *ngIf="estado === 'pendiente'" icon="calendar-plus"
-                                             type="success" (click)="$event.stopPropagation();darTurno(prestacion)"
-                                             title="Dar Turno">
-                                </plex-button>
-                                <plex-button size="sm" *ngIf="estado === 'auditoria' || estado === 'rechazada'"
-                                             icon="lock-alert" type="info"
-                                             (click)="$event.stopPropagation();auditar(prestacion)"
-                                             title="Auditar Solicitud">
-                                </plex-button>
-                                <plex-button size="sm" *ngIf="estado === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional" icon="check" type="success"
-                                             (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
-                                             title="Iniciar prestación">
-                                </plex-button>
-                                <plex-button size="sm" *ngIf="estado === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional" icon="calendar" type="warning"
-                                             (click)="$event.stopPropagation();citar(prestacion)"
-                                             title="Citar paciente">
-                                </plex-button>
-                                <plex-button type="danger" icon="delete" size="sm"
-                                             (click)="$event.stopPropagation();anular(prestacion)" title="Anular"
-                                             *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id && permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'anulada'">
-                                </plex-button>
+
+                                <ng-container *ngIf="prestacion | botonesSolicitud as botones">
+                                    <plex-button size="sm" *ngIf="botones.auditar"
+                                                 icon="lock-alert" type="info"
+                                                 (click)="$event.stopPropagation();auditar(prestacion)"
+                                                 title="Auditar Solicitud">
+                                    </plex-button>
+                                    <plex-button size="sm" *ngIf="botones.darTurno" icon="calendar-plus"
+                                        type="success" (click)="$event.stopPropagation();darTurno(prestacion)"
+                                        title="Dar Turno">
+                                    </plex-button>
+                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion" icon="check" type="success"
+                                                (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
+                                                title="Iniciar prestación">
+                                    </plex-button>
+                                    <plex-button size="sm" *ngIf="botones.citarPaciente" icon="calendar" type="warning"
+                                                 (click)="$event.stopPropagation();citar(prestacion)"
+                                                 title="Citar paciente">
+                                    </plex-button>
+                                    <plex-button type="danger" icon="delete" size="sm" *ngIf="botones.anular && permisoAnular"
+                                                 (click)="$event.stopPropagation();anular(prestacion)" title="Anular">
+                                    </plex-button>
+                                </ng-container>
                                 <plex-dropdown #drop *ngIf="estado === 'asignada'" class="pl-2 mr-0" [right]="true"
                                                [items]="itemsDropdown" size="sm" icon="dots-vertical" label=""
                                                (onOpen)="setDropDown(prestacion, drop)">
@@ -228,7 +230,7 @@
                             <!-- Botones -->
                             <plex-button size="sm" type="danger" icon="delete" (click)="cancelar(prestacion)"
                                          title="Cancelar"
-                                         *ngIf="prestacion.estadoActual.tipo == 'pendiente' && !visualizarSalida[i]">
+                                         *ngIf="prestacion.estadoActual.tipo == 'pendiente' && !prestacion.solicitud.turno">
                             </plex-button>
                         </plex-item>
                     </plex-list>
