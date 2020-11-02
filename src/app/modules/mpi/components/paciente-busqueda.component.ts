@@ -5,7 +5,7 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'paciente-busqueda',
     templateUrl: 'paciente-busqueda.html',
-    styleUrls: ['paciente-busqueda.scss']
+    styleUrls: []
 })
 
 export class PacienteBusquedaComponent {
