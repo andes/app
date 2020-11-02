@@ -95,10 +95,10 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.inicializarFrecuentesTP()
         ).subscribe(([fp, frecuentesTP]) => {
             if (fp && fp.length) {
-                const frecuentesProfesional = fp.map((res: any) => {
-                    let concepto = res.concepto;
-                    (concepto as any).frecuencia = res.frecuencia;
-                    (concepto as any).esSolicitud = res.esSolicitud;
+                const frecuentesProfesional = fp.map(res => {
+                    const concepto: any = res.concepto;
+                    concepto.frecuencia = res.frecuencia;
+                    concepto.esSolicitud = res.esSolicitud;
                     return concepto;
                 });
 
@@ -110,8 +110,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             }
 
 
-            this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
-                let concepto = res.concepto;
+            this.results['frecuentesTP']['todos'] = frecuentesTP.map((res) => {
+                const concepto: any = res.concepto;
                 concepto.frecuencia = res.frecuencia;
                 concepto.esSolicitud = res.esSolicitud;
                 return concepto;
@@ -149,7 +149,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         let queryFTP = {
             'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
         };
-        return this.frecuentesProfesionalService.getXPrestacion(queryFTP);
+        return this.frecuentesProfesionalService.get(queryFTP);
     }
 
     /**
