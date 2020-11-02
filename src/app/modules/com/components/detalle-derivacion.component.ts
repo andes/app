@@ -24,6 +24,7 @@ export class DetalleDerivacionComponent implements OnInit {
     fileToken: String = null;
     timeout = null;
     adjuntosEstado = [];
+    pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
         // Documentos
