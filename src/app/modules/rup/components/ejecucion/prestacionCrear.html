@@ -16,15 +16,6 @@
                 </plex-select>
             </plex-wrapper>
         </plex-title>
-        <plex-wrapper>
-            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
-                           grow="2" [max]="max">
-            </plex-datetime>
-            <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                         label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
-                         [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
-            </plex-select>
-        </plex-wrapper>
 
         <ng-container class="form-group" *ngIf="mostrarPaciente">
             <label for="paciente-buscar" class="form-control-label">Paciente</label>
