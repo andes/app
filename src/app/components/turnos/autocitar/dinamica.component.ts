@@ -125,7 +125,7 @@ export class DinamicaFormComponent implements OnInit {
      */
     guardar($event: any) {
         if ($event.formValid) {
-            if (this.pacienteActivo) {
+            if (this.datosTurno.paciente) {
                 this.datosTurno.tipoPrestacion = this.turnoTipoPrestacion;
                 this.guardarDatosTurno();
                 this.searchClear();
