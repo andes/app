@@ -1,21 +1,21 @@
 <plex-layout *ngIf="!showAutocitar" main="8">
     <plex-layout-main>
-        <plex-title titulo="Crear Prestación">
+        <plex-title main titulo="Crear Prestación">
             <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
             </plex-button>
             <plex-button [label]="btnLabel" type="success" (click)="btnClick()"
                          [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada" class="ml-1">
             </plex-button>
+            <plex-wrapper>
+                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
+                               grow="2">
+                </plex-datetime>
+                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
+                             label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
+                             [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
+                </plex-select>
+            </plex-wrapper>
         </plex-title>
-        <plex-wrapper>
-            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
-                           grow="2" [max]="max">
-            </plex-datetime>
-            <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                         label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
-                         [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
-            </plex-select>
-        </plex-wrapper>
 
         <ng-container class="form-group" *ngIf="mostrarPaciente">
             <label for="paciente-buscar" class="form-control-label">Paciente</label>
@@ -23,7 +23,7 @@
                              (searchClear)="onSearchClear()">
             </paciente-buscar>
 
-            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [height]="55"
+            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="110"
                               [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
             </paciente-listado>
 

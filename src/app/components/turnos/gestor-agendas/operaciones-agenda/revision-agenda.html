@@ -31,7 +31,7 @@
 
                 <plex-loader *ngIf="loading"></plex-loader>
 
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [height]="70"
+                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="150"
                                   [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
                 </paciente-listado>
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">

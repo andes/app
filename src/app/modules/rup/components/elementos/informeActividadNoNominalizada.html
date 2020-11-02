@@ -106,7 +106,7 @@
                                      (searchClear)="searchClear()"></paciente-buscar>
 
                     <div class="height-fix" *ngIf="pacientes && pacientes.length">
-                        <paciente-listado [height]="100" [pacientes]="pacientes"
+                        <paciente-listado [height]="100" [offset]="150" [pacientes]="pacientes"
                                           (selected)="seleccionarPaciente($event)">
                         </paciente-listado>
                     </div>

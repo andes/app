@@ -38,7 +38,7 @@
             <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
 
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                              (selected)="onSelectPaciente($event)">
+                              (selected)="onSelectPaciente($event)" [offset]="110">
             </paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                 ¡No se encontró ningún paciente!

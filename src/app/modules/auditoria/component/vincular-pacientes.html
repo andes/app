@@ -1,138 +1,133 @@
-<section>
-    <!-- Listado de pacientes vinculados -->
-    <ng-container *ngIf="showVinculaciones">
-        <plex-title titulo="Vinculaciones realizadas" size="sm"></plex-title>
-        <plex-label *ngIf="!listaVinculados?.length" titulo="No existen vinculaciones registradas" subtitulo="">
-        </plex-label>
+<!-- Listado de pacientes vinculados -->
+<ng-container *ngIf="showVinculaciones">
+    <plex-title titulo="Vinculaciones realizadas" size="sm"></plex-title>
+    <plex-label *ngIf="!listaVinculados?.length" titulo="No existen vinculaciones registradas" subtitulo="">
+    </plex-label>
 
-        <plex-list [striped]="true">
-            <ng-container *ngFor="let vinculado of listaVinculados">
-                <plex-item>
-                    <img [mpiFotoPaciente]="vinculado" />
+    <plex-list [striped]="true">
+        <ng-container *ngFor="let vinculado of listaVinculados">
+            <plex-item>
+                <img [mpiFotoPaciente]="vinculado" />
 
-                    <plex-label *ngIf="!vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
-                                subtitulo="{{ (vinculado.documento | number) || 'Sin DNI' }}">
+                <plex-label *ngIf="!vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
+                            subtitulo="{{ (vinculado.documento | number) || 'Sin DNI' }}">
+                </plex-label>
+
+                <plex-label *ngIf="vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
+                            subtitulo="{{ vinculado.numeroIdentificacion }}">
+                </plex-label>
+
+                <plex-label titulo="{{ vinculado | edad }}" subtitulo="{{ vinculado.fechaNacimiento | fecha:'utc' }}">
+                </plex-label>
+
+                <plex-badge *ngIf="vinculado.fechaFallecimiento" type="danger">Fallecido:
+                    {{ vinculado.fechaFallecimiento | fecha:'utc'}}
+                </plex-badge>
+
+                <div>
+                    <plex-button type="warning" label="desvincular" size="sm" (click)="preDesvincular(vinculado)">
+                    </plex-button>
+                </div>
+            </plex-item>
+        </ng-container>
+    </plex-list>
+</ng-container>
+
+
+<!-- Pacientes candidatos para vinculacion -->
+
+<ng-container *ngIf="showBuscador">
+    <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()">
+    </paciente-buscar>
+
+    <plex-loader *ngIf="loading"></plex-loader>
+
+    <paciente-listado *ngIf="resultadoPacientes?.length" [pacientes]="resultadoPacientes" (selected)="showModal($event)"
+                      [offset]="110">
+    </paciente-listado>
+
+    <div *ngIf="!resultadoPacientes?.length && !searchClear" class="alert alert-danger">
+        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+    </div>
+</ng-container>
+
+
+<!-- Modal vinculaciones -->
+
+<plex-modal #modalVinculacion size="md" justify>
+    <plex-icon name="alert-circle" type="warning"></plex-icon>
+    <plex-modal-title class="font-title text-center" type="warning">
+        Confirmación de vinculación de registros
+    </plex-modal-title>
+    <plex-modal-subtitle center class="font-subtitle text-muted text-center">
+        Por favor, compare los registros que desea vincular y acepte o cancele el proceso de vinculación.
+    </plex-modal-subtitle>
+
+    <main *ngIf="pacienteBase && pacienteLink">
+        <section class="w-100">
+            <plex-title titulo="Registro Original" size="sm"> </plex-title>
+            <plex-list>
+                <plex-item [selected]="true">
+                    <img [mpiFotoPaciente]="pacienteBase" />
+                    <plex-label *ngIf="!pacienteBase?.numeroIdentificacion" titulo="{{ pacienteBase | nombre }}"
+                                subtitulo="{{ (pacienteBase.documento | number) || 'Sin DNI' }}">
                     </plex-label>
 
-                    <plex-label *ngIf="vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
-                                subtitulo="{{ vinculado.numeroIdentificacion }}">
+                    <plex-label *ngIf="pacienteBase?.numeroIdentificacion" titulo="{{ pacienteBase | nombre }}"
+                                subtitulo="{{ pacienteBase.numeroIdentificacion }}">
                     </plex-label>
 
-                    <plex-label titulo="{{ vinculado | edad }}"
-                                subtitulo="{{ vinculado.fechaNacimiento | fecha:'utc' }}">
-                    </plex-label>
-
-                    <plex-badge *ngIf="vinculado.fechaFallecimiento" type="danger">Fallecido:
-                        {{ vinculado.fechaFallecimiento | fecha:'utc'}}
+                    <plex-badge *ngIf="pacienteBase?.fechaFallecimiento" type="danger">Fallecido:
+                        {{ pacienteBase.fechaFallecimiento | fecha:'utc'}}
                     </plex-badge>
 
-                    <div>
-                        <plex-button type="warning" label="desvincular" size="sm" (click)="preDesvincular(vinculado)">
-                        </plex-button>
-                    </div>
+                    <plex-label titulo="{{ pacienteBase | edad }}"
+                                subtitulo="{{ pacienteBase.fechaNacimiento | fecha:'utc' }}">
+                    </plex-label>
+
+                    <plex-badge *ngIf="pacienteBase?.estado"
+                                [type]="(pacienteBase.estado === 'validado') ? 'success' : 'warning'" right>
+                        {{ pacienteBase.estado | uppercase }}
+                    </plex-badge>
                 </plex-item>
-            </ng-container>
-        </plex-list>
-    </ng-container>
+            </plex-list>
+            <br>
+            <plex-title titulo="Registro a vincular" size="sm"></plex-title>
+            <plex-list>
+                <plex-item [selected]="true">
+                    <img [mpiFotoPaciente]="pacienteLink" />
+                    <plex-label class="text-black" *ngIf="!pacienteLink?.numeroIdentificacion"
+                                titulo="{{ pacienteLink | nombre }}"
+                                subtitulo="{{ (pacienteLink.documento | number) || 'Sin DNI' }}">
+                    </plex-label>
 
+                    <plex-label type="info" *ngIf="pacienteLink?.numeroIdentificacion"
+                                titulo="{{ pacienteLink | nombre }}"
+                                subtitulo="{{ pacienteLink.numeroIdentificacion }}">
+                    </plex-label>
 
-    <!-- Pacientes candidatos para vinculacion -->
+                    <plex-badge *ngIf="pacienteLink?.fechaFallecimiento" type="danger">Fallecido:
+                        {{ pacienteLink.fechaFallecimiento | fecha:'utc'}}
+                    </plex-badge>
 
-    <ng-container *ngIf="showBuscador">
-        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)"
-                         (searchClear)="onSearchClear()">
-        </paciente-buscar>
+                    <plex-label titulo="{{ pacienteLink | edad }}"
+                                subtitulo="{{ pacienteLink.fechaNacimiento | fecha:'utc' }}">
+                    </plex-label>
 
-        <plex-loader *ngIf="loading"></plex-loader>
+                    <plex-badge *ngIf="pacienteLink?.estado"
+                                [type]="(pacienteLink.estado === 'validado') ? 'success' : 'warning'" right>
+                        {{ pacienteLink.estado | uppercase }}
+                    </plex-badge>
+                </plex-item>
+            </plex-list>
+        </section>
+    </main>
 
-        <paciente-listado *ngIf="resultadoPacientes?.length" [pacientes]="resultadoPacientes"
-                          (selected)="showModal($event)">
-        </paciente-listado>
+    <plex-button modal left type="danger" (click)="vincular(false)">
+        Cancelar Vinculacion
+    </plex-button>
+    <plex-button class="pt-4" modal right type="success" (click)="vincular(true)">
+        Confirmar vinculación
+    </plex-button>
 
-        <div *ngIf="!resultadoPacientes?.length && !searchClear" class="alert alert-danger">
-            <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-        </div>
-    </ng-container>
-
-
-    <!-- Modal vinculaciones -->
-
-    <plex-modal #modalVinculacion size="md" justify>
-        <plex-icon name="alert-circle" type="warning"></plex-icon>
-        <plex-modal-title class="font-title text-center" type="warning">
-            Confirmación de vinculación de registros
-        </plex-modal-title>
-        <plex-modal-subtitle center class="font-subtitle text-muted text-center">
-            Por favor, compare los registros que desea vincular y acepte o cancele el proceso de vinculación.
-        </plex-modal-subtitle>
-
-        <main *ngIf="pacienteBase && pacienteLink">
-            <section class="w-100">
-                <plex-title titulo="Registro Original" size="sm"> </plex-title>
-                <plex-list>
-                    <plex-item [selected]="true">
-                        <img [mpiFotoPaciente]="pacienteBase" />
-                        <plex-label *ngIf="!pacienteBase?.numeroIdentificacion" titulo="{{ pacienteBase | nombre }}"
-                                    subtitulo="{{ (pacienteBase.documento | number) || 'Sin DNI' }}">
-                        </plex-label>
-
-                        <plex-label *ngIf="pacienteBase?.numeroIdentificacion" titulo="{{ pacienteBase | nombre }}"
-                                    subtitulo="{{ pacienteBase.numeroIdentificacion }}">
-                        </plex-label>
-
-                        <plex-badge *ngIf="pacienteBase?.fechaFallecimiento" type="danger">Fallecido:
-                            {{ pacienteBase.fechaFallecimiento | fecha:'utc'}}
-                        </plex-badge>
-
-                        <plex-label titulo="{{ pacienteBase | edad }}"
-                                    subtitulo="{{ pacienteBase.fechaNacimiento | fecha:'utc' }}">
-                        </plex-label>
-
-                        <plex-badge *ngIf="pacienteBase?.estado"
-                                    [type]="(pacienteBase.estado === 'validado') ? 'success' : 'warning'" right>
-                            {{ pacienteBase.estado | uppercase }}
-                        </plex-badge>
-                    </plex-item>
-                </plex-list>
-                <br>
-                <plex-title titulo="Registro a vincular" size="sm"></plex-title>
-                <plex-list>
-                    <plex-item [selected]="true">
-                        <img [mpiFotoPaciente]="pacienteLink" />
-                        <plex-label class="text-black" *ngIf="!pacienteLink?.numeroIdentificacion"
-                                    titulo="{{ pacienteLink | nombre }}"
-                                    subtitulo="{{ (pacienteLink.documento | number) || 'Sin DNI' }}">
-                        </plex-label>
-
-                        <plex-label type="info" *ngIf="pacienteLink?.numeroIdentificacion"
-                                    titulo="{{ pacienteLink | nombre }}"
-                                    subtitulo="{{ pacienteLink.numeroIdentificacion }}">
-                        </plex-label>
-
-                        <plex-badge *ngIf="pacienteLink?.fechaFallecimiento" type="danger">Fallecido:
-                            {{ pacienteLink.fechaFallecimiento | fecha:'utc'}}
-                        </plex-badge>
-
-                        <plex-label titulo="{{ pacienteLink | edad }}"
-                                    subtitulo="{{ pacienteLink.fechaNacimiento | fecha:'utc' }}">
-                        </plex-label>
-
-                        <plex-badge *ngIf="pacienteLink?.estado"
-                                    [type]="(pacienteLink.estado === 'validado') ? 'success' : 'warning'" right>
-                            {{ pacienteLink.estado | uppercase }}
-                        </plex-badge>
-                    </plex-item>
-                </plex-list>
-            </section>
-        </main>
-
-        <plex-button modal left type="danger" (click)="vincular(false)">
-            Cancelar Vinculacion
-        </plex-button>
-        <plex-button class="pt-4" modal right type="success" (click)="vincular(true)">
-            Confirmar vinculación
-        </plex-button>
-
-    </plex-modal>
-
-</section>
+</plex-modal>

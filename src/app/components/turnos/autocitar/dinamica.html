@@ -14,7 +14,7 @@
 
 <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
 </paciente-buscar>
-<paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [height]="70"
+<paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [offset]="150"
                   (selected)="onPacienteSelected($event)">
 </paciente-listado>
 <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">

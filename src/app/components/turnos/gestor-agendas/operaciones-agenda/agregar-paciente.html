@@ -1,9 +1,8 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <form #form="ngForm">
-            <header>
-                <div class="page-title">Agregar Paciente</div>
-            </header>
+        <form #form="ngForm" class="h-100">
+            <plex-title titulo="Agregar Paciente"></plex-title>
+
             <span *ngIf="showPaciente && paciente">
                 <div *ngIf="paciente?.id" class="row">
                     <div class="col">
@@ -45,30 +44,12 @@
                     </div>
                 </div>
             </span>
-            <span *ngIf="!showPaciente">
-                <div class="row" *ngIf="pacientesSearch">
-                    <div class="col">
-                        <div class="panel panel-default">
-                            <div class="clear"></div>
-                            <paciente-buscar (searchStart)="onSearchStart()"
-                                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
-                        </div>
-                    </div>
-                </div>
-                <plex-loader *ngIf="loading"></plex-loader>
-                <div class="row">
-                    <div class="col-12">
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                          (selected)="onSelect($event)"></paciente-listado>
-
-                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                            ¡No se encontró ningún paciente!
-                        </div>
-                    </div>
-                </div>
-            </span>
+            <ng-container *ngIf="!showPaciente && pacientesSearch">
+                <paciente-busqueda (searchStart)="onSearchStart()"
+                                   (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                   (searchClear)="onSearchClear()" (selected)="onSelect($event)" [offset]="110">
+                </paciente-busqueda>
+            </ng-container>
         </form>
     </plex-layout-main>
     <plex-layout-sidebar>

@@ -40,8 +40,20 @@ export class PacienteListadoComponent {
         }
     }
 
-    // Indica la altura del listado respecto a su contenedor
-    @Input() height = 80;
+    /**
+     * Indica la altura del listado respecto a su contenedor
+     */
+
+    @Input() height: string | number = 80;
+
+    /**
+     * Cantidad de pixeles a reducir de la pantalla completa.
+     */
+    @Input() set offset(value: number) {
+        if (value) {
+            this.height = `calc(100% - ${value}px)`;
+        }
+    }
 
     // Indica si debe aparecer el boton 'editar' en cada resultado
     @Input() editing = false;

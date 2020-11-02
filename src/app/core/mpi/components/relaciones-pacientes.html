@@ -8,7 +8,8 @@
 
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-<paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)">
+<paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)" [offset]="140"
+                  *ngIf="posiblesRelaciones.length > 0">
 </paciente-listado>
 
 <div *ngIf="posiblesRelaciones && !posiblesRelaciones.length && !searchClear" class="alert alert-danger">

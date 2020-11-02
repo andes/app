@@ -34,6 +34,10 @@ export class PacienteBusquedaComponent {
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
+    @Input() height: string;
+
+    @Input() offset: string;
+
     public onSearchStart() {
         this.loading = true;
         this.searchStart.emit();

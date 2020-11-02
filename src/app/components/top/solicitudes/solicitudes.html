@@ -255,9 +255,9 @@
             <anular-solicitud [prestacionSeleccionada]="prestacionSeleccionada" (returnAnular)="returnAnular($event)">
             </anular-solicitud>
         </div>
-        <div *ngIf="showNuevaSolicitud">
+        <ng-container *ngIf="showNuevaSolicitud">
             <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></top-busqueda-paciente>
-        </div>
+        </ng-container>
         <div *ngIf="showCitar">
             <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"
                                (returnCitar)="returnCitar($event)"></auditar-solicitud>

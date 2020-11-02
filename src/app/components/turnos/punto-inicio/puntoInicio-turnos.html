@@ -12,7 +12,8 @@
         <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
         <ng-container class="col pr-2" *ngIf="!paciente">
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                              (selected)="onPacienteSelected($event)"></paciente-listado>
+                              (selected)="onPacienteSelected($event)" [offset]="80">
+            </paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>

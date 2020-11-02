@@ -6,7 +6,7 @@
         </paciente-buscar>
 
         <paciente-listado *ngIf="listado && listado.length" [pacientes]="listado"
-                          (selected)="onPacienteSelected($event)">
+                          (selected)="onPacienteSelected($event)" [offset]="110">
         </paciente-listado>
 
         <div *ngIf="listado && !listado.length && !searchClear" class="alert alert-danger">
