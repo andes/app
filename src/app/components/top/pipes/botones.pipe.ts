@@ -22,10 +22,17 @@ export class BotonesSolicitudPipe implements PipeTransform {
         if (this.esEfectorDestino(prestacion)) {
             if (prestacion.estadoActual.tipo === 'pendiente' && prestacion ?.paciente && !prestacion.solicitud.turno) {
                 botones.darTurno = true;
-                botones.anular = true;
             }
             if (prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada') {
                 botones.auditar = true;
+            }
+        }
+        // Si es el mismo usuario que creó la solicitud
+        if (this.esUsuarioCreador(prestacion)) {
+            // Si está en estado pendiente o auditoria Y no tuvo movimientos después de crearse, se podrá anular
+            if ((prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'pendiente')
+                && prestacion.solicitud.historial.length === 1) {
+                botones.anular = true;
             }
         }
         return botones;
@@ -38,6 +45,10 @@ export class BotonesSolicitudPipe implements PipeTransform {
 
     esProfesionalDestino(prestacion) {
         return prestacion.solicitud.profesional?.id === this.auth.profesional;
+    }
+
+    esUsuarioCreador(prestacion) {
+        return this.auth.usuario.id === prestacion.createdBy.id;
     }
 
 }

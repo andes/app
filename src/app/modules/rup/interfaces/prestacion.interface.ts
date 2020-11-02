@@ -48,7 +48,8 @@ export class IPrestacion {
         // Registros de la solicitud ... para los planes o prestaciones futuras
         registros: IPrestacionRegistro[],
         organizacionDestino: any,
-        profesionalesDestino: any[]
+        profesionalesDestino: any[],
+        historial: any[]
     };
 
     // Datos de la ejecución (i.e. realización)
