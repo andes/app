@@ -33,6 +33,7 @@ export class PrestacionCrearComponent implements OnInit {
 
     // Fecha seleccionada
     public fecha: Date = new Date();
+    public max: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: ITipoPrestacion[] = [];
     // Tipos de prestacion seleccionada

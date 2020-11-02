@@ -9,7 +9,7 @@
         </plex-title>
         <plex-wrapper>
             <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
-                           grow="2">
+                           grow="2" [max]="max">
             </plex-datetime>
             <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
                          label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
