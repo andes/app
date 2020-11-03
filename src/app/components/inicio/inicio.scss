@@ -5,6 +5,13 @@ $andes-azul-oscuro: #002838;
 header {
     border: 0;
     margin-top: 1rem;
+
+    .marca {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+
     div[svgLogo] {
         width: 117px;
         height: 55px;
@@ -15,27 +22,6 @@ header {
         width: 332px;
         height: 42px;
         fill: $andes-azul-oscuro;
-    }
-
-    &.size-sm,
-    &.size-md {
-        flex-direction: column;
-
-        div {
-            width: 100%;
-        }
-
-        .bienvenida {
-            width: 100%;
-        }
-
-        .hola {
-            font-size: 1.5rem;
-        }
-
-        .mensaje {
-            font-size: 1rem;
-        }
     }
 
     .provincia {
@@ -64,6 +50,11 @@ main {
 .bienvenida {
     text-align: center;
     margin-right: 1.5rem;
+
+    .efector {
+        color: grey;
+    }
+
     .hola {
         font-size: 28px;
         color: $andes-azul-oscuro;
@@ -325,10 +316,45 @@ main {
 // Responsive
 
 header {
+    &.size-sm,
+    &.size-md {
+        flex-direction: column;
+
+        div {
+            width: 100%;
+        }
+
+        .bienvenida {
+            width: 100%;
+        }
+
+        .hola {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .mensaje {
+            font-size: 1rem;
+        }
+    }
     &.size-sm {
+        .marca {
+            display: flex;
+            justify-content: flex-start;
+            align-items: baseline;
+        }
         [svgLogo] {
             height: 40px;
             margin-right: 0px;
+        }
+        div[svgAcronimo] {
+            height: 23px;
+        }
+        .provincia {
+            top: -4px;
+        }
+        .bienvenida {
+            font-size: 0.7rem;
         }
     }
 }

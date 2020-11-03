@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <header justify responsive>
-            <div class="marca" justify="start">
+            <div class="marca">
                 <div svgLogo></div>
                 <div svgAcronimo></div>
                 <div class="provincia">
@@ -9,6 +9,7 @@
                 </div>
             </div>
             <div class="bienvenida">
+                <div class="efector" *ngIf="auth.orgs.length > 1">{{ auth.organizacion.nombre }}</div>
                 <div class="hola">
                     Hola <b>{{ auth.usuario.nombre }}</b>
                 </div>
@@ -50,8 +51,8 @@
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
-                    <div class="seccion">
-                        <div class="principal hover" [style.background]="seccion.color" (click)="redirect(seccion)">
+                    <div class="seccion hover" (click)="redirect(seccion)">
+                        <div class="principal" [style.background]="seccion.color">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
