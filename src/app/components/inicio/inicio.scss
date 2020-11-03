@@ -88,7 +88,7 @@ main {
         flex-direction: column;
 
         box-sizing: border-box;
-        width: 245px;
+        width: 300px;
         margin-bottom: 1rem;
 
         .principal {
@@ -108,7 +108,7 @@ main {
         }
 
         .submodulos {
-            width: 250px;
+            width: 265px;
             height: 145px;
             flex-wrap: wrap;
             justify-content: flex-start;
@@ -123,8 +123,8 @@ main {
         .submodulo {
             cursor: pointer;
             box-sizing: content-box;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 0;
             color: white;
 
@@ -150,7 +150,7 @@ main {
             }
 
             .titulo {
-                font-size: 11px;
+                font-size: 13px;
                 line-height: normal;
                 span {
                     cursor: pointer;
@@ -189,7 +189,6 @@ main {
     justify-content: flex-start;
     align-items: center;
 
-    padding-right: 40px;
     margin-bottom: 1.1rem;
 
     opacity: 0;
@@ -265,15 +264,18 @@ main {
     }
 
     .titulo {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: 600;
         font-style: oblique;
     }
 
     .secundario {
-        font-size: 0.65rem;
+        font-size: 0.8rem;
         display: flex;
         flex-direction: column;
+        .subtitulo {
+            color: grey;
+        }
     }
 }
 
@@ -334,6 +336,14 @@ header {
 main {
     &.size-sm {
         flex-direction: column;
+
+        .modulo {
+            height: auto !important;
+            .submodulos {
+                height: auto;
+            }
+        }
+
         .secciones {
             display: flex;
             justify-content: space-between;
