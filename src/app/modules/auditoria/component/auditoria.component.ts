@@ -26,7 +26,7 @@ export class AuditoriaComponent implements OnInit {
   showCabeceraDetalle = false;
   // busqueda
   textoLibre: string = null;
-  resultadoBusqueda: IPaciente[] = null;
+  resultadoBusqueda: IPaciente[] = [];
   pacienteSelected: IPaciente = null;
   listaVinculados: IPaciente[] = [];
   loading = false;
@@ -240,11 +240,13 @@ export class AuditoriaComponent implements OnInit {
       this.searchSubscription.unsubscribe();
     }
 
+    this.onSearchStart();
     this.searchSubscription = this.pacienteService.getSearch(params).subscribe((resultado: any) => {
       if (resultado && resultado.length) {
         this.resultadoBusqueda = this.resultadoBusqueda.concat(resultado);
       }
-      this.parametros.skip = resultado.length;
+      this.parametros.skip = this.resultadoBusqueda.length;
+      this.loading = false;
       // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
       if (!resultado.length || resultado.length < this.parametros.limit) {
         this.scrollEnd = true;
@@ -265,10 +267,8 @@ export class AuditoriaComponent implements OnInit {
 
 
   onSearchStart() {
-    this.pacienteSelected = null;
     this.searchClear = false;
     this.loading = true;
-    this.closeSidebar();
   }
 
   onSearchClear() {
