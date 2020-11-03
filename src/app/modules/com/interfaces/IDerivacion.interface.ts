@@ -1,4 +1,5 @@
 import { IDerivacionHistorial } from './IDerivacionHistorial.interface';
+import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 
 export interface IDerivacion {
     id: String;
@@ -25,7 +26,8 @@ export interface IDerivacion {
         genero: String,
         nombre: String,
         apellido: String,
-        fechaNacimiento: Date
+        fechaNacimiento: Date,
+        obraSocial: IObraSocial
     };
     estado: String;
     detalle: String;

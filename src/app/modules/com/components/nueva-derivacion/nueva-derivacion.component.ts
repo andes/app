@@ -20,7 +20,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     paciente: any;
     organizacionDestino: any;
     detalle: '';
-
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
@@ -54,6 +53,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         },
         detalle: '',
         estado: 'solicitada',
+        obraSocial: null,
         historial: []
     };
     organizacionesDestino = [];
@@ -69,7 +69,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         public sanitazer: DomSanitizer,
         public adjuntosService: COMAdjuntosService,
         private route: ActivatedRoute,
-        private router: Router,
+        private router: Router
     ) { }
 
     ngOnInit() {
@@ -146,6 +146,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             };
+            if (this.paciente.financiador) {
+                this.modelo.paciente.obraSocial = this.paciente.financiador[0];
+            }
             this.modelo.organizacionDestino = {
                 id: this.organizacionDestino.id,
                 nombre: this.organizacionDestino.nombre,
