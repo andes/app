@@ -1,6 +1,9 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { environment } from 'src/environments/environment';
+import { Plex } from '@andes/plex';
+import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'historial-derivacion',
@@ -24,11 +27,14 @@ export class HistorialDerivacionComponent {
     }
 
     constructor(
-        public adjuntosService: COMAdjuntosService
+        public auth: Auth,
+        private derivacionesService: DerivacionesService,
+        public adjuntosService: COMAdjuntosService,
+        public plex: Plex
     ) { }
 
     cargarItemsHistorial() {
-        let historial = [...this.derivacion.historial];
+        let historial = [...this.derivacion.historial.filter(elto => !elto.eliminado)];
         if (!historial) {
             historial = [];
         }
@@ -59,5 +65,19 @@ export class HistorialDerivacionComponent {
 
     esImagen(extension) {
         return this.imagenes.find(x => x === extension.toLowerCase());
+    }
+
+    eliminarNota(nota) {
+        this.plex.confirm('¿Está seguro de querer eliminar la nota?', 'Eliminar nota').then((resultado) => {
+            if (resultado) {
+                const index = this.derivacion.historial.findIndex(x => x._id === nota._id);
+                nota.eliminado = true;
+                this.derivacion.historial[index] = nota;
+                this.derivacionesService.update(this.derivacion._id, this.derivacion).subscribe((derivacion) => {
+                    this.plex.toast('success', 'Nota eliminada');
+                    this.cargarItemsHistorial();
+                });
+            }
+        });
     }
 }

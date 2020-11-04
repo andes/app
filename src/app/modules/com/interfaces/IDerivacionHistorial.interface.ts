@@ -6,4 +6,5 @@ export interface IDerivacionHistorial {
     };
     observacion: String;
     adjuntos: any;
+    eliminado: Boolean;
 }
