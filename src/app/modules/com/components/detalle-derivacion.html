@@ -4,25 +4,37 @@
 </plex-title>
 <plex-options [items]="items" (activated)="cambiarOption($event)"></plex-options>
 <div *ngIf="mostrar === 'derivacion'">
-    <plex-detail size="md" direction="row">
-        <img [mpiFotoPaciente]="derivacion?.paciente" />
-        <plex-badge type="warning">
-            {{derivacion.fecha
-                            | fecha}} {{derivacion.fecha
-                            | hora}}
+    <paciente-detalle [paciente]="derivacion.paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
+    </paciente-detalle>
+
+    <plex-title size="sm" titulo="Datos de derivación">
+        <plex-badge type="warning mr-1">
+            {{derivacion.fecha | fecha}} {{derivacion.fecha | hora}}
         </plex-badge>
-        <plex-badge type="info">
+        <plex-badge *ngIf="derivacion.estado === 'solicitada' || derivacion.estado === 'asignada' || derivacion.estado === 'finalizada' "
+                    type="info">
             {{derivacion.estado}}
         </plex-badge>
-        <div title>
-            {{derivacion?.paciente | nombre }}
-        </div>
-        <div subtitle>
-            <plex-copy *ngIf="derivacion?.paciente?.documento" [value]="derivacion?.paciente?.documento">
-                {{ derivacion?.paciente?.documento | number  }}
-            </plex-copy>
-        </div>
-    </plex-detail>
+        <plex-badge *ngIf="derivacion.estado === 'habilitada'|| derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada'"
+                    type="success">
+            {{derivacion.estado}}
+        </plex-badge>
+        <plex-badge *ngIf="derivacion.estado === 'inhabilitada' || derivacion.estado === 'rechazada'" type="danger">
+            {{derivacion.estado}}
+        </plex-badge>
+    </plex-title>
+    <plex-grid type="full" cols="2">
+        <plex-label titulo="Organización origen" subtitulo="{{derivacion.organizacionOrigen.nombre}}">
+        </plex-label>
+        <plex-label titulo="Organización destino" subtitulo="{{derivacion.organizacionDestino.nombre}}">
+        </plex-label>
+        <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
+        </plex-label>
+        <plex-label titulo="Ultima actualización" subtitulo="{{derivacion.updatedAt
+                                    | fecha}}  {{derivacion.updatedAt
+                            | hora}}">
+        </plex-label>
+    </plex-grid>
     <plex-title size="sm" titulo="Nota"></plex-title>
     <plex-grid type="full" cols="1">
         {{derivacion.detalle}}
@@ -41,15 +53,6 @@
                 </div>
             </ng-container>
         </div>
-    </plex-grid>
-    <plex-title size="sm" titulo="Datos de creación"></plex-title>
-    <plex-grid type="full" cols="2">
-        <plex-label titulo="Creada por" subtitulo="{{derivacion.createdBy | nombre}}">
-        </plex-label>
-        <plex-label titulo="Fecha de creación" subtitulo="{{derivacion.createdAt
-                                    | fecha}}  {{derivacion.fecha
-                            | hora}}">
-        </plex-label>
     </plex-grid>
     <div *ngIf="reglasDerivacion.length > 0">
         <form #formEstado="ngForm">
