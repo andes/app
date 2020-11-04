@@ -39,8 +39,8 @@
                     </plex-grid>
                 </td>
                 <td>
-                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" label=""
-                                 type="danger btn-sm" icon="trash-can" (click)="eliminarNota(item)">
+                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username"
+                                 type="danger" size="sm" icon="trash-can" (click)="eliminarNota(item)">
                     </plex-button>
                 </td>
             </tr>
