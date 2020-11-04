@@ -20,12 +20,12 @@
                                  label="Estado">
                     </plex-select>
                 </plex-wrapper>
-                <div *ngIf="!derivaciones?.length" class="alert alert-default">
+                <div *ngIf="!derivaciones?.length && !loading" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="!loading && derivaciones?.length">
                     <div class="col-12">
-                        <ng-container *ngIf="derivaciones?.length">
+                        <ng-container>
                             <plex-list [striped]="true">
                                 <plex-item>
                                     <b label> Fecha </b>
@@ -39,7 +39,7 @@
                                            (click)="seleccionar(derivacion)">
                                     <plex-label>
                                         <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
-                                                    subtitulo="Última actualización: {{derivacion.updatedAt
+                                                    subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
                                                         | fecha}}">
                                         </plex-label>
                                     </plex-label>
@@ -88,12 +88,12 @@
                                  label="Estado">
                     </plex-select>
                 </plex-wrapper>
-                <div *ngIf="!derivaciones?.length" class="alert alert-default">
+                <div *ngIf="!this.loading && !derivaciones?.length" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="!loading && derivaciones?.length">
                     <div class="col-12">
-                        <ng-container *ngIf="derivaciones?.length">
+                        <ng-container>
                             <plex-list [striped]="true">
                                 <plex-item>
                                     <b label> Fecha </b>
