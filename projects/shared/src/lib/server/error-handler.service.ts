@@ -50,7 +50,13 @@ export class ServerErrorHandler implements ErrorHandler {
         if (error instanceof HttpErrorResponse) {
             return;
         } else if (error instanceof Error) {
-            this.buffer.next(error);
+            const chunkFailedMessage = /Loading chunk [\d]+ failed/;
+            if (chunkFailedMessage.test(error.message)) {
+                alert('Hay una nueva versión de la aplicación.');
+                window.location.reload();
+            } else {
+                this.buffer.next(error);
+            }
         } else {
             this.buffer.next({ message: error, stack: '' } as any);
         }
