@@ -5,11 +5,15 @@
                 <div svgLogo></div>
                 <div svgAcronimo></div>
                 <div class="provincia">
-                    <div>{{ provincia }}</div>
+                    <div>
+                        {{ provincia }}
+                    </div>
                 </div>
             </div>
             <div class="bienvenida">
-                <div class="efector" *ngIf="auth.orgs.length > 1">{{ auth.organizacion.nombre }}</div>
+                <div class="efector">
+                    {{ auth.organizacion.nombre }}
+                </div>
                 <div class="hola">
                     Hola <b>{{ auth.usuario.nombre }}</b>
                 </div>
@@ -31,19 +35,20 @@
                     <div *ngIf="modulo.activo" class="modulo">
                         <div class="principal" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
-                                <span class="hover" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
-                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
-                                      (click)="irANovedades(modulo._id)"></span>
+                                <a href="javascript:void();" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
+                                   hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
+                                   (click)="irANovedades(modulo._id)"></a>
                             </b>
                             <div class="descripcion">{{ modulo.descripcion }}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
-                                <div *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
-                                     [style.background]="submodulo.color" (click)="redirect(submodulo)">
+                                <a href="javascript:void();" *ngIf="submodulo.activo"
+                                   class="submodulo {{submodulo.class}} hover" [style.background]="submodulo.color"
+                                   (click)="redirect(submodulo)">
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
-                                </div>
+                                </a>
                             </ng-container>
                         </div>
                     </div>
@@ -51,7 +56,7 @@
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
-                    <div class="seccion hover" (click)="redirect(seccion)">
+                    <a href="javascript:void();" class="seccion hover" (click)="redirect(seccion)">
                         <div class="principal" [style.background]="seccion.color">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
@@ -64,7 +69,7 @@
                         <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
                               hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
                               (click)="irANovedades(seccion._id)"></span>
-                    </div>
+                    </a>
                 </ng-container>
             </div>
         </main>

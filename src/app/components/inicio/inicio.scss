@@ -8,7 +8,7 @@ header {
 
     .marca {
         display: flex;
-        justify-content: start;
+        justify-content: flex-start;
         align-items: center;
     }
 
@@ -112,6 +112,7 @@ main {
             }
         }
         .submodulo {
+            text-decoration: none;
             cursor: pointer;
             box-sizing: content-box;
             width: 80px;
@@ -143,8 +144,12 @@ main {
             .titulo {
                 font-size: 13px;
                 line-height: normal;
-                span {
-                    cursor: pointer;
+                a,
+                a:visited,
+                a:hover,
+                a:focus {
+                    color: rgb(56, 69, 85);
+                    text-decoration: none;
                 }
             }
 
@@ -175,7 +180,9 @@ main {
     }
 }
 
-.seccion {
+a.seccion {
+    text-decoration: none;
+    color: rgb(56, 69, 85);
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -188,6 +195,13 @@ main {
         &:nth-child(#{$child}) {
             animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
         }
+    }
+
+    &:visited,
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: rgb(56, 69, 85);
     }
 
     .principal .band {
@@ -377,6 +391,8 @@ main {
             width: 80vw;
             margin-top: 6rem;
             .seccion {
+                display: block;
+                text-decoration: none;
                 min-width: 225px;
                 padding-right: 0;
                 margin-bottom: 0.5rem;
