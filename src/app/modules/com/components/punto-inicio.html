@@ -39,7 +39,7 @@
                                            (click)="seleccionar(derivacion)">
                                     <plex-label>
                                         <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
-                                                    subtitulo="Última actualización: {{derivacion.updatedAt
+                                                    subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
                                                         | fecha}}">
                                         </plex-label>
                                     </plex-label>
