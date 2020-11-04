@@ -1,3 +1,36 @@
+# [5.20.0](https://github.com/andes/app/compare/v5.19.0...v5.20.0) (2020-11-04)
+
+
+### Bug Fixes
+
+* **dasboard:** permisos ([#2011](https://github.com/andes/app/issues/2011)) ([fde7a97](https://github.com/andes/app/commit/fde7a970ee2a3a3143c7e02764f6d85aec2934d0))
+* **mapa-camas:** corrige accion saltar al presente que quitaba la fecha ([#2005](https://github.com/andes/app/issues/2005)) ([209a991](https://github.com/andes/app/commit/209a9911697e3c29211b3d0954d6f119840f6e94))
+* **menu:** filtra en permisos múltiples ([#1982](https://github.com/andes/app/issues/1982)) ([279e0d0](https://github.com/andes/app/commit/279e0d07facd0d75ba4045e76be857cb99064b16))
+* **mpi:** error en busqueda de pacientes auditoria ([#2003](https://github.com/andes/app/issues/2003)) ([6c64d9f](https://github.com/andes/app/commit/6c64d9fb9da4413b7931bae9e66317db4ee9eb8b))
+* **novedades:** se separa array de novedades ([#1985](https://github.com/andes/app/issues/1985)) ([b6aedda](https://github.com/andes/app/commit/b6aeddab16c339c5454cfeec0f52c4695a33a19d))
+* **rup:** control de fecha en fuera de agenda ([#2012](https://github.com/andes/app/issues/2012)) ([46d2094](https://github.com/andes/app/commit/46d2094c24f913a28910d58bc078e9d99132940a))
+* **rup:** error al guardar turno ([#2007](https://github.com/andes/app/issues/2007)) ([0184599](https://github.com/andes/app/commit/018459930378e7ab67c99b9ba40a804dd278fe54))
+* **rup:** handler obra social ([#2002](https://github.com/andes/app/issues/2002)) ([f03a78a](https://github.com/andes/app/commit/f03a78adb2b3a58ca75ee30c7d0a93288c594c8e))
+* **top:** fix en eliminar adjunto ([#1989](https://github.com/andes/app/issues/1989)) ([5e019c0](https://github.com/andes/app/commit/5e019c02f44f161a66a953a003bbdf1b5e7dba3d))
+* **top:** guarda organizacion al iniciar prestacion ([#1990](https://github.com/andes/app/issues/1990)) ([a763d16](https://github.com/andes/app/commit/a763d16baa2355ee70bcaaa99304c68f2d486779))
+* **turnos-prestaciones:** bug conceptId ([#2006](https://github.com/andes/app/issues/2006)) ([8835db9](https://github.com/andes/app/commit/8835db967cfa57e8cf08817a0ecfb64eb3de6fa5))
+
+
+### Features
+
+* **buscador:** ordenar asc/desc columnas ([#2000](https://github.com/andes/app/issues/2000)) ([e12548a](https://github.com/andes/app/commit/e12548a0d3b5b5499d7520efe2fbeb986018b159))
+* **citas:** incluye createdBy en detalle de agenda ([#1996](https://github.com/andes/app/issues/1996)) ([245d251](https://github.com/andes/app/commit/245d2511f2c6d84d9f9af1c7f7f46a993acf0c20))
+* **com:** guardar obra social del paciente ([#2001](https://github.com/andes/app/issues/2001)) ([3824722](https://github.com/andes/app/commit/38247227c061617411f4f318092898fd57d5b881))
+* **com:** seleccionar por defecto el profesional logueado ([#1986](https://github.com/andes/app/issues/1986)) ([134a1b3](https://github.com/andes/app/commit/134a1b3afdac6482364652d505aa86205054d4ce))
+* **com:** uso de componente paciente-detalle ([#2016](https://github.com/andes/app/issues/2016)) ([61e16cf](https://github.com/andes/app/commit/61e16cfa362f81c3df7bb10741c2cb2aa6c61f7b))
+* **mapa-camas:** adapta los estilos de egreso e ingreso de paciente ([#1977](https://github.com/andes/app/issues/1977)) ([e7f8526](https://github.com/andes/app/commit/e7f852632513ffa0e00013456852d19514915719))
+* **mapa-camas:** invalida prestacion al deshacer internacion ([#2009](https://github.com/andes/app/issues/2009)) ([3191be8](https://github.com/andes/app/commit/3191be8c0492a6381a79cd6c3d02cad30721fb43))
+* **mapa-camas:** trackId en prestaciones ([#2010](https://github.com/andes/app/issues/2010)) ([e3950b3](https://github.com/andes/app/commit/e3950b37b774c073e2c5355934c1580a42d0b7a7))
+* **MPI:** agrega funcionalidad a pipe edad ([#1981](https://github.com/andes/app/issues/1981)) ([7ce8932](https://github.com/andes/app/commit/7ce89325215f874d38c52665c9270cebb21a2582))
+* **rup:** pacientes agregados a prestacion no nominalizada ([#1965](https://github.com/andes/app/issues/1965)) ([137d3bf](https://github.com/andes/app/commit/137d3bfe73d16d7f4af8c8ab56d8b859531afc24))
+* **solicitudes:** agrega nuevo pipe para unificar controles en los botones de las operaciones ([#1995](https://github.com/andes/app/issues/1995)) ([da9220a](https://github.com/andes/app/commit/da9220a06d29966b4a478e1946e4f86faa380378))
+* **TOP:** permite anular solicitudes en estado auditoria ([#2014](https://github.com/andes/app/issues/2014)) ([ba51470](https://github.com/andes/app/commit/ba5147077ab4a74221855b518aa2453fbc8c261c))
+
 # [5.19.0](https://github.com/andes/app/compare/v5.18.0...v5.19.0) (2020-10-28)
 
 
