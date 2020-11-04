@@ -4,46 +4,48 @@
         <!-- DATOS DE CONTACTO -->
 
         <plex-title titulo=" datos de contacto" size="sm">
-            <plex-bool [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto" type="slide"
-                       (change)="limpiarContacto()"></plex-bool>
+            <plex-bool class="pr-1" [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto"
+                       type="slide" (change)="limpiarContacto()"></plex-bool>
         </plex-title>
 
-        <plex-grid type="full" cols="2" size="lg" responsive>
-            <plex-wrapper class="pt-1" *ngFor="let _unContacto of paciente.contacto; let i = index">
-                <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                             [required]="i <= 0" label="Tipo" (change)="_unContacto.valor = ''"
-                             [readonly]="noPoseeContacto">
-                </plex-select>
+        <plex-grid type="full" cols="1" size="lg" responsive>
+            <div class="pr-1" grow="1">
+                <plex-wrapper *ngFor="let _unContacto of paciente.contacto; let i = index">
+                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                                 [required]="i <= 0" label="Tipo" (change)="_unContacto.valor = ''"
+                                 [readonly]="noPoseeContacto">
+                    </plex-select>
 
-                <ng-container *ngIf="_unContacto.tipo">
-                    <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número"
-                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}"
-                                [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto">
-                    </plex-phone>
-                    <plex-phone label="Número"
-                                *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
-                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
-                                [readonly]="noPoseeContacto">
-                    </plex-phone>
-                    <plex-text email label="Dirección"
-                               *ngIf="_unContacto.tipo === 'email' || _unContacto.tipo.id === 'email'"
-                               [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
-                               [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
-                               [readonly]="noPoseeContacto">
-                    </plex-text>
-                    <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info" icon="plus"
-                                 name="agregarContacto" (click)="addContacto('celular', '')"
-                                 [disabled]="noPoseeContacto">
+                    <ng-container *ngIf="_unContacto.tipo">
+                        <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número"
+                                    [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}"
+                                    [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto">
+                        </plex-phone>
+                        <plex-phone label="Número"
+                                    *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
+                                    [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
+                                    [readonly]="noPoseeContacto">
+                        </plex-phone>
+                        <plex-text email label="Dirección"
+                                   *ngIf="_unContacto.tipo === 'email' || _unContacto.tipo.id === 'email'"
+                                   [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
+                                   [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
+                                   [readonly]="noPoseeContacto">
+                        </plex-text>
+                        <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info"
+                                     icon="plus" name="agregarContacto" (click)="addContacto('celular', '')"
+                                     [disabled]="noPoseeContacto">
+                        </plex-button>
+                    </ng-container>
+                    <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
                     </plex-button>
-                </ng-container>
-                <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
-                </plex-button>
-            </plex-wrapper>
+                </plex-wrapper>
+            </div>
 
             <!-- APP-MOBILE -->
 
-            <div *ngIf="paciente.estado === 'validado'">
+            <div *ngIf="paciente.estado === 'validado'" class="w-100">
                 <activar-app [paciente]="paciente" [showCampoCelular]="false" (activar)="mobileNotify($event)">
                 </activar-app>
             </div>

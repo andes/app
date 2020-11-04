@@ -1,5 +1,5 @@
 <form #form="ngForm">
-    <plex-wrapper>
+    <plex-wrapper class="w-100">
         <plex-phone *ngIf="showCampoCelular" class="pr-3" label="Teléfono celular" name="celular" [(ngModel)]="celular"
                     [disabled]="cuentaActivada" grow="full">
         </plex-phone>
@@ -8,32 +8,35 @@
             <div span="2" justify="start">
                 <b class="pr-3">Activar App Mobile</b>
             </div>
-            <plex-text span="2" email label="" name="email" debounce="900" [(ngModel)]="email"
+            <plex-text class="mr-1" span="2" email label="" name="email" debounce="900" [(ngModel)]="email"
                        placeholder="maria@gmail.com" [readonly]="(showCampoCelular && !celular) || emailReadonly"
                        (change)="checkEmail()">
             </plex-text>
         </plex-grid>
 
-        <plex-button *ngIf="showEditar" label="" type="warning" name="editarUsuario" title="Editar correo"
+        <!-- editar -->
+        <plex-button *ngIf="showEditar" class="pr-1" label="" type="warning" name="editarUsuario" title="Editar correo"
                      [disabled]="disableEditar" (click)="editarEmail()">
             <plex-icon name="pencil" size="md" type="light"></plex-icon>
         </plex-button>
 
+        <!-- cuanta activada -->
         <plex-button *ngIf="cuentaActivada" label="" type="success" name="activacionSuccess" title="" disabled="true">
             <plex-icon name="check" size="md" type="light"></plex-icon>
         </plex-button>
 
-        <plex-button *ngIf="paciente.id && showActivar"
+        <plex-button *ngIf="paciente.id && showActivar" class="pr-1"
                      [disabled]="form.invalid || disableActivacion || (showCampoCelular && !celular)"
                      label="Activar app" type="info" (click)="activarApp()"></plex-button>
 
-        <plex-button *ngIf="paciente.id && showReenviar"
+        <plex-button *ngIf="paciente.id && showReenviar" class="pr-1"
                      [disabled]="form.invalid || disableActivacion || (showCampoCelular && !celular)"
                      label="Reenviar Código" type="info" (click)="activarApp()">
         </plex-button>
 
-        <plex-badge *ngIf="(hasEmailValido$| async) || message?.length" class="pt-2 pr-3" [type]="typeMessage"
+        <plex-badge *ngIf="(hasEmailValido$| async) || message?.length" class="pt-2 pr-1" [type]="typeMessage"
                     size="block">{{ message }}
         </plex-badge>
+
     </plex-wrapper>
 </form>
