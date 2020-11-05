@@ -77,6 +77,8 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                     this.prestacionesHijas = result;
                 } else {
                     this.prestacionesHijas = [];
+                    this.prestacion.check = true;
+                    this.prestacionesHijas[0] = this.prestacion;
                 }
             });
         }
