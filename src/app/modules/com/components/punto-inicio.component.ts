@@ -27,6 +27,7 @@ export class ComPuntoInicioComponent implements OnInit {
     organizacionDestino: IOrganizacion;
     paciente: any;
     estado: any;
+    gravedad: any;
     tabIndex = 0;
     public loading = false;
     public estados = [
@@ -38,6 +39,11 @@ export class ComPuntoInicioComponent implements OnInit {
         { id: 'aceptada', nombre: 'ACEPTADA' },
         { id: 'finalizada', nombre: 'FINALIZADA' },
         { id: 'encomendada', nombre: 'ENCOMENDADA' }
+    ];
+    public opcionesGravedad = [
+        { id: 'baja', nombre: 'baja' },
+        { id: 'media', nombre: 'media' },
+        { id: 'alta', nombre: 'alta' }
     ];
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
@@ -70,11 +76,14 @@ export class ComPuntoInicioComponent implements OnInit {
 
     actualizarTabla() {
         this.loading = true;
-        let query: any = { cancelada: false };
+        let query: any = { cancelada: false, sort: 'fecha' };
         if (this.estado) {
             query.estado = this.estado.id;
         } else {
             query.estado = ['asignada', 'solicitada', 'inhabilitada', 'habilitada', 'asignada', 'rechazada', 'aceptada', 'encomendada'];
+        }
+        if (this.gravedad) {
+            query.gravedad = this.gravedad.id;
         }
         if (this.tabIndex === 0) {
             query.organizacionDestino = this.auth.organizacion.id;
@@ -93,7 +102,7 @@ export class ComPuntoInicioComponent implements OnInit {
             query.paciente = `^${this.paciente}`;
         }
         this.derivacionesService.search(query).subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = derivaciones.sort((a, b) => moment(a.fecha).diff(moment(b.fecha)));
+            this.derivaciones = derivaciones;
             if (this.tabIndex === 1 && this.esCOM) {
                 this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id);
             }

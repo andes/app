@@ -19,6 +19,9 @@
                     <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
+                    <plex-select [(ngModel)]="gravedad" (change)="actualizarTabla()" [data]="opcionesGravedad"
+                                 name="gravedad" label="Gravedad">
+                    </plex-select>
                 </plex-wrapper>
                 <div *ngIf="!derivaciones?.length && !loading" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
@@ -28,7 +31,7 @@
                         <ng-container>
                             <plex-list [striped]="true">
                                 <plex-item>
-                                    <b label> Fecha </b>
+                                    <b *ngIf="!showSidebar" label> Fecha </b>
                                     <b label> Organización origen </b>
                                     <b label> Organización destino </b>
                                     <b label> Paciente </b>
@@ -37,11 +40,9 @@
                                 <plex-item *ngFor="let derivacion of derivaciones"
                                            [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
                                            (click)="seleccionar(derivacion)">
-                                    <plex-label>
-                                        <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
-                                                    subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
+                                    <plex-label *ngIf="!showSidebar" [tituloBold]="true"
+                                                titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{(derivacion.updatedAt?derivacion.updatedAt:derivacion.createdAt)
                                                         | fecha}}">
-                                        </plex-label>
                                     </plex-label>
                                     <div class="elementos-graficos w-100">
                                         <plex-icon *ngIf="!showSidebar" name="hospital-building" size="lg" type="info">
@@ -58,10 +59,19 @@
                                                     subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                     </div>
-
-                                    <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
-                                    </plex-label>
+                                    <div>
+                                        <plex-label *ngIf="derivacion.gravedad"
+                                                    hintType="{{derivacion.gravedad === 'alta'? 'danger': derivacion.gravedad === 'media'? 'warning':'success'}}"
+                                                    hintIcon="account-alert" hint="Gravedad: {{derivacion.gravedad}}"
+                                                    detach="right"
+                                                    titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                    subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                        </plex-label>
+                                        <plex-label *ngIf="!derivacion.gravedad"
+                                                    titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                    subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                        </plex-label>
+                                    </div>
                                     <plex-button *ngIf="derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id"
                                                  type="info" size="sm"
                                                  (click)="actualizarEstado(derivacion);$event.stopPropagation()">
@@ -87,6 +97,9 @@
                     <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
+                    <plex-select [(ngModel)]="gravedad" (change)="actualizarTabla()" [data]="opcionesGravedad"
+                                 name="gravedad" label="Gravedad">
+                    </plex-select>
                 </plex-wrapper>
                 <div *ngIf="!this.loading && !derivaciones?.length" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
@@ -96,7 +109,7 @@
                         <ng-container>
                             <plex-list [striped]="true">
                                 <plex-item>
-                                    <b label> Fecha </b>
+                                    <b *ngIf="!showSidebar" label> Fecha </b>
                                     <b label> Organización origen </b>
                                     <b label> Organización destino </b>
                                     <b label> Paciente </b>
@@ -105,11 +118,9 @@
                                 <plex-item *ngFor="let derivacion of derivaciones"
                                            [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
                                            (click)="seleccionar(derivacion)">
-                                    <plex-label>
-                                        <plex-label [tituloBold]="true" titulo="{{derivacion.createdAt | fecha}}"
-                                                    subtitulo="Última actualización: {{derivacion.updatedAt
+                                    <plex-label *ngIf="!showSidebar" [tituloBold]="true"
+                                                titulo="{{derivacion.createdAt | fecha}}" subtitulo="Última actualización: {{derivacion.updatedAt
                                                 | fecha}}">
-                                        </plex-label>
                                     </plex-label>
                                     <div class="elementos-graficos w-100">
                                         <plex-icon *ngIf="!showSidebar" name="hospital-building" size="lg" type="info">
@@ -126,9 +137,18 @@
                                                     subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                     </div>
-                                    <plex-label titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
-                                    </plex-label>
+                                    <div>
+                                        <plex-label *ngIf="derivacion.gravedad" detach="right"
+                                                    hintType="{{derivacion.gravedad === 'alta'? 'danger': derivacion.gravedad === 'media'? 'warning':'success'}}"
+                                                    hintIcon="account-alert" hint="Gravedad: {{derivacion.gravedad}}"
+                                                    titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                    subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                        </plex-label>
+                                        <plex-label *ngIf="!derivacion.gravedad"
+                                                    titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
+                                                    subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                        </plex-label>
+                                    </div>
                                     <plex-button *ngIf="derivacion.estado === 'solicitada'" type="danger" size="sm"
                                                  (click)="cancelar(derivacion);$event.stopPropagation()">
                                         CANCELAR
