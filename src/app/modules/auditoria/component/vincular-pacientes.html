@@ -40,13 +40,13 @@
     <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)" (searchClear)="onSearchClear()">
     </paciente-buscar>
 
-    <plex-loader *ngIf="loading"></plex-loader>
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
     <paciente-listado *ngIf="resultadoPacientes?.length" [pacientes]="resultadoPacientes" (selected)="showModal($event)"
                       [offset]="110">
     </paciente-listado>
 
-    <div *ngIf="!resultadoPacientes?.length && !searchClear" class="alert alert-danger">
+    <div *ngIf="!loading && !resultadoPacientes?.length && !searchClear" class="alert alert-danger">
         <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
     </div>
 </ng-container>

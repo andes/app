@@ -25,6 +25,7 @@ export class AuditoriaComponent implements OnInit {
   showDetallePaciente = false;
   showCabeceraDetalle = false;
   // busqueda
+  public autoFocus = 0;
   textoLibre: string = null;
   resultadoBusqueda: IPaciente[] = [];
   pacienteSelected: IPaciente = null;
@@ -182,6 +183,8 @@ export class AuditoriaComponent implements OnInit {
         return;
       }
       this.pacienteService.setActivo(paciente, activo).subscribe(res => {
+        // Actualizamos resultados en panel principal
+        this.buscar();
         (activo) ? this.plex.toast('success', 'Paciente Activado') : this.plex.toast('info', 'Paciente Desactivado');
       });
     }
