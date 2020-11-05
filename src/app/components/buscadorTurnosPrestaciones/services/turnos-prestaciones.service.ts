@@ -61,6 +61,9 @@ export class TurnosPrestacionesService {
                 case 'estado':
                     prestaciones = prestaciones.sort((a, b) => (!a.estado) ? 1 : (!b.estado) ? -1 : a.estado.localeCompare((b.estado as string)));
                     break;
+                case 'ambito':
+                    prestaciones = prestaciones.sort((a, b) => (!a.ambito) ? 1 : (!b.ambito) ? -1 : a.ambito.localeCompare((b.ambito as string)));
+                    break;
                 default:
                     break;
             }

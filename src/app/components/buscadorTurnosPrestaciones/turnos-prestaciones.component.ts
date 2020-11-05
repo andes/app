@@ -41,6 +41,16 @@ export class TurnosPrestacionesComponent implements OnInit {
     public selectProfesional: Boolean = false;
     public profesional: any;
     public botonBuscarDisabled: Boolean = false;
+    public columnas = {
+        fecha: true,
+        documento: true,
+        paciente: true,
+        tipoPrestacion: true,
+        equipoSalud: true,
+        estado: true,
+        financiador: true,
+        ambito: false
+    };
 
     public sortBy: String;
     public sortOrder = 'desc';
