@@ -470,11 +470,9 @@ export class PacienteComponent implements OnInit {
                 this.loading = false;
                 if (resultado.existente) {
                     // PACIENTE EXISTENTE EN ANDES
-                    if (resultado.paciente.estado === 'validado') {
-                        this.validado = true;
-                    }
                     this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                    this.pacienteModel = resultado.paciente;
+                    this.paciente = resultado.paciente;
+                    this.actualizarDatosPaciente();
                 } else if (resultado.validado) {
                     // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
                     this.setBackup();
