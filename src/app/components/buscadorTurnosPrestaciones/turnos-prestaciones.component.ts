@@ -43,12 +43,12 @@ export class TurnosPrestacionesComponent implements OnInit {
     public botonBuscarDisabled: Boolean = false;
     public columnas = {
         fecha: true,
-        documento: false,
+        documento: true,
         paciente: true,
         tipoPrestacion: true,
-        equipoSalud: false,
+        equipoSalud: true,
         estado: true,
-        financiador: false,
+        financiador: true,
         ambito: false
     };
 

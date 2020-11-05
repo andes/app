@@ -118,41 +118,48 @@
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
-                <th *ngIf="columnas.paciente" class="sortable" (click)="sortTable('paciente')">Paciente
+                <th *ngIf="columnas.paciente" class="sortable" (click)="sortTable('paciente')">
+                    Paciente
                     <span *ngIf="sortBy === 'paciente'">
                         <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
-                <th *ngIf="columnas.tipoPrestacion" class="sortable" (click)="sortTable('prestacion')">Tipo de
-                    Prestación
+                <th *ngIf="columnas.tipoPrestacion" class="sortable" (click)="sortTable('prestacion')">
+                    Tipo de Prestación
                     <span *ngIf="sortBy === 'prestacion'">
                         <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
-                <th *ngIf="columnas.ambito" class="sortable" (click)="sortTable('ambito')">Ambito
+                <th *ngIf="columnas.ambito" class="sortable" (click)="sortTable('ambito')">
+                    Ambito
                     <span *ngIf="sortBy === 'ambito'">
                         <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
 
-                <th *ngIf="columnas.equipoSalud" class="sortable" (click)="sortTable('profesional')">Equipo de Salud
+                <th *ngIf="columnas.equipoSalud" class="sortable" (click)="sortTable('profesional')">
+                    Equipo de Salud
                     <span *ngIf="sortBy === 'profesional'">
                         <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
-                <th *ngIf="columnas.estado" class="sortable" (click)="sortTable('estado')">Estado
+                <th *ngIf="columnas.estado" class="sortable" (click)="sortTable('estado')">
+                    Estado
                     <span *ngIf="sortBy === 'estado'">
                         <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                         <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                     </span>
                 </th>
-                <th width="20%" *ngIf="!sumarB && columnas.financiador">Financiador
+                <th width="20%" *ngIf="!sumarB && columnas.financiador">
+                    Financiador
                 </th>
-                <th *ngIf="sumarB">Comprobante</th>
+                <th *ngIf="sumarB">
+                    Comprobante
+                </th>
             </thead>
 
             <tbody>
@@ -164,18 +171,22 @@
                     <td *ngIf="columnas.tipoPrestacion">{{busqueda.prestacion?.term}}</td>
                     <td *ngIf="columnas.ambito">{{busqueda.ambito}}</td>
                     <td *ngIf="columnas.equipoSalud" class="nombres-profesionales">
-                        <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
-                            no asignado</span>
+                        <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">
+                            Profesional no asignado
+                        </span>
                         <ng-container *ngIf="busqueda.profesionales">
-                            <div *ngIf="busqueda.profesionales.length > 0">{{ busqueda.profesionales |
-                                enumerar:['apellido','nombre'] }}</div>
+                            <div *ngIf="busqueda.profesionales.length > 0">
+                                {{ busqueda.profesionales | enumerar:['apellido','nombre'] }}
+                            </div>
                         </ng-container>
                     </td>
                     <td *ngIf="columnas.estado">{{busqueda.estado}}</td>
                     <td *ngIf="!sumarB && columnas.financiador">
-                        {{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}</td>
+                        {{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}
+                    </td>
                     <td *ngIf="sumarB">
-                        {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}</td>
+                        {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}
+                    </td>
                 </tr>
             </tbody>
         </table>
