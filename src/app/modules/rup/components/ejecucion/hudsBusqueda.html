@@ -268,7 +268,7 @@
 
         <!-- Vista: TRASTORNOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-            <ul *ngIf="registrosTotales.trastorno" class="hover conceptos list-unstyled">
+            <ul *ngIf="registrosTotales.trastorno" class="hover conceptos list-unstyled" cdkDropList>
                 <ng-container *ngFor="let registro of registrosTotales.trastorno; let iConcepto = index">
                     <li>
                         <div class="rup-card mini trastorno"
@@ -280,7 +280,9 @@
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
-                                                <div class="col-2 icon-rup">
+                                                <div class="icon-rup drag-handle p-0 pt-1" draggable
+                                                     [dragScope]="'registros-rup'" [dragData]="registro.concepto"
+                                                     (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
                                                     <i class="adi adi-trastorno"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
