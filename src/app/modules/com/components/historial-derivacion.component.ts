@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Plex } from '@andes/plex';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { Auth } from '@andes/auth';
+import { IMAGENES_EXT } from '@andes/shared';
 
 @Component({
     selector: 'historial-derivacion',
@@ -15,7 +16,7 @@ export class HistorialDerivacionComponent {
     public itemsHistorial = [];
     public fileToken;
     public adjuntos = [];
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
+    imagenes = IMAGENES_EXT;
 
     @Input('derivacion')
     set _derivacion(value) {

@@ -102,36 +102,17 @@
     <!-- /SOLICITUD SALIDA -->
     <!-- Adjuntar Archivos -->
     <plex-title titulo="Cargar documentos">
+        <ng-container *ngIf="!waiting">
+            <plex-badge *ngIf="errorExt" type="danger" size="sm"
+                        hint="Estos son los archivos que podes subir: {{ extensions }}" detach="top" hintType="danger">
+                Archivo inválido</plex-badge>
+        </ng-container>
+
         <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
         <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
         </plex-button>
     </plex-title>
-    <plex-wrapper>
-        <span *ngIf="!waiting">
-            <span *ngIf="errorExt">
-                <plex-badge type="danger"> Archivo inválido </plex-badge>
-            </span>
-        </span>
-        <span *ngIf="waiting">
-            <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
-            <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
-            </plex-button>
-        </span>
-        <div class="image-container hr-inline-group" *ngIf="documentos && fileToken">
-            <ng-container *ngFor="let doc of documentos; let i = index">
-                <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
-                <div class="image hover">
-                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
-                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                       (click)="visualizador.open(i)">
-                        {{ doc.ext }}
-                    </a>
-                    <div class="x-mark" (click)="imageRemoved(doc)">
-                        <span class="close"></span>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </plex-wrapper>
-    <!-- /Adjuntar Archivos -->
+
+    <shared-galeria-archivos [files]="documentosUrl" [loading]="waiting" (remove)="imageRemoved($event)">
+    </shared-galeria-archivos>
 </form>

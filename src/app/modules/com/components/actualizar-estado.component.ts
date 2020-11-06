@@ -4,6 +4,7 @@ import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 
 @Component({
     selector: 'actualizar-estado',
@@ -19,13 +20,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     fileToken: String = null;
     timeout = null;
     adjuntosEstado;
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
     public nuevoEstado;
 
     @Input('derivacion')

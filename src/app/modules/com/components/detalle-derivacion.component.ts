@@ -7,6 +7,7 @@ import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -31,13 +32,8 @@ export class DetalleDerivacionComponent implements OnInit {
     timeout = null;
     adjuntosEstado = [];
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
     public items = [
         { key: 'derivacion', label: 'DERIVACIÓN' },
         { key: 'historial', label: 'HISTORIAL' }

@@ -4,9 +4,11 @@ import { Auth } from '@andes/auth';
 import { Server, cache } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { switchMap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 const REFRESH_INTERVAL = 1000 * 60 * 60;
-
 @Injectable()
 export class AdjuntosService {
     private timer$ = timer(0, REFRESH_INTERVAL);
@@ -19,7 +21,8 @@ export class AdjuntosService {
 
     constructor(
         private server: Server,
-        public auth: Auth
+        public auth: Auth,
+        public sanitazer: DomSanitizer
     ) { }
 
     /**
@@ -68,7 +71,24 @@ export class AdjuntosService {
      * [TODO] Mover a @andes/auth
      */
 
-    generateToken() {
+    generateToken(): Observable<{ token: string }> {
         return this.server.post('/auth/file-token', {});
     }
+
+
+    createUrl(modulo: 'rup', doc, token: string) {
+        if (doc.id) {
+            let apiUri = environment.API;
+            return apiUri + modulos[modulo] + doc.id + '?token=' + token;
+        } else {
+            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
+        }
+    }
 }
+
+/**
+ * shotcut para moduloes
+ */
+const modulos = {
+    rup: '/modules/rup/store/'
+};

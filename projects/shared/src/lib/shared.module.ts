@@ -1,4 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PlexModule } from '@andes/plex';
+
 import { Server } from './server/server.service';
 import { FechaPipe } from './pipes/fecha.pipe';
 import { HoraPipe } from './pipes/hora.pipe';
@@ -11,10 +14,11 @@ import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { SexoPipe } from './pipes/sexo.pipe';
 import { FormAutoSaveDirective } from './directives/autosave.directives';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
-import { PlexModule } from '@andes/plex';
+import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
 
 @NgModule({
     imports: [
+        CommonModule,
         PlexModule
     ],
     declarations: [
@@ -28,7 +32,8 @@ import { PlexModule } from '@andes/plex';
         PluralizarPipe,
         SexoPipe,
         FormAutoSaveDirective,
-        PopoverAuditComponent
+        PopoverAuditComponent,
+        GaleriaArchivosComponent
     ],
     exports: [
         FechaPipe,
@@ -41,7 +46,8 @@ import { PlexModule } from '@andes/plex';
         PluralizarPipe,
         SexoPipe,
         FormAutoSaveDirective,
-        PopoverAuditComponent
+        PopoverAuditComponent,
+        GaleriaArchivosComponent
     ]
 })
 export class SharedModule {

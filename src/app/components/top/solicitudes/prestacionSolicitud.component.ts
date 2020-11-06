@@ -3,6 +3,7 @@ import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 
 @Component({
     selector: 'prestacion-solicitud',
@@ -10,15 +11,8 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class PrestacionSolicitudComponent implements OnInit {
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
 
     @Input() prestacionSeleccionada: any;
     @Output() returnPrestacion: EventEmitter<any> = new EventEmitter<any>();

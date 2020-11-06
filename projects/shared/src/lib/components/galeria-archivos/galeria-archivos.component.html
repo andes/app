@@ -1,0 +1,22 @@
+<plex-grid size="md" type="auto" *ngIf="files">
+    <plex-card *ngFor="let archivo of files; let i = index">
+        <img [src]="archivo.url" alt="" *ngIf="archivo.isImage" (click)="visualizador.open(i)">
+        <plex-label *ngIf="archivo.isImage && archivo.nombre" [titulo]="archivo.nombre" direction="column" size="sm">
+        </plex-label>
+        <ng-container *ngIf="!archivo.isImage">
+            <plex-label size="lg" type="info" [titulo]="archivo.ext.toLocaleUpperCase()"
+                        [subtitulo]="archivo.nombre || null" direction="column" (click)="visualizador.open(i)">
+                <plex-icon size="xl" name="file" type="info"></plex-icon>
+            </plex-label>
+        </ng-container>
+        <plex-button *ngIf="!archivo.isImage" type="success" size="sm" icon="download" (click)="openUrl(archivo)">
+        </plex-button>
+        <plex-button type="info" size="sm" icon="eye" (click)="visualizador.open(i)" *ngIf="archivo.isImage">
+        </plex-button>
+        <plex-button *ngIf="!readonly" type="danger" size="sm" icon="close" (click)="onRemove(archivo)"></plex-button>
+    </plex-card>
+    <plex-card size="md" *ngIf="loading">
+        <plex-loader type="ball-pulse"></plex-loader>
+    </plex-card>
+</plex-grid>
+<plex-visualizador [files]="files" #visualizador></plex-visualizador>

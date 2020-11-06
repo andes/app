@@ -8,6 +8,7 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -26,13 +27,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     fileToken: String = null;
     timeout = null;
     adjuntos = [];
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
 
     modelo: any = {
         fecha: new Date(),

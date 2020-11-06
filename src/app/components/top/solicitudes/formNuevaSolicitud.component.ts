@@ -5,11 +5,8 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { ReglaService } from '../../../services/top/reglas.service';
-import { environment } from '../../../../environments/environment';
-import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { FileObject, FILE_EXT, IMAGENES_EXT } from '@andes/shared';
 @Component({
     selector: 'form-nueva-solicitud',
     templateUrl: './formNuevaSolicitud.html',
@@ -32,18 +29,11 @@ export class FormNuevaSolicitudComponent implements OnInit {
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
-    fileToken: String = null;
+    fileToken: string = null;
     timeout = null;
     documentos = [];
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
 
     modelo: any = {
         inicio: 'top',
@@ -85,10 +75,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
         private servicioReglas: ReglaService,
-        public sanitazer: DomSanitizer,
-        public adjuntosService: AdjuntosService,
-        private route: ActivatedRoute,
-        private router: Router,
+        private adjuntosService: AdjuntosService
     ) { }
 
     ngOnInit() {
@@ -98,7 +85,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
             this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
         }
         this.extensions = this.extensions.concat(this.imagenes);
-        this.adjuntosService.generateToken().subscribe((data: any) => {
+        this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
         });
     }
@@ -309,6 +296,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     }
 
     readThis(inputValue: any): void {
+
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
         if (!this.extensions.find((item) => item === ext.toLowerCase())) {
@@ -316,8 +304,9 @@ export class FormNuevaSolicitudComponent implements OnInit {
             this.errorExt = true;
             return;
         }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
+        this.waiting = true;
+        const file: File = inputValue.files[0];
+        const myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
             (this.childsComponents.first as any).nativeElement.value = '';
@@ -327,6 +316,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
                     ext,
                     id: data._id
                 });
+                this.calcDocumentosUrl();
+                this.waiting = false;
             });
         };
         myReader.readAsDataURL(file);
@@ -340,39 +331,30 @@ export class FormNuevaSolicitudComponent implements OnInit {
         }
     }
 
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
-    }
-
     imageUploaded($event) {
         let documento = {
             ext: this.fileExtension($event.file.name),
             file: $event.src,
         };
         this.documentos.push(documento);
+        this.calcDocumentosUrl();
     }
 
-    imageRemoved($event) {
-        let index = this.documentos.indexOf($event);
+    imageRemoved(archivo: FileObject) {
+        const index = this.documentos.findIndex((doc) => doc.id === archivo.id);
         this.documentos.splice(index, 1);
+        this.calcDocumentosUrl();
     }
 
-    get documentosUrl() {
-        return this.documentos.map((doc) => {
-            doc.url = this.createUrl(doc);
-            return doc;
+
+    public documentosUrl = [];
+    calcDocumentosUrl() {
+        this.documentosUrl = this.documentos.map((doc) => {
+            return {
+                ...doc,
+                url: this.adjuntosService.createUrl('rup', doc, this.fileToken)
+            };
         });
-    }
-
-    createUrl(doc) {
-        /** Hack momentaneo */
-        if (doc.id) {
-            let apiUri = environment.API;
-            return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
-        } else {
-            // Por si hay algún documento en la vieja versión.
-            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
-        }
     }
 
     cancelarAdjunto() {

@@ -12,12 +12,11 @@ import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.compo
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 
-
 export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
     VisualizacionReglasComponent,
     HistorialSolicitudComponent,
-    FormNuevaSolicitudComponent
+    FormNuevaSolicitudComponent,
 ];
 
 export const TOP_PROVIDERS = [
