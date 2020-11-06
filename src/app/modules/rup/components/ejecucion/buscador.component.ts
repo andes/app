@@ -262,7 +262,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
 
-            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.term !== this.prestacion.solicitud.tipoPrestacion.term);
+            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.prestacion.solicitud.tipoPrestacion.conceptId);
 
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
             // this.results.buscadorBasico[this.filtroActual] = resultadosSnomed;
