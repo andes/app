@@ -7,6 +7,8 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { DocumentosService } from '../../../../services/documentos.service';
+import { map } from 'rxjs/operators';
+import { populateRelaciones } from '../../operators/populate-relaciones';
 
 @Component({
     selector: 'vista-prestacion',
@@ -25,17 +27,22 @@ export class VistaPrestacionComponent implements OnInit {
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
-    private requestInProgress: boolean;
+    public requestInProgress: boolean;
+
     constructor(
         private auth: Auth,
         private servicioDocumentos: DocumentosService,
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
-        public elementosRUPService: ElementosRUPService) {
+        public elementosRUPService: ElementosRUPService
+    ) {
     }
 
     ngOnInit() {
         this.puedeDescargarInforme = this.auth.check('huds:impresion');
+        if (this.prestacion) {
+            populateRelaciones(this.prestacion);
+        }
     }
 
     private _idPrestacion;
@@ -44,7 +51,9 @@ export class VistaPrestacionComponent implements OnInit {
         this.paciente = null;
         this.prestacion = null;
         this._idPrestacion = value;
-        this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
+        this.servicioPrestacion.getById(this.idPrestacion).pipe(
+            map(prestacion => populateRelaciones(prestacion))
+        ).subscribe(prestacion => {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.prestacion = prestacion;
                 this.paciente = paciente;

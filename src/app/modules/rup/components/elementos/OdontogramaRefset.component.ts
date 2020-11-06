@@ -4,6 +4,7 @@ import { RUPComponent } from './../core/rup.component';
 import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RupElement } from '.';
+import { populateRelaciones } from '../../operators/populate-relaciones';
 
 @Component({
     selector: 'rup-OdontogramaRefset',
@@ -124,6 +125,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             };
 
             this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
+                odontogramasPaciente.forEach(populateRelaciones);
                 this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
                     let odonto = null;
                     if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === this.conceptoOdontograma)) {

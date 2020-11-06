@@ -10,7 +10,7 @@ import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
 import { Plex } from '@andes/plex';
-import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
+import { populateRelaciones } from '../operators/populate-relaciones';
 
 
 @Injectable()
@@ -151,6 +151,10 @@ export class PrestacionesService {
                 }
             };
             this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
+                map(prestaciones => {
+                    prestaciones.forEach(p => populateRelaciones(p));
+                    return prestaciones;
+                }),
                 cache()
             );
             return this.cache[idPaciente];
