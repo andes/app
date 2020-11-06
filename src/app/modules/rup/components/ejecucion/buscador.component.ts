@@ -261,7 +261,15 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
+
+            resultadosSnomed.items.forEach((i, pos) => {
+                if (i.term === this.prestacion.solicitud.tipoPrestacion.term) {
+                    resultadosSnomed.items.splice(pos, 1);
+                }
+            });
+
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
+
             // this.results.buscadorBasico[this.filtroActual] = resultadosSnomed;
 
             // llamamos a la funcion que ordena mis frecuentes, poniendolo al prinicpio de los resultados
