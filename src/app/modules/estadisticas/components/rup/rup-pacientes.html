@@ -38,22 +38,18 @@
                 </div>
             </div>
         </ng-container>
-        <ng-container *ngIf="showData">
-            <div class="row m-3 alert alert-info">
-                <div class="col-3">
-                    Desde: {{ desde | date: 'dd/MM/yyyy' }}
-                </div>
-                <div class="col-3">
-                    Hasta: {{ hasta | date: 'dd/MM/yyyy' }}
-                </div>
-                <div class="col-3">
-                    Prestación: {{ prestacion.term }}
-                </div>
-                <div class="col-3">
-                    <plex-button type="info" label="Filtrar" (click)="volver()"></plex-button>
-                </div>
-            </div>
-        </ng-container>
+        <plex-title *ngIf="showData" titulo="Dashboard rup">
+            <plex-button type="info" label="Filtrar" (click)="volver()"></plex-button>
+        </plex-title>
+        <section *ngIf="showData" justify="around">
+            <plex-label titulo="Desde: {{ desde | date: 'dd/MM/yyyy' }}">
+            </plex-label>
+            <plex-label titulo="Hasta: {{ hasta | date: 'dd/MM/yyyy' }}">
+            </plex-label>
+            <plex-label titulo="Prestación: {{ prestacion.term }}">
+            </plex-label>
+        </section>
+        <hr>
         <plex-tabs *ngIf="showData">
             <plex-tab label="Prestaciones">
                 <div class="mt-3" *ngFor="let presta of tablas">
