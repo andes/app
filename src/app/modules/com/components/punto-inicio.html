@@ -72,7 +72,7 @@
                                                     subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                         </plex-label>
                                     </div>
-                                    <plex-button *ngIf="derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id"
+                                    <plex-button *ngIf="esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
                                                  type="info" size="sm"
                                                  (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                         SUMAR NOTA/ADJUNTO
@@ -153,8 +153,7 @@
                                                  (click)="cancelar(derivacion);$event.stopPropagation()">
                                         CANCELAR
                                     </plex-button>
-                                    <plex-button *ngIf="derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id"
-                                                 type="info" size="sm"
+                                    <plex-button type="info" size="sm"
                                                  (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                         SUMAR NOTA/ADJUNTO
                                     </plex-button>
