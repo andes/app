@@ -10,10 +10,10 @@ import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNa
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { combineLatest, Subscription, Observable } from 'rxjs';
+import { combineLatest, Subscription, Observable, of } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -100,7 +100,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
-        private listadoInternacionService: ListadoInternacionService
+        private listadoInternacionService: ListadoInternacionService,
+        private internacionResumenService: InternacionResumenHTTP
     ) {
 
     }
@@ -265,7 +266,19 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 estadoPatch = this.cama;
             }
 
-            this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
+            const saveInternacion = () => {
+                if (this.capa !== 'estadistica') {
+                    return this.internacionResumenService.update(this.cama.idInternacion, {
+                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                    });
+                }
+                return of(null);
+            };
+
+            saveInternacion().pipe(
+                switchMap(() => this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso))
+            ).subscribe(() => {
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);

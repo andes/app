@@ -5,6 +5,7 @@ import { Observable, Subscription, combineLatest } from 'rxjs';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Auth } from '@andes/auth';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -13,6 +14,8 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 
 export class InternacionDetalleComponent implements OnInit, OnDestroy {
     puedeDesocupar$: Observable<any>;
+    resumenInternacion$: Observable<any>;
+
     prestacion: IPrestacion;
     view$ = this.mapaCamasService.view;
 
@@ -76,6 +79,14 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                 this.prestacionValidada = false;
             }
         });
+
+        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$.pipe(
+            tap(resumen => {
+                if (resumen.ingreso) {
+                    this.items.splice(0, 0, { key: 'ingreso-dinamico', label: 'INGRESO' });
+                }
+            })
+        );
     }
 
     onActiveOption(opcion) {

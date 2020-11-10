@@ -79,6 +79,11 @@ export class ElementosRUPService {
         );
     }
 
+
+    getById(id: string) {
+        return this.populateElemento(this.cacheById[id], false);
+    }
+
     /**
      * Busca el elementoRUP que implemente el concepto o la instancia que fue utilizada en su momento
      * segun el ID del elementoRUP.

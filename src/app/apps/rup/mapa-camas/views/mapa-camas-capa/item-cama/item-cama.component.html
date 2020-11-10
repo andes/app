@@ -1,5 +1,14 @@
 <ng-container *ngIf="cama">
     <ng-container *ngIf="columns$ | async as columns ">
+
+        <td *ngIf="columns.prioridad">
+            <ng-container *ngIf="cama.prioridad">
+                <plex-badge [type]="cama.prioridad.type">
+                    {{ cama.prioridad.label }}
+                </plex-badge>
+            </ng-container>
+        </td>
+
         <td *ngIf="columns.fechaMovimiento">
             <span class="d-block">{{ cama.fecha | fecha }}</span>
             <span class="d-block">{{ cama.fecha | hora }} hs</span>

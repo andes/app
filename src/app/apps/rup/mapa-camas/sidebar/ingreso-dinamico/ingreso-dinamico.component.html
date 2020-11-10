@@ -1,0 +1,14 @@
+<plex-title titulo="Datos de ingreso"></plex-title>
+<plex-label titulo="Fecha Ingreso" subtitulo="{{ resumen.fechaIngreso | fecha }} {{ resumen.fechaIngreso | hora }}">
+</plex-label>
+
+<ng-container *ngIf="prestacion">
+    <ng-container *ngFor="let registro of prestacion.ejecucion.registros">
+
+        <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)" [prestacion]="prestacion"
+             [paciente]="prestacion.paciente" [registro]="registro" [soloValores]="true"
+             [params]="elementosRUPService.getParams(registro)">
+        </rup>
+
+    </ng-container>
+</ng-container>

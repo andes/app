@@ -95,3 +95,13 @@
         </ng-container>
     </ng-container>
 </form>
+<ng-container *ngIf="prestacionFake">
+    <ng-container *ngFor="let registro of prestacionFake.ejecucion.registros">
+
+        <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)" [prestacion]="prestacionFake"
+             [paciente]="paciente" [registro]="registro" [soloValores]="false"
+             [params]="elementosRUPService.getParams(registro)">
+        </rup>
+
+    </ng-container>
+</ng-container>

@@ -1,8 +1,14 @@
-<ng-container>
+<ng-container *ngIf="resumenInternacion$ | async as resumen">
     <div class="mt-2">
         <ng-container *ngIf="!editar">
             <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
         </ng-container>
+
+
+        <ng-container *ngIf="mostrar === 'ingreso-dinamico'">
+            <in-ingreso-dinamico [resumen]="resumen"></in-ingreso-dinamico>
+        </ng-container>
+
 
         <ng-container *ngIf="mostrar === 'ingreso'">
             <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">

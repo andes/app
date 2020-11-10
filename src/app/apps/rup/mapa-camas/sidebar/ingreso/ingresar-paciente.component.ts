@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Optional } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Optional, QueryList, ViewChildren } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -11,13 +11,14 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
-import { map, switchMap, filter, tap } from 'rxjs/operators';
-import { ObjectID } from 'bson';
+import { map, switchMap, filter } from 'rxjs/operators';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
-import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
-import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
+import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -25,6 +26,9 @@ import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
 })
 
 export class IngresarPacienteComponent implements OnInit, OnDestroy {
+    @ViewChildren(RUPComponent) rupElements: QueryList<any>;
+
+
     camas$: Observable<ISnapshot[]>;
 
     // EVENTOS
@@ -87,8 +91,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth,
-        private salaComunService: SalaComunService,
-        @Optional() private ingresoPacienteService: IngresoPacienteService
+        @Optional() private ingresoPacienteService: IngresoPacienteService,
+        public elementosRUPService: ElementosRUPService,
+        public internacionResumenService: InternacionResumenHTTP,
+        private conceptObserverService: ConceptObserverService
     ) {
     }
 
@@ -131,6 +137,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const pacienteID$ = this.handlerPacienteID();
         this.inProgress = true;
         this.subscription = combineLatest(
+            this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
@@ -141,7 +148,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )
-        ).subscribe(([view, capa, cama, prestacion, paciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, paciente]) => {
             this.view = view;
             this.capa = capa;
             this.prestacion = prestacion;
@@ -177,9 +184,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (cama.estado === 'ocupada' && !cama.sala) {
                     this.paciente = cama.paciente;
                 }
-                if (this.informeIngreso.especialidades.length === 0) {
+                if (this.informeIngreso.especialidades && this.informeIngreso.especialidades.length === 0) {
                     this.informeIngreso.especialidades = this.cama.especialidades;
                 }
+                this.createFormularioDinamico(cama, estado);
             } else if (view === 'listado-internacion') {
                 if (this.subscription2) {
                     this.subscription2.unsubscribe();
@@ -191,6 +199,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 this.cama = null;
             }
+
         });
 
         this.camas$ = this.mapaCamasService.snapshot$.pipe(
@@ -289,12 +298,22 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
     }
 
-    guardar(valid) {
-        if (valid.formValid) {
-            this.disableButton = true;
 
-            // armamos dto con datos principales del paciente
-            let dtoPaciente = {
+    validarRUP() {
+        if (!this.prestacionFake) { return true; }
+
+        let flagValid = true;
+        this.rupElements.forEach((item) => {
+            const instance = item.rupInstance;
+            flagValid = flagValid && (instance.soloValores || instance.validate());
+        });
+        return flagValid;
+    }
+
+    guardar(valid) {
+        if (valid.formValid && this.validarRUP()) {
+            this.disableButton = true;
+            const dtoPaciente = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
                 nombre: this.paciente.nombre,
@@ -318,12 +337,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         // Se modifica el estado de la cama
         this.cama.estado = estado;
         this.cama.paciente = paciente;
-        if (idInternacion) {
+
+        if (this.prestacion) { // SOY CAPA ESTADISTICA
             this.cama.idInternacion = idInternacion;
-        } else {
-            this.cama.idInternacion = new ObjectID().toString();
-        }
-        if (this.prestacion) {
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
                 // recuperamos snapshot inicial, por si hay un cambio de cama
                 this.mapaCamasService.snapshot(this.fechaIngresoOriginal, this.prestacion.id).subscribe((snapshot) => {
@@ -349,27 +365,32 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             delete this.cama['sectorName'];
             this.cama.extras = { ingreso: true };
-            if (!this.cama.sala) {
-                this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-                    this.plex.info('success', 'Paciente internado');
-                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                    this.disableButton = false;
-                    this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al ingresar paciente');
-                    this.disableButton = false;
-                });
-            } else {
-                this.salaComunService.ingresarPaciente(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-                    this.plex.info('success', 'Paciente internado');
-                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                    this.disableButton = false;
-                    this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al ingresar paciente');
-                    this.disableButton = false;
-                });
-            }
+            const ingreso = this.elementoRUP ? {
+                elementoRUP: this.elementoRUP,
+                registros: this.prestacionFake.ejecucion.registros
+            } : null;
+
+            this.internacionResumenService.create({
+                ambito: this.mapaCamasService.ambito,
+                fechaIngreso: this.informeIngreso.fechaIngreso,
+                paciente: this.cama.paciente,
+                organizacion: { ...this.auth.organizacion },
+                ingreso
+            }).pipe(
+                switchMap(internacion => {
+                    this.cama.idInternacion = internacion.id;
+                    return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
+                })
+            ).subscribe(() => {
+                this.plex.info('success', 'Paciente internado');
+                this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                this.onSave.emit();
+                this.disableButton = false;
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al ingresar paciente');
+                this.disableButton = false;
+
+            });
         }
     }
 
@@ -410,13 +431,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            // if (this.view === 'listado-internacion') {
-            //     this.plex.info('success', 'Informe de ingreso actualizado');
-            //     this.onSave.emit();
-            //     this.listadoInternacionService.setFechaHasta(this.fechaHasta);
-            // } else {
             this.ingresoSimplificado('ocupada', paciente, prestacion._id);
-            // }
         }, (err) => {
             this.plex.info('danger', err);
         });
@@ -503,6 +518,45 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             }
         });
+
+    }
+
+    public prestacionFake;
+    public elementoRUP: string;
+
+    createFormularioDinamico(cama: ISnapshot, estado: any) {
+        this.conceptObserverService.destroy();
+        const molecula = estado.ingresos && estado.ingresos[cama.id as string];
+        if (!molecula) {
+            this.elementoRUP = null;
+            this.prestacionFake = null;
+            return;
+        }
+
+        this.elementoRUP = molecula;
+        const elementoRUP = this.elementosRUPService.getById(molecula);
+
+        this.prestacionFake = {
+            paciente: this.paciente,
+            solicitud: {
+                tipoPrestacion: {},
+                organizacion: { ...this.auth.organizacion },
+                profesional: {}
+            },
+            ejecucion: {
+                organizacion: { ...this.auth.organizacion },
+                registros: [],
+
+            }
+        };
+
+
+        for (const elementoRequerido of elementoRUP.requeridos) {
+            const elementoRUP_ = this.elementosRUPService.buscarElemento(elementoRequerido.concepto, false);
+            const nuevoRegistro = new IPrestacionRegistro(elementoRUP_, elementoRequerido.concepto, this.prestacionFake);
+            this.prestacionFake.ejecucion.registros.push(nuevoRegistro);
+        }
+
 
     }
 }

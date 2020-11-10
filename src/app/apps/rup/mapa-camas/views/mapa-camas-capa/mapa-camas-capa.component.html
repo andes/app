@@ -34,6 +34,8 @@
                         <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool label="Sexo" [(ngModel)]="columns.sexo" (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Prioridad" [(ngModel)]="columns.prioridad" (change)="toggleColumns()">
+                        </plex-bool>
                     </plex-grid>
                 </plex-dropdown>
             </plex-title>
@@ -44,6 +46,14 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
+                            <th *ngIf="columns.prioridad" class="sortable col-prioridad"
+                                (click)="sortTable('prioridad')">
+                                PRIORIDAD
+                                <span *ngIf="sortBy === 'prioridad'">
+                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                </span>
+                            </th>
                             <th *ngIf="columns.fechaMovimiento" class="sortable" (click)="sortTable('fecha')">
                                 FECHA
                                 <span *ngIf="sortBy === 'fecha'">

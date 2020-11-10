@@ -12,6 +12,8 @@ import { of, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { WebSocketService } from 'src/app/services/websocket.service';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -49,6 +51,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         sexo: false,
         sector: false,
         usuarioMovimiento: false,
+        prioridad: false
     };
 
     public sortBy: string;
@@ -71,6 +74,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        public elementoRUPService: ElementosRUPService,
+        public ws: WebSocketService
     ) { }
 
 
@@ -78,9 +83,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+        this.ws.disconnect();
     }
 
     ngOnInit() {
+        this.ws.connect();
         this.mapaCamasService.resetView();
 
         // CROTADA: si uso ngIf en el layout se rompen los tooltips
@@ -92,7 +99,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
-
+        this.permisosMapaCamasService.setAmbito(ambito);
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -143,6 +150,14 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
 
         this.organizacion = this.auth.organizacion.id;
+
+        this.mapaCamasService.maquinaDeEstado$.pipe(take(1)).subscribe((estado) => {
+            const columns = estado.columns;
+            if (columns) {
+                this.columns = columns;
+                this.toggleColumns();
+            }
+        });
 
         this.getSnapshot();
     }

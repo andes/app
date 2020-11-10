@@ -2,7 +2,7 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { ISectores } from './../../../../interfaces/IOrganizacion';
 
 export interface ISnapshot {
-    id: String;
+    id: string;
     genero: ISnomedConcept;
     estado: string;
     esCensable: Boolean;
@@ -40,6 +40,11 @@ export interface ISnapshot {
         tipo_egreso?: String,
     };
     nota: String;
+    prioridad?: {
+        id: number,
+        label: string,
+        type: string
+    };
     createdAt?: Date;
     createdBy?: {
         id: String,
