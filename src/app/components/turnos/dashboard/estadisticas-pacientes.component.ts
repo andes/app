@@ -25,7 +25,6 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     @Input() showTab: Number = 0;
     @Input() paciente: IPaciente;
-    @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
     constructor(
@@ -49,10 +48,6 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.ultimosTurnos$ = this.historial$.pipe(
             map(turnos => turnos.filter(t => moment(t.horaInicio).isSameOrBefore(new Date(), 'day')))
         );
-    }
-
-    arancelamiento(turno) {
-        this.showArancelamientoForm.emit(turno);
     }
 
     private sortByHoraInicio(turnos: any[]) {

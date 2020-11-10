@@ -51,4 +51,10 @@ export class DocumentosService {
             saveAs(nombreArchivo, 'csv')
         );
     }
+
+    descargarArancelamiento(params, nombreArchivo: string): Observable<any> {
+        return this.download('arancelamiento/pdf', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
 }

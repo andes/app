@@ -65,11 +65,6 @@
             </table>
         </div>
 
-        <div *ngIf="showArancelamiento">
-            <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
-            </arancelamiento-form>
-        </div>
-
     </plex-layout-main>
 
     <!--Panel de Estadisticas y Operaciones-->
@@ -78,8 +73,7 @@
             <estadisticas-agendas></estadisticas-agendas>
         </div>
         <div *ngIf="showMostrarEstadisticasPacientes && paciente" type="info">
-            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab"
-                                    (showArancelamientoForm)="showArancelamientoForm($event)">
+            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab" >
             </estadisticas-pacientes>
         </div>
         <div *ngIf="showIngresarSolicitud && paciente" type="info">
@@ -100,7 +94,3 @@
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos && paciente" [pacienteSeleccionado]="paciente"
             [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
-
-<arancelamiento-form *ngIf=" showArancelamiento" [turno]="turnoArancelamiento"
-                     (volverAPuntoInicio)="volverAPuntoInicio($event); updateTitle('Gestión de pacientes')">
-</arancelamiento-form>

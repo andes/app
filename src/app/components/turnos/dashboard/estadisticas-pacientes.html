@@ -11,7 +11,7 @@
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
         <turnos-paciente [turnos]="turnosPaciente$ | async" [operacion]="'operacionTurnos'" [paciente]='paciente'
-                         (turnosPacienteChanged)="refresh()" (showArancelamientoForm)="arancelamiento($event)" *plTab>
+                         (turnosPacienteChanged)="refresh()" *plTab>
         </turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
