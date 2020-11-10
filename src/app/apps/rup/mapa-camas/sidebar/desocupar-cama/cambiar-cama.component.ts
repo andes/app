@@ -24,6 +24,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
     public fechaMin: Date;
     public cama: ISnapshot;
     public nuevaCama: ISnapshot;
+    public disableButton = false;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
@@ -45,6 +46,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
+            this.disableButton = true;
             combineLatest(
                 this.mapaCamasService.fecha2,
                 this.camaSelectedSegunView$
@@ -59,6 +61,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
                 this.plex.info('success', mensaje);
                 this.mapaCamasService.setFecha(this.fecha);
                 this.onSave.emit();
+                this.disableButton = false;
             });
         }
     }
