@@ -7,6 +7,7 @@ import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -22,8 +23,11 @@ export class ComPuntoInicioComponent implements OnInit {
     public showEditarEstado = false;
     public verAyuda = false;
     public requestInProgress: boolean;
+    private scrollEnd = false;
+    private skip = 0;
+    private limit = 15;
     derivacionSeleccionada: IDerivacion;
-    derivaciones: any[];
+    public derivaciones: any[] = [];
     organizacionActual: any[];
     organizacionOrigen: IOrganizacion;
     organizacionDestino: IOrganizacion;
@@ -61,7 +65,7 @@ export class ComPuntoInicioComponent implements OnInit {
             if (org.esCOM) {
                 this.esCOM = true;
             }
-            this.actualizarTabla();
+            this.cargarDerivaciones();
         });
     }
 
@@ -76,9 +80,25 @@ export class ComPuntoInicioComponent implements OnInit {
         }
     }
 
+    onScroll() {
+        if (!this.scrollEnd) {
+            this.actualizarTabla();
+        }
+    }
+
+    cargarDerivaciones() {
+        if (!this.loading) {
+            this.loading = true;
+            this.skip = 0;
+            this.scrollEnd = false;
+            this.derivaciones = [];
+            this.actualizarTabla();
+        }
+    }
+
+    @Unsubscribe()
     actualizarTabla() {
-        this.loading = true;
-        let query: any = { cancelada: false, sort: 'fecha' };
+        let query: any = { cancelada: false, skip: this.skip, limit: this.limit };
         if (this.estado) {
             query.estado = this.estado.id;
         } else {
@@ -95,6 +115,8 @@ export class ComPuntoInicioComponent implements OnInit {
         } else {
             if (!this.esCOM) {
                 query.organizacionOrigen = this.auth.organizacion.id;
+            } else {
+                query.organizacionDestino = `~${this.auth.organizacion.id}`;
             }
             if (this.organizacionDestino) {
                 query.organizacionDestino = this.organizacionDestino.id;
@@ -104,9 +126,11 @@ export class ComPuntoInicioComponent implements OnInit {
             query.paciente = `^${this.paciente}`;
         }
         this.derivacionesService.search(query).subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = derivaciones;
-            if (this.tabIndex === 1 && this.esCOM) {
-                this.derivaciones = this.derivaciones.filter(e => e.organizacionDestino.id !== this.auth.organizacion.id);
+            this.derivaciones = this.derivaciones.concat(derivaciones);
+            this.derivaciones.sort((a, b) => a.fecha - b.fecha);
+            this.skip = this.derivaciones.length;
+            if (!derivaciones.length || derivaciones.length < this.limit) {
+                this.scrollEnd = true;
             }
             this.loading = false;
         });
@@ -152,7 +176,7 @@ export class ComPuntoInicioComponent implements OnInit {
     returnDetalle(actualizada) {
         this.ocultarSidebars();
         if (actualizada) {
-            this.actualizarTabla();
+            this.cargarDerivaciones();
         }
     }
 
@@ -162,9 +186,14 @@ export class ComPuntoInicioComponent implements OnInit {
 
     cambiarTab(index) {
         if (index !== this.tabIndex) {
+            this.estado = null;
+            this.organizacionOrigen = null;
+            this.organizacionDestino = null;
+            this.paciente = null;
+            this.gravedad = null;
             this.tabIndex = index;
             this.ocultarSidebars();
-            this.actualizarTabla();
+            this.cargarDerivaciones();
         }
     }
 
@@ -174,7 +203,7 @@ export class ComPuntoInicioComponent implements OnInit {
                 derivacion.cancelada = true;
                 this.derivacionesService.update(derivacion._id, derivacion).subscribe(() => {
                     this.plex.toast('success', 'Derivación cancelada');
-                    this.actualizarTabla();
+                    this.cargarDerivaciones();
                 });
             }
             this.ocultarSidebars();
