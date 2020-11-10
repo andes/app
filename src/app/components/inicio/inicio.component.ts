@@ -7,6 +7,7 @@ import { LABELS } from '../../styles/properties';
 import { Router, ActivatedRoute } from '@angular/router';
 import { setDimension } from '../../shared/services/analytics.service';
 import { IModulo } from './../../interfaces/novedades/IModulo.interface';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -140,5 +141,20 @@ export class InicioComponent implements AfterViewInit {
         e.stopImmediatePropagation();
         e.preventDefault();
         this.router.navigate(['/novedades', modulo], { relativeTo: this.route });
+    }
+
+    modulosUsuario = [];
+
+    drop(event: CdkDragDrop<any[]>, index) {
+        // moveItemInArray(this.modulos[index].submodulos, event.previousIndex, event.currentIndex);
+
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+            transferArrayItem(event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex);
+        }
     }
 }

@@ -30,7 +30,7 @@
         <main *ngIf="!denied && !loading" responsive>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
             <div class="modulos">
-                <ng-container *ngFor="let modulo of modulos">
+                <ng-container *ngFor="let modulo of modulos; let i=index">
 
                     <!-- Módulo principal -->
                     <div *ngIf="modulo.activo" class="modulo">
@@ -43,24 +43,38 @@
                             <div class="descripcion">{{ modulo.descripcion }}</div>
                         </div>
                         <!-- Permisos en módulo y submódulos -->
-                        <div class="submodulos d-flex align-items-start" *ngIf="modulo?.submodulos?.main?.length">
+                        <div class="submodulos d-flex align-items-start" *ngIf="modulo?.submodulos?.main?.length"
+                             cdkDropList #modulesList="cdkDropList" [cdkDropListData]="modulos[i].submodulos"
+                             [cdkDropListConnectedTo]="[modulesUser]" (cdkDropListDropped)="drop($event, i)">
                             <ng-container *ngFor="let submodulo of modulo.submodulos.main">
-                                <a href="#" *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
-                                   [class.mini]="modulo.submodulos.main.length >= 4"
-                                   [style.background]="submodulo.color" (click)="redirect(submodulo, $event)">
-                                    <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
-                                    <div class="titulo" [innerHTML]="submodulo.nombre"></div>
-                                </a>
+                                <span cdkDrag cdkDragBoundary=".plex-box-content" [cdkDragDisabled]="false">
+                                    <a href="#" *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
+                                       [class.mini]="modulo.submodulos.main.length >= 4"
+                                       [style.background]="submodulo.color" (click)="redirect(submodulo, $event)">
+                                        <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
+                                        <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                                    </a>
+                                    <a href="javascript:void();" class="submodulo {{submodulo.class}} hover"
+                                       *cdkDragPlaceholder>
+                                    </a>
+                                </span>
                             </ng-container>
                         </div>
-                        <div class="submodulos d-flex align-items-start" *ngIf="modulo?.submodulos?.secondary?.length">
+                        <div class="submodulos d-flex align-items-start" *ngIf="modulo?.submodulos?.secondary?.length"
+                             cdkDropList #modulesList="cdkDropList" [cdkDropListData]="modulos[i].submodulos"
+                             [cdkDropListConnectedTo]="[modulesUser]" (cdkDropListDropped)="drop($event, i)">
                             <ng-container *ngFor="let submodulo of modulo.submodulos.secondary">
-                                <a href="#" *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
-                                   [class.mini]="modulo.submodulos.main.length >= 4"
-                                   [style.background]="submodulo.color" (click)="redirect(submodulo, $event)">
-                                    <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
-                                    <div class="titulo" [innerHTML]="submodulo.nombre"></div>
-                                </a>
+                                <span cdkDrag cdkDragBoundary=".plex-box-content" [cdkDragDisabled]="false">
+                                    <a href="#" *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
+                                       [class.mini]="modulo.submodulos.main.length >= 4"
+                                       [style.background]="submodulo.color" (click)="redirect(submodulo, $event)">
+                                        <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
+                                        <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                                    </a>
+                                    <a href="javascript:void();" class="submodulo {{submodulo.class}} hover"
+                                       *cdkDragPlaceholder>
+                                    </a>
+                                </span>
                             </ng-container>
                         </div>
                         <!-- Sólo con permisos en submódulos -->
@@ -70,9 +84,11 @@
                                 <plex-icon [name]="modulo.icono" size="lg"></plex-icon>
                                 <div class="titulo" [innerHTML]="modulo.nombreSubmodulo"></div>
                             </a>
+
                         </div>
                     </div>
                 </ng-container>
+
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
@@ -90,6 +106,25 @@
                               hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
                               (click)="irANovedades(seccion._id, $event)"></span>
                     </a>
+                </ng-container>
+            </div>
+            <div class="submodulos d-flex align-items-start" cdkDropList #modulesUser="cdkDropList"
+                 [cdkDropListData]="modulosUsuario" [cdkDropListConnectedTo]="[modulesList]"
+                 (cdkDropListDropped)="drop($event, i)">
+                <ng-container *ngFor="let submodulo of modulosUsuario">
+                    <span cdkDrag cdkDragBoundary=".plex-box-content">
+                        <div class="hover" cdkDragHandle>
+                            <plex-icon type="default" size="md" name="pan">
+                            </plex-icon>
+                        </div>
+                        <a href="javascript:void();" *ngIf="submodulo.activo"
+                           class="submodulo drop {{submodulo.class}} hover" [style.background]="submodulo.color"
+                           (click)="redirect(submodulo)">
+                            <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
+                            <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                        </a>
+
+                    </span>
                 </ng-container>
             </div>
         </main>

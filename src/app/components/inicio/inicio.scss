@@ -156,7 +156,7 @@ main {
                 a:hover,
                 a:focus {
                     color: rgb(56, 69, 85);
-                    text-decoration: none;
+                    text-decoration: underline;
                 }
             }
 
@@ -167,6 +167,11 @@ main {
             // Aplica margin bottom sólo si tiene 2 renglones de submódulos
             &:nth-child(4) {
                 margin-bottom: 1rem;
+            }
+
+            // Drag & Drop
+            &.drop {
+                border: 2px dashed $andes-azul-oscuro;
             }
         }
     }

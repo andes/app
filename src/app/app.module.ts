@@ -44,6 +44,7 @@ import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MitosModule } from './apps/mitos';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
@@ -253,6 +254,7 @@ registerLocaleData(localeEs, 'es');
     imports: [
         BrowserAnimationsModule,
         HammerModule,
+        DragDropModule,
         PlexModule.forRoot({ networkLoading: true }),
         ReactiveFormsModule,
         FormsModule,
