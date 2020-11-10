@@ -48,6 +48,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public pacientes = [];
     public paciente = null;
     public view;
+    public disableButton = false;
     public fechaHasta = moment().toDate();
     private fechaIngresoOriginal: Date;
 
@@ -286,6 +287,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
+            this.disableButton = true;
+
             // armamos dto con datos principales del paciente
             let dtoPaciente = {
                 id: this.paciente.id,
@@ -325,6 +328,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
                         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                         this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
+                        this.disableButton = false;
                         this.onSave.emit();
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
@@ -334,7 +338,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                 this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
-
+                this.disableButton = false;
                 this.onSave.emit();
             }
         } else {
@@ -344,6 +348,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
                     this.plex.info('success', 'Paciente internado');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.disableButton = false;
                     this.onSave.emit();
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al ingresar paciente');
@@ -352,6 +357,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.salaComunService.ingresarPaciente(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
                     this.plex.info('success', 'Paciente internado');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.disableButton = false;
                     this.onSave.emit();
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al ingresar paciente');

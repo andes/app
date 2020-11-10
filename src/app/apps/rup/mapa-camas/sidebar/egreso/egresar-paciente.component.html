@@ -1,7 +1,7 @@
 <form #formEgreso="ngForm">
     <plex-title justify titulo="EGRESO">
         <plex-button title="{{ (!prestacionValidada) ? 'guardar' : 'Prestacion validada' }}" icon="check" type="success"
-                     size="sm" [validateForm]="formEgreso" (click)="guardar($event)" [disabled]="prestacionValidada">
+                     size="sm" [validateForm]="formEgreso" (click)="guardar($event)" [disabled]="prestacionValidada || disableButton">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>
