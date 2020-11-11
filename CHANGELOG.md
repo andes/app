@@ -1,3 +1,24 @@
+# [5.21.0](https://github.com/andes/app/compare/v5.20.0...v5.21.0) (2020-11-11)
+
+
+### Bug Fixes
+
+* **chore:** chunk error ([#2020](https://github.com/andes/app/issues/2020)) ([ce45335](https://github.com/andes/app/commit/ce453353f8e78309dcce1eba1970be793573a5cf))
+* **dasboar-huds:** prestaciones hijas y encabezado de tabla ([#2026](https://github.com/andes/app/issues/2026)) ([240fecf](https://github.com/andes/app/commit/240fecf7607c1cf1125c7c18f92d24cc263114fd))
+* **mpi:** corrige validacion de paciente existente sin direccion ([#2017](https://github.com/andes/app/issues/2017)) ([ae296c5](https://github.com/andes/app/commit/ae296c56cbfa3e5fc411a2ccc6e6360c0f73cd55))
+* **rup:** Corrige carga de acceso a huds iniciando prestacion ([#1939](https://github.com/andes/app/issues/1939)) ([7cec1d5](https://github.com/andes/app/commit/7cec1d5fc1ce19940bdef22660e0a2f032dc1b9f))
+* **rup:** fecha limite fuera agenda ([474265a](https://github.com/andes/app/commit/474265aec2d174ebb220ee5b2bf36373dde1affd))
+* **rup:** relaciones no se guarda como ID ([#1970](https://github.com/andes/app/issues/1970)) ([7644ffc](https://github.com/andes/app/commit/7644ffcaba37f61bb93bcdd12672669a01e08c35))
+* **TOP:** realiza cambio en condiciones para anular solicitudes ([#2022](https://github.com/andes/app/issues/2022)) ([588bf77](https://github.com/andes/app/commit/588bf77f72d1c9b426f5852ee1625c40323d69c2))
+
+
+### Features
+
+* **mpi:** IntersectionObserverApi foto paciente ([#2027](https://github.com/andes/app/issues/2027)) ([5f06022](https://github.com/andes/app/commit/5f0602258ca5c5c477c300e9e990a28c3f3a2965))
+* **rup:** drag and drop conceptos de la HUDS (trastornos) ([#2023](https://github.com/andes/app/issues/2023)) ([c2c237f](https://github.com/andes/app/commit/c2c237f6871bf48a30759ca88c993e3487f9f3f6))
+* **top:** tab para historial en detalle ([#1958](https://github.com/andes/app/issues/1958)) ([3bbce99](https://github.com/andes/app/commit/3bbce999aa012ac989c2b1bf352619854ce42a7c))
+* **turnos-prestaciones:** columnas dinamicas  ([#1978](https://github.com/andes/app/issues/1978)) ([77cc047](https://github.com/andes/app/commit/77cc0474b6e62a6f9f64aabafddcca082647e6e3))
+
 # [5.20.0](https://github.com/andes/app/compare/v5.19.0...v5.20.0) (2020-11-04)
 
 
