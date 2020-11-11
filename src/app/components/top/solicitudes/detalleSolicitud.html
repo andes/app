@@ -1,15 +1,21 @@
 <plex-options [items]="items" (activated)="cambiarOpcion($event)"></plex-options>
 <div *ngIf="mostrar === 'solicitud'" class="mt-3">
-    <plex-detail size="md" direction="row">
-        <img [mpiFotoPaciente]="prestacionSeleccionada?.paciente" />
-        <plex-badge type="warning">
+    <paciente-detalle [paciente]="prestacionSeleccionada.paciente" reload="true" orientacion="horizontal"
+                      [fields]="pacienteFields">
+    </paciente-detalle>
+    <plex-title size="sm" titulo="Solicitud">
+        <plex-badge type="warning mr-1">
             {{prestacionSeleccionada.solicitud.fecha
-            | fecha}}
+                                        | fecha}}
         </plex-badge>
-        <plex-badge type="danger"
+        <plex-badge type="danger mr-1"
                     *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
             {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
         </plex-badge>
+        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'validada'"
+                    type="success mr-1">Turno dado</plex-badge>
+        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'validada'"
+                    type="success mr-1">Registro en HUDS</plex-badge>
         <plex-badge type="info"
                     *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'rechazada'">
             {{prestacionSeleccionada.estadoActual.tipo}}
@@ -18,43 +24,25 @@
                     *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'rechazada'">
             {{prestacionSeleccionada.estadoActual.tipo}}
         </plex-badge>
-        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'validada'"
-                    type="success">Turno dado</plex-badge>
-        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'validada'"
-                    type="success">Registro en HUDS</plex-badge>
-        <div title>
-            {{prestacionSeleccionada?.paciente | nombre }}
-        </div>
-
-        <div subtitle>
-            <plex-copy *ngIf="prestacionSeleccionada?.paciente?.documento"
-                       [value]="prestacionSeleccionada?.paciente?.documento">
-                {{ prestacionSeleccionada?.paciente?.documento | number  }}
-            </plex-copy>
-        </div>
-
+    </plex-title>
+    <plex-grid cols="3" size="md" direction="row">
         <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term"
                     titulo="Tipo de prestación origen"
                     subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term}}">
         </plex-label>
-
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre" titulo="Organización origen"
                     subtitulo="{{prestacionSeleccionada.solicitud.organizacionOrigen?.nombre}}">
         </plex-label>
-
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" titulo="Profesional de origen" subtitulo="{{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
                     }}">
         </plex-label>
-
         <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacion?.term" titulo="Tipo de prestación destino"
                     subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacion?.term}}">
         </plex-label>
-
         <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
                     subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
         </plex-label>
-
         <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido
                     }}">
@@ -73,19 +61,15 @@
                     titulo="Usuario que responde"
                     subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
         </plex-label>
-    </plex-detail>
+    </plex-grid>
     <plex-title size="sm" titulo="Datos de creación"></plex-title>
-    <div class="row mb-3">
-        <div class="col-4">
-            <plex-label titulo="Creada por" subtitulo="{{prestacionSeleccionada.createdBy | nombre}}">
-            </plex-label>
-        </div>
-        <div class="col-4">
-            <plex-label titulo="Fecha de creación" subtitulo="{{prestacionSeleccionada.createdAt
-                    | fecha}}">
-            </plex-label>
-        </div>
-    </div>
+    <plex-grid cols="3" size="md" direction="row">
+        <plex-label titulo="Creada por" subtitulo="{{prestacionSeleccionada.createdBy | nombre}}">
+        </plex-label>
+        <plex-label titulo="Fecha de creación" subtitulo="{{prestacionSeleccionada.createdAt
+        | fecha}}">
+        </plex-label>
+    </plex-grid>
     <div class="row">
         <div class="col-12">
             <plex-title size="sm" titulo="Motivo de Solicitud">
@@ -115,7 +99,7 @@
                 </div>
                 <div class="col-4">
                     <plex-label titulo="Fecha de anulación" subtitulo="{{prestacionSeleccionada.estadoActual.createdAt | date:
-                    'dd/MM/yyyy'}}">
+            'dd/MM/yyyy'}}">
                     </plex-label>
                 </div>
             </div>
@@ -123,7 +107,8 @@
     </div>
     <div class="row mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
         <div class="col-12">
-            <b>Archivos Adjuntos</b>
+            <plex-title size="sm" titulo="Archivos adjuntos">
+            </plex-title>
             <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                 <ng-container
                               *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
