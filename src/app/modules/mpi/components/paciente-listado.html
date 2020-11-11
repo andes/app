@@ -1,5 +1,5 @@
 <plex-list [height]="height" (scrolled)="onScroll()">
-    <plex-item *ngFor="let paciente of listado" class=""
+    <plex-item *ngFor="let paciente of listado"
                [class.pacienteFallecido]="paciente.fechaFallecimiento && paciente.fechaFallecimiento !== null"
                [selected]="pacienteSeleccionado?.id === paciente.id" (click)="seleccionar(paciente)">
 
@@ -21,7 +21,8 @@
         <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
         </plex-label>
 
-        <plex-badge *ngIf="showDatosTutor(paciente)" type="warning"> Sin DNI
+        <plex-badge *ngIf="showDatosTutor(paciente)" type="warning">
+            Sin DNI
         </plex-badge>
 
         <plex-badge type="info">{{ paciente | sexo }}

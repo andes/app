@@ -35,8 +35,8 @@ export class FotoDirective implements OnDestroy {
         if (window.IntersectionObserver) {
             this.io = new IntersectionObserver(
                 (entries) => {
-                    const entry = entries[0];
-                    if (entry?.isIntersecting) {
+                    const isIntersecting = entries.some(entry => entry.isIntersecting);
+                    if (isIntersecting) {
                         this.io.unobserve(this.el.nativeElement);
                         this.showImage(paciente, token);
                     }
