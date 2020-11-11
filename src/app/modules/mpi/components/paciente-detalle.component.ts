@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
@@ -10,7 +10,7 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
     templateUrl: 'paciente-detalle.html',
     styleUrls: ['paciente-detalle.scss']
 })
-export class PacienteDetalleComponent implements OnInit {
+export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
@@ -103,10 +103,11 @@ export class PacienteDetalleComponent implements OnInit {
         return 'Obra Social';
     }
 
-    get relaciones() {
-        let relaciones = [];
+    public relaciones: any[];
+
+    private doRelaciones() {
         if (this.paciente.relaciones && this.paciente.relaciones.length) {
-            relaciones = this.paciente.relaciones.map(rel => {
+            this.relaciones = this.paciente.relaciones.map(rel => {
                 return {
                     id: rel.referencia,
                     apellido: rel.apellido,
@@ -117,8 +118,9 @@ export class PacienteDetalleComponent implements OnInit {
                     fotoId: rel.fotoId
                 };
             });
+        } else {
+            this.relaciones = [];
         }
-        return relaciones;
     }
 
     constructor(
@@ -130,7 +132,6 @@ export class PacienteDetalleComponent implements OnInit {
     ngOnInit() {
     }
 
-    // tslint:disable-next-line: use-lifecycle-interface
     ngOnChanges() {
         if (this.reload) {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
@@ -140,6 +141,7 @@ export class PacienteDetalleComponent implements OnInit {
         } else {
             this.loadObraSocial();
         }
+        this.doRelaciones();
         this.notasDestacadas = (this.paciente.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 
