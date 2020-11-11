@@ -1,14 +1,10 @@
-import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
-import { QueriesService } from '../../services/query.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+
 
 
 @Component({
@@ -24,9 +20,6 @@ export class EncabezadoReportesComponent implements OnInit {
     public showConsultaDiagnostico = false;
     public showReporteC2 = false;
     public showCantidadConsultaXPrestacion = false;
-    public showCovid19 = false;
-    public showSeguimientoCovid = false;
-    public enableCsv = false;
     public opciones: any = [];
     public parametros;
     public horaInicio: any;
@@ -34,7 +27,6 @@ export class EncabezadoReportesComponent implements OnInit {
     public organizacion;
     public tipoReportes;
     public diagnosticos = [];
-    public casos = [];
     // Propiedades reporteC2
     public totalConsultas = 0;
     public totalMenor1 = 0;
@@ -50,23 +42,16 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalMasculino = 0;
     public totalFemenino = 0;
     public totalOtro = 0;
-    public queries;
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private plex: Plex,
         private router: Router,
-        private server: Server,
         private agendaService: AgendaService,
         private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
-        private queryService: QueriesService
-
-    ) {
-
-    }
+    ) { }
 
     public ngOnInit() {
         if (!this.auth.check('visualizacionInformacion:reportes')) {
@@ -78,31 +63,19 @@ export class EncabezadoReportesComponent implements OnInit {
             organizacion: this.auth.organizacion.id
         };
         this.organizacion = this.auth.organizacion.nombre;
-        this.queryService.getAllQueries({ desdeAndes: true }).pipe(
-            catchError((err => of([])))
-        ).subscribe(query => {
-            this.opciones = [{
-                id: 1,
-                nombre: 'Reporte C2'
-            },
-            {
-                id: 2,
-                nombre: 'Diagnósticos'
-            },
-            {
-                id: 3,
-                nombre: 'Consultas por prestación'
-            },
-            ];
-            if (query) {
-                this.queries = query;
-                let i = 4;
-                this.queries.forEach(element => {
-                    this.opciones.push({ id: i, nombre: element.nombre });
-                    i++;
-                });
-            }
-        });
+        this.opciones = [{
+            id: 1,
+            nombre: 'Reporte C2'
+        },
+        {
+            id: 2,
+            nombre: 'Diagnósticos'
+        },
+        {
+            id: 3,
+            nombre: 'Consultas por prestación'
+        },
+        ];
     }
 
     loadOrganizacion(event) {
@@ -147,7 +120,6 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.showConsultaDiagnostico = true;
                 this.showReporteC2 = false;
                 this.showCantidadConsultaXPrestacion = false;
-                this.showSeguimientoCovid = false;
                 this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
                 });
@@ -156,7 +128,6 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.showReporteC2 = true;
                 this.showConsultaDiagnostico = false;
                 this.showCantidadConsultaXPrestacion = false;
-                this.showSeguimientoCovid = false;
                 this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
                     this.totalConsultas = this.diagnosticos.map(elem => { return elem.total; }).reduce(this.add, 0);
@@ -179,66 +150,16 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.showCantidadConsultaXPrestacion = true;
                 this.showConsultaDiagnostico = false;
                 this.showReporteC2 = false;
-                this.showSeguimientoCovid = false;
                 this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
                 });
                 break;
             default:
-                let resultado = this.queries.find(query => query.nombre === this.tipoReportes.nombre);
-                if (resultado) {
-                    this.showCantidadConsultaXPrestacion = false;
-                    this.showConsultaDiagnostico = false;
-                    this.showReporteC2 = false;
-                    this.showSeguimientoCovid = true;
-                    let params = {
-                        fechaDesde: this.parametros['horaInicio'],
-                        fechaHasta: this.parametros['horaFin'],
-                        organizacion: this.parametros['organizacion']
-                    };
-                    this.queryService.getQuery(this.tipoReportes.nombre, params).subscribe((casos) => {
-                        if (casos.length) {
-                            this.casos = casos;
-                        } else {
-                            this.plex.info('warning', 'Su búsqueda no arrojó ningún resultado');
-                        }
-                    });
-                }
                 break;
-        }
-    }
-
-    descargarCsv() {
-        let params = {
-            fechaDesde: this.parametros['horaInicio'],
-            fechaHasta: this.parametros['horaFin'],
-            organizacion: this.parametros['organizacion']
-        };
-        this.queryService.descargarCsv(this.tipoReportes.nombre, params).subscribe();
-    }
-
-    selectChange(event) {
-        if (event.value) {
-            let resultado = this.queries.find(query => query.nombre === this.tipoReportes.nombre);
-            if (resultado) {
-                this.enableCsv = true;
-            } else {
-                this.enableCsv = false;
-            }
-        } else {
-            this.enableCsv = false;
         }
     }
 
     add(a, b) {
         return a + b;
     }
-
-
-
-
-
-
-
 }
-

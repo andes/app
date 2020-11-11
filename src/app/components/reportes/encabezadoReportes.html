@@ -30,7 +30,7 @@
                                     <div class="col-4">
                                         <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
                                                      label-field="Tipo de reportes" label="Seleccione reporte"
-                                                     [required]="true" (change)="selectChange($event)">
+                                                     [required]="true">
                                         </plex-select>
                                     </div>
                                     <br>
@@ -45,7 +45,6 @@
                         <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion"
                                                      [diagnosticos]="diagnosticos">
                         </cantidadConsultaXPrestacion>
-                        <seguimientoCovid *ngIf="showSeguimientoCovid" [casos]="casos"></seguimientoCovid>
                     </plex-box>
                 </div>
             </div>
@@ -53,11 +52,8 @@
         </section>
     </plex-layout-main>
     <plex-layout-footer>
-        <plex-button *ngIf="enableCsv && formularioValidacion.valid" type="warning" label="Descargar Reporte (csv)"
-                     (click)="descargarCsv()" position="right"></plex-button>
         <plex-button [disabled]="formularioValidacion.invalid" type="success" label="Generar Reporte"
                      (click)="imprimir()" position="right" class="ml-2"></plex-button>
-
     </plex-layout-footer>
 
 </plex-layout>
