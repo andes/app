@@ -1,139 +1,146 @@
-<plex-detail size="md" direction="row">
-    <img [mpiFotoPaciente]="prestacionSeleccionada?.paciente" />
-    <plex-badge type="warning">
-        {{prestacionSeleccionada.solicitud.fecha
+<plex-options [items]="items" (activated)="cambiarOpcion($event)"></plex-options>
+<div *ngIf="mostrar === 'solicitud'" class="mt-3">
+    <plex-detail size="md" direction="row">
+        <img [mpiFotoPaciente]="prestacionSeleccionada?.paciente" />
+        <plex-badge type="warning">
+            {{prestacionSeleccionada.solicitud.fecha
             | fecha}}
-    </plex-badge>
-    <plex-badge type="danger"
-                *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
-        {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
-    </plex-badge>
-    <plex-badge type="info"
-                *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'rechazada'">
-        {{prestacionSeleccionada.estadoActual.tipo}}
-    </plex-badge>
-    <plex-badge type="danger"
-                *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'rechazada'">
-        {{prestacionSeleccionada.estadoActual.tipo}}
-    </plex-badge>
-    <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'validada'"
-                type="success">Turno dado</plex-badge>
-    <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'validada'"
-                type="success">Registro en HUDS</plex-badge>
-    <div title>
-        {{prestacionSeleccionada?.paciente | nombre }}
-    </div>
+        </plex-badge>
+        <plex-badge type="danger"
+                    *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
+            {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
+        </plex-badge>
+        <plex-badge type="info"
+                    *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'rechazada'">
+            {{prestacionSeleccionada.estadoActual.tipo}}
+        </plex-badge>
+        <plex-badge type="danger"
+                    *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'rechazada'">
+            {{prestacionSeleccionada.estadoActual.tipo}}
+        </plex-badge>
+        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'validada'"
+                    type="success">Turno dado</plex-badge>
+        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'validada'"
+                    type="success">Registro en HUDS</plex-badge>
+        <div title>
+            {{prestacionSeleccionada?.paciente | nombre }}
+        </div>
 
-    <div subtitle>
-        <plex-copy *ngIf="prestacionSeleccionada?.paciente?.documento"
-                   [value]="prestacionSeleccionada?.paciente?.documento">
-            {{ prestacionSeleccionada?.paciente?.documento | number  }}
-        </plex-copy>
-    </div>
+        <div subtitle>
+            <plex-copy *ngIf="prestacionSeleccionada?.paciente?.documento"
+                       [value]="prestacionSeleccionada?.paciente?.documento">
+                {{ prestacionSeleccionada?.paciente?.documento | number  }}
+            </plex-copy>
+        </div>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term" titulo="Tipo de prestación origen"
-                subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term}}">
-    </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term"
+                    titulo="Tipo de prestación origen"
+                    subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term}}">
+        </plex-label>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre" titulo="Organización origen"
-                subtitulo="{{prestacionSeleccionada.solicitud.organizacionOrigen?.nombre}}">
-    </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre" titulo="Organización origen"
+                    subtitulo="{{prestacionSeleccionada.solicitud.organizacionOrigen?.nombre}}">
+        </plex-label>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" titulo="Profesional de origen" subtitulo="{{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" titulo="Profesional de origen" subtitulo="{{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
                     }}">
-    </plex-label>
+        </plex-label>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacion?.term" titulo="Tipo de prestación destino"
-                subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacion?.term}}">
-    </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacion?.term" titulo="Tipo de prestación destino"
+                    subtitulo="{{prestacionSeleccionada.solicitud.tipoPrestacion?.term}}">
+        </plex-label>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
-                subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
-    </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.organizacion?.nombre" titulo="Organización destino"
+                    subtitulo="{{prestacionSeleccionada.solicitud.organizacion?.nombre}}">
+        </plex-label>
 
-    <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
+        <plex-label *ngIf="prestacionSeleccionada.solicitud.profesional" titulo="Profesional de destino" subtitulo="{{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
                     prestacionSeleccionada.solicitud.profesional?.apellido
                     }}">
-    </plex-label>
-    <plex-label *ngIf="turnoSeleccionado" titulo="Fecha de turno"
-                subtitulo="{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}">
-    </plex-label>
-    <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones" titulo="Observaciones" subtitulo="
+        </plex-label>
+        <plex-label *ngIf="turnoSeleccionado" titulo="Fecha de turno"
+                    subtitulo="{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}">
+        </plex-label>
+        <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones" titulo="Observaciones" subtitulo="
                 {{prestacionSeleccionada.estadoActual.observaciones}}">
-    </plex-label>
-    <plex-label *ngIf="!prestacionSeleccionada.estadoActual.observaciones && prestacionSeleccionada.estadoActual.motivoRechazo"
-                titulo="Observaciones" subtitulo="
+        </plex-label>
+        <plex-label *ngIf="!prestacionSeleccionada.estadoActual.observaciones && prestacionSeleccionada.estadoActual.motivoRechazo"
+                    titulo="Observaciones" subtitulo="
                 {{prestacionSeleccionada.estadoActual.motivoRechazo}}">
-    </plex-label>
-    <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones || prestacionSeleccionada.estadoActual.motivoRechazo"
-                titulo="Usuario que responde" subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
-    </plex-label>
-</plex-detail>
-<plex-title size="sm" titulo="Datos de creación"></plex-title>
-<div class="row mb-3">
-    <div class="col-4">
-        <plex-label titulo="Creada por" subtitulo="{{prestacionSeleccionada.createdBy | nombre}}">
         </plex-label>
-    </div>
-    <div class="col-4">
-        <plex-label titulo="Fecha de creación" subtitulo="{{prestacionSeleccionada.createdAt
+        <plex-label *ngIf="prestacionSeleccionada.estadoActual.observaciones || prestacionSeleccionada.estadoActual.motivoRechazo"
+                    titulo="Usuario que responde"
+                    subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
+        </plex-label>
+    </plex-detail>
+    <plex-title size="sm" titulo="Datos de creación"></plex-title>
+    <div class="row mb-3">
+        <div class="col-4">
+            <plex-label titulo="Creada por" subtitulo="{{prestacionSeleccionada.createdBy | nombre}}">
+            </plex-label>
+        </div>
+        <div class="col-4">
+            <plex-label titulo="Fecha de creación" subtitulo="{{prestacionSeleccionada.createdAt
                     | fecha}}">
-        </plex-label>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <plex-title size="sm" titulo="Motivo de Solicitud">
-            <plex-help *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'
-                       type="help" titulo="Indicaciones" tituloBoton="Ver Indicaciones">
-                <p class="m-2"
-                   [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
-                </p>
-            </plex-help>
-        </plex-title>
-        <p>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</p>
-    </div>
-</div>
-<div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
-    <div class="col-12">
-        <plex-title size="sm" titulo="Motivo de Anulación">
-        </plex-title>
-        <span *ngIf="prestacionSeleccionada.estadoActual.observaciones" class="text-left">
-            {{prestacionSeleccionada.estadoActual.observaciones}}</span>
-        <span *ngIf="!prestacionSeleccionada.estadoActual.observaciones" class="text-left mt-2">
-            {{prestacionSeleccionada.estadoActual.motivoRechazo}}</span>
-        <div class="row mb-3">
-            <div class="col-4">
-                <plex-label titulo="Anulada por" subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
-                </plex-label>
-            </div>
-            <div class="col-4">
-                <plex-label titulo="Fecha de anulación" subtitulo="{{prestacionSeleccionada.estadoActual.createdAt | date:
-                    'dd/MM/yyyy'}}">
-                </plex-label>
-            </div>
+            </plex-label>
         </div>
     </div>
-</div>
-<div class="row mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
-    <div class="col-12">
-        <b>Archivos Adjuntos</b>
-        <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-            <ng-container
-                          *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
-                <div class="image hover">
-                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
-                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                       (click)="visualizador.open(i)">
-                        {{ doc.ext }}
-                    </a>
+    <div class="row">
+        <div class="col-12">
+            <plex-title size="sm" titulo="Motivo de Solicitud">
+                <plex-help *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'
+                           type="help" titulo="Indicaciones" tituloBoton="Ver Indicaciones">
+                    <p class="m-2"
+                       [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
+                    </p>
+                </plex-help>
+            </plex-title>
+            <p>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</p>
+        </div>
+    </div>
+    <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
+        <div class="col-12">
+            <plex-title size="sm" titulo="Motivo de Anulación">
+            </plex-title>
+            <span *ngIf="prestacionSeleccionada.estadoActual.observaciones" class="text-left">
+                {{prestacionSeleccionada.estadoActual.observaciones}}</span>
+            <span *ngIf="!prestacionSeleccionada.estadoActual.observaciones" class="text-left mt-2">
+                {{prestacionSeleccionada.estadoActual.motivoRechazo}}</span>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <plex-label titulo="Anulada por"
+                                subtitulo="{{prestacionSeleccionada.estadoActual.createdBy | nombre}}">
+                    </plex-label>
                 </div>
-            </ng-container>
+                <div class="col-4">
+                    <plex-label titulo="Fecha de anulación" subtitulo="{{prestacionSeleccionada.estadoActual.createdAt | date:
+                    'dd/MM/yyyy'}}">
+                    </plex-label>
+                </div>
+            </div>
         </div>
     </div>
-
+    <div class="row mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
+        <div class="col-12">
+            <b>Archivos Adjuntos</b>
+            <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                <ng-container
+                              *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                    <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+                    <div class="image hover">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                           (click)="visualizador.open(i)">
+                            {{ doc.ext }}
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
 </div>
-<historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado'>
-</historial-solicitud>
+<div *ngIf="mostrar === 'historial'" class="mt-3">
+    <historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado'>
+    </historial-solicitud>
+</div>
