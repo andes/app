@@ -6,6 +6,7 @@ import { Auth } from '@andes/auth';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -20,6 +21,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public showDetalle = false;
     public showEditarEstado = false;
     public verAyuda = false;
+    public requestInProgress: boolean;
     derivacionSeleccionada: IDerivacion;
     derivaciones: any[];
     organizacionActual: any[];
@@ -47,7 +49,7 @@ export class ComPuntoInicioComponent implements OnInit {
     ];
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router, public plex: Plex) { }
+        public router: Router, public plex: Plex, private documentosService: DocumentosService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -181,6 +183,14 @@ export class ComPuntoInicioComponent implements OnInit {
 
     cambiarVerAyuda(mostrar) {
         this.verAyuda = mostrar;
+    }
+
+    imprimirComprobante(derivacion: any) {
+        this.requestInProgress = true;
+        this.documentosService.descargarComprobanteDerivacion(derivacion, derivacion.paciente.apellido).subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
 }
 

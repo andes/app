@@ -77,6 +77,10 @@
                                                  (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                         SUMAR NOTA/ADJUNTO
                                     </plex-button>
+                                    <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
+                                                 (click)="imprimirComprobante(derivacion)">
+                                        COMPROBANTE
+                                    </plex-button>
                                     <plex-badge
                                                 type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                         {{ derivacion.estado }}</plex-badge>
@@ -156,6 +160,10 @@
                                     <plex-button type="info" size="sm"
                                                  (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                         SUMAR NOTA/ADJUNTO
+                                    </plex-button>
+                                    <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
+                                                 (click)="imprimirComprobante(derivacion)">
+                                        COMPROBANTE
                                     </plex-button>
                                     <plex-badge
                                                 type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
