@@ -73,7 +73,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
             .subscribe(hallazgo => {
                 if (hallazgo) {
                     this.hallazgoHudsCompleto = hallazgo;
-                    this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
+                    this.evoluciones = [...this.hallazgoHudsCompleto.evoluciones];
 
                     if (this.registro.valor.evolucion) {
                         this.evoluciones.shift();
