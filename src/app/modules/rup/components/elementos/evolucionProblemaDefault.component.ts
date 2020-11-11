@@ -104,22 +104,23 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     }
 
     calcularFecha() {
-        let fechaCalc;
-        switch (true) {
-            case (this.inicioEstimadoTiempo.id === 'anios'):
-                fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'mes'):
-                fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'semanas'):
-                fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'dias'):
-                fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
-                break;
-            default:
-                fechaCalc = new Date();
+        let fechaCalc = new Date();
+
+        if (this.inicioEstimadoTiempo !== null) {
+            switch (true) {
+                case (this.inicioEstimadoTiempo.id === 'anios'):
+                    fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad).toDate();
+                    break;
+                case (this.inicioEstimadoTiempo.id === 'mes'):
+                    fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad).toDate();
+                    break;
+                case (this.inicioEstimadoTiempo.id === 'semanas'):
+                    fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad).toDate();
+                    break;
+                case (this.inicioEstimadoTiempo.id === 'dias'):
+                    fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad).toDate();
+                    break;
+            }
         }
 
         this.registro.valor.fechaInicio = fechaCalc;
