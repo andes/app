@@ -7,7 +7,7 @@ import { LABELS } from '../../styles/properties';
 import { Router, ActivatedRoute } from '@angular/router';
 import { setDimension } from '../../shared/services/analytics.service';
 import { IModulo } from './../../interfaces/novedades/IModulo.interface';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -17,11 +17,13 @@ export class InicioComponent implements AfterViewInit {
     @HostBinding('class.plex-layout')
     public denied = false;
     public loading = false;
-    public accessList: any = [];
     public provincia = LABELS.provincia;
+    public accessList: any = [];
     public modulos: any = [];
     public secciones: any = [];
     public novedades: any[] = [];
+    public modulosUsuario: any[] = [];
+
 
     constructor(
         public auth: Auth,
@@ -115,8 +117,8 @@ export class InicioComponent implements AfterViewInit {
 
                     this.loading = false;
 
-                    // Se quitan módulos sin submódulos
-                    this.modulos = this.modulos.filter(x => x.principal);
+                    this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
+                    this.modulosUsuario = this.getModulosUsuario();
 
                 }, (err) => {
                 }
@@ -124,9 +126,20 @@ export class InicioComponent implements AfterViewInit {
         });
     }
 
+    getModulosUsuario() {
+        const modulos = JSON.parse(localStorage.getItem('modulos-usuario'));
+        if (modulos && modulos.some(x => x.icono)) {
+            return modulos;
+        } else {
+            return [];
+        }
+
+    }
+
     redirect(caja, e: Event) {
         e.stopImmediatePropagation();
         e.preventDefault();
+
         const url: string = caja.linkAcceso;
         if (url.startsWith('http')) {
             // [TODO] Agregar parametro de configuracion, no siempre hay que exponer el token.
@@ -143,18 +156,40 @@ export class InicioComponent implements AfterViewInit {
         this.router.navigate(['/novedades', modulo], { relativeTo: this.route });
     }
 
-    modulosUsuario = [];
 
-    drop(event: CdkDragDrop<any[]>, index) {
-        // moveItemInArray(this.modulos[index].submodulos, event.previousIndex, event.currentIndex);
-
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else {
-            transferArrayItem(event.previousContainer.data,
+    drop(event: CdkDragDrop<any[]>) {
+        if (event.container.data.length === 6) {
+            return;
+        }
+        // if (event.previousContainer === event.container) {
+        // } else {
+        if (event.container.data.findIndex(x => x.icono === event.previousContainer.data[event.previousIndex].icono) === -1) {
+            copyArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
+        } else {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         }
+        // }
+        localStorage.setItem('modulos-usuario', JSON.stringify(event.container.data));
+
     }
+
+    dropBack(event: CdkDragDrop<any[]>) {
+        if (event.previousContainer.data === event.container.data) {
+            return;
+        }
+        if (event.container.data.findIndex(x => x.icono === event.previousContainer.data[event.previousIndex].icono) > -1) {
+            event.previousContainer.data.splice(event.previousIndex, 1);
+        }
+        localStorage.setItem('modulos-usuario', JSON.stringify(event.container.data));
+    }
+
+    removeItem(index) {
+        this.modulosUsuario.splice(index, 1);
+        localStorage.setItem('modulos-usuario', JSON.stringify(this.modulosUsuario));
+
+    }
+
 }

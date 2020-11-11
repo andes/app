@@ -67,6 +67,24 @@ main {
 }
 
 .modulos {
+    .cdk-drag {
+        // width: 70px;
+        // height: 70px;
+        z-index: 1;
+        .cdk-drag-handle {
+            opacity: 0;
+            position: absolute;
+            color: white;
+            top: 2px;
+            right: 2px;
+        }
+        &:hover {
+            .cdk-drag-handle {
+                opacity: 1;
+            }
+        }
+    }
+
     width: 73vw;
     display: flex;
     justify-content: flex-start;
@@ -118,12 +136,12 @@ main {
             }
         }
 
-        .submodulo {
-            text-decoration: none;
+        a.submodulo {
             cursor: pointer;
             box-sizing: content-box;
-            width: 80px;
-            height: 80px;
+            position: relative;
+            width: 70px;
+            height: 70px;
             border-radius: 0;
             color: white;
 
@@ -177,6 +195,63 @@ main {
     }
 }
 
+.custom-placeholder {
+    box-sizing: content-box;
+    background: #ccc;
+    border: dashed 3px #999;
+    min-height: 60px;
+    width: 70px !important;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+
+    cursor: pointer;
+    box-sizing: content-box;
+    position: relative;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 0;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    text-align: center;
+    font-size: 0.75rem;
+
+    box-shadow: 4px 2px 6px #aaa;
+    margin: 0 5px 5px 0;
+    padding-top: 5px;
+
+    background: currentColor;
+    border: 2px dashed #cccccc;
+}
+
+.cdk-drag-preview {
+    cursor: pointer;
+    box-sizing: content-box;
+    position: relative;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 0;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    text-align: center;
+    font-size: 0.75rem;
+
+    box-shadow: 4px 2px 6px #aaa;
+    margin: 0 5px 5px 0;
+    padding-top: 5px;
+
+    background: currentColor;
+    border: 2px dashed #cccccc;
+}
+
 .divisor {
     box-sizing: content-box;
     width: 100%;
@@ -190,6 +265,8 @@ main {
     & > {
         cursor: pointer;
     }
+    opacity: 0;
+    animation: seccion 0.25s ease-in-out 1.15s 1 forwards;
 }
 
 a.seccion {
@@ -201,13 +278,13 @@ a.seccion {
 
     margin-bottom: 1.1rem;
 
-    opacity: 0;
+    // opacity: 0;
 
-    @for $child from 1 through 20 {
-        &:nth-child(#{$child}) {
-            animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
-        }
-    }
+    // @for $child from 1 through 20 {
+    //     &:nth-child(#{$child}) {
+    //         animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
+    //     }
+    // }
 
     &:visited,
     &:hover,
