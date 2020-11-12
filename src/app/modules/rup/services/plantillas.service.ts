@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
-import { Cache } from '@andes/shared';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { ConceptObserverService } from './conceptObserver.service';
@@ -13,8 +12,12 @@ export class PlantillasService {
     private url = '/modules/rup/plantillas';  // URL to web api
     private cache = {};
     private cacheSolicitud = {};
-    // savedText: any;
-    constructor(private server: Server, public auth: Auth, public cos: ConceptObserverService) { }
+
+    constructor(
+        private server: Server,
+        public auth: Auth,
+        public cos: ConceptObserverService
+    ) { }
 
     get(conceptId: string, esSolicitud: Boolean, force = false): Observable<any> {
 

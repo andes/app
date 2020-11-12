@@ -14,7 +14,6 @@ export class ConceptObserverService {
    *
    * @param {ISnomedConcept} concepto Concepto de SNOMED
    * @returns {Subject<any>} Observable
-   * @memberof ConceptObserverService
    */
   public observe(registro: IPrestacionRegistro): Observable<IPrestacionRegistro> {
     if (!this.observers[registro.concepto.conceptId]) {
@@ -31,7 +30,6 @@ export class ConceptObserverService {
    *
    * @param {ISnomedConcept} concepto Concepto de SNOMED
    * @param {IPrestacionRegistro} registro Registro
-   * @memberof ConceptObserverService
    */
   public notify(concepto: ISnomedConcept, registro: IPrestacionRegistro) {
     if (this.observers[concepto.conceptId]) {
@@ -45,6 +43,10 @@ export class ConceptObserverService {
    */
 
   public destroy() {
+    for (const conceptId in this.observers) {
+      this.observers[conceptId].complete();
+      this.observers[conceptId].unsubscribe();
+    }
     this.observers = {};
   }
 
