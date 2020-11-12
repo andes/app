@@ -83,7 +83,8 @@ export class RUPAccionesEnvioInformeComponent {
             return false;
         }
         if (this.registro) {
-            const esProcedimientoSolicitud = getSemanticTag(this.registro.concepto, false) === 'procedimiento' || this.registro.esSolicitud;
+            let concepto = getSemanticTag(this.registro.concepto, false);
+            const esProcedimientoSolicitud = concepto === 'procedimiento' || concepto === 'hallazgo' || concepto === 'trastorno' || this.registro.esSolicitud;
             return this.validada && esProcedimientoSolicitud;
         } else {
             return this.validada && !this.noNominalizada;
