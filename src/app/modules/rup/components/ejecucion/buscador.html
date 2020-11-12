@@ -175,12 +175,12 @@
      class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]; let i = index" class="rup-card mini"
-             [ngClass]="item | semanticClass:  filtroActual === 'planes'">
+             [ngClass]="item | semanticClass: item.esSolicitud || filtroActual === 'planes'">
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
                      [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
                      (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
-                    <i class="adi {{ item | semanticIcon: filtroActual === 'planes'  }}"></i>
+                    <i class="adi {{ item | semanticIcon: item.esSolicitud || filtroActual === 'planes'  }}"></i>
                 </div>
                 <div class="rup-border">
                     <div class="row p-0 m-0 border-secondary border-left-0">

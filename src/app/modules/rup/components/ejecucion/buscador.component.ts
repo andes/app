@@ -11,6 +11,7 @@ import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
 import { map } from 'rxjs/operators';
 
+
 @Component({
     selector: 'rup-buscador',
     templateUrl: 'buscador.html',
@@ -48,7 +49,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         frecuentesTP: []
     };
     public resultsAux: any;
-
+    public resultadosSnomedAux;
     public copiaFiltroActual: any;
 
 
@@ -260,9 +261,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
+        this.resultadosSnomedAux = resultadosSnomed.items;
         if (resultadosSnomed.items.length) {
+
+            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.prestacion.solicitud.tipoPrestacion.conceptId);
+
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
-            // this.results.buscadorBasico[this.filtroActual] = resultadosSnomed;
+
 
             // llamamos a la funcion que ordena mis frecuentes, poniendolo al prinicpio de los resultados
             this.getMisFrecuentes();
@@ -292,7 +297,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
-                this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                if (concepto === 'planes' && this.resultadosSnomedAux) {
+                    this.results[busquedaActual][concepto] = this.resultadosSnomedAux.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                } else {
+                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                }
             });
         }
 
@@ -353,6 +362,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
                     let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
                     let registroFrec = this.results.buscadorBasico['todos'][index];
+                    registroFrec.frecuencia = x.frecuencia;
                     this.results.buscadorBasico['todos'].splice(index, 1);
                     this.results.buscadorBasico['todos'].unshift(registroFrec);
                 }
