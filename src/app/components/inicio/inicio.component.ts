@@ -89,7 +89,9 @@ export class InicioComponent implements AfterViewInit {
         });
     }
 
-    redirect(caja) {
+    redirect(caja, e: Event) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
         const url: string = caja.linkAcceso;
         if (url.startsWith('http')) {
             // [TODO] Agregar parametro de configuracion, no siempre hay que exponer el token.
@@ -100,7 +102,9 @@ export class InicioComponent implements AfterViewInit {
         }
     }
 
-    irANovedades(modulo) {
+    irANovedades(modulo, e: Event) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
         this.router.navigate(['/novedades', modulo], { relativeTo: this.route });
     }
 }

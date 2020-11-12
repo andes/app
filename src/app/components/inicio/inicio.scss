@@ -5,6 +5,13 @@ $andes-azul-oscuro: #002838;
 header {
     border: 0;
     margin-top: 1rem;
+
+    .marca {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
     div[svgLogo] {
         width: 117px;
         height: 55px;
@@ -15,27 +22,6 @@ header {
         width: 332px;
         height: 42px;
         fill: $andes-azul-oscuro;
-    }
-
-    &.size-sm,
-    &.size-md {
-        flex-direction: column;
-
-        div {
-            width: 100%;
-        }
-
-        .bienvenida {
-            width: 100%;
-        }
-
-        .hola {
-            font-size: 1.5rem;
-        }
-
-        .mensaje {
-            font-size: 1rem;
-        }
     }
 
     .provincia {
@@ -64,6 +50,11 @@ main {
 .bienvenida {
     text-align: center;
     margin-right: 1.5rem;
+
+    .efector {
+        color: grey;
+    }
+
     .hola {
         font-size: 28px;
         color: $andes-azul-oscuro;
@@ -88,7 +79,7 @@ main {
         flex-direction: column;
 
         box-sizing: border-box;
-        width: 245px;
+        width: 300px;
         margin-bottom: 1rem;
 
         .principal {
@@ -108,7 +99,7 @@ main {
         }
 
         .submodulos {
-            width: 250px;
+            width: 265px;
             height: 145px;
             flex-wrap: wrap;
             justify-content: flex-start;
@@ -121,10 +112,11 @@ main {
             }
         }
         .submodulo {
+            text-decoration: none;
             cursor: pointer;
             box-sizing: content-box;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 0;
             color: white;
 
@@ -150,10 +142,14 @@ main {
             }
 
             .titulo {
-                font-size: 11px;
+                font-size: 13px;
                 line-height: normal;
-                span {
-                    cursor: pointer;
+                a,
+                a:visited,
+                a:hover,
+                a:focus {
+                    color: rgb(56, 69, 85);
+                    text-decoration: none;
                 }
             }
 
@@ -184,12 +180,13 @@ main {
     }
 }
 
-.seccion {
+a.seccion {
+    text-decoration: none;
+    color: rgb(56, 69, 85);
     display: flex;
     justify-content: flex-start;
     align-items: center;
 
-    padding-right: 40px;
     margin-bottom: 1.1rem;
 
     opacity: 0;
@@ -198,6 +195,13 @@ main {
         &:nth-child(#{$child}) {
             animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
         }
+    }
+
+    &:visited,
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: rgb(56, 69, 85);
     }
 
     .principal .band {
@@ -265,15 +269,18 @@ main {
     }
 
     .titulo {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: 600;
         font-style: oblique;
     }
 
     .secundario {
-        font-size: 0.65rem;
+        font-size: 0.8rem;
         display: flex;
         flex-direction: column;
+        .subtitulo {
+            color: grey;
+        }
     }
 }
 
@@ -323,10 +330,45 @@ main {
 // Responsive
 
 header {
+    &.size-sm,
+    &.size-md {
+        flex-direction: column;
+
+        div {
+            width: 100%;
+        }
+
+        .bienvenida {
+            width: 100%;
+        }
+
+        .hola {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .mensaje {
+            font-size: 1rem;
+        }
+    }
     &.size-sm {
+        .marca {
+            display: flex;
+            justify-content: flex-start;
+            align-items: baseline;
+        }
         [svgLogo] {
             height: 40px;
             margin-right: 0px;
+        }
+        div[svgAcronimo] {
+            height: 23px;
+        }
+        .provincia {
+            top: -4px;
+        }
+        .bienvenida {
+            font-size: 0.7rem;
         }
     }
 }
@@ -334,6 +376,14 @@ header {
 main {
     &.size-sm {
         flex-direction: column;
+
+        .modulo {
+            height: auto !important;
+            .submodulos {
+                height: auto;
+            }
+        }
+
         .secciones {
             display: flex;
             justify-content: space-between;
@@ -341,6 +391,8 @@ main {
             width: 80vw;
             margin-top: 6rem;
             .seccion {
+                display: block;
+                text-decoration: none;
                 min-width: 225px;
                 padding-right: 0;
                 margin-bottom: 0.5rem;
