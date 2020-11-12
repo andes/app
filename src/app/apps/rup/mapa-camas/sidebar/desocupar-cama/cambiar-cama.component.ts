@@ -24,6 +24,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
     public fechaMin: Date;
     public cama: ISnapshot;
     public nuevaCama: ISnapshot;
+    public disableButton = false;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
@@ -45,6 +46,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
+            this.disableButton = true;
             combineLatest(
                 this.mapaCamasService.fecha2,
                 this.camaSelectedSegunView$
@@ -54,12 +56,18 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
                     this.fecha = fechaCambio;
                     return this.cambiarCama(camaActual, this.nuevaCama, fechaCambio);
                 })
-            ).subscribe(() => {
-                const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
-                this.plex.info('success', mensaje);
-                this.mapaCamasService.setFecha(this.fecha);
-                this.onSave.emit();
-            });
+            ).subscribe(
+                () => {
+                    const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
+                    this.plex.info('success', mensaje);
+                    this.mapaCamasService.setFecha(this.fecha);
+                    this.onSave.emit();
+                    this.disableButton = false;
+                }, err => {
+                    const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
+                    this.plex.info('warning', '', `Ocurrió un error durante el ${mensaje}`);
+                    this.disableButton = false;
+                });
         }
     }
 

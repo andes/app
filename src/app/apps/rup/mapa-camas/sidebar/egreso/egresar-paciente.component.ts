@@ -83,6 +83,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public existeCausaExterna = false;
     public listaProcedimientosQuirurgicos: any[];
     public prestacionValidada = false;
+    public disableButton = false;
 
     private subscription: Subscription;
     private subscription2: Subscription;
@@ -196,6 +197,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
+            this.disableButton = true;
             if (this.capa === 'estadistica') {
                 this.egresoExtendido();
             } else {
@@ -241,9 +243,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
+                this.disableButton = false;
                 this.onSave.emit();
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al egresar paciente!');
+                this.disableButton = false;
             });
         }
     }
