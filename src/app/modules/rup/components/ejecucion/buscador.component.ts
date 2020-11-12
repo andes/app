@@ -362,6 +362,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
                     let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
                     let registroFrec = this.results.buscadorBasico['todos'][index];
+                    registroFrec.frecuencia = x.frecuencia;
                     this.results.buscadorBasico['todos'].splice(index, 1);
                     this.results.buscadorBasico['todos'].unshift(registroFrec);
                 }
