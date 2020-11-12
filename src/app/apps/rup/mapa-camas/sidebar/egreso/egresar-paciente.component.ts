@@ -247,6 +247,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.onSave.emit();
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al egresar paciente!');
+                this.disableButton = false;
             });
         }
     }

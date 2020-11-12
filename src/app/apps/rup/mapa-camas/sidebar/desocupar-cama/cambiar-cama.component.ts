@@ -56,13 +56,18 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
                     this.fecha = fechaCambio;
                     return this.cambiarCama(camaActual, this.nuevaCama, fechaCambio);
                 })
-            ).subscribe(() => {
-                const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
-                this.plex.info('success', mensaje);
-                this.mapaCamasService.setFecha(this.fecha);
-                this.onSave.emit();
-                this.disableButton = false;
-            });
+            ).subscribe(
+                () => {
+                    const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
+                    this.plex.info('success', mensaje);
+                    this.mapaCamasService.setFecha(this.fecha);
+                    this.onSave.emit();
+                    this.disableButton = false;
+                }, err => {
+                    const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
+                    this.plex.info('warning', '', `Ocurrió un error durante el ${mensaje}`);
+                    this.disableButton = false;
+                });
         }
     }
 

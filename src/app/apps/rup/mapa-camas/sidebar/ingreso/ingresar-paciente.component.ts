@@ -332,6 +332,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.onSave.emit();
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                        this.disableButton = false;
                     });
                 });
             } else {
@@ -352,6 +353,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     this.onSave.emit();
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al ingresar paciente');
+                    this.disableButton = false;
                 });
             } else {
                 this.salaComunService.ingresarPaciente(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
@@ -361,6 +363,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     this.onSave.emit();
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al ingresar paciente');
+                    this.disableButton = false;
                 });
             }
         }
