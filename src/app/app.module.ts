@@ -184,7 +184,6 @@ import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
-import { SeguimientoCovidComponent } from './components/reportes/seguimientoCovid.component';
 
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 import { QueriesService } from './services/query.service';
@@ -322,7 +321,6 @@ registerLocaleData(localeEs, 'es');
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
-        SeguimientoCovidComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
