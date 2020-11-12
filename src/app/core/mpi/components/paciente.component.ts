@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs';
 import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 import { DatosContactoComponent } from './datos-contacto.component';
 import { DatosBasicosComponent } from './datos-basicos.component';
-import { ObjectID } from 'bson';
 
 @Component({
     selector: 'paciente',
@@ -92,8 +91,8 @@ export class PacienteComponent implements OnInit {
         fechaFallecimiento: null,
         direccion: [this.direccion],
         estadoCivil: undefined,
-        fotoId: undefined,
-        foto: undefined,
+        fotoId: null,
+        foto: null,
         relaciones: null,
         financiador: [null],
         identificadores: null,
@@ -529,13 +528,15 @@ export class PacienteComponent implements OnInit {
         this.backUpDatos['cuil'] = this.pacienteModel.cuil;
         this.backUpDatos['fechaFallecimiento'] = this.pacienteModel.fechaFallecimiento;
         this.backUpDatos['direccion'] = this.pacienteModel.direccion ? this.pacienteModel.direccion : null;
+        this.backUpDatos['foto'] = this.pacienteModel.foto;
+        this.backUpDatos['fotoId'] = this.pacienteModel.fotoId;
     }
 
     deshacerValidacion() {
         this.showDeshacer = false;
         this.pacienteModel.direccion = this.backUpDatos['direccion'] ? this.backUpDatos['direccion'] : [this.direccion];
-        delete this.pacienteModel.foto;
-        this.pacienteModel.fotoId ? this.pacienteModel.fotoId = new ObjectID() : delete this.pacienteModel.fotoId;
+        this.pacienteModel.foto = this.backUpDatos['foto'];
+        this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
 
         if (this.backUpDatos['estado'] === 'temporal') {
             this.pacienteModel.nombre = this.backUpDatos['nombre'];
