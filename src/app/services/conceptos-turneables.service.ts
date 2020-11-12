@@ -7,6 +7,9 @@ import { Auth } from '@andes/auth';
 @Injectable()
 export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion> {
     protected url = '/core/tm/conceptos-turneables';
+    public static Laboratorio_CDA_ID = '4241000179101';
+    public static Vacunas_CDA_ID = '33879002';
+
 
     constructor(protected server: Server, protected auth: Auth) {
         super(server);

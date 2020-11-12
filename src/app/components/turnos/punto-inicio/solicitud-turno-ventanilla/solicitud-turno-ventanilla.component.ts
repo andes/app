@@ -1,14 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-
-// Services
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
-import { OrganizacionService } from './../../../../services/organizacion.service';
-import { ReglaService } from '../../../../services/top/reglas.service';
 
 @Component({
     selector: 'solicitud-turno-ventanilla',

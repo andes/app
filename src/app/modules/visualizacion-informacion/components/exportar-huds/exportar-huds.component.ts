@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ExportHudsService } from '../../services/export-huds.service';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -29,7 +28,6 @@ export class ExportarHudsComponent implements OnInit {
 
     constructor(
         private plex: Plex,
-        private servicioPrestacion: TipoPrestacionService,
         private exportHudsService: ExportHudsService,
         private auth: Auth,
         private router: Router,
@@ -83,10 +81,6 @@ export class ExportarHudsComponent implements OnInit {
                     this.pacienteSelected = '';
                 });
         }
-    }
-
-    loadConceptosTurneables(event) {
-        this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
     exportar() {

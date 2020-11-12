@@ -46,7 +46,7 @@
                                type="slide">
                     </plex-bool>
                     <plex-select grow="full" label="Prestaciones" name="prestacion" idField="conceptId"
-                                 [(ngModel)]="prestacion" (getData)="loadConceptosTurneables($event)">>
+                                 [(ngModel)]="prestacion" tmPrestaciones [preload]="true">
                     </plex-select>
                 </plex-wrapper>
             </form>

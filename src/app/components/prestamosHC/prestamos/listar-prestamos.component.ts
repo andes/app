@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { enumToArray } from '../../../utils/enums';
@@ -18,7 +17,6 @@ import * as moment from 'moment';
 
 export class ListarPrestamosComponent implements OnInit {
     public carpetas: any[] = [];
-    public prestacionesPermisos = [];
     public espacioFisico = [];
     public tipoPrestacion: any;
     public profesional: any;
@@ -49,7 +47,6 @@ export class ListarPrestamosComponent implements OnInit {
     constructor(
         public plex: Plex,
         public prestamosService: PrestamosService,
-        public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
         public auth: Auth) {
@@ -113,18 +110,6 @@ export class ListarPrestamosComponent implements OnInit {
         this.prestamosService.getCarpetasPrestamo(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
         });
-    }
-
-    loadPrestaciones(event) {
-        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
-            this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
-            }).subscribe(event.callback);
-        } else {
-            this.servicioPrestacion.get({
-                turneable: 1
-            }).subscribe(event.callback);
-        }
     }
 
     loadEspacios(event) {

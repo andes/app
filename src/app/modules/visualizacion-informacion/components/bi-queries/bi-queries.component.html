@@ -33,8 +33,7 @@
                         <plex-select *ngSwitchCase="'conceptoTurneable'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                     idField="conceptId" [required]="argumento.required"
-                                     (getData)="loadConceptosTurneables($event)">>
+                                     idField="conceptId" [required]="argumento.required" tmPrestaciones preload="true">>
                         </plex-select>
                         <plex-text *ngSwitchCase="'string'" [label]="argumento.label?argumento.label:argumento.key"
                                    grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"

@@ -48,9 +48,8 @@
 
     <div class="row">
         <div class="col-6">
-            <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')"
-                         (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
-                         placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
+            <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
+                         preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
             </plex-select>
         </div>
         <div class="col-6">

@@ -10,6 +10,7 @@ import { EncabezadoReportesDiariosComponent } from './encabezadoReportesDiarios.
 import { PlanillaC1Component } from './planillaC1.component';
 import { ResumenDiarioMensualComponent } from './resumenDiarioMensual.component';
 import { ReportesDiariosRouting } from './reportes-diarios.routing';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { ReportesDiariosRouting } from './reportes-diarios.routing';
         RouterModule,
         HttpClientModule,
         SharedModule,
-        ReportesDiariosRouting
+        ReportesDiariosRouting,
+        DirectiveLibModule
     ],
     declarations: [
         EncabezadoReportesDiariosComponent,

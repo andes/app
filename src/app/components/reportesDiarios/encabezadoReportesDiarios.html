@@ -3,22 +3,20 @@
         <header>
             <div class="row">
                 <div class="col-4">
-                    <plex-select [(ngModel)]="organizacion" name="organizacion"
-                        [data]="opcionesOrganizacion" label="Organización"
-                        placeholder="Seleccione la organización" (change)="refreshSelection()"
-                        labelField="nombre" [required]="true">
+                    <plex-select [(ngModel)]="organizacion" name="organizacion" [data]="opcionesOrganizacion"
+                                 label="Organización" placeholder="Seleccione la organización"
+                                 (change)="refreshSelection()" labelField="nombre" [required]="true">
                     </plex-select>
                 </div>
                 <br />
 
                 <!-- Select Reporte -->
                 <div class="col-4">
-                    <plex-select [(ngModel)]="tipoReportes" name="tipoReportes"
-                        [data]="opcionesReportes" label-field="Tipo de reportes"
-                        label="Seleccione reporte" placeholder="Seleccione reporte"
-                        [required]="true"
-                        (change)="onChangeTipoReportes($event); refreshSelection()"
-                        [readonly]="organizacion === null">
+                    <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opcionesReportes"
+                                 label-field="Tipo de reportes" label="Seleccione reporte"
+                                 placeholder="Seleccione reporte" [required]="true"
+                                 (change)="onChangeTipoReportes($event); refreshSelection()"
+                                 [readonly]="organizacion === null">
                     </plex-select>
                 </div>
             </div>
@@ -33,23 +31,22 @@
                 <div class="col-2">
                     <!-- Select Mes -->
                     <plex-select [(ngModel)]="mes" name="mes" [data]="opcionesMes" label="Mes"
-                        (change)="refreshSelection()" placeholder="Mes" [required]="true">
+                                 (change)="refreshSelection()" placeholder="Mes" [required]="true">
                     </plex-select>
                 </div>
 
                 <div class="col-2">
                     <!-- Select Año -->
                     <plex-select [(ngModel)]="anio" name="año" [data]="opcionesAnio" label="Año"
-                        (change)="refreshSelection()" placeholder="Año" [required]="true">
+                                 (change)="refreshSelection()" placeholder="Año" [required]="true">
                     </plex-select>
                 </div>
 
                 <div class="col-4">
                     <!-- Select Prestacion -->
-                    <plex-select [(ngModel)]="prestacion" name="prestacion"
-                        [data]="opcionesPrestacion" label="Prestación"
-                        placeholder="Seleccione la prestación" labelField="nombre"
-                        (change)="refreshSelection()" [required]="true" [readonly]="
+                    <plex-select [(ngModel)]="prestacion" name="prestacion" tmPrestaciones preload="true"
+                                 label="Prestación" placeholder="Seleccione la prestación" labelField="nombre"
+                                 (change)="refreshSelection()" [required]="true" [readonly]="
                             organizacion === null ||
                             mes === null ||
                             anio === null
@@ -59,8 +56,8 @@
 
                 <div class="col-2">
                     <!-- Dividir por Turno -->
-                    <plex-bool [(ngModel)]="divirTurnos" (change)="refreshSelection()"
-                        type="slide" label="Dividir por turnos" name="dividir">
+                    <plex-bool [(ngModel)]="divirTurnos" (change)="refreshSelection()" type="slide"
+                               label="Dividir por turnos" name="dividir">
                     </plex-bool>
                 </div>
 
@@ -73,48 +70,44 @@
                     tipoReportes.nombre === 'Planilla C1'
                 ">
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="fecha" (change)="refreshSelection()"
-                        name="fecha" label="Fecha" class="fechas" [required]="true">
+                    <plex-datetime type="date" [(ngModel)]="fecha" (change)="refreshSelection()" name="fecha"
+                                   label="Fecha" class="fechas" [required]="true">
                     </plex-datetime>
                 </div>
 
                 <div class="col-4">
                     <!-- Select Prestación -->
-                    <plex-select [(ngModel)]="prestacion" name="prestacion"
-                        [data]="opcionesPrestacion" label="Prestación"
-                        placeholder="Seleccione la Prestación" labelField="nombre"
-                        (change)="refreshSelection()" [required]="true"
-                        [readonly]="organizacion === null">
+                    <plex-select [(ngModel)]="prestacion" name="prestacion" tmPrestaciones perload="true"
+                                 label="Prestación" placeholder="Seleccione la Prestación" labelField="nombre"
+                                 (change)="refreshSelection()" [required]="true" [readonly]="organizacion === null">
                     </plex-select>
                 </div>
 
                 <div class="col-4">
                     <!-- Select Profesional -->
-                    <plex-select [(ngModel)]="profesional" label="Profesional"
-                        name="profesional" (getData)="loadProfesionales($event)"
-                        labelField="apellido + ' ' + nombre" (change)="refreshSelection()">
+                    <plex-select [(ngModel)]="profesional" label="Profesional" name="profesional"
+                                 (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre"
+                                 (change)="refreshSelection()">
                     </plex-select>
                 </div>
             </div>
         </header>
         <ng-container *ngIf="showResumenDiarioMensual">
-            <resumenDiarioMensual *ngFor="let item of reporte" [reporte]="item.data"
-                [parametros]="parametros" [titulo]="item.tag" [id]="'Resumen diario mensual ' + item.tag"
-                style="height: auto;">
+            <resumenDiarioMensual *ngFor="let item of reporte" [reporte]="item.data" [parametros]="parametros"
+                                  [titulo]="item.tag" [id]="'Resumen diario mensual ' + item.tag" style="height: auto;">
             </resumenDiarioMensual>
         </ng-container>
         <ng-container *ngIf="showPlanillaC1">
-            <planillaC1 [reporte]="reporte" [parametros]="parametros"
-                id="Planilla C1"></planillaC1>
+            <planillaC1 [reporte]="reporte" [parametros]="parametros" id="Planilla C1"></planillaC1>
         </ng-container>
     </plex-layout-main>
 
     <plex-layout-footer>
         <plex-button position="right" type="success" label="Generar Reporte" (click)="generar()"></plex-button>
         <plex-button *ngIf="showBotonImprimir" position="right" type="default" label="Imprimir Reporte"
-            (click)="imprimir(parametros['tipoReportes'])"></plex-button>
+                     (click)="imprimir(parametros['tipoReportes'])"></plex-button>
 
-            <plex-button *ngIf="showBotonExportaXLS" position="right" type="default" label="Exportar a XLS"
-            (click)="toExcel()"></plex-button>
+        <plex-button *ngIf="showBotonExportaXLS" position="right" type="default" label="Exportar a XLS"
+                     (click)="toExcel()"></plex-button>
     </plex-layout-footer>
 </plex-layout>

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
 
 @Component({
@@ -24,11 +23,11 @@ export class BiQueriesComponent implements OnInit {
   public mostrarSalida = false;
   public tipoPrestaciones;
 
-  constructor(private queryService: QueriesService,
+  constructor(
+    private queryService: QueriesService,
     private profesionalService: ProfesionalService,
     private auth: Auth,
-    private router: Router,
-    public servicioPrestacion: TipoPrestacionService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -65,10 +64,6 @@ export class BiQueriesComponent implements OnInit {
     } else {
       event.callback(listaProfesionales);
     }
-  }
-
-  loadConceptosTurneables(event) {
-    this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
   }
 
   loadEstadosAgenda(event) {

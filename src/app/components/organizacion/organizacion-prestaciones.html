@@ -59,7 +59,7 @@
                                 <tr>
                                     <td>
                                         <plex-select [(ngModel)]="prestacion" name="ofertaPrestacionalSeleccionada"
-                                                     label="Tipo de prestación" (getData)="loadTipoPrestaciones($event)"
+                                                     label="Tipo de prestación" tmPrestaciones preload="true"
                                                      [required]="true" [closeAfterSelect]="true">
                                         </plex-select>
                                     </td>
@@ -94,7 +94,7 @@
                                     <td>
                                         <plex-select [(ngModel)]="modelo.prestacion"
                                                      name="conceptoTurneableSeleccionado" label="Tipo de prestación"
-                                                     (getData)="loadTipoPrestaciones($event)" [required]="true"
+                                                     tmPrestaciones preload="true" [required]="true"
                                                      [closeAfterSelect]="true">
                                         </plex-select>
                                     </td>

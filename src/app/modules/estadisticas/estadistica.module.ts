@@ -23,6 +23,7 @@ import { SnomedService } from './services/snomed.service';
 import { Tabla2DComponent } from './components/tabla-2d/tabla-2d.component';
 import { TopComponent } from './components/top/top.component';
 import { SumPipe } from './pipes/sum.pipe';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { SumPipe } from './pipes/sum.pipe';
         ChartsModule,
         FormsModule,
         HttpClientModule,
-        EstadisticasRouting
+        EstadisticasRouting,
+        DirectiveLibModule
     ],
     declarations: [
         SumPipe,

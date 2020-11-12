@@ -18,7 +18,7 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Buscamos los tipos de prestación que sean turneables para los que el tenga permisos
         // (OBS: a futuro un profesional puede tener permisos para más Prestaciones que no sean turneables)
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+        this.conceptosTurneablesService.search({ permisos: 'rup:tipoPrestacion:?' }).subscribe(data => {
             this.tiposPrestacion = data;
             if (!this.registro.valor) {
                 this.registro.valor = { solicitudPrestacion: {} };

@@ -8,7 +8,6 @@ import * as moment from 'moment';
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { ObraSocialService } from './../../../services/obraSocial.service';
@@ -88,7 +87,6 @@ export class ListarSolicitudesComponent implements OnInit {
     constructor(
         public plex: Plex,
         public prestamosService: PrestamosService,
-        public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
         public auth: Auth,
@@ -169,18 +167,6 @@ export class ListarSolicitudesComponent implements OnInit {
         }
 
         this.filters['mostrarPrestamos'] = true;
-    }
-
-    loadPrestaciones(event) {
-        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
-            this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
-            }).subscribe(event.callback);
-        } else {
-            this.servicioPrestacion.get({
-                turneable: 1
-            }).subscribe(event.callback);
-        }
     }
 
     loadEspacios(event) {

@@ -3,12 +3,12 @@ import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulatio
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -113,7 +113,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     constructor(
         public servicioPrestacion: PrestacionesService,
-        public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService,
@@ -307,12 +306,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
             });
             this.prestaciones = this.prestacionesCopia;
             // filtramos las vacunas y laboratorios por ahora para que se listan por separado
-            this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Vacunas_CDA_ID);
-            this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Laboratorio_CDA_ID);
+            this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
+            this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID);
 
             // DEjamos el resto de los CDAS y los unimos a las prestaciones
             const filtro = this.cdas.filter(cda => {
-                return cda.prestacion.conceptId !== TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !== TipoPrestacionService.Laboratorio_CDA_ID;
+                return cda.prestacion.conceptId !== ConceptosTurneablesService.Vacunas_CDA_ID && cda.prestacion.conceptId !== ConceptosTurneablesService.Laboratorio_CDA_ID;
             });
             // Filtramos por CDA para poder recargar los estudiosc
             this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];

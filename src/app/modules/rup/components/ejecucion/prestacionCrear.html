@@ -11,8 +11,9 @@
                                grow="2" [max]="max">
                 </plex-datetime>
                 <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                             label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
-                             [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
+                             label="Seleccione el tipo de prestación" labelField="term"
+                             tmPrestaciones="rup:tipoPrestacion:?" preload="true" [required]="true"
+                             (change)="seleccionarTipoPrestacion()" grow="2">
                 </plex-select>
             </plex-wrapper>
         </plex-title>

@@ -3,7 +3,6 @@ import { ProfesionalService } from './../../../services/profesional.service';
 import { Component, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
@@ -27,7 +26,6 @@ export class ReglasComponent {
   constructor(
     private auth: Auth,
     private plex: Plex,
-    private servicioPrestacion: TipoPrestacionService,
     private servicioProfesional: ProfesionalService,
     private servicioOrganizacion: OrganizacionService,
     private servicioReglas: ReglaService
@@ -35,14 +33,6 @@ export class ReglasComponent {
 
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
-  loadTipoPrestaciones(event) {
-    this.servicioPrestacion.get({ turneable: 1 }).subscribe((data) => {
-      let dataF = data.filter(x => {
-        return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
-      });
-      event.callback(dataF);
-    });
-  }
 
   loadProfesionales(event) {
     if (event.query) {

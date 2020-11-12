@@ -2,8 +2,6 @@ import * as moment from 'moment';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { SolicitudesTopService } from '../../services/top.service';
 
 @Component({
@@ -11,8 +9,6 @@ import { SolicitudesTopService } from '../../services/top.service';
     styleUrls: ['top.scss']
 })
 export class TopComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;
-
     public prestacionesPermisos = [];
     public prestacionDestino;
     public permisosReglas;
@@ -58,7 +54,6 @@ export class TopComponent implements OnInit {
     constructor(
         private plex: Plex,
         public auth: Auth,
-        public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTOP: SolicitudesTopService
     ) { }
 

@@ -1,7 +1,6 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding, EventEmitter, Output, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
+import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
@@ -37,12 +36,12 @@ import { Auth } from '@andes/auth';
     </div>
     <div class="row">
         <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesOrigen" (getData)="loadPrestaciones($event)" name="prestacionOrigen"
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesOrigen" tmPrestaciones preload="true" name="prestacionOrigen"
                 label="Prestación Origen" ngModelOptions="{standalone: true}">
             </plex-select>
         </div>
         <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesDestino" (getData)="loadPrestaciones($event)" name="prestacionDestino"
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesDestino" tmPrestaciones preload="true" name="prestacionDestino"
                 label="Prestación Destino" ngModelOptions="{standalone: true}">
             </plex-select>
         </div>
@@ -92,7 +91,6 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         private plex: Plex,
         public auth: Auth,
         public servicioProfesional: ProfesionalService,
-        public servicioPrestacion: TipoPrestacionService,
         public servicioOrganizacion: OrganizacionService
     ) { }
 
@@ -125,12 +123,6 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         } else {
             event.callback([]);
         }
-    }
-
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(result => {
-            event.callback(result);
-        });
     }
 
     onChange() {

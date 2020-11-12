@@ -2,13 +2,13 @@
     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones label="Organización origen"
                  placeholder="Seleccione la organización" (change)="actualizarTabla()">
     </plex-select>
-    <plex-select [(ngModel)]="prestacionOrigen" (getData)="loadPrestaciones($event)" name="prestOrigen"
+    <plex-select [(ngModel)]="prestacionOrigen" tmPrestaciones preload="true" name="prestOrigen"
                  label="Prestación origen" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
     </plex-select>
     <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones label="Organización destino"
                  placeholder="Seleccione la organización" (change)="actualizarTabla()">
     </plex-select>
-    <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" (getData)="loadPrestaciones($event)"
+    <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" tmPrestaciones preload="true"
                  label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
     </plex-select>
 </plex-wrapper>
