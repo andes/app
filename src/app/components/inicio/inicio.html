@@ -35,17 +35,16 @@
                     <div *ngIf="modulo.activo" class="modulo">
                         <div class="principal" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
-                                <a href="javascript:void();" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
+                                <a href="#" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
                                    hint="Novedades del módulo {{ modulo.nombre }}" detach="both" hintIcon="bell"
-                                   (click)="irANovedades(modulo._id)"></a>
+                                   (click)="irANovedades(modulo._id, $event)"></a>
                             </b>
                             <div class="descripcion">{{ modulo.descripcion }}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
-                                <a href="javascript:void();" *ngIf="submodulo.activo"
-                                   class="submodulo {{submodulo.class}} hover" [style.background]="submodulo.color"
-                                   (click)="redirect(submodulo)">
+                                <a href="#" *ngIf="submodulo.activo" class="submodulo {{submodulo.class}} hover"
+                                   [style.background]="submodulo.color" (click)="redirect(submodulo, $event)">
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
                                 </a>
@@ -56,7 +55,7 @@
             </div>
             <div class="secciones">
                 <ng-container *ngFor="let seccion of secciones">
-                    <a href="javascript:void();" class="seccion hover" (click)="redirect(seccion)">
+                    <a href="#" class="seccion hover" (click)="redirect(seccion, $event)">
                         <div class="principal" [style.background]="seccion.color">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
@@ -68,7 +67,7 @@
                         </div>
                         <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
                               hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
-                              (click)="irANovedades(seccion._id)"></span>
+                              (click)="irANovedades(seccion._id, $event)"></span>
                     </a>
                 </ng-container>
             </div>
