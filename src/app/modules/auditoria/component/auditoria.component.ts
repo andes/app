@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { VincularPacientesComponent } from './vincular-pacientes.component';
 import { ModalCorreccionPacienteComponent } from './../component/modal-correccion-paciente.component';
+import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBusqueda.service';
 
 @Component({
   selector: 'auditoria',
@@ -47,6 +48,7 @@ export class AuditoriaComponent implements OnInit {
     private pacienteService: PacienteService,
     private plex: Plex,
     private router: Router,
+    private historialBusquedaService: HistorialBusquedaService
   ) { }
 
   // Cargamos todos los pacientes temporales y activos
@@ -185,7 +187,12 @@ export class AuditoriaComponent implements OnInit {
       this.pacienteService.setActivo(paciente, activo).subscribe(res => {
         // Actualizamos resultados en panel principal
         this.buscar();
-        (activo) ? this.plex.toast('success', 'Paciente Activado') : this.plex.toast('info', 'Paciente Desactivado');
+        if (activo) {
+          this.plex.toast('success', 'Paciente Activado');
+        } else {
+          this.historialBusquedaService.delete(paciente);
+          this.plex.toast('info', 'Paciente Desactivado');
+        }
       });
     }
   }

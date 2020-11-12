@@ -30,4 +30,9 @@ export class HistorialBusquedaService {
     get(): IPaciente[] {
         return this.historial.getValue();
     }
+
+    delete(paciente: IPaciente) {
+        const hist = this.get().filter((pac: any) => pac.id !== paciente.id);
+        this.historial.next(hist);
+    }
 }
