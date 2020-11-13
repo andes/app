@@ -489,6 +489,8 @@ export class PacienteComponent implements OnInit {
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
                         this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).toDate();
+                    } else {
+                        this.pacienteModel.fechaFallecimiento = null;
                     }
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
@@ -523,20 +525,18 @@ export class PacienteComponent implements OnInit {
         this.backUpDatos['estado'] = this.pacienteModel.estado;
         this.backUpDatos['genero'] = this.pacienteModel.genero;
         this.backUpDatos['fechaNacimiento'] = this.pacienteModel.fechaNacimiento;
-        this.backUpDatos['foto'] = this.pacienteModel.foto;
         this.backUpDatos['cuil'] = this.pacienteModel.cuil;
         this.backUpDatos['fechaFallecimiento'] = this.pacienteModel.fechaFallecimiento;
-        if (this.pacienteModel.direccion) {
-            this.backUpDatos['direccion'] = this.pacienteModel.direccion[0].valor;
-            this.backUpDatos['codigoPostal'] = this.pacienteModel.direccion[0].codigoPostal;
-        }
+        this.backUpDatos['direccion'] = this.pacienteModel.direccion ? this.pacienteModel.direccion : null;
+        this.backUpDatos['foto'] = this.pacienteModel.foto;
+        this.backUpDatos['fotoId'] = this.pacienteModel.fotoId;
     }
 
     deshacerValidacion() {
         this.showDeshacer = false;
+        this.pacienteModel.direccion = this.backUpDatos['direccion'] ? this.backUpDatos['direccion'] : [this.direccion];
         this.pacienteModel.foto = this.backUpDatos['foto'];
-        this.pacienteModel.direccion[0].valor = this.backUpDatos['direccion'];
-        this.pacienteModel.direccion[0].codigoPostal = this.backUpDatos['codigoPostal'];
+        this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
 
         if (this.backUpDatos['estado'] === 'temporal') {
             this.pacienteModel.nombre = this.backUpDatos['nombre'];
@@ -549,6 +549,9 @@ export class PacienteComponent implements OnInit {
             this.validado = false;
         }
         this.disableValidar = false;
-        this.pacienteModel.direccion.splice(1);
+        this.pacientesSimilares = [];
+        this.visualizarIgnorarGuardar = false;
+        this.disableGuardar = false;
+        this.checkDisableValidar();
     }
 }
