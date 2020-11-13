@@ -1,5 +1,5 @@
-import { Observable, pipe, combineLatest } from 'rxjs';
-import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
+import { Observable, combineLatest } from 'rxjs';
+import { HistorialBusquedaService } from './historialBusqueda.service';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
@@ -11,12 +11,15 @@ import { map } from 'rxjs/operators';
 export class PacienteService {
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
     private carpetaUrl = '/modules/carpetas';
+    private pacienteCoreV2 = '/core-v2/mpi/pacientes';
     /**
      * RegEx para validar nombres y apellidos.
      */
     public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
 
-    constructor(private server: Server) { }
+    constructor(
+        private server: Server,
+        private historialBusquedaService: HistorialBusquedaService) { }
 
     getConsultas(filtro: String): Observable<number> {
         return this.server.get(`${this.pacienteUrl}/counts?consulta=${filtro}`, null);
@@ -97,14 +100,9 @@ export class PacienteService {
         return this.server.patch(`${this.pacienteUrl}/${id}`, cambios);
     }
 
-    /**
-    * Metodo post. Modifica el array de identificadores del paciente.
-    * @param {any} cambios Recibe any
-    */
-    postIdentificadores(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
-        return this.server.post(`${this.pacienteUrl}/${id}/identificadores`, cambios);
+    patchV2(id: String, cambios: any): Observable<IPaciente> {
+        return this.server.patch(`${this.pacienteCoreV2}/${id}`, cambios);
     }
-
 
     save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
         if (paciente.id) {
@@ -125,18 +123,13 @@ export class PacienteService {
 
     // ############################  AUDITORIA  #################################
 
-    get(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl, { params: params, showError: true });
-    }
-
     /**
      * Metodo setActivo: Actualiza dato activo (true/false) de un paciente
      * @param {IPaciente} paciente
      * @param {boolean} activo
      */
     setActivo(paciente: IPaciente, activo: boolean) {
-        paciente.activo = activo;
-        return this.server.put(`${this.pacienteUrl}/auditoria/setActivo`, paciente);
+        return this.server.patch(`${this.pacienteCoreV2}/${paciente.id}`, { activo });
     }
 
     /**
@@ -150,8 +143,13 @@ export class PacienteService {
                 entidad: 'ANDES',
                 valor: pacienteLink.id
             };
-
-            return combineLatest(this.postIdentificadores(pacienteBase.id, { 'op': 'link', 'dto': dataLink }), this.setActivo(pacienteLink, false));
+            if (pacienteBase.identificadores) {
+                pacienteBase.identificadores.push(dataLink);
+            } else {
+                pacienteBase.identificadores = [dataLink];
+            }
+            pacienteLink.activo = false;
+            return combineLatest(this.patchV2(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, false));
         }
         return;
     }
@@ -166,7 +164,7 @@ export class PacienteService {
             if (pacienteBase.identificadores) {
                 pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
             }
-            return combineLatest(this.save(pacienteBase), this.setActivo(pacienteLink, true));
+            return combineLatest(this.patchV2(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, true));
         }
         return;
     }

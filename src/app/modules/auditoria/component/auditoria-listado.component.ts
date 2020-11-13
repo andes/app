@@ -2,7 +2,7 @@ import { IPacienteMatch } from '../../mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-
+import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBusqueda.service';
 
 @Component({
     selector: 'auditoria-listado',
@@ -56,7 +56,8 @@ export class ListadoAuditoriaComponent {
         }
     }
 
-    constructor(private plex: Plex) { }
+    constructor(private plex: Plex,
+        private historialBusquedaService: HistorialBusquedaService) { }
 
     getCantidadVinculados(paciente: IPaciente) {
         let vinculaciones = [];
@@ -96,6 +97,9 @@ export class ListadoAuditoriaComponent {
     // Cambia estado activo/inactivo
     setActivo(paciente: IPaciente, activo: boolean) {
         (paciente.id) ? this.setActive.emit([paciente, activo]) : this.setActive.emit(null);
+        if (!activo) {
+            this.historialBusquedaService.delete(paciente);
+        }
     }
 
     // (Des)Vincula paciente entrante del seleccionado

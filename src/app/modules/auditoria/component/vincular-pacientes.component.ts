@@ -6,6 +6,8 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBusqueda.service';
+
 
 @Component({
     selector: 'vincular-pacientes',
@@ -31,7 +33,8 @@ export class VincularPacientesComponent {
 
     constructor(
         private pacienteService: PacienteService,
-        private plex: Plex
+        private plex: Plex,
+        private historialBusquedaService: HistorialBusquedaService
     ) { }
 
 
@@ -70,6 +73,7 @@ export class VincularPacientesComponent {
                 if (pacientes.length) {
                     this.pacienteBase = pacientes[0];
                     this.pacienteLink = pacientes[1];
+                    this.historialBusquedaService.delete(this.pacienteLink);
                 }
                 this.setLink.emit(this.pacienteBase);
                 this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
