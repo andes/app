@@ -302,7 +302,11 @@ export class SolicitudesComponent implements OnInit {
         if (this.tipoSolicitud === 'entrada') {
             params['solicitudDesde'] = this.fechaDesdeEntrada;
             params['solicitudHasta'] = this.fechaHastaEntrada;
-            params.referidas = true;
+            /*
+                TODO: Se remueve temporalmente la inclusión de referidas en la búsqueda de prestaciones.
+                Se verá de agregar un checkbox para búsueda de referidas a demanda.
+            */
+            // params.referidas = true;
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
             }
