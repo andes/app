@@ -1,7 +1,6 @@
-import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
-import { Observable } from 'rxjs';
+
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 // import { FORM_DIRECTIVES } from '@angular/common';
 import { ProfesionalService } from './../../services/profesional.service';
 import { PaisService } from './../../services/pais.service';
@@ -9,7 +8,6 @@ import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IProfesional } from './../../interfaces/IProfesional';
-import { IMatricula } from './../../interfaces/IMatricula';
 import { IPais } from './../../interfaces/IPais';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ILocalidad } from './../../interfaces/ILocalidad';
@@ -18,7 +16,7 @@ import * as enumerados from './../../utils/enumerados';
 import {
     IContacto
 } from './../../interfaces/IContacto';
-import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
+import { ValidacionService } from '../../services/fuentesAutenticas/validacion.service';
 import { Plex } from '@andes/plex';
 import { Matching } from '@andes/match';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -99,7 +97,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private especialidadService: EspecialidadService,
-        private renaperService: RenaperService,
+        private validacionService: ValidacionService,
         private siisaService: SIISAService,
         public sanitizer: DomSanitizer) { }
 
@@ -181,7 +179,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             profesional.sexo = ((typeof profesional.sexo === 'string')) ? profesional.sexo : (Object(profesional.sexo).id);
             sexoRena = profesional.sexo;
             documentoRena = profesional.documento;
-            this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
+            this.validacionService.post({ documento: documentoRena, sexo: sexoRena }).subscribe(
                 resultado => {
                     if (resultado) {
                         this.validado = true;

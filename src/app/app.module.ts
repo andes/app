@@ -62,7 +62,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
-import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
+import { ValidacionService } from './services/fuentesAutenticas/validacion.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
 import { PrestacionLegacyService } from './services/prestacionLegacy.service';
 import { WebSocketService } from './services/websocket.service';
@@ -87,11 +87,6 @@ import { SIISAService } from './services/siisa.service';
 // TOP
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
-
-// Auditoría
-import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
-import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
-import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
 
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
@@ -419,10 +414,7 @@ registerLocaleData(localeEs, 'es');
         ElementosRUPService,
         ConceptObserverService,
         LogService,
-        SisaService,
-        SintysService,
-        AnsesService,
-        RenaperService,
+        ValidacionService,
         LogPacienteService,
         UsuarioService,
         FrecuentesProfesionalService,
