@@ -47,10 +47,17 @@ export class DetalleDerivacionComponent implements OnInit {
         this.adjuntosEstado = [];
         this.cargarEstado();
     }
+
+    @Input('reglasDerivacion')
+    set _reglasDerivacion(value) {
+        this.reglasDerivacion = value;
+    }
+
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
     public tabIndex = 0;
     organizacionesDestino = [];
     reglasDerivacion = [];
+    reglasDerivacionFiltradas = [];
     public nuevoEstado: any = {
         organizacionDestino: '',
         estado: null,
@@ -63,7 +70,6 @@ export class DetalleDerivacionComponent implements OnInit {
         public sanitazer: DomSanitizer,
         private organizacionService: OrganizacionService,
         private derivacionService: DerivacionesService,
-        private reglasDerivacionService: ReglasDerivacionService,
         private auth: Auth,
         public plex: Plex
     ) { }
@@ -113,7 +119,7 @@ export class DetalleDerivacionComponent implements OnInit {
             if (org.esCOM) {
                 this.esCOM = true;
             }
-            this.getReglasDerivaciones();
+            this.filterReglasDerivaciones();
         });
     }
 
@@ -130,19 +136,9 @@ export class DetalleDerivacionComponent implements OnInit {
         });
     }
 
-    getReglasDerivaciones() {
-        // los efectores no pueden cambiar el estado de las derivaciones solicitadas
-        if (!(this.derivacion.organizacionOrigen.id === this.auth.organizacion.id) || this.esCOM) {
-            let query: any = {
-                estadoInicial: this.derivacion.estado,
-                soloCOM: this.esCOM
-            };
-            this.reglasDerivacionService.search(query).subscribe(resultado => {
-                this.reglasDerivacion = resultado;
-            });
-        } else {
-            this.reglasDerivacion = [];
-        }
+    filterReglasDerivaciones() {
+        this.reglasDerivacionFiltradas = this.reglasDerivacion.filter(element => element.estadoInicial === this.derivacion.estado &&
+            element.soloCOM === this.esCOM);
     }
 
     actualizarEstado($event) {

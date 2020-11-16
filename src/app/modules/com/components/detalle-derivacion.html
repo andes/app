@@ -54,14 +54,14 @@
             </ng-container>
         </div>
     </plex-grid>
-    <div *ngIf="reglasDerivacion.length > 0">
+    <div *ngIf="reglasDerivacionFiltradas.length > 0">
         <form #formEstado="ngForm">
             <plex-title size="sm" titulo="Actualizar estado">
             </plex-title>
             <plex-wrapper>
                 <plex-select [(ngModel)]="reglaSeleccionada" label="Nuevo estado" name="estado"
                              placeholder="Seleccione un nuevo estado" idField="_id" labelField="estadoFinal"
-                             [data]="reglasDerivacion" [required]="true" grow="full">
+                             [data]="reglasDerivacionFiltradas" [required]="true" grow="full">
                 </plex-select>
                 <plex-select *ngIf="reglaSeleccionada?.modificaDestino" [(ngModel)]="nuevoEstado.organizacionDestino"
                              name="organizacionOrigen" [data]="organizacionesDestino" label="Organización destino"

@@ -182,7 +182,8 @@
             <com-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></com-busqueda-paciente>
         </ng-container>
         <div *ngIf="showDetalle">
-            <detalle-derivacion [derivacion]="derivacionSeleccionada" (returnDetalle)="returnDetalle($event)">
+            <detalle-derivacion [derivacion]="derivacionSeleccionada" [reglasDerivacion]="reglasDerivacion"
+                                (returnDetalle)="returnDetalle($event)">
             </detalle-derivacion>
         </div>
         <div *ngIf="showEditarEstado">
