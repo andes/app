@@ -42,7 +42,7 @@
                                     {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                 </ng-container>
                                 <div class="float-left"
-                                     *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length">
+                                     *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
                                     <b class="clearfix">Relacionado con:</b>
                                     <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
                                         <plex-badge size="sm" type="info mr-1">
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="actions">
-                                <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
+                                <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
                                             size="sm" type="info">
                                     <b> Relacionado con: </b>
                                     {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
