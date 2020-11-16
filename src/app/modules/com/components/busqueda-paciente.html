@@ -1,5 +1,6 @@
 <plex-title justify titulo="Paciente a derivar">
-    <ng-content></ng-content>
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
 </plex-title>
 <paciente-busqueda (searchEnd)="searchEnd($event)" (selected)="seleccionarPaciente($event)" [offset]="110">
 </paciente-busqueda>

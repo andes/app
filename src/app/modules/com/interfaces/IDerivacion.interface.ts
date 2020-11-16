@@ -34,4 +34,5 @@ export interface IDerivacion {
     adjuntos: any;
     historial: [IDerivacionHistorial];
     cancelada: Boolean;
+    gravedad: String;
 }
