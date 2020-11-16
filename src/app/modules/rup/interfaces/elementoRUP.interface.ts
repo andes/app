@@ -49,6 +49,8 @@ export interface IElementoRUP {
      * Puede repetirse el concepto mas de una vez en la prestación.
      */
     permiteRepetidos?: boolean;
+
+    rules?: any[];
 }
 
 export interface IElementoRUPRequeridos {

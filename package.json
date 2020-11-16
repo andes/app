@@ -45,6 +45,7 @@
     "core-js": "^2.5.7",
     "enhanced-resolve": "^4.1.0",
     "file-saver": "^2.0.2",
+    "json-rules-engine": "^4.1.0",
     "ng-drag-drop": "^5.0.0",
     "ng2-charts": "^2.3.2",
     "ng2-slugify": "^0.1.0",

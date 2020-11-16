@@ -3,7 +3,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional, OnDestroy } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
@@ -24,13 +24,17 @@ import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { PlantillasService } from '../../services/plantillas.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
+import { Engine } from 'json-rules-engine';
+import { calcularEdad } from '@andes/shared';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'rup',
     encapsulation: ViewEncapsulation.None,
     template: ''
 })
-export class RUPComponent implements OnInit, AfterViewInit {
+export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
     @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
@@ -45,6 +49,10 @@ export class RUPComponent implements OnInit, AfterViewInit {
     @Input() params: any;
     @Input() opcionales: any;
     public mensaje: any = {};
+
+    private rulesEngine: Engine;
+    private rulesEvent = new Subject<{ type: string, params: any }>();
+    private rulesEvent$ = this.rulesEvent.asObservable();
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -96,6 +104,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
 
+        componentReference.instance['createEngine']();
+
         this.rupInstance = componentReference.instance;
     }
 
@@ -131,6 +141,17 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.loadComponent();
+    }
+
+    ngOnDestroy() {
+        this.onDestroy();
+        this.onDestroy$.next();
+        this.onDestroy$.complete();
+
+        if (this.rulesEngine) {
+            (this.rulesEngine as any).removeAllListeners();
+            this.rulesEngine.stop();
+        }
     }
 
     ngAfterViewInit() {
@@ -225,6 +246,11 @@ export class RUPComponent implements OnInit, AfterViewInit {
         return validChild && validForm && validateMain;
     }
 
+    /**
+     * Reemplazar en los elementosRUP propios para ejecutar codigo al destruir el elemento
+     */
+    public onDestroy() { }
+
     public onValidate() {
         return true;
     }
@@ -305,5 +331,51 @@ export class RUPComponent implements OnInit, AfterViewInit {
         const sexo = prestacion && prestacion.paciente && prestacion.paciente.sexo;
         const sexoFilter = requerido && requerido.sexo;
         return !sexo || !sexoFilter || sexo === sexoFilter;
+    }
+
+
+
+    createEngine() {
+        if (this.elementoRUP.rules && this.paciente && !this.soloValores) {
+            this.rulesEngine = new Engine();
+
+            this.rulesEngine.addFact('edad', calcularEdad(this.paciente.fechaNacimiento, 'y'));
+            this.rulesEngine.addFact('meses', calcularEdad(this.paciente.fechaNacimiento, 'm'));
+            this.rulesEngine.addFact('sexo', this.paciente.sexo);
+
+            this.elementoRUP.rules.forEach(rule => {
+                this.rulesEngine.addRule(rule);
+            });
+
+            this.rulesEngine.on('success', (event: any) => {
+                this.rulesEvent.next(event);
+            });
+
+            this.rulesEngine.run().catch(err => { });
+
+
+
+        }
+    }
+
+    public onDestroy$ = new Subject();
+
+    addFact(name: string, valor: any) {
+        if (this.rulesEngine) {
+            this.rulesEngine.addFact(name, valor);
+            this.rulesEngine.run();
+        }
+    }
+
+    onRule(name?: string) {
+        const pipes = this.rulesEvent$.pipe(
+            takeUntil(this.onDestroy$)
+        );
+        if (name) {
+            return pipes.pipe(
+                filter(event => event.type === name)
+            );
+        }
+        return pipes;
     }
 }

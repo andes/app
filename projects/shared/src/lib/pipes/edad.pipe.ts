@@ -37,3 +37,23 @@ export class EdadPipe implements PipeTransform {
     }
 }
 
+
+export function calcularEdad(fechaNacimiento: Date, unit: 'y' | 'm' | 'd' = 'y', hasta: Date = null) {
+    if (!fechaNacimiento) {
+        return null;
+    }
+
+    const fechaLimite = hasta ? moment(hasta) : moment();
+    const from = moment(fechaNacimiento);
+
+    const difDias = fechaLimite.diff(from, 'd');
+
+    switch (unit) {
+        case 'y':
+            return Math.floor(difDias / 365.25);
+        case 'm':
+            return Math.floor(difDias / 30.4375);
+        case 'd':
+            return Math.floor(difDias);
+    }
+}
