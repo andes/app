@@ -47,12 +47,19 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() soloValores: boolean;
     @Input() vistaHUDS = false;
     @Input() params: any;
-    @Input() opcionales: any;
+    @Input() style: any;
+
     public mensaje: any = {};
 
     private rulesEngine: Engine;
     private rulesEvent = new Subject<{ type: string, params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
+
+    /**
+     * Determina si un elemento RUP es valido. Se setea apartir de reglas.
+     */
+
+    public _isValid = true;
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -89,7 +96,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         componentReference.instance['vistaHUDS'] = this.vistaHUDS;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
-        componentReference.instance['opcionales'] = this.opcionales;
+        componentReference.instance['style'] = this.style;
 
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
@@ -161,41 +168,22 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+
     /**
      * Emite el evento change con los nuevos datos de registro
-     *
-     * @protected
-     * @memberof RUPComponent
      */
-    prepareEmit(notifyObservers = true) {
-        /**
-        llamas a la funcion getMensajes y setea el objeto mensaje
-        para devolver el valor a los átomos, moléculas, fórmulas, etc
-        */
+    public emitChange(notifyObservers = true) {
         this.mensaje = this.getMensajes();
         // Notifica a todos los components que estén suscriptos con este concepto
         if (notifyObservers) {
             this.conceptObserverService.notify(this.registro.concepto, this.registro);
         }
-    }
-
-    /**
-     * Emite el evento change con los nuevos datos de registro
-     *
-     * @protected
-     * @memberof RUPComponent
-     */
-    public emitChange(notifyObservers = true) {
-        this.prepareEmit();
 
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
     }
 
     public emitEjecutarAccion(evento, datos) {
-        // this.prepareEmit();
-
-        // Notifica al componente padre del cambio
         this.ejecutarAccion.emit({ evento, datos });
     }
 
@@ -231,7 +219,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     /**
     * valida los atomos, moleculas, formulas, etc.
-    * Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
+    * Si existe un formulario en el elementoRUP, lo valida automaticamente, y si la misma tiene más elementosRUP
     * adentro ejecuta el validate en cada uno de sus hijos.
     *
     * Cada elementoRUP puede sobreescribir el metodo OnValidate para agregar validaciones especiales.
@@ -243,7 +231,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         const validChild = this.validateChild();
         const validForm = this.validateForm();
         const validateMain = this.onValidate();
-        return validChild && validForm && validateMain;
+        return validChild && validForm && validateMain && this._isValid;
     }
 
     /**
@@ -260,6 +248,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     */
     public validateForm() {
         if (this.formulario) {
+
             for (let key in this.formulario.controls) {
                 let frm = this.formulario.controls[key];
                 frm.markAsTouched();
@@ -337,7 +326,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
     createEngine() {
         if (this.elementoRUP.rules && this.paciente && !this.soloValores) {
-            this.rulesEngine = new Engine();
+            this.rulesEngine = new Engine([], { allowUndefinedFacts: true });
 
             this.rulesEngine.addFact('edad', calcularEdad(this.paciente.fechaNacimiento, 'y'));
             this.rulesEngine.addFact('meses', calcularEdad(this.paciente.fechaNacimiento, 'm'));
@@ -348,13 +337,14 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
             this.rulesEngine.on('success', (event: any) => {
+                if (event.type === 'validation') {
+                    const valid = !!event.params?.value;
+                    this._isValid = valid;
+                }
                 this.rulesEvent.next(event);
             });
 
-            this.rulesEngine.run().catch(err => { });
-
-
-
+            this.runRules();
         }
     }
 
@@ -362,9 +352,14 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
     addFact(name: string, valor: any) {
         if (this.rulesEngine) {
+            this._isValid = true;
             this.rulesEngine.addFact(name, valor);
-            this.rulesEngine.run();
+            this.runRules();
         }
+    }
+
+    runRules() {
+        this.rulesEngine.run();
     }
 
     onRule(name?: string) {

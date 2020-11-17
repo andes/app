@@ -154,6 +154,7 @@ export class ElementosRUPService {
             if (!elem.elementoRUP) {
                 elem.elementoRUP = this.buscarElemento(elem.concepto, esSolicitud);
                 elem.params = { ...elem.elementoRUP.params, ...(elem.params || {}) };
+                elem.style = { ...(elem.elementoRUP.style || {}), ...(elem.style || {}) } as any;
             } else if (typeof (elem.elementoRUP as any) === 'string') {
                 elem.elementoRUP = this.populateElemento(this.cacheById[elem.elementoRUP as any], false);
             }

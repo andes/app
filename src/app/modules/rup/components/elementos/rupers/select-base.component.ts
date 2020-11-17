@@ -30,6 +30,8 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
 
     public otherEnabled: Boolean = false;
 
+    private watch = false;
+
 
     public otherText: String = '';
 
@@ -57,7 +59,6 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         if (!this.params) {
             this.params = {};
         }
-
         if (this.registro && this.registro.valor) {
             const value = this.registro.valor;
             if (Array.isArray(value)) {
@@ -71,6 +72,17 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
                     this.otherText = value.nombre;
                 }
             }
+        }
+
+        this.watch = this.params?.watch || false;
+
+        if (this.watch && !this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (data.valor) {
+                    this.itemSelected = { ...data.valor };
+                    this.registro.valor = { ...data.valor };
+                }
+            });
         }
 
     }
@@ -101,6 +113,8 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
             };
         }
         this.emitChange();
+        this.addFact('value', this.registro.valor);
+
     }
 
     @Unsubscribe()

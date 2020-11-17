@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
+import { threadId } from 'worker_threads';
 
 @Component({
     selector: 'rup-molecula-base',
@@ -39,13 +40,30 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
                     }
                 }
                 this.contentLoaded = true;
+
             });
         } else {
             this.contentLoaded = true;
         }
 
-
+        this.createRules();
     }
 
+    createRules() {
+        if (this.elementoRUP.rules?.length > 0) {
+            const registros = (this.registro.registros || []);
+            registros.forEach(item => {
+                this.conceptObserverService.observe({ concepto: item.concepto } as any).subscribe(value => {
+                    this.addFact(item.concepto.conceptId, value.valor);
+                });
+            });
+
+            this.onRule('set-value').subscribe(evento => {
+                const { params } = evento;
+                this.conceptObserverService.notify(params.target, { valor: params.valor } as any);
+            });
+
+        }
+    }
 
 }
