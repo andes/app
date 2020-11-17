@@ -1,49 +1,48 @@
-<ng-container class="mb-3">
-    <table class="table table-striped">
-        <tbody>
-            <tr *ngFor="let item of itemsHistorial">
-                <td *ngIf="item.createdBy">
-                    <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
-                    <br />
-                    <span *ngIf="item.estado">
-                        Pasa a <b>{{ item.estado }}</b> por <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
-                            {{ item.createdBy.organizacion.nombre }}</b>
-                    </span>
-                    <span *ngIf="!item.estado">
-                        <b>{{ item.createdBy.nombreCompleto }}</b> de <b>
-                            {{ item.createdBy.organizacion.nombre }}</b>
-                    </span>
-                    <ng-container *ngIf="item.organizacionDestino">
-                        <br />
-                        <b>Destino:</b> {{ item.organizacionDestino.nombre }}
-                    </ng-container>
-                    <ng-container *ngIf='item.observacion'>
-                        <br />
-                        <b>OBSERVACIONES: </b>
-                        {{ item.observacion }}
-                    </ng-container>
-                    <plex-grid type="full" *ngIf="item.adjuntos?.length > 0" cols="1">
-                        <div class="image-container" *ngIf="item.adjuntos && fileToken">
-                            <ng-container *ngFor="let doc of this.item.adjuntos; let i = index">
-                                <plex-visualizador [files]="adjuntos[item.id]" #visualizador></plex-visualizador>
-                                <div class="image hover">
-                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
-                                         (click)="visualizador.open(i)">
-                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                       class="adjunto" (click)="visualizador.open(i)">
-                                        {{ doc.ext }}
-                                    </a>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </plex-grid>
-                </td>
-                <td *ngIf="item.createdBy">
-                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" type="danger"
-                                 size="sm" icon="trash-can" (click)="eliminarNota(item)">
-                    </plex-button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</ng-container>
+<plex-accordion>
+    <plex-panel *ngFor="let item of itemsHistorial">
+        <div plex-accordion-title justify>
+            <section *ngIf="item.createdBy">
+                <plex-badge type="info" class="mr-4">
+                    {{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}
+                </plex-badge>
+                <plex-label *ngIf="item.estado" titulo="Pasa a {{ item.estado }} por"
+                            subtitulo="{{ item.createdBy.nombreCompleto }} de {{ item.createdBy.organizacion.nombre }}">
+                </plex-label>
+                <plex-label *ngIf="!item.estado" titulo="Nota sumada por"
+                            subtitulo="{{ item.createdBy.nombreCompleto }} de {{ item.createdBy.organizacion.nombre }}">
+                </plex-label>
+                <plex-label *ngIf="item.observacion" titulo="Observaciones" subtitulo="
+                {{ item.observacion }}">
+                </plex-label>
+                <plex-label *ngIf="item.organizacionDestino" titulo="Destino"
+                            subtitulo="{{ item.organizacionDestino.nombre }}">
+                </plex-label>
+            </section>
+            <section *ngIf="item.createdBy">
+                <plex-badge type="info" *ngIf="item.adjuntos?.length > 0" title="Tiene adjuntos">
+                    <plex-icon name="file-multiple"></plex-icon>
+                </plex-badge>
+                <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" type="danger"
+                             size="sm" icon="trash-can" (click)="$event.stopPropagation();eliminarNota(item)">
+                </plex-button>
+            </section>
+        </div>
+        <plex-grid type="full" *ngIf="item.adjuntos?.length > 0" cols="1">
+            <div class="image-container" *ngIf="item.adjuntos && fileToken">
+                <ng-container *ngFor="let doc of this.item.adjuntos; let i = index">
+                    <plex-visualizador [files]="adjuntos[item.id]" #visualizador></plex-visualizador>
+                    <div class="image hover">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                           (click)="visualizador.open(i)">
+                            {{ doc.ext }}
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+        </plex-grid>
+        <plex-badge *ngIf="!item.adjuntos || item.adjuntos.length === 0" type="info" size="block"> No tiene archivos
+            adjuntos
+        </plex-badge>
+    </plex-panel>
+</plex-accordion>
