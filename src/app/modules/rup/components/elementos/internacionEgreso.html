@@ -42,7 +42,7 @@
     </div>
     <!-- Causa externa -->
     <fieldset>
-        <legend *ngIf="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" class="small">Causa Externa</legend>
+        <legend *ngIf="registro.valor.InformeEgreso?.causaExterna?.comoSeProdujo" class="small">Causa Externa</legend>
         <div class="row" *ngIf="registro.valor.InformeEgreso.causaExterna">
             <div class="col" *ngIf="registro.valor.InformeEgreso.causaExterna.comoSeProdujo">
                 <b>Como se produjo</b>
