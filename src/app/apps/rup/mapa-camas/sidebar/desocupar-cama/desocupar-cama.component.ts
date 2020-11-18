@@ -5,6 +5,7 @@ import { Subscription, combineLatest, Observable, of } from 'rxjs';
 import { switchMap, map, switchMapTo } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-desocupar-cama',
@@ -24,14 +25,12 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public fechaMin;
     public fechaMax = moment().toDate();
     public mostrar;
-    public permisoMovimiento = false;
-    public permisoEgreso = false;
 
 
     // Constructor
     constructor(
-        private auth: Auth,
         private mapaCamasService: MapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
     ngOnDestroy() {
@@ -50,9 +49,6 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const HOY = moment().toDate();
-
-        this.permisoMovimiento = this.auth.check('internacion:movimientos');
-        this.permisoEgreso = this.auth.check('internacion:egreso');
 
         this.historial$ = this.mapaCamasService.fecha2.pipe(
             switchMap((fecha) => {

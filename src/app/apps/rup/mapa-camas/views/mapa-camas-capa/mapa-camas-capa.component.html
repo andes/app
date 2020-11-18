@@ -9,14 +9,14 @@
                              type="primary" (click)="verListadoInternacion()">
                 </plex-button>
                 <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisoCenso" size="sm" label="VER CENSO" type="primary"
-                               class="d-inline-block" [right]="true" [items]="itemsCensoDropdown">
+                               class="d-inline-block" [right]="true" [items]="itemsDropdown">
                 </plex-dropdown>
             </plex-title>
 
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
-                <plex-button *ngIf="permisoIngreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
@@ -110,7 +110,7 @@
                             <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama"
                                 [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
-                                [permisoIngreso]="permisoIngreso" [permisoBloqueo]="permisoBloqueo"
+                                [permisoIngreso]="permisosMapaCamasService.ingreso" [permisoBloqueo]="permisosMapaCamasService.bloqueo"
                                 (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
                                 [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
                             </tr>

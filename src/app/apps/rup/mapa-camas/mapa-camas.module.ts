@@ -54,6 +54,7 @@ import { ItemInconsistenciaComponent } from './views/integridad/item-inconsisten
 import { IntegridadService } from './views/integridad/integridad.service';
 import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
+import { PermisosMapaCamasService } from './services/permisos-mapa-camas.service';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -97,7 +98,8 @@ export const INTERNACION_PROVIDERS = [
     ListadoInternacionService,
     SalaComunService,
     ScrollDispatcher,
-    IntegridadService
+    IntegridadService,
+    PermisosMapaCamasService,
 ];
 
 @NgModule({

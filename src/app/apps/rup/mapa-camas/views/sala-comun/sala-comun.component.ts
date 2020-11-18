@@ -12,6 +12,7 @@ import { cache } from '@andes/shared';
 import { map, pluck } from 'rxjs/operators';
 import { SnomedExpression } from '../../../../mitos';
 import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-sala-comun',
@@ -48,6 +49,7 @@ export class SalaComunComponent implements OnInit {
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
         private salaComunService: SalaComunService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
     ngOnInit() {
@@ -83,17 +85,17 @@ export class SalaComunComponent implements OnInit {
     getSala() {
         const id = this.route.snapshot.params.id;
         if (id) {
-            if (!this.auth.check('internacion:sala:edit')) {
+            if (!this.permisosMapaCamasService.salaEdit) {
                 this.puedeEditar = false;
             }
-            if (this.auth.check('internacion:sala:delete')) {
+            if (this.permisosMapaCamasService.salaDelete) {
                 this.puedeEliminar = true;
             }
             this.salaComunService.get(id).subscribe(salaComun => {
                 this.salaComun = salaComun;
             });
         } else {
-            if (!this.auth.check('internacion:sala:create')) {
+            if (!this.permisosMapaCamasService.salaCreate) {
                 this.puedeEditar = false;
             }
             this.salaComun.capacidad = null;

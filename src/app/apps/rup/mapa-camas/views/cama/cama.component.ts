@@ -13,6 +13,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 import { map, pluck } from 'rxjs/operators';
 import { cache } from '@andes/shared';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-cama',
@@ -43,7 +44,6 @@ export class CamaMainComponent implements OnInit {
         sectores: null,
         esCensable: null
     };
-    public permisoBaja = this.auth.check('internacion:cama:baja');
     public infoCama = {};
     public capas = [
         'estadistica',
@@ -62,6 +62,7 @@ export class CamaMainComponent implements OnInit {
         private camasHTTP: MapaCamasHTTP,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private location: Location,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
 
     }
@@ -80,7 +81,7 @@ export class CamaMainComponent implements OnInit {
 
         this.getOrganizacion();
         this.getCama();
-        if (this.permisoBaja) {
+        if (this.permisosMapaCamasService.camaBaja) {
             this.maquinaEstadosHTTP.get(this.ambito, undefined, this.auth.organizacion.id).subscribe(maquinaEstados => {
                 maquinaEstados.forEach(mq => {
                     if (!this.infoCama[mq.capa]) {
@@ -108,7 +109,7 @@ export class CamaMainComponent implements OnInit {
     getCama() {
         const id = this.route.snapshot.params.id;
         if (id) {
-            if (!this.auth.check('internacion:cama:edit')) {
+            if (!this.permisosMapaCamasService.camaEdit) {
                 this.puedeEditar = false;
             }
             const snapshotRequests = this.capas.map(capa => {
