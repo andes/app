@@ -470,7 +470,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     defualtDiagnosticoPrestacion() {
         let count = 0;
         let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto', 'fármaco de uso clínico'].indexOf(elemento.concepto.semanticTag) >= 0);
-        if (items.length === 1) {
+        if (items.length === 1 && this.elementoRUP.requiereDiagnosticoPrincipal) {
             items[0].esDiagnosticoPrincipal = true;
         }
     }
