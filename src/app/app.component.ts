@@ -121,7 +121,7 @@ export class AppComponent {
             });
         }
         this.modulos$ = this.modulosService.search({ activo: true }).pipe(
-            cacheStorage('modulos')
+            cacheStorage('modulos-v1')
         );
 
         this.modulos$.subscribe(registros => {
