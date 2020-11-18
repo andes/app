@@ -36,7 +36,7 @@ export class ExportarHudsComponent implements OnInit {
         private motivoAccesoService: ModalMotivoAccesoHudsService) { }
 
     ngOnInit(): void {
-        if (!this.auth.check('visualizacionInformacion:exportarHuds')) {
+        if (!this.auth.check('huds:exportarHuds')) {
             this.router.navigate(['inicio']);
         } else {
             this.plex.updateTitle([
