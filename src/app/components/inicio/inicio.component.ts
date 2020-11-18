@@ -23,6 +23,7 @@ export class InicioComponent implements AfterViewInit {
     public secciones: any = [];
     public novedades: any[] = [];
     public modulosUsuario: any[] = [];
+    public editarModulos = false;
 
 
     constructor(
@@ -192,4 +193,10 @@ export class InicioComponent implements AfterViewInit {
 
     }
 
+    toggleEditarModulos() {
+        this.editarModulos = !this.editarModulos;
+    }
+    get getEditarModulos() {
+        return this.editarModulos;
+    }
 }

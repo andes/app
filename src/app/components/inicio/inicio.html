@@ -29,7 +29,50 @@
         <hr>
         <main *ngIf="!denied && !loading" responsive cdkDropListGroup>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
+
+            <!-- MÓDULOS PRINCIPALES -->
             <div class="modulos">
+                <!-- MIS MÓDULOS Y SECCIONES -->
+                <div class="modulo usuarios">
+                    <div class="principal">
+                        <b class="titulo" justify="start">
+                            <!-- <plex-icon type="warning" size="lg" name="chevron-double-right"></plex-icon> -->
+                            <span>Mis Módulos</span>
+                            <plex-button *ngIf="!getEditarModulos" type="link" size="md" icon="pencil"
+                                         (click)="toggleEditarModulos()" tooltip="Editar 'Mis Módulos'">
+                            </plex-button>
+                            <plex-button *ngIf="getEditarModulos" type="link" size="md" icon="tilde"
+                                         (click)="toggleEditarModulos()" tooltip="Finalizar edición">
+                            </plex-button>
+                        </b>
+                        <div class="descripcion">Acceso rápido a módulos frecuentes</div>
+                    </div>
+                    <div *ngIf="editarModulos && modulosUsuario?.length === 0" class="sin-modulos-usuario">
+                        Podés arrastrar módulos dentro de este recuadro para tener un acceso más rápido a los más
+                        frecuentes
+                    </div>
+                    <div [class.position-absolute]="modulosUsuario?.length === 0"
+                         class="submodulos usuario drop d-flex align-items-start" cdkDropList
+                         [cdkDropListDisabled]="!getEditarModulos" [cdkDropListData]="modulosUsuario"
+                         (cdkDropListDropped)="drop($event)">
+                        <ng-container *ngFor="let submodulo of modulosUsuario; let k = index">
+                            <span cdkDragBoundary=".plex-box-content">
+                                <a cdkDrag href="javascript:void();" *ngIf="submodulo.activo"
+                                   class="submodulo {{submodulo.class}} hover" [style.background]="submodulo.color"
+                                   (click)="redirect(submodulo)">
+                                    <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
+                                    <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                                </a>
+                                <plex-icon *ngIf="getEditarModulos" type="light" size="md" name="close"
+                                           (click)="removeItem(k)" tooltip="Quitar">
+                                </plex-icon>
+                            </span>
+                            <a href="javascript:void();" class="custom-placeholder seccion" *cdkDragPlaceholder>
+                            </a>
+                        </ng-container>
+                    </div>
+                </div>
+
                 <ng-container *ngFor="let modulo of modulos; let i = index">
 
                     <!-- Módulo principal -->
@@ -97,8 +140,9 @@
                             </plex-icon>
                         </div>
                     </div>
-                    <div class="submodulos drop d-flex align-items-start" cdkDropList [cdkDropListData]="modulosUsuario"
-                         (cdkDropListDropped)="drop($event)">
+                    <div class="submodulos drop d-flex align-items-start" cdkDropList
+                         [cdkDropListDisabled]="!getEditarModulos" [cdkDropListData]="modulos[i].submodulos"
+                         (cdkDropListDropped)="dropBack($event)" cdkDropListSortingDisabled>
                         <ng-container *ngFor="let submodulo of modulosUsuario">
                             <span cdkDragBoundary=".plex-box-content">
                                 <a cdkDrag href="javascript:void();" *ngIf="submodulo.activo"
@@ -107,18 +151,22 @@
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
                                 </a>
-                            </span>
-                            <a href="javascript:void();" class="custom-placeholder seccion" *cdkDragPlaceholder>
-                            </a>
                         </ng-container>
                     </div>
+
                 </div>
+                </ng-container>
+
+
             </div>
-            <div class="secciones" cdkDropList [cdkDropListData]="secciones">
+
+            <!-- SECCIONES -->
+            <div class="secciones" cdkDropList [cdkDropListData]="secciones" (cdkDropListDropped)="dropBack($event)"
+                 cdkDropListSortingDisabled [cdkDropListDisabled]="!getEditarModulos">
                 <ng-container *ngFor="let seccion of secciones">
                     <div class="seccion">
-                        <div cdkDrag class="principal hover" [style.background]="seccion.color"
-                             (click)="redirect(seccion)">
+                        <div cdkDrag cdkDragDisabled="getEditarModulos" class="principal hover"
+                             [style.background]="seccion.color" (click)="redirect(seccion)">
                             <div class="band"></div>
                             <plex-icon class="main" [name]="seccion.icono" type="light" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" type="light" size="lg"></plex-icon>

@@ -65,26 +65,26 @@ main {
         color: var(--nav-bar-color);
     }
 }
-
-.modulos {
-    .cdk-drag {
-        // width: 70px;
-        // height: 70px;
-        z-index: 1;
-        .cdk-drag-handle {
+.submodulos.usuario {
+    span {
+        position: relative;
+        plex-icon[name="close"] {
+            cursor: pointer;
             opacity: 0;
             position: absolute;
+            top: 0px;
+            right: 5px;
+            z-index: 1;
             color: white;
-            top: 2px;
-            right: 2px;
         }
         &:hover {
-            .cdk-drag-handle {
+            plex-icon[name="close"] {
                 opacity: 1;
             }
         }
     }
-
+}
+.modulos {
     width: 73vw;
     display: flex;
     justify-content: flex-start;
@@ -102,7 +102,7 @@ main {
 
         .principal {
             width: 220px;
-            height: 62px;
+            height: 52px;
             margin-bottom: 7px;
 
             .titulo {
@@ -117,9 +117,9 @@ main {
         }
 
         .submodulos {
-            width: 265px;
             height: 145px;
-            // flex-wrap: wrap;
+            width: 250px;
+            flex-wrap: wrap;
             justify-content: flex-start;
             .mini {
                 width: 60px;
@@ -130,18 +130,18 @@ main {
         }
 
         opacity: 0;
-        @for $child from 1 through 10 {
-            &:nth-child(#{$child}) {
-                animation: submodulos #{$child/2}s ease-in-out 0.15s 1 forwards;
-            }
-        }
+        // @for $child from 1 through 10 {
+        // &:nth-child(#{$child}) {
+        animation: submodulos 0.5s ease-in-out 0.15s 1 forwards;
+        // }
+        // }
 
         a.submodulo {
             cursor: pointer;
             box-sizing: content-box;
             position: relative;
-            width: 70px;
-            height: 70px;
+            width: 70px !important;
+            height: 70px !important;
             border-radius: 0;
             color: white;
 
@@ -195,44 +195,14 @@ main {
     }
 }
 
-.custom-placeholder {
-    box-sizing: content-box;
-    background: #ccc;
-    border: dashed 3px #999;
-    min-height: 60px;
-    width: 70px !important;
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-
-    cursor: pointer;
-    box-sizing: content-box;
-    position: relative;
+.cdk-drag-preview,
+.cdk-drag-placeholder {
     width: 70px !important;
     height: 70px !important;
-    border-radius: 0;
-    color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-    text-align: center;
-    font-size: 0.75rem;
-
-    box-shadow: 4px 2px 6px #aaa;
-    margin: 0 5px 5px 0;
-    padding-top: 5px;
-
-    background: currentColor;
-    border: 2px dashed #cccccc;
-}
-
-.cdk-drag-preview {
-    cursor: pointer;
     box-sizing: content-box;
+
+    cursor: pointer;
     position: relative;
-    width: 70px !important;
-    height: 70px !important;
     border-radius: 0;
     color: white;
 
@@ -266,7 +236,7 @@ main {
         cursor: pointer;
     }
     opacity: 0;
-    animation: seccion 0.25s ease-in-out 1.15s 1 forwards;
+    animation: seccion 0.25s ease-in-out 0.75s 1 forwards;
 }
 
 a.seccion {
@@ -277,21 +247,6 @@ a.seccion {
     align-items: center;
 
     margin-bottom: 1.1rem;
-
-    // opacity: 0;
-
-    // @for $child from 1 through 20 {
-    //     &:nth-child(#{$child}) {
-    //         animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
-    //     }
-    // }
-
-    &:visited,
-    &:hover,
-    &:focus {
-        text-decoration: none;
-        color: rgb(56, 69, 85);
-    }
 
     .principal .band {
         width: 4px;
@@ -408,6 +363,57 @@ a.seccion {
 
     &:hover {
         box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.sin-modulos-usuario {
+    box-sizing: content-box;
+    width: 192px;
+    height: 65px;
+    border: 2px dotted #aaa;
+    border-radius: 5px;
+    padding: 0.25rem;
+
+    color: #777;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+.usuarios {
+    height: auto !important;
+    .position-absolute {
+        position: absolute;
+        top: 60px;
+        height: 80px !important;
+        width: 204px !important;
+    }
+
+    .usuario {
+        span {
+            display: flex;
+        }
+        .principal {
+            cursor: pointer;
+            box-sizing: content-box;
+            position: relative;
+            width: 70px !important;
+            height: 70px !important;
+            border-radius: 0;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+
+            box-shadow: 4px 2px 6px #aaa;
+            margin: 0 5px 5px 0;
+            padding-top: 5px;
+        }
     }
 }
 
