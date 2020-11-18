@@ -8,30 +8,30 @@ import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-men
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
-import { IntegridadCamasComponent } from './views/integridad/integridad-camas.component';
 
 export const INTERNACION_ROUTES = [
-    { path: 'mapa-camas', component: MapaCamasMainComponent },
 
-    { path: 'mapa-camas/:capa', component: MapaCamasCapaComponent },
+    { path: ':ambito/cama/:id', component: CamaMainComponent },
 
-    { path: 'cama/:id', component: CamaMainComponent },
+    { path: ':ambito/cama', component: CamaMainComponent },
 
-    { path: 'cama', component: CamaMainComponent },
+    { path: ':ambito/censo/diario', component: CensosDiariosComponent },
 
-    { path: 'censo/diario', component: CensosDiariosComponent },
-
-    { path: 'censo/mensual', component: CensosMensualesComponent },
-
-    { path: 'listado-internacion', component: InternacionListadoComponent },
+    { path: ':ambito/censo/mensual', component: CensosMensualesComponent },
 
     { path: ':ambito/:capa/lista-espera', component: InternacionListaEsperaComponent },
 
-    { path: 'sala-comun', component: SalaComunComponent },
+    { path: ':ambito/sala-comun', component: SalaComunComponent },
 
-    { path: 'sala-comun/:id', component: SalaComunComponent },
+    { path: ':ambito/sala-comun/:id', component: SalaComunComponent },
 
-    { path: '', redirectTo: 'mapa-camas', pathMatch: 'full' }
+    { path: 'listado-internacion', component: InternacionListadoComponent },
+
+    { path: ':ambito', component: MapaCamasMainComponent },
+
+    { path: ':ambito/:capa', component: MapaCamasCapaComponent },
+
+    { path: '', redirectTo: 'internacion', pathMatch: 'full' }
 
 ];
 

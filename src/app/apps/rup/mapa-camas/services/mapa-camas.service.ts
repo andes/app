@@ -63,7 +63,7 @@ export class MapaCamasService {
 
     public mainView = new BehaviorSubject<any>('mapa-camas');
 
-    public ambito = 'internacion';
+    public ambito;
     public capa;
     public fecha: Date;
     public permisos: string[];

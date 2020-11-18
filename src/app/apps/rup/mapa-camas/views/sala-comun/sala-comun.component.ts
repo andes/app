@@ -20,6 +20,7 @@ import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
 
 export class SalaComunComponent implements OnInit {
     public expr = SnomedExpression;
+    public ambito: string;
 
     public sectores$: Observable<any[]>;
     public mapaSectores$: Observable<any[]>;
@@ -50,11 +51,13 @@ export class SalaComunComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.ambito = this.route.snapshot.paramMap.get('ambito');
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
         }, {
-            name: 'Internacion'
+            name: this.ambito
         }, {
             name: 'Sala Comun'
         }]);

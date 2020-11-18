@@ -168,7 +168,7 @@ const appRoutes: Routes = [
     // Turnero
     { path: 'pantallas', loadChildren: () => import('./apps/turnero/turnero.module').then(m => m.TurneroModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-    { path: 'internacion', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'mapa-camas', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: 'novedades/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

@@ -67,12 +67,13 @@ export class CamaMainComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.ambito = this.route.snapshot.paramMap.get('ambito');
 
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
         }, {
-            name: 'Internacion'
+            name: this.ambito
         }, {
             name: 'Cama'
         }]);
@@ -173,7 +174,7 @@ export class CamaMainComponent implements OnInit {
                 () => {
                     this.disabled = false;
                     this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                    this.router.navigate(['/internacion/mapa-camas']);
+                    this.router.navigate([`/mapa-camas/${this.ambito}`]);
                 }
             );
         } else {
@@ -184,7 +185,7 @@ export class CamaMainComponent implements OnInit {
             this.guardarCambios(dtoCama, null, this.fecha).subscribe(() => {
                 this.disabled = false;
                 this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                this.router.navigate(['/internacion/mapa-camas']);
+                this.router.navigate([`/mapa-camas/${this.ambito}`]);
             }, () => {
                 this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
                 this.disabled = false;
@@ -220,7 +221,7 @@ export class CamaMainComponent implements OnInit {
                     () => {
                         this.disabled = false;
                         this.plex.info('success', 'La cama fue dada de baja', 'Baja exitosa!');
-                        this.router.navigate(['/internacion/mapa-camas']);
+                        this.router.navigate([`/mapa-camas/${this.ambito}`]);
                     }
                 );
             }

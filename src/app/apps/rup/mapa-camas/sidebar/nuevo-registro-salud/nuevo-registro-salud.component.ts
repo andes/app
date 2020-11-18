@@ -51,7 +51,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
                     );
                 })
             ).subscribe((prestacion) => {
-                this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: '/internacion/mapa-camas' });
+                this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/${this.mapaCamasService.ambito}` });
                 this.router.navigate(['rup/ejecucion', prestacion.id]);
             });
         }
@@ -60,7 +60,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     crearPrestacion(cama: ISnapshot, concepto, fecha: Date) {
         const nuevaPrestacion = this.prestacionService.inicializarPrestacion(
-            cama.paciente, concepto, 'ejecucion', 'internacion', fecha
+            cama.paciente, concepto, 'ejecucion', this.mapaCamasService.ambito, fecha
         );
         nuevaPrestacion.trackId = cama.idInternacion;
         return this.prestacionService.post(nuevaPrestacion);

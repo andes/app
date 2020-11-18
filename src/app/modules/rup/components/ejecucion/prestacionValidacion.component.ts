@@ -413,7 +413,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             if (ruta) {
                 ruteo = ruta;
             } else {
-                ruteo = '/internacion/mapa-camas';
+                ruteo = '/mapa-camas';
             }
         }
         this.router.navigate([ruteo]);
