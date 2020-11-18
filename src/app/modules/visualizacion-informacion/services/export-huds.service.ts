@@ -4,7 +4,7 @@ import { Server, saveAs } from '@andes/shared';
 
 @Injectable()
 export class ExportHudsService {
-    private exportHudsUrl = '/modules/descargas/export-huds/exportHuds';
+    private exportHudsUrl = '/modules/huds/export';
 
     constructor(private server: Server) { }
 
