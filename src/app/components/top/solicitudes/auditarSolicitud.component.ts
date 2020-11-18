@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { ReglaService } from '../../../services/top/reglas.service';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 
 @Component({
     selector: 'auditar-solicitud',
@@ -13,15 +14,8 @@ import { ReglaService } from '../../../services/top/reglas.service';
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class AuditarSolicitudComponent implements OnInit {
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
 
     prestacionSeleccionada: any;
     @Input('prestacionSeleccionada')

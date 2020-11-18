@@ -4,6 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { isUndefined } from 'util';
+import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',
@@ -15,15 +16,8 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @Input() parametroRegistro;
 
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
-    ];
+    imagenes = IMAGENES_EXT;
+    extensions = FILE_EXT;
 
     adjunto: any;
     loading = false;

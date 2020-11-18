@@ -1,7 +1,6 @@
 <plex-options [items]="items" (activated)="cambiarOpcion($event)"></plex-options>
 <div *ngIf="mostrar === 'solicitud'" class="mt-3">
-    <paciente-detalle [paciente]="prestacionSeleccionada.paciente" reload="true" orientacion="horizontal"
-                      [fields]="pacienteFields">
+    <paciente-detalle [paciente]="prestacionSeleccionada.paciente" reload="true" orientacion="horizontal">
     </paciente-detalle>
     <plex-title size="sm" titulo="Solicitud">
         <plex-badge type="warning mr-1">
@@ -105,24 +104,9 @@
             </div>
         </div>
     </div>
-    <div class="row mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
-        <div class="col-12">
-            <plex-title size="sm" titulo="Archivos adjuntos">
-            </plex-title>
-            <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                <ng-container
-                              *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                    <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
-                    <div class="image hover">
-                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
-                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                           (click)="visualizador.open(i)">
-                            {{ doc.ext }}
-                        </a>
-                    </div>
-                </ng-container>
-            </div>
-        </div>
+    <div class="mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
+        <plex-title size="sm" titulo="Archivo Adjunto"></plex-title>
+        <shared-galeria-archivos [files]="fotos" [readonly]="true"></shared-galeria-archivos>
     </div>
 </div>
 <div *ngIf="mostrar === 'historial'" class="mt-3">
