@@ -35,7 +35,7 @@ export class ComPuntoInicioComponent implements OnInit {
     organizacionDestino: IOrganizacion;
     paciente: any;
     estado: any;
-    gravedad: any;
+    prioridad: any;
     tabIndex = 0;
     public loading = false;
     public estados = [
@@ -48,7 +48,7 @@ export class ComPuntoInicioComponent implements OnInit {
         { id: 'finalizada', nombre: 'FINALIZADA' },
         { id: 'encomendada', nombre: 'ENCOMENDADA' }
     ];
-    public opcionesGravedad = [
+    public opcionesPrioridad = [
         { id: 'baja', nombre: 'baja' },
         { id: 'media', nombre: 'media' },
         { id: 'alta', nombre: 'alta' }
@@ -109,8 +109,8 @@ export class ComPuntoInicioComponent implements OnInit {
         } else {
             query.estado = ['asignada', 'solicitada', 'inhabilitada', 'habilitada', 'asignada', 'rechazada', 'aceptada', 'encomendada'];
         }
-        if (this.gravedad) {
-            query.gravedad = this.gravedad.id;
+        if (this.prioridad) {
+            query.prioridad = this.prioridad.id;
         }
         if (this.tabIndex === 0) {
             query.organizacionDestino = this.auth.organizacion.id;
@@ -195,7 +195,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionOrigen = null;
             this.organizacionDestino = null;
             this.paciente = null;
-            this.gravedad = null;
+            this.prioridad = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();

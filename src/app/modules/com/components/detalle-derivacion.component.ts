@@ -18,8 +18,8 @@ export class DetalleDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
     public derivacion;
     public reglaSeleccionada;
-    public gravedad;
-    public opcionesGravedad = [
+    public prioridad;
+    public opcionesPrioridad = [
         { id: 'baja', name: 'baja' },
         { id: 'media', name: 'media' },
         { id: 'alta', name: 'alta' }
@@ -148,8 +148,8 @@ export class DetalleDerivacionComponent implements OnInit {
             this.derivacion.historial.push(this.nuevoEstado);
             this.derivacion.estado = this.nuevoEstado.estado;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            if (this.gravedad) {
-                this.derivacion.gravedad = this.gravedad.id;
+            if (this.prioridad) {
+                this.derivacion.prioridad = this.prioridad.id;
             }
             this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
