@@ -127,11 +127,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             this.router.navigate(['/inicio']);
         }
 
-
-        this.permisoIngreso = this.auth.check('internacion:ingreso');
-        this.permisoBloqueo = this.auth.check('internacion:bloqueo');
-        this.permisoCenso = this.auth.check('internacion:censo');
-
         this.mapaCamasService.setView('mapa-camas');
 
         this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {

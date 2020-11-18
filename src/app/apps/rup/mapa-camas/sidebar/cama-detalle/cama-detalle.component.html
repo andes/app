@@ -13,7 +13,7 @@
                     </ng-container>
                 </ng-container>
                 <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
-                             *ngIf="permisosMapaCamasService.camaEdit">
+                             *ngIf="(cama.sala) ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit">
                 </plex-button>
                 <plex-button title="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>

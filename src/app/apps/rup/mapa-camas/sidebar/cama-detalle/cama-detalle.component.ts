@@ -70,7 +70,7 @@ export class CamaDetalleComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private mapaCamasHTTP: MapaCamasHTTP,
         private prestacionesService: PrestacionesService,
-        private permisosMapaCamasService: PermisosMapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
     }
 
@@ -122,7 +122,11 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     goTo(cama) {
-        this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${cama.idCama}`]);
+        if (cama.sala) {
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/sala-comun/${cama.id}`]);
+        } else {
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${cama.id}`]);
+        }
     }
 
     accion(relacion) {

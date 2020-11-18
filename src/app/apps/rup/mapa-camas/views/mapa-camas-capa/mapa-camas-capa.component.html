@@ -8,7 +8,7 @@
                 <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN"
                              type="primary" (click)="verListadoInternacion()">
                 </plex-button>
-                <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisoCenso" size="sm" label="VER CENSO" type="primary"
+                <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo" size="sm" label="VER CENSO" type="primary"
                                class="d-inline-block" [right]="true" [items]="itemsDropdown">
                 </plex-dropdown>
             </plex-title>
