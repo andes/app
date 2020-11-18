@@ -1,3 +1,27 @@
+# [5.22.0](https://github.com/andes/app/compare/v5.21.0...v5.22.0) (2020-11-18)
+
+
+### Bug Fixes
+
+* **rup:** cannot read comoSeProdujo of undefined ([#2046](https://github.com/andes/app/issues/2046)) ([a6a1897](https://github.com/andes/app/commit/a6a1897f44b3e4a945039800941dd7f073e5b21c))
+* **rup:** error en fecha ([#2035](https://github.com/andes/app/issues/2035)) ([fadb382](https://github.com/andes/app/commit/fadb382da34152b15ff4a55b7a674c24b3e34ba0))
+* **rup:** vista-prestacion se visualizan mal las relaciones y diagnostico ([202b680](https://github.com/andes/app/commit/202b6804d0ce4be1765f8c75837161f85266beed))
+
+
+### Features
+
+* **CIT:** bagde fuera de agenda ([#1966](https://github.com/andes/app/issues/1966)) ([7c6cb90](https://github.com/andes/app/commit/7c6cb90e66b69b95944a5a62e2e2ff6138ec26e6))
+* **com:** impresión de comprobante ([#2039](https://github.com/andes/app/issues/2039)) ([64826bd](https://github.com/andes/app/commit/64826bd570e1ca5f3a88a898ee6eab2c792b3833))
+* **com:** permitir sumar nota a origen/destino ([#2031](https://github.com/andes/app/issues/2031)) ([09b8aa3](https://github.com/andes/app/commit/09b8aa31490f673d9bb32aca6db4da7d1c10aba6))
+* **com:** sumar gravedad al habilitar una derivación desde el com ([#2025](https://github.com/andes/app/issues/2025)) ([568002f](https://github.com/andes/app/commit/568002fb270b516b9cfcc32d8f47dbd04a594916))
+* **inicio:** mejoras de layout ([#2018](https://github.com/andes/app/issues/2018)) ([73dfcb1](https://github.com/andes/app/commit/73dfcb1245c0061d2617e74e830029dd737e8f36))
+* **movimientos:** deshabilita el boton para evitar el doble click ([#2029](https://github.com/andes/app/issues/2029)) ([50f7ce9](https://github.com/andes/app/commit/50f7ce9fbc181011cd686c41a62efd74d033382c))
+* **rup:** complete Subject before delete ([#2036](https://github.com/andes/app/issues/2036)) ([f39d462](https://github.com/andes/app/commit/f39d462704de16709cf5ebd2d8c829648c4431c9))
+* **rup:** componente receta médica ([#1905](https://github.com/andes/app/issues/1905)) ([8f1266e](https://github.com/andes/app/commit/8f1266ec91be5be8350aeda4b540086a88f3601b))
+* **rup:** enviar por email hallazgo/trastorno ([#2037](https://github.com/andes/app/issues/2037)) ([12c8282](https://github.com/andes/app/commit/12c8282eff3bb9351cb6703a4d94efa73bf786a5))
+* **top:** uso de paciente detalle en detalle solicitud ([#2015](https://github.com/andes/app/issues/2015)) ([c184354](https://github.com/andes/app/commit/c18435440f15a2389667918e62f7c03a8cf26091))
+* **TOP:** remueve referidas de busqueda de entrada ([#2041](https://github.com/andes/app/issues/2041)) ([26f41bd](https://github.com/andes/app/commit/26f41bd109df4dcafed3bf7d79a9effdf194faab))
+
 # [5.21.0](https://github.com/andes/app/compare/v5.20.0...v5.21.0) (2020-11-11)
 
 
