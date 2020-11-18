@@ -28,6 +28,12 @@ export class DocumentosService {
         );
     }
 
+    descargarComprobanteDerivacion(params, nombreArchivo: string): Observable<any> {
+        return this.download('comprobanteDerivacion', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
+
     descargarCensoMensual(data, nombreArchivo: string): Observable<any> {
         return this.download('censoMensual', data).pipe(
             saveAs(nombreArchivo, 'pdf')
