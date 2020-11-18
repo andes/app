@@ -1,6 +1,11 @@
-<plex-list height="80%" [striped]="true" (scrolled)="onScroll()">
-    <ng-container *ngFor="let paciente of listado; let pos = index">
+<plex-list height="{{ errorTab ? '85%' : '80%'}}" [striped]="true" (scrolled)="onScroll()">
+    <plex-heading *ngIf="errorTab" [sticky]="true">
+        <b label>Paciente</b>
+        <b label>Edad</b>
+        <b label>Reportado por</b>
+    </plex-heading>
 
+    <ng-container *ngFor="let paciente of listado; let pos = index">
         <plex-item (click)="seleccionar(paciente)" [selected]="paciente.id == seleccionado?.id">
 
             <img [mpiFotoPaciente]="paciente" />
@@ -16,15 +21,15 @@
             <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
             </plex-label>
 
-            <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+            <plex-badge *ngIf="!errorTab && paciente.fechaFallecimiento" type="danger">Fallecido:
                 {{ paciente.fechaFallecimiento | fecha:'utc'}}
             </plex-badge>
 
-            <plex-badge type="{{ paciente.estado === 'validado' ? 'success' : 'warning'}}">
+            <plex-badge *ngIf="!errorTab" type="{{ paciente.estado === 'validado' ? 'success' : 'warning'}}">
                 {{ paciente.estado }}
             </plex-badge>
 
-            <plex-badge type="{{ paciente.activo ? 'primary' : 'danger'}}">
+            <plex-badge *ngIf="!errorTab" type="{{ paciente.activo ? 'primary' : 'danger'}}">
                 {{ paciente.activo ? 'activo' : 'inactivo' }}
             </plex-badge>
 
@@ -38,6 +43,21 @@
             <plex-dropdown #drop *ngIf="!errorTab" class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm"
                            icon="dots-vertical" label="" (onOpen)="setDropDown(paciente, drop)">
             </plex-dropdown>
+
+            <!-- Exclusivo tab reporte de errores -->
+
+            <plex-label *ngIf="errorTab"
+                        titulo="{{ registroReportes[paciente.id][0]?.createdBy.nombreCompleto || 'Sin datos'}}"
+                        subtitulo="{{ registroReportes[paciente.id][0]?.createdBy.organizacion.nombre || ''}}">
+            </plex-label>
+
+            <plex-badge *ngIf="errorTab && !paciente.reportarError" type="success">
+                Corregido
+            </plex-badge>
+
+            <plex-badge *ngIf="errorTab" type="info">
+                {{ registroReportes[paciente.id][0]?.createdAt | fecha:'utc'}}
+            </plex-badge>
 
         </plex-item>
     </ng-container>

@@ -6,8 +6,8 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { VincularPacientesComponent } from './vincular-pacientes.component';
-import { ModalCorreccionPacienteComponent } from './../component/modal-correccion-paciente.component';
 import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBusqueda.service';
+import { ReporteErroresComponent } from './reporte-errores.component';
 
 @Component({
   selector: 'auditoria',
@@ -18,7 +18,7 @@ import { HistorialBusquedaService } from 'src/app/core/mpi/services/historialBus
 export class AuditoriaComponent implements OnInit {
 
   @ViewChild('vincularComponent', null) vincularPacientes: VincularPacientesComponent;
-  @ViewChild('modalCorreccion', null) modalCorreccion: ModalCorreccionPacienteComponent;
+  @ViewChild('erroresComponent', null) erroresComponent: ReporteErroresComponent;
 
   // sidebar
   mainSize = 12;
@@ -36,12 +36,10 @@ export class AuditoriaComponent implements OnInit {
   parametros;
   scrollEnd = false;
   searchSubscription = new Subscription();
-  // reporte de errores
-  pacientesReportados;
-  corregirPaciente: Number = null;
-  showReporteError = false; // se muestra en el sidebar datos del error reportado
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
+  showReporteError = false; // se muestra en el sidebar datos del error reportado
+  listaReportes = []; // historial de reportes del paciente
 
   constructor(
     public auth: Auth,
@@ -59,9 +57,6 @@ export class AuditoriaComponent implements OnInit {
     }
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
-    if (this.permisoEdicion) {
-      this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí
-    }
     this.parametros = {
       skip: 0,
       limit: 10
@@ -69,22 +64,15 @@ export class AuditoriaComponent implements OnInit {
   }
 
 
-  // REPORTE DE ERRORES -----------------------------------------
-
-  // Aquellos pacientes que reportaron errores en sus datos personales
-  getReportados() {
-    const params = { reportarError: true, activo: true };
-    this.pacienteService.getSearch(params).subscribe(resultado => {
-      if (resultado) {
-        this.pacientesReportados = resultado;
-        this.corregirPaciente = null;
-      }
-    });
+  onSelect(paciente: IPaciente): void {
+    this.pacienteSelected = paciente;
+    this.showInSidebar('detallePaciente');
   }
 
-  onSelectReportados(paciente: any): void {
-    if (paciente) {
-      this.pacienteSelected = paciente;
+  onSelectReportado(data: any): void {
+    if (data.paciente) {
+      this.pacienteSelected = data.paciente;
+      this.listaReportes = data.listadoReportes;
       this.showInSidebar('reporteError');
     } else {
       this.pacienteSelected = null;
@@ -92,47 +80,8 @@ export class AuditoriaComponent implements OnInit {
   }
 
   onSelectCorregir() {
-    if (this.permisoEdicion) {
-      this.modalCorreccion.show();
-    } else {
-      this.plex.info('warning', 'Usted no posee permisos para realizar esta acción.');
-    }
+    this.erroresComponent.corregirError();
   }
-
-  savePatient(paciente: IPaciente) {
-    // si el paciente no debe ser modificado (cancelar) entonces es paciente=null
-    if (paciente) {
-      paciente.reportarError = false;
-      paciente.notaError = '';
-      if (!paciente.tipoIdentificacion) {
-        paciente.tipoIdentificacion = null;
-      }
-      this.pacienteService.save(paciente).subscribe((respSave: any) => {
-
-        if (respSave && !respSave.errors) {
-          // Si el matcheo es alto o el dni-sexo está repetido no se permite guardar el paciente
-          if (respSave.macheoAlto && respSave.dniRepetido) {
-            this.plex.info('danger', 'Existen pacientes similares, el paciente no puede ser modificado hasta que sea vinculado');
-          } else {
-            this.pacienteSelected = respSave;
-            this.plex.toast('success', 'Los datos se actualizaron correctamente!');
-          }
-
-        } else {
-          this.plex.toast('danger', 'No es posible actualizar el paciente');
-        }
-        this.closeSidebar();
-        this.getReportados();
-      });
-    }
-  }
-
-
-  onSelect(paciente: any): void {
-    this.pacienteSelected = paciente;
-    this.showInSidebar('detallePaciente');
-  }
-
 
   showInSidebar(opcion: string) {
     switch (opcion) {
@@ -152,7 +101,7 @@ export class AuditoriaComponent implements OnInit {
         this.mainSize = 8;
         break;
       case 'reporteError':
-        this.tituloSidebar = 'Descripción';
+        this.tituloSidebar = 'Detalle Reporte';
         this.showDetallePaciente = false;
         this.showReporteError = true;
         this.mainSize = 8;
