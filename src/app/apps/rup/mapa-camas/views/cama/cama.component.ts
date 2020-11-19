@@ -69,6 +69,7 @@ export class CamaMainComponent implements OnInit {
 
     ngOnInit() {
         this.ambito = this.route.snapshot.paramMap.get('ambito');
+        this.permisosMapaCamasService.setAmbito(this.ambito);
 
         this.plex.updateTitle([{
             route: '/inicio',
