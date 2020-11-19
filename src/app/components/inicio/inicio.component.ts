@@ -23,7 +23,7 @@ export class InicioComponent implements AfterViewInit {
     public secciones: any = [];
     public novedades: any[] = [];
     public modulosUsuario: any[] = [];
-    public editarModulos = false;
+    public editarModulos = true;
 
 
     constructor(

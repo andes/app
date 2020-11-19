@@ -4,7 +4,7 @@ $andes-azul-oscuro: #002838;
 
 header {
     border: 0;
-    margin-top: 1rem;
+    margin-top: 0.3rem;
 
     .marca {
         display: flex;
@@ -37,6 +37,11 @@ header {
     animation: header 0.5s ease-in 0s 1 forwards;
 }
 
+hr.sm {
+    margin-top: 0;
+    margin-bottom: 0.55rem;
+}
+
 header,
 main {
     margin-left: 20px;
@@ -45,6 +50,9 @@ main {
 main {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    // overflow: hidden;
+    // height: 69vh;
 }
 
 .bienvenida {
@@ -118,8 +126,8 @@ main {
 
         .submodulos {
             height: 145px;
-            width: 250px;
-            flex-wrap: wrap;
+            width: 265px;
+            // flex-wrap: wrap;
             justify-content: flex-start;
             .mini {
                 width: 60px;
@@ -130,18 +138,14 @@ main {
         }
 
         opacity: 0;
-        // @for $child from 1 through 10 {
-        // &:nth-child(#{$child}) {
         animation: submodulos 0.5s ease-in-out 0.15s 1 forwards;
-        // }
-        // }
 
         a.submodulo {
             cursor: pointer;
             box-sizing: content-box;
             position: relative;
-            width: 70px !important;
-            height: 70px !important;
+            width: 80px;
+            height: 80px;
             border-radius: 0;
             color: white;
 
@@ -239,7 +243,7 @@ main {
     animation: seccion 0.25s ease-in-out 0.75s 1 forwards;
 }
 
-a.seccion {
+.seccion {
     text-decoration: none;
     color: rgb(56, 69, 85);
     display: flex;
@@ -378,14 +382,30 @@ a.seccion {
     font-size: 12px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 .usuarios {
     height: auto !important;
+
     .position-absolute {
         position: absolute;
         top: 60px;
         height: 80px !important;
         width: 204px !important;
+    }
+
+    .submodulo {
+        // display: flex;
+        // flex-wrap: wrap;
+        &.hover {
+            transition: none !important;
+            &:hover {
+                box-sizing: content-box;
+                width: initial !important;
+                padding: 0.25rem;
+            }
+        }
     }
 
     .usuario {
