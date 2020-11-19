@@ -6,7 +6,10 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 export class IPrestacion {
     id: string;
     trackId: string;
+    unidadOrganizativa: ISnomedConcept;
+    groupId: string;
     elementoRUP: string;
+    inicio: string;
     // Datos principales del paciente
     paciente: {
         // requirido, validar en middleware
@@ -38,6 +41,13 @@ export class IPrestacion {
             apellido: string,
             documento: string
         },
+
+        profesionalOrigen?: {
+            id: string,
+            nombre: string,
+            apellido: string,
+            documento: string
+        }
         // Organizacion desde la que se solicita la prestacion
         organizacion: {
             id: string,
@@ -48,8 +58,11 @@ export class IPrestacion {
         // Registros de la solicitud ... para los planes o prestaciones futuras
         registros: IPrestacionRegistro[],
         organizacionDestino: any,
+        organizacionOrigen: any,
         profesionalesDestino: any[],
-        historial: any[]
+        historial: any[],
+        turneable: boolean;
+        reglaId: string;
     };
 
     // Datos de la ejecución (i.e. realización)
@@ -72,6 +85,8 @@ export class IPrestacion {
     unidadOrganizativa: ISnomedConcept;
     createdAt: Date;
     updatedAt: Date;
+
+    metadata: { key: string, valor: any }[];
 
     /**
      * Recorre la estructura de los elementosRUP asociados y completa el array de registros

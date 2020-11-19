@@ -1,16 +1,19 @@
 
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { cache, Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../apps/mitos';
-import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
 import { Plex } from '@andes/plex';
 import { populateRelaciones } from '../operators/populate-relaciones';
+import { AdjuntosService } from './adjuntos.service';
+import { environment } from 'src/environments/environment';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
+import { Router } from '@angular/router';
 
 
 @Injectable()
@@ -67,9 +70,10 @@ export class PrestacionesService {
         private server: Server,
         private auth: Auth,
         private snomed: SnomedService,
-        private servicioReglas: ReglaService,
         private hudsService: HUDSService,
-        private plex: Plex
+        private plex: Plex,
+        private archivoAdjuntoService: AdjuntosService,
+        private router: Router
     ) {
     }
 
@@ -94,6 +98,11 @@ export class PrestacionesService {
      */
     getSolicitudes(params: any): Observable<IPrestacion[]> {
         return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
+    }
+
+
+    getServicioIntermedios(params: any): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/servicio-intermedio', { params: params, showError: true });
     }
 
     /**
@@ -738,5 +747,39 @@ export class PrestacionesService {
         const esAnterior = moment(fechaTurno).isBefore(new Date(), 'day');
         return esAnterior ? fechaTurno : new Date();
     }
+
+    visualizarImagen(prestacion: IPrestacion) {
+        this.archivoAdjuntoService.token$.subscribe(({ token }) => {
+            const url = `${environment.API}/modules/rup/prestaciones/${prestacion.id}/pacs?token=${token}`;
+            window.open(url, '_blank');
+        });
+    }
+
+
+
+    navegarAEjecucion(prestacion: IPrestacion, turno?: ITurno) {
+        const tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
+        const paciente = prestacion.paciente;
+        const snomedConcept = prestacion.solicitud.tipoPrestacion;
+        if (tieneAccesoHUDS) {
+            this.hudsService.generateHudsToken(
+                this.auth.usuario,
+                this.auth.organizacion,
+                paciente,
+                snomedConcept.term,
+                this.auth.profesional,
+                turno?.id,
+                prestacion.id
+            ).subscribe((husdTokenRes) => {
+                if (husdTokenRes.token) {
+                    window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                    this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                }
+            });
+        } else {
+            this.router.navigate(['rup/ejecucion/', prestacion.id]);
+        }
+    }
+
 
 }

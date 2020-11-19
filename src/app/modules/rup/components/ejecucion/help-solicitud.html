@@ -26,6 +26,18 @@
                 <label>Fecha:</label> {{solicitud.fecha | fecha}}
             </div>
         </div>
+        <div class="row" *ngIf="solicitud.registros?.length > 0">
+            <div class="col-12">
+                <label>Motivo:</label>
+                {{ solicitud.registros[0].valor.solicitudPrestacion.motivo }}
+            </div>
+
+            <div class="col-12">
+                <label>Indicaciones:</label>
+                <span [innerHTML]="solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
+            </div>
+        </div>
+
     </div>
 
 </plex-help>

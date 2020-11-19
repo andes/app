@@ -4,6 +4,11 @@
         <form #form="ngForm" class="h-100">
             <div class="w-100 h-100">
                 <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)" (change)="activeIndex = $event">
+
+                    <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm">
+                        VER IMAGEN
+                    </plex-button>
+
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
                         <plex-help class="text-left" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes"
                                    size="sm">

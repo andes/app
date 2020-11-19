@@ -10,6 +10,7 @@ import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.serv
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -198,6 +199,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     registro.class = 'plan';
                 }
                 break;
+            case 'rup-group':
+                registro = registro.data;
+                registro.class = 'plan';
+                break;
             case 'rup':
                 gtag('huds-open', tipo, registro.prestacion.term, index);
                 registro = registro.data;
@@ -235,17 +240,56 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     listarPrestaciones() {
+
+        function groupBy(prestaciones: IPrestacion[]) {
+            const resultado = [];
+            const diccionario = {};
+
+            prestaciones.forEach(p => {
+                if (p.groupId) {
+                    if (!diccionario[p.groupId]) {
+                        diccionario[p.groupId] = [];
+                    }
+                    diccionario[p.groupId].push(p);
+                } else {
+                    resultado.push(p);
+                }
+            });
+
+            Object.values(diccionario).forEach(dc => resultado.push(dc));
+
+            return resultado;
+
+        }
+
+
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
-            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada').map(p => {
-                const lastState = p.estados[p.estados.length - 1];
-                return {
-                    data: p,
-                    tipo: 'rup',
-                    prestacion: p.solicitud.tipoPrestacion,
-                    profesional: lastState.createdBy.nombreCompleto,
-                    fecha: lastState.createdAt,
-                    estado: lastState.tipo
-                };
+            const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            this.prestaciones = groupBy(validadas).map(p => {
+                if (Array.isArray(p)) {
+                    return {
+                        data: p,
+                        tipo: 'rup-group',
+                        prestacion: p[0].solicitud.tipoPrestacion,
+                        profesional: p[0].estadoActual.createdBy.nombreCompleto,
+                        fecha: p[0].estadoActual.createdAt,
+                        estado: p[0].estadoActual.tipo,
+                        ambito: p[0].solicitud.ambitoOrigen,
+                        organizacion: p[0].solicitud.organizacion.id
+                    };
+                } else {
+                    const lastState = p.estados[p.estados.length - 1];
+                    return {
+                        data: p,
+                        tipo: 'rup',
+                        prestacion: p.solicitud.tipoPrestacion,
+                        profesional: lastState.createdBy.nombreCompleto,
+                        fecha: lastState.createdAt,
+                        estado: lastState.tipo,
+                        ambito: p.solicitud.ambitoOrigen,
+                        organizacion: p.solicitud.organizacion.id
+                    };
+                }
             });
             this.prestacionesCopia = this.prestaciones.slice();
             this.setAmbitoOrigen('ambulatorio');
@@ -312,14 +356,15 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
             this.cdas = registros.map(cda => {
                 cda.id = cda.cda_id;
-                cda['solicitud'] = { ambitoOrigen: 'ambulatorio' };
                 return {
                     data: cda,
                     tipo: 'cda',
                     prestacion: cda.prestacion.snomed,
                     profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
                     fecha: cda.fecha,
-                    estado: 'validada'
+                    estado: 'validada',
+                    ambito: 'ambulatorio',
+                    organizacion: cda.organizacion.id
                 };
             });
             this.prestaciones = this.prestacionesCopia;
@@ -341,7 +386,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     buscarFichasEpidemiologicas() {
 
-        this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe( fichas => {
+        this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe(fichas => {
             if (fichas.length) {
                 const fichasEpidemiologia = fichas.map(f => {
                     f.solicitud = { ambitoOrigen: 'ambulatorio' };
@@ -352,7 +397,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                             term: 'Ficha Epidemiológica'
                         },
                         profesional: f.createdBy.nombreCompleto,
-                        fecha:  f.createdAt,
+                        fecha: f.createdAt,
                         estado: 'validada'
                     };
                 });
@@ -417,20 +462,22 @@ export class HudsBusquedaComponent implements AfterContentInit {
             const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
             this.prestaciones = this.prestaciones.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
         }
+
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
             this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
             this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
+
         if (this.ambitoOrigen) {
-            this.prestaciones = this.prestaciones.filter(p => p.data.solicitud?.ambitoOrigen === this.ambitoOrigen);
+            this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
         }
+
         if (this.organizacionSeleccionada) {
-
-            this.prestaciones = this.prestaciones.filter(p => p.data.ejecucion?.organizacion?.id === this.organizacionSeleccionada.id);
-
+            this.prestaciones = this.prestaciones.filter(p => p.organizacion === this.organizacionSeleccionada.id);
         }
+
         this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
     }
 

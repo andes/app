@@ -73,6 +73,11 @@ export class HUDSService {
                             return i;
                         }
                         break;
+                    case 'rup-group':
+                        if (registro[0].id === _registro[0].id) {
+                            return i;
+                        }
+                        break;
                     case 'rup':
                     case 'cda':
                     case 'solicitud':

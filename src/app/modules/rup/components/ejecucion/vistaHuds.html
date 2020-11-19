@@ -15,7 +15,7 @@
                         </rup-resumenPaciente-dinamico>
                     </plex-tab>
                     <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
-                        <rup-seguimientoPaciente  [paciente]="paciente">
+                        <rup-seguimientoPaciente [paciente]="paciente">
                         </rup-seguimientoPaciente>
                     </plex-tab>
 
@@ -44,6 +44,16 @@
                           [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
                     <vista-prestacion [prestacion]="registro.data" [paciente]="paciente">
                     </vista-prestacion>
+                </plex-tab>
+
+                <plex-tab [allowClose]="true" [label]="registro.data[0].solicitud.tipoPrestacion.term"
+                          [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup-group'">
+
+                    <ng-container *ngFor="let prestacion of registro.data">
+                        <vista-prestacion [prestacion]="prestacion" [paciente]="paciente">
+                        </vista-prestacion>
+                    </ng-container>
+
                 </plex-tab>
 
                 <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"

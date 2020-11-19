@@ -9,9 +9,11 @@ import { RupElement } from '.';
 @RupElement('SolicitudPrestacionDefaultComponent')
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit, AfterViewInit {
 
+    public reglasMatch = [];
+    public reglaSelected = null;
+
     public organizaciones: any[] = [];
     afterInit = false;
-    // public puedeAutocitar: Boolean = false;
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -31,7 +33,19 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 prestacionOrigen: this.prestacion.solicitud.tipoPrestacion.conceptId,
                 prestacionDestino: this.registro.concepto.conceptId
             }).subscribe(reglas => {
-                this.organizaciones = reglas.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
+                this.reglasMatch = reglas;
+                this.organizaciones = reglas.map(elem => {
+                    return {
+                        id: elem.destino.organizacion.id,
+                        nombre: elem.destino.organizacion.nombre
+                    };
+                });
+
+                if (this.organizaciones.length === 1) {
+                    this.registro.valor.solicitudPrestacion.organizacionDestino = this.organizaciones[0];
+                    this.onOrganizacionChange();
+                }
+
             });
         }
 
@@ -47,6 +61,22 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             });
 
         }
+    }
+
+    onOrganizacionChange() {
+        const org = this.registro.valor.solicitudPrestacion.organizacionDestino;
+        this.reglaSelected = this.reglasMatch.find(r => r.destino.organizacion.id === org.id);
+
+        if (this.reglaSelected) {
+            this.reglaSelected.destino.informe = this.reglaSelected.destino.informe || 'none';
+
+            if (this.reglaSelected.destino.informe === 'required') {
+                this.registro.valor.solicitudPrestacion.informe = true;
+            }
+
+            this.registro.valor.solicitudPrestacion.reglaID = this.reglaSelected.id;
+        }
+
     }
 
     isEmpty() {

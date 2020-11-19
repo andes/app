@@ -25,7 +25,6 @@ export class CalendarioDia {
         } else {
             let bloquesPrestacion = [];
             this.turnosDisponibles = 0;
-
             agendas.forEach(unaAgenda => {
                 bloquesPrestacion = unaAgenda.bloques; // para filtrado de agendas/bloques segun prestacion y/o profesional
 
@@ -34,7 +33,7 @@ export class CalendarioDia {
                     bloquesPrestacion = [];
                 }
                 if (filtroPrestacion) {
-                    bloquesPrestacion = bloquesPrestacion.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
+                    bloquesPrestacion = bloquesPrestacion.filter(b => b.tipoPrestaciones.find(tipo => tipo.conceptId === filtroPrestacion.conceptId));
                 }
                 let hayTurnosDisponibles = (bloquesPrestacion.some(b => b.turnos.some(t => t.estado === 'disponible')));
                 this.estadoAgenda = unaAgenda.estado;
@@ -92,7 +91,7 @@ export class CalendarioDia {
                         // Seteamos el contador de turnos disponibles para el calendario
                         if (hayTurnosDisponibles) {
                             bloquesPrestacion.forEach(unBloque => {
-                                if (solicitudPrestacion) {
+                                if (solicitudPrestacion?.inicio !== 'servicio-intermedio') {
                                     if (autocitado) {
                                         this.turnosDisponibles += unBloque.restantesProfesional;
                                     } else {
@@ -107,7 +106,7 @@ export class CalendarioDia {
                         }
                         // Para enmarcar los días correspondientes en el calendario
                         if (unaAgenda.estado === 'disponible' || unaAgenda.estado === 'publicada') {
-                            if (solicitudPrestacion) {
+                            if (solicitudPrestacion?.inicio !== 'servicio-intermedio') {
                                 if (this.gestionDisponibles > 0 && !autocitado) {
                                     this.estado = 'disponible';
                                     hayTurnosDisponibles = true;

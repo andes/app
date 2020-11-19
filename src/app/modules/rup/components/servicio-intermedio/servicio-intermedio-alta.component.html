@@ -1,0 +1,43 @@
+<!-- [TODO] paciente detalle -->
+<paciente-detalle [paciente]="prestacion.paciente" [reload]="true" orientacion="horizontal"></paciente-detalle>
+
+<plex-title titulo="Datos Solicitud" size="sm"> </plex-title>
+<plex-grid size="md" type="full">
+    <plex-label size="md" titulo="Organización" [subtitulo]="prestacion.solicitud.organizacion.nombre"
+                *ngIf="prestacion.solicitud.organizacionOrigen">
+    </plex-label>
+
+    <plex-label size="md" titulo="Profesional" [subtitulo]="prestacion.solicitud.profesionalOrigen | nombre "
+                *ngIf="prestacion.solicitud.profesionalOrigen">
+    </plex-label>
+
+    <plex-label size="md" titulo="Prestación" [subtitulo]="prestacion.solicitud.tipoPrestacionOrigen.term"
+                *ngIf="prestacion.solicitud.tipoPrestacionOrigen">
+    </plex-label>
+</plex-grid>
+
+<plex-title titulo="Datos Solicitud" size="sm"></plex-title>
+<plex-grid size="md" type="full">
+    <plex-label size="md" titulo="Fecha" [subtitulo]="prestacion.solicitud.fecha | fecha">
+    </plex-label>
+
+    <plex-label size="md" titulo="Pedido" [subtitulo]="prestacionSolicitada.term">
+    </plex-label>
+</plex-grid>
+<plex-label size="md" titulo="Motivo" [subtitulo]="prestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo">
+</plex-label>
+<div class="row" *ngIf="prestacion.solicitud.registros?.length > 0">
+    <div class="col-12">
+        <label>Indicaciones</label>
+        <span [innerHTML]="prestacion.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
+    </div>
+</div>
+<plex-select *ngIf="regla?.destino.agendas" [(ngModel)]="prestacionElegida" [data]="regla?.destino.agendas"
+             placeholder="Tipo de Prestación" name="tipoPrestacion" label="Tipo Prestacion">
+</plex-select>
+<div justify class="mt-2">
+
+    <plex-button type="danger" (click)="onCancelar()"> Cancelar </plex-button>
+    <plex-button type="success" (click)="onConfirmar()"> Confirmar </plex-button>
+
+</div>
