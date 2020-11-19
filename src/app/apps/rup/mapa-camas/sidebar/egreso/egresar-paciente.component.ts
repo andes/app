@@ -179,6 +179,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
             }
+            this.fecha = fecha;
         });
     }
 
