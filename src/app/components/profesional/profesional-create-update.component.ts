@@ -187,8 +187,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                         this.profesional.apellido = resultado.apellido.toUpperCase();
                         this.profesional.fechaNacimiento = moment(resultado.fechaNacimiento, 'YYYY-MM-DD');
                         this.profesional.validadoRenaper = true;
-                        this.profesional.foto = resultado.foto;
-                        this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
+                        if (resultado.foto) {
+                            this.profesional.foto = resultado.foto;
+                            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
+                        }
                         this.plex.toast('success', 'El profesional ha sido validado con RENAPER');
                     } else {
                         this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
