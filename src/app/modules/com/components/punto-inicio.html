@@ -12,14 +12,14 @@
                 <plex-wrapper>
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
                                  label="Organización origen" placeholder="Seleccione la organización"
-                                 (change)="actualizarTabla()">
+                                 (change)="cargarDerivaciones()">
                     </plex-select>
-                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="actualizarTabla()"
+                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                                label="Buscar paciente" debounce="400"></plex-text>
-                    <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
+                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
-                    <plex-select [(ngModel)]="gravedad" (change)="actualizarTabla()" [data]="opcionesGravedad"
+                    <plex-select [(ngModel)]="gravedad" (change)="cargarDerivaciones()" [data]="opcionesGravedad"
                                  name="gravedad" label="Gravedad">
                     </plex-select>
                 </plex-wrapper>
@@ -29,7 +29,7 @@
                 <div class="row" *ngIf="!loading && derivaciones?.length">
                     <div class="col-12">
                         <ng-container>
-                            <plex-list [striped]="true">
+                            <plex-list [striped]="true" height="60vh" (scrolled)="onScroll()">
                                 <plex-item>
                                     <b *ngIf="!showSidebar" label> Fecha </b>
                                     <b label> Organización origen </b>
@@ -37,7 +37,7 @@
                                     <b label> Paciente </b>
                                     <b></b>
                                 </plex-item>
-                                <plex-item *ngFor="let derivacion of derivaciones"
+                                <plex-item *ngFor=" let derivacion of derivaciones"
                                            [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
                                            (click)="seleccionar(derivacion)">
                                     <plex-label *ngIf="!showSidebar" [tituloBold]="true"
@@ -54,7 +54,8 @@
                                     </div>
                                     <div class="elementos-graficos w-100">
                                         <plex-icon *ngIf="!showSidebar" name="hospital-building" size="lg"
-                                                   type="success"></plex-icon>
+                                                   type="success">
+                                        </plex-icon>
                                         <plex-label titulo="{{ derivacion.organizacionDestino.nombre }}"
                                                     subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
@@ -94,14 +95,14 @@
                 <plex-wrapper>
                     <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
                                  label="Organización destino" placeholder="Seleccione la organización"
-                                 (change)="actualizarTabla()">
+                                 (change)="cargarDerivaciones()">
                     </plex-select>
-                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="actualizarTabla()"
+                    <plex-text [(ngModel)]="paciente" name="paciente" (change)="cargarDerivaciones()"
                                label="Buscar paciente" debounce="400"></plex-text>
-                    <plex-select [(ngModel)]="estado" (change)="actualizarTabla()" [data]="estados" name="estado"
+                    <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
-                    <plex-select [(ngModel)]="gravedad" (change)="actualizarTabla()" [data]="opcionesGravedad"
+                    <plex-select [(ngModel)]="gravedad" (change)="cargarDerivaciones()" [data]="opcionesGravedad"
                                  name="gravedad" label="Gravedad">
                     </plex-select>
                 </plex-wrapper>
@@ -111,7 +112,7 @@
                 <div class="row" *ngIf="!loading && derivaciones?.length">
                     <div class="col-12">
                         <ng-container>
-                            <plex-list [striped]="true">
+                            <plex-list [striped]="true" height="60vh" (scrolled)="onScroll()">
                                 <plex-item>
                                     <b *ngIf="!showSidebar" label> Fecha </b>
                                     <b label> Organización origen </b>

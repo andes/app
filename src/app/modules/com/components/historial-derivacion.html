@@ -2,7 +2,7 @@
     <table class="table table-striped">
         <tbody>
             <tr *ngFor="let item of itemsHistorial">
-                <td>
+                <td *ngIf="item.createdBy">
                     <b>{{ item.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
                     <br />
                     <span *ngIf="item.estado">
@@ -38,9 +38,9 @@
                         </div>
                     </plex-grid>
                 </td>
-                <td>
-                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username"
-                                 type="danger" size="sm" icon="trash-can" (click)="eliminarNota(item)">
+                <td *ngIf="item.createdBy">
+                    <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" type="danger"
+                                 size="sm" icon="trash-can" (click)="eliminarNota(item)">
                     </plex-button>
                 </td>
             </tr>
