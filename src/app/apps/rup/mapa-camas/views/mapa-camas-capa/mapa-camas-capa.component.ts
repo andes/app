@@ -113,7 +113,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (this.permisosMapaCamasService.camaCreate) {
+        if (this.permisosMapaCamasService.salaCreate) {
             this.itemsCrearDropdown.push(
                 { label: 'SALA COMUN', route: `/mapa-camas/${ambito}/sala-comun` }
             );
