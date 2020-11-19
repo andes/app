@@ -38,13 +38,15 @@ export function cache<T>(): OperatorFunction<T, T> {
     );
 }
 
-export type Extensiones = 'pdf' | 'csv';
+export type Extensiones = 'pdf' | 'csv' | 'zip';
 
 function getHeaders(type: Extensiones) {
     if (type === 'pdf') {
         return { type: 'application/pdf' };
     } else if (type === 'csv') {
         return { type: 'text/csv' };
+    } else if (type === 'zip') {
+        return { type: 'aplication/zip' };
     }
 }
 
