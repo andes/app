@@ -31,7 +31,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     private hoy;
     public fechaDesde: any;
     public fechaHasta: any;
-    private sumar;
+    public sumar;
     public showPrestacion;
     public loading;
     public arrayEstados;
@@ -41,7 +41,9 @@ export class TurnosPrestacionesComponent implements OnInit {
     prestacion: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
-
+    public profesionales;
+    public estado;
+    public sinOS = false;
     public selectProfesional: Boolean = false;
     public profesional: any;
     public botonBuscarDisabled: Boolean = false;

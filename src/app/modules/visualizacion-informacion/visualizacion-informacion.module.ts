@@ -9,6 +9,7 @@ import { BiQueriesComponent } from './components/bi-queries/bi-queries.component
 import { ExportarHudsComponent } from './components/exportar-huds/exportar-huds.component';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ExportHudsService } from './services/export-huds.service';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DescargasPendientesComponent } from './components/exportar-huds/descargas-pendientes.component';
 
 
@@ -17,9 +18,11 @@ import { DescargasPendientesComponent } from './components/exportar-huds/descarg
         VisualizacionInformacionComponent,
         BiQueriesComponent,
         ExportarHudsComponent,
+        BiQueriesComponent,
         DescargasPendientesComponent
     ],
     exports: [DescargasPendientesComponent],
+
     imports: [
         CommonModule,
         FormsModule,
@@ -27,8 +30,10 @@ import { DescargasPendientesComponent } from './components/exportar-huds/descarg
         PlexModule,
         VisualizacioninfromacionRounting,
         MPILibModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DirectiveLibModule
     ],
     providers: [ExportHudsService]
+
 })
 export class VisualizacionInformacionModule { }
