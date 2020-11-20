@@ -7,7 +7,8 @@
             <plex-button type="info" (click)="cambiarVerAyuda(true)" icon="help-circle">
             </plex-button>
         </plex-title>
-        <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+        <plex-tabs [activeIndex]="tabIndex" (change)="cambiarTab($event)"
+                   *ngIf="(derivaciones$ | async) as derivacionesOrdenadas">
             <plex-tab label="DERIVACIONES ENTRANTES">
                 <plex-wrapper>
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones
@@ -19,25 +20,43 @@
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
-                    <plex-select *ngIf="esCOM" [(ngModel)]="prioridad" (change)="cargarDerivaciones()"
-                                 [data]="opcionesPrioridad" name="prioridad" label="Prioridad">
-                    </plex-select>
+                    <plex-radio *ngIf="esCOM" [(ngModel)]="prioridad" (change)="sortList(prioridad)"
+                                label="Ordenar por prioridad" type="horizontal" name="ordenPrioridad"
+                                [data]="opcionesPrioridad">
+                    </plex-radio>
                 </plex-wrapper>
-                <div *ngIf="!derivaciones?.length && !loading" class="alert alert-default">
+                <div *ngIf="!derivacionesOrdenadas?.length && !loading" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <div class="row" *ngIf="!loading && derivaciones?.length">
+                <div class="row" *ngIf="!loading && derivacionesOrdenadas?.length">
                     <div class="col-12">
                         <ng-container>
                             <plex-list [striped]="true" height="60vh" (scrolled)="onScroll()">
                                 <plex-item>
-                                    <b *ngIf="!showSidebar" label> Fecha </b>
-                                    <b label> Organización origen </b>
-                                    <b label> Organización destino </b>
-                                    <b label> Paciente </b>
+                                    <b class="sortable" *ngIf="!showSidebar" label (click)="sortList('fecha')">
+                                        Fecha
+                                        <span *ngIf="sortBy === 'fecha'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
+                                    <b class="sortable" label (click)="sortList('origen')"> Organización origen
+                                        <span *ngIf="sortBy === 'origen'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
+                                    <b label> Organización destino
+                                    </b>
+                                    <b class="sortable" label (click)="sortList('paciente')"> Paciente
+                                        <span *ngIf="sortBy === 'paciente'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
                                     <b></b>
                                 </plex-item>
-                                <plex-item *ngFor=" let derivacion of derivaciones"
+                                <plex-item *ngFor="let derivacion of derivacionesOrdenadas"
                                            [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
                                            (click)="seleccionar(derivacion)">
                                     <plex-label *ngIf="!showSidebar" [tituloBold]="true"
@@ -102,25 +121,51 @@
                     <plex-select [(ngModel)]="estado" (change)="cargarDerivaciones()" [data]="estados" name="estado"
                                  label="Estado">
                     </plex-select>
-                    <plex-select *ngIf="esCOM" [(ngModel)]="prioridad" (change)="cargarDerivaciones()"
-                                 [data]="opcionesPrioridad" name="prioridad" label="Prioridad">
-                    </plex-select>
+                    <<<<<<< HEAD <plex-select *ngIf="esCOM" [(ngModel)]="prioridad" (change)="cargarDerivaciones()"
+                            [data]="opcionesPrioridad" name="prioridad" label="Prioridad">
+                        </plex-select>
+                        =======
+                        <plex-radio [(ngModel)]="prioridad" (change)="sortList(prioridad)" label="Ordenar por prioridad"
+                                    type="horizontal" name="ordenPrioridad" [data]="opcionesPrioridad">
+                        </plex-radio>
+                        >>>>>>> 18db08c39 (feat(com): poder ordenar listado por columnas)
                 </plex-wrapper>
-                <div *ngIf="!this.loading && !derivaciones?.length" class="alert alert-default">
+                <div *ngIf="!this.loading && !derivacionesOrdenadas?.length" class="alert alert-default">
                     No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <div class="row" *ngIf="!loading && derivaciones?.length">
+                <div class="row" *ngIf="!loading && derivacionesOrdenadas?.length">
                     <div class="col-12">
                         <ng-container>
                             <plex-list [striped]="true" height="60vh" (scrolled)="onScroll()">
                                 <plex-item>
-                                    <b *ngIf="!showSidebar" label> Fecha </b>
-                                    <b label> Organización origen </b>
-                                    <b label> Organización destino </b>
-                                    <b label> Paciente </b>
+                                    <b class="sortable" *ngIf="!showSidebar" label (click)="sortList('fecha')">
+                                        Fecha
+                                        <span *ngIf="sortBy === 'fecha'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
+                                    <b class="sortable" label (click)="sortList('origen')"> Organización origen
+                                        <span *ngIf="sortBy === 'origen'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
+                                    <b class="sortable" label (click)="sortList('destino')"> Organización destino
+                                        <span *ngIf="sortBy === 'destino'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
+                                    <b class="sortable" label (click)="sortList('paciente')"> Paciente
+                                        <span *ngIf="sortBy === 'paciente'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </b>
                                     <b></b>
                                 </plex-item>
-                                <plex-item *ngFor="let derivacion of derivaciones"
+                                <plex-item *ngFor="let derivacion of derivacionesOrdenadas"
                                            [selected]="showSidebar && (derivacion === derivacionSeleccionada)"
                                            (click)="seleccionar(derivacion)">
                                     <plex-label *ngIf="!showSidebar" [tituloBold]="true"

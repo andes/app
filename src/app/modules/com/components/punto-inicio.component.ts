@@ -1,3 +1,4 @@
+import { PuntoInicioService } from './../services/punto-inicio.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Component, OnInit } from '@angular/core';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -9,13 +10,16 @@ import { Plex } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'com-punto-inicio',
-    templateUrl: './punto-inicio.html'
+    templateUrl: './punto-inicio.html',
+    styleUrls: ['./punto-inicio.scss']
 })
 
 export class ComPuntoInicioComponent implements OnInit {
+    public derivaciones$: Observable<any[]>;
     public orgActual;
     public esCOM = false;
     public showSidebar = false;
@@ -28,6 +32,12 @@ export class ComPuntoInicioComponent implements OnInit {
     private skip = 0;
     private limit = 15;
     public reglasDerivacion = [];
+    public opcionesPrioridad = [
+        { id: 'baja', label: 'verde' },
+        { id: 'media', label: 'amarillo' },
+        { id: 'alta', label: 'rojo' },
+        { id: 'especial', label: 'negro' }
+    ];
     derivacionSeleccionada: IDerivacion;
     public derivaciones: any[] = [];
     organizacionActual: any[];
@@ -48,14 +58,11 @@ export class ComPuntoInicioComponent implements OnInit {
         { id: 'finalizada', nombre: 'FINALIZADA' },
         { id: 'encomendada', nombre: 'ENCOMENDADA' }
     ];
-    public opcionesPrioridad = [
-        { id: 'baja', nombre: 'baja' },
-        { id: 'media', nombre: 'media' },
-        { id: 'alta', nombre: 'alta' }
-    ];
+    public sortBy = 'fecha';
+    public sortOrder = 'asc';
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router, public plex: Plex, private reglasDerivacionService: ReglasDerivacionService, private documentosService: DocumentosService) { }
+        public router: Router, public plex: Plex, private reglasDerivacionService: ReglasDerivacionService, private documentosService: DocumentosService, private puntoInicioService: PuntoInicioService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -119,11 +126,12 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
-        this.derivacionesService.search(query).subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = this.derivaciones.concat(derivaciones);
-            this.derivaciones.sort((a, b) => a.fecha - b.fecha);
+        this.puntoInicioService.get(query).subscribe((data) => {
+            this.derivaciones = this.derivaciones.concat(data);
+            this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
             this.skip = this.derivaciones.length;
-            if (!derivaciones.length || derivaciones.length < this.limit) {
+            this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
+            if (!data.length || data.length < this.limit) {
                 this.scrollEnd = true;
             }
             this.loading = false;
@@ -206,6 +214,18 @@ export class ComPuntoInicioComponent implements OnInit {
 
     cambiarVerAyuda(mostrar) {
         this.verAyuda = mostrar;
+    }
+
+    sortList(event: string) {
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
+        } else {
+            this.sortBy = event;
+            this.sortOrder = 'asc';
+            this.puntoInicioService.sortBy.next(event);
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
+        }
     }
 
     imprimirComprobante(derivacion: any) {

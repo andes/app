@@ -68,10 +68,9 @@
                              placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
                              [required]="true">
                 </plex-select>
-                <plex-select *ngIf="reglaSeleccionada?.definePrioridad" [(ngModel)]="prioridad" label="Prioridad"
-                             name="prioridad" placeholder="Indique la prioridad" [data]="opcionesPrioridad"
-                             [required]="true" grow="full" idField='id' labelField="name">
-                </plex-select>
+                <plex-radio *ngIf="reglaSeleccionada?.definePrioridad" [(ngModel)]="prioridad" label="Prioridad"
+                            type="horizontal" name="prioridad" [data]="opcionesPrioridad" [required]="true" grow="full">
+                </plex-radio>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
