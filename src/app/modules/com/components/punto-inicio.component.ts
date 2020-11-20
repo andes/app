@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
+import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -26,6 +27,7 @@ export class ComPuntoInicioComponent implements OnInit {
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
+    public reglasDerivacion = [];
     derivacionSeleccionada: IDerivacion;
     public derivaciones: any[] = [];
     organizacionActual: any[];
@@ -53,12 +55,15 @@ export class ComPuntoInicioComponent implements OnInit {
     ];
 
     constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router, public plex: Plex, private documentosService: DocumentosService) { }
+        public router: Router, public plex: Plex, private reglasDerivacionService: ReglasDerivacionService, private documentosService: DocumentosService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
             this.router.navigate(['./inicio']);
         }
+        this.reglasDerivacionService.search({}).subscribe(resultado => {
+            this.reglasDerivacion = resultado;
+        });
         this.organizacionActual = this.auth.organizacion as any;
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             this.orgActual = org;
