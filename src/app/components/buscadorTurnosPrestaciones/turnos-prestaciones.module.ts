@@ -10,6 +10,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { TurnosPrestacionesComponent } from './turnos-prestaciones.component';
 import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
+import { ExportHudsService } from 'src/app/modules/visualizacion-informacion/services/export-huds.service';
+import { VisualizacionInformacionModule } from 'src/app/modules/visualizacion-informacion/visualizacion-informacion.module';
 
 @NgModule({
     imports: [
@@ -22,11 +24,12 @@ import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
         DirectiveLibModule,
         InfiniteScrollModule,
         ElementosRUPModule,
+        VisualizacionInformacionModule,
         RouterModule.forChild([
             { path: '', component: TurnosPrestacionesComponent, pathMatch: 'full' },
         ])
     ],
-    providers: [],
+    providers: [ExportHudsService],
     declarations: [
         TurnosPrestacionesComponent
     ]

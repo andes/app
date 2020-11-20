@@ -22,7 +22,7 @@
         </div>
         <div *ngIf="modalAccepted">
             <plex-title titulo="Paciente">
-                <plex-button type="danger btn-sm" icon="flecha-izquierda" (click)="onSearchClear()">
+                <plex-button type="link" icon="flecha-izquierda" (click)="onSearchClear()" tooltip="Volver">
                 </plex-button>
             </plex-title>
             <paciente-detalle orientacion="horizontal" *ngIf="pacienteSelected" [paciente]="pacienteSelected"
@@ -53,34 +53,6 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar [type]="'invert'">
-        <plex-title titulo="Descargas pendientes">
-            <plex-button tooltip="Actualizar" type="success">
-                <plex-icon prefix="adi" name="reload" (click)="descargasPendientes()"></plex-icon>
-            </plex-button>
-        </plex-title>
-        <plex-list *ngIf="completed.length || pending.length; else noPendientes">
-            <plex-item *ngFor="let pendiente of completed">
-                <plex-label titulo="HUDS-{{pendiente.pacienteNombre}}">
-                </plex-label>
-                <plex-button type="info" size="sm" (click)="exportarHuds(pendiente)">
-                    Descargar
-                </plex-button>
-            </plex-item>
-            <plex-item *ngFor="let pendiente of pending">
-                <plex-label titulo="HUDS-{{pendiente.pacienteNombre}}">
-                </plex-label>
-                <plex-button type="info" size="sm" disabled="true">
-                    En proceso
-                </plex-button>
-            </plex-item>
-        </plex-list>
-        <ng-template #noPendientes>
-            <div justify="center" class="h-75">
-                <plex-label icon="information-variant" type="default" size="xl" direction="column"
-                            titulo='Usted no tiene descargas pendientes'
-                            subtitulo='Si generó un nuevo pedido de exportación, presione el botón ACTUALIZAR '>
-                </plex-label>
-            </div>
-        </ng-template>
+        <descargas-pendientes></descargas-pendientes>
     </plex-layout-sidebar>
 </plex-layout>

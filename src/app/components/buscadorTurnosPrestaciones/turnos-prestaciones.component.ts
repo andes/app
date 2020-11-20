@@ -3,12 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { Router } from '@angular/router';
+import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
+
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -20,8 +23,10 @@ export class TurnosPrestacionesComponent implements OnInit {
     public busqueda$: Observable<any[]>;
     public seleccionada$: Observable<boolean>;
     public lastSelect$ = new BehaviorSubject<string>(null);
-
-    public mostrarMasOpciones;
+    public prestacionesAll = false;
+    public enableExport = false;
+    public descargasPendientes = false;
+    public prestacionesExport = [];
     private parametros;
     private hoy;
     public fechaDesde: any;
@@ -53,21 +58,17 @@ export class TurnosPrestacionesComponent implements OnInit {
 
     public sortBy: String;
     public sortOrder = 'desc';
-
     constructor(
-        private auth: Auth,
-        private plex: Plex,
-        private turnosPrestacionesService: TurnosPrestacionesService,
-        public serviceProfesional: ProfesionalService,
-        private facturacionAutomaticaService: FacturacionAutomaticaService,
-        private hudsService: HUDSService,
-        private router: Router
+        private auth: Auth, private plex: Plex,
+        private turnosPrestacionesService: TurnosPrestacionesService, public serviceProfesional: ProfesionalService,
+        private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router,
+        private exportHudsService: ExportHudsService,
+
     ) { }
 
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
         this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
-        this.mostrarMasOpciones = false;
         this.sumarB = false;
         this.sumar = false;
         this.loading = true;
@@ -222,8 +223,6 @@ export class TurnosPrestacionesComponent implements OnInit {
             if (tipo === 'filter') {
                 this.buscar(this.parametros);
             }
-
-            // this.buscar(this.parametros);
         }
 
     }
@@ -239,6 +238,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     mostrarPrestacion(datos) {
+        this.descargasPendientes = false;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
@@ -278,8 +278,70 @@ export class TurnosPrestacionesComponent implements OnInit {
         }
     }
 
+    exportPrestaciones() {
+        let prestacionesCheck = [];
+        this.prestacionesExport = [];
+        this.busqueda$.pipe(
+            map((prestaciones) => {
+                prestacionesCheck = prestaciones.filter(prestacion => prestacion.check === true);
+            })
+        ).subscribe();
+        if (prestacionesCheck.length) {
+            prestacionesCheck.forEach(elem => {
+                this.prestacionesExport.push(elem.idPrestacion);
+            });
+            this.exportHudsService.peticionHuds({ arrayPrestaciones: this.prestacionesExport }).subscribe(res => {
+                if (res) {
+                    this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
+                    this.getPendientes();
+                }
+            });
+        }
+
+    }
+
+    selectPrestacion(prestacionCeck) {
+        if (prestacionCeck) {
+            this.enableExport = true;
+        } else {
+            this.prestacionesAll = false;
+            let found;
+            this.busqueda$.pipe(
+                map((prestaciones) => {
+                    found = prestaciones.find(prestacion => prestacion.check === true);
+                })
+            ).subscribe();
+            this.enableExport = found ? true : false;
+        }
+    }
+
+    selectAll() {
+        this.enableExport = this.prestacionesAll ? true : false;
+        this.busqueda$.pipe(
+            map((prestaciones) => {
+                prestaciones.forEach(elem => {
+                    elem.check = this.prestacionesAll;
+                });
+            })
+        ).subscribe();
+    }
+
+    mostrarPendientes() {
+        this.descargasPendientes = this.descargasPendientes ? false : true;
+        this.onClose();
+    }
+
+    getPendientes() {
+        this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
+            this.exportHudsService.hud$.next(data);
+        });
+    }
+
     onClose() {
         this.showPrestacion = false;
-        this.prestacion = null;
+        const aux: any = this.lastSelect$;
+        if (aux._value) {
+            aux._value.seleccionada = false;
+        }
     }
 }

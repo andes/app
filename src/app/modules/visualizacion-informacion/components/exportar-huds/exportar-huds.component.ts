@@ -24,6 +24,7 @@ export class ExportarHudsComponent implements OnInit {
     public disabledDescarga = false;
     public completed = [];
     public pending = [];
+    public turnosPrestaciones = false;
 
 
     constructor(
@@ -101,25 +102,9 @@ export class ExportarHudsComponent implements OnInit {
         });
     }
 
-    exportarHuds(pendiente) {
-        const params = {
-            id: pendiente.idHudsFiles,
-            name: pendiente.pacienteNombre,
-            idHuds: pendiente.id
-        };
-        this.exportHudsService.descargaHuds(params).subscribe((data) => {
-            if (data) {
-                this.descargasPendientes();
-            }
-        });
-    }
-
     descargasPendientes() {
         this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
-            // Acomodo para mostrar los que estan para descargar primero y los pendientes despues
-            this.completed = data.filter(item => item.status === 'completed');
-            this.pending = data.filter(item => item.status === 'pending');
+            this.exportHudsService.hud$.next(data);
         });
     }
-
 }

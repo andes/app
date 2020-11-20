@@ -1,0 +1,31 @@
+<plex-title titulo="Descargas pendientes">
+    <plex-button tooltip="Actualizar" type="success">
+        <plex-icon prefix="adi" name="reload" (click)="descargasPendientes()"></plex-icon>
+    </plex-button>
+</plex-title>
+<plex-list *ngIf="!sinPendientes; else noPendientes">
+    <plex-item *ngFor="let pendiente of completed">
+        <plex-label
+                    titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+        </plex-label>
+        <plex-button type="info" size="sm" (click)="exportarHuds(pendiente)">
+            Descargar
+        </plex-button>
+    </plex-item>
+    <plex-item *ngFor="let pendiente of pending">
+        <plex-label
+                    titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+        </plex-label>
+        <plex-button type="info" size="sm" disabled="true">
+            En proceso
+        </plex-button>
+    </plex-item>
+</plex-list>
+<ng-template #noPendientes>
+    <div justify="center" class="h-75">
+        <plex-label icon="information-variant" type="default" size="xl" direction="column"
+                    titulo='Usted no tiene descargas pendientes'
+                    subtitulo='Si generó un nuevo pedido de exportación, presione el botón ACTUALIZAR '>
+        </plex-label>
+    </div>
+</ng-template>

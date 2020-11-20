@@ -9,25 +9,26 @@ import { BiQueriesComponent } from './components/bi-queries/bi-queries.component
 import { ExportarHudsComponent } from './components/exportar-huds/exportar-huds.component';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ExportHudsService } from './services/export-huds.service';
-import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { DescargasPendientesComponent } from './components/exportar-huds/descargas-pendientes.component';
+
 
 @NgModule({
-        declarations: [
-                VisualizacionInformacionComponent,
-                BiQueriesComponent,
-                ExportarHudsComponent,
-                BiQueriesComponent
-        ],
-        imports: [
-                CommonModule,
-                FormsModule,
-                HttpClientModule,
-                PlexModule,
-                VisualizacioninfromacionRounting,
-                MPILibModule,
-                ReactiveFormsModule,
-                DirectiveLibModule
-        ],
-        providers: [ExportHudsService]
+    declarations: [
+        VisualizacionInformacionComponent,
+        BiQueriesComponent,
+        ExportarHudsComponent,
+        DescargasPendientesComponent
+    ],
+    exports: [DescargasPendientesComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        PlexModule,
+        VisualizacioninfromacionRounting,
+        MPILibModule,
+        ReactiveFormsModule
+    ],
+    providers: [ExportHudsService]
 })
 export class VisualizacionInformacionModule { }
