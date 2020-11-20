@@ -4,9 +4,13 @@
     height: 100%;
     left: 0;
     top: 50%;
+    z-index: 99 !important;
 }
+
 .loadMode {
-    opacity: 0.3;
+   opacity: 0.3;
+    pointer-events: none !important;
+    user-select: none !important;
 }
 
 .img-fallecido {
