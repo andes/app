@@ -20,9 +20,10 @@ export class DetalleDerivacionComponent implements OnInit {
     public reglaSeleccionada;
     public prioridad;
     public opcionesPrioridad = [
-        { id: 'baja', name: 'baja' },
-        { id: 'media', name: 'media' },
-        { id: 'alta', name: 'alta' }
+        { id: 'baja', label: 'verde' },
+        { id: 'media', label: 'amarillo' },
+        { id: 'alta', label: 'rojo' },
+        { id: 'especial', label: 'negro' }
     ];
     // Adjuntar Archivo
     errorExt = false;
@@ -158,7 +159,7 @@ export class DetalleDerivacionComponent implements OnInit {
             this.derivacion.estado = this.nuevoEstado.estado;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             if (this.prioridad) {
-                this.derivacion.prioridad = this.prioridad.id;
+                this.derivacion.prioridad = this.prioridad;
             }
             this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');

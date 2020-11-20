@@ -18,6 +18,7 @@ import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DetalleDerivacionComponent } from './components/detalle-derivacion.component';
+import { PuntoInicioService } from './services/punto-inicio.service';
 
 export const COM_COMPONENTS = [
     ComPuntoInicioComponent,
@@ -31,7 +32,8 @@ export const COM_COMPONENTS = [
 export const COM_PROVIDERS = [
     COMAdjuntosService,
     DerivacionesService,
-    ReglasDerivacionService
+    ReglasDerivacionService,
+    PuntoInicioService
 ];
 
 @NgModule({
