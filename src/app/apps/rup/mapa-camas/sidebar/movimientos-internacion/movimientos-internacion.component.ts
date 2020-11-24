@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
@@ -10,20 +10,38 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
     templateUrl: './movimientos-internacion.component.html',
 })
 
-export class MovimientosInternacionComponent implements OnInit {
+export class MovimientosInternacionComponent implements OnInit, OnDestroy {
     public historial = new Subject();
 
     public historial$: Observable<any>;
 
-    public desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
-    public hasta = this.mapaCamasService.fecha;
+    public desde;
+    public hasta;
+
+    private subscription: Subscription;
 
     constructor(
         private mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
-        this.onChange();
+        this.subscription = combineLatest(
+            this.mapaCamasService.view,
+            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.selectedPrestacion,
+        ).subscribe(([view, prestacionMapaCamas, prestacionListado]) => {
+            const prestacion = (view === 'mapa-camas') ? prestacionMapaCamas : prestacionListado;
+            if (prestacion && prestacion.id !== null) {
+                this.desde = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                if (prestacion.ejecucion.registros[1]) {
+                    this.hasta = prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso;
+                } else {
+                    this.hasta = moment().toDate();
+                }
+                this.onChange();
+            }
+        });
+
 
         const fechaPipe = this.historial.pipe(
             startWith({
@@ -58,7 +76,7 @@ export class MovimientosInternacionComponent implements OnInit {
 
         if (this.desde && this.hasta) {
             const fechaDesdeValida = (this.desde <= this.hasta);
-            const fechaHastaValida = (this.hasta <= moment().toDate() && this.hasta >= this.desde);
+            const fechaHastaValida = (this.hasta >= this.desde);
 
             if (fechaDesdeValida && fechaHastaValida) {
                 this.historial.next(filtros);
@@ -66,4 +84,7 @@ export class MovimientosInternacionComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
 }
