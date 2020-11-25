@@ -68,8 +68,8 @@
                              placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
                              [required]="true">
                 </plex-select>
-                <plex-select *ngIf="reglaSeleccionada?.defineGravedad" [(ngModel)]="gravedad" label="Gravedad"
-                             name="gravedad" placeholder="Indique la gravedad del paciente" [data]="opcionesGravedad"
+                <plex-select *ngIf="reglaSeleccionada?.definePrioridad" [(ngModel)]="prioridad" label="Prioridad"
+                             name="prioridad" placeholder="Indique la prioridad" [data]="opcionesPrioridad"
                              [required]="true" grow="full" idField='id' labelField="name">
                 </plex-select>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
