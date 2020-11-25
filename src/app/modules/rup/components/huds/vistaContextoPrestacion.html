@@ -18,6 +18,10 @@
                 {{ prestacion.solicitud.profesional.apellido }}, {{
                 prestacion.solicitud.profesional.nombre }}</span>
         </div>
+        <div *ngIf="prestacion?.solicitud?.ambitoOrigen" class="columna-datos d-flex justify-content-between mb-2">
+            <b>Ámbito: </b> <span class="text-capitalize">
+                {{ prestacion.solicitud.ambitoOrigen }}</span>
+        </div>
         <div class="columna-completa">
             <div class="columna-datos no-border d-flex justify-content-between mb-2">
                 <b>Otros registros de la Prestación: </b>
