@@ -4,6 +4,7 @@ import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Auth } from '@andes/auth';
+import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -24,9 +25,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public existeEgreso = false;
     public prestacionValidada = false;
     public mostrar;
-    public permisoIngreso = false;
-    public permisoMovimiento = false;
-    public permisoEgreso = false;
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
@@ -36,8 +34,8 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
 
     constructor(
-        private auth: Auth,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
     ngOnDestroy() {
@@ -47,9 +45,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
-        this.permisoIngreso = this.auth.check('internacion:ingreso');
-        this.permisoMovimiento = this.auth.check('internacion:movimientos');
-        this.permisoEgreso = this.auth.check('internacion:egreso');
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
             this.mapaCamasService.prestacion$,

@@ -69,7 +69,7 @@
             </plex-badge>
         </td>
         <td>
-            <ng-container *ngIf="canMovimientos">
+            <ng-container *ngIf="permisosMapaCamasService.movimientos">
                 <ng-container *ngFor="let relacion of relacionesPosibles">
                     <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
                                   || (relacion.nombre === 'Bloquear' && permisoBloqueo)">

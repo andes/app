@@ -12,6 +12,7 @@ import { cache, notNull } from '@andes/shared';
 import { Plex } from '@andes/plex';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 
 @Component({
@@ -52,8 +53,6 @@ export class CamaDetalleComponent implements OnInit {
     public tabIndex = 0;
     public editar = false;
     public permisoIngreso = false;
-    canEdit = this.auth.check('internacion:cama:edit');
-    canMovimientos = this.auth.check('internacion:movimientos');
     canUndo = false;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
@@ -71,11 +70,11 @@ export class CamaDetalleComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private mapaCamasHTTP: MapaCamasHTTP,
         private prestacionesService: PrestacionesService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
     }
 
     ngOnInit() {
-        this.permisoIngreso = this.auth.check('internacion:ingreso');
         this.cama$ = this.mapaCamasService.selectedCama;
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
@@ -123,7 +122,11 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     goTo(cama) {
-        this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${cama.idCama}`]);
+        if (cama.sala) {
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/sala-comun/${cama.id}`]);
+        } else {
+            this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${cama.id}`]);
+        }
     }
 
     accion(relacion) {

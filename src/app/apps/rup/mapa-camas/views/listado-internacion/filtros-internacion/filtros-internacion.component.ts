@@ -3,6 +3,7 @@ import * as enumerados from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
+import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -17,18 +18,17 @@ export class FiltrosInternacionComponent implements OnInit {
         fechaEgresoHasta: null
     };
     estadosInternacion;
-    permisoDescarga;
     requestInProgress: boolean;
 
     constructor(
         private auth: Auth,
         private listadoInternacionService: ListadoInternacionService,
-        private servicioDocumentos: DocumentosService
+        private servicioDocumentos: DocumentosService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
     ngOnInit() {
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
-        this.permisoDescarga = this.auth.check('internacion:descargarListado');
     }
 
     filtrar() {

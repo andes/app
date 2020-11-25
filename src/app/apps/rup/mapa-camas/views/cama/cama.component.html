@@ -6,7 +6,7 @@
                             type="success" [validateForm]="formCama" (click)="save($event)"
                              [disabled]="disabled || !puedeEditar">
                 </plex-button>
-                <plex-button *ngIf="permisoBaja && cama?.idCama"
+                <plex-button *ngIf="permisosMapaCamasService.camaBaja && cama?.idCama"
                              title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
                              [disabled]="!verificarBaja() || disabled" label="INACTIVAR CAMA" type="warning"
                              (click)="darBaja()">
@@ -66,7 +66,7 @@
                     <div class="col-12">
                         <ng-container *ngIf="organizacion$ | async as organizacion">
                             <plex-select name="sectores" [data]="sectores$ | async" label="Ubicación" idField="_id"
-                                         labelField="nombre + sectorName" [required]="true" [(ngModel)]="camaEditada.sectores" 
+                                         labelField="nombre + sectorName" [required]="true" [(ngModel)]="camaEditada.sectores"
                                          (change)="onSectorSelect($event, organizacion)">
                             </plex-select>
                         </ng-container>

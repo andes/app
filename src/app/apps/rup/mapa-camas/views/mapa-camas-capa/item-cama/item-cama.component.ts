@@ -4,6 +4,7 @@ import { Auth } from '@andes/auth';
 import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { map } from 'rxjs/operators';
+import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -20,7 +21,6 @@ export class ItemCamaComponent implements OnChanges {
     @Output() accionCama = new EventEmitter<any>();
 
     canEdit = false;
-    canMovimientos = this.auth.check('internacion:movimientos');
 
     columns$ = this.mapaCamasService.columnsMapa.pipe(
         map((columns) => {
@@ -42,11 +42,12 @@ export class ItemCamaComponent implements OnChanges {
         public auth: Auth,
         private router: Router,
         private mapaCamasService: MapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
     }
 
     ngOnChanges() {
-        this.canEdit = this.cama.sala ? this.auth.check('internacion:sala:edit') : this.auth.check('internacion:cama:edit');
+        this.canEdit = this.cama.sala ? this.permisosMapaCamasService.salaEdit : this.permisosMapaCamasService.camaEdit;
 
         this.equipos = {
             aporteOxigeno: false,

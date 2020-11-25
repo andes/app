@@ -16,7 +16,7 @@
     </plex-datetime>
     <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
     </plex-select>
-    <plex-button *ngIf="permisoDescarga" type="warning" icon="download mdi-14px" title="Descargar Csv"
+    <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px" title="Descargar Csv"
                  titlePosition="top" (click)="reporteInternaciones()" [disabled]="requestInProgress">
     </plex-button>
 </plex-wrapper>

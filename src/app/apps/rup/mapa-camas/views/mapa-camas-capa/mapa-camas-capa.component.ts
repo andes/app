@@ -12,6 +12,7 @@ import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { timer, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -54,12 +55,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     public sortBy: string;
     public sortOrder = 'desc';
 
-    public permisoIngreso = false;
-    public permisoBloqueo = false;
-    public permisoCenso = false;
-    public permisoCrearCama = this.auth.check('internacion:cama:create');
-    public permisoCrearSala = this.auth.check('internacion:sala:create');
-
     itemsCrearDropdown = [];
 
     public get inverseOfTranslation(): string {
@@ -76,6 +71,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
 
@@ -95,6 +91,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
+                    this.permisosMapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -110,13 +107,13 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             { label: 'CENSO MENSUAL', route: `/mapa-camas/${ambito}/censo/mensual` },
         );
 
-        if (this.permisoCrearCama) {
+        if (this.permisosMapaCamasService.camaCreate) {
             this.itemsCrearDropdown.push(
                 { label: 'CAMA', route: `/mapa-camas/${ambito}/cama` }
             );
         }
 
-        if (this.permisoCrearSala) {
+        if (this.permisosMapaCamasService.salaCreate) {
             this.itemsCrearDropdown.push(
                 { label: 'SALA COMUN', route: `/mapa-camas/${ambito}/sala-comun` }
             );
@@ -129,11 +126,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         } else {
             this.router.navigate(['/inicio']);
         }
-
-
-        this.permisoIngreso = this.auth.check('internacion:ingreso');
-        this.permisoBloqueo = this.auth.check('internacion:bloqueo');
-        this.permisoCenso = this.auth.check('internacion:censo');
 
         this.mapaCamasService.setView('mapa-camas');
 
