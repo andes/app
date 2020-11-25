@@ -1,3 +1,19 @@
+# [5.23.0](https://github.com/andes/app/compare/v5.22.0...v5.23.0) (2020-11-25)
+
+
+### Bug Fixes
+
+* **mapa-camas:** muestra fecha correcta al editar egreso ([#2054](https://github.com/andes/app/issues/2054)) ([be50386](https://github.com/andes/app/commit/be503862267e50583d58fb96dd667e8d6b735264))
+* **mpi:** deshabilitar campos durante validación ([#2034](https://github.com/andes/app/issues/2034)) ([3f9e7da](https://github.com/andes/app/commit/3f9e7dac7393e5a3c50ea26c7e59dae75fa65c32))
+
+
+### Features
+
+* **com:** scroll infinito en punto de inicio ([#2030](https://github.com/andes/app/issues/2030)) ([18c6f86](https://github.com/andes/app/commit/18c6f862ea60d1b2bc0f511a9bb384af9fa97d6c))
+* **mapa-camas:** cambia ruteo del mapa de camas para adaptar el ambito ([#1973](https://github.com/andes/app/issues/1973)) ([d34c0c8](https://github.com/andes/app/commit/d34c0c81781fde04896e784729a083f066d03ea4))
+* **mapa-camas:** permisos por ambito([#2049](https://github.com/andes/app/issues/2049)) ([b92b92d](https://github.com/andes/app/commit/b92b92d65672db3df214ab41fd7ef781a2c89f42))
+* **shared:** crea componente galeria ([#2045](https://github.com/andes/app/issues/2045)) ([75a7e42](https://github.com/andes/app/commit/75a7e4294577c893610b418ca5ca8c4624a04e8c))
+
 # [5.22.0](https://github.com/andes/app/compare/v5.21.0...v5.22.0) (2020-11-18)
 
 
