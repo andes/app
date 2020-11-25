@@ -137,7 +137,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (turno.obraSocial === 'prepaga' && turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
-            this.obraSocialSeleccionada = turno.obraSocial || (turno.paciente.obraSocial && turno.paciente.obraSocial.nombre) || (turno.prepaga.nombre);
+            this.obraSocialSeleccionada = turno.obraSocial || (turno.paciente.obraSocial && turno.paciente.obraSocial.nombre);
         }
 
         if (!this.obraSocialSeleccionada) {
