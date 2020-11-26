@@ -9,7 +9,6 @@ import { RupElement } from '.';
 @RupElement('SolicitudPrestacionDefaultComponent')
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit, AfterViewInit {
 
-    private listaPlanes: any = [];
     public organizaciones: any[] = [];
     afterInit = false;
     // public puedeAutocitar: Boolean = false;
@@ -63,20 +62,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             let callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
-            event.callback(callback);
-        }
-    }
-
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            let callback = (this.registro.valor.solicitudPrestacion.organizacionDestino) ? this.registro.valor.solicitudPrestacion.organizacionDestino : null;
             event.callback(callback);
         }
     }

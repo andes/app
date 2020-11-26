@@ -3,9 +3,9 @@
         <header>
             <div class="row">
                 <div class="col-4">
-                    <plex-select [(ngModel)]="organizacion" name="organizacion" [data]="opcionesOrganizacion"
+                    <plex-select [(ngModel)]="organizacion" name="organizacion" tmOrganizaciones preload="true"
                                  label="Organización" placeholder="Seleccione la organización"
-                                 (change)="refreshSelection()" labelField="nombre" [required]="true">
+                                 (change)="refreshSelection()" [required]="true">
                     </plex-select>
                 </div>
                 <br />
@@ -45,8 +45,8 @@
                 <div class="col-4">
                     <!-- Select Prestacion -->
                     <plex-select [(ngModel)]="prestacion" name="prestacion" tmPrestaciones preload="true"
-                                 label="Prestación" placeholder="Seleccione la prestación" labelField="nombre"
-                                 (change)="refreshSelection()" [required]="true" [readonly]="
+                                 label="Prestación" placeholder="Seleccione la prestación" (change)="refreshSelection()"
+                                 [required]="true" [readonly]="
                             organizacion === null ||
                             mes === null ||
                             anio === null
@@ -77,9 +77,9 @@
 
                 <div class="col-4">
                     <!-- Select Prestación -->
-                    <plex-select [(ngModel)]="prestacion" name="prestacion" tmPrestaciones perload="true"
-                                 label="Prestación" placeholder="Seleccione la Prestación" labelField="nombre"
-                                 (change)="refreshSelection()" [required]="true" [readonly]="organizacion === null">
+                    <plex-select [(ngModel)]="prestacion" name="prestacion" tmPrestaciones preload="true"
+                                 label="Prestación" placeholder="Seleccione la Prestación" (change)="refreshSelection()"
+                                 [required]="true" [readonly]="organizacion === null">
                     </plex-select>
                 </div>
 

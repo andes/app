@@ -45,7 +45,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     constructor(
         private plex: Plex,
         private agendaService: AgendaService,
-        private servicioOrganizacion: OrganizacionService,
         private profesionalService: ProfesionalService,
         private excelService: ExcelService
     ) {
@@ -65,7 +64,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         this.mes = null;
         this.anio = null;
         this.opcionesReportes = this.getObjTiposReportes();
-        this.loadOrganizacion();
         this.opcionesMes = getObjMeses();
         this.opcionesAnio = this.getObjAnios();
     }
@@ -100,17 +98,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         ];
         return anios;
     }
-
-    loadOrganizacion() {
-        let query = {
-            activo: 1
-        };
-
-        this.servicioOrganizacion.get(query).subscribe(data => {
-            this.opcionesOrganizacion = data;
-        });
-    }
-
 
     loadProfesionales(event) {
         if (this.profesional) {

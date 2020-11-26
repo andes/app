@@ -1,10 +1,9 @@
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { Unsubscribe } from '@andes/shared';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { concat } from 'rxjs';
@@ -107,9 +106,7 @@ export class SolicitudesComponent implements OnInit {
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
         public servicioTurnos: TurnoService,
-        public servicioOrganizacion: OrganizacionService,
         public router: Router,
-        private route: ActivatedRoute,
         private hudsService: HUDSService,
     ) { }
 
@@ -137,17 +134,6 @@ export class SolicitudesComponent implements OnInit {
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
         this.buscarSolicitudes();
-    }
-
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
     }
 
     cambio(activeTab) {
@@ -644,8 +630,8 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
-                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional ?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional ?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
                             this.setRouteToParams(['paciente', prestacion.paciente.id]);

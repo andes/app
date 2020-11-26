@@ -51,7 +51,6 @@ export class ListaReglasComponent implements OnInit {
 
     constructor(
         private servicioReglas: ReglaService,
-        private servicioOrganizacion: OrganizacionService,
         private auth: Auth
     ) { }
 
@@ -59,23 +58,6 @@ export class ListaReglasComponent implements OnInit {
         if (this.esParametrizado) {
             this.organizacionOrigen = this.auth.organizacion as any;
             this.actualizarTabla();
-        }
-    }
-    /**
-     * Trae las organizaciones con nombre "igual" al texto ingresado.
-     * Si se ingresa "spi dan" trae Hospital Bouquet Roldan
-     *
-     * @param {*} event
-     * @memberof ListaReglasComponent
-     */
-    loadOrganizaciones(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
         }
     }
 

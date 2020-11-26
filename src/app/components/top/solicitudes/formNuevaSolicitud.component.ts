@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
@@ -71,7 +70,6 @@ export class FormNuevaSolicitudComponent implements OnInit {
     constructor(
         private plex: Plex,
         private auth: Auth,
-        private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
         private servicioReglas: ReglaService,
@@ -88,19 +86,6 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
         });
-    }
-
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            event.callback([]);
-        }
     }
 
     onSelect() {

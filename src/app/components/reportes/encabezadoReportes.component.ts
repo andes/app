@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
-import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 
 
@@ -50,7 +49,6 @@ export class EncabezadoReportesComponent implements OnInit {
         private router: Router,
         private agendaService: AgendaService,
         private auth: Auth,
-        private servicioOrganizacion: OrganizacionService,
     ) { }
 
     public ngOnInit() {
@@ -76,19 +74,6 @@ export class EncabezadoReportesComponent implements OnInit {
             nombre: 'Consultas por prestación'
         },
         ];
-    }
-
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-
-
     }
 
     refreshSelection(value, tipo) {

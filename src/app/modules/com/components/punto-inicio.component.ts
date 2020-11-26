@@ -74,17 +74,6 @@ export class ComPuntoInicioComponent implements OnInit {
         });
     }
 
-    loadOrganizaciones(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.organizacionService.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-    }
-
     onScroll() {
         if (!this.scrollEnd) {
             this.actualizarTabla();

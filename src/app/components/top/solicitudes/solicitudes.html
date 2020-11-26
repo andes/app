@@ -42,10 +42,9 @@
                                              (change)="cargarSolicitudes()" [data]="estadosEntrada" name="estado"
                                              label="Estado" ngModelOptions="{standalone: true}">
                                 </plex-select>
-                                <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion"
-                                             (getData)="loadOrganizacion($event)" label="Organización origen"
-                                             placeholder="Seleccione la organización" labelField="nombre"
-                                             [multiple]="true" (change)="cargarSolicitudes()">
+                                <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion" tmOrganizaciones
+                                             label="Organización origen" placeholder="Seleccione la organización"
+                                             labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                                 </plex-select>
                                 <plex-select [(ngModel)]="prioridadEntrada" [data]="prioridades" name="prioridad"
                                              label="Prioridad" ngModelOptions="{standalone: true}"
@@ -120,24 +119,24 @@
                                 </plex-badge>
 
                                 <ng-container *ngIf="prestacion | botonesSolicitud as botones">
-                                    <plex-button size="sm" *ngIf="botones.auditar"
-                                                 icon="lock-alert" type="info"
+                                    <plex-button size="sm" *ngIf="botones.auditar" icon="lock-alert" type="info"
                                                  (click)="$event.stopPropagation();auditar(prestacion)"
                                                  title="Auditar Solicitud">
                                     </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.darTurno" icon="calendar-plus"
-                                        type="success" (click)="$event.stopPropagation();darTurno(prestacion)"
-                                        title="Dar Turno">
+                                    <plex-button size="sm" *ngIf="botones.darTurno" icon="calendar-plus" type="success"
+                                                 (click)="$event.stopPropagation();darTurno(prestacion)"
+                                                 title="Dar Turno">
                                     </plex-button>
                                     <plex-button size="sm" *ngIf="botones.iniciarPrestacion" icon="check" type="success"
-                                                (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
-                                                title="Iniciar prestación">
+                                                 (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
+                                                 title="Iniciar prestación">
                                     </plex-button>
                                     <plex-button size="sm" *ngIf="botones.citarPaciente" icon="calendar" type="warning"
                                                  (click)="$event.stopPropagation();citar(prestacion)"
                                                  title="Citar paciente">
                                     </plex-button>
-                                    <plex-button type="danger" icon="delete" size="sm" *ngIf="botones.anular && permisoAnular"
+                                    <plex-button type="danger" icon="delete" size="sm"
+                                                 *ngIf="botones.anular && permisoAnular"
                                                  (click)="$event.stopPropagation();anular(prestacion)" title="Anular">
                                     </plex-button>
                                 </ng-container>
@@ -170,10 +169,9 @@
                                              [data]="estadosSalida" name="estado" label="Estado"
                                              ngModelOptions="{standalone: true}">
                                 </plex-select>
-                                <plex-select [(ngModel)]="organizacionesDestino" name="organizacion"
-                                             (getData)="loadOrganizacion($event)" label="Organización destino"
-                                             placeholder="Seleccione la organización" labelField="nombre"
-                                             [multiple]="true" (change)="cargarSolicitudes()">
+                                <plex-select [(ngModel)]="organizacionesDestino" name="organizacion" tmOrganizaciones
+                                             label="Organización destino" placeholder="Seleccione la organización"
+                                             labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                                 </plex-select>
                                 <plex-select [(ngModel)]="prioridadSalida" [data]="prioridades" name="prioridad"
                                              label="Prioridad" ngModelOptions="{standalone: true}"
