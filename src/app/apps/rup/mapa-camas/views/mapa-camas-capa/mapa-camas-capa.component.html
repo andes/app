@@ -2,21 +2,23 @@
     <plex-layout-main>
         <header [hidden]="mainView !== 'mapa-camas'">
             <plex-title titulo="Mapa de Camas">
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm" label="LISTA DE ESPERA"
-                             type="primary" (click)="gotoListaEspera()">
+                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
+                             label="LISTA DE ESPERA" type="primary" (click)="gotoListaEspera()">
                 </plex-button>
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN"
-                             type="primary" (click)="verListadoInternacion()">
+                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
+                             label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
                 </plex-button>
-                <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo" size="sm" label="VER CENSO" type="primary"
-                               class="d-inline-block" [right]="true" [items]="itemsDropdown">
+                <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
+                               size="sm" label="VER CENSO" type="primary" class="d-inline-block" [right]="true"
+                               [items]="itemsCensoDropdown">
                 </plex-dropdown>
             </plex-title>
 
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE"
+                             type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
@@ -24,11 +26,14 @@
                 </plex-dropdown>
                 <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true">
                     <plex-grid cols="3">
-                        <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento" (change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Sector" [(ngModel)]="columns.sector"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Documento" [(ngModel)]="columns.documento"(change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Sexo" [(ngModel)]="columns.sexo"(change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
+                                   (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"
+                                   (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Sector" [(ngModel)]="columns.sector" (change)="toggleColumns()"></plex-bool>
+                        <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
+                        </plex-bool>
+                        <plex-bool label="Sexo" [(ngModel)]="columns.sexo" (change)="toggleColumns()"></plex-bool>
                     </plex-grid>
                 </plex-dropdown>
             </plex-title>
@@ -110,7 +115,8 @@
                             <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama"
                                 [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
                                 [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
-                                [permisoIngreso]="permisosMapaCamasService.ingreso" [permisoBloqueo]="permisosMapaCamasService.bloqueo"
+                                [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                [permisoBloqueo]="permisosMapaCamasService.bloqueo"
                                 (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
                                 [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
                             </tr>
