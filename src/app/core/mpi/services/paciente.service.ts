@@ -1,16 +1,13 @@
 import { Observable, combineLatest } from 'rxjs';
-import { HistorialBusquedaService } from './historialBusqueda.service';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PacienteService {
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
-    private carpetaUrl = '/modules/carpetas';
     private pacienteCoreV2 = '/core-v2/mpi/pacientes';
     /**
      * RegEx para validar nombres y apellidos.
@@ -18,12 +15,7 @@ export class PacienteService {
     public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
 
     constructor(
-        private server: Server,
-        private historialBusquedaService: HistorialBusquedaService) { }
-
-    getConsultas(filtro: String): Observable<number> {
-        return this.server.get(`${this.pacienteUrl}/counts?consulta=${filtro}`, null);
-    }
+        private server: Server) { }
 
     /**
      * Metodo getById. Trae un objeto paciente por su Id.
@@ -55,17 +47,6 @@ export class PacienteService {
         return this.server.get(this.pacienteUrl + '/search', { params: params, showError: true });
     }
 
-    getTemporales(): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/temporales/`, null);
-    }
-
-    getNroCarpeta(params: any): Observable<any> {
-        return this.server.get(`${this.carpetaUrl}/carpetasPacientes`, { params: params, showError: true });
-    }
-
-    getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
-        return this.server.get(`${this.carpetaUrl}/carpetasPacientes${id}`, null);
-    }
 
     /**
      * Metodo post. Inserta un objeto paciente nuevo.
@@ -111,14 +92,6 @@ export class PacienteService {
             return this.server.post(this.pacienteUrl, { paciente, ignoreCheck });
         }
     }
-    getSiguienteCarpeta(): Observable<any> {
-        return this.server.get(`${this.carpetaUrl}/ultimaCarpeta`);
-    }
-
-    incrementarNroCarpeta(): Observable<any> {
-        return this.server.post(`${this.carpetaUrl}/incrementarCuenta`, {});
-    }
-
 
 
     // ############################  AUDITORIA  #################################

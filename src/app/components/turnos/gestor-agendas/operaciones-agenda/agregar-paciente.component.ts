@@ -10,6 +10,7 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ObraSocialService } from '../../../../services/obraSocial.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
+import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 
 @Component({
     selector: 'agregar-paciente',
@@ -51,6 +52,7 @@ export class AgregarPacienteComponent implements OnInit {
         private router: Router,
         private auth: Auth,
         private servicePaciente: PacienteService,
+        public serviceCarpetaPaciente: CarpetaPacienteService,
         public obraSocialService: ObraSocialService,
         private route: ActivatedRoute) { }
 
@@ -188,7 +190,7 @@ export class AgregarPacienteComponent implements OnInit {
         }
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+            this.serviceCarpetaPaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.changeCarpeta = true;
