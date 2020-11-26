@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReglaService } from '../../../services/top/reglas.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
@@ -45,7 +44,10 @@ export class VisualizacionReglasComponent implements OnInit {
      */
     filas: any[];
 
-    constructor(private servicioReglas: ReglaService, public servicioPrestacion: TipoPrestacionService, private auth: Auth, private serviceTipoPrestacion: TipoPrestacionService) { }
+    constructor(
+        private servicioReglas: ReglaService,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
         if (this.esParametrizado) {
@@ -54,17 +56,6 @@ export class VisualizacionReglasComponent implements OnInit {
         }
     }
 
-    /**
-     * Trae las prestaciones con nombre "igual" al texto ingresado.
-     * Si se ingresa "sulta dica" trae Consulta médica general
-     * @param {*} event
-     * @memberof VisualizacionReglasComponent
-     */
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({
-            turneable: 1
-        }).subscribe(event.callback);
-    }
 
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que

@@ -1,15 +1,10 @@
 import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-
-import * as moment from 'moment';
 
 @Component({
     selector: 'filtros-mapa-espacio-fisico',
@@ -32,10 +27,13 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     public mostrarMasOpciones = false;
     public espacioNombre = '';
 
-    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
-        public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router,
-        public auth: Auth) { }
+    constructor(
+        public plex: Plex,
+        public servicioProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public serviceAgenda: AgendaService,
+        public auth: Auth
+    ) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
@@ -52,15 +50,6 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
 
     validarTodo() {
         this.onChange.emit(this.agenda);
-    }
-
-    loadTipoPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe((data) => {
-            let dataF = data.filter(x => {
-                return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
-            });
-            event.callback(dataF);
-        });
     }
 
     loadProfesionales(event) {

@@ -14,7 +14,6 @@ import { EspacioFisicoComponent } from './components/turnos/configuracion/espaci
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
-import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
@@ -37,9 +36,6 @@ import { PucoComponent } from './components/puco/puco.component';
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
-
-// CONFIGURACIONES
-import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
@@ -86,7 +82,6 @@ const appRoutes: Routes = [
     { path: 'citas/agendas', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/punto-inicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/punto-inicio/:idPaciente', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -120,9 +115,6 @@ const appRoutes: Routes = [
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
-
-    // Configuraciones / ABM
-    { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // Mapa de camas
     { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },

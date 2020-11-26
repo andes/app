@@ -1,10 +1,10 @@
 import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { QueriesService } from 'src/app/services/query.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -36,7 +36,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     }
 
     constructor(
-        private servicioTipoPrestacion: TipoPrestacionService,
+        private conceptosTurneablesService: ConceptosTurneablesService,
         private organizacionService: OrganizacionService,
         private queryService: QueriesService,
         private auth: Auth,
@@ -132,7 +132,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
-                                this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
+                                this.conceptosTurneablesService.search({ ids: items }).subscribe((data) => {
                                     this.loading = false;
                                     this.seleccionados = [...data];
                                     this.parseSelecionados();
@@ -183,8 +183,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         }
         switch (type) {
             case 'prestacion':
-                query.term = event.query;
-                this.servicioTipoPrestacion.get(query).subscribe((data) => {
+                query.term = '^' + event.query;
+                this.conceptosTurneablesService.search(query).subscribe((data) => {
                     data = [...data, ...this.seleccionados || []];
                     event.callback(data);
                 });

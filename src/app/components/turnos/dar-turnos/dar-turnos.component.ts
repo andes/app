@@ -7,7 +7,6 @@ import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
-import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 
 // Interfaces
@@ -20,7 +19,6 @@ import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
@@ -29,6 +27,8 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -160,7 +160,7 @@ export class DarTurnosComponent implements OnInit {
         public serviceListaEspera: ListaEsperaService,
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
-        public servicioTipoPrestacion: TipoPrestacionService,
+        public conceptosTurneablesService: ConceptosTurneablesService,
         public servicioPrestacionPaciente: PrestacionesService,
         public servicioOS: ObraSocialService,
         public smsService: SmsService,
@@ -218,7 +218,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+        this.conceptosTurneablesService.getAll().subscribe((data) => {
             let dataF;
             if (this.permisos[0] === '*') {
                 dataF = data;

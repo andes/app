@@ -7,7 +7,7 @@
             </plex-select>
         </div>
         <div class="col-md-3">
-            <plex-select [(ngModel)]="prestacionOrigen" (getData)="loadPrestaciones($event)" name="prestOrigen"
+            <plex-select [(ngModel)]="prestacionOrigen" tmPrestaciones preload="true" name="prestOrigen"
                          label="Prestación origen" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
             </plex-select>
         </div>
@@ -18,8 +18,9 @@
             </plex-select>
         </div>
         <div class="col-md-3">
-            <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" (getData)="loadPrestaciones($event)"
-                         label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
+            <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" tmPrestaciones preload="true"
+                         label=" Prestación destino" placeholder="Seleccione la prestación"
+                         (change)="actualizarTabla()">
             </plex-select>
         </div>
     </div>

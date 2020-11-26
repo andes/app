@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import { Component, AfterViewInit, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import * as loadCombos from '../../utils/comboLabelFiltro.component';
@@ -31,8 +30,10 @@ import * as loadCombos from '../../utils/comboLabelFiltro.component';
     </div>
     <div class="row" *ngIf="mostrarMasOpciones">
         <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.prestacion" (getData)="loadPrestaciones($event)" name="prestaciones"
-                label="Prestación" ngModelOptions="{standalone: true}">
+            <plex-select [multiple]="true"
+                         [(ngModel)]="seleccion.prestacion"
+                         tmPrestaciones="visualizacionInformacion:dashboard:citas:tipoPrestacion:?" preload="true" name="prestaciones"
+                            label="Prestación" >
             </plex-select>
         </div>
         <div class="col-3" *ngIf="verProfesionales">
@@ -71,7 +72,6 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     // Permisos
     public verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
-    private idPermisoPrestaciones = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:tipoPrestacion:?');
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
 
@@ -87,8 +87,8 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     constructor(
         private plex: Plex,
         public auth: Auth,
-        public servicioProfesional: ProfesionalService,
-        public servicioPrestacion: TipoPrestacionService) {
+        public servicioProfesional: ProfesionalService
+    ) {
     }
 
     ngAfterViewInit() {
@@ -116,20 +116,6 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
             this.servicioProfesional.get(query).subscribe(resultado => {
                 listaProfesionales = resultado;
                 event.callback(listaProfesionales);
-            });
-        } else {
-            event.callback([]);
-        }
-    }
-
-    loadPrestaciones(event) {
-        let queryPrestacion = {};
-        if (event.query) {
-            if (this.idPermisoPrestaciones.length > 0 && this.idPermisoPrestaciones[0] !== '*') {
-                queryPrestacion = { id: this.idPermisoPrestaciones };
-            }
-            this.servicioPrestacion.get(queryPrestacion).subscribe(result => {
-                event.callback(result);
             });
         } else {
             event.callback([]);

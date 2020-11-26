@@ -4,7 +4,6 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { ITipoPrestacion } from '../../interfaces/ITipoPrestacion';
 
 @Component({
@@ -29,8 +28,7 @@ export class OrganizacionOfertaPrestacionalComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         private route: ActivatedRoute,
-        private organizacionService: OrganizacionService,
-        private conceptosTurneablesService: TipoPrestacionService,
+        private organizacionService: OrganizacionService
     ) { }
 
     ngOnInit() {
@@ -49,12 +47,6 @@ export class OrganizacionOfertaPrestacionalComponent implements OnInit {
         });
     }
 
-    loadTipoPrestaciones(event) {
-        this.conceptosTurneablesService.get({ turneable: 1 })
-            .subscribe(conceptosTurneables =>
-                event.callback(conceptosTurneables)
-            );
-    }
 
     /*
      * AGREGAR

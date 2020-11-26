@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy, HostBinding, ViewContainerRef, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewContainerRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../../services/turnos/agenda.service';
@@ -14,6 +12,7 @@ import { enumToArray } from '../../../utils/enums';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { Subscription } from 'rxjs';
 import { InstitucionService } from '../../../services/turnos/institucion.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 @Component({
     selector: 'gestor-agendas',
@@ -88,9 +87,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     items: any[];
 
-    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
-        public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, public serviceInstitucion: InstitucionService, private router: Router,
+    constructor(
+        public plex: Plex,
+        private conceptoTurneablesService: ConceptosTurneablesService,
+        public serviceProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public serviceAgenda: AgendaService,
+        public serviceInstitucion: InstitucionService,
+        private router: Router,
         public auth: Auth) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -145,7 +149,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
 
             if (this.parametros.idTipoPrestacion) {
-                this.servicioPrestacion.getById(this.parametros.idTipoPrestacion).subscribe(rta => { this.prestaciones = rta; });
+                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => { this.prestaciones = rta; });
             }
             if (this.parametros.espacioFisico || this.parametros.idProfesional || this.parametros.estado) {
                 this.mostrarMasOpciones = true;
@@ -415,18 +419,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         localStorage.setItem('filtrosGestorAgendas', JSON.stringify(this.parametros));
         localStorage.setItem('idAgenda', agenda._id);
         this.router.navigate(['citas/revision_agenda', agenda._id]);
-    }
-
-    loadPrestaciones(event) {
-        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
-            this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
-            }).subscribe(event.callback);
-        } else {
-            this.servicioPrestacion.get({
-                turneable: 1
-            }).subscribe(event.callback);
-        }
     }
 
     loadProfesionales(event) {

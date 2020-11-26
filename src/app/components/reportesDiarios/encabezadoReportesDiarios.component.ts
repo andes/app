@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
-import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
 import { ProfesionalService } from '../../services/profesional.service';
 import { ExcelService } from '../../services/xlsx.service';
@@ -20,7 +19,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     public showBotonImprimir = false;
     public opcionesOrganizacion: any = [];
     public opcionesReportes: { id: number, nombre: string }[] = [];
-    public opcionesPrestacion: any = [];
     public parametros = {};
     public organizacion;
     public tipoReportes;
@@ -48,7 +46,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         private plex: Plex,
         private agendaService: AgendaService,
         private servicioOrganizacion: OrganizacionService,
-        private servicioPrestacion: TipoPrestacionService,
         private profesionalService: ProfesionalService,
         private excelService: ExcelService
     ) {
@@ -68,7 +65,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         this.mes = null;
         this.anio = null;
         this.opcionesReportes = this.getObjTiposReportes();
-        this.loadPrestaciones();
         this.loadOrganizacion();
         this.opcionesMes = getObjMeses();
         this.opcionesAnio = this.getObjAnios();
@@ -115,13 +111,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         });
     }
 
-    loadPrestaciones() {
-        this.servicioPrestacion.get({
-            turneable: 1
-        }).subscribe((data) => {
-            this.opcionesPrestacion = data;
-        });
-    }
 
     loadProfesionales(event) {
         if (this.profesional) {

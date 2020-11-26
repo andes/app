@@ -75,7 +75,6 @@ import { AppMobileService } from './services/appMobile.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
-import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ObraSocialCacheService } from './services/obraSocialCache.service';
 
@@ -130,8 +129,6 @@ import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.compo
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
-import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
-import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/suspender-turno.component';
 import { ReasignarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar/reasignar-turno.component';
@@ -204,11 +201,6 @@ import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
-
-
-// Configuracion prestaciones
-import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
-import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
 import { FormulaBaseService } from './modules/rup/components/formulas';
@@ -301,7 +293,7 @@ registerLocaleData(localeEs, 'es');
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent,
+        RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         AgregarPacienteComponent,
@@ -351,9 +343,6 @@ registerLocaleData(localeEs, 'es');
         ArbolItemComponent,
         FormTerapeuticoDetallePageComponent,
         AddformTerapeuticoComponent,
-        // Configuracion prestacion
-        ConfiguracionPrestacionVisualizarComponent,
-        ConfiguracionPrestacionCrearComponent,
         PucoComponent,
 
         // Campañas Salud
@@ -406,7 +395,6 @@ registerLocaleData(localeEs, 'es');
         SmsService,
         PrestacionesService,
         AdjuntosService,
-        TipoPrestacionService,
         ObraSocialService,
         ObraSocialCacheService,
         ProfeService,

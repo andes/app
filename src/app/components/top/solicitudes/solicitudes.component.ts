@@ -3,7 +3,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { Unsubscribe } from '@andes/shared';
@@ -107,10 +106,10 @@ export class SolicitudesComponent implements OnInit {
         public auth: Auth,
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
-        public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnos: TurnoService,
         public servicioOrganizacion: OrganizacionService,
-        public router: Router, private route: ActivatedRoute,
+        public router: Router,
+        private route: ActivatedRoute,
         private hudsService: HUDSService,
     ) { }
 

@@ -6,7 +6,6 @@ import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
@@ -107,7 +106,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public auth: Auth,
         private router: Router,
         private route: ActivatedRoute,
-        public servicioTipoPrestacion: TipoPrestacionService,
         private servicioPaciente: PacienteService,
         private conceptObserverService: ConceptObserverService,
         private buscadorService: SnomedBuscarService,

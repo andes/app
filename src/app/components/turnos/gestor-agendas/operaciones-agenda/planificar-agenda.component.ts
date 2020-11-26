@@ -7,7 +7,6 @@ import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 import * as operaciones from './../../../../utils/operacionesJSON';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
@@ -64,8 +63,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: Subscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
-        public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public servicioInstitucion: InstitucionService, public auth: Auth) { }
+    constructor(
+        public plex: Plex,
+        public servicioProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public organizacionService: OrganizacionService,
+        public serviceAgenda: AgendaService,
+        public servicioInstitucion: InstitucionService,
+        public auth: Auth
+    ) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
@@ -100,14 +106,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.calculosInicio();
     }
 
-    loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter(x => {
-                return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
-            });
-            event.callback(dataF);
-        });
-    }
 
     loadProfesionales(event) {
         if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {

@@ -1,5 +1,4 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -34,8 +33,7 @@ export class PrestacionCrearComponent implements OnInit {
     // Fecha seleccionada
     public fecha: Date = new Date();
     public max: Date = new Date();
-    // Tipos de prestacion que el usuario tiene permiso
-    public tiposPrestacion: ITipoPrestacion[] = [];
+
     // Tipos de prestacion seleccionada
     public tipoPrestacionSeleccionada: ITipoPrestacion;
     // Paciente sleccionado
@@ -73,7 +71,6 @@ export class PrestacionCrearComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
-        public servicioTipoPrestacion: TipoPrestacionService,
         private location: Location,
         private osService: ObraSocialCacheService,
         private pacienteService: PacienteService,
@@ -81,11 +78,7 @@ export class PrestacionCrearComponent implements OnInit {
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
-        // Carga tipos de prestaciones permitidas para el usuario
 
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-            this.tiposPrestacion = data;
-        });
 
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];

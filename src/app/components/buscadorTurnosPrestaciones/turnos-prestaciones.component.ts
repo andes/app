@@ -2,7 +2,6 @@ import { Unsubscribe } from '@andes/shared';
 import { Component, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
-import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
@@ -56,11 +55,15 @@ export class TurnosPrestacionesComponent implements OnInit {
     public sortOrder = 'desc';
 
     constructor(
-        private auth: Auth, private plex: Plex,
-        private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router
-
+        private auth: Auth,
+        private plex: Plex,
+        private turnosPrestacionesService: TurnosPrestacionesService,
+        public serviceProfesional: ProfesionalService,
+        private facturacionAutomaticaService: FacturacionAutomaticaService,
+        private hudsService: HUDSService,
+        private router: Router
     ) { }
+
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
         this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
@@ -225,11 +228,6 @@ export class TurnosPrestacionesComponent implements OnInit {
 
     }
 
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({
-            turneable: 1
-        }).subscribe(event.callback);
-    }
 
     @Unsubscribe()
     loadEquipoSalud(event) {

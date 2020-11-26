@@ -7,7 +7,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';

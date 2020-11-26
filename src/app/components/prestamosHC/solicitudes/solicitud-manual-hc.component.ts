@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Plex } from '@andes/plex';
@@ -15,9 +14,8 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
     templateUrl: './solicitud-manual-hc.component.html'
 })
 
-export class SolicitudManualComponent implements OnInit {
+export class SolicitudManualComponent {
     private _carpeta: any;
-    public prestacionesPermisos = [];
     public espacioFisico = null;
     public tipoPrestacion: any;
     public profesional: any;
@@ -42,29 +40,11 @@ export class SolicitudManualComponent implements OnInit {
     constructor(
         public plex: Plex,
         public prestamosService: PrestamosService,
-        public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
         public servicePaciente: PacienteService,
         public auth: Auth) {
     }
-
-    ngOnInit() {
-
-    }
-
-    loadPrestaciones(event) {
-        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
-            this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
-            }).subscribe(event.callback);
-        } else {
-            this.servicioPrestacion.get({
-                turneable: 1
-            }).subscribe(event.callback);
-        }
-    }
-
     loadEspacios(event) {
         let listaEspaciosFisicos = [];
         if (event.query) {
@@ -105,7 +85,7 @@ export class SolicitudManualComponent implements OnInit {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.obtenerCarpetaPaciente( () => {
+                    this.obtenerCarpetaPaciente(() => {
                         this.solicitud = {};
                         this.solicitud.organizacion = this.auth.organizacion;
                         this.solicitud.paciente = this.paciente;
@@ -145,7 +125,7 @@ export class SolicitudManualComponent implements OnInit {
         if (this.paciente.carpetaEfectores) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find(e => (e.organizacion as any)._id === this.auth.organizacion.id);
             if (!this.carpetaEfector) {
-                this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe( carpetas => {
+                this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetas => {
                     if (carpetas.length > 0) {
                         let _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                         if (_carpetaEfector.nroCarpeta) {

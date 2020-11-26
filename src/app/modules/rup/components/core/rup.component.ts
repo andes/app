@@ -2,7 +2,6 @@ import { Auth } from '@andes/auth';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
@@ -109,7 +108,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
         protected conceptObserverService: ConceptObserverService,
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
-        public servicioTipoPrestacion: TipoPrestacionService,
         public auth: Auth,
         public ocupacionService: OcupacionService,
         public financiadorService: FinanciadorService,
