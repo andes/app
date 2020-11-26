@@ -103,14 +103,18 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     }
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
         if (this.subscription2) {
             this.subscription2.unsubscribe();
         }
         if (this.subscription3) {
             this.subscription3.unsubscribe();
         }
-        this.subscription4.unsubscribe();
+        if (this.subscription4) {
+            this.subscription4.unsubscribe();
+        }
     }
 
     ngOnInit() {
