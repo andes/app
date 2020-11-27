@@ -132,15 +132,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             this.min$,
         ).pipe(
             map(([prestaciones, desde, hasta, tipoPrestacion, min]) => {
-                desde = desde.getTime() < min.getTime() ? min : desde;
-                desde = moment(desde);
-                return prestaciones.filter((prestacion) => {
-                    const fecha = moment(prestacion.ejecucion.fecha);
-                    if (tipoPrestacion) {
-                        return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
-                    }
-                    return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
-                });
+                if (desde) {
+                    desde = desde.getTime() < min.getTime() ? min : desde;
+                    desde = moment(desde);
+                    return prestaciones.filter((prestacion) => {
+                        const fecha = moment(prestacion.ejecucion.fecha);
+                        if (tipoPrestacion) {
+                            return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                        }
+                        return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
+                    });
+                }
             })
         );
 
