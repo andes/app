@@ -603,8 +603,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
 
         if (this.parametros) {
+            this.parametros.skip = 0;
+            this.scrollEnd = false;
             this.getAgendas();
         } else {
+            this.parametros.skip = 0;
+            this.scrollEnd = false;
             this.loadAgendas();
         }
         if (!this.showSuspenderAgenda) {
