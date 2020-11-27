@@ -1,0 +1,29 @@
+<form #form="ngForm" *ngIf="!soloValores">
+
+    <ng-container *ngIf="data$ | async as data">
+        <plex-radio [label]="label" [required]="required" name="plex-radio" [data]="data" [(ngModel)]="valor"
+                    [multiple]="multiple" [keyField]="idField" [labelField]="labelField" [type]="type"
+                    (change)="onValueChange(data, $event.value)">
+        </plex-radio>
+    </ng-container>
+</form>
+
+<p *ngIf="soloValores" class="readonly">
+
+    <label class="text-capitalize">{{ label }}</label>
+
+    <ng-container *ngIf="registro.valor  && !multiple">
+        <p class="list-item-group text-capitalize">
+            {{  registro.valor[labelField] }}</p>
+    </ng-container>
+    <ng-container *ngIf="registro.valor  && multiple">
+        <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">
+            <li class="list-item text-capitalize">
+                {{ valor[labelField] }}
+            </li>
+        </ul>
+    </ng-container>
+    <ng-container *ngIf="!registro.valor || registro.valor.length === 0">
+        Sin datos
+    </ng-container>
+</p>
