@@ -132,6 +132,9 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             this.min$,
         ).pipe(
             map(([prestaciones, desde, hasta, tipoPrestacion, min]) => {
+                if (!desde) {
+                    desde = moment().subtract(7, 'd').toDate();
+                }
                 desde = desde.getTime() < min.getTime() ? min : desde;
                 desde = moment(desde);
                 return prestaciones.filter((prestacion) => {
