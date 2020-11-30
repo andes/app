@@ -2,7 +2,6 @@ import * as moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../services/profesional.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -25,8 +24,8 @@ import { Auth } from '@andes/auth';
     </div>
     <div class="row">
         <div class="col-4">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.organizaciones" name="organizaciones" (getData)="loadOrganizacion($event)"
-                label="Organización" placeholder="Seleccione la organización" labelField="nombre">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.organizaciones" name="organizaciones" tmOrganizaciones
+                label="Organización" placeholder="Seleccione la organización">
             </plex-select>
         </div>
         <div class="col-4">
@@ -90,24 +89,12 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     constructor(
         private plex: Plex,
         public auth: Auth,
-        public servicioProfesional: ProfesionalService,
-        public servicioOrganizacion: OrganizacionService
+        public servicioProfesional: ProfesionalService
     ) { }
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
         this.onDisplayChange.emit(this.esTablaGrafico);
-    }
-
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
     }
 
     loadProfesionales(event) {

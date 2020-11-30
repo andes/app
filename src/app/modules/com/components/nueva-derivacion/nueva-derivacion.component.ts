@@ -92,7 +92,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
         });
-        this.loadOrganizaciones();
+        this.cargarDestinos();
     }
 
     ngOnDestroy() {
@@ -124,7 +124,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         );
     }
 
-    loadOrganizaciones() {
+    cargarDestinos() {
         this.organizacionService.get({ esCOM: true }).subscribe(resultado => {
             this.organizacionesDestino = resultado;
             this.organizacionDestino = this.organizacionesDestino[0];
