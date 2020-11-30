@@ -79,6 +79,9 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         } else {
             this.registro.valor = items.find(item => item[this.idField] === valor);
         }
+        this.addFact('value', this.registro.valor);
+        this.emitChange();
+
     }
 
 }

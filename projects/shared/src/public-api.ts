@@ -12,3 +12,4 @@ export * from './lib/operators';
 export * from './lib/navigations';
 export * from './lib/directives/autosave.directives';
 export * from './lib/components/galeria-archivos/galeria-archivos.component';
+export * from './lib/pipes/edad.pipe';

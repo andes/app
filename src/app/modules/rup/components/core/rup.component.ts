@@ -3,7 +3,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional, OnDestroy } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
@@ -24,13 +24,17 @@ import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { PlantillasService } from '../../services/plantillas.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
+import { Engine } from 'json-rules-engine';
+import { calcularEdad } from '@andes/shared';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'rup',
     encapsulation: ViewEncapsulation.None,
     template: ''
 })
-export class RUPComponent implements OnInit, AfterViewInit {
+export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
     @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
@@ -43,8 +47,19 @@ export class RUPComponent implements OnInit, AfterViewInit {
     @Input() soloValores: boolean;
     @Input() vistaHUDS = false;
     @Input() params: any;
-    @Input() opcionales: any;
+    @Input() style: any;
+
     public mensaje: any = {};
+
+    private rulesEngine: Engine;
+    private rulesEvent = new Subject<{ type: string, params: any }>();
+    private rulesEvent$ = this.rulesEvent.asObservable();
+
+    /**
+     * Determina si un elemento RUP es valido. Se setea apartir de reglas.
+     */
+
+    public _isValid = true;
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -81,7 +96,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['vistaHUDS'] = this.vistaHUDS;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
-        componentReference.instance['opcionales'] = this.opcionales;
+        componentReference.instance['style'] = this.style;
 
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
@@ -95,6 +110,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
+
+        componentReference.instance['createEngine']();
 
         this.rupInstance = componentReference.instance;
     }
@@ -133,6 +150,17 @@ export class RUPComponent implements OnInit, AfterViewInit {
         this.loadComponent();
     }
 
+    ngOnDestroy() {
+        this.onDestroy();
+        this.onDestroy$.next();
+        this.onDestroy$.complete();
+
+        if (this.rulesEngine) {
+            (this.rulesEngine as any).removeAllListeners();
+            this.rulesEngine.stop();
+        }
+    }
+
     ngAfterViewInit() {
         // Hack momentaneo
         if (!this.soloValores) {
@@ -140,41 +168,22 @@ export class RUPComponent implements OnInit, AfterViewInit {
         }
     }
 
+
     /**
      * Emite el evento change con los nuevos datos de registro
-     *
-     * @protected
-     * @memberof RUPComponent
      */
-    prepareEmit(notifyObservers = true) {
-        /**
-        llamas a la funcion getMensajes y setea el objeto mensaje
-        para devolver el valor a los átomos, moléculas, fórmulas, etc
-        */
+    public emitChange(notifyObservers = true) {
         this.mensaje = this.getMensajes();
         // Notifica a todos los components que estén suscriptos con este concepto
         if (notifyObservers) {
             this.conceptObserverService.notify(this.registro.concepto, this.registro);
         }
-    }
-
-    /**
-     * Emite el evento change con los nuevos datos de registro
-     *
-     * @protected
-     * @memberof RUPComponent
-     */
-    public emitChange(notifyObservers = true) {
-        this.prepareEmit();
 
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
     }
 
     public emitEjecutarAccion(evento, datos) {
-        // this.prepareEmit();
-
-        // Notifica al componente padre del cambio
         this.ejecutarAccion.emit({ evento, datos });
     }
 
@@ -210,7 +219,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     }
     /**
     * valida los atomos, moleculas, formulas, etc.
-    * Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
+    * Si existe un formulario en el elementoRUP, lo valida automaticamente, y si la misma tiene más elementosRUP
     * adentro ejecuta el validate en cada uno de sus hijos.
     *
     * Cada elementoRUP puede sobreescribir el metodo OnValidate para agregar validaciones especiales.
@@ -222,8 +231,13 @@ export class RUPComponent implements OnInit, AfterViewInit {
         const validChild = this.validateChild();
         const validForm = this.validateForm();
         const validateMain = this.onValidate();
-        return validChild && validForm && validateMain;
+        return validChild && validForm && validateMain && this._isValid;
     }
+
+    /**
+     * Reemplazar en los elementosRUP propios para ejecutar codigo al destruir el elemento
+     */
+    public onDestroy() { }
 
     public onValidate() {
         return true;
@@ -234,6 +248,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     */
     public validateForm() {
         if (this.formulario) {
+
             for (let key in this.formulario.controls) {
                 let frm = this.formulario.controls[key];
                 frm.markAsTouched();
@@ -305,5 +320,57 @@ export class RUPComponent implements OnInit, AfterViewInit {
         const sexo = prestacion && prestacion.paciente && prestacion.paciente.sexo;
         const sexoFilter = requerido && requerido.sexo;
         return !sexo || !sexoFilter || sexo === sexoFilter;
+    }
+
+
+
+    createEngine() {
+        if (this.elementoRUP.rules && this.paciente && !this.soloValores) {
+            this.rulesEngine = new Engine([], { allowUndefinedFacts: true });
+
+            this.rulesEngine.addFact('edad', calcularEdad(this.paciente.fechaNacimiento, 'y'));
+            this.rulesEngine.addFact('meses', calcularEdad(this.paciente.fechaNacimiento, 'm'));
+            this.rulesEngine.addFact('sexo', this.paciente.sexo);
+
+            this.elementoRUP.rules.forEach(rule => {
+                this.rulesEngine.addRule(rule);
+            });
+
+            this.rulesEngine.on('success', (event: any) => {
+                if (event.type === 'validation') {
+                    const valid = !!event.params?.value;
+                    this._isValid = valid;
+                }
+                this.rulesEvent.next(event);
+            });
+
+            this.runRules();
+        }
+    }
+
+    public onDestroy$ = new Subject();
+
+    addFact(name: string, valor: any) {
+        if (this.rulesEngine) {
+            this._isValid = true;
+            this.rulesEngine.addFact(name, valor);
+            this.runRules();
+        }
+    }
+
+    runRules() {
+        this.rulesEngine.run();
+    }
+
+    onRule(name?: string) {
+        const pipes = this.rulesEvent$.pipe(
+            takeUntil(this.onDestroy$)
+        );
+        if (name) {
+            return pipes.pipe(
+                filter(event => event.type === name)
+            );
+        }
+        return pipes;
     }
 }

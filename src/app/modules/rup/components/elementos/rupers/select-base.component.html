@@ -1,4 +1,4 @@
-<ng-container *ngIf="!soloValores">
+<ng-container *ngIf="!soloValores && !style?.soloValores">
     <form #form="ngForm">
         <div class="grow">
             <ng-container *ngIf="params.preload">
@@ -25,9 +25,9 @@
         </plex-text>
     </form>
 </ng-container>
-<ng-container *ngIf="soloValores">
-    <p *ngIf="registro.valor" class="readonly">
-        <span>{{ titulo }} </span>
+<ng-container *ngIf="soloValores || style?.soloValores">
+    <p class="readonly">
+        <label class="text-capitalize">{{ titulo }} </label>
         <ng-container *ngIf="registro.valor">
             <ng-container *ngIf="params.multiple">
                 <ng-container *ngFor="let item of registro.valor; let last = last">

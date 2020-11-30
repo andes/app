@@ -38,11 +38,28 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
                     // TODO : Queda pendiente disparar un alerta para el usuario que se recupera el valor desde otra prestacion
                 });
             }
+
+
+            this.addFact('value', this.registro.valor);
+
+            this.onRule('alert').subscribe(evento => {
+                const { params } = evento;
+                this.mensaje = {
+                    texto: params.message,
+                    type: params.type
+                };
+            });
         }
         if (this.params) {
             this.esRequerido = this.params.required;
         } else {
             this.esRequerido = false;
         }
+    }
+
+    onChange() {
+        this.emitChange();
+        this.mensaje = {};
+        this.addFact('value', this.registro.valor);
     }
 }
