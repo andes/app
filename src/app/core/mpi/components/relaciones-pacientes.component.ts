@@ -95,17 +95,24 @@ export class RelacionesPacientesComponent implements OnInit {
         this.posiblesRelaciones = listaPacientes;
     }
 
-    seleccionarRelacionEntrante(data: IPaciente | IPacienteRelacion) {
-        if (data.id) {
+    seleccionarRelacionEntrante(data: any) {
+        if (data.referencia) {
+            // creamos una copia del objeto relacion para no editarla directamente
+            this.relacionEntrante = [Object.assign({}, data)];
+        } else if (data.id) {
             this.relacionEntrante = [data];
-            this.onSearchClear();
         }
+        this.onSearchClear();
     }
 
     addRelacion(unaRelacion) {
         // es una relacion existente?
         if (unaRelacion.referencia) {
-            // notificamos cambios
+            // efectuamos y notificamos cambios
+            let index = this.paciente.relaciones.findIndex(rel => unaRelacion.referencia === rel.referencia);
+            if (index >= 0) {
+                this.paciente.relaciones[index] = unaRelacion;
+            }
             this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
         } else {
             // relacion inexistente, construimos una nueva
