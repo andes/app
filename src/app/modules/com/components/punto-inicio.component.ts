@@ -107,7 +107,7 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.estado) {
             query.estado = this.estado.id;
         } else {
-            query.estado = ['asignada', 'solicitada', 'inhabilitada', 'habilitada', 'asignada', 'rechazada', 'aceptada', 'encomendada'];
+            query.estado = '~finalizada';
         }
         if (this.prioridad) {
             query.prioridad = this.prioridad.id;

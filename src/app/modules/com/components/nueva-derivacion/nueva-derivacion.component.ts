@@ -133,28 +133,34 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     guardarDerivacion($event) {
         if ($event.formValid) {
-            this.modelo.organizacionOrigen = this.auth.organizacion;
-            this.modelo.paciente = {
-                id: this.paciente.id,
-                nombre: this.paciente.nombre,
-                apellido: this.paciente.apellido,
-                documento: this.paciente.documento,
-                sexo: this.paciente.sexo,
-                fechaNacimiento: this.paciente.fechaNacimiento
-            };
-            if (this.paciente.financiador) {
-                this.modelo.paciente.obraSocial = this.paciente.financiador[0];
-            }
-            this.modelo.organizacionDestino = {
-                id: this.organizacionDestino.id,
-                nombre: this.organizacionDestino.nombre,
-                direccion: this.organizacionDestino.direccion
-            };
-            this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
-            this.modelo.adjuntos = this.adjuntos;
-            this.derivacionesService.create(this.modelo).subscribe(respuesta => {
-                this.router.navigate(['/com']);
-                this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+            this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada' }).subscribe(resultado => {
+                if (resultado.length) {
+                    this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
+                } else {
+                    this.modelo.organizacionOrigen = this.auth.organizacion;
+                    this.modelo.paciente = {
+                        id: this.paciente.id,
+                        nombre: this.paciente.nombre,
+                        apellido: this.paciente.apellido,
+                        documento: this.paciente.documento,
+                        sexo: this.paciente.sexo,
+                        fechaNacimiento: this.paciente.fechaNacimiento
+                    };
+                    if (this.paciente.financiador) {
+                        this.modelo.paciente.obraSocial = this.paciente.financiador[0];
+                    }
+                    this.modelo.organizacionDestino = {
+                        id: this.organizacionDestino.id,
+                        nombre: this.organizacionDestino.nombre,
+                        direccion: this.organizacionDestino.direccion
+                    };
+                    this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
+                    this.modelo.adjuntos = this.adjuntos;
+                    this.derivacionesService.create(this.modelo).subscribe(respuesta => {
+                        this.router.navigate(['/com']);
+                        this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                    });
+                }
             });
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
