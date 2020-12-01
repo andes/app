@@ -32,8 +32,8 @@ export const COM_COMPONENTS = [
 export const COM_PROVIDERS = [
     COMAdjuntosService,
     DerivacionesService,
-    ReglasDerivacionService,
-    PuntoInicioService
+    ReglasDerivacionService
+
 ];
 
 @NgModule({

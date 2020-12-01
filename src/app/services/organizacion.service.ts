@@ -1,4 +1,4 @@
-import { Server, Cache } from '@andes/shared';
+import { Server, Cache, cacheStorage } from '@andes/shared';
 import { IOrganizacion, ISectores } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -21,7 +21,9 @@ export class OrganizacionService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IOrganizacion> {
-        return this.server.get(this.organizacionUrl + '/' + id, null);
+        return this.server.get(this.organizacionUrl + '/' + id, null).pipe(
+            cacheStorage({ key: 'organizacion-' + id })
+        );
     }
 
     getGeoreferencia(id: String): Observable<any> {

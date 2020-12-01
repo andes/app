@@ -10,17 +10,19 @@ import { Plex } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 
 @Component({
     selector: 'com-punto-inicio',
     templateUrl: './punto-inicio.html',
-    styleUrls: ['./punto-inicio.scss']
+    styleUrls: ['./punto-inicio.scss'],
+    providers: [
+        PuntoInicioService
+    ]
 })
-
 export class ComPuntoInicioComponent implements OnInit {
     public derivaciones$: Observable<any[]>;
-    public orgActual;
+    public orgActual$: Observable<any>;
     public esCOM = false;
     public showSidebar = false;
     public showNuevaDerivacion = false;
@@ -61,8 +63,19 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortBy = 'fecha';
     public sortOrder = 'asc';
 
-    constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router, public plex: Plex, private reglasDerivacionService: ReglasDerivacionService, private documentosService: DocumentosService, private puntoInicioService: PuntoInicioService) { }
+
+    sortData$: Observable<any>;
+
+    constructor(
+        private derivacionesService: DerivacionesService,
+        private organizacionService: OrganizacionService,
+        private auth: Auth,
+        public router: Router,
+        public plex: Plex,
+        private reglasDerivacionService: ReglasDerivacionService,
+        private documentosService: DocumentosService,
+        private puntoInicioService: PuntoInicioService
+    ) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -72,29 +85,39 @@ export class ComPuntoInicioComponent implements OnInit {
             this.reglasDerivacion = resultado;
         });
         this.organizacionActual = this.auth.organizacion as any;
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
-            this.orgActual = org;
-            if (org.esCOM) {
-                this.esCOM = true;
-            }
-            this.cargarDerivaciones();
-        });
+        this.orgActual$ = this.organizacionService.getById(this.auth.organizacion.id);
+
+        this.derivaciones$ = this.puntoInicioService.getListado();
+        this.sortData$ = this.puntoInicioService.getSortCriteria();
+
     }
 
     onScroll() {
-        if (!this.scrollEnd) {
-            this.actualizarTabla();
-        }
+        this.puntoInicioService.nextPage();
+        // if (!this.scrollEnd) {
+        //     this.actualizarTabla();
+        // }
     }
 
     cargarDerivaciones() {
-        if (!this.loading) {
-            this.loading = true;
-            this.skip = 0;
-            this.scrollEnd = false;
-            this.derivaciones = [];
-            this.actualizarTabla();
-        }
+        const filtros = {
+            paciente: this.paciente,
+            estado: this.estado,
+            organizacionOrigen: this.organizacionOrigen,
+            organizacionDestino: this.organizacionDestino
+
+        };
+
+        this.puntoInicioService.setFiltros(filtros);
+
+
+        // if (!this.loading) {
+        //     this.loading = true;
+        //     this.skip = 0;
+        //     this.scrollEnd = false;
+        //     this.derivaciones = [];
+        //     this.actualizarTabla();
+        // }
     }
 
     @Unsubscribe()
@@ -126,16 +149,16 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
-        this.puntoInicioService.get(query).subscribe((data) => {
-            this.derivaciones = this.derivaciones.concat(data);
-            this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
-            this.skip = this.derivaciones.length;
-            this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
-            if (!data.length || data.length < this.limit) {
-                this.scrollEnd = true;
-            }
-            this.loading = false;
-        });
+        // this.puntoInicioService.get(query).subscribe((data) => {
+        //     this.derivaciones = this.derivaciones.concat(data);
+        //     this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
+        //     this.skip = this.derivaciones.length;
+        //     this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
+        //     if (!data.length || data.length < this.limit) {
+        //         this.scrollEnd = true;
+        //     }
+        //     this.loading = false;
+        // });
     }
 
     ocultarSidebars() {
@@ -193,9 +216,19 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionDestino = null;
             this.paciente = null;
             this.prioridad = null;
+
             this.tabIndex = index;
+
+            const filtros = {
+                skip: 0,
+                tipo: index === 0 ? 'entrantes' : 'solicitadas'
+            };
+
+            this.puntoInicioService.setFiltros(filtros);
+
+
             this.ocultarSidebars();
-            this.cargarDerivaciones();
+            // this.cargarDerivaciones();
         }
     }
 
@@ -216,16 +249,17 @@ export class ComPuntoInicioComponent implements OnInit {
         this.verAyuda = mostrar;
     }
 
-    sortList(event: string) {
-        if (this.sortBy === event) {
-            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
-            this.puntoInicioService.sortOrder.next(this.sortOrder);
-        } else {
-            this.sortBy = event;
-            this.sortOrder = 'asc';
-            this.puntoInicioService.sortBy.next(event);
-            this.puntoInicioService.sortOrder.next(this.sortOrder);
-        }
+    sortList(sortBy: string) {
+        this.puntoInicioService.setOrder(sortBy);
+        // if (this.sortBy === event) {
+        //     this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+        //     this.puntoInicioService.sortOrder.next(this.sortOrder);
+        // } else {
+        //     this.sortBy = event;
+        //     this.sortOrder = 'asc';
+        //     this.puntoInicioService.sortBy.next(event);
+        //     this.puntoInicioService.sortOrder.next(this.sortOrder);
+        // }
     }
 
     imprimirComprobante(derivacion: any) {
