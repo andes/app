@@ -28,38 +28,14 @@
         <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                    grow="full" required="true">
         </plex-text>
-        <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-        <plex-button class="mt-2" *ngIf="!waiting" type="primary" size="sm" label="Subir archivo"
-                     (click)="upload.click()">
-        </plex-button>
-    </plex-wrapper>
-    <plex-wrapper *ngIf="adjuntosEstado.length > 0">
-        <span *ngIf="!waiting">
-            <span *ngIf="errorExt">
-                <plex-badge type="danger"> Archivo inválido </plex-badge>
-            </span>
+        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [modulo]="'com'"></upload-file>
+        <br><br>
+        <span *ngIf="errorExt">
+            <plex-badge type="danger">Archivo inválido.</plex-badge>
         </span>
-        <span *ngIf="waiting">
-            <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
-            <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
-            </plex-button>
-        </span>
-        <div class="image-container hr-inline-group" *ngIf="adjuntosEstado && fileToken">
-            <ng-container *ngFor="let doc of adjuntosEstado; let i = index">
-                <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
-                <div class="image hover">
-                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
-                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                       (click)="visualizador.open(i)">
-                        {{ doc.ext }}
-                    </a>
-                    <div class="x-mark" (click)="removeFile(doc)">
-                        <span class="close"></span>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
     </plex-wrapper>
+    <shared-galeria-archivos [files]="documentosUrl" [loading]="waiting" (remove)="removeFile($event)">
+    </shared-galeria-archivos>
     <div class="w-100" justify>
         <plex-button type="danger" (click)="cerrar()">
             Cancelar

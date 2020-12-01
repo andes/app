@@ -25,6 +25,7 @@ export interface ICompleted {
 export class UploadFileComponent {
     @Input() label = 'SUBIR';
     @Input() extensiones: string[] = null;
+    @Input() modulo: string = null;
 
     @Output() onProgress = new EventEmitter<IProgress>();
     @Output() onUpload = new EventEmitter<ICompleted>();
@@ -72,7 +73,6 @@ export class UploadFileComponent {
             }
 
         }
-
         this.portFile(this.currentFileUpload).subscribe(event => {
             if (event.type === HttpEventType.UploadProgress) {
                 const { loaded, total } = event;
@@ -82,9 +82,11 @@ export class UploadFileComponent {
             if (event.type === HttpEventType.Response) {
                 this.disabled = false;
                 this.uploadElement.nativeElement.value = null;
-                const { status, body } = event;
+                const status = event.status;
+                let body = JSON.parse(event.body as string);
+                body.ext = this.getExtension(this.currentFileUpload.name);
                 if (status >= 200 && status < 300) {
-                    this.onUpload.emit({ status, body: JSON.parse(body as string) });
+                    this.onUpload.emit({ status, body });
                 }
             }
         }, (error) => {
@@ -95,6 +97,9 @@ export class UploadFileComponent {
     portFile(file: File) {
         const formdata: FormData = new FormData();
         formdata.append('file', file);
+        if (this.modulo) {
+            formdata.append('origen', this.modulo);
+        }
         const headers: HttpHeaders = new HttpHeaders({
             'Authorization': 'JWT ' + window.sessionStorage.getItem('jwt')
         });

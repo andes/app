@@ -23,10 +23,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     detalle: '';
     // Adjuntar Archivo
     errorExt = false;
-    waiting = false;
     fileToken: String = null;
-    timeout = null;
     adjuntos = [];
+    adjuntosUrl = [];
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
 
@@ -182,77 +181,28 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Adjuntar archivo
-    changeListener($event): void {
-        this.readThis($event.target);
-    }
-
-    readThis(inputValue: any): void {
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            this.errorExt = true;
-            return;
-        }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            let metadata = {};
-            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.adjuntos.push({
-                    ext,
-                    id: data._id
-                });
+    onUpload($event) {
+        if ($event.status = 200) {
+            this.adjuntos.push({
+                ext: $event.body.ext,
+                id: $event.body.id
             });
-
-
-        };
-        myReader.readAsDataURL(file);
-    }
-
-    fileExtension(file) {
-        if (file.lastIndexOf('.') >= 0) {
-            return file.slice((file.lastIndexOf('.') + 1));
-        } else {
-            return '';
+            this.calcDocumentosUrl();
         }
     }
 
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
-    }
-
-    subirArchivo($event) {
-        let foto = {
-            ext: this.fileExtension($event.file.name),
-            file: $event.src,
-        };
-        this.adjuntos.push(foto);
-    }
-
-    eliminarArchivo($event) {
+    removeFile($event) {
         let index = this.adjuntos.indexOf($event);
         this.adjuntos.splice(index, 1);
+        this.calcDocumentosUrl();
     }
 
-    get adjuntosUrl() {
-        return this.adjuntos.map((doc) => {
-            doc.url = this.createUrl(doc);
-            return doc;
+    calcDocumentosUrl() {
+        this.adjuntosUrl = this.adjuntos.map((doc) => {
+            return {
+                ...doc,
+                url: this.derivacionesService.getUrlImage(doc.id, this.fileToken)
+            };
         });
-    }
-
-    createUrl(doc) {
-        if (doc.id) {
-            return this.derivacionesService.getUrlImage(doc.id, this.fileToken);
-        }
-    }
-
-    cancelarAdjunto() {
-        clearTimeout(this.timeout);
-        this.waiting = false;
     }
 }

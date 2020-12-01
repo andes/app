@@ -221,7 +221,6 @@ import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
-import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
@@ -285,7 +284,6 @@ registerLocaleData(localeEs, 'es');
         InicioComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
-        UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         MapsComponent,
         PlanificarAgendaComponent,

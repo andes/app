@@ -1,7 +1,6 @@
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Plex } from '@andes/plex';
 import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
@@ -23,7 +22,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
     public nuevoEstado;
-
+    public documentosUrl = [];
     @Input('derivacion')
     set _derivacion(value) {
         this.nuevoEstado = {
@@ -49,17 +48,6 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         });
     }
 
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
-    }
-
-    createUrl(doc) {
-        if (doc.id) {
-            let apiUri = environment.API;
-            return apiUri + '/modules/com/store/' + doc.id + '?token=' + this.fileToken;
-        }
-    }
-
     actualizarEstado($event) {
         if ($event.formValid) {
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
@@ -71,58 +59,29 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         }
     }
 
-    // Adjuntar archivo
-    changeListener($event): void {
-        this.readThis($event.target);
-    }
-
-    readThis(inputValue: any): void {
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            this.errorExt = true;
-            return;
-        }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            let metadata = {};
-            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.adjuntosEstado.push({
-                    ext,
-                    id: data._id
-                });
+    onUpload($event) {
+        if ($event.status = 200) {
+            this.adjuntosEstado.push({
+                ext: $event.body.ext,
+                id: $event.body.id
             });
-        };
-        myReader.readAsDataURL(file);
-    }
-
-    fileExtension(file) {
-        if (file.lastIndexOf('.') >= 0) {
-            return file.slice((file.lastIndexOf('.') + 1));
-        } else {
-            return '';
+            this.calcDocumentosUrl();
         }
     }
 
     removeFile($event) {
         let index = this.adjuntosEstado.indexOf($event);
         this.adjuntosEstado.splice(index, 1);
+        this.calcDocumentosUrl();
     }
 
-    get documentosUrl() {
-        return this.adjuntosEstado.map((doc) => {
-            doc.url = this.createUrl(doc);
-            return doc;
+    calcDocumentosUrl() {
+        this.documentosUrl = this.adjuntosEstado.map((doc) => {
+            return {
+                ...doc,
+                url: this.derivacionService.getUrlImage(doc.id, this.fileToken)
+            };
         });
-    }
-
-    cancelarAdjunto() {
-        clearTimeout(this.timeout);
-        this.waiting = false;
     }
 
     cerrar() {
