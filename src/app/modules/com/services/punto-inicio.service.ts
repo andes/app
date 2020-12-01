@@ -10,7 +10,12 @@ export class PuntoInicioService {
     public derivacionesOrdenadas$: Observable<any[]>;
     public derivacionesFiltradas = new BehaviorSubject<any[]>(null);
 
-
+    public priorityOrder = {
+        'especial': 1,
+        'alta': 2,
+        'media': 3,
+        'baja': 4
+    };
     public sortBy = new BehaviorSubject<string>('fecha');
     public sortOrder = new BehaviorSubject<string>('asc');
 
@@ -47,15 +52,17 @@ export class PuntoInicioService {
                 case 'destino':
                     derivaciones = derivaciones.sort((a, b) => a.organizacionDestino.nombre.localeCompare((b.organizacionDestino.nombre as string)));
                     break;
-                default:
+                case 'prioridad':
                     derivaciones = derivaciones.sort((a, b) => {
-                        if (b.prioridad === sortBy) {
-                            return 1;
-                        } else if (a.prioridad === sortBy) {
-                            return -1;
-                        } else {
-                            return 0;
+                        let prioridadA = this.priorityOrder[a.prioridad];
+                        let prioridadB = this.priorityOrder[b.prioridad];
+                        if (!prioridadA) {
+                            prioridadA = 5;
                         }
+                        if (!prioridadB) {
+                            prioridadB = 5;
+                        }
+                        return prioridadA - prioridadB;
                     });
                     break;
             }
