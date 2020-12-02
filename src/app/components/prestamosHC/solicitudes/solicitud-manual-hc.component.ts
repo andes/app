@@ -6,6 +6,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 
 
 
@@ -43,6 +44,7 @@ export class SolicitudManualComponent {
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
         public servicePaciente: PacienteService,
+        public serviceCarpetaPaciente: CarpetaPacienteService,
         public auth: Auth) {
     }
     loadEspacios(event) {
@@ -125,7 +127,7 @@ export class SolicitudManualComponent {
         if (this.paciente.carpetaEfectores) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find(e => (e.organizacion as any)._id === this.auth.organizacion.id);
             if (!this.carpetaEfector) {
-                this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetas => {
+                this.serviceCarpetaPaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetas => {
                     if (carpetas.length > 0) {
                         let _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                         if (_carpetaEfector.nroCarpeta) {

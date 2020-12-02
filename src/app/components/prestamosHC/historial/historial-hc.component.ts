@@ -33,7 +33,7 @@ export class HistorialCarpetasComponent implements OnInit {
         if (this.numeroCarpeta) {
             this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion.id })
                 .subscribe(resultado => {
-                    if (resultado.historial.length > 0) {
+                    if (resultado?.historial?.length > 0) {
                         this.historial = resultado.historial;
                     } else {
                         this.historial = [];

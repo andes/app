@@ -29,6 +29,7 @@ import { ObraSocialCacheService } from '../../../services/obraSocialCache.servic
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -160,6 +161,7 @@ export class DarTurnosComponent implements OnInit {
         public serviceListaEspera: ListaEsperaService,
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
+        public servicioCarpetaPaciente: CarpetaPacienteService,
         public conceptosTurneablesService: ConceptosTurneablesService,
         public servicioPrestacionPaciente: PrestacionesService,
         public servicioOS: ObraSocialService,
@@ -737,7 +739,7 @@ export class DarTurnosComponent implements OnInit {
         }
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+            this.servicioCarpetaPaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
                 if (carpeta.length > 0) {
                     let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);

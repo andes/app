@@ -118,7 +118,7 @@ import { GeoreferenciaService } from './core/mpi/services/georeferencia.service'
 import { PacienteComponent } from './core/mpi/components/paciente.component';
 import { DatosBasicosComponent } from './core/mpi/components/datos-basicos.component';
 import { DatosContactoComponent } from './core/mpi/components/datos-contacto.component';
-
+import { CarpetaPacienteService } from './core/mpi/services/carpeta-paciente.service';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -437,6 +437,7 @@ registerLocaleData(localeEs, 'es');
         InstitucionService,
         CommonNovedadesService,
         QueriesService,
+        CarpetaPacienteService,
         { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler }
     ]
 })
