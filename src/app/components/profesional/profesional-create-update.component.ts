@@ -181,7 +181,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             documentoRena = profesional.documento;
             this.validacionService.post({ documento: documentoRena, sexo: sexoRena }).subscribe(
                 resultado => {
-                    if (resultado) {
+                    if (!resultado || resultado.error) {
+                        this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
+                    } else {
                         this.validado = true;
                         this.profesional.nombre = resultado.nombre.toUpperCase();
                         this.profesional.apellido = resultado.apellido.toUpperCase();
@@ -192,8 +194,6 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
                         }
                         this.plex.toast('success', 'El profesional ha sido validado con RENAPER');
-                    } else {
-                        this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
                     }
                 }, err => {
                     this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
