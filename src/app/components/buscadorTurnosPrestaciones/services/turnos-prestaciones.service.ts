@@ -1,24 +1,37 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { Server } from '@andes/shared';
+import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
+import { cache, Server } from '@andes/shared';
 import { ITurnosPrestaciones } from '../interfaces/turnos-prestaciones.interface';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TurnosPrestacionesService {
 
+
     private turnosPrestacionesURL = '/modules/estadistica/turnos_prestaciones';  // URL to web api
 
+    public listadoPrestaciones$: Observable<any[]>;
     public prestacionesOrdenada$: Observable<any[]>;
     public prestacionesFiltrada$ = new BehaviorSubject<any[]>(null);
 
     public sortBy$ = new BehaviorSubject<string>('fecha'); // Seteo con fecha para que el primer orden sea por fecha
-    public sortOrder$ = new BehaviorSubject<string>(null);
+    public sortOrder$ = new BehaviorSubject<string>('asc');
+
+
+    private filtros = new Subject<any>();
+
 
 
     constructor(private server: Server) {
+
+        this.listadoPrestaciones$ = this.filtros.pipe(
+            switchMap(params => this.get(params)),
+            tap(data => data.forEach((item: any, index) => item.key = `${item._id}-${item.idPrestacion}-${index}`)),
+            cache()
+        );
+
         this.prestacionesOrdenada$ = combineLatest(
-            this.prestacionesFiltrada$,
+            this.listadoPrestaciones$,
             this.sortBy$,
             this.sortOrder$
         ).pipe(
@@ -26,6 +39,10 @@ export class TurnosPrestacionesService {
                 this.sortPrestaciones(prestaciones, sortBy, sortOrder)
             )
         );
+    }
+
+    buscar(params: any) {
+        this.filtros.next(params);
     }
 
     /**
