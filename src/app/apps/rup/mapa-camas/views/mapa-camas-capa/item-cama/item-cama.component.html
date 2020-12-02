@@ -9,6 +9,11 @@
             </ng-container>
         </td>
 
+        <td *ngIf="columns.guardia">
+            <span class="d-block" *ngIf="cama.fechaIngreso"> Ingreso: {{ cama.fechaIngreso | hora }}hs</span>
+            <span class="d-block" *ngIf="cama.fechaAtencion"> Atención: {{ cama.fechaAtencion | hora }} hs</span>
+        </td>
+
         <td *ngIf="columns.fechaMovimiento">
             <span class="d-block">{{ cama.fecha | fecha }}</span>
             <span class="d-block">{{ cama.fecha | hora }} hs</span>

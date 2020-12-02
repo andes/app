@@ -101,6 +101,8 @@ export class SalaComunComponent implements OnInit {
                 this.puedeEditar = false;
             }
             this.salaComun.capacidad = null;
+            this.salaComun.ambito = this.ambito;
+
         }
     }
 

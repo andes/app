@@ -7,4 +7,5 @@ export interface MapaCamaListadoColumns {
     documento: boolean;
     sexo: boolean;
     prioridad: boolean;
+    guardia: boolean;
 }

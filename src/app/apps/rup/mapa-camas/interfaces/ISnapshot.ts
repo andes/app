@@ -10,6 +10,8 @@ export interface ISnapshot {
     esMovimiento: Boolean;
     sugierePase?: Boolean;
     fecha: Date;
+    fechaIngreso?: Date;
+    fechaAtencion?: Date;
     unidadOrganizativa: ISnomedConcept;
     especialidades: ISnomedConcept[];
     ambito: String;

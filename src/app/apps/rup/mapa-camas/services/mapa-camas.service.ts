@@ -16,6 +16,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
 import { InternacionResumenHTTP } from './resumen-internacion.http';
+import { retry } from 'rxjs-compat/operator/retry';
 
 
 @Injectable()
@@ -386,7 +387,7 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
-            } else if (sortBy === 'fecha') {
+            } else if (sortBy === 'fechaMovimiento') {
                 snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
             } else if (sortBy === 'usuario') {
                 snapshots = snapshots.sort((a, b) => {
@@ -401,7 +402,18 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.sexo.localeCompare((b.paciente.sexo as string)));
             } else if (sortBy === 'prioridad') {
                 snapshots = snapshots.sort((a, b) => (a.prioridad?.id || -10) - (b.prioridad?.id || -10));
-
+            } else if (sortBy === 'guardia') {
+                snapshots = snapshots.sort((a, b) => {
+                    const dateA = a.fechaAtencion || a.fechaIngreso;
+                    const dateB = b.fechaAtencion || b.fechaIngreso;
+                    if (!dateA) {
+                        return -1;
+                    } else if (!dateB) {
+                        return 1;
+                    } else {
+                        return dateA.getTime() - dateB.getTime();
+                    }
+                });
             }
         }
 
