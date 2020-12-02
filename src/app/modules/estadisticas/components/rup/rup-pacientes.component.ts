@@ -61,13 +61,12 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
             { name: 'Dashboard', route: '/dashboard' },
             { name: 'RUP' }
         ]);
-    }
-
-    ngAfterViewInit() {
         this.conceptosTurneablesService.getAll().subscribe(result => {
             this.prestaciones = result;
         });
     }
+
+    ngAfterViewInit() { }
 
     onPrestacionChange() {
         if (this.prestacion) {
@@ -174,7 +173,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
         // Filtramos el informa del encuentro
         this.registros.forEach(row => {
             const names = [];
-            row.relaciones.filter(e => e.concepto.conceptId !== '371531000').forEach((item) => {
+            row.relaciones.filter(e => e.concepto?.conceptId !== '371531000').forEach((item) => {
                 this.registros.forEach((reg) => {
                     const i = reg.ids.indexOf(item.id);
                     if (i >= 0) {
