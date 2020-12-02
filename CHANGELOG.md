@@ -1,3 +1,23 @@
+# [5.24.0](https://github.com/andes/app/compare/v5.23.0...v5.24.0) (2020-12-02)
+
+
+### Bug Fixes
+
+* **cit:** Cannot read property nombre of undefined at showArancelamiento ([#2042](https://github.com/andes/app/issues/2042)) ([c6a253a](https://github.com/andes/app/commit/c6a253a67e57f1f924d139a495c4ee47a33ee8df))
+* **dashoard:** fix huds select prestaciones ([#2066](https://github.com/andes/app/issues/2066)) ([b227233](https://github.com/andes/app/commit/b2272331fab6c76ad6785027e51477be787702bd))
+* **mapa-camas:** controla las subscripciones en los ngOnDestroy ([#2059](https://github.com/andes/app/issues/2059)) ([496a519](https://github.com/andes/app/commit/496a519c2fcaadb88fe20cf2f4c5c047e8caa032))
+* **mapa-camas:** controla que la fecha desde esté inicializada ([#2065](https://github.com/andes/app/issues/2065)) ([0bdaa50](https://github.com/andes/app/commit/0bdaa5059bdc60e60f3300832610fbf7f97c2f25))
+* **mapa-camas:** no se ve el boton de censo ([#2063](https://github.com/andes/app/issues/2063)) ([fdcddb8](https://github.com/andes/app/commit/fdcddb8ffa6b3f344b9c3e398a622ff84b22258f))
+
+
+### Features
+
+* **com:** evitar cargar derivaciones si hay otra en curso para el paciente ([#2052](https://github.com/andes/app/issues/2052)) ([a8cc9a2](https://github.com/andes/app/commit/a8cc9a2135a1bf9414255f88511d1a7c698051ce))
+* **com:** mostrar gravedad solo a usuarios del COM ([#2051](https://github.com/andes/app/issues/2051)) ([316f896](https://github.com/andes/app/commit/316f8968f5166d33553e91e5cb70383afeef03d7))
+* **elementos-rup:** add rules ([#2061](https://github.com/andes/app/issues/2061)) ([db2ebfd](https://github.com/andes/app/commit/db2ebfdd43b6c18793a07807ff4b51c7c60e0940))
+* **huds:** agrega ámbito al visualizar registro y prestación ([#2058](https://github.com/andes/app/issues/2058)) ([4d3a1ac](https://github.com/andes/app/commit/4d3a1ac4ed1cd38991673f985fcdf25f05c2e301))
+* **rup:** atomo checkList ([#1951](https://github.com/andes/app/issues/1951)) ([47ef8ef](https://github.com/andes/app/commit/47ef8ef5ac0d234e67f1e3d1c1649d23ab4ffc2e))
+
 # [5.23.0](https://github.com/andes/app/compare/v5.22.0...v5.23.0) (2020-11-25)
 
 
