@@ -12,6 +12,8 @@
         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
             <b>Prestación: </b> <span class="text-capitalize">{{
                 prestacion.solicitud.tipoPrestacion.term }}</span>
+            <plex-button size="sm" icon="eye" (click)="getPrestacion()">
+            </plex-button>
         </div>
         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
             <b>Profesional: </b> <span class="text-capitalize">
@@ -26,11 +28,14 @@
             <div class="columna-datos no-border d-flex justify-content-between mb-2">
                 <b>Otros registros de la Prestación: </b>
             </div>
-            <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros">
+            <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros;let i =index">
                 <span class="mb-1">
-                    <plex-badge [type]="registro | semanticClass">
-                        {{ registro.concepto.term }}
+                    <plex-badge size="sm" [type]="registro | semanticClass">{{ registro.concepto.term }}
+                        <plex-button size="sm" icon="eye" (click)="emitTabs(registro,'concepto',i)">
+                        </plex-button>
                     </plex-badge>
+
+
                 </span><br>
             </ng-container>
         </div>
