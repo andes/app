@@ -2,7 +2,9 @@
     <div class="divisor">
         <div class="datos-prestacion">
             <plex-icon name="documento-corazon" class="text-info" size="xl"></plex-icon>
-            <h5 class="text-primary">Datos de la Prestación</h5>
+            <h5 class="text-primary">
+                Datos de la Prestación
+            </h5>
         </div>
         <div *ngIf="prestacion?.ejecucion?.fecha" class="justify-content-end align-items-center">
             {{ prestacion.solicitud.fecha | fecha }}
@@ -10,19 +12,25 @@
     </div>
     <div class="borde-datos ml-3 pl-2 pt-2">
         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
-            <b>Prestación: </b> <span class="text-capitalize">{{
-                prestacion.solicitud.tipoPrestacion.term }}</span>
-            <plex-button size="sm" icon="eye" (click)="getPrestacion()">
-            </plex-button>
+            <b>Prestación: </b>
+            <span class="text-capitalize">
+                {{ prestacion.solicitud.tipoPrestacion.term }}
+                <plex-button size="sm" icon="eye" type="info" (click)="getPrestacion()" tooltip="Ver prestacion">
+                </plex-button>
+            </span>
         </div>
         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
-            <b>Profesional: </b> <span class="text-capitalize">
-                {{ prestacion.solicitud.profesional.apellido }}, {{
-                prestacion.solicitud.profesional.nombre }}</span>
+            <b>Profesional: </b>
+            <span class="text-capitalize">
+                {{ prestacion.solicitud.profesional.apellido }},
+                {{ prestacion.solicitud.profesional.nombre }}
+            </span>
         </div>
         <div *ngIf="prestacion?.solicitud?.ambitoOrigen" class="columna-datos d-flex justify-content-between mb-2">
-            <b>Ámbito: </b> <span class="text-capitalize">
-                {{ prestacion.solicitud.ambitoOrigen }}</span>
+            <b> Ámbito: </b>
+            <span class="text-capitalize">
+                {{ prestacion.solicitud.ambitoOrigen }}
+            </span>
         </div>
         <div class="columna-completa">
             <div class="columna-datos no-border d-flex justify-content-between mb-2">
@@ -30,8 +38,10 @@
             </div>
             <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros;let i =index">
                 <span class="mb-1">
-                    <plex-badge size="sm" [type]="registro | semanticClass">{{ registro.concepto.term }}
-                        <plex-button size="sm" icon="eye" (click)="emitTabs(registro,'concepto',i)">
+                    <plex-badge size="sm" [type]="registro | semanticClass">
+                        {{ registro.concepto.term }}
+                        <plex-button size="sm" icon="eye" (click)="emitTabs(registro,'concepto',i)"
+                                     tooltip="Ver registro">
                         </plex-button>
                     </plex-badge>
 

@@ -45,7 +45,7 @@ export class VistaContextoPrestacionComponent implements OnInit {
     }
 
     emitTabs(registro, tipo, index: number) {
-        let registroAux = this.todoRegistro.find(r => r.idRegistro === registro.id);
+        let registroAux = this.todoRegistro.find(r => r.evoluciones.some(e => e.idRegistro === registro.id));
         registroAux.class = getSemanticClass(registroAux.concepto, false);
         gtag('huds-open', tipo, registroAux.concepto.term, index);
         this.huds.toogle(registroAux, tipo);
