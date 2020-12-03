@@ -10,7 +10,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { combineLatest, Subscription, Observable } from 'rxjs';
+import { combineLatest, Subscription, Observable, of } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
@@ -342,7 +342,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
                 // recuperamos snapshot inicial, por si hay un cambio de cama
-                this.mapaCamasService.snapshot(this.fechaIngresoOriginal, this.prestacion.id).subscribe((snapshot) => {
+                this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).subscribe((snapshot) => {
                     const primeraCama = snapshot[0];
                     this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -364,19 +364,25 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         } else {
             delete this.cama['sectorName'];
-            this.cama.extras = { ingreso: true };
+            this.cama.extras = {
+                ingreso: true
+            };
             const ingreso = this.elementoRUP ? {
                 elementoRUP: this.elementoRUP,
                 registros: this.prestacionFake.ejecucion.registros
             } : null;
 
-            this.internacionResumenService.create({
-                ambito: this.mapaCamasService.ambito,
-                fechaIngreso: this.informeIngreso.fechaIngreso,
-                paciente: this.cama.paciente,
-                organizacion: { ...this.auth.organizacion },
-                ingreso
-            }).pipe(
+            const createAction = idInternacion ? of({ id: idInternacion }) :
+
+                this.internacionResumenService.create({
+                    ambito: this.mapaCamasService.ambito,
+                    fechaIngreso: this.informeIngreso.fechaIngreso,
+                    paciente: this.cama.paciente,
+                    organizacion: { ...this.auth.organizacion },
+                    ingreso
+                });
+
+            createAction.pipe(
                 switchMap(internacion => {
                     this.cama.idInternacion = internacion.id;
                     return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
@@ -392,6 +398,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             });
         }
+
     }
 
     ingresoExtendido(paciente) {

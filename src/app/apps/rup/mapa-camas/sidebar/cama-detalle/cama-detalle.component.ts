@@ -93,7 +93,7 @@ export class CamaDetalleComponent implements OnInit {
         ).pipe(
             map(([cama, estado]) => {
                 if (cama.idInternacion) {
-                    const turnero = estado.turnero;
+                    const turnero = estado.turnero || {};
                     if (turnero[cama.id]) {
                         return turnero[cama.id];
                     }

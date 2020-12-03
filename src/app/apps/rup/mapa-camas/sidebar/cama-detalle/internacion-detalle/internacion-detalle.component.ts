@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy, ContentChild, AfterContentInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy, ContentChild, AfterContentInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { PlexOptionsComponent } from '@andes/plex';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription, combineLatest } from 'rxjs';
@@ -16,6 +16,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
 
+    prestacion$: Observable<IPrestacion>;
+
+
     prestacion: IPrestacion;
     view$ = this.mapaCamasService.view;
 
@@ -26,7 +29,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     public editar = false;
     public existeEgreso = false;
-    public prestacionValidada = false;
+
     public mostrar;
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
@@ -38,7 +41,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     constructor(
         private mapaCamasService: MapaCamasService,
-        public permisosMapaCamasService: PermisosMapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnDestroy() {
@@ -50,43 +53,43 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
+
+        this.prestacion$ = this.mapaCamasService.prestacion$.pipe(
+            tap(() => this.editar = false)
+        );
+
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
-            this.mapaCamasService.prestacion$,
-        ).subscribe(([capa, prestacion]) => {
+            this.mapaCamasService.resumenInternacion$,
+        ).subscribe(([capa, resumen]) => {
             if (capa !== 'estadistica') {
-                this.items = [
-                    { key: 'movimientos', label: 'MOVIMIENTOS' },
-                    { key: 'registros', label: 'REGISTROS' }
-                ];
-                this.mostrar = 'movimientos';
-                return;
-            }
-            if (!prestacion) { return; }
-            this.items = [
-                { key: 'ingreso', label: 'INGRESO' },
-                { key: 'movimientos', label: 'MOVIMIENTOS' },
-                { key: 'registros', label: 'REGISTROS' },
-                { key: 'egreso', label: 'EGRESO' }
-            ];
 
-
-            this.prestacion = prestacion;
-            if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.editar = false;
-                this.prestacionValidada = true;
+                if (resumen.ingreso) {
+                    this.items = [
+                        { key: 'ingreso-dinamico', label: 'INGRESO' },
+                        { key: 'movimientos', label: 'MOVIMIENTOS' },
+                        { key: 'registros', label: 'REGISTROS' }
+                    ];
+                    this.mostrar = 'ingreso-dinamico';
+                } else {
+                    this.items = [
+                        { key: 'movimientos', label: 'MOVIMIENTOS' },
+                        { key: 'registros', label: 'REGISTROS' }
+                    ];
+                    this.mostrar = 'movimientos';
+                }
             } else {
-                this.prestacionValidada = false;
+                this.items = [
+                    { key: 'ingreso', label: 'INGRESO' },
+                    { key: 'movimientos', label: 'MOVIMIENTOS' },
+                    { key: 'registros', label: 'REGISTROS' },
+                    { key: 'egreso', label: 'EGRESO' }
+                ];
             }
+
         });
 
-        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$.pipe(
-            tap(resumen => {
-                if (resumen.ingreso) {
-                    this.items.splice(0, 0, { key: 'ingreso-dinamico', label: 'INGRESO' });
-                }
-            })
-        );
+        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
     }
 
     onActiveOption(opcion) {

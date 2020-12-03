@@ -214,8 +214,10 @@ export class MapaCamasService {
             this.capa2
         ]).pipe(
             switchMap(([cama, ambito, capa]) => {
-                if (cama.idInternacion) {
-                    return this.internacionResumenHTTP.get(cama.idInternacion);
+                if (cama.idInternacion && capa !== 'estadistica') {
+                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                        catchError((err) => { return of({}); })
+                    );
                 }
                 return of({});
             }),
