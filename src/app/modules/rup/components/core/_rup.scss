@@ -435,11 +435,11 @@ $rotate: -90deg;
 // BADGES
 @each $tag, $color in $rup_colors {
     .badge-#{$tag} {
+        --badge-color: #{$color};
         font-weight: normal;
         text-transform: uppercase;
         color: $color;
-        border: 1px solid $color;
-        margin-bottom: 0.5rem;
+        border: 1px solid $color; 
 
         &:focus {
             outline: 0;
@@ -449,6 +449,10 @@ $rotate: -90deg;
             background-color: $color;
             mix-blend-mode: hard-light;
         }
+    }
+
+    .btn-badge-#{$tag} {
+        --badge-color: #{$color};
     }
 }
 
