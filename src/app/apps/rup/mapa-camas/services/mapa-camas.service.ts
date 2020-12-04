@@ -16,8 +16,6 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
 import { InternacionResumenHTTP } from './resumen-internacion.http';
-import { retry } from 'rxjs-compat/operator/retry';
-
 
 @Injectable()
 export class MapaCamasService {
@@ -114,6 +112,8 @@ export class MapaCamasService {
                     const sectores = snap.sectores || [];
                     const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
                     (snap as any).sectorName = sectorName;
+
+                    snap._key = snap.id + '-' + snap.idInternacion;
                 });
 
 

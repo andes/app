@@ -3,6 +3,8 @@ import { ISectores } from './../../../../interfaces/IOrganizacion';
 
 export interface ISnapshot {
     id: string;
+    _key: string;
+
     genero: ISnomedConcept;
     estado: string;
     esCensable: Boolean;

@@ -12,7 +12,7 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable, of } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 
 @Component({
@@ -271,7 +271,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     return this.internacionResumenService.update(this.cama.idInternacion, {
                         tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                         fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                    });
+                    }).pipe(
+                        catchError(() => of(null))
+                    );
                 }
                 return of(null);
             };

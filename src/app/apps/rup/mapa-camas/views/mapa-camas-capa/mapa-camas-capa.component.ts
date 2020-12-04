@@ -7,7 +7,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
@@ -128,7 +128,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         }
 
         const capa = this.route.snapshot.paramMap.get('capa');
-        const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+        const permisosInternacion = this.auth.getPermissions(`${ambito}:rol:?`);
         if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
             this.mapaCamasService.setCapa(capa);
         } else {

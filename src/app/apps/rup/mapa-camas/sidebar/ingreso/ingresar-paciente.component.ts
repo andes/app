@@ -364,6 +364,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         } else {
             delete this.cama['sectorName'];
+            delete this.cama['_key'];
             this.cama.extras = {
                 ingreso: true
             };

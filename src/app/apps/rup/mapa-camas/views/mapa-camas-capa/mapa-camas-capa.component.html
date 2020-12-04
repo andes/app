@@ -137,7 +137,7 @@
                                 [permisoIngreso]="permisosMapaCamasService.ingreso"
                                 [permisoBloqueo]="permisosMapaCamasService.bloqueo"
                                 (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
-                                [class.invert]="(cama.estado !== 'ocupada') ? selectedCama.id === cama.id : selectedCama.idInternacion && cama.idInternacion === selectedCama.idInternacion">
+                                [class.invert]="selectedCama._key === cama._key">
                             </tr>
                         </ng-container>
                     </tbody>
