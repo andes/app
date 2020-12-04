@@ -32,7 +32,7 @@ export class DatosBasicosComponent implements OnInit {
     noPoseeDNI = false;
 
     public nombrePattern: string;
-    public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
+    public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     hoy = moment().endOf('day').toDate();
 
     // para registro de bebes
