@@ -36,6 +36,9 @@ export class AuditoriaComponent implements OnInit {
   parametros;
   scrollEnd = false;
   searchSubscription = new Subscription();
+  // reporte de errores
+  pacientesReportados;
+  corregirPaciente: Number = null;
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
   showReporteError = false; // se muestra en el sidebar datos del error reportado
@@ -64,9 +67,17 @@ export class AuditoriaComponent implements OnInit {
   }
 
 
-  onSelect(paciente: IPaciente): void {
-    this.pacienteSelected = paciente;
-    this.showInSidebar('detallePaciente');
+  // REPORTE DE ERRORES -----------------------------------------
+
+  // Aquellos pacientes que reportaron errores en sus datos personales
+  getReportados() {
+    const params = { reportarError: true, activo: true };
+    this.pacienteService.get(params).subscribe(resultado => {
+      if (resultado) {
+        this.pacientesReportados = resultado;
+        this.corregirPaciente = null;
+      }
+    });
   }
 
   onSelectReportado(data: any): void {
@@ -190,7 +201,7 @@ export class AuditoriaComponent implements OnInit {
     }
     let busqueda = this.textoLibre.trim();
     let params = {
-      cadenaInput: busqueda,
+      search: busqueda,
       skip: this.parametros.skip,
       limit: this.parametros.limit
     };
@@ -200,7 +211,7 @@ export class AuditoriaComponent implements OnInit {
     }
 
     this.onSearchStart();
-    this.searchSubscription = this.pacienteService.getSearch(params).subscribe((resultado: any) => {
+    this.searchSubscription = this.pacienteService.get(params).subscribe((resultado: any) => {
       if (resultado && resultado.length) {
         this.resultadoBusqueda = this.resultadoBusqueda.concat(resultado);
       }

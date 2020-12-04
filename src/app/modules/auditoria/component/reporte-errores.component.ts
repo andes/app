@@ -37,7 +37,7 @@ export class ReporteErroresComponent implements OnInit {
         this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
 
         forkJoin([
-            this.pacienteService.getSearch({ reportarError: true, activo: true }), // pacientes
+            this.pacienteService.get({ reportarError: true, activo: true }), // pacientes
             this.logPacienteService.get({ operacion: 'error:reportar' })    // registros de errores reportados
         ]).subscribe(respuesta => {
             this.pacientesReportados = respuesta[0];

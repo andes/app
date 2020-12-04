@@ -177,7 +177,11 @@ export class DatosBasicosComponent implements OnInit {
                 this.copiarContacto(paciente);
                 this.busquedaTutor = [];
                 this.showBuscador = false;
-                this.changes.emit({ refreshData: true, relaciones: this.paciente.relaciones });
+                this.changes.emit({
+                    refreshData: true,
+                    relaciones: this.paciente.relaciones,
+                    relacionesEdit: [this.relacionBebe]
+                });
             });
         } else {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
