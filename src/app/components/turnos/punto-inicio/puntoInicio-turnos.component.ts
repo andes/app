@@ -44,7 +44,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     esEscaneado = false;
     textoPacienteSearch = '';
     turnoArancelamiento: any;
-    showArancelamiento = false;
     showTab = 0;
     private esOperacion = false;
 
@@ -127,15 +126,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     // -----------------------------------------------
 
-
-    showArancelamientoForm(turno) {
-        this.turnoArancelamiento = turno;
-        this.showDashboard = false;
-        this.showArancelamiento = true;
-    }
-
     volverAPuntoInicio() {
-        this.showArancelamiento = false;
         this.showDashboard = true;
     }
 

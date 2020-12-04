@@ -2,6 +2,7 @@ import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } fro
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
+import { DocumentosService } from '../../../services/documentos.service';
 import * as moment from 'moment';
 
 // Servicios
@@ -68,14 +69,13 @@ export class TurnosPacienteComponent implements OnInit {
         return this._turnos;
     }
     @Output() turnosPacienteChanged = new EventEmitter<any>();
-    @Output() showArancelamientoForm = new EventEmitter<any>();
 
     public modelo: any = {
         obraSocial: ''
     };
 
     // Inicialización
-    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService,
+    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
         public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
@@ -134,6 +134,7 @@ export class TurnosPacienteComponent implements OnInit {
             this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
             return;
         }
+
         if (turno.obraSocial === 'prepaga' && turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
@@ -165,8 +166,9 @@ export class TurnosPacienteComponent implements OnInit {
         data['turno'] = turno;
         let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
 
-        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe();
-        this.showArancelamientoForm.emit(turno);
+        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe( () => {
+            this.documentosService.descargarArancelamiento({ turnoId: turno.id }, 'recupero').subscribe();
+        });
     }
 
     eventosTurno(turno, operacion) {
