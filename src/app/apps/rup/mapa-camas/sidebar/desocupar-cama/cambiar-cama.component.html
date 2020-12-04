@@ -6,12 +6,38 @@
         <ng-content></ng-content>
     </plex-title>
     <fieldset>
-        <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
-            <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
-                         [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
-                         placeholder="Elija cama" label="Cama" idField="id"
-                         labelField="nombre + '(' + sectorName + ')'">
-            </plex-select>
+        <ng-container *ngIf="cambiarUO; else cambioNormal">
+            <ng-container *ngIf="paseConfig; else cambioNormal">
+                <plex-bool *ngIf="allowCama" label="¿Desea elegir cama destino?" [(ngModel)]="selectCama"
+                           name="selectCama" type="slide" (click)="nuevaCama = null"></plex-bool>
+                <ng-container *ngIf="selectCama; else onlySala">
+                    <ng-container *ngIf="camasParaPases$ | async as camasParaPases">
+                        <ng-container *ngIf="camasParaPases.length > 0; else noHayCamas">
+                            <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama" [data]="camasParaPases"
+                                         placeholder="Elija cama" label="Cama" idField="id"
+                                         labelField="nombre + '(' + sectorName + ')'">
+                            </plex-select>
+                        </ng-container>
+                        <ng-template #noHayCamas>
+                            <plex-label titulo="No hay camas disponibles."></plex-label>
+                        </ng-template>
+                    </ng-container>
+                </ng-container>
+                <ng-template #onlySala>
+                    <ng-container *ngIf="salaPases$ | async as salaPases">
+                        <plex-label size="lg" type="info" titulo="Destino" [subtitulo]="salaPases.nombre"></plex-label>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
         </ng-container>
+        <ng-template #cambioNormal>
+            <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
+                <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
+                             [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
+                             placeholder="Elija cama" label="Cama" idField="id"
+                             labelField="nombre + '(' + sectorName + ')'">
+                </plex-select>
+            </ng-container>
+        </ng-template>
     </fieldset>
 </form>
