@@ -1,3 +1,16 @@
+# [5.25.0](https://github.com/andes/app/compare/v5.24.0...v5.25.0) (2020-12-09)
+
+
+### Bug Fixes
+
+* **mpi:** permite dni con 5 digitos ([#2073](https://github.com/andes/app/issues/2073)) ([91ddf87](https://github.com/andes/app/commit/91ddf878831cf61e18f2d6cbd56d14ffa945c4dc))
+
+
+### Features
+
+* **CIT:** refactor arancelamiento ([#2032](https://github.com/andes/app/issues/2032)) ([c12d0db](https://github.com/andes/app/commit/c12d0dbed64bfac8541883e14695657ba98c4dfb))
+* **huds:** agregar links a otros registros y a prestación ([#2070](https://github.com/andes/app/issues/2070)) ([5641117](https://github.com/andes/app/commit/5641117d61f35cf0fd344b4893d9a20c6f04b43d))
+
 # [5.24.0](https://github.com/andes/app/compare/v5.23.0...v5.24.0) (2020-12-02)
 
 
