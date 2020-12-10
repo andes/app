@@ -11,7 +11,7 @@
             <plex-title titulo="Registro Original" size="sm"></plex-title>
             <plex-list>
                 <plex-item *ngIf="paciente" [selected]="true">
-                    <img [mpiFotoPaciente]="paciente" />
+                    <img [mpiFotoPaciente]="pacienteEdited" />
                     <plex-label class="text-black" *ngIf="!paciente.numeroIdentificacion"
                                 titulo="{{ paciente | nombre }}"
                                 subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
