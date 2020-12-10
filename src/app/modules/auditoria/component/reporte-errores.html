@@ -1,0 +1,10 @@
+<auditoria-listado *ngIf="pacientesReportados && pacientesReportados.length" [pacientes]="pacientesReportados"
+                   [registroReportes]="reportes" [autoselect]="false" [errorTab]="true" (selected)="onSelect($event)">
+</auditoria-listado>
+
+<div *ngIf="pacientesReportados && !pacientesReportados.length" class="alert alert-default">
+    <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
+</div>
+
+<modal-correccion-paciente #modalCorreccion [paciente]="pacienteSelected" (patientCorrected)="savePatient($event)">
+</modal-correccion-paciente>

@@ -14,7 +14,7 @@ export class ModalCorreccionPacienteComponent {
     @Output() patientCorrected = new EventEmitter<IPaciente>();
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
-    public pacienteEdited = { nombre: '', apellido: '' };
+    public pacienteEdited = { foto: '', fotoId: '', nombre: '', apellido: '' };
 
     /**
      * verifica que al paciente se le haya editado al menos un campo (nombre y apellido)
@@ -28,9 +28,10 @@ export class ModalCorreccionPacienteComponent {
     }
 
     show() {
+        this.pacienteEdited = this.paciente;
         this.modal.show();
-        this.pacienteEdited.apellido = this.paciente.apellido;
-        this.pacienteEdited.nombre = this.paciente.nombre;
+        // this.pacienteEdited.apellido = this.paciente.apellido;
+        // this.pacienteEdited.nombre = this.paciente.nombre;
     }
 
     notificarAccion(flag: boolean) {

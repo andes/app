@@ -23,14 +23,7 @@
             </plex-tab>
 
             <plex-tab *ngIf="permisoEdicion" label="Errores reportados" icon="account-details">
-                <auditoria-listado *ngIf="pacientesReportados && pacientesReportados.length"
-                                   [pacientes]="pacientesReportados" [autoselect]="false" [errorTab]="true"
-                                   (selected)="onSelectReportados($event)">
-                </auditoria-listado>
-
-                <div *ngIf="pacientesReportados && !pacientesReportados.length" class="alert alert-default">
-                    <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
-                </div>
+                <reporte-errores #erroresComponent (selected)="onSelectReportado($event)"></reporte-errores>
             </plex-tab>
         </plex-tabs>
 
@@ -89,6 +82,9 @@
         <!--  ###### Para pestaña  de reporte de errores  ###### -->
 
         <ng-container *ngIf="showReporteError" justify="center">
+            <plex-title titulo="Descripción" size="sm">
+                <plex-badge type="info">{{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
+            </plex-title>
 
             <plex-text *ngIf="pacienteSelected.notaError" readonly="true" multiline="true" name="motivo"
                        [(ngModel)]="pacienteSelected.notaError">
@@ -97,14 +93,25 @@
             <plex-label *ngIf="!pacienteSelected.notaError">
                 No se ha encontrado alguna descripción del error
             </plex-label>
-            <br>
-            <plex-button type="warning" position="right" *ngIf="permisoEdicion" (click)="onSelectCorregir()">
-                Corregir
-            </plex-button>
 
-            <modal-correccion-paciente #modalCorreccion [paciente]="pacienteSelected"
-                                       (patientCorrected)="savePatient($event)">
-            </modal-correccion-paciente>
+            <plex-button *ngIf="permisoEdicion && pacienteSelected.reportarError" class="pt-2 pb-4" label="corregir"
+                         justify="end" type="warning" (click)="onSelectCorregir()"> </plex-button>
+
+            <plex-title titulo="Historial de errores reportados" size="sm"> </plex-title>
+
+            <plex-list>
+                <ng-container *ngFor="let reporte of listaReportes">
+                    <plex-item>
+                        <plex-label titulo="{{ reporte.createdAt | fecha:'utc' }}"
+                                    subtitulo="{{ 'Agente: ' + reporte.createdBy.nombreCompleto }}">
+                        </plex-label>
+
+                        <plex-label titulo="Descripción" subtitulo="{{ reporte.error || ''}}">
+                        </plex-label>
+                    </plex-item>
+                </ng-container>
+            </plex-list>
+
         </ng-container>
 
     </plex-layout-sidebar>
