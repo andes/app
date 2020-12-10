@@ -20,13 +20,14 @@ export class VistaProcedimientoComponent implements OnInit {
     @Input() evolucionActual: any;
     @Input() indice = 0;
     elementoRUP: IElementoRUP;
-
+    public relacionAux;
     constructor(public prestacionesService: PrestacionesService, public elementosRUPService: ElementosRUPService) { }
 
     ngOnInit() {
         this.prestacionesService.getByPaciente(this.paciente.id).subscribe(prestacion => {
             this.prestacion = prestacion.find(x => x.id === this.registro.idPrestacion);
         });
+        this.relacionAux = this.registro.evoluciones[0].relacionadoCon[0];
     }
 
 }

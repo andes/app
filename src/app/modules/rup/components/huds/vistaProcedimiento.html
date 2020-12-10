@@ -59,6 +59,12 @@
                                     <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
                                         {{ relacion | relacionRUP }}
                                     </plex-badge>
+                                    <rup class="columna-completa align"
+                                         [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
+                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                         [params]="elementosRUPService.elementoRegistro(relacionAux).params"
+                                         [soloValores]="true">
+                                    </rup>
                                 </ng-container>
                             </ng-container>
                         </div>
