@@ -107,10 +107,18 @@
                                 <plex-badge type="info" *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
                                     CONTRARREFERIDA
                                 </plex-badge>
-                                <plex-badge type="warning"
-                                            *ngIf=" !prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
-                                    {{prestacion.estadoActual.tipo}}
-                                </plex-badge>
+                                
+                                <ng-container *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
+                                    <plex-badge type="warning" class="mr-0">
+                                        {{prestacion.estadoActual.tipo}}
+                                    </plex-badge>
+                                    <plex-badge type="danger bg-danger" class="ml-0" *ngIf="prestacion | auditoriasSolicitud as auditorias">
+                                        <span class="text-white">
+                                            <strong>{{auditorias}}</strong>
+                                        </span>
+                                    </plex-badge>
+                                </ng-container>
+
                                 <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                             type="success">Registro en HUDS</plex-badge>
