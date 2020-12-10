@@ -318,19 +318,23 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         const arraySelect = this.selectPrestaciones$.getValue();
         const exp = Object.keys(arraySelect).filter((key) => arraySelect[key] === true);
         let prestacionesTurnos = [];
-        let arrayPrestaciones = [];
+        let prestaciones = [];
         exp.forEach(element => {
             prestacionesTurnos = element.split('-');
             if (prestacionesTurnos[1] !== 'undefined') { // Me quedo solo con las prestaciones, obviando los turnos
-                arrayPrestaciones.push(prestacionesTurnos[1]);
+                prestaciones.push(prestacionesTurnos[1]);
             }
         });
-        this.exportHudsService.peticionHuds({ arrayPrestaciones }).subscribe(res => {
-            if (res) {
-                this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
-                this.getPendientes();
-            }
-        });
+        if (prestaciones.length) {
+            this.exportHudsService.peticionHuds({ prestaciones }).subscribe(res => {
+                if (res) {
+                    this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
+                    this.getPendientes();
+                }
+            });
+        } else {
+            this.plex.info('warning', 'No tiene prestaciones seleccionadas, recuerde que los turnos no pueden ser exportados');
+        }
     }
 
     selectPrestacion(item, $event) {

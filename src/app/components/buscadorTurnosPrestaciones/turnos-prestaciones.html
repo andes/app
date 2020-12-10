@@ -4,8 +4,6 @@
         <plex-title titulo="Turnos y prestaciones">
             <plex-button label="Descargas pendientes" size="sm" type="info" (click)="mostrarPendientes()">
             </plex-button>
-            <plex-button *ngIf="descargasPendientes" icon="close" type="danger" size="sm" (click)="mostrarPendientes()">
-            </plex-button>
         </plex-title>
         <!--Botones / Acciones-->
         <!--Filtros-->
@@ -320,6 +318,9 @@
 
     </plex-layout-sidebar>
     <plex-layout-sidebar *ngIf="descargasPendientes" [type]="'invert'">
-        <descargas-pendientes></descargas-pendientes>
+        <descargas-pendientes>
+            <plex-button justify="end" icon="close" type="danger" tooltip="Cerrar" (click)="mostrarPendientes()">
+            </plex-button>
+        </descargas-pendientes>
     </plex-layout-sidebar>
 </plex-layout>
