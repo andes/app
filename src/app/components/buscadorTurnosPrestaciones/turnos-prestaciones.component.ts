@@ -1,8 +1,7 @@
-import { Unsubscribe } from '@andes/shared';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
-import { BehaviorSubject, concat, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
@@ -44,6 +43,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public selectProfesional = false;
     public profesional: any;
     public botonBuscarDisabled = false;
+    public profesionales;
 
     public columnas = {
         fecha: true,
@@ -171,7 +171,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         ).pipe(
             map(([selected, items]) => {
                 return {
-                    selectAll: Object.values(selected).filter(v => v).length === items.length,
+                    selectAll: items.length ? Object.values(selected).filter(v => v).length === items.length : false,
                     enableExport: Object.values(selected).filter(v => v).length > 0
                 };
             })
@@ -315,25 +315,22 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     exportPrestaciones() {
-        let prestacionesCheck = [];
-        this.prestacionesExport = [];
-        this.busqueda$.pipe(
-            map((prestaciones) => {
-                prestacionesCheck = prestaciones.filter(prestacion => prestacion.check === true);
-            })
-        ).subscribe();
-        if (prestacionesCheck.length) {
-            prestacionesCheck.forEach(elem => {
-                this.prestacionesExport.push(elem.idPrestacion);
-            });
-            this.exportHudsService.peticionHuds({ arrayPrestaciones: this.prestacionesExport }).subscribe(res => {
-                if (res) {
-                    this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
-                    this.getPendientes();
-                }
-            });
-        }
-
+        const arraySelect = this.selectPrestaciones$.getValue();
+        const exp = Object.keys(arraySelect).filter((key) => arraySelect[key] === true);
+        let prestacionesTurnos = [];
+        let arrayPrestaciones = [];
+        exp.forEach(element => {
+            prestacionesTurnos = element.split('-');
+            if (prestacionesTurnos[1] !== 'undefined') { // Me quedo solo con las prestaciones, obviando los turnos
+                arrayPrestaciones.push(prestacionesTurnos[1]);
+            }
+        });
+        this.exportHudsService.peticionHuds({ arrayPrestaciones }).subscribe(res => {
+            if (res) {
+                this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
+                this.getPendientes();
+            }
+        });
     }
 
     selectPrestacion(item, $event) {
