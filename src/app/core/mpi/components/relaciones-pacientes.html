@@ -20,10 +20,10 @@
 <plex-list *ngIf="relacionEntrante.length">
     <plex-item *ngFor="let unaRel of relacionEntrante" class="">
         <!-- caso paciente relacionado -->
-        <img *ngIf="unaRel.foto && unaRel.referencia" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
-             [mpiFotoPaciente]="{id: unaRel.referencia, fotoId: unaRel.foto}">
+        <img *ngIf="unaRel.referencia" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
+             [mpiFotoPaciente]="{id: unaRel.referencia, fotoId: unaRel.fotoId}">
         <!-- caso paciente aun no relacionado -->
-        <img *ngIf="unaRel.id" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}" [mpiFotoPaciente]="unaRel"
+      <img *ngIf="!unaRel.referencia && unaRel.id && unaRel.fotoId" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}" [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}"
              alt="">
 
         <plex-label *ngIf="!unaRel.numeroIdentificacion" titulo="{{ unaRel | nombre }}"
