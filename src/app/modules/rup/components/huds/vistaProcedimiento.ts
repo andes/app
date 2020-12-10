@@ -27,7 +27,9 @@ export class VistaProcedimientoComponent implements OnInit {
         this.prestacionesService.getByPaciente(this.paciente.id).subscribe(prestacion => {
             this.prestacion = prestacion.find(x => x.id === this.registro.idPrestacion);
         });
-        this.relacionAux = this.registro.evoluciones[0].relacionadoCon[0];
+        if (this.registro.evoluciones[0]?.relacionadoCon[0]?.concepto.conceptId === '1921000013108') {
+            this.relacionAux = this.registro.evoluciones[0].relacionadoCon[0];
+        }
     }
 
 }

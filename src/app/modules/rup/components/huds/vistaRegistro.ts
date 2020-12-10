@@ -18,6 +18,7 @@ export class VistaRegistroComponent implements OnInit {
     // @Input() prestacion: IPrestacion = null;
     @Input() evolucionActual: any = null;
     @Input() indice = 0;
+    public relacionAux;
     @Input('registro')
     set registro(value: IPrestacionRegistro) {
         this._registro = value;
@@ -51,6 +52,10 @@ export class VistaRegistroComponent implements OnInit {
                 this.contextoEvolutivo = this.prestaciones.find(p => p.id === this.registro.evoluciones[0].idPrestacion);
             }
         });
+        if (this.registro.evoluciones[0]?.relacionadoCon[0]?.concepto.conceptId === '1921000013108') {
+            this.relacionAux = this.registro.evoluciones[0].relacionadoCon[0];
+
+        }
     }
 
     cambiarEvolucion(signo) {
