@@ -100,6 +100,15 @@ export enum Meses {
     'diciembre',
 }
 
+export enum MotivosLiberacion {
+    'Error',
+    'Paciente canceló',
+    'Paciente cambió turno',
+    'No se pudo informar el turno',
+    'Otro'
+}
+
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -305,3 +314,18 @@ export function getObjMeses() {
     return salida;
 }
 
+export function getMotivosLiberacion() {
+    return getObj(MotivosLiberacion);
+}
+
+function getObj(data) {
+    let array = Object.keys(data);
+    array = array.slice(array.length / 2);
+    let salida = array.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
