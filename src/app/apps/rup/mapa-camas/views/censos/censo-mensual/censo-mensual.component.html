@@ -23,8 +23,9 @@
                     <plex-button [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
                                  label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
                     </plex-button>
-                    <plex-button [disabled]="!censo && requestInProgress" title="Descargar censo mensual" type="warning"
-                                 (click)="descargarCensoMensual()">
+                    <plex-button [disabled]="!(censo.length > 0) || requestInProgress"
+                                 [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
+                                 type="warning" (click)="descargarCensoMensual()">
                         <plex-icon name="download"></plex-icon>
                     </plex-button>
                 </div>
