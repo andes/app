@@ -1,3 +1,4 @@
+import { UploadFileComponent } from 'src/app/shared/components/upload-file.component';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
@@ -33,7 +34,8 @@ import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-
         SexoPipe,
         FormAutoSaveDirective,
         PopoverAuditComponent,
-        GaleriaArchivosComponent
+        GaleriaArchivosComponent,
+        UploadFileComponent
     ],
     exports: [
         FechaPipe,
@@ -47,7 +49,8 @@ import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-
         SexoPipe,
         FormAutoSaveDirective,
         PopoverAuditComponent,
-        GaleriaArchivosComponent
+        GaleriaArchivosComponent,
+        UploadFileComponent
     ]
 })
 export class SharedModule {

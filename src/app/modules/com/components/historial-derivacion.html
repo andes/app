@@ -27,20 +27,8 @@
                 </plex-button>
             </section>
         </div>
-        <plex-grid type="full" *ngIf="item.adjuntos?.length > 0" cols="1">
-            <div class="image-container" *ngIf="item.adjuntos && fileToken">
-                <ng-container *ngFor="let doc of this.item.adjuntos; let i = index">
-                    <plex-visualizador [files]="adjuntos[item.id]" #visualizador></plex-visualizador>
-                    <div class="image hover">
-                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
-                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                           (click)="visualizador.open(i)">
-                            {{ doc.ext }}
-                        </a>
-                    </div>
-                </ng-container>
-            </div>
-        </plex-grid>
+        <shared-galeria-archivos [files]="adjuntos[item.id]" [readonly]="true">
+        </shared-galeria-archivos>
         <plex-badge *ngIf="!item.adjuntos || item.adjuntos.length === 0" type="info" size="block"> No tiene archivos
             adjuntos
         </plex-badge>

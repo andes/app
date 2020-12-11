@@ -148,7 +148,7 @@
                     <!-- Boton para subir HUDS digitalizada -->
                     <td>
                         <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
-                                     (onUpload)="onUpload($event, carpeta)"></upload-file>
+                                     (onUpload)="onUpload($event, carpeta)" [modulo]="'prestamosHC'"></upload-file>
                         <br><br>
                         <span *ngIf="errorExt===i">
                             <plex-badge type="danger">Archivo inválido. Solo se admite PDF</plex-badge>

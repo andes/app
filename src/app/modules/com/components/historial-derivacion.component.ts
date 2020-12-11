@@ -1,10 +1,8 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
-import { environment } from 'src/environments/environment';
 import { Plex } from '@andes/plex';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { Auth } from '@andes/auth';
-import { IMAGENES_EXT } from '@andes/shared';
 
 @Component({
     selector: 'historial-derivacion',
@@ -16,7 +14,6 @@ export class HistorialDerivacionComponent {
     public itemsHistorial = [];
     public fileToken;
     public adjuntos = [];
-    imagenes = IMAGENES_EXT;
 
     @Input('derivacion')
     set _derivacion(value) {
@@ -45,27 +42,16 @@ export class HistorialDerivacionComponent {
         });
     }
 
-    createUrl(doc) {
-        if (doc.id) {
-            let apiUri = environment.API;
-            return apiUri + '/modules/com/store/' + doc.id + '?token=' + this.fileToken;
-        }
-    }
-
     documentos(estado) {
         let adjuntosEstado = estado.adjuntos;
         if (adjuntosEstado) {
             return adjuntosEstado.map((doc) => {
-                doc.url = this.createUrl(doc);
+                doc.url = this.derivacionesService.getUrlImage(doc.id, this.fileToken);
                 return doc;
             });
         } else {
             return [];
         }
-    }
-
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
     eliminarNota(nota) {
