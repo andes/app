@@ -238,7 +238,7 @@ import { DetalleNovedadComponent } from './components/novedades/lista-novedades/
 import { NovedadesService } from './services/novedades/novedades.service';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { ModulosService } from './services/novedades/modulos.service';
-
+import { DriveService } from './services/drive.service';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
@@ -361,6 +361,7 @@ registerLocaleData(localeEs, 'es');
         HttpClient,
         Plex,
         Server,
+        DriveService,
         NovedadesService,
         ModulosService,
         RoutingGuard,

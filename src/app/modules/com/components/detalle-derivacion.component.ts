@@ -7,6 +7,7 @@ import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { DriveService } from 'src/app/services/drive.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -78,7 +79,8 @@ export class DetalleDerivacionComponent implements OnInit {
         private organizacionService: OrganizacionService,
         private derivacionService: DerivacionesService,
         private auth: Auth,
-        public plex: Plex
+        public plex: Plex,
+        public driveService: DriveService
     ) { }
 
     ngOnInit() {
@@ -177,9 +179,11 @@ export class DetalleDerivacionComponent implements OnInit {
     }
 
     removeFile($event) {
-        let index = this.adjuntosEstado.indexOf($event);
-        this.adjuntosEstado.splice(index, 1);
-        this.calcDocumentosUrl();
+        this.driveService.deleteFile($event.id).subscribe(() => {
+            const index = this.adjuntosEstado.findIndex(a => a.id === $event.id);
+            this.adjuntosEstado.splice(index, 1);
+            this.calcDocumentosUrl();
+        });
     }
 
     calcDocumentosUrl() {
