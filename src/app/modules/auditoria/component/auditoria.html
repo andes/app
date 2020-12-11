@@ -83,7 +83,8 @@
 
         <ng-container *ngIf="showReporteError" justify="center">
             <plex-title titulo="Descripción" size="sm">
-                <plex-badge type="info">{{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
+                <plex-badge *ngIf="listaReportes?.length" type="info">
+                    {{ listaReportes[0].createdAt | fecha:'utc' }}</plex-badge>
             </plex-title>
 
             <plex-text *ngIf="pacienteSelected.notaError" readonly="true" multiline="true" name="motivo"
@@ -102,7 +103,7 @@
             <plex-list>
                 <ng-container *ngFor="let reporte of listaReportes">
                     <plex-item>
-                        <plex-label titulo="{{ reporte.createdAt | fecha:'utc' }}"
+                        <plex-label titulo="{{ reporte.createdAt | fecha:'utc' || 'Sin Datos' }}"
                                     subtitulo="{{ 'Agente: ' + reporte.createdBy.nombreCompleto }}">
                         </plex-label>
 
