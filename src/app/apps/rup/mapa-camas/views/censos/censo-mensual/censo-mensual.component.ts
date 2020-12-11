@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
@@ -46,13 +45,16 @@ export class CensosMensualesComponent implements OnInit {
 
     constructor(
         public auth: Auth,
-        private router: Router,
         private mapaCamasService: MapaCamasService,
         private organizacionService: OrganizacionService,
         private servicioDocumentos: DocumentosService,
     ) { }
 
     ngOnInit() {
+        this.getOrganizacion();
+    }
+
+    getOrganizacion() {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             let index;
