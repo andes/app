@@ -22,6 +22,7 @@ export class BiQueriesComponent implements OnInit {
   public resultados;
   public mostrarSalida = false;
   public tipoPrestaciones;
+  public totalOrganizaciones = false;
 
   constructor(
     private queryService: QueriesService,
@@ -32,6 +33,7 @@ export class BiQueriesComponent implements OnInit {
 
   ngOnInit() {
     const permisos = this.auth.getPermissions('visualizacionInformacion:biQueries:?');
+    this.totalOrganizaciones = !this.auth.check('visualizacionInformacion:totalOrganizaciones');
     if (permisos.length) {
       if (permisos[0] === '*') {
         this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
@@ -95,7 +97,6 @@ export class BiQueriesComponent implements OnInit {
     let resultado = this.queries$.find(query => query.nombre === this.consultaSeleccionada.nombre);
     if (resultado) {
       const params = {};
-
       this.argumentos.forEach(arg => {
         const key = arg.key;
         const valor = this.argumentos[key];
@@ -110,6 +111,7 @@ export class BiQueriesComponent implements OnInit {
           }
         }
       });
+      params['totalOrganizaciones'] = !this.totalOrganizaciones;
       this.queryService.descargarCsv(this.consultaSeleccionada.nombre, params).subscribe();
     }
   }

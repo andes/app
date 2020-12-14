@@ -28,7 +28,8 @@
                         <plex-select *ngSwitchCase="'organizacion'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                     [required]="argumento.required" [data]="organizaciones$ |async">>
+                                     [required]="argumento.required && totalOrganizaciones"
+                                     [data]="organizaciones$ |async">>
                         </plex-select>
                         <plex-select *ngSwitchCase="'conceptoTurneable'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
