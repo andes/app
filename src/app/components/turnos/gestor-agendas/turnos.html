@@ -108,7 +108,7 @@
                         <plex-button *ngIf="botones.sms" type="default" icon="email-outline" (click)="enviarSMS()"
                                      title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="account-off" title="Liberar turno"
-                                     (click)="liberarTurno(agenda)"></plex-button>
+                                     (click)="liberarTurno()"></plex-button>
                         <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="stop" title="Suspender turno"
                                      (click)="suspenderTurno(agenda)"></plex-button>
                     </div>
