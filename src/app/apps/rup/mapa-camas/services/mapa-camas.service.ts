@@ -548,6 +548,9 @@ export class MapaCamasService {
             accionesCapa$
         ).pipe(
             map(([uo, acciones]) => {
+                if (!uo) {
+                    return [];
+                }
                 const registros = acciones.filter(acc => acc.tipo === 'nuevo-registro');
                 return registros.filter((registro) => {
                     const { unidadOrganizativa } = registro.parametros;
