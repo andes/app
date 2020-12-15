@@ -6,6 +6,8 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { ReglaService } from '../../../services/top/reglas.service';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { FileObject, FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { DriveService } from 'src/app/services/drive.service';
+
 @Component({
     selector: 'form-nueva-solicitud',
     templateUrl: './formNuevaSolicitud.html',
@@ -33,6 +35,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     documentos = [];
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
+    public documentosUrl = [];
 
     modelo: any = {
         inicio: 'top',
@@ -73,7 +76,8 @@ export class FormNuevaSolicitudComponent implements OnInit {
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
         private servicioReglas: ReglaService,
-        private adjuntosService: AdjuntosService
+        private adjuntosService: AdjuntosService,
+        private driveService: DriveService
     ) { }
 
     ngOnInit() {
@@ -275,64 +279,14 @@ export class FormNuevaSolicitudComponent implements OnInit {
         }
     }
 
-    // Adjuntar archivo
-    changeListener($event): void {
-        this.readThis($event.target);
-    }
-
-    readThis(inputValue: any): void {
-
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            this.errorExt = true;
-            return;
-        }
-        this.waiting = true;
-        const file: File = inputValue.files[0];
-        const myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            let metadata = {};
-            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.documentos.push({
-                    ext,
-                    id: data._id
-                });
-                this.calcDocumentosUrl();
-                this.waiting = false;
-            });
-        };
-        myReader.readAsDataURL(file);
-    }
-
-    fileExtension(file) {
-        if (file.lastIndexOf('.') >= 0) {
-            return file.slice((file.lastIndexOf('.') + 1));
-        } else {
-            return '';
-        }
-    }
-
-    imageUploaded($event) {
-        let documento = {
-            ext: this.fileExtension($event.file.name),
-            file: $event.src,
-        };
-        this.documentos.push(documento);
-        this.calcDocumentosUrl();
-    }
-
     imageRemoved(archivo: FileObject) {
-        const index = this.documentos.findIndex((doc) => doc.id === archivo.id);
-        this.documentos.splice(index, 1);
-        this.calcDocumentosUrl();
+        this.driveService.deleteFile(archivo.id).subscribe(() => {
+            const index = this.documentos.findIndex((doc) => doc.id === archivo.id);
+            this.documentos.splice(index, 1);
+            this.calcDocumentosUrl();
+        });
     }
 
-
-    public documentosUrl = [];
     calcDocumentosUrl() {
         this.documentosUrl = this.documentos.map((doc) => {
             return {
@@ -342,8 +296,13 @@ export class FormNuevaSolicitudComponent implements OnInit {
         });
     }
 
-    cancelarAdjunto() {
-        clearTimeout(this.timeout);
-        this.waiting = false;
+    onUpload($event) {
+        if ($event.status = 200) {
+            this.documentos.push({
+                ext: $event.body.ext,
+                id: $event.body.id
+            });
+            this.calcDocumentosUrl();
+        }
     }
 }
