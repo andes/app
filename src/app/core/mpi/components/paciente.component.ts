@@ -178,6 +178,7 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.fechaNacimiento = moment(this.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.sexo = this.paciente.sexo;
                     this.pacienteModel.documento = this.paciente.documento;
+                    this.pacienteModel.scan = this.paciente.scan;
                     this.pacienteModel.estado = 'validado';
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
@@ -486,6 +487,19 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.foto = resultado.paciente.foto;
                     this.pacienteModel.fotoId = null;
+                    // agregamos en identificadores la validación
+                    const resIdentificadores = resultado.paciente.identificadores;
+                    if (this.pacienteModel.identificadores?.length) {
+                        const posIdentficador = this.pacienteModel.identificadores.findIndex(unId => unId.entidad === resIdentificadores[0].entidad);
+                        if (posIdentficador !== -1) {
+                            // seteo el campo valor por si se modificó
+                            this.pacienteModel.identificadores[posIdentficador].valor = resIdentificadores[0].valor || '';
+                        } else {
+                            this.pacienteModel.identificadores.push(resIdentificadores[0]);
+                        }
+                    } else {
+                        this.pacienteModel.identificadores = resIdentificadores || null;
+                    }
                     // Fecha de fallecimiento en caso de poseerla
                     if (resultado.paciente.fechaFallecimiento) {
                         this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).toDate();
@@ -530,6 +544,7 @@ export class PacienteComponent implements OnInit {
         this.backUpDatos['direccion'] = this.pacienteModel.direccion ? this.pacienteModel.direccion : null;
         this.backUpDatos['foto'] = this.pacienteModel.foto;
         this.backUpDatos['fotoId'] = this.pacienteModel.fotoId;
+        this.backUpDatos['identificadores'] = this.pacienteModel.identificadores;
     }
 
     deshacerValidacion() {
@@ -537,6 +552,7 @@ export class PacienteComponent implements OnInit {
         this.pacienteModel.direccion = this.backUpDatos['direccion'] ? this.backUpDatos['direccion'] : [this.direccion];
         this.pacienteModel.foto = this.backUpDatos['foto'];
         this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
+        this.pacienteModel.identificadores = this.backUpDatos['identificadores'];
 
         if (this.backUpDatos['estado'] === 'temporal') {
             this.pacienteModel.nombre = this.backUpDatos['nombre'];
