@@ -121,6 +121,9 @@
                                     {{profesional | nombre}}
                                 </div>
                             </div>
+                            <div *ngIf="agenda | espacioFisico" class='text-capitalize'>
+                                {{ agenda | espacioFisico }}
+                            </div>
                         </div>
                         <!-- Tiene turnos disponibles -->
                         <ng-container *ngIf="estadoT === 'seleccionada'">
