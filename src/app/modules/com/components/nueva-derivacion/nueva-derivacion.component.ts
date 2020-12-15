@@ -1,3 +1,4 @@
+import { DriveService } from 'src/app/services/drive.service';
 import { DerivacionesService } from './../../../../services/com/derivaciones.service';
 import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -64,7 +65,8 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         public sanitazer: DomSanitizer,
         public adjuntosService: COMAdjuntosService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private driveService: DriveService
     ) { }
 
     ngOnInit() {
@@ -192,9 +194,11 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     }
 
     removeFile($event) {
-        let index = this.adjuntos.indexOf($event);
-        this.adjuntos.splice(index, 1);
-        this.calcDocumentosUrl();
+        this.driveService.deleteFile($event.id).subscribe(() => {
+            const index = this.adjuntos.findIndex(a => a.id === $event.id);
+            this.adjuntos.splice(index, 1);
+            this.calcDocumentosUrl();
+        });
     }
 
     calcDocumentosUrl() {

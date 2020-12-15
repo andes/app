@@ -4,6 +4,7 @@ import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList
 import { DomSanitizer } from '@angular/platform-browser';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { DriveService } from 'src/app/services/drive.service';
 
 @Component({
     selector: 'actualizar-estado',
@@ -38,7 +39,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         public adjuntosService: COMAdjuntosService,
         public sanitazer: DomSanitizer,
         private derivacionService: DerivacionesService,
-        public plex: Plex
+        public plex: Plex,
+        private driveService: DriveService
     ) { }
 
     ngOnInit() {
@@ -70,9 +72,11 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     }
 
     removeFile($event) {
-        let index = this.adjuntosEstado.indexOf($event);
-        this.adjuntosEstado.splice(index, 1);
-        this.calcDocumentosUrl();
+        this.driveService.deleteFile($event.id).subscribe(() => {
+            const index = this.adjuntosEstado.findIndex(a => a.id === $event.id);
+            this.adjuntosEstado.splice(index, 1);
+            this.calcDocumentosUrl();
+        });
     }
 
     calcDocumentosUrl() {
