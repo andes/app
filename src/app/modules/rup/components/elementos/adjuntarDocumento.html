@@ -21,6 +21,7 @@
         </div>
         <div class="row">
             <div class="col-12" *ngIf="registro?.valor?.documentos?.length && fileToken && !parametroRegistro">
+                <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
                 <div class="image-container hr-inline-group">
                     <table class=" table table-striped">
                         <thead>
@@ -67,7 +68,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
                 </div>
             </div>
             <div class="col-12" *ngIf="parametroRegistro">

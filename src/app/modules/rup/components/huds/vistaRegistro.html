@@ -22,15 +22,15 @@
                     <div class="d-inline-flex justify-content-end nav-fecha">
                         <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
                              class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
-                             (click)="cambiarEvolucion('+')"></div>
-                        <!--{{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
-                    registro.evoluciones[indice].fechaCarga) | fecha }}-->
+                             (click)="cambiarEvolucion('+')">
+                        </div>
                         {{ registro.evoluciones[indice]?.fechaCarga | fecha }}
 
                         <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}"
                              class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
-                             (click)="cambiarEvolucion('-')"></div>
-                        <!-- fechaCarga es registro.createdAt -->
+                             (click)="cambiarEvolucion('-')">
+                        </div>
+
                     </div>
                 </div>
 
@@ -47,16 +47,17 @@
                         <b>Estado:</b>
                         <div>
                             <plex-badge *ngIf="registro?.valor?.estado !== ''" type="success">
-                                <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
+                                <ng-container *ngIf="!registro.evoluciones">
                                     {{ registro.valor.estado }}
                                 </ng-container>
-                                <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
+                                <ng-container *ngIf="registro.evoluciones">
                                     {{ registro.evoluciones[indice].estado }}
                                 </ng-container>
                             </plex-badge>
                             <small *ngIf="registro?.evoluciones?.length">
-                                ({{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
-                            registro.evoluciones[indice].fechaCarga) | fromNow }})
+                                ({{ (registro.evoluciones[indice]?.fechaInicio ?
+                                registro.evoluciones[indice].fechaInicio :
+                                registro.evoluciones[indice].fechaCarga) | fromNow }})
                             </small>
                             <small *ngIf="registro?.valor?.fechaInicio">
                                 ({{ registro.valor.fechaInicio | fromNow }})
@@ -72,7 +73,7 @@
                     <div class="d-flex">
                         <plex-badge *ngIf="registro.transformado" type="info">
                             Transformado en: {{ registro.transformado.concepto.term ?
-                        registro.transformado.concepto.term : ''}}
+                            registro.transformado.concepto.term : ''}}
                         </plex-badge>
                     </div>
                     <div class="columna-completa">
@@ -84,9 +85,9 @@
 
                     <div class="columna-completa">
                         <!-- VER QUE FUNCIONEN LAS RELACIONES -->
-                        <b class="relaciones"
-                           *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
-                            con:</b>
+                        <b class="relaciones" *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">
+                            Relacionado con:
+                        </b>
                         <div>
                             <ng-container
                                           *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
@@ -94,15 +95,15 @@
                                     <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
                                         {{ relacion | relacionRUP }}
                                     </plex-badge>
-                                    <ng-container *ngIf="relacionAux">
-                                        <rup class="columna-completa align"
-                                             [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
-                                             [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
-                                             [params]="elementosRUPService.elementoRegistro(relacionAux).params"
-                                             [soloValores]="true">
-                                        </rup>
-                                    </ng-container>
                                 </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="relacionAux">
+                                <rup class="columna-completa align"
+                                     [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
+                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                     [params]="elementosRUPService.elementoRegistro(relacionAux).params"
+                                     [soloValores]="true">
+                                </rup>
                             </ng-container>
                         </div>
                     </div>

@@ -49,9 +49,8 @@
 
                     <div class="columna-completa">
                         <!-- VER QUE FUNCIONEN LAS RELACIONES -->
-                        <b class="relaciones"
-                           *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
-                            con:</b>
+                        <b class="relaciones" *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">
+                            Relacionado con:</b>
                         <div>
                             <ng-container
                                           *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
@@ -59,15 +58,15 @@
                                     <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
                                         {{ relacion | relacionRUP }}
                                     </plex-badge>
-                                    <ng-container *ngIf="relacionAux">
-                                        <rup class="columna-completa align"
-                                             [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
-                                             [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
-                                             [params]="elementosRUPService.elementoRegistro(relacionAux).params"
-                                             [soloValores]="true">
-                                        </rup>
-                                    </ng-container>
                                 </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="relacionAux">
+                                <rup class="columna-completa align"
+                                     [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
+                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                     [params]="elementosRUPService.elementoRegistro(relacionAux).params"
+                                     [soloValores]="true">
+                                </rup>
                             </ng-container>
                         </div>
                     </div>
