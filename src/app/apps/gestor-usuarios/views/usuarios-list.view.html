@@ -1,26 +1,19 @@
 <plex-layout [main]="6">
     <plex-layout-main>
-        <header>
-            <plex-title titulo="Gestor de Usuarios">
-                <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
-                    PERFILES
-                </plex-button>
-            </plex-title>
-            <div class="row">
-                <div class="col-6">
-                    <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
-                        <plex-icon name="account-search"></plex-icon>
-                    </plex-text>
-                </div>
-                <div class="col-6">
-                    <plex-select [(ngModel)]="organizacion" placeholder="Seleccione una organización"
-                                 [data]="organizaciones">
-                    </plex-select>
-                </div>
-            </div>
-        </header>
+        <plex-title titulo="Gestor de Usuarios">
+            <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
+                PERFILES
+            </plex-button>
+        </plex-title>
+        <plex-grid type="full" cols="2">
+            <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
+                <plex-icon name="account-search"></plex-icon>
+            </plex-text>
+            <plex-select [(ngModel)]="organizacion" placeholder="Seleccione una organización" [data]="organizaciones">
+            </plex-select>
+        </plex-grid>
         <ng-container *ngIf="(usuarios$ | async) as usuarios">
-            <table class="table table-striped" *ngIf="usuarios.length > 0">
+            <table class="table table-striped mt-2" *ngIf="usuarios.length > 0">
                 <thead>
                     <tr>
                         <th>Usuario</th>
@@ -44,19 +37,14 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="row" *ngIf="usuarios.length === 0">
-                <div class="col">
-                    <div class="alert alert-danger d-flex justify-content-between">
-                        <div>
-                            <plex-icon name="account-alert"></plex-icon>
-                            No se encontró ningún usuario.
-                        </div>
-                        <plex-button type="success" size="sm" (click)="nuevo()" *ngIf="!isNewDisabled">
-                            NUEVO USUARIO
-                        </plex-button>
-                    </div>
-                </div>
-            </div>
+            <plex-grid cols="2" *ngIf="usuarios.length === 0" justify="center" type="full">
+                <plex-badge type="warning" size="block">
+                    El usuario que busca no se encuentra cargado en el sistema.
+                </plex-badge>
+                <plex-button type="success" size="sm" (click)="nuevo()" *ngIf="!isNewDisabled">
+                    CARGAR USUARIO
+                </plex-button>
+            </plex-grid>
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
