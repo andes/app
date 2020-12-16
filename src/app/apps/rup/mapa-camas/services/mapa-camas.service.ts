@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { cache } from '@andes/shared';
+import { cache, notNull } from '@andes/shared';
 import { Observable, BehaviorSubject, Subject, combineLatest, of, timer } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, multicast, filter } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, multicast, filter, tap } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
@@ -312,8 +312,8 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
@@ -540,6 +540,7 @@ export class MapaCamasService {
         );
         const accionesCapa$ = cama.pipe(
             switchMap(_cama => this.getEstadoCama(_cama)),
+            notNull(),
             pluck('acciones')
         );
 
@@ -548,6 +549,9 @@ export class MapaCamasService {
             accionesCapa$
         ).pipe(
             map(([uo, acciones]) => {
+                if (!uo) {
+                    return [];
+                }
                 const registros = acciones.filter(acc => acc.tipo === 'nuevo-registro');
                 return registros.filter((registro) => {
                     const { unidadOrganizativa } = registro.parametros;
