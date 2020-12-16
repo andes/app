@@ -51,7 +51,7 @@
     "file-saver": "^2.0.2",
     "json-rules-engine": "^5.0.4",
     "ng-drag-drop": "^5.0.0",
-    "ng2-charts": "^2.3.2",
+    "ng2-charts": "^2.4.2",
     "ng2-slugify": "^0.1.0",
     "ngx-infinite-scroll": "^8.0.0",
     "ol": "^5.3.3",
