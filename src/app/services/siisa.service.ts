@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';

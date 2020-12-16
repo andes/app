@@ -1,7 +1,7 @@
 // import { RequestOptions, URLSearchParams } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 import { Plex } from '@andes/plex';

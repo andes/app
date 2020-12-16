@@ -1,6 +1,6 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import * as io from 'socket.io-client';
 import * as Wildcard from 'socketio-wildcard';
 

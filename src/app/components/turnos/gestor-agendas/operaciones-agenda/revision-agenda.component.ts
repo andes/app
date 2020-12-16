@@ -14,7 +14,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { Unsubscribe } from '@andes/shared';
 
 @Component({
@@ -24,7 +24,7 @@ import { Unsubscribe } from '@andes/shared';
 })
 
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
     private _agenda: any;
     private estadoPendienteAuditoria;
     private estadoCodificado;
