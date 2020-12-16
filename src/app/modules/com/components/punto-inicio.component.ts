@@ -1,3 +1,4 @@
+import { PuntoInicioService } from './../services/punto-inicio.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Component, OnInit } from '@angular/core';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -9,13 +10,16 @@ import { Plex } from '@andes/plex';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'com-punto-inicio',
-    templateUrl: './punto-inicio.html'
+    templateUrl: './punto-inicio.html',
+    styleUrls: ['./punto-inicio.scss']
 })
 
 export class ComPuntoInicioComponent implements OnInit {
+    public derivaciones$: Observable<any[]>;
     public orgActual;
     public esCOM = false;
     public showSidebar = false;
@@ -28,6 +32,12 @@ export class ComPuntoInicioComponent implements OnInit {
     private skip = 0;
     private limit = 15;
     public reglasDerivacion = [];
+    public opcionesPrioridad = [
+        { id: 'baja', label: 'Baja' },
+        { id: 'media', label: 'Media' },
+        { id: 'alta', label: 'Alta' },
+        { id: 'especial', label: 'Especial' }
+    ];
     derivacionSeleccionada: IDerivacion;
     public derivaciones: any[] = [];
     organizacionActual: any[];
@@ -35,7 +45,6 @@ export class ComPuntoInicioComponent implements OnInit {
     organizacionDestino: IOrganizacion;
     paciente: any;
     estado: any;
-    prioridad: any;
     tabIndex = 0;
     public loading = false;
     public estados = [
@@ -48,14 +57,46 @@ export class ComPuntoInicioComponent implements OnInit {
         { id: 'finalizada', nombre: 'FINALIZADA' },
         { id: 'encomendada', nombre: 'ENCOMENDADA' }
     ];
-    public opcionesPrioridad = [
-        { id: 'baja', nombre: 'baja' },
-        { id: 'media', nombre: 'media' },
-        { id: 'alta', nombre: 'alta' }
+    public sortBy = 'fecha';
+    public sortOrder = 'asc';
+    public ordenarPorPrioridad = false;
+
+    // Códigos de color de prioridades
+    colores = [
+        {
+            border: '#b0cfa0',
+            hover: '#80b266',
+            background: '#e9f2e5',
+            name: 'baja'
+        },
+        {
+            border: '#d5c743',
+            hover: '#C6B300',
+            background: '#f8f5de',
+            name: 'media'
+        },
+        {
+            border: '#e4a4a4',
+            hover: '#B70B0B',
+            background: '#f8e6e6',
+            name: 'alta'
+        },
+        {
+            border: '#7a6f93',
+            hover: '#02111C',
+            background: '#dddae3',
+            name: 'especial'
+        }
     ];
 
-    constructor(private derivacionesService: DerivacionesService, private organizacionService: OrganizacionService, private auth: Auth,
-        public router: Router, public plex: Plex, private reglasDerivacionService: ReglasDerivacionService, private documentosService: DocumentosService) { }
+    constructor(
+        private derivacionesService: DerivacionesService,
+        private organizacionService: OrganizacionService,
+        private auth: Auth,
+        public router: Router, public plex: Plex,
+        private reglasDerivacionService: ReglasDerivacionService,
+        private documentosService: DocumentosService,
+        private puntoInicioService: PuntoInicioService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -98,9 +139,6 @@ export class ComPuntoInicioComponent implements OnInit {
         } else {
             query.estado = '~finalizada';
         }
-        if (this.prioridad) {
-            query.prioridad = this.prioridad.id;
-        }
         if (this.tabIndex === 0) {
             query.organizacionDestino = this.auth.organizacion.id;
             if (this.organizacionOrigen) {
@@ -119,13 +157,16 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
-        this.derivacionesService.search(query).subscribe((derivaciones: [IDerivacion]) => {
-            this.derivaciones = this.derivaciones.concat(derivaciones);
-            this.derivaciones.sort((a, b) => a.fecha - b.fecha);
+        this.puntoInicioService.get(query).subscribe((data) => {
+            this.derivaciones = this.derivaciones.concat(data);
+            this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
             this.skip = this.derivaciones.length;
-            if (!derivaciones.length || derivaciones.length < this.limit) {
+            this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
+            if (!data.length || data.length < this.limit) {
                 this.scrollEnd = true;
             }
+            this.puntoInicioService.sortOrder.next(this.sortBy);
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
             this.loading = false;
         });
     }
@@ -184,7 +225,6 @@ export class ComPuntoInicioComponent implements OnInit {
             this.organizacionOrigen = null;
             this.organizacionDestino = null;
             this.paciente = null;
-            this.prioridad = null;
             this.tabIndex = index;
             this.ocultarSidebars();
             this.cargarDerivaciones();
@@ -208,12 +248,43 @@ export class ComPuntoInicioComponent implements OnInit {
         this.verAyuda = mostrar;
     }
 
+    sortList(event: string) {
+        if (event !== 'prioridad') {
+            this.ordenarPorPrioridad = false;
+        }
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
+        } else {
+            this.sortBy = event;
+            this.sortOrder = 'asc';
+            this.puntoInicioService.sortBy.next(event);
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
+        }
+    }
+
+    ordenarPrioridad() {
+        if (this.ordenarPorPrioridad) {
+            this.sortList('prioridad');
+        } else {
+            this.sortList('fecha');
+        }
+    }
+
     imprimirComprobante(derivacion: any) {
         this.requestInProgress = true;
         this.documentosService.descargarComprobanteDerivacion(derivacion, derivacion.paciente.apellido).subscribe(
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
+    }
+
+    getColorPrioridad(prioridad) {
+        if (prioridad && this.esCOM) {
+            return this.colores.find(x => x.name === prioridad);
+        } else {
+            return false;
+        }
     }
 }
 

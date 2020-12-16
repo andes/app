@@ -12,17 +12,18 @@ import { DriveService } from 'src/app/services/drive.service';
 @Component({
     selector: 'detalle-derivacion',
     templateUrl: './detalle-derivacion.html',
-    styleUrls: ['./adjuntos.scss']
+    styleUrls: ['./adjuntos.scss', './punto-inicio.scss']
 })
 export class DetalleDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
     public derivacion;
     public reglaSeleccionada;
-    public prioridad;
+    public prioridad = 'baja';
     public opcionesPrioridad = [
-        { id: 'baja', name: 'baja' },
-        { id: 'media', name: 'media' },
-        { id: 'alta', name: 'alta' }
+        { id: 'baja', label: 'Baja' },
+        { id: 'media', label: 'Media' },
+        { id: 'alta', label: 'Alta' },
+        { id: 'especial', label: 'Especial' }
     ];
     // Adjuntar Archivo
     errorExt = false;
@@ -150,6 +151,10 @@ export class DetalleDerivacionComponent implements OnInit {
             element.soloCOM === this.esCOM);
     }
 
+    setPrioridad(prioridad) {
+        this.prioridad = prioridad;
+    }
+
     actualizarEstado($event) {
         if ($event.formValid) {
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
@@ -157,8 +162,8 @@ export class DetalleDerivacionComponent implements OnInit {
             this.derivacion.historial.push(this.nuevoEstado);
             this.derivacion.estado = this.nuevoEstado.estado;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            if (this.prioridad) {
-                this.derivacion.prioridad = this.prioridad.id;
+            if (this.reglaSeleccionada.definePrioridad) {
+                this.derivacion.prioridad = this.prioridad;
             }
             this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');

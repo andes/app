@@ -55,10 +55,13 @@
                              placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
                              [required]="true">
                 </plex-select>
-                <plex-select *ngIf="reglaSeleccionada?.definePrioridad" [(ngModel)]="prioridad" label="Prioridad"
-                             name="prioridad" placeholder="Indique la prioridad" [data]="opcionesPrioridad"
-                             [required]="true" grow="full" idField='id' labelField="name">
-                </plex-select>
+                <div class="mt-1" *ngIf="reglaSeleccionada?.definePrioridad">
+                    <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
+                    <ng-container *ngFor="let p of opcionesPrioridad">
+                        <div [class]="p.id" [class.selected]="p.id === prioridad" (click)="setPrioridad(p.id);">
+                        </div>
+                    </ng-container>
+                </div>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
