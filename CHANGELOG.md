@@ -1,3 +1,23 @@
+# [5.26.0](https://github.com/andes/app/compare/v5.25.0...v5.26.0) (2020-12-16)
+
+
+### Bug Fixes
+
+* **citas:** poder seleccionar prepaga cuando el paciente no tiene obra social ([#2079](https://github.com/andes/app/issues/2079)) ([e529d43](https://github.com/andes/app/commit/e529d438c0742bcf2cf0c0e9f0ee0d2061f961e5))
+* **mapa-camas:** agrega control para los registros si la uo es null  ([#2087](https://github.com/andes/app/issues/2087)) ([757fbf1](https://github.com/andes/app/commit/757fbf1645a428ed8fcc339b81b87eb406f838d5))
+* **mapa-camas:** controla que se haya generado el censo para descargarlo ([#2081](https://github.com/andes/app/issues/2081)) ([e13d869](https://github.com/andes/app/commit/e13d869d8ed006ebdc1f138700c183a6190da3ad))
+* **mpi:** edicion de datos de paciente en modal ([#2083](https://github.com/andes/app/issues/2083)) ([3bde806](https://github.com/andes/app/commit/3bde806664f3c1ce19fa795879d6d3a11e2d9cab))
+
+
+### Features
+
+* **bi-query:** organizacion required ([#2072](https://github.com/andes/app/issues/2072)) ([24f9ad4](https://github.com/andes/app/commit/24f9ad4e2818bb7a57bd2e6d854f4b3b4a38fed2))
+* **buscador:** exportar huds ([#2055](https://github.com/andes/app/issues/2055)) ([896f786](https://github.com/andes/app/commit/896f786be12e505caf1a491ecf482e4979fd4984))
+* **CIT:** mostrar espacio fisico dacion turno ([#2082](https://github.com/andes/app/issues/2082)) ([2b1cc7d](https://github.com/andes/app/commit/2b1cc7d7d7a4994a29309dcfdbdb5b329aeefcea))
+* **CIT:** registrar motivo liberacion turno ([#2078](https://github.com/andes/app/issues/2078)) ([5586923](https://github.com/andes/app/commit/5586923e2452fc57f9f461dc28e68dc1913af85e))
+* **com:** borrar archivos del drive al eliminar de la galería ([#2084](https://github.com/andes/app/issues/2084)) ([226c23c](https://github.com/andes/app/commit/226c23ce873509def9353abe6162c67a436823e7))
+* **huds:** mostrar adjuntos si esta relacionado ([#2077](https://github.com/andes/app/issues/2077)) ([97fb17f](https://github.com/andes/app/commit/97fb17fca179c30484f65d3fbe8914dbef35cfe8))
+
 # [5.25.0](https://github.com/andes/app/compare/v5.24.0...v5.25.0) (2020-12-09)
 
 
