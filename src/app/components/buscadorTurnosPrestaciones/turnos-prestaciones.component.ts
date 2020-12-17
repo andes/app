@@ -44,6 +44,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public profesional: any;
     public botonBuscarDisabled = false;
     public profesionales;
+    public arrayAmbito = [{ id: 'ambulatorio', nombre: 'ambulatorio' }, { id: 'internacion', nombre: 'internación' }];
+    public ambito;
 
     public columnas = {
         fecha: true,
@@ -265,6 +267,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             }
             if (tipo === 'documento') {
                 this.parametros['documento'] = data ? data : '';
+            }
+            if (tipo === 'ambito') {
+                this.parametros['ambito'] = data ? data.id : '';
             }
             if (tipo === 'filter') {
                 this.buscar(this.parametros);

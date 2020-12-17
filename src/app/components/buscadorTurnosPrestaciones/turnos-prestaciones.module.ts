@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { TurnosPrestacionesComponent } from './turnos-prestaciones.component';
@@ -25,6 +26,7 @@ import { VisualizacionInformacionModule } from 'src/app/modules/visualizacion-in
         InfiniteScrollModule,
         ElementosRUPModule,
         VisualizacionInformacionModule,
+        ScrollingModule,
         RouterModule.forChild([
             { path: '', component: TurnosPrestacionesComponent, pathMatch: 'full' },
         ])

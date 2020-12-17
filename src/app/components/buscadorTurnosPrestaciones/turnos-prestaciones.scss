@@ -2,3 +2,20 @@ table th.sortable:hover {
     text-decoration: underline !important;
     cursor: pointer;
 }
+
+cdk-virtual-scroll-viewport {
+    height: 100%;
+    table {
+        table-layout: fixed;
+        width: 100%;
+       
+        tbody tr td {
+            width: 100%;
+        }
+        .selected{
+            width: 4% !important;
+        }
+        
+    }
+    
+}
