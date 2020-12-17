@@ -55,6 +55,7 @@ import { IntegridadService } from './views/integridad/integridad.service';
 import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
 import { PermisosMapaCamasService } from './services/permisos-mapa-camas.service';
+import { HammerModule } from '@angular/platform-browser';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -118,7 +119,8 @@ export const INTERNACION_PROVIDERS = [
         NgDragDropModule,
         RUPLibModule,
         ScrollingModule,
-        CdkTableModule
+        CdkTableModule,
+        HammerModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

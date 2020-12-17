@@ -31,8 +31,18 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     public user$: Observable<any>;
 
-    public permisos$: Observable<any>;
-    @Observe({ initial: [] }) permisos;
+
+    private _permisos = new BehaviorSubject([]);
+    public permisos$ = this._permisos.asObservable();
+
+    get permisos() {
+        return this._permisos.getValue();
+    }
+
+    set permisos(value) {
+        this._permisos.next(value);
+    }
+
 
     public perfiles = [];
     public arbolPermisos = [];

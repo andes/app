@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of, merge, BehaviorSubject } from 'rxjs';
-import { map, switchMap, tap, distinctUntilChanged, take, catchError, } from 'rxjs/operators';
+import { of, merge, BehaviorSubject } from 'rxjs';
+import { map, switchMap, tap, distinctUntilChanged, take, debounceTime, catchError } from 'rxjs/operators';
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
-import { Observe, asObject, mergeObject, onlyNull, cache } from '@andes/shared';
+import { asObject, mergeObject, onlyNull, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -31,11 +31,34 @@ export class UsuariosListComponent implements OnInit {
     refresh = new BehaviorSubject({});
     refresh$ = this.refresh.asObservable();
 
-    search$: Observable<any>;
-    @Observe({ distinc: true, debounce: 300 }) search: string;
 
-    organizacion$: Observable<any>;
-    @Observe({ distinc: true }) organizacion: any;
+    private _search = new BehaviorSubject(null);
+    private search$ = this._search.asObservable().pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+    );
+
+    get search() {
+        return this._search.getValue();
+    }
+
+    set search(value) {
+        this._search.next(value);
+    }
+
+
+    private _organizacion = new BehaviorSubject(null);
+    private organizacion$ = this._organizacion.asObservable().pipe(distinctUntilChanged());
+
+    get organizacion() {
+        return this._organizacion.getValue();
+    }
+
+    set organizacion(value) {
+        this._organizacion.next(value);
+    }
+
+
 
     public organizaciones = [];
     public usuarios$;
@@ -164,8 +187,18 @@ export class UsuariosListComponent implements OnInit {
 
     public userData$;
 
-    @Observe() userSelected;
-    private userSelected$;
+
+    private _userSelected = new BehaviorSubject(null);
+    private userSelected$ = this._userSelected.asObservable();
+
+    get userSelected() {
+        return this._userSelected.getValue();
+    }
+
+    set userSelected(value) {
+        this._userSelected.next(value);
+    }
+
 
     select(user) {
         this.showNewOrgView = false;
