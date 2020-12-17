@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, combineLatest, throwError } from 'rxjs';
+import { Observable, Subject, combineLatest, throwError, BehaviorSubject } from 'rxjs';
 import { map, switchMap, take, tap, pluck, catchError, filter } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
@@ -44,13 +44,14 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public historial$: Observable<any>;
     public historialFiltrado$: Observable<any>;
 
-    @Observe() public desde: Date;
-    @Observe() public hasta: Date;
-    @Observe() public tipoPrestacion;
+    public desde: Date;
+    public hasta: Date;
+    public tipoPrestacion;
 
-    public desde$: Observable<Date>;
-    public hasta$: Observable<Date>;
-    public tipoPrestacion$: Observable<any>;
+
+    public desde$ = new BehaviorSubject(new Date());
+    public hasta$ = new BehaviorSubject(new Date());
+    public tipoPrestacion$ = new BehaviorSubject(null);
 
     public cama$ = this.mapaCamasService.selectedCama;
     public estadoCama$: Observable<IMAQEstado>;
@@ -76,6 +77,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
         this.hasta = moment(this.mapaCamasService.fecha).toDate();
 
+        this.desde$ = new BehaviorSubject(this.desde);
+        this.hasta$ = new BehaviorSubject(this.hasta);
 
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
@@ -108,6 +111,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             tap((date) => {
                 if (moment(this.desde).isSameOrBefore(moment(date))) {
                     this.desde = date;
+                    this.onChangeDesde();
                 }
             })
         );
@@ -118,6 +122,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 const egreso = movimientos.find(m => m.extras && m.extras.egreso);
                 if (egreso) {
                     this.hasta = egreso.fecha;
+                    this.onChangeHasta();
                     return egreso.fecha;
                 }
                 return null;
@@ -215,5 +220,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 });
                 break;
         }
+    }
+
+    onChangeDesde() {
+        this.desde$.next(this.desde);
+    }
+
+    onChangeHasta() {
+        this.hasta$.next(this.hasta);
+    }
+
+    onChangeTipoPrestacion() {
+        this.tipoPrestacion$.next(this.tipoPrestacion);
     }
 }
