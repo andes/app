@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { map } from 'rxjs/operators';

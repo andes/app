@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Server } from '@andes/shared';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 

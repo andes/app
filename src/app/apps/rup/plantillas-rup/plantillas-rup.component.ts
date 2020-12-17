@@ -174,12 +174,6 @@ export class PlantillasRUPComponent implements OnInit {
         });
     }
 
-    guardarPlantillas() {
-        this.plantillas$.map(pl => {
-            this.guardarPlantilla(pl, this.procedimiento.conceptId);
-        });
-    }
-
     eliminarPlantilla(plantilla, idx) {
         if (plantilla.title || plantilla.descripcion) {
             this.plex.confirm(`Se eliminará la plantilla ${plantilla.title ? `"${plantilla.title}"` : ''}`, '¿Eliminar plantilla?', 'Eliminar', 'Cancelar').then(confirmar => {

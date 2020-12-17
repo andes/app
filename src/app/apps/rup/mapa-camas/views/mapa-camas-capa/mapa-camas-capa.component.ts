@@ -5,11 +5,10 @@ import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { take, pluck, tap, map, distinctUntilChanged } from 'rxjs/operators';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { timer, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
@@ -93,7 +92,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
-                    this.permisosMapaCamasService.setAmbito('internacion');
+        this.permisosMapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -131,12 +130,14 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.mapaCamasService.setView('mapa-camas');
 
-        this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {
-            if (cama.id && !this.accion) {
-                this.accion = 'verDetalle';
-            }
-            return cama;
-        });
+        this.selectedCama$ = this.mapaCamasService.selectedCama.pipe(
+            map((cama) => {
+                if (cama.id && !this.accion) {
+                    this.accion = 'verDetalle';
+                }
+                return cama;
+            })
+        );
 
 
         this.mapaCamasService.setFecha(new Date());
@@ -188,7 +189,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     refresh(accion) {
         let i = this.snapshot.findIndex((snap: ISnapshot) => snap.idCama === accion.cama._id);
         this.snapshot[i] = accion.cama;
-        this.camas = Observable.of(this.snapshot);
+        this.camas = of(this.snapshot);
         this.volverAResumen();
     }
 

@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { tap, publishReplay, refCount, switchMap, skip } from 'rxjs/operators';
