@@ -4,7 +4,7 @@ table th.sortable:hover {
 }
 
 cdk-virtual-scroll-viewport {
-    height: 100%;
+    height: calc(100% - 180px);
     table {
         table-layout: fixed;
         width: 100%;
