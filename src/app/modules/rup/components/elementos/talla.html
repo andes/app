@@ -1,5 +1,5 @@
 <form #form="ngForm">
-    <plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240"
+    <plex-float [autoFocus]="true" *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240"
                 [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="{{ registro.concepto.term }}"
                 suffix="cm" [required]="esRequerido" min="1" max="240">
     </plex-float>
