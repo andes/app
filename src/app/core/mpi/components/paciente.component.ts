@@ -104,7 +104,8 @@ export class PacienteComponent implements OnInit {
         scan: null,
         reportarError: false,
         notaError: '',
-        vinculos: [null]
+        vinculos: [null],
+        documentos: [null]
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];
@@ -437,7 +438,9 @@ export class PacienteComponent implements OnInit {
             this.actualizarRelaciones(data);
         }
     }
-
+    documentos(documentosNew) {
+        this.pacienteModel.documentos = documentosNew;
+    }
     notasNotification(notasNew) {
         this.pacienteModel.notas = notasNew;
     }

@@ -57,4 +57,5 @@ export interface IPaciente {
     }];
     _score?: number;
     vinculos: [string];
+    documentos: [any];
 }

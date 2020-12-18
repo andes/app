@@ -219,9 +219,11 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
+import { DocumentosPacienteComponent } from './core/mpi/components/documentos.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
@@ -335,6 +337,7 @@ registerLocaleData(localeEs, 'es');
         PacienteComponent,
         DatosBasicosComponent,
         DatosContactoComponent,
+        DocumentosPacienteComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

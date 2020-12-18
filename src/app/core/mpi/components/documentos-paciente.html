@@ -1,0 +1,16 @@
+<plex-wrapper class="pt-2">
+    <plex-button class="pr-2" label="Seleccionar archivo" htmlFor="image" type="info" name="image"></plex-button>
+    <plex-select [(ngModel)]="documento.tipo" placeholder="seleccione tipo" labelField="label" [data]="datos">
+    </plex-select>
+    <plex-button name="confirmarNota" type="success" icon="plus" size="md" justify="end" multiline="true"
+                 (click)="addDocumentos()"></plex-button>
+</plex-wrapper>
+
+
+<plex-list>
+    <plex-item *ngFor="let item of documentos; let i = index">
+        <plex-icon name="documento" type="info" size="xl"></plex-icon>
+        <plex-label titulo="{{ item.tipo.label }}"></plex-label>
+        <plex-badge type="info">{{ item.fecha | fecha: 'utc'}}</plex-badge>
+    </plex-item>
+</plex-list>
