@@ -24,6 +24,7 @@ import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.compon
 import { PrestacionSolicitudComponent } from './solicitudes/prestacionSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { EstadoSolicitudPipe } from './pipes/estado-solicitud.pipe';
+import { AuditoriasSolicitudPipe } from './pipes/auditorias-solicitud.pipe';
 import { BotonesSolicitudPipe } from './pipes/botones.pipe';
 
 
@@ -63,6 +64,7 @@ export const TOP_ROUTES = [
         ListaReglasComponent,
         BusquedaPacienteComponent,
         EstadoSolicitudPipe,
+        AuditoriasSolicitudPipe,
         BotonesSolicitudPipe
     ]
 })
