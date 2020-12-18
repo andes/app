@@ -33,6 +33,7 @@ import { MovimientosInternacionComponent } from './sidebar/movimientos-internaci
 import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
+import { PrestarDevolverRecursoComponent } from './sidebar/prestar-devolver-recurso/prestar-devolver-recurso.component';
 
 import { MapaCamasService } from './services/mapa-camas.service';
 import { MitosModule } from '../../mitos';
@@ -92,7 +93,8 @@ export const INTERNACION_COMPONENTS = [
     ItemInconsistenciaComponent,
     DetalleIntegridadComponent,
     FiltrosInconsistenciasComponent,
-    IngresoDinamicoComponent
+    IngresoDinamicoComponent,
+    PrestarDevolverRecursoComponent,
 ];
 
 export const INTERNACION_PROVIDERS = [

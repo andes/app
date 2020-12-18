@@ -1,0 +1,31 @@
+<ng-container *ngIf="mapaCamasService.camaSelectedSegunView$ | async as selectedCama">
+    <form #formPrestarDevolver="ngForm">
+        <plex-title [titulo]="(accion === 'prestar') ? 'Prestar Recurso' : 'Devolver Recurso'">
+            <plex-button title="Guardar" icon="check" type="success" size="sm" [validateForm]="formPrestarDevolver"
+                         [disabled]="!fecha || (accion === 'prestar' && !selectedUnidadOrganizativa) || inProgress || !accionPermitida"
+                         (click)="guardar(selectedCama)">
+            </plex-button>
+            <ng-content></ng-content>
+        </plex-title>
+        <plex-wrapper>
+            <plex-label grow="full" size="lg" titulo="Recurso" [subtitulo]="selectedCama.nombre"></plex-label>
+            <ng-container *ngIf="accion === 'devolver'">
+                <plex-label grow="full" size="lg" titulo="Unidad Organizativa"
+                            [subtitulo]="selectedCama.unidadOrganizativaOriginal.term"></plex-label>
+            </ng-container>
+            <plex-datetime grow="full" type="datetime" [(ngModel)]="fecha" [required]="true" name="fechaDesde"
+                           label="Fecha" [debounce]="400" (typing)="onType()" (change)="onDateChange()">
+            </plex-datetime>
+            <ng-container *ngIf="accion === 'prestar'">
+                <plex-select name="unidadOrganizativa" [data]="unidadesOrganizativas$ | async"
+                             label="Unidad Organizativa" idField="conceptId" labelField="term" [required]="true"
+                             [(ngModel)]="selectedUnidadOrganizativa">
+                </plex-select>
+            </ng-container>
+        </plex-wrapper>
+        <div *ngIf="!accionPermitida">
+            El recurso seleccionado no se encuentra disponible en la fecha seleccionada. Esta ocupado o presenta
+            movimientos posteriores.
+        </div>
+    </form>
+</ng-container>

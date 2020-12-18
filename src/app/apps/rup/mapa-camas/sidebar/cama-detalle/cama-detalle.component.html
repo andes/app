@@ -13,8 +13,18 @@
                     </ng-container>
                 </ng-container>
                 <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
-                             *ngIf="(cama.sala) ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit">
+                             *ngIf="cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit">
                 </plex-button>
+                <ng-container *ngIf="!cama.sala && cama.estado === 'disponible' && permisosMapaCamasService.camaEdit">
+                    <plex-button title="Prestar" icon="chevron-right" type="warning" size="sm"
+                                 (click)="accion({accion: 'prestar'})"
+                                 *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">
+                    </plex-button>
+                    <plex-button title="Devolver" icon="chevron-left" type="warning" size="sm"
+                                 (click)="accion({accion: 'devolver'})"
+                                 *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.unidadOrganizativa.conceptId">
+                    </plex-button>
+                </ng-container>
                 <plex-button title="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>
 
