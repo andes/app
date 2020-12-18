@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, of, merge, BehaviorSubject } from 'rxjs';
-import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
+import { map, switchMap, tap, distinctUntilChanged, take, catchError, } from 'rxjs/operators';
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
 import { Observe, asObject, mergeObject, onlyNull, cache } from '@andes/shared';
@@ -133,7 +133,7 @@ export class UsuariosListComponent implements OnInit {
                     map(users => users.length > 0),
                     tap((found) => {
                         if (found) {
-                            this.plex.info('error', 'El usuario existe');
+                            this.plex.info('error', 'El usuario que desea cargar ya se encuentra registrado');
                         }
                     }),
                     onlyNull(),
@@ -142,7 +142,11 @@ export class UsuariosListComponent implements OnInit {
                     }),
                     switchMap((user) => {
                         return this.usuariosHttp.create(user);
-                    })
+                    }),
+                    catchError((e) => {
+                        this.plex.info('warning', e, 'Error 500 (LDAP)');
+                        return null;
+                    }),
                 ).subscribe((user) => {
                     this.plex.toast('success', 'Usuarios creado exitosamente!');
                     this.organizacion = null;
