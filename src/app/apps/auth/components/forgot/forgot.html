@@ -1,0 +1,41 @@
+<div class="forgot-container">
+    <div class="forgot-form">
+        <form>
+            <div class="row forgot-header">
+                <div class="col">
+                    <div class="onelogin"></div>
+                    <div class="andes"></div>
+                </div>
+            </div>
+            <div class="row forgot-content">
+                <div class="col">
+                    <div>
+                        <h3>Restablecer contraseña</h3>
+                        <span>
+                            Por favor, ingrese su usuario. Recibirá un correo electrónico con instrucciones para restablecer su contraseña. En caso que tenga usuario en onelogin se lo redirigirá al sitio web correspondiente
+                        </span>
+                    </div>
+                    <plex-int label="Ingrese su usuario" [autoFocus]="true" [(ngModel)]="usuario"
+                              name="usuario" [required]="true">
+                        <plex-icon name="account-key" left></plex-icon>
+                    </plex-int>
+                    <div class="row">&nbsp;</div>
+                    <plex-button type="success" [validateForm]="true" [disabled]="loading" (click)="recover($event)">
+                        Recuperar contraseña
+                    </plex-button>
+                    <div class="row">&nbsp;</div>
+                    <plex-button type="danger" [disabled]="loading" (click)="cancel()">
+                        Cancelar
+                    </plex-button>
+                    <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+                </div>
+            </div>
+            <div class="row forgot-footer">
+                <div class="col">
+                    <div class="redTICS"></div>
+                    <div class="ministerio"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

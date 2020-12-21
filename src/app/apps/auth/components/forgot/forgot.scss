@@ -1,0 +1,108 @@
+@import '~@andes/plex/src/lib/css/variables';
+.forgot-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 10%;
+    padding-left: 25vw;
+    padding-right: 25vw;
+    width: 100%;
+    height: 100%;
+    z-index: 1030;
+    background: #EEE;
+    // Form
+    .forgot-form {
+        box-shadow: 0px 0px 22px 2px rgba(0, 0, 0, 0.45);
+        // Header
+        .forgot-header {
+            height: 80px;
+            background: var(--nav-bar-color);
+            // OneLogin
+            .onelogin {
+                width: 120px;
+                float: left;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-size: var(--login-logo-1-size);
+                background-position: center left;
+                background-image: var(--login-logo-1);
+            }
+            // Andes
+            .andes {
+                width: 200px;
+                float: right;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-size: 80px;
+                background-position: center right;
+                background-image: url('../../../../assets/img/andes-logo-v-white.svg');
+            }
+        }
+        // Content
+        .forgot-content {
+            padding-top: 30px;
+            padding-bottom: 30px;
+            background: var(--nav-bar-icon-color);
+            color: white;
+            align-items: center;
+            
+            .input-group-addon {
+                background: var(--nav-bar-color) !important;
+            }
+            input {
+                border-color: white;
+            }
+            plex-button,
+            .btn {
+                display: block;
+                width: 100%;
+            }
+        }
+        // Footer
+        .forgot-footer {
+            height: 60px;
+            background: var(--nav-bar-color);
+            // Red TICS
+            .redTICS {
+                width: 200px;
+                float: left;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-size: 100px;
+                background-position: center left;
+                background-image: var(--login-logo-3);
+            }
+            // Ministerio
+            .ministerio {
+                width: 200px;
+                float: right;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-size: 100px;
+                background-position: center right;
+                background-image: var(--login-logo-4);
+            }
+        }
+    }
+
+    
+}
+
+
+@media screen and (max-width: 768px) {
+    .forgot-container {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 0%;
+        height: 100vh;
+    }
+
+    .forgot-container .forgot-form .forgot-content {
+        height: calc(100vh - 140px);
+    }
+
+    .onelogin, .andes, .ministerio, .redTICS {
+        background-size: 75px;
+        width: 100px!important;
+    }
+}

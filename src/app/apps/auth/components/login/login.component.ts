@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { WebSocketService } from '../../../../services/websocket.service';
+import { environment } from '../../../../../../src/environments/environment';
 
 @Component({
     templateUrl: 'login.html',
@@ -13,6 +14,7 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public loading = false;
+    public enable = environment.PASSWORD_RECOVER ? environment.PASSWORD_RECOVER === 'enabled' : false;
 
     constructor(
         private plex: Plex,
@@ -29,6 +31,10 @@ export class LoginComponent implements OnInit {
     checkTimezone() {
         const timeZone = new Date().getTimezoneOffset();
         return timeZone === 180;
+    }
+
+    forgot() {
+        this.router.navigate(['/auth/forgot']);
     }
 
     login(event) {

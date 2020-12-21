@@ -1,0 +1,47 @@
+  <div class="login-container">
+    <div class="login-form">
+        <form #formulario="ngForm">
+            <div class="row login-header">
+                <div class="col">
+                    <div class="onelogin"></div>
+                    <div class="andes"></div>
+                </div>
+            </div>
+            <div class="row login-content">
+                <div class="col">
+                  <div class="password mb-2">
+                    <plex-text placeholder="Ingresá una nueva contraseña" [(ngModel)]="password1" required="true" name="password1"
+                              [password]="!showPassword">
+                    </plex-text>
+                  </div>
+                  <div class="password mb-3">
+                    <plex-text placeholder="Confirmá tu nueva contraseña" [(ngModel)]="password2" required="true" name="password2"
+                              [password]="!showPassword">
+                    </plex-text>
+                  </div>
+                  <span *ngIf="formulario.form.valid && (this.password1 !== this.password2)" class="text-danger">
+                    Las contraseñas no coinciden
+                  </span>
+                  <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+                  <plex-button modal right type="success" [validateForm]="formulario"
+                               [disabled]="!formulario.form.valid || (this.password1 !== this.password2)"
+                               (click)="save(formulario.form)">
+                    Confirmar contraseña
+                  </plex-button>
+                  <div class="row">&nbsp;</div>
+                  <plex-button modal left type="danger" (click)="cancel(formulario.form)">
+                    Cancelar
+                  </plex-button>
+                
+                </div>
+            </div>
+            <div class="row login-footer">
+                <div class="col">
+                    <div class="redTICS"></div>
+                   
+                    <div class="ministerio"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
