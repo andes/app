@@ -54,8 +54,8 @@ export class RecoveryComponent implements OnInit {
                   } else {
                     this.plex.info('danger', 'Hubo un error en la actualización de la contraseña');
                   }
-                  this.clearForm(form);
-                  this.cancel(form);
+                  this.clearForm();
+                  this.cancel();
                 },
                 err => {
                   this.plex.info('danger', err);
@@ -66,7 +66,7 @@ export class RecoveryComponent implements OnInit {
         }
       }
 
-      cancel(form) {
+      cancel() {
         this.formulario.showed = false;
         this.closeModal.emit();
         if (this.token) {
@@ -74,7 +74,7 @@ export class RecoveryComponent implements OnInit {
         }
       }
 
-    clearForm(form) {
+    clearForm() {
         this.loading = false;
         this.password1 = '';
         this.password2 = '';
