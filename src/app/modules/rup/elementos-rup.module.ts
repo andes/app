@@ -47,8 +47,8 @@ import { CalculoDeBostonComponent } from './components/elementos/calculoDeBoston
 import { SeleccionBinariaComponent } from './components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './components/elementos/valorNumerico.component';
 import { ValorFechaComponent } from './components/elementos/valorFecha.component';
-
 import { UltimaFechaComponent } from './components/elementos/ultimaFecha.component';
+import { VacunasComponent } from './components/elementos/vacunas.component';
 
 import { MoleculaBaseComponent } from './components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
@@ -71,6 +71,7 @@ import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { RUPObservacionesModalComponent } from './components/elementos/components/observaciones-modal.component';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
+
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -122,7 +123,8 @@ const RUPComponentsArray = [
     SeccionComponent,
     InternacionEgresoComponent,
     InternacionIngresoComponent,
-    ChecklistComponent
+    ChecklistComponent,
+    VacunasComponent
 ];
 
 @NgModule({
