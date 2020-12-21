@@ -11,12 +11,12 @@
                 <div class="col">
                   <div class="password mb-2">
                     <plex-text placeholder="Ingresá una nueva contraseña" [(ngModel)]="password1" required="true" name="password1"
-                              [password]="!showPassword">
+                              [password]="true">
                     </plex-text>
                   </div>
                   <div class="password mb-3">
                     <plex-text placeholder="Confirmá tu nueva contraseña" [(ngModel)]="password2" required="true" name="password2"
-                              [password]="!showPassword">
+                              [password]="true">
                     </plex-text>
                   </div>
                   <span *ngIf="formulario.form.valid && (this.password1 !== this.password2)" class="text-danger">
