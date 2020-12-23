@@ -1,14 +1,16 @@
 <form #formEgreso="ngForm">
     <plex-title justify titulo="EGRESO">
         <plex-button title="{{ (!prestacionValidada) ? 'guardar' : 'Prestacion validada' }}" icon="check" type="success"
-                     size="sm" [validateForm]="formEgreso" (click)="guardar($event)" [disabled]="prestacionValidada || disableButton">
+                     size="sm" [validateForm]="formEgreso" (click)="guardar($event)"
+                     [disabled]="prestacionValidada || disableButton || inProgress || (disableButton$ | async)"
+                     [autodisabled]="true">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>
     <plex-wrapper>
         <plex-datetime grow="2" label="Fecha y hora de egreso" [(ngModel)]="fecha" name="fechaEgreso" required
                        label="Fecha Egreso" [max]="(fechaMax) ? fechaMax : mapaCamasService.fechaActual$ | async"
-                       [min]="fechaMin" (change)="setFecha()" [debounce]="600" grow="full">
+                       [min]="fechaMin" (change)="setFecha()" [debounce]="600" grow="full" (typing)="onType()">
         </plex-datetime>
         <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
                      name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "

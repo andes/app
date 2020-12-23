@@ -142,12 +142,14 @@
             </plex-button>
         </app-desocupar-cama>
         <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"
+                         [autodisabled]="true">
             </plex-button>
         </app-cambiar-cama>
         <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" (onSave)="volverAResumen()"
                               (cancel)="volverAResumen()">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()"
+                         [autodisabled]="true">
             </plex-button>
         </app-egresar-paciente>
         <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [relacion]="estadoRelacion"

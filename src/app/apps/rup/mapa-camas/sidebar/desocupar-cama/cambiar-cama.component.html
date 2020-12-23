@@ -1,7 +1,7 @@
 <form #formCambiarCama="ngForm">
     <plex-title justify titulo="{{ (cambiarUO) ? 'Pase de Unidad Organizativa' : 'Cambiar cama' }}">
         <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formCambiarCama"
-                     (click)="guardar($event)" [disabled]="disableButton">
+                     (click)="guardar($event)" [disabled]="disableButton" [autodisabled]="true">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>

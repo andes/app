@@ -6,8 +6,8 @@
 
         <ng-container *ngIf="mostrar === 'ingreso'">
             <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso" title="editar ingreso" icon="pencil" type="warning" size="sm"
-                             (click)="toggleEdit()">
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" title="editar ingreso" icon="pencil"
+                             type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-ingreso>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
@@ -25,13 +25,13 @@
         </ng-container>
         <ng-container *ngIf="mostrar === 'egreso'">
             <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
-                <plex-button *ngIf="permisosMapaCamasService.egreso" title="editar egreso" icon="pencil" type="warning" size="sm"
-                             (click)="toggleEdit()">
+                <plex-button *ngIf="permisosMapaCamasService.egreso" title="editar egreso" icon="pencil" type="warning"
+                             size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
             <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !existeEgreso)">
                 <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
-                             (click)="toggleEdit();">
+                             (click)="toggleEdit();" [autodisabled]="true">
                 </plex-button>
             </app-egresar-paciente>
         </ng-container>

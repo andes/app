@@ -13,6 +13,7 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { SalaComunService } from '../../views/sala-comun/sala-comun.service';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -84,6 +85,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public listaProcedimientosQuirurgicos: any[];
     public prestacionValidada = false;
     public disableButton = false;
+    public inProgress = false;
 
     private subscription: Subscription;
     private subscription2: Subscription;
@@ -102,6 +104,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     ) {
 
     }
+
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
@@ -116,9 +119,26 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.subscription4.unsubscribe();
         }
     }
-
+    public disableButton$: Observable<boolean>;
     ngOnInit() {
+        this.inProgress = true;
         this.fecha = this.mapaCamasService.fecha;
+
+        this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
+            map((camas) => {
+                this.inProgress = false;
+                if (this.cama.sala) {
+                    return false;
+                }
+                const camaActual = camas.find(c => c.id === this.cama.id);
+                if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama.idInternacion) || this.prestacion) {
+                    return false;
+                }
+
+                return true;
+
+            })
+        );
 
         this.subscription = combineLatest(
             this.mapaCamasService.view,
@@ -126,6 +146,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
+            this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             if (view === 'listado-internacion') {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
@@ -185,6 +206,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
             this.fecha = fecha;
         });
+    }
+
+    onType() {
+        this.inProgress = true;
     }
 
     get hayEgreso() {
