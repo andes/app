@@ -131,7 +131,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                     }
                     if (registrosNomivac && registrosNomivac.length) {
                         let nomivacFiltradas = registrosNomivac.filter((vac) =>
-                            vac.codigoVacuna.toString() === this.registro.valor.vacuna.vacuna.codigo.toString()
+                            vac.codigo && vac.codigo === this.registro.valor.vacuna.vacuna.codigo.toString()
                         );
                         if (listaVacunas && listaVacunas.length) {
                             let filtroDuplicadas = nomivacFiltradas.filter(v => {
