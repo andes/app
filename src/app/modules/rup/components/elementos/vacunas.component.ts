@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
 import { cache } from '@andes/shared';
-import { map } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
+import { Observable, combineLatest, forkJoin } from 'rxjs';
 
 @Component({
     selector: 'rup-vacuna',
@@ -105,9 +105,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
         this.validacion = !this.ejecucionService;
         if (!this.validacion && !this.soloValores) {
             const conceptoBuscar = this.registro.concepto.conceptId;
-            let rupVacunas$ = this.prestacionesService.getRegistrosHuds(this.paciente.id, conceptoBuscar);
-            let nomivacVacunas$ = this.vacunasService.get(this.paciente.id);
-            let data$ = combineLatest([
+            const rupVacunas$ = this.prestacionesService.getRegistrosHuds(this.paciente.id, conceptoBuscar);
+            const nomivacVacunas$ = this.vacunasService.get(this.paciente.id);
+            forkJoin([
                 rupVacunas$,
                 nomivacVacunas$
             ]).pipe(
@@ -145,8 +145,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
 
                     return listaVacunas;
                 })
-            );
-            data$.subscribe(d => {
+            ).subscribe(d => {
                 this.vacunasEncontradas = d;
             });
         }
