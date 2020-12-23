@@ -24,6 +24,9 @@
                          [disabled]='botonBuscarDisabled'>
             </plex-button>
             <div collapse>
+                <plex-select [(ngModel)]="ambito" [data]="arrayAmbito" (change)="refreshSelection($event,'ambito')"
+                             label="Ambito">
+                </plex-select>
                 <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
                              label="Equipo de salud" placeholder="Buscar por equipo de salud" tmProfesionales
                              [readonly]="selectProfesional">
@@ -51,38 +54,37 @@
             El rango de fecha no pueda superar los 31 días</span>
 
         <!-- Resultados -->
-        <ng-container *ngIf="busqueda$ | async as busquedas">
-            <ng-container *ngIf="state$ | async as state">
-                <plex-title titulo="Listado" size="sm">
-                    <plex-button label="Exportar" size="sm" type="success" class="mr-2" (click)="exportPrestaciones()"
-                                 [disabled]="!state.enableExport">
-                    </plex-button>
-                    <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block"
-                                   [right]="true">
-                        <plex-grid cols="3">
-                            <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
-                            </plex-bool>
-                            <plex-bool label="Documento" [(ngModel)]="columnas.documento">
-                            </plex-bool>
-                            <plex-bool label="Paciente" [(ngModel)]="columnas.paciente">
-                            </plex-bool>
-                            <plex-bool label="Prestación" [(ngModel)]="columnas.tipoPrestacion">
-                            </plex-bool>
-                            <plex-bool label="Equipo de Salud" [(ngModel)]="columnas.equipoSalud">
-                            </plex-bool>
-                            <plex-bool label="Estado" [(ngModel)]="columnas.estado">
-                            </plex-bool>
-                            <plex-bool label="Financiador" [(ngModel)]="columnas.financiador">
-                            </plex-bool>
-                            <plex-bool label="Ámbito" [(ngModel)]="columnas.ambito">
-                            </plex-bool>
-                        </plex-grid>
-                    </plex-dropdown>
-                </plex-title>
-                <ng-container *ngIf="selectPrestaciones$ | async as selectPrestaciones">
+        <ng-container *ngIf="state$ | async as state">
+            <plex-title titulo="Listado" size="sm">
+                <plex-button label="Exportar" size="sm" type="success" class="mr-2" (click)="exportPrestaciones()"
+                             [disabled]="!state.enableExport">
+                </plex-button>
+                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true">
+                    <plex-grid cols="3">
+                        <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
+                        </plex-bool>
+                        <plex-bool label="Documento" [(ngModel)]="columnas.documento">
+                        </plex-bool>
+                        <plex-bool label="Paciente" [(ngModel)]="columnas.paciente">
+                        </plex-bool>
+                        <plex-bool label="Prestación" [(ngModel)]="columnas.tipoPrestacion">
+                        </plex-bool>
+                        <plex-bool label="Equipo de Salud" [(ngModel)]="columnas.equipoSalud">
+                        </plex-bool>
+                        <plex-bool label="Estado" [(ngModel)]="columnas.estado">
+                        </plex-bool>
+                        <plex-bool label="Financiador" [(ngModel)]="columnas.financiador">
+                        </plex-bool>
+                        <plex-bool label="Ámbito" [(ngModel)]="columnas.ambito">
+                        </plex-bool>
+                    </plex-grid>
+                </plex-dropdown>
+            </plex-title>
+            <ng-container *ngIf="selectPrestaciones$ | async as selectPrestaciones">
+                <cdk-virtual-scroll-viewport [itemSize]="50">
                     <table class="table table-striped table-sm">
                         <thead>
-                            <th>
+                            <th class="selected">
                                 <plex-bool name="all" (change)="selectAll($event)" [ngModel]="state.selectAll">
                                 </plex-bool>
                             </th>
@@ -144,7 +146,8 @@
                             </th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let busqueda of busquedas" class="hover" (click)="mostrarPrestacion(busqueda)"
+                            <tr *cdkVirtualFor="let busqueda of busqueda$" class="hover"
+                                (click)="mostrarPrestacion(busqueda)"
                                 [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                                 <td>
                                     <plex-bool [ngModel]="selectPrestaciones[busqueda.key]"
@@ -176,7 +179,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </ng-container>
+                </cdk-virtual-scroll-viewport>
             </ng-container>
         </ng-container>
     </plex-layout-main>
