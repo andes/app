@@ -1,0 +1,96 @@
+<ng-container *ngIf="!soloValores && registro.valor">
+    <form #form="ngForm">
+        <plex-grid cols="1">
+            <plex-select [(ngModel)]="registro.valor.vacuna.vacunador" name="vacunador"
+                         (getData)="loadProfesionales($event)" placeholder="Vacunador" label="Vacunador" idField="id"
+                         labelField="nombreCompleto">
+            </plex-select>
+            <plex-datetime [(ngModel)]="registro.valor.vacuna.fechaAplicacion" label="Fecha de aplicación"
+                           name="fechaAplicacion" type="date" required="true">
+            </plex-datetime>
+            <plex-select [(ngModel)]="registro.valor.vacuna.categoria" name="categoria" [data]="categorias$ | async"
+                         placeholder="Seleccione una opción" label="Categoría de la aplicación" idField="_id"
+                         labelField="nombre" (change)="loadVacunas();" required="true">
+            </plex-select>
+            <plex-select [(ngModel)]="registro.valor.vacuna.vacuna" name="vacuna" [data]="vacunas$ | async"
+                         placeholder="Seleccione una opción" label="Vacuna u otros biológicos" idField="_id"
+                         labelField="nombre" (change)="loadEsquemas();getHistorialVacunas()" required="true">
+            </plex-select>
+            <plex-select name="condicion" [(ngModel)]="registro.valor.vacuna.condicion" [data]="condiciones$ | async"
+                         placeholder="Seleccione una opción" label="Condición o motivo" idField="_id"
+                         labelField="nombre" required="true" (change)="loadEsquemas()">
+            </plex-select>
+            <plex-select name="esquema" [(ngModel)]="registro.valor.vacuna.esquema" [data]="esquemas$ | async"
+                         placeholder="Seleccione una opción" label="Esquema" idField="_id" labelField="nombre"
+                         required="true" (change)="loadDosis()">
+            </plex-select>
+            <plex-select name="dosis" [(ngModel)]="registro.valor.vacuna.dosis" [data]="dosis$ | async"
+                         placeholder="Seleccione una opción" label="Dosis" idField="_id" labelField="nombre"
+                         (change)="checkDosis()" required="true">
+            </plex-select>
+            <plex-text [(ngModel)]="registro.valor.vacuna.lote" label="Lote" name="lote" required="true">
+            </plex-text>
+            <plex-select name="laboratorio" [(ngModel)]="registro.valor.vacuna.laboratorio"
+                         [data]="laboratorios$ | async" placeholder="Seleccione una opción" label="Laboratorio"
+                         idField="_id" labelField="nombre">
+            </plex-select>
+            <plex-datetime [(ngModel)]="registro.valor.vacuna.fechaVencimiento" label="Fecha de vencimiento"
+                           name="fechaVencimiento" type="date">
+            </plex-datetime>
+            <plex-text [(ngModel)]="registro.valor.vacuna.comentarios" label="Comentarios" name="comentarios"
+                       [multiline]="true">
+            </plex-text>
+        </plex-grid>
+    </form>
+
+    <ng-container *ngIf="vacunasEncontradas && vacunasEncontradas.length">
+
+        <plex-list class="mt-3">
+            <plex-item *ngFor="let item of vacunasEncontradas">
+                <plex-label titulo="Fecha" [subtitulo]="item.fechaAplicacion | fecha " size="sm"></plex-label>
+                <plex-label titulo="Vacuna" [subtitulo]="item.vacuna" size="sm">
+                </plex-label>
+                <plex-label titulo="Condición" [subtitulo]="item.condicion" size="sm">
+                </plex-label>
+                <plex-label titulo="Esquema" [subtitulo]="item.esquema" size="sm">
+                </plex-label>
+                <plex-label titulo="Dosis" [subtitulo]="item.dosis" size="sm"></plex-label>
+            </plex-item>
+        </plex-list>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="soloValores && registro.valor">
+    <plex-grid cols="1">
+        <plex-label *ngIf="registro.valor.vacuna.vacunador" titulo="Vacunador"
+                    [subtitulo]="registro.valor.vacuna.vacunador.nombreCompleto">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.fechaAplicacion" titulo="Fecha de aplicacion"
+                    [subtitulo]="registro.valor.vacuna.fechaAplicacion  | fecha">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.categoria" titulo="Categoría"
+                    [subtitulo]="registro.valor.vacuna.categoria.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.vacuna" titulo="Vacuna"
+                    [subtitulo]="registro.valor.vacuna.vacuna.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.condicion" titulo="Condición"
+                    [subtitulo]="registro.valor.vacuna.condicion.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.esquema" titulo="Esquema"
+                    [subtitulo]="registro.valor.vacuna.esquema.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.dosis" titulo="Dosis" [subtitulo]="registro.valor.vacuna.dosis.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.lote" titulo="Lote" [subtitulo]="registro.valor.vacuna.lote">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.laboratorio" titulo="Laboratorio"
+                    [subtitulo]="registro.valor.vacuna.laboratorio.nombre">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.fechaVencimiento" titulo="Fecha de vencimiento"
+                    [subtitulo]="registro.valor.vacuna.fechaVencimiento  | fecha">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.vacuna.comentarios" titulo="Comentario"
+                    [subtitulo]="registro.valor.vacuna.comentarios">
+        </plex-label>
+    </plex-grid>
+</ng-container>

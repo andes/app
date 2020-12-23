@@ -24,6 +24,7 @@ import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { PlantillasService } from '../../services/plantillas.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
+import { VacunasService } from '../../../../services/vacunas.service';
 import { Engine } from 'json-rules-engine';
 import { calcularEdad } from '@andes/shared';
 import { Subject } from 'rxjs';
@@ -142,6 +143,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public servicioReglas: ReglaService,
         public conceptosTurneablesService: ConceptosTurneablesService,
         public plantillasService: PlantillasService,
+        public vacunasService: VacunasService,
         @Optional() public ejecucionService: RupEjecucionService
     ) {
     }
