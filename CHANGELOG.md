@@ -1,3 +1,11 @@
+# [5.27.0](https://github.com/andes/app/compare/v5.26.0...v5.27.0) (2020-12-23)
+
+
+### Features
+
+* **gdu:** feedback al usuario cuando no encuentra resultados ([#2090](https://github.com/andes/app/issues/2090)) ([bcea8cb](https://github.com/andes/app/commit/bcea8cb5fb672d8c14f637d1a85d8624e21b5e50))
+* **top:** mostrar cantidad solicitudes ([#2080](https://github.com/andes/app/issues/2080)) ([989b171](https://github.com/andes/app/commit/989b171227245ce4eabbbbf64e4b864071286241))
+
 # [5.26.0](https://github.com/andes/app/compare/v5.25.0...v5.26.0) (2020-12-16)
 
 
