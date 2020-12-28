@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { Subscription, combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map, switchMapTo } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { cache } from '@andes/shared';
-import { Auth } from '@andes/auth';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
@@ -26,10 +25,11 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public fechaMax = moment().toDate();
     public mostrar;
 
+    public inProgress = true;
 
     // Constructor
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
@@ -92,6 +92,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.snapshot$,
         ).pipe(
+            tap(() => this.inProgress = false),
             map(([selectedCama, snapshots]) => {
                 const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
                 return cama.estado !== 'ocupada' && !cama.sala;
@@ -103,6 +104,10 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         );
 
 
+    }
+
+    onType() {
+        this.inProgress = true;
     }
 
     verificarFecha() {

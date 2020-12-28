@@ -1,4 +1,5 @@
-<plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)" *ngIf="inconsistencia$ | async as inconsistencia">
+<plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)"
+           *ngIf="inconsistencia$ | async as inconsistencia">
     <plex-tab label="ORIGEN">
         <ng-container *ngIf="!accion">
             <plex-title titulo="DETALLE DE ORIGEN">
@@ -11,15 +12,18 @@
                         {{ inconsistencia.source.nombre }}
                     </div>
                     <plex-badge *ngIf="inconsistencia.source.estado === 'ocupada'" type="warning">Ocupada</plex-badge>
-                    <plex-badge *ngIf="inconsistencia.source.estado === 'disponible'" type="success">Disponible</plex-badge>
-                    <plex-badge *ngIf="inconsistencia.source.estado === 'bloqueada'" type="secondary">Bloqueada</plex-badge>
+                    <plex-badge *ngIf="inconsistencia.source.estado === 'disponible'" type="success">Disponible
+                    </plex-badge>
+                    <plex-badge *ngIf="inconsistencia.source.estado === 'bloqueada'" type="secondary">Bloqueada
+                    </plex-badge>
                     <plex-badge *ngIf="inconsistencia.source.estado === 'inactiva'" type="danger">Inactiva</plex-badge>
                     <plex-badge type="info">
                         {{ inconsistencia.source.fecha | fecha}}
                     </plex-badge>
                 </plex-detail>
                 <ng-container *ngIf="inconsistencia.source.estado === 'ocupada'">
-                    <plex-button label="Resolver Inconsistencia" type="warning" size="block" (click)="accionar('desocuparCama')"></plex-button>
+                    <plex-button label="Resolver Inconsistencia" type="warning" size="block"
+                                 (click)="accionar('desocuparCama')"></plex-button>
                 </ng-container>
                 <plex-title size="sm" justify titulo="DATOS DE PACIENTE"></plex-title>
                 <ng-container *ngIf="inconsistencia.source.paciente">
@@ -29,22 +33,22 @@
             </fieldset>
         </ng-container>
         <ng-container *ngIf="accion === 'desocuparCama'">
-            <app-desocupar-cama (cancel)="accionar(null)"
-            (accionDesocupar)="accionDesocupar($event)">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="accionar(null)">
-            </plex-button>
-        </app-desocupar-cama>
+            <app-desocupar-cama (cancel)="accionar(null)" (accionDesocupar)="accionDesocupar($event)">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="accionar(null)">
+                </plex-button>
+            </app-desocupar-cama>
         </ng-container>
         <ng-container *ngIf="accion === 'cambiarCama'">
-            <app-cambiar-cama  cambiarUO="{{ cambiarUO }}" (onSave)="refresh()">
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="accionar('desocuparCama')">
+            <app-cambiar-cama cambiarUO="{{ cambiarUO }}" (onSave)="refresh()">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
+                             (click)="accionar('desocuparCama')" [autodisabled]="true">
                 </plex-button>
             </app-cambiar-cama>
         </ng-container>
         <ng-container *ngIf="accion === 'egresarPaciente'">
-            <app-egresar-paciente (onSave)="refresh()"
-                                (cancel)="accionar(null)">
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="accionar('desocuparCama')">
+            <app-egresar-paciente (onSave)="refresh()" (cancel)="accionar(null)">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
+                             (click)="accionar('desocuparCama')" [autodisabled]="true">
                 </plex-button>
             </app-egresar-paciente>
         </ng-container>

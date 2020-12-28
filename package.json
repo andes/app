@@ -31,7 +31,7 @@
     "@agm/core": "^1.0.0-beta.5",
     "@andes/icons": "^1.1.3",
     "@andes/match": "^1.1.12",
-    "@andes/plex": "^7.9.1",
+    "@andes/plex": "^7.10.0",
     "@angular/animations": "9.1.12",
     "@angular/cdk": "^9.2.4",
     "@angular/common": "9.1.12",

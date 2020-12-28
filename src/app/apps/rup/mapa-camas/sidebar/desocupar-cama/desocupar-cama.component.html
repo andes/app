@@ -13,7 +13,8 @@
                 <div class="col">
                     <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
                                    [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin$ | async"
-                                   name="fechaCambio" required (change)="verificarFecha()" [debounce]="600">
+                                   name="fechaCambio" required (change)="verificarFecha()" [debounce]="600"
+                                   (typing)="onType()">
                     </plex-datetime>
                 </div>
             </div>
@@ -30,7 +31,7 @@
                     <ng-template #puedeEgresarDefinitivo>
                         <plex-button label="Cambiar de cama" type="primary" size="block"
                                      title="{{ (!permisosMapaCamasService.movimientos) ? 'No tiene permisos suficientes' : null }}"
-                                     [disabled]="!permisosMapaCamasService.movimientos || !(camasDisponibles.camasMismaUO.length > 0)"
+                                     [disabled]="!permisosMapaCamasService.movimientos || !(camasDisponibles.camasMismaUO.length > 0) || inProgress"
                                      (click)="cambiarCama(null)" [validateForm]="formReparada" class="mb-2">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
@@ -38,7 +39,7 @@
                         </ng-container>
                         <plex-button label="Pase de unidad organizativa" type="secondary" size="block"
                                      title="{{ (!permisosMapaCamasService.movimientos) ? 'No tiene permisos suficientes' : null }}"
-                                     [disabled]="!permisosMapaCamasService.movimientos || !(camasDisponibles.camasDistintaUO.length > 0)"
+                                     [disabled]="!permisosMapaCamasService.movimientos || !(camasDisponibles.camasDistintaUO.length > 0) || inProgress"
                                      (click)="cambiarCama(true)" [validateForm]="formReparada" class="mb-2">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
@@ -47,8 +48,8 @@
                         <ng-container *ngIf="(view$ | async) === 'mapa-camas'">
                             <plex-button label="Egresar paciente" type="warning" size="block"
                                          title="{{ (!permisosMapaCamasService.egreso) ? 'No tiene permisos para egresar pacientes' : null }}"
-                                         [disabled]="!permisosMapaCamasService.egreso" (click)="egresarPaciente()"
-                                         [validateForm]="formReparada">
+                                         [disabled]="!permisosMapaCamasService.egreso || inProgress"
+                                         (click)="egresarPaciente()" [validateForm]="formReparada">
                             </plex-button>
                         </ng-container>
                     </ng-template>
