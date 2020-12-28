@@ -101,18 +101,15 @@
     </ng-container>
     <!-- /SOLICITUD SALIDA -->
     <!-- Adjuntar Archivos -->
-    <plex-title titulo="Cargar documentos">
-        <ng-container *ngIf="!waiting">
-            <plex-badge *ngIf="errorExt" type="danger" size="sm"
-                        hint="Estos son los archivos que podes subir: {{ extensions }}" detach="top" hintType="danger">
-                Archivo inválido</plex-badge>
-        </ng-container>
-
-        <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-        <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
-        </plex-button>
+    <plex-title titulo="Cargar adjuntos">
+        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" [modulo]="'top'">
+        </upload-file>
+        <br><br>
+        <span *ngIf="errorExt">
+            <plex-badge type="danger" size="sm" hint="Estos son los archivos que podes subir: {{ extensions }}"
+                        detach="top" hintType="danger">Archivo inválido.</plex-badge>
+        </span>
     </plex-title>
-
     <shared-galeria-archivos [files]="documentosUrl" [loading]="waiting" (remove)="imageRemoved($event)">
     </shared-galeria-archivos>
 </form>
