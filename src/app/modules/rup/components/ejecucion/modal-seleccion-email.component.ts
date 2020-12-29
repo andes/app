@@ -26,6 +26,8 @@ export class ModalSeleccionEmailComponent implements OnInit, AfterViewInit {
 
     public emailSelected = null;
 
+    public adjuntos = false;
+
     // Constructor
     constructor(
         private auth: Auth,
@@ -52,7 +54,7 @@ export class ModalSeleccionEmailComponent implements OnInit, AfterViewInit {
 
     notificarAccion(flag: boolean) {
         if (flag) {
-            this.email.emit(this.emailSelected.email);
+            this.email.emit({ email: this.emailSelected.email, adjuntos: this.adjuntos });
         } else {
             this.email.emit(null);
         }

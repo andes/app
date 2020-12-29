@@ -8,6 +8,8 @@
             <plex-select [(ngModel)]="emailSelected" [data]="emails" idField="email" labelField="nombre"
                          placeholder="Seleccione un servicio">
             </plex-select>
+            <br>
+            <plex-bool label="Enviar adjuntos" [(ngModel)]="adjuntos" name="adjuntos"> </plex-bool>
         </section>
     </main>
 

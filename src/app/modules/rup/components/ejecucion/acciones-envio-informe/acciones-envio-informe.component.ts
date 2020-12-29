@@ -10,6 +10,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { getSemanticTag } from '../../../pipes/semantic-class.pipes';
+import { getRegistros } from '../../../operators/populate-relaciones';
 
 /**
  * Cualquier cambio en esta componente implica testear en:
@@ -95,7 +96,24 @@ export class RUPAccionesEnvioInformeComponent {
         this.showModalEmails = true;
     }
 
-    enviarPDF(email) {
+    getAdjuntos() {
+        const registros = getRegistros(this.prestacion);
+        const regAdjuntos = registros.find(reg => reg.concepto.conceptId === '1921000013108');
+        if (regAdjuntos) {
+            return regAdjuntos.valor.documentos.map(i => {
+                return {
+                    id: i.id,
+                    ext: i.ext
+                };
+            });
+        }
+        return null;
+    }
+
+    enviarPDF(data) {
+        const { email, adjuntos } = data;
+        const documentos = this.getAdjuntos();
+
         this.showModalEmails = false;
         if (email) {
             this.requestInProgress = true;
@@ -103,6 +121,7 @@ export class RUPAccionesEnvioInformeComponent {
                 idPrestacion: this.prestacion.id,
                 email: email,
                 idOrganizacion: this.auth.organizacion.id,
+                adjuntos: adjuntos ? documentos : undefined
             };
             if (this.registro) {
                 datos.idRegistro = this.registro.id;
