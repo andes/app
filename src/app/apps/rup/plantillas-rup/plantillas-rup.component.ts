@@ -99,7 +99,7 @@ export class PlantillasRUPComponent implements OnInit {
 
         let query = {
             search: this.searchTerm,
-            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento']
+            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento', 'situación']
 
         };
 
