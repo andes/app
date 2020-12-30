@@ -1,3 +1,14 @@
+# [5.28.0](https://github.com/andes/app/compare/v5.27.0...v5.28.0) (2020-12-30)
+
+
+### Features
+
+* **mapa-camas:** controles de networking ([#2092](https://github.com/andes/app/issues/2092)) ([1c97cb7](https://github.com/andes/app/commit/1c97cb790a0ba761d107d5907c1d82eea01a846d))
+* **rup:** envios adjuntos ([#1848](https://github.com/andes/app/issues/1848)) ([24cf9eb](https://github.com/andes/app/commit/24cf9eb85d31b473e9847da127cc1ec22eb544cb))
+* **RUP:** Agregar registro de vacuna covid ([#2094](https://github.com/andes/app/issues/2094)) ([2328c5c](https://github.com/andes/app/commit/2328c5c4ee8dc0e69f2d279c57af7165e1b6e23d))
+* **top:** subir archivos a andesDrive ([#2089](https://github.com/andes/app/issues/2089)) ([b43be2c](https://github.com/andes/app/commit/b43be2c413ef6cb99ea6f61257fdbaff24950365))
+* **turnos-prestaciones:** ambito y virtual scroll ([#2091](https://github.com/andes/app/issues/2091)) ([4f71dcc](https://github.com/andes/app/commit/4f71dcc6ac0369b97fb6d697ead010a5086c2374))
+
 # [5.27.0](https://github.com/andes/app/compare/v5.26.0...v5.27.0) (2020-12-23)
 
 
