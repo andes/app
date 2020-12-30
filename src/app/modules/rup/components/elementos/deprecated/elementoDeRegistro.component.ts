@@ -150,7 +150,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
             nuevoRegistro.relacionadoCon = relaciones;
         }
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento' || snomedConcept.semanticTag === 'situación') {
             this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
         this.registro.registros.push(nuevoRegistro);
