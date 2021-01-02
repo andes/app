@@ -134,7 +134,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     guardarDerivacion($event) {
         if ($event.formValid) {
-            this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada' }).subscribe(resultado => {
+            this.derivacionesService.search({ paciente: this.paciente.id, estado: '~finalizada', cancelada: false }).subscribe(resultado => {
                 if (resultado.length) {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
                 } else {
