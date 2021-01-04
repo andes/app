@@ -10,7 +10,7 @@
                             getCantidadResultados('planes')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'planes'}">{{
-                            getCantidadResultados('planes')}}</small>
+                    getCantidadResultados('planes')}}</small>
                 <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
                         [ngClass]="{'active': filtroActual === 'planes'}">
                     <i class="adi adi-clipboard-check-outline"></i>
@@ -23,7 +23,7 @@
                             getCantidadResultados('solicitudes')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('solicitudes')" class="contador badge-solicitud ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'solicitudes'}">{{
-                            getCantidadResultados('solicitudes')}}</small>
+                    getCantidadResultados('solicitudes')}}</small>
                 <button (click)="filtroBuscador('solicitudes')" [ngClass]="{'active': filtroActual === 'solicitudes'}"
                         class="btn btn-block p-0 btn-solicitud">
                     <i class="adi adi-mano-corazon"></i>
@@ -36,7 +36,7 @@
                             getCantidadResultados('hallazgo')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('hallazgo')" class="contador badge-hallazgo ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
-                            getCantidadResultados('hallazgo')}}</small>
+                    getCantidadResultados('hallazgo')}}</small>
                 <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
                         class="btn btn-block p-0 btn-hallazgo" (click)="buscar()">
                     <i class="adi adi-lupa-ojo"></i>
@@ -49,7 +49,7 @@
                             getCantidadResultados('trastorno')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('trastorno')" class="contador badge-trastorno ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'trastorno'}">{{
-                            getCantidadResultados('trastorno')}}</small>
+                    getCantidadResultados('trastorno')}}</small>
                 <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
                         class="btn btn-block p-0 btn-trastorno" (click)="buscar()">
                     <i class="adi adi-trastorno"></i>
@@ -64,7 +64,7 @@
                 <small *ngIf="getCantidadResultados('procedimiento')"
                        class="contador badge-procedimiento ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
-                            getCantidadResultados('procedimiento')}}</small>
+                    getCantidadResultados('procedimiento')}}</small>
                 <button (click)="filtroBuscador('procedimiento')"
                         [ngClass]="{'active': filtroActual === 'procedimiento'}"
                         class="btn btn-block p-0 btn-procedimiento" (click)="buscar()">
@@ -78,7 +78,7 @@
                             getCantidadResultados('producto')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('producto')" class="contador badge-producto ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'producto'}">{{
-                            getCantidadResultados('producto')}}</small>
+                    getCantidadResultados('producto')}}</small>
                 <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
                         class="btn btn-block p-0 btn-producto" (click)="buscar()">
                     <i class="adi adi-pildoras"></i>
@@ -91,7 +91,7 @@
                             getCantidadResultados('laboratorios')}}</plex-badge> -->
                 <small *ngIf="getCantidadResultados('laboratorios')" class="contador badge-otro ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
-                            getCantidadResultados('laboratorios')}}</small>
+                    getCantidadResultados('laboratorios')}}</small>
                 <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
                         class="btn btn-block p-0 btn-laboratorio">
                     <i class="adi adi-recipiente"></i>
@@ -184,7 +184,8 @@
                                                                         {{ registro.evoluciones[0].profesional }}
                                                                     </ng-container>
                                                                     <ng-container *ngIf='!registro.evoluciones'>
-                                                                        {{ registro.solicitud.profesionalOrigen | nombre }}
+                                                                        {{ registro.solicitud.profesionalOrigen | nombre
+                                                                        }}
                                                                     </ng-container>
                                                                 </small>
                                                             </div>
@@ -294,7 +295,8 @@
                                                                     {{ registro.evoluciones[0].tipoPrestacion }}</small>
                                                                 <br>
                                                                 <small>Última evolución:
-                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha
+                                                                    }}</small>
                                                                 <br>
                                                                 <small>Profesional:
                                                                     {{ registro.evoluciones[0].profesional }}</small>
@@ -395,12 +397,12 @@
                 <div class="row pb-2">
                     <div class="col-6">
                         <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio"
-                                       label="Fecha Desde">
+                                       label="Fecha Desde" [debounce]="400">
                         </plex-datetime>
                     </div>
                     <div class="col-6">
                         <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin"
-                                       label="Fecha Hasta">
+                                       label="Fecha Hasta" [debounce]="400">
                         </plex-datetime>
                     </div>
                 </div>
