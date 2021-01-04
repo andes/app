@@ -419,6 +419,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 if (res.ofertaPrestacional) {
                     this.organizacionModel.ofertaPrestacional = res.ofertaPrestacional;
                 }
+                this.plex.toast('success', 'Sincronización con fuentes autenticas.', 'La organización se sincronizó satisfactoriamente');
+
             } else {
                 this.plex.info('warning', 'El código SISA no existe.', 'No sincronizó');
             }
