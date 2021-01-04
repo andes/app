@@ -159,12 +159,13 @@ export class DetalleDerivacionComponent implements OnInit {
         if ($event.formValid) {
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
-            this.derivacion.historial.push(this.nuevoEstado);
             this.derivacion.estado = this.nuevoEstado.estado;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             if (this.reglaSeleccionada.definePrioridad) {
                 this.derivacion.prioridad = this.prioridad;
+                this.nuevoEstado.prioridad = this.prioridad;
             }
+            this.derivacion.historial.push(this.nuevoEstado);
             this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
