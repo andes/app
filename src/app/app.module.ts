@@ -248,6 +248,7 @@ import { TOPLibModule } from './components/top/top.module';
 import { DirectiveLibModule } from './directives/directives.module';
 import { CITASLibModule } from './components/turnos/citas.module';
 import { NgDragDropModule } from 'ng-drag-drop';
+import { HammerModule } from '@angular/platform-browser';
 
 registerLocaleData(localeEs, 'es');
 
@@ -255,6 +256,7 @@ registerLocaleData(localeEs, 'es');
 @NgModule({
     imports: [
         BrowserAnimationsModule,
+        HammerModule,
         PlexModule.forRoot({ networkLoading: true }),
         ReactiveFormsModule,
         FormsModule,

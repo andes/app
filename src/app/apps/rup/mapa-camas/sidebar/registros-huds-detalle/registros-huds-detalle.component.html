@@ -14,18 +14,20 @@
 
 <div class="row">
     <div class="col-6">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min$ | async" [debounce]="600">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min$ | async" [debounce]="600"
+                       (change)="onChangeDesde()">
         </plex-datetime>
     </div>
     <div class="col-6">
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [max]="max$ | async" [debounce]="600">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [max]="max$ | async" [debounce]="600"
+                       (change)="onChangeHasta()">
         </plex-datetime>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
         <plex-select label="Prestacion" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId"
-                     labelField="term" [data]="prestacionesList$ | async">
+                     labelField="term" [data]="prestacionesList$ | async" (change)="onChangeTipoPrestacion()">
         </plex-select>
     </div>
 </div>

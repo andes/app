@@ -17,8 +17,8 @@ import { ReporteErroresComponent } from './reporte-errores.component';
 
 export class AuditoriaComponent implements OnInit {
 
-  @ViewChild('vincularComponent', null) vincularPacientes: VincularPacientesComponent;
-  @ViewChild('erroresComponent', null) erroresComponent: ReporteErroresComponent;
+  @ViewChild('vincularComponent') vincularPacientes: VincularPacientesComponent;
+  @ViewChild('erroresComponent') erroresComponent: ReporteErroresComponent;
 
   // sidebar
   mainSize = 12;

@@ -1,3 +1,4 @@
+import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
 import { OnInit, Input, ViewContainerRef, Directive } from '@angular/core';
 import { SnomedService } from '../../services/snomed.service';
 
@@ -16,22 +17,20 @@ export class SelectExpressionDirective implements OnInit {
 
     constructor(
         private snomed: SnomedService,
-        private _viewContainerRef: ViewContainerRef
+        private plexSelect: PlexSelectComponent
     ) {
-        const plexSelect = this._viewContainerRef['_data'].componentView.component;
-        plexSelect.idField = 'term';
-        plexSelect.labelField = 'term';
+        this.plexSelect.idField = 'term';
+        this.plexSelect.labelField = 'term';
     }
 
     ngOnInit() {
-        const plexSelect = this._viewContainerRef['_data'].componentView.component;
         if (this.preload) {
-            plexSelect.data = [];
+            this.plexSelect.data = [];
             this.snomed.getQuery({ expression: this.snomedExpression }).subscribe(result => {
-                plexSelect.data = result;
+                this.plexSelect.data = result;
             });
         } else {
-            plexSelect.getData.subscribe(($event) => {
+            this.plexSelect.getData.subscribe(($event) => {
                 this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query }).subscribe(result => {
                     $event.callback(result);
                 });

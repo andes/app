@@ -14,7 +14,7 @@ import { forkJoin } from 'rxjs';
 
 export class ReporteErroresComponent implements OnInit {
 
-    @ViewChild('modalCorreccion', null) modalCorreccion: ModalCorreccionPacienteComponent;
+    @ViewChild('modalCorreccion') modalCorreccion: ModalCorreccionPacienteComponent;
     @Output() selected = new EventEmitter<any>();
 
     showSidebar = false;
