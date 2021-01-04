@@ -63,11 +63,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         if ($event.formValid) {
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
             if (this.derivacion.prioridad !== this.prioridad) {
-                this.derivacion.prioridad = this.prioridad;
                 this.nuevoEstado.prioridad = this.prioridad;
             }
-            this.derivacion.historial.push(this.nuevoEstado);
-            this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
+            this.derivacionService.updateHistorial(this.derivacion._id, this.nuevoEstado).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnEditarEstado.emit(true);
             });
