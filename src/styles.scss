@@ -64,3 +64,15 @@ $mdi-font-path: "~@mdi/font/fonts/";
 // RUP
 // @andrrrl ver con @jfgabriel
 // @import './src/app/styles/turnos/turnos';
+
+.grow-reverse {
+    display: flex;
+
+    > .label {
+        align-self: center;
+    }
+
+    > :nth-child(2) {
+        flex-grow: 1;
+    }
+}

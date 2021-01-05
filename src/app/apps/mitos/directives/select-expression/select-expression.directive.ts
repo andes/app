@@ -1,5 +1,6 @@
 import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
 import { OnInit, Input, ViewContainerRef, Directive } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { SnomedService } from '../../services/snomed.service';
 
 /**
@@ -15,6 +16,8 @@ export class SelectExpressionDirective implements OnInit {
     @Input() snomedExpression = '';
     @Input() preload = true;
 
+    private lastCallSubscription: Subscription = null;
+
     constructor(
         private snomed: SnomedService,
         private plexSelect: PlexSelectComponent
@@ -24,6 +27,7 @@ export class SelectExpressionDirective implements OnInit {
     }
 
     ngOnInit() {
+
         if (this.preload) {
             this.plexSelect.data = [];
             this.snomed.getQuery({ expression: this.snomedExpression }).subscribe(result => {
@@ -31,10 +35,26 @@ export class SelectExpressionDirective implements OnInit {
             });
         } else {
             this.plexSelect.getData.subscribe(($event) => {
-                this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query }).subscribe(result => {
-                    $event.callback(result);
-                });
+
+
+                const inputText: string = $event.query;
+
+                if (inputText && inputText.length > 2) {
+                    if (this.lastCallSubscription) {
+                        this.lastCallSubscription.unsubscribe();
+                    }
+
+                    this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query }).subscribe(result => {
+                        $event.callback(result);
+                    });
+
+                } else {
+                    const value = (this.plexSelect as any).value;
+                    $event.callback(value ? [value] : []);
+                }
+
             });
+
         }
     }
 }

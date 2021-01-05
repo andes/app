@@ -71,6 +71,7 @@ import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { RUPObservacionesModalComponent } from './components/elementos/components/observaciones-modal.component';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
+import { MitosModule } from '../../apps/mitos';
 
 
 const RUPComponentsArray = [
@@ -137,7 +138,8 @@ const RUPComponentsArray = [
         SharedModule,
         ChartsModule,
         NgDragDropModule,
-        MPILibModule
+        MPILibModule,
+        MitosModule
     ],
     declarations: [
         ...RUPComponentsArray,
