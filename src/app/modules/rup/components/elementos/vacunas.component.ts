@@ -91,7 +91,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                     if (this.vacunasEncontradas && this.vacunasEncontradas.length) {
                         return dosis.filter(d => !(this.vacunasEncontradas.find(v => d.nombre === v.dosis)));
                     } else {
-                        return dosis;
+                        return dosis.slice(0, 1);
                     }
                 })
             );
@@ -142,7 +142,6 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                             listaVacunas = [...nomivacFiltradas];
                         }
                     }
-
                     return listaVacunas;
                 })
             ).subscribe(d => {
