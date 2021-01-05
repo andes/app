@@ -7,7 +7,7 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'historial-derivacion',
     templateUrl: './historial-derivacion.html',
-    styleUrls: ['./adjuntos.scss']
+    styleUrls: ['./adjuntos.scss', './punto-inicio.scss']
 })
 export class HistorialDerivacionComponent {
     public derivacion;
@@ -15,6 +15,7 @@ export class HistorialDerivacionComponent {
     public fileToken;
     public adjuntos = [];
 
+    @Input() esCOM = false;
     @Input('derivacion')
     set _derivacion(value) {
         this.derivacion = value;

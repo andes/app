@@ -1,5 +1,5 @@
-<plex-accordion>
-    <plex-panel *ngFor="let item of itemsHistorial">
+<plex-accordion *ngFor="let item of itemsHistorial">
+    <plex-panel *ngIf="item.estado || !item.prioridad || (item.prioridad && esCOM)">
         <div plex-accordion-title justify>
             <section *ngIf="item.createdBy">
                 <plex-badge type="info" class="mr-4">
@@ -8,12 +8,16 @@
                 <plex-label *ngIf="item.estado" titulo="Pasa a {{ item.estado }} por"
                             subtitulo="{{ item.createdBy.nombreCompleto }} de {{ item.createdBy.organizacion.nombre }}">
                 </plex-label>
-                <plex-label *ngIf="!item.estado" titulo="Nota sumada por"
+                <plex-label *ngIf="!item.estado" titulo="Actualizado por"
                             subtitulo="{{ item.createdBy.nombreCompleto }} de {{ item.createdBy.organizacion.nombre }}">
                 </plex-label>
                 <plex-label *ngIf="item.observacion" titulo="Observaciones" subtitulo="
                 {{ item.observacion }}">
                 </plex-label>
+                <plex-label *ngIf="item.prioridad && esCOM" titulo="Nueva prioridad">
+                </plex-label>
+                <div *ngIf="item.prioridad && esCOM" [class]="item.prioridad" [class.selected]="true">
+                </div>
                 <plex-label *ngIf="item.organizacionDestino" titulo="Destino"
                             subtitulo="{{ item.organizacionDestino.nombre }}">
                 </plex-label>
@@ -22,8 +26,9 @@
                 <plex-badge type="info" *ngIf="item.adjuntos?.length > 0" title="Tiene adjuntos">
                     <plex-icon name="file-multiple"></plex-icon>
                 </plex-badge>
-                <plex-button *ngIf="!item.estado && item.createdBy.username === auth.usuario.username" type="danger"
-                             size="sm" icon="trash-can" (click)="$event.stopPropagation();eliminarNota(item)">
+                <plex-button *ngIf="!item.prioridad && !item.estado && item.createdBy.username === auth.usuario.username"
+                             type="danger" size="sm" icon="trash-can"
+                             (click)="$event.stopPropagation();eliminarNota(item)">
                 </plex-button>
             </section>
         </div>

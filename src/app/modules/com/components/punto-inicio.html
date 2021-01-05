@@ -86,7 +86,7 @@
                                         <plex-button *ngIf="esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
                                                      type="info" size="sm"
                                                      (click)="actualizarEstado(derivacion);$event.stopPropagation()">
-                                            SUMAR NOTA/ADJUNTO
+                                            ACTUALIZAR
                                         </plex-button>
                                         <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
                                                      (click)="imprimirComprobante(derivacion)">
@@ -186,7 +186,7 @@
                                         </plex-button>
                                         <plex-button type="info" size="sm"
                                                      (click)="actualizarEstado(derivacion);$event.stopPropagation()">
-                                            SUMAR NOTA/ADJUNTO
+                                            ACTUALIZAR
                                         </plex-button>
                                         <plex-button *ngIf="derivacion.estado === 'finalizada'" type="warning" size="sm"
                                                      (click)="imprimirComprobante(derivacion)">
@@ -214,7 +214,8 @@
             </detalle-derivacion>
         </div>
         <div *ngIf="showEditarEstado">
-            <actualizar-estado [derivacion]="derivacionSeleccionada" (returnEditarEstado)="returnDetalle($event)">
+            <actualizar-estado [esCOM]="esCOM" [derivacion]="derivacionSeleccionada"
+                               (returnEditarEstado)="returnDetalle($event)">
             </actualizar-estado>
         </div>
     </plex-layout-sidebar>

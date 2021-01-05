@@ -22,9 +22,16 @@
     </div>
 </plex-detail>
 <form #formEstado="ngForm">
-    <plex-title size="sm" titulo="Actualizar estado">
+    <plex-title size="sm" titulo="Actualizar">
     </plex-title>
     <plex-wrapper>
+        <div class="mt-1" *ngIf="esCOM && derivacion.prioridad">
+            <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
+            <ng-container *ngFor="let p of opcionesPrioridad">
+                <div [class]="p.id" [class.selected]="p.id === this.prioridad" (click)="setPrioridad(p.id);">
+                </div>
+            </ng-container>
+        </div>
         <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                    grow="full" required="true">
         </plex-text>

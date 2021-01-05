@@ -86,6 +86,7 @@
     </div>
 </div>
 <div *ngIf="mostrar === 'historial'">
-    <historial-derivacion *ngIf="derivacion && derivacion.historial.length > 0" [derivacion]="derivacion">
+    <historial-derivacion *ngIf="derivacion && derivacion.historial.length > 0" [esCOM]="esCOM"
+                          [derivacion]="derivacion">
     </historial-derivacion>
 </div>
