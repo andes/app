@@ -57,5 +57,15 @@ export interface IPaciente {
     }];
     _score?: number;
     vinculos: [string];
-    documentos: [any];
+    documentos: {
+        fecha: Date,
+        tipo: {
+            id: string,
+            label: string
+        },
+        archivos: {
+            id: string,
+            ext: string
+        }[]
+    }[];
 }

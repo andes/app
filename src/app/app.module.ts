@@ -251,6 +251,7 @@ import { DirectiveLibModule } from './directives/directives.module';
 import { CITASLibModule } from './components/turnos/citas.module';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { HammerModule } from '@angular/platform-browser';
+import { GaleriaPipe } from './pipes/galeria.pipe';
 
 registerLocaleData(localeEs, 'es');
 
@@ -353,6 +354,7 @@ registerLocaleData(localeEs, 'es');
 
         LogoSvgComponent,
         AcronimoSvgComponent,
+        GaleriaPipe
     ],
     entryComponents: [
         HeaderPacienteComponent

@@ -308,7 +308,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     }
 
     onUpload($event) {
-        if ($event.status = 200) {
+        if ($event.status === 200) {
             this.documentos.push({
                 ext: $event.body.ext,
                 id: $event.body.id

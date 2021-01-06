@@ -35,6 +35,10 @@ export class GaleriaArchivosComponent {
 
     @Input()
     set files(value: FileObject[]) {
+        if (!value) {
+            this._files = [];
+            return;
+        }
         this._files = value.map(file => {
             return {
                 ...file,

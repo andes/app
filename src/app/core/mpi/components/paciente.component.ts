@@ -105,7 +105,7 @@ export class PacienteComponent implements OnInit {
         reportarError: false,
         notaError: '',
         vinculos: [null],
-        documentos: [null]
+        documentos: []
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];
@@ -122,6 +122,8 @@ export class PacienteComponent implements OnInit {
     activacionMobilePendiente = null;
     dataMobile;
 
+
+
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private pacienteService: PacienteService,
@@ -130,7 +132,9 @@ export class PacienteComponent implements OnInit {
         private pacienteCache: PacienteCacheService,
         private _router: Router,
         public plex: Plex,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+
+    ) {
     }
 
     ngOnInit() {

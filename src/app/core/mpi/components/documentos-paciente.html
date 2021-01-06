@@ -1,16 +1,40 @@
-<plex-wrapper class="pt-2">
-    <plex-button class="pr-2" label="Seleccionar archivo" htmlFor="image" type="info" name="image"></plex-button>
-    <plex-select [(ngModel)]="documento.tipo" placeholder="seleccione tipo" labelField="label" [data]="datos">
-    </plex-select>
-    <plex-button name="confirmarNota" type="success" icon="plus" size="md" justify="end" multiline="true"
-                 (click)="addDocumentos()"></plex-button>
-</plex-wrapper>
+<plex-title titulo="Documentos del paciente">
+    <plex-button *ngIf="!showAdd" type="success" icon="plus" size="md" (click)="showFormulario()"
+                 tooltip="Agregar documento"></plex-button>
+    <plex-button *ngIf="showAdd" type="success" icon="check" size="md" (click)="addDocumentos()"
+                 tooltip="Agregar documento" [disabled]="invalid"></plex-button>
+    <plex-button *ngIf="showAdd" type="danger" icon="close" size="md" (click)="cancelar()" tooltip="Cancelar">
+    </plex-button>
+</plex-title>
+<ng-container *ngIf="showAdd">
+    <div class="grow">
+        <plex-select [(ngModel)]="documento.tipo" placeholder="seleccione tipo" labelField="label"
+                     [data]="tipoDocumentos" (change)="onTipoChange()">
+        </plex-select>
 
+        <upload-file label="Adjuntar archivo" (onUpload)="onUpload($event)" [extensiones]="extensions" modulo="mpi">
+        </upload-file>
+    </div>
+    <shared-galeria-archivos [files]="archivos | galeria | async" (remove)="imageRemoved($event)">
+    </shared-galeria-archivos>
+</ng-container>
 
-<plex-list>
-    <plex-item *ngFor="let item of documentos; let i = index">
-        <plex-icon name="documento" type="info" size="xl"></plex-icon>
-        <plex-label titulo="{{ item.tipo.label }}"></plex-label>
-        <plex-badge type="info">{{ item.fecha | fecha: 'utc'}}</plex-badge>
-    </plex-item>
-</plex-list>
+<plex-accordion *ngIf="!showAdd">
+    <plex-panel *ngFor="let item of paciente.documentos">
+        <div plex-accordion-title class="d-flex justify-content-between align-items-center">
+            <span class="d-flex">
+                <plex-icon name="documento" type="info" size="xl"></plex-icon>
+                <plex-label [titulo]="item.tipo.label"></plex-label>
+            </span>
+            <span>
+                <plex-badge type="info">
+                    {{ item.fecha | fecha: 'utc'}}
+                </plex-badge>
+                <plex-button type="danger" icon="delete" size="sm" (click)="removeItem(item)"
+                             tooltip="Eliminar documento">
+                </plex-button>
+            </span>
+        </div>
+        <shared-galeria-archivos [files]="item.archivos | galeria | async"></shared-galeria-archivos>
+    </plex-panel>
+</plex-accordion>

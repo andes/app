@@ -51,10 +51,8 @@
                     </notas-paciente>
                 </plex-tab>
 
-                <plex-tab label="Documentos" icon="file-multiple" (click)="tabIndex = 4">
-                    <documentos-paciente>
-
-                    </documentos-paciente>
+                <plex-tab label="Documentos" icon="file-multiple" (click)="tabIndex = 4" *ngIf="documentacionPermiso">
+                    <documentos-paciente [paciente]="pacienteModel"></documentos-paciente>
                 </plex-tab>
 
             </plex-tabs>
