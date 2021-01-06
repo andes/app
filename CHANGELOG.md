@@ -1,3 +1,21 @@
+# [5.29.0](https://github.com/andes/app/compare/v5.28.0...v5.29.0) (2021-01-06)
+
+
+### Bug Fixes
+
+* **com:** arreglo al actualizar datos simultaneamente ([#2099](https://github.com/andes/app/issues/2099)) ([e3dee03](https://github.com/andes/app/commit/e3dee03bfe598aa892ff69a9a955b97f194c5d5e))
+* **com:** filtra las derivaciones canceladas ([#2097](https://github.com/andes/app/issues/2097)) ([471cf06](https://github.com/andes/app/commit/471cf06ebb89bed2387dd33ce8131998878fc016))
+* **rup:** mapeo situaciones ([#2101](https://github.com/andes/app/issues/2101)) ([31ac62e](https://github.com/andes/app/commit/31ac62e1edb3143c5347ffd8e0623088862b10b3))
+
+
+### Features
+
+* **chore:** activa ivy ([#2088](https://github.com/andes/app/issues/2088)) ([629da4a](https://github.com/andes/app/commit/629da4a1e98a95ec2c08ffafec562bb52afdb3e0))
+* **com:** permitir modificar la prioridad ([#2100](https://github.com/andes/app/issues/2100)) ([0812b6d](https://github.com/andes/app/commit/0812b6d3da85287fe3a2249e0a3476f51a5285f2))
+* **mpi:** se guarda el número de trámite del dni al validar un paciente ([#2085](https://github.com/andes/app/issues/2085)) ([2d8e7e2](https://github.com/andes/app/commit/2d8e7e2d4f4aa161bc105f17b993fb04745f938e))
+* **rup:** agrega control en dosis ([#2095](https://github.com/andes/app/issues/2095)) ([9fd5a36](https://github.com/andes/app/commit/9fd5a36036da75f019cc55458a94163c5b631a1a))
+* **rup:** plantillas moleculas ([#2096](https://github.com/andes/app/issues/2096)) ([aa93db8](https://github.com/andes/app/commit/aa93db8fcf961c0617b2451d73088db250ee2606))
+
 # [5.28.0](https://github.com/andes/app/compare/v5.27.0...v5.28.0) (2020-12-30)
 
 
