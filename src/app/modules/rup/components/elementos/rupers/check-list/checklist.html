@@ -3,8 +3,19 @@
     <ng-container *ngIf="data$ | async as data">
         <plex-radio [label]="label" [required]="required" name="plex-radio" [data]="data" [(ngModel)]="valor"
                     [multiple]="multiple" [keyField]="idField" [labelField]="labelField" [type]="type"
-                    (change)="onValueChange(data, $event.value)">
+                    (change)="onValueChange('radio', data, $event.value)">
         </plex-radio>
+        <ng-container *ngIf="allowOtherQuery">
+            <div class="grow-reverse">
+                <span class="label mr-2">
+                    Otros:
+                </span>
+                <plex-select [snomedExpression]="allowOtherQuery" [preload]="false" [multiple]="multiple" name="otros"
+                             [(ngModel)]="otros" (change)="onValueChange('select', data, null)"
+                             [closeAfterSelect]="true">
+                </plex-select>
+            </div>
+        </ng-container>
     </ng-container>
 </form>
 
@@ -14,7 +25,7 @@
 
     <ng-container *ngIf="registro.valor  && !multiple">
         <p class="list-item-group text-capitalize">
-            {{  registro.valor[labelField] }}</p>
+            {{ registro.valor[labelField] }}</p>
     </ng-container>
     <ng-container *ngIf="registro.valor  && multiple">
         <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">

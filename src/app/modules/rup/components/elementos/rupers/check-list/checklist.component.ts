@@ -38,6 +38,10 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
     idField: string;
     labelField: string;
 
+    allowOtherQuery: string;
+    otros = [];
+
+
     ngOnInit() {
         if (!this.params) {
             this.params = {};
@@ -50,10 +54,23 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         this.type = this.params.type || 'horizontal';
         this.watch = this.params.watch || false;
 
+        this.allowOtherQuery = this.params.allowOtherQuery || null;
+
+
         if (!this.registro.valor) {
             this.registro.valor = this.multiple ? [] : null;
         }
-        this.valor = this.registro.valor;
+
+        if (this.multiple) {
+            this.valor = this.registro.valor.filter(el => !el._o);
+            this.otros = this.registro.valor.filter(el => el._o);
+        } else {
+            if (this.registro.valor?._o) {
+                this.otros = this.registro.valor;
+            } else {
+                this.valor = this.registro.valor;
+            }
+        }
 
         if (this.params.query) {
             this.idField = 'conceptId';
@@ -73,11 +90,26 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         }
     }
 
-    onValueChange(items: any[], valor) {
+    onValueChange(type: string, items: any[], valor) {
+
         if (this.multiple) {
-            this.registro.valor = valor;
+            valor = valor || this.valor;
+
+            const otros = (this.otros || []).map(el => { return { ...el, _o: true }; });
+
+            this.registro.valor = [
+                ...valor,
+                ...otros
+            ];
+
         } else {
-            this.registro.valor = items.find(item => item[this.idField] === valor);
+            if (type === 'radio') {
+                this.otros = null;
+                this.registro.valor = items.find(item => item[this.idField] === valor);
+            } else {
+                this.valor = null;
+                this.registro.valor = { ...this.otros, _o: true };
+            }
         }
         this.addFact('value', this.registro.valor);
         this.emitChange();
