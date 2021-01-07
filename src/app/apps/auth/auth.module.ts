@@ -8,6 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { ForgotComponent } from './components/forgot/forgot.component';
+import { RecoveryComponent } from './components/recovery/recovery.component';
 import { SelectOrganizacionComponent } from './components/select-organizacion/select-organizacion.component';
 import { AuthAppRouting } from './auth.routing';
 
@@ -22,6 +24,8 @@ import { AuthAppRouting } from './auth.routing';
     declarations: [
         LoginComponent,
         LogoutComponent,
+        ForgotComponent,
+        RecoveryComponent,
         SelectOrganizacionComponent,
         ModalDisclaimerComponent
     ]

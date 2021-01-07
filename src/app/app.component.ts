@@ -3,7 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Server, cache, cacheStorage } from '@andes/shared';
+import { Server, cacheStorage } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
@@ -12,9 +12,6 @@ import { GoogleTagManagerService } from './shared/services/analytics.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
 import { Observable } from 'rxjs';
-import { keyframes } from '@angular/animations';
-
-// import { RxSocket } from 'rx-socket.io-client';
 
 @Component({
     selector: 'app',

@@ -17,6 +17,11 @@
                                [required]="true">
                         <plex-icon name="dialpad" left></plex-icon>
                     </plex-text>
+                    <div *ngIf="enable">
+                        <a class="hover" justify="end" (click)="forgot()">
+                            (olvidé mi contraseña)
+                        </a>
+                    </div>
                     <div class="row">&nbsp;</div>
                     <plex-button type="success" [validateForm]="true" [disabled]="loading" (click)="login($event)">
                         Iniciar sesión

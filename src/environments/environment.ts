@@ -14,5 +14,6 @@ export const environment = {
   version: _package.version,
   MAPS_KEY: '',
   HOTJAR_KEY: '',
-  ANALYTICS_KEY: ''
+  ANALYTICS_KEY: '',
+  PASSWORD_RECOVER: ''
 };

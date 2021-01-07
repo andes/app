@@ -36,7 +36,6 @@ export interface ISession {
 export class Auth {
     private token$ = new Subject<string>();
     private session$: Observable<ISession>;
-
     private shiro = shiroTrie.new();
     public estado: Estado;
     public usuario: IUsuario;
@@ -142,6 +141,17 @@ export class Auth {
             })
         );
     }
+
+    // Metodo que invoca a la api para realizar el recovering de la password
+    setValidationTokenAndNotify(usuario: Number): Observable<any> {
+        return this.server.post('/auth/setValidationTokenAndNotify', {username: usuario}, {showError: false});
+    }
+
+    // Método que modifica la contraseña del usuario
+    resetPassword(data): Observable<any> {
+        return this.server.post('/auth/resetPassword', data, {showError: false});
+    }
+
 
 
 
