@@ -17,7 +17,7 @@ export interface ICompleted {
 @Component({
     selector: 'upload-file',
     template: `
-        <input style="visibility: hidden;" type="file" (change)="onChange($event)" #upload>
+        <input style="visibility: hidden; position: absolute;" type="file" (change)="onChange($event)" #upload>
         <plex-button type="info" [label]="btnLabel" (click)="upload.click()" [disabled]="disabled"></plex-button>
     `,
 })
