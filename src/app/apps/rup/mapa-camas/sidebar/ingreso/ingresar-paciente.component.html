@@ -2,7 +2,7 @@
     <ng-container *ngIf="paciente">
         <plex-title justify titulo="INGRESO">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
-                         (click)="guardar($event)" [disabled]="disableButton">
+                         (click)="guardar($event)" [disabled]="disableButton || inProgress">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
@@ -16,7 +16,7 @@
         <plex-wrapper>
             <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
                            name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required
-                           label="Fecha Ingreso" [debounce]="600" (change)="setFecha()" grow="full">
+                           label="Fecha Ingreso" [debounce]="600" (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
                 <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama" [data]="camas"

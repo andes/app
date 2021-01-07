@@ -51,6 +51,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public disableButton = false;
     public fechaHasta = moment().toDate();
     private fechaIngresoOriginal: Date;
+    public inProgress = false;
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -128,7 +129,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
 
         const pacienteID$ = this.handlerPacienteID();
-
+        this.inProgress = true;
         this.subscription = combineLatest(
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
@@ -194,6 +195,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.camas$ = this.mapaCamasService.snapshot$.pipe(
             map((snapshot) => {
+                this.inProgress = false;
                 let camasDisponibles = [];
                 let cama = null;
 
@@ -462,6 +464,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
+
+    onType() {
+        this.inProgress = true;
+    }
+
+
 
     // Se debe controlar que:
     // La cama este disponible en la fecha que la quiero usar,
