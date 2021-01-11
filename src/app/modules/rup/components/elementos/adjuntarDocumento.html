@@ -2,11 +2,10 @@
     <div class="container-fluid col-12">
         <div class="row mb-3" *ngIf="permiteCarga">
             <div class="col-12">
-                <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
                 <strong *ngIf="!soloValores">Cargar documentos</strong>
                 <span *ngIf="!waiting && !soloValores">
-                    <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()">
-                    </plex-button>
+                    <upload-file label="Desde mi PC" (onUpload)="onUpload($event)" modulo="rup"
+                                 [extensiones]="extensions"></upload-file>
                     <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi App móvil"
                                  (click)="fromMobile()"></plex-button>
                     <span *ngIf="errorExt">

@@ -29,6 +29,7 @@ import { Engine } from 'json-rules-engine';
 import { calcularEdad } from '@andes/shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { DriveService } from 'src/app/services/drive.service';
 
 @Component({
     selector: 'rup',
@@ -144,6 +145,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public conceptosTurneablesService: ConceptosTurneablesService,
         public plantillasService: PlantillasService,
         public vacunasService: VacunasService,
+        public driveService: DriveService,
         @Optional() public ejecucionService: RupEjecucionService
     ) {
     }

@@ -15,9 +15,8 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @Input() permiteCarga: boolean;
     @Input() parametroRegistro;
 
-    @ViewChildren('upload') childsComponents: QueryList<any>;
     imagenes = IMAGENES_EXT;
-    extensions = FILE_EXT;
+    extensions = [...FILE_EXT, ...IMAGENES_EXT];
 
     adjunto: any;
     loading = false;
@@ -27,20 +26,15 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     uploadValid = true;
 
     // fotos: { file?: any, ext: string, id?: any, descripcion?: ISnomedConcept, fecha?: Date }[] = [];
-    lightbox = false;
-    indice;
     fileToken: String = null;
 
     public descendientesInformeClinico: ISnomedConcept[] = [];
-    public hoy = moment(new Date()).endOf('day').toDate();
+    public hoy = moment().endOf('day').toDate();
 
     ngOnInit() {
-
         if (isUndefined(this.permiteCarga)) {
             this.permiteCarga = true;
         }
-
-        this.extensions = this.extensions.concat(this.imagenes);
 
         if (!isUndefined(this.parametroRegistro)) {
             this.registro = this.parametroRegistro;
@@ -51,7 +45,8 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor.documentos) {
             this.registro.valor.documentos = [];
         }
-        this.adjuntosService.generateToken().subscribe((data: any) => {
+
+        this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
         });
 
@@ -72,83 +67,18 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         return this.registro.valor.documentos.length === 0;
     }
 
-    changeListener($event): void {
-        this.readThis($event.target);
-    }
-
-
-    readThis(inputValue: any): void {
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            this.errorExt = true;
-            return;
-        }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
-            let metadata = {
-                prestacion: this.prestacion.id,
-                registro: this.registro.id
-            };
-            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.registro.valor.documentos.push({
-                    ext,
-                    id: data._id,
-                });
-            });
-
-
-        };
-        myReader.readAsDataURL(file);
-        this.uploadValid = true;
-    }
-
-
-    fileExtension(file) {
-        if (file.lastIndexOf('.') >= 0) {
-            return file.slice((file.lastIndexOf('.') + 1));
-        } else {
-            return '';
-        }
-    }
-
     esImagen(extension) {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    imageRemoved($event) {
-        let index = this.registro.valor.documentos.indexOf($event);
-        this.registro.valor.documentos.splice(index, 1);
-    }
-
-    activaLightbox(index) {
-        if (this.registro.valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.registro.valor.documentos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
+    imageRemoved(doc) {
+        this.driveService.deleteFile(doc.id).subscribe(() => {
+            const index = this.registro.valor.documentos.indexOf(doc);
+            this.registro.valor.documentos.splice(index, 1);
+        });
     }
 
     createUrl(doc) {
-        /** Hack momentaneo */
-        // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
             let apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
@@ -208,6 +138,16 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             });
         } else {
             return [];
+        }
+    }
+
+    onUpload($event) {
+        const { status, body } = $event;
+        if (status === 200) {
+            this.registro.valor.documentos.push({
+                ext: body.ext,
+                id: body.id
+            });
         }
     }
 }
