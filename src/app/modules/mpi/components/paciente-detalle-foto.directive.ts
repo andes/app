@@ -10,6 +10,9 @@ export class FotoDirective implements OnDestroy {
     private io: IntersectionObserver;
 
     @Input() set mpiFotoPaciente(paciente: IPaciente) {
+        if (this.io) {
+            this.io.disconnect();
+        }
         if (paciente && paciente.id && paciente.fotoId) {
             this.fileService.token$.subscribe((data: any) => {
                 const { token } = data;
