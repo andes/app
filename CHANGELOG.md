@@ -1,3 +1,14 @@
+# [5.30.0](https://github.com/andes/app/compare/v5.29.0...v5.30.0) (2021-01-13)
+
+
+### Features
+
+* **auth:** e agrega la posibilidad resetear la contraseña para los usuarios externos (no OneLogin) ([#2093](https://github.com/andes/app/issues/2093)) ([8dcf7ec](https://github.com/andes/app/commit/8dcf7ec2c52c31172e55da12b6a98edbf16decd1))
+* **mapa-camas:** control request en ingresos ([#2104](https://github.com/andes/app/issues/2104)) ([c1491e6](https://github.com/andes/app/commit/c1491e6a2095ea7dfbe07a0f369961706e29730f))
+* **rup:** cambia a drive los archivos adjuntos ([#2105](https://github.com/andes/app/issues/2105)) ([725702a](https://github.com/andes/app/commit/725702a106bb2ddb695ea58f1fd60737ca23ce67))
+* **rup:** opción otros para checklist ([#2102](https://github.com/andes/app/issues/2102)) ([8736e66](https://github.com/andes/app/commit/8736e6670be34597a2011f1343c1c4927037a9ae))
+* **tm:** toast success en sincro sisa de organizacion ([#2098](https://github.com/andes/app/issues/2098)) ([547e2c9](https://github.com/andes/app/commit/547e2c9875469841cbd3b19efe0e182d976afbbb))
+
 # [5.29.0](https://github.com/andes/app/compare/v5.28.0...v5.29.0) (2021-01-06)
 
 
