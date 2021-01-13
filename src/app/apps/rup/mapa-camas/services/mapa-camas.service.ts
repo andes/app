@@ -15,7 +15,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
-
+import { InternacionResumenHTTP } from './resumen-internacion.http';
 
 @Injectable()
 export class MapaCamasService {
@@ -48,7 +48,7 @@ export class MapaCamasService {
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
     public camaSelectedSegunView$: Observable<ISnapshot>;
 
-    private maquinaDeEstado$: Observable<IMaquinaEstados>;
+    public maquinaDeEstado$: Observable<IMaquinaEstados>;
 
     public estado$: Observable<IMAQEstado[]>;
     public relaciones$: Observable<IMAQRelacion[]>;
@@ -56,6 +56,10 @@ export class MapaCamasService {
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
     public snapshotOrdenado$: Observable<ISnapshot[]>;
+
+
+    public resumenInternacion$: Observable<any>;
+
 
     public fechaActual$: Observable<Date>;
 
@@ -79,6 +83,7 @@ export class MapaCamasService {
         private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private salaComunService: SalaComunService,
+        private internacionResumenHTTP: InternacionResumenHTTP
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -107,7 +112,10 @@ export class MapaCamasService {
                     const sectores = snap.sectores || [];
                     const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
                     (snap as any).sectorName = sectorName;
+
+                    snap._key = snap.id + '-' + snap.idInternacion;
                 });
+
 
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
                     (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
@@ -198,6 +206,22 @@ export class MapaCamasService {
         this.fechaActual$ = timer(segundosAPoxMin, 60000).pipe(
             startWith(0),
             map(() => moment().endOf('minute').toDate()),
+        );
+
+        this.resumenInternacion$ = combineLatest([
+            this.selectedCama,
+            this.ambito2,
+            this.capa2
+        ]).pipe(
+            switchMap(([cama, ambito, capa]) => {
+                if (cama.idInternacion && capa !== 'estadistica') {
+                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                        catchError((err) => { return of({}); })
+                    );
+                }
+                return of({});
+            }),
+            cache()
         );
     }
 
@@ -365,7 +389,7 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
-            } else if (sortBy === 'fecha') {
+            } else if (sortBy === 'fechaMovimiento') {
                 snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
             } else if (sortBy === 'usuario') {
                 snapshots = snapshots.sort((a, b) => {
@@ -378,6 +402,20 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.documento.localeCompare((b.paciente.documento as string)));
             } else if (sortBy === 'sexo') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.sexo.localeCompare((b.paciente.sexo as string)));
+            } else if (sortBy === 'prioridad') {
+                snapshots = snapshots.sort((a, b) => (a.prioridad?.id || -10) - (b.prioridad?.id || -10));
+            } else if (sortBy === 'guardia') {
+                snapshots = snapshots.sort((a, b) => {
+                    const dateA = a.fechaAtencion || a.fechaIngreso;
+                    const dateB = b.fechaAtencion || b.fechaIngreso;
+                    if (!dateA) {
+                        return -1;
+                    } else if (!dateB) {
+                        return 1;
+                    } else {
+                        return dateA.getTime() - dateB.getTime();
+                    }
+                });
             }
         }
 

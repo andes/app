@@ -17,6 +17,9 @@
                 </plex-button>
                 <plex-button title="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>
+
+
+
             </plex-title>
             <fieldset>
                 <plex-detail size="lg" direction="row">
@@ -58,6 +61,13 @@
         </ng-container>
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
+
+                <ng-container *ngIf="turnero$ | async as pantalla">
+                    <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">
+                        <plex-icon name="bell-ring-outline"></plex-icon>
+                    </plex-button>
+                </ng-container>
+
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
                     <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>

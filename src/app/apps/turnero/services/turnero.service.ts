@@ -15,7 +15,7 @@ export class TurneroService {
 
 
     llamar(agenda, turno) {
-        let turnoProximo = {
+        const turnoProximo = {
             id: turno.id,
             horaInicio: turno.horaInicio,
             paciente: turno.paciente,
@@ -25,6 +25,19 @@ export class TurneroService {
             espacioFisico: agenda.espacioFisico
         };
         this.ws.emit('turnero-proximo-llamado', turnoProximo);
+    }
+
+    llamarInternacion(idPantalla, cama) {
+        const turnoProximo = {
+            idPantalla,
+            id: cama.idInternacion,
+            paciente: cama.paciente,
+            horaLlamada: new Date(),
+            espacioFisico: {
+                nombre: cama.nombre
+            }
+        };
+        this.ws.emit('turnero-proximo-llamado-internacion', turnoProximo);
     }
 
     get(params: any): Observable<any> {

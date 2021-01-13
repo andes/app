@@ -8,6 +8,7 @@ import { SharedModule } from '@andes/shared';
 import { MPILibModule } from '../../../modules/mpi/mpi-lib.module';
 import { ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
+import { HammerModule } from '@angular/platform-browser';
 
 import { MapaCamasRouting } from './mapa-camas.routing';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
@@ -55,7 +56,7 @@ import { IntegridadService } from './views/integridad/integridad.service';
 import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
 import { PermisosMapaCamasService } from './services/permisos-mapa-camas.service';
-import { HammerModule } from '@angular/platform-browser';
+import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -91,6 +92,7 @@ export const INTERNACION_COMPONENTS = [
     ItemInconsistenciaComponent,
     DetalleIntegridadComponent,
     FiltrosInconsistenciasComponent,
+    IngresoDinamicoComponent
 ];
 
 export const INTERNACION_PROVIDERS = [

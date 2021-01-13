@@ -48,6 +48,7 @@ export class SalaComunComponent implements OnInit {
         private location: Location,
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
+        private mapaCamasService: MapaCamasService,
         private salaComunService: SalaComunService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
@@ -100,6 +101,8 @@ export class SalaComunComponent implements OnInit {
                 this.puedeEditar = false;
             }
             this.salaComun.capacidad = null;
+            this.salaComun.ambito = this.ambito;
+
         }
     }
 

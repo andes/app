@@ -45,11 +45,15 @@ cdk-virtual-scroll-viewport {
         }
 
         .col-acciones {
-            width: 130px;
+            width: 130px!important;
         }
 
         .col-estados {
-            width: 200px;
+            width: 200px!important;
+        }
+
+        .col-prioridad {
+            width: 80px!important;
         }
     }
 }

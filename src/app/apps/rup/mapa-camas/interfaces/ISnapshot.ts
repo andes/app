@@ -2,7 +2,9 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { ISectores } from './../../../../interfaces/IOrganizacion';
 
 export interface ISnapshot {
-    id: String;
+    id: string;
+    _key: string;
+
     genero: ISnomedConcept;
     estado: string;
     esCensable: Boolean;
@@ -10,6 +12,8 @@ export interface ISnapshot {
     esMovimiento: Boolean;
     sugierePase?: Boolean;
     fecha: Date;
+    fechaIngreso?: Date;
+    fechaAtencion?: Date;
     unidadOrganizativa: ISnomedConcept;
     especialidades: ISnomedConcept[];
     ambito: String;
@@ -40,6 +44,11 @@ export interface ISnapshot {
         tipo_egreso?: String,
     };
     nota: String;
+    prioridad?: {
+        id: number,
+        label: string,
+        type: string
+    };
     createdAt?: Date;
     createdBy?: {
         id: String,

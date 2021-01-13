@@ -7,11 +7,13 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { WebSocketService } from 'src/app/services/websocket.service';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -49,6 +51,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         sexo: false,
         sector: false,
         usuarioMovimiento: false,
+        prioridad: false,
+        guardia: false
     };
 
     public sortBy: string;
@@ -71,6 +75,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        public elementoRUPService: ElementosRUPService,
+        public ws: WebSocketService
     ) { }
 
 
@@ -78,9 +84,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+        this.ws.disconnect();
     }
 
     ngOnInit() {
+        this.ws.connect();
         this.mapaCamasService.resetView();
 
         // CROTADA: si uso ngIf en el layout se rompen los tooltips
@@ -92,8 +100,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
-        this.permisosMapaCamasService.setAmbito('internacion');
-
+        this.permisosMapaCamasService.setAmbito(ambito);
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -121,7 +128,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         }
 
         const capa = this.route.snapshot.paramMap.get('capa');
-        const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+        const permisosInternacion = this.auth.getPermissions(`${ambito}:rol:?`);
         if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
             this.mapaCamasService.setCapa(capa);
         } else {
@@ -144,6 +151,14 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
 
         this.organizacion = this.auth.organizacion.id;
+
+        this.mapaCamasService.maquinaDeEstado$.pipe(take(1)).subscribe((estado) => {
+            const columns = estado.columns;
+            if (columns) {
+                this.columns = columns;
+                this.toggleColumns();
+            }
+        });
 
         this.getSnapshot();
     }

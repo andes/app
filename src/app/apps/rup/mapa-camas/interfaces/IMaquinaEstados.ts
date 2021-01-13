@@ -1,4 +1,5 @@
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
+import { MapaCamaListadoColumns } from './mapa-camas.internface';
 
 export interface IMaquinaEstados {
     id: string;
@@ -7,6 +8,10 @@ export interface IMaquinaEstados {
     capa: string;
     estados: IMAQEstado[];
     relaciones: IMAQRelacion[];
+
+    columns: MapaCamaListadoColumns;
+    ingresos: { [key: string]: string };
+    turnero: { [key: string]: string };
 }
 
 export interface IMAQEstado {

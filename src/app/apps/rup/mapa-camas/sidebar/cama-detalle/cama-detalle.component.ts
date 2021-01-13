@@ -13,6 +13,7 @@ import { Plex } from '@andes/plex';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 
 
 @Component({
@@ -63,6 +64,8 @@ export class CamaDetalleComponent implements OnInit {
     public hayMovimientosAt$: Observable<Boolean>;
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
+    public turnero$: Observable<string>;
+
     constructor(
         private auth: Auth,
         public plex: Plex,
@@ -71,6 +74,7 @@ export class CamaDetalleComponent implements OnInit {
         private mapaCamasHTTP: MapaCamasHTTP,
         private prestacionesService: PrestacionesService,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        private turneroService: TurneroService
     ) {
     }
 
@@ -80,6 +84,21 @@ export class CamaDetalleComponent implements OnInit {
             filter(cama => !!cama.paciente),
             switchMap(cama => {
                 return this.mapaCamasService.getPaciente(cama.paciente);
+            })
+        );
+
+        this.turnero$ = combineLatest(
+            this.cama$,
+            this.mapaCamasService.maquinaDeEstado$
+        ).pipe(
+            map(([cama, estado]) => {
+                if (cama.idInternacion) {
+                    const turnero = estado.turnero || {};
+                    if (turnero[cama.id]) {
+                        return turnero[cama.id];
+                    }
+                }
+                return null;
             })
         );
 
@@ -184,5 +203,10 @@ export class CamaDetalleComponent implements OnInit {
                     });
             }
         });
+    }
+
+
+    llamarTurnero(pantalla: string, cama: ISnapshot) {
+        this.turneroService.llamarInternacion(pantalla, cama);
     }
 }
