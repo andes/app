@@ -63,7 +63,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
             this.mapaCamasService.resumenInternacion$,
         ).subscribe(([capa, resumen]) => {
             if (capa !== 'estadistica') {
-
                 if (resumen.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },

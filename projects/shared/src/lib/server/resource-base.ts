@@ -66,4 +66,21 @@ export abstract class ResourceBaseHttp<T = any> {
         return this.showError;
     }
 
+    public queryDateParams(desde: Date, hasta: Date, diaEntero: Boolean = true) {
+        const desdeF = moment(desde).format(diaEntero ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss');
+        const hastaF = moment(hasta).format(diaEntero ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss');
+        if (desde) {
+            if (hasta) {
+                return `${desdeF}|${hastaF}`;
+            } else {
+                return `>${desdeF}`;
+            }
+        } else {
+            if (hasta) {
+                return `<${hastaF}`;
+            }
+        }
+        return undefined;
+    }
+
 }

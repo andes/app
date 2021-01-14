@@ -42,6 +42,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     cambiarUO;
     camasDisponibles;
 
+    puedeVerHistorial$: Observable<boolean>;
+
     mainView;
     subscription: Subscription;
 
@@ -149,6 +151,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
+        this.mapaCamasService.select(null);
 
         this.organizacion = this.auth.organizacion.id;
 
@@ -159,6 +162,10 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
                 this.toggleColumns();
             }
         });
+
+        this.puedeVerHistorial$ = this.mapaCamasService.maquinaDeEstado$.pipe(
+            map(estado => estado.historialMedico)
+        );
 
         this.getSnapshot();
     }
@@ -177,6 +184,10 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     verListadoInternacion() {
         this.router.navigate([`/mapa-camas/listado-internacion`]);
+    }
+
+    verListadoInternacionMedico() {
+        this.router.navigate([`/mapa-camas/listado-internacion-medico`]);
     }
 
     onEdit(accion) {
