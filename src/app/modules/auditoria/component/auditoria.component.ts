@@ -37,8 +37,6 @@ export class AuditoriaComponent implements OnInit {
   scrollEnd = false;
   searchSubscription = new Subscription();
   // reporte de errores
-  pacientesReportados;
-  corregirPaciente: Number = null;
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
   showReporteError = false; // se muestra en el sidebar datos del error reportado
@@ -69,15 +67,9 @@ export class AuditoriaComponent implements OnInit {
 
   // REPORTE DE ERRORES -----------------------------------------
 
-  // Aquellos pacientes que reportaron errores en sus datos personales
-  getReportados() {
-    const params = { reportarError: true, activo: true };
-    this.pacienteService.get(params).subscribe(resultado => {
-      if (resultado) {
-        this.pacientesReportados = resultado;
-        this.corregirPaciente = null;
-      }
-    });
+  onSelect(paciente: IPaciente): void {
+    this.pacienteSelected = paciente;
+    this.showInSidebar('detallePaciente');
   }
 
   onSelectReportado(data: any): void {

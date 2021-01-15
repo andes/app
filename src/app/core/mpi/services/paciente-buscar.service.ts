@@ -180,7 +180,7 @@ export class PacienteBuscarService {
             return EMPTY;
         }
         // Busca por texto libre
-        return this.pacienteService.get({ search: this.searchText, limit: this.limit, skip: this.skip }).pipe(
+        return this.pacienteService.get({ search: this.searchText, activo: true, limit: this.limit, skip: this.skip }).pipe(
             map((resultado: any) => {
                 this.skip += resultado.length;
                 // si vienen menos resultado que {{ limit }} significa que ya se cargaron todos

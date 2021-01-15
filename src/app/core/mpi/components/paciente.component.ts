@@ -255,17 +255,17 @@ export class PacienteComponent implements OnInit {
     }
 
 
-    save(ignoreCheck = false) {
+    save(ignoreSuggestions = false) {
         let contactoValid = this.datosContacto.checkForm();
         let datosBasicosValid = this.datosBasicos.checkForm();
         if (!contactoValid || !datosBasicosValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        this.disableIgnorarGuardar = ignoreCheck;
+        this.disableIgnorarGuardar = ignoreSuggestions;
         this.disableGuardar = true;
         let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-        pacienteGuardar.ignoreCheck = ignoreCheck;
+        pacienteGuardar.ignoreSuggestions = ignoreSuggestions;
         pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
         pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
