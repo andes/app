@@ -1,0 +1,53 @@
+<plex-layout [main]='6'>
+    <plex-layout-main>
+        <plex-title titulo="punto de inicio - ficha epidemiológica"></plex-title>
+        <div class="row">
+            <div class="col-12">
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                 (searchClear)="onSearchClear()">
+                </paciente-buscar>
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-12">
+                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                                  (selected)="onSelect($event)">
+                </paciente-listado>
+            </div>
+        </div>
+
+    </plex-layout-main>
+    <plex-layout-sidebar [type]="'invert'">
+        <ng-container *ngIf="pacienteSelected">
+            <paciente-detalle [paciente]="pacienteSelected" orientacion="horizontal"></paciente-detalle>
+            <plex-title titulo="Fichas epidemiológicas">
+                <plex-button size="sm" type="success" class="mr-1" [right]="true" label="NUEVA FICHA">
+                </plex-button>
+                <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
+                    VER HUDS
+                </plex-button>
+            </plex-title>
+            <plex-table [columns]="columns">
+                <tr>
+                    <td>14/01/2021</td>
+                    <td>Ficha covid</td>
+                    <td>Finalizada</td>
+                    <td>
+                        <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" title="Ver">
+                        </plex-button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>10/01/2021</td>
+                    <td>Ficha covid</td>
+                    <td>En curso</td>
+                    <td>
+                        <plex-button size="sm" icon="pencil" type="warning" (click)="emit('ver', $event)"
+                                     title="Editar">
+                        </plex-button>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
