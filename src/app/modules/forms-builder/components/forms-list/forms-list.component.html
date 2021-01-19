@@ -4,7 +4,6 @@
         <plex-button type="danger" [routerLink]="'/home'"> Cancelar </plex-button>
         <plex-button type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
       </plex-title>
-      {{$forms}}
       <div *ngxObserve="forms$ as forms; before: loadingTemplate; error: errorTemplate">
         <plex-list>
           <plex-heading>
