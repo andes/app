@@ -115,7 +115,12 @@ const appRoutes: Routes = [
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
-
+    {
+        path: 'forms',
+        loadChildren: () => import('./modules/forms-builder/forms.module').then(m => m.FormBuilderModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        runGuardsAndResolvers: 'always'
+    },
     // Mapa de camas
     { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 

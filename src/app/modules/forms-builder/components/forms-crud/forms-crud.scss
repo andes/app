@@ -1,0 +1,20 @@
+::ng-deep {
+    plex-int, plex-bool {
+        &.sm {
+            .form-group, .form-control {
+                width: 60px;
+            }
+        }
+    }
+    .recurso {
+        width: 100px;
+    }
+    .precargado {
+        width: 50px;
+    }
+    .minmax {
+        display: inline-flex;
+        position: relative;
+        bottom: 15px;
+    }
+}
