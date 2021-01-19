@@ -1,0 +1,36 @@
+<plex-layout>
+    <plex-layout-main>
+      <plex-title main titulo="Listado de Formularios">
+        <plex-button type="danger" [routerLink]="'/home'"> Cancelar </plex-button>
+        <plex-button type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
+      </plex-title>
+      {{$forms}}
+      <div *ngxObserve="forms$ as forms; before: loadingTemplate; error: errorTemplate">
+        <plex-list>
+          <plex-heading>
+            <b label>Nombre</b>
+            <b label>Tipo/Clave</b>
+            <b label>Cant. Campos</b>
+  
+            <b button></b>
+          </plex-heading>
+          <plex-item *ngFor="let form of forms" class="mb-4 mb-0-md">
+            <plex-label>{{ form.name }}</plex-label>
+            <plex-label>{{ form.type }}</plex-label>
+            <plex-label> {{ form.fields.length }} </plex-label>
+            <plex-badge [type]="form.active ? 'success' : 'danger'">
+              {{ form.active ? 'HABILITADO' : 'DESHABILITADO' }}
+            </plex-badge>
+            <plex-button size="sm" icon="pencil" type="info" [routerLink]="[form.id]"></plex-button>
+          </plex-item>
+        </plex-list>
+      </div>
+  
+      <ng-template #loadingTemplate>
+        <p>Loading ...</p>
+      </ng-template>
+      <ng-template #errorTemplate let-error>
+        <p>{{ error }}</p>
+      </ng-template>
+    </plex-layout-main>
+  </plex-layout>

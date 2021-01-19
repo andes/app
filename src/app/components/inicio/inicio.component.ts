@@ -39,7 +39,6 @@ export class InicioComponent implements AfterViewInit {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
                 registros => {
-
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
                         if (modulo.activo) {

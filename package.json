@@ -55,6 +55,7 @@
     "ng2-charts": "^2.4.2",
     "ng2-slugify": "^0.1.0",
     "ngx-infinite-scroll": "^8.0.0",
+    "ngx-observe": "^1.1.1",
     "ol": "^5.3.3",
     "rxjs": "^6.5.2",
     "shiro-trie": "^0.4.9",
