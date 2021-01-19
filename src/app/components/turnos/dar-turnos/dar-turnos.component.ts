@@ -30,6 +30,8 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { ModificadoresService } from 'src/app/services/modificadores/modificadores.service';
+
 
 @Component({
     selector: 'dar-turnos',
@@ -154,6 +156,7 @@ export class DarTurnosComponent implements OnInit {
     private busquedas = this.cacheBusquedas;
     private eventoProfesional: any = null;
     public mostrarCalendario = false;
+    public modificadorLlaveAgenda: any;
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -169,7 +172,8 @@ export class DarTurnosComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         private router: Router,
-        private osService: ObraSocialCacheService) { }
+        private osService: ObraSocialCacheService,
+        private modificadoresService: ModificadoresService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -309,6 +313,8 @@ export class DarTurnosComponent implements OnInit {
     filtrar() {
         this.prestacionSeleccionada = this.opciones.tipoPrestacion;
         this.profesionalSeleccionado = this.opciones.profesional;
+
+
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null,
@@ -336,7 +342,17 @@ export class DarTurnosComponent implements OnInit {
                 localStorage.setItem('busquedas', JSON.stringify(this.cacheBusquedas));
             }
         }
-        this.actualizar();
+        if (!this.solicitudPrestacion) {
+            this.modificadoresService.search({
+                prestacion: this.prestacionSeleccionada,
+                paciente: this.pacienteSeleccionado
+            }).subscribe(resp => {
+                this.modificadorLlaveAgenda = resp.result || false;
+                this.actualizar();
+            });
+        } else {
+            this.actualizar();
+        }
     }
 
     actualizar() {
@@ -378,7 +394,10 @@ export class DarTurnosComponent implements OnInit {
             // Traer las agendas
             this.serviceAgenda.get(params).subscribe(agendas => {
                 // Filtrar agendas disponibles o publicadas
-                this.agendas = agendas.filter((data) => {
+                this.agendas = agendas.filter(data => {
+                    if (data.turnosRestantesGestion > 0 && !this.solicitudPrestacion) {
+                        data.modificadorLlave = this.modificadorLlaveAgenda;
+                    }
                     if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                         if (this._solicitudPrestacion && this.contieneExclusivoGestion(data)) {
                             return (data.estado === 'disponible' || data.estado === 'publicada');
@@ -386,7 +405,7 @@ export class DarTurnosComponent implements OnInit {
                             return (data.estado === 'publicada');
                         }
                     } else {
-                        if (this._solicitudPrestacion) {
+                        if (this._solicitudPrestacion || data.modificadorLlave) {
                             return (data.estado === 'disponible' || data.estado === 'publicada');
                         } else {
                             return (data.estado === 'publicada');
@@ -403,7 +422,8 @@ export class DarTurnosComponent implements OnInit {
                             ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((this.autocitado && agenda.turnosRestantesProfesional > 0) ||
                                 (!this.autocitado && agenda.turnosRestantesGestion > 0))) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0 && !this._solicitudPrestacion) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && !this._solicitudPrestacion)
+                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && !this._solicitudPrestacion) ||
+                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.modificadorLlave)
                             );
                         return cond;
 
@@ -495,7 +515,7 @@ export class DarTurnosComponent implements OnInit {
                             this.estadoT = 'dinamica';
                         } else {
                             // Tiene solicitud
-                            if (this._solicitudPrestacion) {
+                            if (this._solicitudPrestacion || this.agenda.modificadorLlave) {
                                 if (this.autocitado) {
                                     this.tiposTurnosSelect = 'profesional';
                                 } else {
@@ -612,7 +632,7 @@ export class DarTurnosComponent implements OnInit {
             this.bloques = this.bloques.filter(bloque => bloque.tipoPrestaciones.map(e => e.conceptId).includes(this.opciones.tipoPrestacion.conceptId));
         }
 
-        if (this.solicitudPrestacion) {
+        if (this.solicitudPrestacion || this.agenda.modificadorLlave) {
             if (!this.contieneExclusivoGestion(this.agenda)) {
                 // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
                 this.bloques = this.bloques.filter(
@@ -1096,7 +1116,7 @@ export class DarTurnosComponent implements OnInit {
 
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
-        if (this._solicitudPrestacion) {
+        if (this._solicitudPrestacion || this.agenda.modificadorLlave) {
 
             if (this.autocitado && bloque.restantesProfesional > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
