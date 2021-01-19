@@ -28,11 +28,6 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                 }
             };
         } else {
-            if (!this.validacion && !this.soloValores) {
-                this.loadVacunas();
-                this.loadEsquemas();
-                this.loadDosis();
-            }
             this.getHistorialVacunas();
         }
 
