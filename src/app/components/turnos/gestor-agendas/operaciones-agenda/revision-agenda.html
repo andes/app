@@ -452,6 +452,9 @@
                                           *ngIf="isRegistradoProfesional(turno) && !isAuditado(turno)">|
                                         Registrado por Profesional</span>
                                     <span [ngClass]="{'text-success': true}" *ngIf="isAuditado(turno)">| Auditado</span>
+                                    <br><small><span [ngClass]="{'text-info': true}"
+                                              *ngIf="turno.usuarioDacion">Asignado por
+                                            {{turno.usuarioDacion.nombreCompleto}}</span></small>
 
                                 </td>
                             </tr>
