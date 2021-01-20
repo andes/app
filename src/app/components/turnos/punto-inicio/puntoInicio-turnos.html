@@ -4,7 +4,7 @@
 
         <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
                          (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
-                         [create]="canCreate">
+                         [create]="true">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>

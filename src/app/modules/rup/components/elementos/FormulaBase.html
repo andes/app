@@ -6,7 +6,7 @@
                  class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                      [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                     (change)="emitChange($event)" (ejecutarAccion)="emitEjecutarAccion($event)">
+                     (change)="emitChange2($event)" (ejecutarAccion)="emitEjecutarAccion($event)">
                 </rup>
             </div>
         </ng-container>
@@ -15,7 +15,16 @@
 
             <label class="form-control-label text-capitalize-first"> {{ registro.concepto.term}} </label>
 
-            {{resultado?.message}}
+            <!-- {{resultado?.message}} -->
+
+            <p *ngIf="mensaje?.texto">
+                <plex-badge type="{{mensaje.type}}">
+                    {{mensaje.texto}}
+                    <plex-button *ngIf="mensaje.add" (click)="addConcepto(mensaje.add)">
+                        <plex-icon name="plus"></plex-icon>
+                    </plex-button>
+                </plex-badge>
+            </p>
         </div>
     </div>
 </ng-container>

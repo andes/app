@@ -37,6 +37,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public autorizado = false;
     public puedeActivarAppMobile = false;
 
+    public soloLectura = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
     showDarTurnos = false;

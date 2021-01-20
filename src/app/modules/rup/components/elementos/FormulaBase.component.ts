@@ -2,6 +2,7 @@ import { Component, OnInit, ReflectiveInjector } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { FormulaBaseService, FormularRegister } from '../formulas/index';
 import { RupElement } from '.';
+import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 
 @Component({
     selector: 'rup-formula-base',
@@ -23,14 +24,42 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.formulaProvider = provider.get(formulaService.service);
             this.formulaProvider.formula = this.params.formula;
         }
-        this.emitChange(null);
+        this.emitChange2(null);
+
+        this.addFact('value', this.registro.valor);
+
+        this.onRule('alert').subscribe(evento => {
+
+            const { params } = evento;
+            this.mensaje = {
+                texto: params.message,
+                type: params.type,
+                add: params.add
+            };
+
+
+        });
 
     }
 
-    emitChange(event) {
+    addConcepto(concepto: ISnomedConcept) {
+        this.ejecucionService.agregarConcepto(
+            concepto
+        );
+    }
+
+    emitChange2(event) {
         this.resultado = this.formulaProvider.calcular(this.paciente, this.prestacion, this.registro.registros);
         this.registro.valor = this.resultado.value;
+        this.onChange();
     }
+
+    onChange() {
+        this.emitChange();
+        this.mensaje = {};
+        this.addFact('value', this.registro.valor);
+    }
+
 
 
 }
