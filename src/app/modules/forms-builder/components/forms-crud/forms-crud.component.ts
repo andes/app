@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { ResourcesService } from '../../services/resources.service';
+import { FormResourcesService } from '../../services/resources.service';
 import { Form, FormsService } from '../../services/form.service';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
@@ -35,7 +35,7 @@ export class AppFormsCrudComponent implements OnInit {
             subfilter: true,
             extras: '',
             resources: '',
-            preload: false
+            preload: true
         }
     ]
     };
@@ -45,19 +45,23 @@ export class AppFormsCrudComponent implements OnInit {
         private formsService: FormsService,
         private location: Location,
         private route: ActivatedRoute,
+        private formResourceService: FormResourcesService
     ) { }
 
     ngOnInit() {
-        const form = this.route.snapshot.data.event;
-        if (form) {
-            this.form = form;
-            this.form.fields.forEach(f => {
-                f.type = this.tiposList.find(t => t.id === f.type) as any;
-                if ((f.type as any).id === 'select') {
-                    f.resources = this.recursos.find(t => t.key === f.resources) as any;
-                }
-            });
-        }
+        this.formResourceService.search({}).subscribe(resultado => {
+            this.recursos = resultado;
+            const form = this.route.snapshot.data.event;
+            if (form) {
+                this.form = form;
+                this.form.fields.forEach(file => {
+                    file.type = this.tiposList.find(t => t.id === file.type) as any;
+                    if ((file.type as any).id === 'select') {
+                        file.resources = this.recursos.find(t => t.key === file.resources) as any;
+                    }
+                });
+            }
+        });
     }
 
     onAdd() {
