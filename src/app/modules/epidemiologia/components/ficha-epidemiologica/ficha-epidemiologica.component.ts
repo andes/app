@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { FechaPipe } from 'projects/shared/src/lib/pipes/fecha.pipe';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { FormsService } from '../../../forms-builder/services/form.service';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
   templateUrl: './ficha-epidemiologica.component.html'
 })
 export class FichaEpidemiologicaComponent implements OnInit {
+  fichaSelected = {};
+  itemsDropdownFichas = [];
   public showLabel = true;
   public pacienteSelected = null;
   public resultadoBusqueda = null;
+
   public columns = [
     {
       key: 'fecha',
@@ -34,9 +37,9 @@ export class FichaEpidemiologicaComponent implements OnInit {
     }
   ];
 
-
   constructor(
-    private plex: Plex
+    private plex: Plex,
+    private formsService: FormsService
   ) { }
 
   ngOnInit(): void {
@@ -44,8 +47,17 @@ export class FichaEpidemiologicaComponent implements OnInit {
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Ficha epidemiológica' }
     ]);
-  }
 
+    this.formsService.search().subscribe(fichas => {
+      fichas.forEach(element => {
+        this.itemsDropdownFichas.push({
+          'label': element.name, handler: () => {
+            this.mostrarFicha();
+          }
+        });
+      });
+    });
+  }
 
   searchStart() {
     this.showLabel = false;
@@ -70,5 +82,9 @@ export class FichaEpidemiologicaComponent implements OnInit {
       this.pacienteSelected = paciente;
 
     }
+  }
+
+  mostrarFicha() {
+    // Mostrar ficha en layout-main
   }
 }

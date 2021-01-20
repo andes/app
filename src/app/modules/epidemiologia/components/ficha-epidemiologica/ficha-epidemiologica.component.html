@@ -1,5 +1,6 @@
-<plex-layout [main]='6'>
+<plex-layout [main]='8'>
     <plex-layout-main>
+
         <plex-title titulo="punto de inicio - ficha epidemiológica"></plex-title>
         <div class="row">
             <div class="col-12">
@@ -19,34 +20,18 @@
     </plex-layout-main>
     <plex-layout-sidebar [type]="'invert'">
         <ng-container *ngIf="pacienteSelected">
-            <paciente-detalle [paciente]="pacienteSelected" orientacion="horizontal"></paciente-detalle>
-            <plex-title titulo="Fichas epidemiológicas">
-                <plex-button size="sm" type="success" class="mr-1" [right]="true" label="NUEVA FICHA">
-                </plex-button>
+            <plex-title size="sm" titulo="Datos del paciente">
                 <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
                     VER HUDS
                 </plex-button>
             </plex-title>
+            <paciente-detalle [paciente]="pacienteSelected" orientacion="horizontal"></paciente-detalle>
+            <plex-title size="sm" titulo="Fichas epidemiológicas">
+                <plex-dropdown size="sm" type="success" class="mr-1" [right]="true" label="NUEVA FICHA"
+                               [items]="itemsDropdownFichas">
+                </plex-dropdown>
+            </plex-title>
             <plex-table [columns]="columns">
-                <tr>
-                    <td>14/01/2021</td>
-                    <td>Ficha covid</td>
-                    <td>Finalizada</td>
-                    <td>
-                        <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" title="Ver">
-                        </plex-button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>10/01/2021</td>
-                    <td>Ficha covid</td>
-                    <td>En curso</td>
-                    <td>
-                        <plex-button size="sm" icon="pencil" type="warning" (click)="emit('ver', $event)"
-                                     title="Editar">
-                        </plex-button>
-                    </td>
-                </tr>
             </plex-table>
         </ng-container>
     </plex-layout-sidebar>
