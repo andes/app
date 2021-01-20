@@ -4,8 +4,9 @@
             <plex-title titulo="DATOS DE CAMA">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
-                        <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisosMapaCamasService.ingreso)
-                                      || (relacion.nombre === 'Bloquear' && permisosMapaCamasService.bloqueo)">
+                        <ng-container
+                                      *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisosMapaCamasService.ingreso)
+                                      || (relacion.nombre === 'Bloquear' && permisosMapaCamasService.bloqueo && !cama.sala)">
                             <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                          size="sm" (click)="accion(relacion)">
                             </plex-button>
