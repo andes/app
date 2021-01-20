@@ -1,4 +1,4 @@
-import { ResourcesService } from './services/resources.service';
+import { FormResourcesService } from './services/resources.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ import { FormsResolver } from './resolver/forms.resolver';
     // prettier-ignore
     providers: [
         FormsResolver,
-        ResourcesService
+        FormResourcesService
     ],
     bootstrap: []
 })
