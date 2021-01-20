@@ -35,6 +35,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showIngresarSolicitud = false;
     public paciente: IPaciente;
     public autorizado = false;
+    public soloLectura = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
     showDarTurnos = false;
@@ -70,6 +71,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 window.history.replaceState({}, '', `/citas/punto-inicio`);
             }
         });
+        this.soloLectura = this.auth.getPermissions('turnos:agenda:READ:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;

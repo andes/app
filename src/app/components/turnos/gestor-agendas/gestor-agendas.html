@@ -50,7 +50,8 @@
                             <div
                                  class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-4' : 'col-2'}} text-right">
                                 <label>
-                                    <!--Spacer-->&nbsp;</label>
+                                    <!--Spacer-->&nbsp;
+                                </label>
                                 <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
                                              (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                             </div>
@@ -106,21 +107,20 @@
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }}
                                         {{agenda.horaInicio | fecha}}
                                         <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio |
-                                            date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                        date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
                                         -
                                         <i class="mdi mdi-timelapse" title="Duración"></i> {{
-                                            duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
+                                        duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
                                         <span *ngIf="agenda.nota">
                                             <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
                                         </span>
                                     </div>
                                     <div>
-                                        <small
-                                               *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre +
-                                                (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre
-                                                ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
-                                                (agenda.espacioFisico.edificio?.descripcion
-                                                ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
+                                        <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre +
+                                            (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre
+                                            ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
+                                            (agenda.espacioFisico.edificio?.descripcion
+                                            ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
                                         <small
                                                *ngIf="agenda.otroEspacioFisico?.nombre">{{agenda.otroEspacioFisico.nombre}}</small>
                                         <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
@@ -130,14 +130,14 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="tipo-prestacion" *ngIf="agenda.tipoPrestaciones.length > 0">{{
-                                            agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
+                                        agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
                                     <div class="nombres-profesionales">
                                         <span *ngIf="!agenda.profesionales?.length" class="text-danger">Equipo de
                                             Salud
                                             no asignado</span>
                                         <ng-container *ngIf="agenda.profesionales">
                                             <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales |
-                                                    enumerar:['apellido','nombre'] }}</div>
+                                                enumerar:['apellido','nombre'] }}</div>
                                         </ng-container>
                                     </div>
                                 </td>
@@ -197,7 +197,7 @@
     </section>
 
     <!--Footer-->
-    <footer *ngIf="showGestorAgendas">
+    <footer *ngIf="showGestorAgendas && !soloLectura">
         <div class="float-left">
             <plex-button *ngIf="puedeCrearAgenda" class="pr-1" type="primary" label="Crear una nueva agenda"
                          (click)="insertarAgenda()"></plex-button>
