@@ -176,6 +176,10 @@
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-cama-destino-generico>
+        <app-prestar-devolver-recurso *ngIf="accion === 'prestar' || accion === 'devolver'" [accion]="accion" (onSave)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            </plex-button>
+        </app-prestar-devolver-recurso>
         <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
             <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()"
                               (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
