@@ -71,7 +71,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 window.history.replaceState({}, '', `/citas/punto-inicio`);
             }
         });
-        this.soloLectura = this.auth.getPermissions('turnos:agenda:READ:?').length > 0;
+        this.soloLectura = this.auth.getPermissions('turnos:puntoInicio:READ:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
