@@ -32,7 +32,7 @@ export class AppFormsCrudComponent implements OnInit {
             type: '',
             description: '',
             required: false,
-            subfilter: true,
+            subfilter: false,
             extras: '',
             resources: '',
             preload: true
