@@ -1,3 +1,18 @@
+# [5.31.0](https://github.com/andes/app/compare/v5.30.0...v5.31.0) (2021-01-20)
+
+
+### Bug Fixes
+
+* **mpi:** foto paciente directiva ([#2106](https://github.com/andes/app/issues/2106)) ([ef5cfb1](https://github.com/andes/app/commit/ef5cfb110dac77166b1cf21d1bfcc173d6379c0f))
+* **rup:**  modifica control de dias ([#2108](https://github.com/andes/app/issues/2108)) ([7f99526](https://github.com/andes/app/commit/7f995260a024a1b0d23f5eb4af650f819623bd65))
+* **rup:** quita loads de esquemas y vacunas ([#2111](https://github.com/andes/app/issues/2111)) ([421c8a5](https://github.com/andes/app/commit/421c8a5777558dc5f2af1e4390cda55fd950f586))
+* **vacunas:** fix en la condicion de timepo interdosis ([#2109](https://github.com/andes/app/issues/2109)) ([cc7fc63](https://github.com/andes/app/commit/cc7fc63374868c54a3d0a286443a9a71bc0b0f5c))
+
+
+### Features
+
+* **guardia:** primeros pasos ([#2071](https://github.com/andes/app/issues/2071)) ([c40206d](https://github.com/andes/app/commit/c40206d7621a5ee5593d41191ab72459cdf97963))
+
 # [5.30.0](https://github.com/andes/app/compare/v5.29.0...v5.30.0) (2021-01-13)
 
 
