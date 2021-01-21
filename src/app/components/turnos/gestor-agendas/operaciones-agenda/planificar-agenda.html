@@ -2,11 +2,17 @@
     <section>
         <div class="row">
             <!-- Header de la agenda-->
-            <div class="col-5 h-100">
+            <div class="col-5 h-100 pr-1">
                 <plex-box>
                     <header>
-                        <div class="page-title" *ngIf="!editaAgenda">Crear una nueva agenda</div>
-                        <div class="page-title" *ngIf="editaAgenda">Editar una nueva agenda</div>
+                        <plex-title *ngIf="!editaAgenda" titulo="Crear una nueva agenda" size="md">
+                            <plex-bool [(ngModel)]="modelo.enviarSms" label="Enviar SMS" name="enviarSms" type="slide">
+                            </plex-bool>
+                        </plex-title>
+                        <plex-title *ngIf="editaAgenda" titulo="Editar una nueva agenda" size="md">
+                            <plex-bool [(ngModel)]="modelo.enviarSms" label="Enviar SMS" name="enviarSms" type="slide">
+                            </plex-bool>
+                        </plex-title>
                     </header>
                     <div class="row">
                         <div class="col-4">
@@ -63,7 +69,7 @@
                          class="row">
                         <div class="col-12">
                             <fieldset>
-                                <legend>Espacio físico</legend>
+                                <plex-title titulo="Espacio físico" size="md"></plex-title>
                             </fieldset>
                             <div class="row">
                                 <div class="col text-left">
@@ -98,11 +104,11 @@
                     <!--Lista de Bloques-->
                     <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length > 0" class="pt-3">
                         <fieldset>
-                            <legend>Bloques
+                            <plex-title titulo="Bloques" size="md">
                                 <plex-button *ngIf="!dinamica" class="float-right" icon="plus" type="success btn-sm"
                                              title="Agregar Bloque" (click)="addBloque()">
                                 </plex-button>
-                            </legend>
+                            </plex-title>
                             <div class="list-group">
                                 <div *ngFor="let unBloque of modelo.bloques; let i=index"
                                      class="list-group-item justify-content-between hover"
@@ -125,7 +131,7 @@
             <div class="col-7 h-100" *ngIf="elementoActivo && bloqueActivo >= 0">
                 <plex-box *ngIf="!dinamica">
                     <header>
-                        <div class="page-title">Bloque</div>
+                        <plex-title titulo="Bloque" size="md"></plex-title>
                     </header>
                     <div class="row">
                         <div class="col-6">
@@ -185,7 +191,7 @@
                         <div class="row pt-3">
                             <div class="col-6">
                                 <fieldset>
-                                    <legend>Acceso Directo</legend>
+                                    <plex-title titulo="Acceso Directo" size="md"></plex-title>
                                     <div class="row">
                                         <div class="col-4">
                                             <label>Del día</label>
@@ -226,7 +232,7 @@
                             </div>
                             <div class="col-6">
                                 <fieldset>
-                                    <legend>Reservados</legend>
+                                    <plex-title titulo="Reservados" size="md"></plex-title>
                                     <div class="row">
                                         <div class="col-4">
                                             <label>Con llave</label>
@@ -311,7 +317,7 @@
 
                 <plex-box *ngIf="dinamica">
                     <header>
-                        <div class="page-title">Agenda Dinámica</div>
+                        <plex-title titulo="Agenda Dinámica" size="md"></plex-title>
                     </header>
                     <div class="row">
                         <div class="col-12">
