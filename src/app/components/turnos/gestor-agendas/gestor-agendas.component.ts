@@ -65,7 +65,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public estado: any = [];
     public parametros;
     public btnDarTurnos = false;
-    public soloLectura = false;
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
@@ -121,9 +120,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
-
-        this.soloLectura = this.auth.getPermissions('turnos:agenda:READ:?').length > 0;
-
         // Verifica permisos para crear agenda
         this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
 

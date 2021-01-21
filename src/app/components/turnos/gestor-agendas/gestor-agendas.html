@@ -197,7 +197,7 @@
     </section>
 
     <!--Footer-->
-    <footer *ngIf="showGestorAgendas && !soloLectura">
+    <footer *ngIf="showGestorAgendas ">
         <div class="float-left">
             <plex-button *ngIf="puedeCrearAgenda" class="pr-1" type="primary" label="Crear una nueva agenda"
                          (click)="insertarAgenda()"></plex-button>
