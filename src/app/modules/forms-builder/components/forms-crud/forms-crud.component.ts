@@ -17,7 +17,8 @@ export class AppFormsCrudComponent implements OnInit {
         { id: 'int', nombre: 'Numerico' },
         { id: 'select', nombre: 'Selección' },
         { id: 'date', nombre: 'Fecha' },
-        { id: 'boolean', nombre: 'Booleano' }
+        { id: 'boolean', nombre: 'Booleano' },
+        { id: 'phone', nombre: 'Teléfono'}
     ];
     public recursos = [];
     public hasOcurrences = false;

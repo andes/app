@@ -61,12 +61,12 @@
                         <plex-text name="descripcion-{{ i }}" [(ngModel)]="field.description"></plex-text>
                     </div>
                     <div class="col-md col-sm-4 d-flex justify-content-between">
-                        <div>
+                        <!-- <div>
                             <b>Subfiltro</b>
                             <br>
                             <plex-bool type="slide" name="subfiltro-{{ i }}" [(ngModel)]="field.subfilter">
                             </plex-bool>
-                        </div>
+                        </div> -->
                         <div>
                             <b>Requerido</b>
                             <br>
@@ -83,11 +83,11 @@
                                          labelField="nombre" idField="key" required>
                             </plex-select>
                         </div>
-                        <div class="precargado">
+                        <!-- <div class="precargado">
                             <b>Precargado</b>
                             <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
                             </plex-bool>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="col-md-1 col-sm-4" justify="center justify-content-sm-start">
