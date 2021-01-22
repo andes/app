@@ -201,7 +201,8 @@
         <div class="float-left">
             <plex-button *ngIf="puedeCrearAgenda" class="pr-1" type="primary" label="Crear una nueva agenda"
                          (click)="insertarAgenda()"></plex-button>
-            <plex-button type="primary" label="Auditar fuera de agenda" (click)="auditarFueraAgenda()"></plex-button>
+            <plex-button *ngIf="puedeRevisarAgendas" type="primary" label="Auditar fuera de agenda"
+                         (click)="auditarFueraAgenda()"></plex-button>
         </div>
         <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
             <plex-button type="danger" label="Cancelar" (click)="guardarAgendaPanel.cancelar()"></plex-button>

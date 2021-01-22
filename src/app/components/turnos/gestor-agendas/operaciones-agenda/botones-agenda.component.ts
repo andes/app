@@ -136,6 +136,8 @@ export class BotonesAgendaComponent implements OnInit {
         let puedeImprimir = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
         let puedeReasignar = this.auth.getPermissions('turnos:agenda:puedeReasignar:').length > 0;
         let puedeBorrar = this.auth.getPermissions('turnos:agenda:puedeBorrar:').length > 0;
+        let puedeRevisar = this.auth.getPermissions('turnos:agenda:puedeRevision:').length > 0;
+        let puedeNota = this.auth.getPermissions('turnos:agenda:puedeNota:').length > 0;
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
@@ -157,11 +159,11 @@ export class BotonesAgendaComponent implements OnInit {
             // Se pueden clonar todas las agendas, ya que sólo se usa como un blueprint
             clonarAgenda: (this.cantidadSeleccionadas === 1) && puedeClonar,
             // Agregar una nota relacionada a la Agenda
-            agregarNota: true,
+            agregarNota: puedeNota,
             // Agregar un sobreturno
             agregarSobreturno: (this.cantidadSeleccionadas === 1) && this.puedoAgregar() && puedeDarSobreturno,
             // Revisión de agenda
-            revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
+            revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar() && puedeRevisar,
             // Reasignar turnos
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayTurnosSuspendidos() && puedeReasignar,
             // Imprimir pdf

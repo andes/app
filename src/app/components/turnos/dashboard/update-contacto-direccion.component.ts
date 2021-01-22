@@ -41,7 +41,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     provinciaNeuquen = null;
     localidadNeuquen = null;
     disableGuardar = true;
-
+    public soloLectura = false;
     contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -77,6 +77,8 @@ export class UpdateContactoDireccionComponent implements OnInit {
         public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
+        this.soloLectura = !this.auth.check('mpi:paciente:patchAndes');
+
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1);  // eliminamos 'Email'
 

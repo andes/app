@@ -4,7 +4,7 @@
 
         <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
                          (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
-                         [create]="true">
+                         [create]="canCreate">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -57,7 +57,7 @@
                                          (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
                         </td>
                         <td>
-                            <plex-button title="Activar App" icon="cellphone-android"
+                            <plex-button *ngIf="puedeActivarAppMobile" title="Activar App" icon="cellphone-android"
                                          (click)="verificarOperacion('activarApp', paciente)"></plex-button>
                         </td>
                     </tr>
