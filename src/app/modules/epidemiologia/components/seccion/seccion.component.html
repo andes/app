@@ -1,21 +1,30 @@
 <plex-layout>
     <plex-layout-main>
-        <plex-title titulo="{{seccion.seccion}}" size="sm"></plex-title>
-        <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
+        <plex-title titulo="{{seccion[0].nombre}}" size="sm">
+            <plex-button size="sm" type="warning" (click)="edit(seccion[0].nombre)" [disabled]="disabledEditar">Editar
+            </plex-button>
+            <plex-button size="sm" type="success" (click)="save()" [disabled]="disabledGuardar">Guardar</plex-button>
+
+        </plex-title>
+        <ng-container *ngFor="let field of seccion" [ngSwitch]="field.type">
             <plex-select *ngSwitchCase="'select'" [label]="field.label?field.label:field.key" grow="2"
-                         name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
-                         [ssSearch]="field.resources">
+                         name="{{ field.key }}" [(ngModel)]="seccion[field.key]" [required]="field.required"
+                         [ssSearch]="field.resources" [readonly]="disabledGuardar">
             </plex-select>
             <plex-text *ngSwitchCase="'string'" [label]="field.label?field.label:field.key" grow="2"
-                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+                       name="{{ field.key }}" [(ngModel)]="seccion[field.key]" [required]="field.required"
+                       [readonly]="disabledGuardar">
             </plex-text>
             <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key" grow="auto"
-                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+                           name="{{ field.key }}" [(ngModel)]="seccion[field.key]" [required]="field.required"
+                           [readonly]="disabledGuardar">
             </plex-datetime>
             <plex-phone *ngSwitchCase="'phone'" [label]="field.label?field.label:field.key"
-                        [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+                        [(ngModel)]="seccion[field.key]" [required]="field.required" [readonly]="disabledGuardar">
             </plex-phone>
+            <plex-bool *ngSwitchCase="'boolean'" [label]="field.label?field.label:field.key" grow="auto"
+                       name="{{ field.key }}" [(ngModel)]="seccion[field.key]" [required]="field.required"
+                       [readonly]="disabledGuardar"></plex-bool>
         </ng-container>
-        <!-- <plex-button type="success" (click)="save()">Guardar</plex-button> -->
     </plex-layout-main>
 </plex-layout>

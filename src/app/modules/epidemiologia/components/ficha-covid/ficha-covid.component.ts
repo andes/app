@@ -16,6 +16,10 @@ export class FichaCovidComponent implements OnInit {
   public fieldSelected;
   public organizaciones$: Observable<any>;
   public secciones = [];
+  public seccionUsuario = [];
+  public seccionMpi = [];
+  public seccionClasificacion = [];
+  public laFicha = {};
 
   constructor(
     private formsService: FormsService,
@@ -23,89 +27,40 @@ export class FichaCovidComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.seccionUsuario[0] = { nombre: 'Usuario' };
+    this.seccionMpi[0] = { nombre: 'Mpi' };
+    this.seccionClasificacion[0] = { nombre: 'Clasificacion' };
     this.organizaciones$ = this.auth.organizaciones();
-    // this.formsService.search({ name: 'covid10' }).subscribe((ficha: any) => {
-    //   this.fields = ficha[0].fields;
-    //   this.secciones.push({ seccion: 'Seccion 1', fields: this.fields });
-    // });
-    this.secciones.push({
-      seccion: 'Seccion 2', fields: [
-        {
-          "id": "62060e5bc3623dcb27d5c521",
-          "key": "apellido",
-          "label": "Apellido",
-          "type": "string",
-          "description": "",
-          "required": false,
-          "subfilter": false,
-          "resources": null,
-          "preload": true
-        },
-        {
-          "id": "62060e5bc3623dcb27d5c5w1",
-          "key": "nombre",
-          "label": "Nombre",
-          "type": "string",
-          "description": "",
-          "required": false,
-          "subfilter": true,
-          "resources": null,
-          "preload": false
-        },
-        {
-          "id": "62060e5bc3623dcb27d2c5w1",
-          "key": "organizaciones",
-          "label": "Organizaciones",
-          "type": "select",
-          "resources": "profesionales",
-          "description": "",
-          "required": false,
-          "subfilter": true,
-          "preload": true
-        }
-      ]
-    },
-      {
-        seccion: 'Seccion 1', fields: [
-          {
-            "id": "62060e5bc3623dcb27d5c521",
-            "key": "dsa",
-            "label": "dsa",
-            "type": "string",
-            "description": "",
-            "required": false,
-            "subfilter": false,
-            "resources": null,
-            "preload": true
-          },
-          {
-            "id": "62060e5bc3623dcb27d5c5w1",
-            "key": "ddsa",
-            "label": "a",
-            "type": "string",
-            "description": "",
-            "required": false,
-            "subfilter": true,
-            "resources": null,
-            "preload": false
-          },
-          {
-            "id": "62060e5bc3623dcb27d2c5w1",
-            "key": "g",
-            "label": "g",
-            "type": "select",
-            "resources": "profesionales",
-            "description": "",
-            "required": false,
-            "subfilter": true,
-            "preload": true
+    this.formsService.search({ name: 'covid19' }).subscribe((ficha: any) => {
+      this.fields = ficha[0].fields;
+      this.fields.map(field => {
+        field.sections.map(section => {
+          switch (section.id) {
+            case 'usuario':
+              this.seccionUsuario.push(field);
+              break;
+            case 'mpi':
+              this.seccionMpi.push(field);
+              break;
+            case 'clasificacion':
+              this.seccionClasificacion.push(field);
+              break;
           }
-        ]
+        })
       });
+      this.secciones.push(this.seccionUsuario);
+      this.secciones.push(this.seccionMpi);
+      this.secciones.push(this.seccionClasificacion);
+    });
   }
 
   saveFicha(nuevaFicha) {
-    console.log(nuevaFicha);
+    let keys = Object.keys(nuevaFicha);
+    keys.map(key => {
+      this.laFicha[key] = nuevaFicha[key];
+    })
+    console.log(this.laFicha);
+
   }
 
 }

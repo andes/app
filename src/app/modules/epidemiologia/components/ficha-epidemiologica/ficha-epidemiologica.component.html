@@ -17,7 +17,7 @@
         </div>
     </plex-layout-main>
     <ng-template #elseFicha [ngSwitch]="showFicha">
-        <plex-layout-main *ngSwitchCase="'covid10'">
+        <plex-layout-main *ngSwitchCase="'covid19'">
             <app-ficha-covid [paciente]="pacienteSelected"></app-ficha-covid>
         </plex-layout-main>
     </ng-template>
