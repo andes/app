@@ -12,6 +12,12 @@ export interface Form {
         description: string;
         required: boolean;
         subfilter: boolean;
+        sections: {
+            activo: boolean,
+            nombre: string,
+            id: string,
+            type: string
+        }[];
         extras: any;
         resources: string;
         preload: boolean;

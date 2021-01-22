@@ -1,9 +1,9 @@
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 export interface FormResources {
-    id: string;
     nombre: string;
-    key: string;
+    id: string;
+    type: string;
     activo: boolean;
 }
 @Injectable({ providedIn: 'root' })

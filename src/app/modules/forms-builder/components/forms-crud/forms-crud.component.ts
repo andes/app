@@ -20,25 +20,26 @@ export class AppFormsCrudComponent implements OnInit {
         { id: 'boolean', nombre: 'Booleano' },
         { id: 'phone', nombre: 'Teléfono'}
     ];
+    public disable = false;
     public recursos = [];
+    public secciones = [];
     public hasOcurrences = false;
     public form: Form = {
         name: '',
         type: '',
         active: true,
-        fields: [
-        {
+        fields: [{
             key: '',
             label: '',
             type: '',
             description: '',
             required: false,
             subfilter: false,
+            sections: [],
             extras: '',
             resources: '',
-            preload: true
-        }
-    ]
+            preload: false
+        }]
     };
 
     constructor(
@@ -51,34 +52,44 @@ export class AppFormsCrudComponent implements OnInit {
 
     ngOnInit() {
         this.formResourceService.search({}).subscribe(resultado => {
-            this.recursos = resultado;
+            resultado.forEach(r => {
+                r.type === 'section' ? this.secciones.push(r) : this.recursos.push(r);
+            });
             const form = this.route.snapshot.data.event;
             if (form) {
                 this.form = form;
-                this.form.fields.forEach(file => {
-                    file.type = this.tiposList.find(t => t.id === file.type) as any;
-                    if ((file.type as any).id === 'select') {
-                        file.resources = this.recursos.find(t => t.key === file.resources) as any;
-                    }
-                });
+                this.form.fields.forEach(field => {
+                        field.type = this.tiposList.find(t => t.id === field.type) as any;
+                        if ((field.type as any).id === 'select') {
+                            field.resources = this.recursos.find(t => t.key === field.resources) as any;
+                        }
+                    });
             }
         });
     }
 
-    onAdd() {
+    identify(item) {
+        return item.name;
+     }
+
+    loadSecciones(event) {
+       event.callback(this.secciones);
+    }
+
+    onAddField() {
         this.form.fields.push({
             key: '',
             label: '',
             type: '',
             description: '',
             required: false,
-            subfilter: true,
+            subfilter: false,
             extras: '',
+            sections: [],
             resources: '',
             preload: false
         });
         this.form.fields = [...this.form.fields];
-
         setTimeout(() => {
             const element = document.querySelector(`#wrapper-${this.form.fields.length - 1}`);
             if (element) {
@@ -101,15 +112,15 @@ export class AppFormsCrudComponent implements OnInit {
             const dataSaved = {
                 ...this.form,
                 fields: this.form.fields.map(i => {
-                    const field: any = { ...i };
-                    field.type = field.type.id;
-                    if (field.type === 'select') {
-                        field.resources = field.resources.key;
-                    } else {
-                        field.resources = null;
-                    }
-                    return field;
-                })
+                        const field: any = { ...i };
+                        i.type = field.type.id;
+                        if (i.type === 'select') {
+                            i.resources = field.resources.key;
+                        } else {
+                            i.resources = null;
+                        }
+                        return i;
+                        })
             };
             this.formsService.save(dataSaved).subscribe(() => {
                 this.location.back();
