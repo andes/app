@@ -28,18 +28,7 @@ export class AppFormsCrudComponent implements OnInit {
         name: '',
         type: '',
         active: true,
-        fields: [{
-            key: '',
-            label: '',
-            type: '',
-            description: '',
-            required: false,
-            subfilter: false,
-            sections: [],
-            extras: '',
-            resources: '',
-            preload: false
-        }]
+        fields: []
     };
 
     constructor(

@@ -5,24 +5,25 @@
         <plex-button type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
       </plex-title>
       <div *ngxObserve="forms$ as forms; before: loadingTemplate; error: errorTemplate">
-        <plex-list>
-          <plex-heading>
-            <b label>Nombre</b>
-            <b label>Tipo/Clave</b>
-            <b label>Cant. Campos</b>
+
+        <plex-table [columns]="columns" #table="plTable">
   
-            <b button></b>
-          </plex-heading>
-          <plex-item *ngFor="let form of forms" class="mb-4 mb-0-md">
-            <plex-label>{{ form.name }}</plex-label>
-            <plex-label>{{ form.type }}</plex-label>
-            <plex-label> {{ form.fields.length }} </plex-label>
-            <plex-badge [type]="form.active ? 'success' : 'danger'">
-              {{ form.active ? 'HABILITADO' : 'DESHABILITADO' }}
-            </plex-badge>
-            <plex-button size="sm" icon="pencil" type="info" [routerLink]="[form.id]"></plex-button>
-          </plex-item>
-        </plex-list>
+            <plex-table-columns>
+            </plex-table-columns>
+          
+          <tr *ngFor="let item of forms">
+              <td *plTableCol="'col-1'">{{item.name }}</td>
+              <td *plTableCol="'col-2'">{{ item.type }}</td>     
+              <td *plTableCol="'col-3'">
+                  <plex-badge [type]="item.active ? 'success' : 'danger'">
+                    {{ item.active ? 'HABILITADO' : 'DESHABILITADO' }}
+                  </plex-badge>
+              </td>
+              <td *plTableCol="'col-4'">
+                <plex-button type="info" icon="pencil" size="sm"  [routerLink]="[item.id]"></plex-button>
+              </td>
+          </tr>
+        </plex-table>
       </div>
   
       <ng-template #loadingTemplate>
