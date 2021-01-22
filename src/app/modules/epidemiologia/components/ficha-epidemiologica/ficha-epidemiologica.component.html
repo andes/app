@@ -1,6 +1,5 @@
 <plex-layout [main]='8'>
-    <plex-layout-main>
-
+    <plex-layout-main *ngIf="!showFicha ; else elseFicha">
         <plex-title titulo="punto de inicio - ficha epidemiológica"></plex-title>
         <div class="row">
             <div class="col-12">
@@ -16,8 +15,12 @@
                 </paciente-listado>
             </div>
         </div>
-
     </plex-layout-main>
+    <ng-template #elseFicha [ngSwitch]="showFicha">
+        <plex-layout-main *ngSwitchCase="'covid10'">
+            <app-ficha-covid [paciente]="pacienteSelected"></app-ficha-covid>
+        </plex-layout-main>
+    </ng-template>
     <plex-layout-sidebar [type]="'invert'">
         <ng-container *ngIf="pacienteSelected">
             <plex-title size="sm" titulo="Datos del paciente">

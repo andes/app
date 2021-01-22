@@ -1,0 +1,12 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Ficha COVID 19">
+            <plex-button>Guardar</plex-button>
+        </plex-title>
+        <plex-grid>
+            <ng-container *ngFor="let seccion of secciones">
+                <app-seccion [seccion]="seccion" (onSave)="saveFicha($event)"></app-seccion>
+            </ng-container>
+        </plex-grid>
+    </plex-layout-main>
+</plex-layout>

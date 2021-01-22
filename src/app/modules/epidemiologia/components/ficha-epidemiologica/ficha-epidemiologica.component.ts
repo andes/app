@@ -10,6 +10,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 export class FichaEpidemiologicaComponent implements OnInit {
   fichaSelected = {};
   itemsDropdownFichas = [];
+  public showFicha = null;
   public showLabel = true;
   public pacienteSelected = null;
   public resultadoBusqueda = null;
@@ -52,7 +53,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
       fichas.forEach(element => {
         this.itemsDropdownFichas.push({
           'label': element.name, handler: () => {
-            this.mostrarFicha();
+            this.mostrarFicha(element.name);
           }
         });
       });
@@ -84,7 +85,9 @@ export class FichaEpidemiologicaComponent implements OnInit {
     }
   }
 
-  mostrarFicha() {
+  mostrarFicha(nombreFicha) {
+    this.showFicha = nombreFicha;
+    console.log(this.showFicha);
     // Mostrar ficha en layout-main
   }
 }

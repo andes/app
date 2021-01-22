@@ -1,0 +1,21 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="{{seccion.seccion}}" size="sm"></plex-title>
+        <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
+            <plex-select *ngSwitchCase="'select'" [label]="field.label?field.label:field.key" grow="2"
+                         name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                         [ssSearch]="field.resources">
+            </plex-select>
+            <plex-text *ngSwitchCase="'string'" [label]="field.label?field.label:field.key" grow="2"
+                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+            </plex-text>
+            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key" grow="auto"
+                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+            </plex-datetime>
+            <plex-phone *ngSwitchCase="'phone'" [label]="field.label?field.label:field.key"
+                        [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
+            </plex-phone>
+        </ng-container>
+        <!-- <plex-button type="success" (click)="save()">Guardar</plex-button> -->
+    </plex-layout-main>
+</plex-layout>
