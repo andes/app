@@ -5,22 +5,22 @@ export interface Form {
     name: string;
     type: string;
     active: boolean;
-    fields: {
-        key: string;
-        label: string;
-        type: string;
-        description: string;
-        required: boolean;
-        subfilter: boolean;
-        sections: {
-            activo: boolean,
-            nombre: string,
-            id: string,
-            type: string
+    sections: {
+        id: string,
+        active: boolean,
+        name: string,
+        type: string,
+        fields: {
+            key: string;
+            label: string;
+            type: string;
+            description: string;
+            required: boolean;
+            subfilter: boolean;
+            extras: any;
+            resources: string;
+            preload: boolean;
         }[];
-        extras: any;
-        resources: string;
-        preload: boolean;
     }[];
 }
 

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormResourcesService } from '../../services/resources.service';
-import { Form, FormsService } from '../../services/form.service';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Form, FormsService } from '../../services/form.service';
+import { FormResourcesService } from '../../services/resources.service';
+
 
 @Component({
     selector: 'app-forms-crud',
@@ -11,25 +12,26 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./forms-crud.scss']
 })
 export class AppFormsCrudComponent implements OnInit {
-    [x: string]: any;
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numerico' },
         { id: 'select', nombre: 'Selección' },
         { id: 'date', nombre: 'Fecha' },
         { id: 'boolean', nombre: 'Booleano' },
-        { id: 'phone', nombre: 'Teléfono'}
+        { id: 'phone', nombre: 'Teléfono' }
     ];
     public disable = false;
     public recursos = [];
     public secciones = [];
     public hasOcurrences = false;
-    public form: Form = {
+    public desabilitado = false;
+    public form: any = {
         name: '',
         type: '',
         active: true,
         fields: []
     };
+    private formToUpdate: Form;
 
     constructor(
         private plex: Plex,
@@ -40,29 +42,53 @@ export class AppFormsCrudComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        let fieldsAssigns = [];
         this.formResourceService.search({}).subscribe(resultado => {
             resultado.forEach(r => {
                 r.type === 'section' ? this.secciones.push(r) : this.recursos.push(r);
             });
-            const form = this.route.snapshot.data.event;
-            if (form) {
-                this.form = form;
-                this.form.fields.forEach(field => {
-                        field.type = this.tiposList.find(t => t.id === field.type) as any;
-                        if ((field.type as any).id === 'select') {
-                            field.resources = this.recursos.find(t => t.key === field.resources) as any;
+            const formulario = this.route.snapshot.data.event;
+            this.formToUpdate = formulario; // Hacemos esta parte para saber si hacemos update o create.
+            if (formulario) {
+                this.desabilitado = true;
+                this.form.name = formulario.name;
+                this.form.type = formulario.type;
+                this.form.active = formulario.active;
+                formulario.sections.forEach(s => {
+                    s.fields.forEach(f => {
+                        f.type = this.tiposList.find(t => t.id === f.type) as any;
+                        if ((f.type as any).id === 'select') {
+                            f.resources = this.recursos.find(t => t.key === f.resources) as any;
+                        }
+                        if (!this.fieldAssigned(fieldsAssigns, f, s)) {
+                            f.sections = [];
+                            f.sections.push(this.secciones.find(sec => sec.name === s.name) as any);
+                            fieldsAssigns.push(f);
+                            this.form.fields.push(f);
                         }
                     });
+                });
             }
         });
     }
 
+    fieldAssigned(array, field, newSection) {
+        let resultado = false;
+        array.find(f => {
+            if (f.key === field.key) {
+                f.sections.push(newSection);
+                resultado = true;
+            }
+        });
+        return resultado;
+    }
+
     identify(item) {
         return item.name;
-     }
+    }
 
     loadSecciones(event) {
-       event.callback(this.secciones);
+        event.callback(this.secciones);
     }
 
     onAddField() {
@@ -93,27 +119,60 @@ export class AppFormsCrudComponent implements OnInit {
     }
 
     save($event) {
+
         if (!this.form.fields.length) {
             return this.plex.toast('danger', 'Al menos debes agregar un campo');
         }
-
         if ($event.formValid) {
-            const dataSaved = {
-                ...this.form,
-                fields: this.form.fields.map(i => {
-                        const field: any = { ...i };
-                        i.type = field.type.id;
-                        if (i.type === 'select') {
-                            i.resources = field.resources.key;
-                        } else {
-                            i.resources = null;
+            let aux = [];
+            this.form.fields.forEach(f => {
+                let cloneField = Object.assign({}, f);
+                delete cloneField.sections;
+                const field: any = { ...cloneField };
+                cloneField.type = field.type.id;
+                if (cloneField.type === 'select') {
+                    cloneField.resources = field.resources.key;
+                }
+                if (f.sections && f.sections.length > 0) {
+                    f.sections.forEach(s => {
+                        let r = aux.find(item => {
+                            if (item.seccion.name === s.name) {
+                                item.campos.push(cloneField);
+                                return true;
+                            }
+                        });
+                        if (!r) {
+                            return aux.push({ seccion: s, campos: [cloneField] });
                         }
-                        return i;
-                        })
-            };
-            this.formsService.save(dataSaved).subscribe(() => {
-                this.location.back();
+                    });
+                }
             });
+            const dataSaved: Form = {
+                active: this.form.active,
+                name: this.form.name,
+                type: this.form.type,
+                sections: aux.map(i => {
+                    let seccion;
+                    seccion = i.seccion;
+                    seccion['fields'] = i.campos;
+                    return seccion;
+                })
+            };
+
+            if (this.formToUpdate) { // if update
+                this.formToUpdate = {
+                    ...this.formToUpdate,
+                    active: this.form.active,
+                    sections: dataSaved.sections
+                };
+                this.formsService.save(this.formToUpdate).subscribe(() => {
+                    this.location.back();
+                });
+            } else { // create
+                this.formsService.save(dataSaved).subscribe(() => {
+                    this.location.back();
+                });
+            }
         }
     }
 }

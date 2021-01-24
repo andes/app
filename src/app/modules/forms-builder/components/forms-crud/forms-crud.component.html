@@ -11,8 +11,8 @@
             </plex-title>
            
             <plex-wrapper>
-                <plex-text label="Nombre" [required]="true" name="nombre" [(ngModel)]="form.name"></plex-text>
-                <plex-text label="Tipo/Clave" required name="tipo" [(ngModel)]="form.type"
+                <plex-text label="Nombre" [required]="true" [disabled]="desabilitado" name="nombre" [(ngModel)]="form.name"></plex-text>
+                <plex-text label="Tipo/Clave" required name="tipo" [disabled]="desabilitado" [(ngModel)]="form.type"
                            [readonly]="hasOcurrences">
                 </plex-text>
                 <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
@@ -62,7 +62,7 @@
                         <b>Sección</b>
                         <plex-select [multiple]="true" [(ngModel)]="field.sections" name="seccion-{{ i }}"
                          [data]="secciones" placeholder="Seleccione a que secciones pertenece"
-                         idField="id" labelField="nombre"></plex-select>
+                         idField="id" labelField="name" required></plex-select>
                     </div>               
                     <div class="col-md col-sm-12">
                         <b>Descripción</b>
