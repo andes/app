@@ -373,7 +373,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 registros: this.prestacionFake.ejecucion.registros
             } : null;
 
-            const createAction = idInternacion ? of({ id: idInternacion }) :
+            const createAction: Observable<any> = idInternacion ? of({ id: idInternacion }) :
 
                 this.internacionResumenService.create({
                     ambito: this.mapaCamasService.ambito,

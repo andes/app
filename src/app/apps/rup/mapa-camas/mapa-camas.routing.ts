@@ -8,6 +8,7 @@ import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-men
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
+import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
 
 export const INTERNACION_ROUTES = [
 
@@ -26,6 +27,8 @@ export const INTERNACION_ROUTES = [
     { path: ':ambito/sala-comun/:id', component: SalaComunComponent },
 
     { path: 'listado-internacion', component: InternacionListadoComponent },
+
+    { path: 'listado-internacion-medico', component: ListadoInternacionCapasComponent },
 
     { path: ':ambito', component: MapaCamasMainComponent },
 

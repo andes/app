@@ -20,20 +20,23 @@ export class IngresoDinamicoComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.resumen) {
+            if (this.resumen.ingreso) {
+                this.prestacion = {
+                    paciente: this.resumen.paciente,
+                    solicitud: {
+                        tipoPrestacion: {},
+                        organizacion: { ...this.auth.organizacion },
+                        profesional: {}
+                    },
+                    ejecucion: {
+                        organizacion: { ...this.auth.organizacion },
+                        registros: this.resumen.ingreso.registros,
 
-            this.prestacion = {
-                paciente: this.resumen.paciente,
-                solicitud: {
-                    tipoPrestacion: {},
-                    organizacion: { ...this.auth.organizacion },
-                    profesional: {}
-                },
-                ejecucion: {
-                    organizacion: { ...this.auth.organizacion },
-                    registros: this.resumen.ingreso.registros,
-
-                }
-            };
+                    }
+                };
+            } else {
+                this.prestacion = null;
+            }
 
         }
     }

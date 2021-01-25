@@ -2,11 +2,14 @@
     <plex-layout-main>
         <header [hidden]="mainView !== 'mapa-camas'">
             <plex-title titulo="Mapa de Camas">
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
+                <!-- <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
                              label="LISTA DE ESPERA" type="primary" (click)="gotoListaEspera()">
-                </plex-button>
+                </plex-button> -->
                 <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
                              label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
+                </plex-button>
+                <plex-button *ngIf="mapaCamasService.capa === 'estadistica' && puedeVerHistorial$ | async" class="mr-1"
+                             size="sm" label="HISTORIAL MEDICO" type="primary" (click)="verListadoInternacionMedico()">
                 </plex-button>
                 <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
                                size="sm" label="VER CENSO" type="primary" class="d-inline-block" [right]="true"
@@ -176,7 +179,8 @@
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-cama-destino-generico>
-        <app-prestar-devolver-recurso *ngIf="accion === 'prestar' || accion === 'devolver'" [accion]="accion" (onSave)="volverAResumen()">
+        <app-prestar-devolver-recurso *ngIf="accion === 'prestar' || accion === 'devolver'" [accion]="accion"
+                                      (onSave)="volverAResumen()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-prestar-devolver-recurso>

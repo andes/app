@@ -58,6 +58,8 @@ import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-i
 import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
 import { PermisosMapaCamasService } from './services/permisos-mapa-camas.service';
 import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
+import { FiltrosListadoCapasComponent } from './views/listado-internacion-capas/filtros-listado/filtros-listado-capas.component';
+import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -95,6 +97,8 @@ export const INTERNACION_COMPONENTS = [
     FiltrosInconsistenciasComponent,
     IngresoDinamicoComponent,
     PrestarDevolverRecursoComponent,
+    ListadoInternacionCapasComponent,
+    FiltrosListadoCapasComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -124,7 +128,7 @@ export const INTERNACION_PROVIDERS = [
         RUPLibModule,
         ScrollingModule,
         CdkTableModule,
-        HammerModule
+        HammerModule,
     ],
     declarations: [
         ...INTERNACION_COMPONENTS
