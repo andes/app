@@ -65,7 +65,7 @@ export class UploadFileComponent {
 
         if (this.extensiones) {
             const ext = this.getExtension(this.currentFileUpload.name);
-            if (!this.extensiones.find(i => i === ext)) {
+            if (!this.extensiones.find(i => i === ext.toLowerCase())) {
                 this.disabled = false;
                 this.uploadElement.nativeElement.value = null;
                 this.plex.toast('danger', 'Tipo de archivo incorrecto');
