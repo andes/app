@@ -56,7 +56,6 @@
                                           [(ngModel)]="field.max">
                                 </plex-int>
                             </div>
-
                         </div>
                     </div>
                     <div class="col-md col-sm-12">
@@ -64,6 +63,7 @@
                         <plex-select [multiple]="true" [(ngModel)]="field.sections" name="seccion-{{ i }}"
                                      [data]="secciones" placeholder="Seleccione a que secciones pertenece" idField="id"
                                      labelField="name" required></plex-select>
+
                     </div>
                     <div class="col-md col-sm-12">
                         <b>Descripción</b>
@@ -87,11 +87,11 @@
                                          labelField="name" idField="id" required>
                             </plex-select>
                         </div>
-                        <div class="precargado">
+                        <!-- <div class="precargado">
                             <b>Precargado</b>
                             <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
                             </plex-bool>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="col-md-1 col-sm-4" justify="center justify-content-sm-start">
