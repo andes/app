@@ -104,11 +104,14 @@ export class RelacionesPacientesComponent implements OnInit {
     }
 
     addRelacion(unaRelacion) {
-        // es una relacion existente?
+        // Es una relacion existente?
         if (unaRelacion.referencia) {
-            if (!this.relacionesEdit.includes(rel => rel.referencia === unaRelacion.referencia)) {
-                this.relacionesEdit.push(unaRelacion);
-            }
+            // Se la agrega al array de relaciones nuevas/editadas
+            let index = this.relacionesEdit.findIndex(rel => rel.referencia === unaRelacion.referencia);
+            index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(unaRelacion);
+            // Se actualiza el array de relaciones del paciente para que impacte en las vistas
+            index = this.paciente.relaciones.findIndex(rel => rel.referencia === unaRelacion.referencia);
+            this.paciente.relaciones[index] = unaRelacion;
         } else {
             // relacion inexistente, construimos una nueva
             this.buscarPacRel = '';
@@ -144,16 +147,14 @@ export class RelacionesPacientesComponent implements OnInit {
             }
 
             // Se inserta nueva relación en array de relaciones del paciente
-            let index = null;
             if (this.paciente.relaciones && this.paciente.relaciones.length) {
                 this.paciente.relaciones.push(nuevaRelacion);
             } else {
                 this.paciente.relaciones = [nuevaRelacion];
             }
             // Se inserta en el array de relaciones nuevas/editadas
-            if (!this.relacionesEdit.includes(rel => rel.referencia === nuevaRelacion.referencia)) {
-                this.relacionesEdit.push(nuevaRelacion);
-            }
+            let index = this.relacionesEdit.findIndex(rel => rel.referencia === nuevaRelacion.referencia);
+            index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(nuevaRelacion);
             this.idPacientesRelacionados.push({ id: nuevaRelacion.referencia });
 
             // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'

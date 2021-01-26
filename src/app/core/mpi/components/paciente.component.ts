@@ -337,7 +337,7 @@ export class PacienteComponent implements OnInit {
                 if (rel.referencia) {
                     this.pacienteService.getById(rel.referencia).pipe(
                         map(pac => {
-                            let index = pac.relaciones.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
+                            let index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
                             if (index >= 0) {
                                 pac.relaciones.splice(index, 1);
                             }
