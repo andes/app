@@ -110,3 +110,27 @@
 
     </plex-list>
 </ng-container>
+
+<ng-container *ngIf='paciente.documentos.length>0'>
+    <plex-title titulo="Documentos adjuntos" size="sm"></plex-title>
+    <plex-accordion>
+        <plex-panel *ngFor="let item of paciente.documentos">
+
+            <div plex-accordion-title class="d-flex justify-content-between align-items-center">
+                <span class="d-flex">
+                    <plex-icon name="documento" type="info" size="xl"></plex-icon>
+                    <plex-label [titulo]="item.tipo.label"></plex-label>
+                </span>
+                <span>
+                    <plex-badge type="info">
+                        {{ item.fecha | fecha: 'utc'}}
+                    </plex-badge>
+
+                </span>
+            </div>
+            <shared-galeria-archivos [readonly]="true" [files]="item.archivos | galeria | async">
+            </shared-galeria-archivos>
+        </plex-panel>
+    </plex-accordion>
+
+</ng-container>
