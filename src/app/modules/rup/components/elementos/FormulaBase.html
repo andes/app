@@ -20,7 +20,8 @@
             <p *ngIf="mensaje?.texto">
                 <plex-badge type="{{mensaje.type}}">
                     {{mensaje.texto}}
-                    <plex-button *ngIf="mensaje.add" (click)="addConcepto(mensaje.add)">
+                    <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
+                                 title="Registrar">
                         <plex-icon name="plus"></plex-icon>
                     </plex-button>
                 </plex-badge>

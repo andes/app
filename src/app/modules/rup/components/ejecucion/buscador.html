@@ -26,7 +26,7 @@
 
 <div class="buscador"
      *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
-    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="true">
+    <plex-text [(ngModel)]="search" name="search" (change)="buscar()" placeholder=" Buscar ..." [autoFocus]="true">
     </plex-text>
 </div>
 

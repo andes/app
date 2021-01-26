@@ -35,6 +35,9 @@ export class RupEjecucionService {
     private seccion = new BehaviorSubject<ISnomedConcept>(null);
     private seccion$ = this.seccion.asObservable();
 
+    private sugeridos = new Subject<ISnomedConcept[]>();
+    private segeridos$ = this.sugeridos.asObservable();
+
     constructor(
         private plex: Plex,
         private prestacionService: PrestacionesService,
@@ -59,6 +62,14 @@ export class RupEjecucionService {
         return this.seccion.getValue();
     }
 
+    getSugeridos() {
+        return this.segeridos$;
+    }
+
+    addSugeridos(conceptos: ISnomedConcept[]) {
+        this.sugeridos.next(conceptos);
+    }
+
     agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null) {
         if (typeof seccion === 'boolean') {
             seccion = seccion && this.seccion.getValue();
@@ -81,6 +92,11 @@ export class RupEjecucionService {
         const { concepto, esSolicitud } = data;
 
         const elementoRUP = this.elementosRUPService.buscarElemento(concepto, esSolicitud);
+
+        if (elementoRUP.frecuentes?.length > 0) {
+            this.addSugeridos(elementoRUP.frecuentes);
+        }
+
         if (elementoRUP.permiteRepetidos) {
             return true;
         }

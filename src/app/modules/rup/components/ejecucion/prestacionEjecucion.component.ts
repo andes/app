@@ -62,8 +62,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public elementoOnDrag: any;
     public posicionOnDrag;
 
-    public masFrecuentes: any[] = [];
-
     // Defaults de Tabs panel derecho
     public activeIndex = 0;
     public panelIndex = 0;
@@ -687,22 +685,25 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         } else {
             this.conceptoFrecuente = this.prestacion.solicitud.tipoPrestacion;
         }
-        this.masFrecuentes = [];
+        const masFrecuentes = [];
         if (!elementoRUP && concepto) {
             elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
         }
         if (elementoRUP && elementoRUP.frecuentes) {
             elementoRUP.frecuentes.forEach(element => {
-                this.masFrecuentes.push(element);
+                masFrecuentes.push(element);
             });
         } else {
             // si no hay por un registro en particular mostramos el de la consulta
             if (this.elementoRUP && this.elementoRUP.frecuentes) {
                 this.elementoRUP.frecuentes.forEach(element => {
-                    this.masFrecuentes.push(element);
+                    masFrecuentes.push(element);
                 });
             }
         }
+        setTimeout(() => {
+            this.ejecucionService.addSugeridos(masFrecuentes);
+        }, 0);
     }
 
     // Actualiza ambas columnas de registros según las relaciones
