@@ -16,7 +16,7 @@ import { DatosBasicosComponent } from './datos-basicos.component';
 import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
 import { Subscription, EMPTY } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-
+import { Auth } from '@andes/auth';
 @Component({
     selector: 'paciente',
     templateUrl: 'paciente.html',
@@ -37,7 +37,7 @@ export class PacienteComponent implements OnInit {
     relacionesEdit: any[] = []; // relaciones nuevas o editadas
     backUpDatos = [];
     pacientesSimilares = [];
-
+    documentacionPermiso = false;
     validado = false;
     disableGuardar = false;
     visualizarIgnorarGuardar = false;
@@ -133,11 +133,13 @@ export class PacienteComponent implements OnInit {
         private _router: Router,
         public plex: Plex,
         private route: ActivatedRoute,
+        public auth: Auth
 
     ) {
     }
 
     ngOnInit() {
+        this.documentacionPermiso = this.auth.getPermissions('mpi:paciente:documentacionPermiso:?').length > 0;
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
