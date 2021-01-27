@@ -19,6 +19,7 @@ import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-de
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DetalleDerivacionComponent } from './components/detalle-derivacion.component';
 import { PuntoInicioService } from './services/punto-inicio.service';
+import { VistaPrestacionComponent } from '../rup/components/huds/vistaPrestacion';
 
 export const COM_COMPONENTS = [
     ComPuntoInicioComponent,
@@ -26,7 +27,8 @@ export const COM_COMPONENTS = [
     NuevaDerivacionComponent,
     DetalleDerivacionComponent,
     HistorialDerivacionComponent,
-    ActualizarEstadoDerivacionComponent
+    ActualizarEstadoDerivacionComponent,
+    VistaPrestacionComponent
 ];
 
 export const COM_PROVIDERS = [

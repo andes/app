@@ -10,6 +10,8 @@ import { ProfesionalService } from 'src/app/services/profesional.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -62,11 +64,13 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private derivacionesService: DerivacionesService,
         private profesionalService: ProfesionalService,
         private pacienteService: PacienteService,
+        private servicioPrestacion: PrestacionesService,
         public sanitazer: DomSanitizer,
         public adjuntosService: COMAdjuntosService,
         private route: ActivatedRoute,
         private router: Router,
-        private driveService: DriveService
+        private driveService: DriveService,
+        private elementoRupService: ElementosRUPService
     ) { }
 
     ngOnInit() {
@@ -138,28 +142,35 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 if (resultado.length) {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
                 } else {
-                    this.modelo.organizacionOrigen = this.auth.organizacion;
-                    this.modelo.paciente = {
-                        id: this.paciente.id,
-                        nombre: this.paciente.nombre,
-                        apellido: this.paciente.apellido,
-                        documento: this.paciente.documento,
-                        sexo: this.paciente.sexo,
-                        fechaNacimiento: this.paciente.fechaNacimiento
-                    };
-                    if (this.paciente.financiador) {
-                        this.modelo.paciente.obraSocial = this.paciente.financiador[0];
-                    }
-                    this.modelo.organizacionDestino = {
-                        id: this.organizacionDestino.id,
-                        nombre: this.organizacionDestino.nombre,
-                        direccion: this.organizacionDestino.direccion
-                    };
-                    this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
-                    this.modelo.adjuntos = this.adjuntos;
-                    this.derivacionesService.create(this.modelo).subscribe(respuesta => {
-                        this.router.navigate(['/com']);
-                        this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                    const concepto = this.elementoRupService.getConceptoDerivacion();
+                    let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
+                    this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+
+                        this.modelo.prestacion = prestacion.id,
+                        this.modelo.organizacionOrigen = this.auth.organizacion;
+                        this.modelo.paciente = {
+                            id: this.paciente.id,
+                            nombre: this.paciente.nombre,
+                            apellido: this.paciente.apellido,
+                            documento: this.paciente.documento,
+                            sexo: this.paciente.sexo,
+                            fechaNacimiento: this.paciente.fechaNacimiento
+                        };
+                        if (this.paciente.financiador) {
+                            this.modelo.paciente.obraSocial = this.paciente.financiador[0];
+                        }
+                        this.modelo.organizacionDestino = {
+                            id: this.organizacionDestino.id,
+                            nombre: this.organizacionDestino.nombre,
+                            direccion: this.organizacionDestino.direccion
+                        };
+                        this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
+                        this.modelo.adjuntos = this.adjuntos;
+
+                        this.derivacionesService.create(this.modelo).subscribe(respuesta => {
+                            this.router.navigate(['/com']);
+                            this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                        });
                     });
                 }
             });

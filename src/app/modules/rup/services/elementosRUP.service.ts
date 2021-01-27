@@ -206,5 +206,16 @@ export class ElementosRUPService {
         }
     }
 
+    /** TODO validar concepto para solicitud de derivación
+     * concepto temporal: 44383000 - 'pedido de interconsulta'
+     */
+    getConceptoDerivacion() {
+        return {
+            conceptId: '44383000',
+            term: 'derivación del paciente para interconsulta',
+            fsn: 'derivación del paciente para interconsulta (procedimiento)',
+            semanticTag: 'procedimiento'
+        };
+    }
 
 }
