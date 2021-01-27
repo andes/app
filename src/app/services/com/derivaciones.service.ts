@@ -11,8 +11,4 @@ export class DerivacionesService extends ResourceBaseHttp {
     getUrlImage(id, fileToken) {
         return this.apiUrl + '/modules/com/store/' + id + '?token=' + fileToken;
     }
-
-    updateHistorial(id, movimiento) {
-        return this.server.post(`/modules/com/derivaciones/${id}/historial`, movimiento);
-    }
 }

@@ -18,6 +18,7 @@
                              placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
                              [required]="true" grow="full">
                 </plex-select>
+                <tipo-traslado [derivacion]="modelo" grow="full"></tipo-traslado>
                 <plex-text [(ngModel)]="modelo.detalle" label="Detalle" name="motivo" [required]="true" multiline="true"
                            grow="full">
                 </plex-text>

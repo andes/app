@@ -1,0 +1,8 @@
+<plex-select [(ngModel)]="derivacion.tipoTraslado" label="Traslado Especial" name="trasladoEspecial"
+    placeholder="Seleccione un traslado especial" idField="_id" labelField="nombre"
+    (change)='onTipoTrasladoChange()' [data]="tipoTraslados" grow="full" >
+</plex-select>
+<plex-select *ngIf="derivacion.tipoTraslado" [(ngModel)]="derivacion.organizacionTraslado" label="Organización Traslado"
+    name="organizacionTraslado" placeholder="Seleccione una organización de traslado" idField="_id" labelField="nombre"
+    [data]="organizacionesTraslado" [disabled]="this.organizacionesTraslado.length <= 1" grow="full" >
+</plex-select>

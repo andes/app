@@ -74,7 +74,7 @@
                                                     subtitulo="{{ derivacion.organizacionDestino.direccion.ubicacion.localidad?.nombre }}">
                                         </plex-label>
                                         <div>
-                                            <plex-label *ngIf="derivacion.prioridad  && esCOM"
+                                            <plex-label *ngIf="derivacion.prioridad && esCOM"
                                                         titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
                                                         subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                             </plex-label>
@@ -83,7 +83,7 @@
                                                         subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
                                             </plex-label>
                                         </div>
-                                        <plex-button *ngIf="esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
+                                        <plex-button *ngIf="esTrasladoEspecial || esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
                                                      type="info" size="sm"
                                                      (click)="actualizarEstado(derivacion);$event.stopPropagation()">
                                             ACTUALIZAR
@@ -95,6 +95,9 @@
                                         <plex-badge
                                                     type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}</plex-badge>
+                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning" title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                            <plex-icon name="avion"></plex-icon>
+                                        </plex-badge>
                                     </plex-item>
                                 </ng-container>
                             </plex-list>
@@ -195,6 +198,10 @@
                                         <plex-badge
                                                     type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}</plex-badge>
+                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning" title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                            <plex-icon name="avion"></plex-icon>
+                                        </plex-badge>
+
                                     </plex-item>
                                 </ng-container>
                             </plex-list>

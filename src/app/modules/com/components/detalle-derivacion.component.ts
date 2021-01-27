@@ -122,7 +122,7 @@ export class DetalleDerivacionComponent implements OnInit {
     cargarEstado() {
         this.nuevoEstado = {
             organizacionDestino: this.derivacion.organizacionDestino,
-            estado: { id: this.derivacion.estado, nombre: this.derivacion.estado },
+            estado: this.derivacion.estado,
             observacion: ''
         };
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
@@ -147,8 +147,10 @@ export class DetalleDerivacionComponent implements OnInit {
     }
 
     filterReglasDerivaciones() {
-        this.reglasDerivacionFiltradas = this.reglasDerivacion.filter(element => element.estadoInicial === this.derivacion.estado &&
-            element.soloCOM === this.esCOM);
+        if (this.esCOM || this.derivacion.organizacionDestino === this.auth.organizacion.id) {
+            this.reglasDerivacionFiltradas = this.reglasDerivacion.filter(element => element.estadoInicial === this.derivacion.estado &&
+                element.soloCOM === this.esCOM);
+        }
     }
 
     setPrioridad(prioridad) {
@@ -157,12 +159,17 @@ export class DetalleDerivacionComponent implements OnInit {
 
     actualizarEstado($event) {
         if ($event.formValid) {
+            this.derivacion.estado = this.reglaSeleccionada.estadoFinal;
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
+            this.derivacion.historial.push(this.nuevoEstado);
             if (this.reglaSeleccionada.definePrioridad) {
+                this.derivacion.prioridad = this.prioridad;
                 this.nuevoEstado.prioridad = this.prioridad;
             }
-            this.derivacionService.updateHistorial(this.derivacion._id, this.nuevoEstado).subscribe(() => {
+            this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
+
+            this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
             });

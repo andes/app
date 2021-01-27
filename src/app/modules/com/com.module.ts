@@ -1,5 +1,6 @@
 import { ActualizarEstadoDerivacionComponent } from './components/actualizar-estado.component';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
+import { TipoTrasladoService } from './../../services/com/tipoTraslados.service';
 import { COMAdjuntosService } from './../../services/com/adjuntos.service';
 import { HistorialDerivacionComponent } from './components/historial-derivacion.component';
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
@@ -19,6 +20,7 @@ import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-de
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DetalleDerivacionComponent } from './components/detalle-derivacion.component';
 import { PuntoInicioService } from './services/punto-inicio.service';
+import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
 
 export const COM_COMPONENTS = [
     ComPuntoInicioComponent,
@@ -26,13 +28,15 @@ export const COM_COMPONENTS = [
     NuevaDerivacionComponent,
     DetalleDerivacionComponent,
     HistorialDerivacionComponent,
-    ActualizarEstadoDerivacionComponent
+    ActualizarEstadoDerivacionComponent,
+    TipoTrasladoComponent
 ];
 
 export const COM_PROVIDERS = [
     COMAdjuntosService,
     DerivacionesService,
     ReglasDerivacionService,
+    TipoTrasladoService,
     PuntoInicioService
 ];
 
