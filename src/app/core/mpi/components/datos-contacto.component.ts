@@ -79,6 +79,10 @@ export class DatosContactoComponent implements OnInit {
     provinciaActual = null;
     localidadActual = null;
     organizacionActual = null;
+    contactoValorNumerico = '';
+    contactoValorAlfabetico = '';
+    patronContactoNumerico = /^299[0-9]{7}$/;
+    patronContactoAlfabetico = /^[a-z,A-Z]+@[a-z]+(.[a-z]+)+$/;
 
 
     constructor(
@@ -160,19 +164,34 @@ export class DatosContactoComponent implements OnInit {
 
     // ------------------- CONTACTO -------------------
 
-    addContacto(key, valor) {
+    setValorContacto(index) {
+        if (index === this.paciente.contacto.length - 1) {
+            const contacto = this.paciente.contacto[index];
+            contacto.tipo.id === 'email' || contacto.tipo === 'email' ? this.contactoValorAlfabetico = contacto.valor : this.contactoValorNumerico = contacto.valor;
+        }
+    }
+
+    loadValorContacto(index) {
+        if (index === this.paciente.contacto.length - 1) {
+            const contacto = this.paciente.contacto[index];
+            contacto.valor = contacto.tipo.id === 'email' || contacto.tipo === 'email' ? this.contactoValorAlfabetico : this.contactoValorNumerico;
+        }
+    }
+
+    addContacto(key) {
         let indexUltimo = this.paciente.contacto.length - 1;
 
         if (this.paciente.contacto[indexUltimo].valor) {
             let nuevoContacto = Object.assign({}, {
                 tipo: key,
-                valor: valor,
+                valor: '',
                 ranking: 0,
                 activo: true,
                 ultimaActualizacion: new Date()
             });
-
             this.paciente.contacto.push(nuevoContacto);
+            this.contactoValorAlfabetico = '';
+            this.contactoValorNumerico = '';
         } else {
             this.plex.toast('info', 'Debe completar los contactos anteriores.');
         }
@@ -191,24 +210,6 @@ export class DatosContactoComponent implements OnInit {
             this.paciente.contacto = [this.contacto];
         } else {
             this.paciente.contacto = this.contactosCache;
-        }
-    }
-
-    onFocusout(type, value) {
-        let item = null;
-        for (let elem of this.paciente.contacto) {
-            if (elem.tipo === type || elem.valor === value) {
-                item = elem;
-            }
-        }
-        if (!item) {
-            this.addContacto(type, value);
-        } else {
-            if (!item.valor) {
-                item.valor = value;
-            } else if (item.valor !== value) {
-                this.addContacto(type, value);
-            }
         }
     }
 
