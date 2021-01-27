@@ -1,3 +1,17 @@
+# [5.32.0](https://github.com/andes/app/compare/v5.31.0...v5.32.0) (2021-01-27)
+
+
+### Bug Fixes
+
+* **core:** carga de archivos con extension en mayuscula ([#2117](https://github.com/andes/app/issues/2117)) ([be7731d](https://github.com/andes/app/commit/be7731d71fe475883171cf6635c00046ed01c657))
+
+
+### Features
+
+* **citas:** mostrar quien da el turno en revisión de agenda ([#2110](https://github.com/andes/app/issues/2110)) ([67881ca](https://github.com/andes/app/commit/67881caf864d5ca5290723c3407866b62ae86bec))
+* **mapa-camas:** agrega operacion para prestar y devolver camas ([#2107](https://github.com/andes/app/issues/2107)) ([6e9fb21](https://github.com/andes/app/commit/6e9fb210778d44e4ee8d82a7678895c4892cdc8a))
+* **mapa-camas:** listado internaciones capa medica ([#2112](https://github.com/andes/app/issues/2112)) ([485ef13](https://github.com/andes/app/commit/485ef13ebcc4115f96556833f82e045c0bea9ae1))
+
 # [5.31.0](https://github.com/andes/app/compare/v5.30.0...v5.31.0) (2021-01-20)
 
 
