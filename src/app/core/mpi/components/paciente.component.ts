@@ -524,6 +524,20 @@ export class PacienteComponent implements OnInit {
                                 this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
                                 this.pacienteModel.foto = resultado.foto;
                                 this.pacienteModel.fotoId = null;
+
+                                // agregamos en identificadores la validación
+                                const resIdentificadores = resultado.identificadores;
+                                if (this.pacienteModel.identificadores?.length) {
+                                    const posIdentficador = this.pacienteModel.identificadores.findIndex(unId => unId.entidad === resIdentificadores[0].entidad);
+                                    if (posIdentficador !== -1) {
+                                        // seteo el campo valor por si se modificó
+                                        this.pacienteModel.identificadores[posIdentficador].valor = resIdentificadores[0].valor || '';
+                                    } else {
+                                        this.pacienteModel.identificadores.push(resIdentificadores[0]);
+                                    }
+                                } else {
+                                    this.pacienteModel.identificadores = resIdentificadores || null;
+                                }
                                 // Fecha de fallecimiento en caso de poseerla
                                 if (resultado.fechaFallecimiento) {
                                     this.pacienteModel.fechaFallecimiento = moment(resultado.fechaFallecimiento).toDate();
