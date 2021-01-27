@@ -7,22 +7,20 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PacienteService {
-    private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
-    private pacienteCoreV2 = '/core-v2/mpi/pacientes';
+    private pacienteV2 = '/core-v2/mpi/pacientes';
     /**
      * RegEx para validar nombres y apellidos.
      */
     public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
 
-    constructor(
-        private server: Server) { }
+    constructor(private server: Server) { }
 
     /**
      * Metodo getById. Trae un objeto paciente por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IPaciente> {
-        return this.server.get(`${this.pacienteUrl}/${id}`, null);
+    getById(id: String, options?: any): Observable<IPaciente> {
+        return this.server.get(`${this.pacienteV2}/${id}`, options);
     }
 
     /**
@@ -32,8 +30,8 @@ export class PacienteService {
      * @returns {Observable<IPacienteMatch[]>}
      * @memberof PacienteService
      */
-    getMatch(params: any): Observable<IPacienteMatch[]> {
-        return this.server.get(this.pacienteUrl, { params: params, showError: true }).pipe(map((value) => {
+    get(params: any): Observable<IPacienteMatch[]> {
+        return this.server.get(this.pacienteV2, { params }).pipe(map((value) => {
             if (params.type === 'simplequery') {
                 return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
             } else {
@@ -42,54 +40,31 @@ export class PacienteService {
         }));
     }
 
-    // Búsqueda tipo matching según condiciones.
-    getSearch(params: any): Observable<any[]> {
-        return this.server.get(this.pacienteUrl + '/search', { params: params, showError: true });
+    match(params: any): Observable<IPacienteMatch[]> {
+        return this.server.post(`${this.pacienteV2}/match`, params);
     }
-
 
     /**
      * Metodo post. Inserta un objeto paciente nuevo.
      * @param {IPaciente} paciente Recibe IPaciente
      */
-    post(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.post(this.pacienteUrl, paciente);
-    }
-    /**
-     * Consulta fuentes auténticas para obtener datos del paciente validados.
-     *
-     * @param {*} paciente
-     * @returns {Observable<any>}
-     * @memberof PacienteService
-     */
-    validar(paciente: any): Observable<any> {
-        return this.server.post(this.pacienteUrl + '/validar', paciente);
-    }
-    /**
-     * Metodo put. Actualiza un objeto paciente.
-     * @param {IPaciente} paciente Recibe IPaciente
-     */
-    put(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.put(`${this.pacienteUrl}/${paciente.id}`, paciente);
+    post(paciente: IPaciente, options?: any): Observable<IPaciente> {
+        return this.server.post(this.pacienteV2, paciente, options);
     }
 
     /**
-     * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
+     * Metodo patch. Modifica solo algunos campos del paciente.
      * @param {any} cambios Recibe any
      */
-    patch(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
-        return this.server.patch(`${this.pacienteUrl}/${id}`, cambios);
-    }
-
-    patchV2(id: String, cambios: any): Observable<IPaciente> {
-        return this.server.patch(`${this.pacienteCoreV2}/${id}`, cambios);
+    patch(id: String, cambios: any): Observable<IPaciente> {
+        return this.server.patch(`${this.pacienteV2}/${id}`, cambios);
     }
 
     save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
         if (paciente.id) {
-            return this.server.put(`${this.pacienteUrl}/${paciente.id}`, { paciente, ignoreCheck });
+            return this.patch(paciente.id, paciente);
         } else {
-            return this.server.post(this.pacienteUrl, { paciente, ignoreCheck });
+            return this.post(paciente, ignoreCheck);
         }
     }
 
@@ -102,7 +77,7 @@ export class PacienteService {
      * @param {boolean} activo
      */
     setActivo(paciente: IPaciente, activo: boolean) {
-        return this.server.patch(`${this.pacienteCoreV2}/${paciente.id}`, { activo });
+        return this.server.patch(`${this.pacienteV2}/${paciente.id}`, { activo });
     }
 
     /**
@@ -122,7 +97,7 @@ export class PacienteService {
                 pacienteBase.identificadores = [dataLink];
             }
             pacienteLink.activo = false;
-            return combineLatest(this.patchV2(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, false));
+            return combineLatest([this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, false)]);
         }
         return;
     }
@@ -137,7 +112,7 @@ export class PacienteService {
             if (pacienteBase.identificadores) {
                 pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
             }
-            return combineLatest(this.patchV2(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, true));
+            return combineLatest(this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, true));
         }
         return;
     }

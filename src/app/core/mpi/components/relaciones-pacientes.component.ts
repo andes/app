@@ -2,14 +2,12 @@ import {
     Component,
     OnInit,
     Input,
-    HostBinding,
     Output,
     EventEmitter
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
-import { PacienteService } from '../services/paciente.service';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 
 @Component({
@@ -36,6 +34,7 @@ export class RelacionesPacientesComponent implements OnInit {
     parentescoModel: any[] = [];
     relacionesBorradas: any[] = [];
     relacionesIniciales: any[] = [];
+    relacionesEdit: any[] = []; // relaciones nuevas o existentes editadas
     posiblesRelaciones: any[] = [];
     relacionEntrante: any[] = [];
     disableGuardar = false;
@@ -49,7 +48,6 @@ export class RelacionesPacientesComponent implements OnInit {
 
     constructor(
         private parentescoService: ParentescoService,
-        private pacienteService: PacienteService,
         public plex: Plex) { }
 
 
@@ -106,14 +104,14 @@ export class RelacionesPacientesComponent implements OnInit {
     }
 
     addRelacion(unaRelacion) {
-        // es una relacion existente?
+        // Es una relacion existente?
         if (unaRelacion.referencia) {
-            // efectuamos y notificamos cambios
-            let index = this.paciente.relaciones.findIndex(rel => unaRelacion.referencia === rel.referencia);
-            if (index >= 0) {
-                this.paciente.relaciones[index] = unaRelacion;
-            }
-            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+            // Se la agrega al array de relaciones nuevas/editadas
+            let index = this.relacionesEdit.findIndex(rel => rel.referencia === unaRelacion.referencia);
+            index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(unaRelacion);
+            // Se actualiza el array de relaciones del paciente para que impacte en las vistas
+            index = this.paciente.relaciones.findIndex(rel => rel.referencia === unaRelacion.referencia);
+            this.paciente.relaciones[index] = unaRelacion;
         } else {
             // relacion inexistente, construimos una nueva
             this.buscarPacRel = '';
@@ -149,25 +147,29 @@ export class RelacionesPacientesComponent implements OnInit {
             }
 
             // Se inserta nueva relación en array de relaciones del paciente
-            let index = null;
             if (this.paciente.relaciones && this.paciente.relaciones.length) {
                 this.paciente.relaciones.push(nuevaRelacion);
             } else {
                 this.paciente.relaciones = [nuevaRelacion];
             }
-            // notificamos cambios
-            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+            // Se inserta en el array de relaciones nuevas/editadas
+            let index = this.relacionesEdit.findIndex(rel => rel.referencia === nuevaRelacion.referencia);
+            index >= 0 ? this.relacionesEdit[index] = unaRelacion : this.relacionesEdit.push(nuevaRelacion);
             this.idPacientesRelacionados.push({ id: nuevaRelacion.referencia });
 
             // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
-            index = this.relacionesBorradas.findIndex(rel => rel.documento === nuevaRelacion.documento);
-            if (index < 0) {
-                index = this.relacionesBorradas.findIndex(rel => rel.numeroIdentificacion === nuevaRelacion.numeroIdentificacion);
-            }
+            index = this.relacionesBorradas.findIndex(rel => rel.referencia === nuevaRelacion.referencia);
             if (index >= 0) {
                 this.relacionesBorradas.splice(index, 1);
             }
         }
+
+        // notificamos cambios
+        this.actualizar.emit({
+            relaciones: this.paciente.relaciones,
+            relacionesBorradas: this.relacionesBorradas,
+            relacionesEdit: this.relacionesEdit
+        });
         // Se borra la edicion en panel principal.
         this.relacionEntrante = [];
     }
@@ -176,17 +178,17 @@ export class RelacionesPacientesComponent implements OnInit {
     removeRelacion(i) {
         if (i >= 0) {
             // si la relacion borrada ya se encotraba almacenada en la DB
-            let index = this.relacionesIniciales.findIndex(unaRel => unaRel.documento === this.paciente.relaciones[i].documento);
-            if (index < 0) {
-                index = this.relacionesIniciales.findIndex(unaRel => unaRel.numeroIdentificacion === this.paciente.relaciones[i].numeroIdentificacion);
-            }
+            let index = this.relacionesIniciales.findIndex(unaRel => unaRel.referencia === this.paciente.relaciones[i].referencia);
             if (index >= 0) {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
             this.idPacientesRelacionados = this.paciente.relaciones.map(rel => { return { id: rel.referencia }; });
             // notificamos cambios
-            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+            this.actualizar.emit({
+                relaciones: this.paciente.relaciones,
+                relacionesBorradas: this.relacionesBorradas
+            });
         }
     }
 

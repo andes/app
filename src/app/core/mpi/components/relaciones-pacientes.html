@@ -1,6 +1,6 @@
-<span class="mt-2">
+<div class="mt-2">
     <plex-title size="sm" titulo="Agregar relaciones"></plex-title>
-</span>
+</div>
 
 <paciente-buscar label="Buscar paciente" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)"
                  (searchClear)="onSearchClear()">
@@ -8,7 +8,7 @@
 
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-<paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)" [offset]="140"
+<paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)" [offset]="160"
                   *ngIf="posiblesRelaciones.length > 0">
 </paciente-listado>
 

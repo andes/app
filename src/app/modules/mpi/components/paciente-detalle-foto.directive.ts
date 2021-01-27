@@ -59,7 +59,7 @@ export class FotoDirective implements OnDestroy {
     }
 
     private makeURL(paciente: IPaciente, token: string) {
-        const url = `${environment.API}/core/mpi/pacientes/${paciente.id}/foto/${paciente.fotoId}?token=${token}`;
+        const url = `${environment.API}/core-v2/mpi/pacientes/${paciente.id}/foto/${paciente.fotoId}?token=${token}`;
         return url;
     }
 

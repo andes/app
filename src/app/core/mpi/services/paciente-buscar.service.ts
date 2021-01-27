@@ -86,8 +86,7 @@ export class PacienteBuscarService {
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
         // 1. Busca por documento escaneado (simplequery)
-        return this.pacienteService.getMatch({
-            type: 'simplequery',
+        return this.pacienteService.get({
             apellido: pacienteEscaneado.apellido,
             nombre: pacienteEscaneado.nombre,
             documento: pacienteEscaneado.documento,
@@ -101,9 +100,8 @@ export class PacienteBuscarService {
                 // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
                 if (resultado) { return of(resultado); }
 
-                // 1.3. Si no encontró el paciente escaneado, busca uno similar
-                return this.pacienteService.getMatch({
-                    type: 'suggest',
+                // 1.3. Si no encontró el paciente escaneado, busca uno similar (suggest)
+                return this.pacienteService.match({
                     apellido: pacienteEscaneado.apellido,
                     nombre: pacienteEscaneado.nombre,
                     documento: pacienteEscaneado.documento,
@@ -121,7 +119,7 @@ export class PacienteBuscarService {
                             return { escaneado: true, pacientes: [candidato], err: null };
                         } else {
                             // 1.3.3. Busca uno con un porcentaje alto de matcheo
-                            if (resultadoSuggest[0].match >= 0.94) {
+                            if (resultadoSuggest[0]._score >= 0.94) {
                                 if (resultadoSuggest[0].estado === 'validado') {
                                     return { pacientes: [resultadoSuggest[0]], err: null };
                                 } else {
@@ -182,12 +180,7 @@ export class PacienteBuscarService {
             return EMPTY;
         }
         // Busca por texto libre
-        return this.pacienteService.getMatch({
-            type: 'multimatch',
-            cadenaInput: this.searchText,
-            limit: this.limit,
-            skip: this.skip
-        }).pipe(
+        return this.pacienteService.get({ search: this.searchText, activo: true, limit: this.limit, skip: this.skip }).pipe(
             map((resultado: any) => {
                 this.skip += resultado.length;
                 // si vienen menos resultado que {{ limit }} significa que ya se cargaron todos
