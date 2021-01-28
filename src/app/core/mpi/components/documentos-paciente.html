@@ -6,7 +6,7 @@
     <plex-button *ngIf="showAdd" type="danger" icon="close" size="md" (click)="cancelar()" tooltip="Cancelar">
     </plex-button>
 </plex-title>
-<ng-container *ngIf="showAdd">
+<ng-container *ngIf="showAdd ">
     <div class="grow">
         <plex-select [(ngModel)]="documento.tipo" placeholder="seleccione tipo" labelField="label"
                      [data]="tipoDocumentos" (change)="onTipoChange()">
@@ -19,7 +19,7 @@
     </shared-galeria-archivos>
 </ng-container>
 
-<plex-accordion *ngIf="!showAdd">
+<plex-accordion *ngIf="!showAdd && paciente.documentos?.length>0">
     <plex-panel *ngFor="let item of paciente.documentos">
         <div plex-accordion-title class="d-flex justify-content-between align-items-center">
             <span class="d-flex">
