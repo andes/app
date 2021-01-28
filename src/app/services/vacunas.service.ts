@@ -1,6 +1,6 @@
+import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Server } from '@andes/shared';
 
 @Injectable()
 export class VacunasService {
@@ -12,6 +12,7 @@ export class VacunasService {
     private nomivacLaboratoriosUrl = '/modules/vacunas/nomivacLaboratorios';
     private nomivacEsquemasUrl = '/modules/vacunas/nomivacEsquemas';
     private nomivacDosisUrl = '/modules/vacunas/nomivacDosis';
+    private nomivacLotesUrl = '/modules/vacunas/nomivacLotes';
 
     constructor(private server: Server) { }
 
@@ -49,6 +50,10 @@ export class VacunasService {
 
     getNomivacDosis(params: any) {
         return this.server.get(this.nomivacDosisUrl, { params: params, showError: true });
+    }
+
+    getNomivacLotes(params: any) {
+        return this.server.get(this.nomivacLotesUrl, { params: params, showError: true });
     }
 
 }
