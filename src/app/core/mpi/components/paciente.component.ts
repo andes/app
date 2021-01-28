@@ -110,6 +110,7 @@ export class PacienteComponent implements OnInit {
     public pacientes: IPacienteMatch[] | IPaciente[];
     public disableValidar = true;
     public escaneado = false;
+    public scanCode = null;
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
@@ -139,7 +140,8 @@ export class PacienteComponent implements OnInit {
             this.tipoPaciente = params['opcion'] ? params['opcion'] : '';
         });
         this.paciente = this.pacienteCache.getPacienteValor();
-        this.escaneado = this.pacienteCache.getScanState();
+        this.scanCode = this.pacienteCache.getScan();
+        this.escaneado = this.scanCode?.length > 0;
         this.pacienteCache.clearPaciente();
         this.pacienteCache.clearScanState();
         this.parentescoService.get().subscribe(resultado => {
@@ -159,7 +161,7 @@ export class PacienteComponent implements OnInit {
                 this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
                     if (resultado) {
                         if (!resultado.scan) {
-                            resultado.scan = this.paciente.scan;
+                            resultado.scan = this.scanCode;
                         }
                         if (this.escaneado && resultado.estado !== 'validado') {
                             resultado.nombre = resultado.nombre.toUpperCase();

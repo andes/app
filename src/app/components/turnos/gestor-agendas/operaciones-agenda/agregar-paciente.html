@@ -46,7 +46,7 @@
             </span>
             <ng-container *ngIf="!showPaciente && pacientesSearch">
                 <paciente-busqueda (searchStart)="onSearchStart()"
-                                   (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                   (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
                                    (searchClear)="onSearchClear()" (selected)="onSelect($event)" [offset]="110">
                 </paciente-busqueda>
             </ng-container>

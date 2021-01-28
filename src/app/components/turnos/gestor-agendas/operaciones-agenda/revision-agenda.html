@@ -24,8 +24,7 @@
                 </div>
             </div>
             <ng-container *ngIf="pacientesSearch">
-                <paciente-buscar (searchStart)="searchStart()"
-                                 (searchEnd)="searchEnd($event.pacientes,$event.escaneado)"
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event.pacientes,$event.scan)"
                                  (searchClear)="onSearchClear()">
                 </paciente-buscar>
 

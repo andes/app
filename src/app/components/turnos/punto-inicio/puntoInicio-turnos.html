@@ -2,7 +2,7 @@
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
 
-        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
                          (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
                          [create]="canCreate">
         </paciente-buscar>

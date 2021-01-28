@@ -1,7 +1,7 @@
 <plex-layout main="{{ sidebar }}">
     <plex-layout-main>
         <paciente-busqueda [hostComponent]="'mpi'" [create]="true" [returnScannedPatient]="true" [editing]="true"
-                           (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (selected)="toVisualize($event)"
+                           (searchEnd)="onSearchEnd($event.pacientes,$event.scan)" (selected)="toVisualize($event)"
                            (edit)="toEdit($event)" [offset]="80">
         </paciente-busqueda>
     </plex-layout-main>

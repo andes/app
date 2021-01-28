@@ -91,10 +91,10 @@ export class PacienteBuscarService {
             nombre: pacienteEscaneado.nombre,
             documento: pacienteEscaneado.documento,
             sexo: pacienteEscaneado.sexo,
-            escaneado: true
+            activo: true
         }).pipe(
             map(resultado => {
-                return resultado.length ? { escaneado: true, pacientes: resultado, err: null } : null;
+                return resultado.length ? { scan: textoLibre, pacientes: resultado, err: null } : null;
             }),
             mergeMap((resultado: any) => {
                 // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
@@ -116,7 +116,7 @@ export class PacienteBuscarService {
                         // 1.3.2. Busca a uno con el mismo código de barras
                         let candidato = resultadoSuggest.find(elto => elto.paciente.scan && elto.paciente.scan === textoLibre);
                         if (candidato) {
-                            return { escaneado: true, pacientes: [candidato], err: null };
+                            return { scan: textoLibre, pacientes: [candidato], err: null };
                         } else {
                             // 1.3.3. Busca uno con un porcentaje alto de matcheo
                             if (resultadoSuggest[0]._score >= 0.94) {

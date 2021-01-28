@@ -417,14 +417,15 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
 
-    searchEnd(pacientes: IPaciente[], escaneado: boolean) {
+    searchEnd(pacientes: IPaciente[], scan: string) {
         this.loading = false;
-        this.pacienteCache.setScanState(escaneado);
+        const escaneado = scan?.length > 0;
+        this.pacienteCache.setScanCode(scan);
         if (escaneado && pacientes.length === 1 && pacientes[0].id) {
             this.onSelect(pacientes[0]);
         } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
             this.pacienteCache.setPaciente(pacientes[0]);
-            this.pacienteCache.setScanState(escaneado);
+            this.pacienteCache.setScanCode(scan);
             this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
         } else {
             this.resultadoBusqueda = pacientes;

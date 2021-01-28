@@ -110,14 +110,15 @@ export class AgregarSobreturnoComponent implements OnInit {
         this.loading = true;
     }
 
-    onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
+    onSearchEnd(pacientes: IPaciente[], scan: string) {
         this.loading = false;
-        this.pacienteCache.setScanState(escaneado);
-        if (escaneado && pacientes.length === 1 && pacientes[0].id) {
+        this.esEscaneado = scan?.length > 0;
+        if (this.esEscaneado && pacientes.length === 1 && pacientes[0].id) {
+            this.pacienteCache.setScanCode(scan);
             this.onSelect(pacientes[0]);
-        } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+        } else if (this.esEscaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
             this.pacienteCache.setPaciente(pacientes[0]);
-            this.pacienteCache.setScanState(escaneado);
+            this.pacienteCache.setScanCode(scan);
             this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
         } else {
             this.pacientes = pacientes;
