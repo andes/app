@@ -29,6 +29,7 @@
             <span>
                 <plex-badge type="info">
                     {{ item.fecha | fecha: 'utc'}}
+                    {{item.fecha | date:'HH:mm'}}
                 </plex-badge>
                 <plex-button type="danger" icon="delete" size="sm" (click)="removeItem(item)"
                              tooltip="Eliminar documento">

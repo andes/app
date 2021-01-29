@@ -139,7 +139,7 @@ export class PacienteComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.documentacionPermiso = this.auth.getPermissions('mpi:paciente:documentacionPermiso:?').length > 0;
+        this.documentacionPermiso = this.auth.getPermissions('mpi:paciente:documentacion:?').length > 0;
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
