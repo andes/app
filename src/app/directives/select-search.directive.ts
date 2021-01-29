@@ -30,7 +30,6 @@ export class SelectSearchDirective implements OnDestroy, AfterContentInit {
 
     ngAfterContentInit() {
         if (this.preload) {
-            console.log('ssserac', this.ssSearch);
             this.plexSelect.data = [];
             this.selectSearch.get(this.ssSearch, null).subscribe(result => {
                 this.plexSelect.data = result;
@@ -47,8 +46,6 @@ export class SelectSearchDirective implements OnDestroy, AfterContentInit {
                     });
                 } else {
                     const selectedValue = (this.plexSelect as any).value;
-                    console.log('event ', selectedValue);
-
                     if (selectedValue) {
                         $event.callback([selectedValue]);
                     } else {

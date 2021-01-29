@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { Observable } from 'rxjs';
-import { Auth } from '@andes/auth';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { Plex } from '@andes/plex';
 
 
 @Component({
@@ -11,56 +12,63 @@ import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 })
 export class FichaCovidComponent implements OnInit {
   @Input() paciente: IPaciente;
+  @Input() fichaPaciente: any;
 
   public fields = [];
   public fieldSelected;
   public organizaciones$: Observable<any>;
   public secciones = [];
-  public seccionUsuario = [];
-  public seccionMpi = [];
-  public seccionClasificacion = [];
-  public laFicha = {};
+  public ficha = [];
 
   constructor(
     private formsService: FormsService,
-    private auth: Auth
+    private formEpidemiologiaService: FormsEpidemiologiaService,
+    private plex: Plex,
+
   ) { }
 
   ngOnInit(): void {
-    this.seccionUsuario[0] = { nombre: 'Usuario' };
-    this.seccionMpi[0] = { nombre: 'Mpi' };
-    this.seccionClasificacion[0] = { nombre: 'Clasificacion' };
-    this.organizaciones$ = this.auth.organizaciones();
     this.formsService.search({ name: 'covid19' }).subscribe((ficha: any) => {
-      this.fields = ficha[0].fields;
-      this.fields.map(field => {
-        field.sections.map(section => {
-          switch (section.id) {
-            case 'usuario':
-              this.seccionUsuario.push(field);
-              break;
-            case 'mpi':
-              this.seccionMpi.push(field);
-              break;
-            case 'clasificacion':
-              this.seccionClasificacion.push(field);
-              break;
-          }
-        })
-      });
-      this.secciones.push(this.seccionUsuario);
-      this.secciones.push(this.seccionMpi);
-      this.secciones.push(this.seccionClasificacion);
+      this.secciones = ficha[0].sections;
     });
   }
 
   saveFicha(nuevaFicha) {
-    let keys = Object.keys(nuevaFicha);
-    keys.map(key => {
-      this.laFicha[key] = nuevaFicha[key];
-    })
-    console.log(this.laFicha);
+    // registro los datos del usuario
+    const buscado = this.ficha.findIndex(seccion => seccion.name === nuevaFicha.seccion);
+    if (buscado !== -1) {
+      // si ya existe la sección, la reemplazo
+      this.ficha[buscado] = { name: nuevaFicha.seccion, fields: nuevaFicha.campos };
+    } else {
+      this.ficha.push({ name: nuevaFicha.seccion, fields: nuevaFicha.campos })
+    }
+  }
 
+  registrarFicha() {
+    const fichaFinal = {
+      type: 'covid19',
+      createdAt: new Date(),
+      secciones: this.ficha,
+      paciente: this.paciente
+    }
+    if (this.fichaPaciente) {
+      this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
+        res => {
+          this.plex.toast('success', 'Su ficha fue actualizada correctamente');
+        },
+        error => {
+          this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada');
+        })
+    } else {
+      this.formEpidemiologiaService.save(fichaFinal).subscribe(
+        res => {
+          this.plex.toast('success', 'Su ficha fue registrada correctamente');
+        },
+        error => {
+          this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
+
+        })
+    }
   }
 
 }

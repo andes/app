@@ -12,6 +12,7 @@ import { FichaCovidComponent } from './components/ficha-covid/ficha-covid.compon
 import { SeccionComponent } from './components/seccion/seccion.component';
 import { SelectSearchDirective } from '../../directives/select-search.directive';
 import { SelectSearchService } from '../../services/select-search.service';
+import { SharedModule } from '@andes/shared';
 
 
 
@@ -24,7 +25,8 @@ import { SelectSearchService } from '../../services/select-search.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MPILibModule
+    MPILibModule,
+    SharedModule
   ],
   providers: [FormsService, SelectSearchService]
 })

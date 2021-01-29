@@ -18,7 +18,7 @@
     </plex-layout-main>
     <ng-template #elseFicha [ngSwitch]="showFicha">
         <plex-layout-main *ngSwitchCase="'covid19'">
-            <app-ficha-covid [paciente]="pacienteSelected"></app-ficha-covid>
+            <app-ficha-covid [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente"></app-ficha-covid>
         </plex-layout-main>
     </ng-template>
     <plex-layout-sidebar [type]="'invert'">
@@ -34,7 +34,17 @@
                                [items]="itemsDropdownFichas">
                 </plex-dropdown>
             </plex-title>
-            <plex-table [columns]="columns">
+            <plex-table [columns]="columns" #table="plTable">
+                <plex-table-columns>
+                </plex-table-columns>
+                <tr *ngFor="let ficha of fichasPaciente | async">
+                    <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
+                    <td *plTableCol="'nombre'">{{ficha.type}}</td>
+                    <td *plTableCol="'acciones'">
+                        <plex-button type="info" icon="pencil" size="sm" (click)="mostrarFicha(ficha.type, ficha)">
+                        </plex-button>
+                    </td>
+                </tr>
             </plex-table>
         </ng-container>
     </plex-layout-sidebar>

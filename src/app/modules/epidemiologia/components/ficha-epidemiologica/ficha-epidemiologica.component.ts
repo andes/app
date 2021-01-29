@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
+import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
@@ -14,6 +16,8 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public showLabel = true;
   public pacienteSelected = null;
   public resultadoBusqueda = null;
+  public fichasPaciente: Observable<any>;
+  public fichaPaciente = '';
 
   public columns = [
     {
@@ -27,11 +31,6 @@ export class FichaEpidemiologicaComponent implements OnInit {
       sorteable: true
     },
     {
-      key: 'estado',
-      label: 'Estado',
-      sorteable: false
-    },
-    {
       key: 'acciones',
       label: 'Acciones',
       sorteable: false
@@ -40,7 +39,8 @@ export class FichaEpidemiologicaComponent implements OnInit {
 
   constructor(
     private plex: Plex,
-    private formsService: FormsService
+    private formsService: FormsService,
+    private formEpidemiologiaService: FormsEpidemiologiaService,
   ) { }
 
   ngOnInit(): void {
@@ -58,6 +58,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
         });
       });
     });
+
   }
 
   searchStart() {
@@ -81,13 +82,14 @@ export class FichaEpidemiologicaComponent implements OnInit {
   onSelect(paciente: IPaciente): void {
     if (paciente) {
       this.pacienteSelected = paciente;
-
+      this.fichasPaciente = this.formEpidemiologiaService.search({ paciente: this.pacienteSelected._id });
     }
   }
 
-  mostrarFicha(nombreFicha) {
+  mostrarFicha(nombreFicha, ficha?) {
+    if (ficha) {
+      this.fichaPaciente = ficha;
+    }
     this.showFicha = nombreFicha;
-    console.log(this.showFicha);
-    // Mostrar ficha en layout-main
   }
 }

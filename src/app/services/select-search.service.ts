@@ -8,7 +8,6 @@ export class SelectSearchService {
     constructor(private server: Server) { }
 
     get(recurso, texto): Observable<any[]> {
-        console.log('recurso ', recurso);
         let search = null;
         if (texto) {
             search = `^${texto}`;

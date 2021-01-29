@@ -18,7 +18,8 @@ export class AppFormsCrudComponent implements OnInit {
         { id: 'select', nombre: 'Selección' },
         { id: 'date', nombre: 'Fecha' },
         { id: 'boolean', nombre: 'Booleano' },
-        { id: 'phone', nombre: 'Teléfono' }
+        { id: 'phone', nombre: 'Teléfono' },
+        { id: 'dependencia', nombre: 'Dependencia' }
     ];
     public disable = false;
     public recursos = [];
@@ -58,7 +59,7 @@ export class AppFormsCrudComponent implements OnInit {
                     s.fields.forEach(f => {
                         f.type = this.tiposList.find(t => t.id === f.type) as any;
                         if ((f.type as any).id === 'select') {
-                            f.resources = this.recursos.find(t => t.key === f.resources) as any;
+                            f.resources = this.recursos.find(t => t.id === f.resources) as any;
                         }
                         if (!this.fieldAssigned(fieldsAssigns, f, s)) {
                             f.sections = [];
@@ -102,7 +103,8 @@ export class AppFormsCrudComponent implements OnInit {
             extras: '',
             sections: [],
             resources: '',
-            preload: false
+            preload: false,
+            dependencia: ''
         });
         this.form.fields = [...this.form.fields];
         setTimeout(() => {
@@ -131,7 +133,7 @@ export class AppFormsCrudComponent implements OnInit {
                 const field: any = { ...cloneField };
                 cloneField.type = field.type.id;
                 if (cloneField.type === 'select') {
-                    cloneField.resources = field.resources.key;
+                    cloneField.resources = field.resources.id;
                 }
                 if (f.sections && f.sections.length > 0) {
                     f.sections.forEach(s => {
@@ -158,7 +160,6 @@ export class AppFormsCrudComponent implements OnInit {
                     return seccion;
                 })
             };
-
             if (this.formToUpdate) { // if update
                 this.formToUpdate = {
                     ...this.formToUpdate,
