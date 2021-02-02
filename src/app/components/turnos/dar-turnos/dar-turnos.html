@@ -28,7 +28,7 @@
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
                                              [(ngModel)]="_solicitudPrestacion.solicitud.profesional"
                                              (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre"
-                                             (change)="filtrar()" name="profesional" [readonly]="true">
+                                             (change)="filtrar()" name="profesional">
                                 </plex-select>
                                 <plex-select *ngIf="(_solicitudPrestacion?.solicitud && !autocitado) "
                                              [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
