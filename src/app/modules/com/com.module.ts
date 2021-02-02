@@ -1,4 +1,3 @@
-import { ActualizarEstadoDerivacionComponent } from './components/actualizar-estado.component';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
 import { TipoTrasladoService } from './../../services/com/tipoTraslados.service';
 import { HistorialDerivacionComponent } from './components/historial-derivacion.component';
@@ -16,6 +15,7 @@ import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ElementosRUPModule } from '../rup/elementos-rup.module';
 import { COMRouting } from './com.routing';
+import { ActualizarEstadoDerivacionComponent } from './components/actualizar-estado.component';
 import { ComBusquedaPacienteComponent } from './components/busqueda-paciente.component';
 import { DetalleDerivacionComponent } from './components/detalle-derivacion.component';
 import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
