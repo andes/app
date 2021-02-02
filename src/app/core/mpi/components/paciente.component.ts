@@ -523,7 +523,7 @@ export class PacienteComponent implements OnInit {
                                 }
                                 this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
                                 this.pacienteModel.foto = resultado.foto;
-                                this.pacienteModel.fotoId = null;
+                                this.pacienteModel.fotoId = resultado.fotoId;
 
                                 // agregamos en identificadores la validación
                                 const resIdentificadores = resultado.identificadores;
