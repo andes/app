@@ -481,19 +481,19 @@ export class PacienteComponent implements OnInit {
             this.subscripcionValidar.unsubscribe();
         }
 
-        this.subscripcionValidar = this.pacienteService.match({
+        this.subscripcionValidar = this.pacienteService.get({
             documento: this.pacienteModel.documento,
-            sexo: sexoPaciente
+            sexo: sexoPaciente,
+            estado: 'validado'
         }).pipe(
             map((resultado: any) => {
                 if (!this.pacienteModel.id) {
-                    // Si estamos creando un nuevo paciente, chequeamos si existen pacientes validados con alto % de similitud
-                    const sugeridos = resultado.filter(sug => sug.paciente.estado === 'validado');
-                    if (sugeridos.length && sugeridos[0].paciente.documento === this.pacienteModel.documento.toString()) {
+                    // Si estamos creando un nuevo paciente, chequeamos si existe un paciente validado con igual documento y sexo
+                    if (resultado.length && resultado[0].documento === this.pacienteModel.documento.toString()) {
                         // El paciente que se intenta validar ya existe
                         this.loading = false;
                         this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                        this.paciente = sugeridos[0].paciente;
+                        this.paciente = resultado[0];
                         this.actualizarDatosPaciente();
                         return true;
                     }
