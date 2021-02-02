@@ -6,20 +6,22 @@ import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@andes/shared';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
+import { MPILibModule } from '../mpi/mpi-lib.module';
+import { ElementosRUPModule } from '../rup/elementos-rup.module';
 import { COMRouting } from './com.routing';
 import { ComBusquedaPacienteComponent } from './components/busqueda-paciente.component';
-import { MPILibModule } from '../mpi/mpi-lib.module';
-import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
-import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
-import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DetalleDerivacionComponent } from './components/detalle-derivacion.component';
-import { PuntoInicioService } from './services/punto-inicio.service';
+import { NuevaDerivacionComponent } from './components/nueva-derivacion/nueva-derivacion.component';
 import { TipoTrasladoComponent } from './components/tipo-traslado/tipo-traslado';
+import { PuntoInicioService } from './services/punto-inicio.service';
+
 
 export const COM_COMPONENTS = [
     ComPuntoInicioComponent,
@@ -49,7 +51,8 @@ export const COM_PROVIDERS = [
         SharedModule,
         InfiniteScrollModule,
         MPILibModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        ElementosRUPModule
     ],
     declarations: [
         ...COM_COMPONENTS

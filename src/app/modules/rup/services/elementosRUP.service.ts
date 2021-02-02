@@ -206,5 +206,13 @@ export class ElementosRUPService {
         }
     }
 
+    getConceptoDerivacion() {
+        return {
+            conceptId: '107724000',
+            term: 'traslado del paciente',
+            fsn: 'traslado del paciente (procedimiento)',
+            semanticTag: 'procedimiento'
+        };
+    }
 
 }
