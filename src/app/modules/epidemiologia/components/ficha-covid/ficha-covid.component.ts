@@ -1,11 +1,11 @@
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormsService } from '../../../forms-builder/services/form.service';
 import { Observable } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { FormsService } from '../../../forms-builder/services/form.service';
+import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 
 
 @Component({
@@ -75,6 +75,7 @@ export class FichaCovidComponent implements OnInit {
     fechaUltimoContacto: '',
     tipoContacto: ''
   };
+
 
   public columns = [
     {
