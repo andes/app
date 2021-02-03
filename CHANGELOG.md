@@ -1,3 +1,11 @@
+## [5.32.1](https://github.com/andes/app/compare/v5.32.0...v5.32.1) (2021-02-03)
+
+
+### Bug Fixes
+
+* **mpi:** corrige bug de fotoId al obtenerlo de la validacion ([#2123](https://github.com/andes/app/issues/2123)) ([5e1bce3](https://github.com/andes/app/commit/5e1bce3d6be83691ed660b7944aa63858ca6ab78))
+* **mpi:** reemplaza busqueda match por get ([#2120](https://github.com/andes/app/issues/2120)) ([937a3db](https://github.com/andes/app/commit/937a3dbd93b7f269429ec0b8a8f4aa9672dd00be))
+
 # [5.32.0](https://github.com/andes/app/compare/v5.31.0...v5.32.0) (2021-01-27)
 
 
