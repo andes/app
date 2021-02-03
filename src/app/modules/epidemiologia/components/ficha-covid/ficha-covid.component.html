@@ -239,6 +239,49 @@
                                        [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
                                        [(ngModel)]="seccion.fields[field.key]" [required]="field.required">
                         </plex-datetime>
+
+                        <!--Datos de contactos estrechos-->
+                        <div *ngIf="field.key==='tablacontactos'">
+                            <plex-table [columns]="columns" #table="plTable">
+                                <plex-table-columns>
+                                </plex-table-columns>
+                                <tr *ngFor="let contacto of contactosEstrechos">
+                                    <td *plTableCol="'apellidoNombre'">{{contacto.apellidoNombre}}</td>
+                                    <td *plTableCol="'dni'">{{contacto.dni}}</td>
+                                    <td *plTableCol="'telefono'">{{contacto.telefono}}</td>
+                                    <td *plTableCol="'domicilio'">{{contacto.domicilio}}</td>
+                                    <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto | fecha}}</td>
+                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto}}</td>
+                                </tr>
+                                <tr>
+                                    <td *plTableCol="'apellidoNombre'">
+                                        <plex-text name="apellidoNombre" [(ngModel)]="contacto.apellidoNombre">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'dni'">
+                                        <plex-text name="dni" [(ngModel)]="contacto.dni">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'telefono'">
+                                        <plex-text name="telefono" [(ngModel)]="contacto.telefono">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'domicilio'">
+                                        <plex-text name="domicilio" [(ngModel)]="contacto.domicilio">
+                                        </plex-text>
+                                    </td>
+                                    <td *plTableCol="'fechaContacto'">
+                                        <plex-datetime name="fechaContacto" [(ngModel)]="contacto.fechaUltimoContacto">
+                                        </plex-datetime>
+                                    </td>
+                                    <td *plTableCol="'tipoContacto'">
+                                        <plex-text name="tipoContacto" [(ngModel)]="contacto.tipoContacto">
+                                        </plex-text>
+                                    </td>
+                                    <plex-button (click)="addContacto()">Agregar nuevo</plex-button>
+                                </tr>
+                            </plex-table>
+                        </div>
                     </ng-container>
                     <hr>
                 </ng-container>

@@ -67,12 +67,56 @@ export class FichaCovidComponent implements OnInit {
     { id: 'negativo', nombre: 'Negativo' }
   ];
 
+  public contacto = {
+    apellidoNombre: '',
+    dni: '',
+    telefono: '',
+    domicilio: '',
+    fechaUltimoContacto: '',
+    tipoContacto: ''
+  };
+
+  public columns = [
+    {
+      key: 'apellidoNombre',
+      label: 'Apellido y Nombre',
+      sorteable: true
+    },
+    {
+      key: 'dni',
+      label: 'Dni',
+      sorteable: true
+    },
+    {
+      key: 'telefono',
+      label: 'Teléfono',
+      sorteable: true
+    },
+    {
+      key: 'domicilio',
+      label: 'Domicilio',
+      sorteable: true
+    },
+    {
+      key: 'fechaContacto',
+      label: 'fecha último contacto',
+      sorteable: true
+    },
+    {
+      key: 'tipoContacto',
+      label: 'tipo de contacto',
+      sorteable: true
+    }
+  ];
+
+
   public fields = [];
   public fieldSelected;
   public organizaciones$: Observable<any>;
   public secciones = [];
   public ficha = [];
   public telefono = null;
+  public contactosEstrechos = [];
 
   constructor(
     private formsService: FormsService,
@@ -88,12 +132,16 @@ export class FichaCovidComponent implements OnInit {
       this.secciones = ficha[0].sections;
       if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
         this.fichaPaciente.secciones.map(sec => {
-          const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
-          if (buscado !== -1) {
-            sec.fields.map(field => {
-              let key = Object.keys(field);
-              this.secciones[buscado].fields[key[0]] = field[key[0]];
-            });
+          if (sec.name !== 'Contactos Estrechos') {
+            const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
+            if (buscado !== -1) {
+              sec.fields.map(field => {
+                let key = Object.keys(field);
+                this.secciones[buscado].fields[key[0]] = field[key[0]];
+              });
+            }
+          } else {
+            this.contactosEstrechos = sec.fields;
           }
         });
       } else {
@@ -105,35 +153,40 @@ export class FichaCovidComponent implements OnInit {
 
   registrarFicha() {
     this.secciones.map(seccion => {
-      const campos = [];
-      seccion.fields.forEach(arg => {
-        let params = {};
-        const key = arg.key;
-        if (key) {
-          const valor = seccion.fields[key];
-          if (valor !== undefined) {
-            params[key] = valor;
-            if (valor instanceof Date) {
+      let campos = [];
+      if (seccion.name !== 'Contactos Estrechos') {
+        seccion.fields.forEach(arg => {
+          let params = {};
+          const key = arg.key;
+          if (key) {
+            const valor = seccion.fields[key];
+            if (valor !== undefined) {
               params[key] = valor;
-            } else {
-              if (valor.id) {
-                // caso en el que los select usan el select-search.directive que viene con los dos campos
-                if (valor.nombre) {
-                  params[key] = {
-                    id: valor.id,
-                    nombre: valor.nombre
-                  };
-                } else {
-                  params[key] = valor.id;
+              if (valor instanceof Date) {
+                params[key] = valor;
+              } else {
+                if (valor.id) {
+                  // caso en el que los select usan el select-search.directive que viene con los dos campos
+                  if (valor.nombre) {
+                    params[key] = {
+                      id: valor.id,
+                      nombre: valor.nombre
+                    };
+                  } else {
+                    params[key] = valor.id;
+                  }
+                } else if (valor === undefined) {
+                  params[key] = arg.check;
                 }
-              } else if (valor === undefined) {
-                params[key] = arg.check;
               }
+              campos.push(params);
             }
-            campos.push(params);
           }
-        }
-      });
+        });
+      } else {
+        campos = this.contactosEstrechos;
+      }
+
       if (campos.length) {
         const buscado = this.ficha.findIndex(sec => sec.name === seccion.seccion);
         if (buscado !== -1) {
@@ -188,14 +241,17 @@ export class FichaCovidComponent implements OnInit {
           seccion.fields['organizacion'] = this.auth.organizacion.id;
           seccion.fields['fechanotificacion'] = new Date();
           this.setOrganizacion(seccion, this.auth.organizacion.id);
+          break;
         case 'clasificacionFinal':
           seccion.fields['fechamuestra'] = new Date();
+          break;
         case 'informacionClinica':
           seccion.fields['establecimientoconsulta'] = {
             id: this.auth.organizacion.id,
             nombre: this.auth.organizacion.nombre
           };
           seccion.fields['fechaprimerconsulta'] = new Date();
+          break;
       }
     });
   }
@@ -246,4 +302,15 @@ export class FichaCovidComponent implements OnInit {
     this.volver.emit();
   }
 
+  addContacto() {
+    this.contactosEstrechos.push(this.contacto);
+    this.contacto = {
+      apellidoNombre: '',
+      dni: '',
+      telefono: '',
+      domicilio: '',
+      fechaUltimoContacto: '',
+      tipoContacto: ''
+    };
+  }
 }

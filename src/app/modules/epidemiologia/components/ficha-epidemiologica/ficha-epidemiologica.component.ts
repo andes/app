@@ -97,7 +97,6 @@ export class FichaEpidemiologicaComponent implements OnInit {
 
   mostrarFicha(nombreFicha, ficha?) {
     this.fichaPaciente = '';
-    // this.showFicha = null;
     if (ficha) {
       this.fichaPaciente = ficha;
     }
