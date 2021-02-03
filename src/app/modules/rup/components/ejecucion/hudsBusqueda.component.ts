@@ -79,6 +79,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public fechaInicio;
     public fechaFin;
     public ambitoOrigen;
+    public organizaciones = [];
+    public organizacionSeleccionada;
     public showFiltros = false;
     public filtrosAmbitos = [
         { key: 'ambulatorio', label: 'Ambulatorio' },
@@ -236,7 +238,9 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.prestacionesCopia = this.prestaciones.slice();
             this.setAmbitoOrigen('ambulatorio');
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            this.organizaciones = this.prestaciones.map(p => p.data.ejecucion.organizacion);
             this.buscarCDAPacientes(this.huds.getHudsToken());
+
         });
     }
 
@@ -380,6 +384,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
         }
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.data.solicitud.ambitoOrigen === this.ambitoOrigen);
+        }
+        if (this.organizacionSeleccionada) {
+
+            this.prestaciones = this.prestaciones.filter(p => p.data.ejecucion.organizacion.id === this.organizacionSeleccionada.id);
+
         }
         this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
     }
