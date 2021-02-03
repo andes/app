@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../../environments/environment';
 import { IAgenda } from '../../interfaces/turnos/IAgenda';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 
 @Injectable()
 export class TurnoService {
@@ -21,6 +21,7 @@ export class TurnoService {
         return this.server.get(this.turnoUrl + '/historial', { params: params, showError: true });
     }
 
+    /* Devuelve la agenda actualizada */
     save(turno: any, options: any = {}): Observable<IAgenda> {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
@@ -30,7 +31,8 @@ export class TurnoService {
         }
     }
 
-    saveDinamica(turno: any): Observable<IAgenda> {
+    /* Devuelve el ultimo turno dado */
+    saveDinamica(turno: any): Observable<ITurno> {
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/agenda/' + turno.idAgenda, turno);
         }
