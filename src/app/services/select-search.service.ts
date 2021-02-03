@@ -15,7 +15,7 @@ export class SelectSearchService {
         const params = {
             search,
             fields: 'nombre'
-        }
+        };
         return this.server.get(`/core/tm/${recurso}`, { params, showError: true });
     }
 

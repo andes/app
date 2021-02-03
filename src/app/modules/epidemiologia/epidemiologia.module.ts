@@ -9,7 +9,6 @@ import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { FormsService } from '../forms-builder/services/form.service';
 import { FichaCovidComponent } from './components/ficha-covid/ficha-covid.component';
-import { SeccionComponent } from './components/seccion/seccion.component';
 import { SelectSearchDirective } from '../../directives/select-search.directive';
 import { SelectSearchService } from '../../services/select-search.service';
 import { SharedModule } from '@andes/shared';
@@ -17,7 +16,7 @@ import { SharedModule } from '@andes/shared';
 
 
 @NgModule({
-  declarations: [FichaEpidemiologicaComponent, FichaCovidComponent, SeccionComponent, SelectSearchDirective],
+  declarations: [FichaEpidemiologicaComponent, FichaCovidComponent, SelectSearchDirective],
   imports: [
     CommonModule,
     EpidemiologiaRoutingModule,

@@ -4,6 +4,8 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
@@ -18,6 +20,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public resultadoBusqueda = null;
   public fichasPaciente: Observable<any>;
   public fichaPaciente = '';
+  public permisoHuds = false;
 
   public columns = [
     {
@@ -41,6 +44,8 @@ export class FichaEpidemiologicaComponent implements OnInit {
     private plex: Plex,
     private formsService: FormsService,
     private formEpidemiologiaService: FormsEpidemiologiaService,
+    private router: Router,
+    private auth: Auth
   ) { }
 
   ngOnInit(): void {
@@ -58,7 +63,11 @@ export class FichaEpidemiologicaComponent implements OnInit {
         });
       });
     });
+    this.permisoHuds = this.auth.check('huds:visualizacionHuds');
+  }
 
+  ruteo(id) {
+    this.router.navigate(['/huds/paciente/', id]);
   }
 
   searchStart() {
@@ -87,9 +96,18 @@ export class FichaEpidemiologicaComponent implements OnInit {
   }
 
   mostrarFicha(nombreFicha, ficha?) {
+    this.fichaPaciente = '';
+    // this.showFicha = null;
     if (ficha) {
       this.fichaPaciente = ficha;
     }
     this.showFicha = nombreFicha;
+
+  }
+
+  volver() {
+    this.showFicha = null;
+    this.pacienteSelected = null;
+    this.resultadoBusqueda = [];
   }
 }

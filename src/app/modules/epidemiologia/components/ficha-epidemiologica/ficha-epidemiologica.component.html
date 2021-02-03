@@ -15,16 +15,22 @@
                 </paciente-listado>
             </div>
         </div>
+        <div *ngIf="!pacienteSelected" justify="center" class="h-75">
+            <plex-label icon="arrow-up" type="default" size="xl" direction="column"
+                        titulo='Comience buscando y seleccionando un paciente en la barra superior'>
+            </plex-label>
+        </div>
     </plex-layout-main>
     <ng-template #elseFicha [ngSwitch]="showFicha">
         <plex-layout-main *ngSwitchCase="'covid19'">
-            <app-ficha-covid [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente"></app-ficha-covid>
+            <app-ficha-covid [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente" (volver)="volver()">
+            </app-ficha-covid>
         </plex-layout-main>
     </ng-template>
     <plex-layout-sidebar [type]="'invert'">
         <ng-container *ngIf="pacienteSelected">
             <plex-title size="sm" titulo="Datos del paciente">
-                <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
+                <plex-button *ngIf="permisoHuds" size="sm" type="info" (click)="ruteo(pacienteSelected.id)">
                     VER HUDS
                 </plex-button>
             </plex-title>
