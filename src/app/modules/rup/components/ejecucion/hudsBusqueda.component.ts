@@ -387,7 +387,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         }
         if (this.organizacionSeleccionada) {
 
-            this.prestaciones = this.prestaciones.filter(p => p.data.ejecucion.organizacion.id === this.organizacionSeleccionada.id);
+            this.prestaciones = this.prestaciones.filter(p => p.data.ejecucion?.organizacion.id === this.organizacionSeleccionada.id);
 
         }
         this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
