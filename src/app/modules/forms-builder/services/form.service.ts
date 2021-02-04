@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 export interface Form {
     name: string;
     type: string;
+    snomedCode: string;
     active: boolean;
     sections: {
         id: string,
@@ -15,6 +16,7 @@ export interface Form {
             label: string;
             type: string;
             description: string;
+            snomedCodeOrQuery: string;
             required: boolean;
             subfilter: boolean;
             extras: any;

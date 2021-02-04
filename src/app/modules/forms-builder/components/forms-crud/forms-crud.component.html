@@ -16,6 +16,11 @@
                 <plex-text label="Tipo/Clave" required name="tipo" [disabled]="desabilitado" [(ngModel)]="form.type"
                            [readonly]="hasOcurrences">
                 </plex-text>
+                <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable">
+                </plex-bool>
+                <div *ngIf="isFormSnomedizable">
+                    <plex-text label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"></plex-text>
+                </div>
                 <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
             </plex-wrapper>
 
@@ -44,6 +49,19 @@
                         </plex-select>
                     </div>
                     <div class="col-md col-sm-4 d-flex justify-content-between"
+                         *ngIf="field.type && field.type.id === 'snomed'">
+                        <div>
+                            <b>Snomed Code / Query</b><br>
+                            <plex-text name="Snomed-{{ i }}" [(ngModel)]="field.snomedCodeOrQuery">
+                            </plex-text>
+                        </div>
+                        <!-- <div class="precargado">
+                            <b>Precargado</b>
+                            <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
+                            </plex-bool>
+                        </div> -->
+                    </div>
+                    <div class="col-md col-sm-4 d-flex justify-content-between"
                          *ngIf="field.type && field.type.id === 'int'">
                         <div class="minmax">
                             <div class="mr-4">
@@ -70,15 +88,6 @@
 
                         <plex-text name="descripcion-{{ i }}" [(ngModel)]="field.description"></plex-text>
                     </div>
-                    <div class="col-md col-sm-4 d-flex justify-content-between">
-                        <div>
-                            <b>Requerido</b>
-                            <br>
-                            <plex-bool type="slide" name="active-{{ i }}" [(ngModel)]="field.required" required>
-                            </plex-bool>
-                        </div>
-                    </div>
-
                     <div class="col-md col-sm-4 d-flex justify-content-between"
                          *ngIf="field.type && field.type.id === 'select'">
                         <div>
@@ -92,6 +101,14 @@
                             <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
                             </plex-bool>
                         </div> -->
+                    </div>
+                    <div class="col-md col-sm-4 d-flex justify-content-between">
+                        <div>
+                            <b>Requerido</b>
+                            <br>
+                            <plex-bool type="slide" name="active-{{ i }}" [(ngModel)]="field.required" required>
+                            </plex-bool>
+                        </div>
                     </div>
 
                     <div class="col-md-1 col-sm-4" justify="center justify-content-sm-start">

@@ -20,16 +20,19 @@ export class AppFormsCrudComponent implements OnInit {
         { id: 'boolean', nombre: 'Booleano' },
         { id: 'phone', nombre: 'Teléfono' },
         { id: 'dependencia', nombre: 'Dependencia' },
+        { id: 'snomed', nombre: 'Snomed' },
         { id: 'table', nombre: 'Tabla' }
     ];
     public disable = false;
     public recursos = [];
     public secciones = [];
     public hasOcurrences = false;
+    public isFormSnomedizable = false;
     public desabilitado = false;
     public form: any = {
         name: '',
         type: '',
+        snomedCode: '',
         active: true,
         fields: []
     };
@@ -53,8 +56,10 @@ export class AppFormsCrudComponent implements OnInit {
             this.formToUpdate = formulario; // Hacemos esta parte para saber si hacemos update o create.
             if (formulario) {
                 this.desabilitado = true;
+                this.isFormSnomedizable = (formulario.snomedCode) ? true : false;
                 this.form.name = formulario.name;
                 this.form.type = formulario.type;
+                this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
                 formulario.sections.forEach(s => {
                     s.fields.forEach(f => {
@@ -154,6 +159,7 @@ export class AppFormsCrudComponent implements OnInit {
                 active: this.form.active,
                 name: this.form.name,
                 type: this.form.type,
+                snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                 sections: aux.map(i => {
                     let seccion;
                     seccion = i.seccion;
@@ -165,6 +171,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.formToUpdate = {
                     ...this.formToUpdate,
                     active: this.form.active,
+                    snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                     sections: dataSaved.sections
                 };
                 this.formsService.save(this.formToUpdate).subscribe(() => {
