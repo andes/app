@@ -1,14 +1,25 @@
 <plex-layout>
     <plex-layout-main>
-        <plex-title titulo="Ficha COVID 19">
+        <plex-title titulo="Ficha COVID 19" main>
             <plex-button type="danger" (click)="toBack()">Volver
+            </plex-button>
+            <plex-button position="right" type="success" (click)="registrarFicha()" [disabled]="form.invalid">
+                Registrar
+                ficha
             </plex-button>
         </plex-title>
         <section class="my-3">
             <form #form="ngForm">
                 <ng-container *ngFor="let seccion of secciones">
-                    <plex-title titulo="{{seccion.name}}" size="sm">
+                    <plex-title *ngIf="seccion.name==='Contactos Estrechos';else notContactos" size="sm"
+                                titulo="{{seccion.name}}">
+                        <plex-button type="info" size="sm" (click)="showNuevoContacto()">
+                            Agregar contacto</plex-button>
                     </plex-title>
+                    <ng-template #notContactos>
+                        <plex-title titulo="{{seccion.name}}" size="sm">
+                        </plex-title>
+                    </ng-template>
                     <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
 
                         <plex-select *ngIf="field.key==='organizacion';else notOrganizacion "
@@ -251,9 +262,13 @@
                                     <td *plTableCol="'telefono'">{{contacto.telefono}}</td>
                                     <td *plTableCol="'domicilio'">{{contacto.domicilio}}</td>
                                     <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto | fecha}}</td>
-                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto}}</td>
+                                    <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto.nombre}}</td>
+                                    <td *plTableCol="'acciones'">
+                                        <plex-icon size="xl" type="danger" name="delete"
+                                                   (click)="deleteContacto(contacto)" class="hover"></plex-icon>
+                                    </td>
                                 </tr>
-                                <tr>
+                                <tr *ngIf="nuevoContacto">
                                     <td *plTableCol="'apellidoNombre'">
                                         <plex-text name="apellidoNombre" [(ngModel)]="contacto.apellidoNombre">
                                         </plex-text>
@@ -263,8 +278,8 @@
                                         </plex-text>
                                     </td>
                                     <td *plTableCol="'telefono'">
-                                        <plex-text name="telefono" [(ngModel)]="contacto.telefono">
-                                        </plex-text>
+                                        <plex-phone name="telefono" [(ngModel)]="contacto.telefono">
+                                        </plex-phone>
                                     </td>
                                     <td *plTableCol="'domicilio'">
                                         <plex-text name="domicilio" [(ngModel)]="contacto.domicilio">
@@ -275,10 +290,15 @@
                                         </plex-datetime>
                                     </td>
                                     <td *plTableCol="'tipoContacto'">
-                                        <plex-text name="tipoContacto" [(ngModel)]="contacto.tipoContacto">
-                                        </plex-text>
+                                        <plex-select name="tipoContacto" [(ngModel)]="contacto.tipoContacto"
+                                                     [data]="tipoContacto">
+                                        </plex-select>
                                     </td>
-                                    <plex-button (click)="addContacto()">Agregar nuevo</plex-button>
+                                    <td *plTableCol="'acciones'">
+                                        <plex-icon size="xl" type="success" name="mas" class="hover"
+                                                   (click)="addContacto()">
+                                        </plex-icon>
+                                    </td>
                                 </tr>
                             </plex-table>
                         </div>
@@ -288,9 +308,4 @@
             </form>
         </section>
     </plex-layout-main>
-    <plex-layout-footer>
-        <plex-button position="right" type="success" (click)="registrarFicha()" [disabled]="form.invalid">Registrar
-            ficha
-        </plex-button>
-    </plex-layout-footer>
 </plex-layout>

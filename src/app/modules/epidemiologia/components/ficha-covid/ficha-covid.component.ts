@@ -57,7 +57,7 @@ export class FichaCovidComponent implements OnInit {
     { id: 'pcr', nombre: 'PCR' },
   ];
   public tipoMuestra = [
-    { id: 'aspirad', nombre: 'Aspirado' },
+    { id: 'aspirado', nombre: 'Aspirado' },
     { id: 'hisopado', nombre: 'Hisopado' },
     { id: 'esputo', nombre: 'Esputo' },
     { id: 'lavadoBroncoalveolar', nombre: 'Lavado broncoalveolar' },
@@ -107,6 +107,11 @@ export class FichaCovidComponent implements OnInit {
       key: 'tipoContacto',
       label: 'tipo de contacto',
       sorteable: true
+    },
+    {
+      key: 'acciones',
+      label: 'Acciones',
+      sorteable: false
     }
   ];
 
@@ -118,6 +123,7 @@ export class FichaCovidComponent implements OnInit {
   public ficha = [];
   public telefono = null;
   public contactosEstrechos = [];
+  public nuevoContacto = false;
 
   constructor(
     private formsService: FormsService,
@@ -303,6 +309,10 @@ export class FichaCovidComponent implements OnInit {
     this.volver.emit();
   }
 
+  showNuevoContacto() {
+    this.nuevoContacto = true;
+  }
+
   addContacto() {
     this.contactosEstrechos.push(this.contacto);
     this.contacto = {
@@ -313,5 +323,14 @@ export class FichaCovidComponent implements OnInit {
       fechaUltimoContacto: '',
       tipoContacto: ''
     };
+    this.nuevoContacto = false;
+  }
+
+  deleteContacto(contacto) {
+    let index = this.contactosEstrechos.findIndex(item => item.dni === contacto.dni);
+    if (index >= 0) {
+      this.contactosEstrechos.splice(index, 1);
+      this.contactosEstrechos = [...this.contactosEstrechos];
+    }
   }
 }
