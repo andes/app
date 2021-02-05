@@ -8,6 +8,7 @@ import { Unsubscribe } from '@andes/shared';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { concat } from 'rxjs';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'solicitudes',
@@ -108,6 +109,7 @@ export class SolicitudesComponent implements OnInit {
         public servicioTurnos: TurnoService,
         public router: Router,
         private hudsService: HUDSService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
@@ -181,6 +183,10 @@ export class SolicitudesComponent implements OnInit {
     }
 
     darTurno(prestacionSolicitud) {
+        this.pacienteService.getById(prestacionSolicitud.paciente.id).subscribe(paciente => {
+            // Si se seleccionó por error un paciente fallecido
+            this.pacienteService.checkFallecido(paciente);
+        });
         // Pasar filtros al calendario
         this.solicitudTurno = prestacionSolicitud;
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
@@ -630,8 +636,8 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional ?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
-                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional ?.id === this.auth.profesional && prestacion.paciente) {
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
                             this.setRouteToParams(['paciente', prestacion.paciente.id]);

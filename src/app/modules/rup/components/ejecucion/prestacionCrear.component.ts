@@ -1,7 +1,7 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
@@ -359,9 +359,10 @@ export class PrestacionCrearComponent implements OnInit {
     onSelect(paciente: IPaciente): void {
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
+            // Si se seleccionó por error un paciente fallecido
+            this.pacienteService.checkFallecido(paciente);
             this.paciente = paciente;
             this.buscandoPaciente = false;
-
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }

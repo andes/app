@@ -1,5 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class BusquedaPacienteComponent implements OnInit {
     loading = false;
 
     constructor(
-        public plex: Plex
+        public plex: Plex,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
@@ -38,6 +40,8 @@ export class BusquedaPacienteComponent implements OnInit {
     }
 
     seleccionarPaciente(paciente) {
+        // Si se seleccionó por error un paciente fallecido
+        this.pacienteService.checkFallecido(paciente);
         this.returnBusqueda.emit({ status: true, paciente: paciente.id });
     }
 

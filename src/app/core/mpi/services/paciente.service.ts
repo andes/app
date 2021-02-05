@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { map } from 'rxjs/operators';
+import { Plex } from '@andes/plex';
 
 @Injectable()
 export class PacienteService {
@@ -13,7 +14,10 @@ export class PacienteService {
      */
     public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
 
-    constructor(private server: Server) { }
+    constructor(
+        private server: Server,
+        private plex: Plex
+    ) { }
 
     /**
      * Metodo getById. Trae un objeto paciente por su Id.
@@ -65,6 +69,14 @@ export class PacienteService {
             return this.patch(paciente.id, paciente);
         } else {
             return this.post(paciente, ignoreCheck);
+        }
+    }
+
+    // Arroja una alerta invasiva cuando un paciente dado se encuentra fallecido
+    checkFallecido(paciente: IPaciente) {
+        if (paciente.fechaFallecimiento) {
+            const fecha = moment(paciente.fechaFallecimiento).format('DD/MM/YYYY');
+            this.plex.info('warning', `${paciente.nombreCompleto} se encuentra registrado como paciente fallecido el ${fecha}. De continuar, esta acción quedará registrada en la Historia de Salud del paciente.`, 'Paciente fallecido');
         }
     }
 

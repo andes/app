@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -10,6 +10,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -163,6 +164,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
         switch (operacion) {
             case 'darTurno':
+                // Si se seleccionó por error un paciente fallecido
+                this.servicePaciente.checkFallecido(paciente);
                 this.solicitudPrestacion = null;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;

@@ -30,6 +30,7 @@ import { calcularEdad } from '@andes/shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { DriveService } from 'src/app/services/drive.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'rup',
@@ -146,7 +147,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public plantillasService: PlantillasService,
         public vacunasService: VacunasService,
         public driveService: DriveService,
-        @Optional() public ejecucionService: RupEjecucionService
+        @Optional() public ejecucionService: RupEjecucionService,
+        public pacienteService: PacienteService
     ) {
     }
 

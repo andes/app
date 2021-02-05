@@ -444,6 +444,8 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.resultadoBusqueda = [];
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
+            // Si se seleccionó por error un paciente fallecido
+            this.servicePaciente.checkFallecido(paciente);
             return this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMongo => {
                     this.paciente = pacienteMongo;
