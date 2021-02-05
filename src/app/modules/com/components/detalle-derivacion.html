@@ -28,7 +28,7 @@
         </plex-label>
         <plex-label titulo="Organización destino" subtitulo="{{derivacion.organizacionDestino.nombre}}">
         </plex-label>
-        <plex-label *ngIf='derivacion.organizacionTraslado' titulo="Organización traslado" subtitulo="{{derivacion.organizacionTraslado.nombre}}">
+        <plex-label *ngIf='derivacion.organizacionTraslado' titulo="Traslado" subtitulo="{{derivacion.organizacionTraslado.nombre}}">
         </plex-label>
         <plex-label *ngIf='derivacion.tipoTraslado' titulo="Tipo de traslado" subtitulo="{{derivacion.tipoTraslado.nombre}}">
         </plex-label>
@@ -59,7 +59,7 @@
                              placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
                              [required]="true">
                 </plex-select>
-                <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" ></tipo-traslado>
+                <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full"></tipo-traslado>
                 <div class="mt-1" *ngIf="reglaSeleccionada?.definePrioridad">
                     <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
                     <ng-container *ngFor="let p of opcionesPrioridad">

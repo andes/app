@@ -147,7 +147,7 @@ export class DetalleDerivacionComponent implements OnInit {
     }
 
     filterReglasDerivaciones() {
-        if (this.esCOM || this.derivacion.organizacionDestino === this.auth.organizacion.id) {
+        if (this.esCOM || this.derivacion.organizacionDestino.id === this.auth.organizacion.id) {
             this.reglasDerivacionFiltradas = this.reglasDerivacion.filter(element => element.estadoInicial === this.derivacion.estado &&
                 element.soloCOM === this.esCOM);
         }
@@ -159,17 +159,22 @@ export class DetalleDerivacionComponent implements OnInit {
 
     actualizarEstado($event) {
         if ($event.formValid) {
-            this.derivacion.estado = this.reglaSeleccionada.estadoFinal;
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
-            this.derivacion.historial.push(this.nuevoEstado);
             if (this.reglaSeleccionada.definePrioridad) {
-                this.derivacion.prioridad = this.prioridad;
                 this.nuevoEstado.prioridad = this.prioridad;
             }
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
 
-            this.derivacionService.update(this.derivacion._id, this.derivacion).subscribe(() => {
+            let body: any = {
+                estado: this.nuevoEstado,
+                trasladoEspecial: {
+                    tipoTraslado: this.derivacion.tipoTraslado,
+                    organizacionTraslado: this.derivacion.organizacionTraslado
+                }
+            };
+
+            this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
                 this.plex.toast('success', 'La derivación fue actualizada exitosamente');
                 this.returnDetalle.emit(true);
             });
