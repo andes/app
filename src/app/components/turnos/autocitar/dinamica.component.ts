@@ -9,6 +9,8 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { Router } from '@angular/router';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { map, tap, switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
     selector: 'dinamica',
@@ -155,21 +157,23 @@ export class DinamicaFormComponent implements OnInit {
                             idAgenda: this.agenda.id
                         };
                         // guardamos el turno
-                        this.serviceTurno.saveDinamica(datosConfirma).subscribe(
-                            agendaResultado => {
-                                // TODO::revisar si podemos obtener directamente desde la api el turno agregado
-                                const turnos = agendaResultado.bloques[0].turnos;
-                                const turnoDado = turnos[turnos.length - 1];
-                                // creamos la prestación
-                                this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', new Date(), turnoDado.id).subscribe(prestacion => {
-                                    this.router.navigate(['rup/ejecucion/', prestacion.id]);
-                                }, (err) => {
+                        this.serviceTurno.saveDinamica(datosConfirma).pipe(
+                            map(turnoDado => {
+                                return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
+                            }),
+                            switchMap(idturnoDado => {
+                                if (idturnoDado) {
+                                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', new Date(), idturnoDado).pipe(
+                                        tap(prestacion => {
+                                            this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                                        })
+                                    );
+                                } else {
                                     this.plex.info('danger', 'No fue posible crear la prestación');
-                                });
-                            },
-                            error => {
-
-                            });
+                                    return EMPTY;
+                                }
+                            })
+                        ).subscribe();
                     }
 
                 });
