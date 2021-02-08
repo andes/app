@@ -394,6 +394,13 @@
                         </plex-select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <plex-select [(ngModel)]="organizacionSeleccionada" label="Organización" [data]="organizaciones"
+                                     idField="id" labelField="nombre" (change)="filtrar()">
+                        </plex-select>
+                    </div>
+                </div>
                 <div class="row pb-2">
                     <div class="col-6">
                         <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio"
