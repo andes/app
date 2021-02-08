@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { RUPComponent } from '../core/rup.component';
-import { RupElement } from '.';
 import { cache } from '@andes/shared';
-import { finalize, map } from 'rxjs/operators';
-import { Observable, combineLatest, forkJoin } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RupElement } from '.';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-vacuna',
@@ -17,7 +17,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     public laboratorios$: Observable<any[]>;
     public esquemas$: Observable<any[]>;
     public dosis$: Observable<any[]>;
+    public lotes$: Observable<any[]>;
     private validacion = false;
+    public lote;
     public vacunasEncontradas;
 
     ngOnInit() {
@@ -28,6 +30,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                 }
             };
         } else {
+            this.loadLotes();
             this.getHistorialVacunas();
         }
 
@@ -61,6 +64,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                 });
             })
         );
+
     }
 
 
@@ -95,6 +99,24 @@ export class VacunasComponent extends RUPComponent implements OnInit {
         }
     }
 
+    loadLotes() {
+        if (this.registro.valor.vacuna.vacuna) {
+            this.lotes$ = this.vacunasService.getNomivacLotes({ habilitado: true, vacuna: this.registro.valor.vacuna.vacuna._id, sort: 'codigo' }).pipe(
+                map(l => {
+                    if (this.registro.valor.vacuna.lote) {
+                        this.lote = l.find(unLote => unLote.codigo === this.registro.valor.vacuna.lote);
+                    }
+                    return l;
+                })
+            );
+        } else {
+            this.lotes$ = null;
+        }
+    }
+
+    setLote() {
+        this.registro.valor.vacuna.lote = (this.lote as any).codigo;
+    }
 
     getHistorialVacunas() {
         this.validacion = !this.ejecucionService;
@@ -120,7 +142,8 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                                 vacuna: r.registro.valor.vacuna.vacuna.nombre,
                                 condicion: r.registro.valor.vacuna.condicion.nombre,
                                 esquema: r.registro.valor.vacuna.esquema.nombre,
-                                dosis: r.registro.valor.vacuna.dosis.nombre
+                                dosis: r.registro.valor.vacuna.dosis.nombre,
+                                lote: r.registro.valor.vacuna.lote
                             };
                         });
                     }
