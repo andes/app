@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -41,15 +41,10 @@ export class PanelAgendaComponent implements OnInit {
 
     showEditarAgendaPanel: Boolean = true;
     public showMapa = false;
-
     public agenda: any = {};
-
     public alertas: any[] = [];
-
     public espaciosList = [];
-
     textoEspacio = 'Espacios físicos de la organización';
-
     espacioFisicoPropio = true;
 
     constructor(
@@ -103,7 +98,8 @@ export class PanelAgendaComponent implements OnInit {
                     'op': 'editarAgenda',
                     'profesional': profesional,
                     'espacioFisico': espacioFisico,
-                    'otroEspacioFisico': otroEspacioFisico
+                    'otroEspacioFisico': otroEspacioFisico,
+                    enviarSms: this.agenda.enviarSms
                 };
 
                 this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {

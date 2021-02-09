@@ -53,4 +53,5 @@ export interface IAgenda {
         estado: String,
         fecha: Date
     }];
+    enviarSms: String;
 }

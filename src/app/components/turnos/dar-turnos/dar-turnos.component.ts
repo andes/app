@@ -980,7 +980,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private afterSaveTurno(pacienteSave) {
-        if (!this.agenda.dinamica) {
+        if (!this.agenda.dinamica && this.agenda.enviarSms) {
             this.enviarSMS(pacienteSave);
         }
         this.estadoT = 'noSeleccionada';
