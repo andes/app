@@ -10,6 +10,7 @@ import { ProfesionalService } from 'src/app/services/profesional.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { TipoTrasladoService } from 'src/app/services/com/tipoTraslados.service';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -53,6 +54,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         historial: []
     };
     organizacionesDestino = [];
+    tipoTraslados = [];
     paramsSubscribe: any;
 
     constructor(
@@ -60,6 +62,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private auth: Auth,
         private organizacionService: OrganizacionService,
         private derivacionesService: DerivacionesService,
+        private tipoTrasladoService: TipoTrasladoService,
         private profesionalService: ProfesionalService,
         private pacienteService: PacienteService,
         public sanitazer: DomSanitizer,
@@ -94,6 +97,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             this.fileToken = data.token;
         });
         this.cargarDestinos();
+        this.cargarTipoTraslados();
     }
 
     ngOnDestroy() {
@@ -129,6 +133,12 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         this.organizacionService.get({ esCOM: true }).subscribe(resultado => {
             this.organizacionesDestino = resultado;
             this.organizacionDestino = this.organizacionesDestino[0];
+        });
+    }
+
+    cargarTipoTraslados() {
+        this.tipoTrasladoService.search().subscribe(resultado => {
+            this.tipoTraslados = resultado;
         });
     }
 

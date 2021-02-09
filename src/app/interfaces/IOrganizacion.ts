@@ -1,10 +1,9 @@
 import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.interface';
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
-import { IUbicacion } from './IUbicacion';
 import { IContacto } from './IContacto';
 import { IDireccion } from '../core/mpi/interfaces/IDireccion';
-import { tipoComunicacion } from './../utils/enumerados';
 import { ITipoPrestacion } from './ITipoPrestacion';
+import { ITipoTraslado } from './ITipoTraslado';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
 
@@ -58,4 +57,5 @@ export interface IOrganizacion {
     showMapa?: boolean;
     aceptaDerivacion?: boolean;
     esCOM?: boolean;
+    trasladosEspeciales?: [ITipoTraslado];
 }

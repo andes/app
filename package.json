@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@agm/core": "^1.0.0-beta.5",
-    "@andes/icons": "^1.1.3",
+    "@andes/icons": "^1.1.13",
     "@andes/match": "^1.1.12",
     "@andes/plex": "^7.13.0",
     "@angular/animations": "9.1.12",

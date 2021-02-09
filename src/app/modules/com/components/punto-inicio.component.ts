@@ -28,6 +28,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public showEditarEstado = false;
     public verAyuda = false;
     public requestInProgress: boolean;
+    public esTrasladoEspecial;
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
@@ -111,6 +112,7 @@ export class ComPuntoInicioComponent implements OnInit {
             if (org.esCOM) {
                 this.esCOM = true;
             }
+            this.esTrasladoEspecial = org.trasladosEspeciales && org.trasladosEspeciales.length;
             this.cargarDerivaciones();
         });
     }
@@ -133,6 +135,22 @@ export class ComPuntoInicioComponent implements OnInit {
 
     @Unsubscribe()
     actualizarTabla() {
+        let query = this.getQuery();
+        this.puntoInicioService.get(query).subscribe((data) => {
+            this.derivaciones = this.derivaciones.concat(data);
+            this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
+            this.skip = this.derivaciones.length;
+            this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
+            if (!data.length || data.length < this.limit) {
+                this.scrollEnd = true;
+            }
+            this.puntoInicioService.sortOrder.next(this.sortBy);
+            this.puntoInicioService.sortOrder.next(this.sortOrder);
+            this.loading = false;
+        });
+    }
+
+    private getQuery() {
         let query: any = { cancelada: false, skip: this.skip, limit: this.limit };
         if (this.estado) {
             query.estado = this.estado.id;
@@ -140,10 +158,15 @@ export class ComPuntoInicioComponent implements OnInit {
             query.estado = '~finalizada';
         }
         if (this.tabIndex === 0) {
-            query.organizacionDestino = this.auth.organizacion.id;
-            if (this.organizacionOrigen) {
-                query.organizacionOrigen = this.organizacionOrigen.id;
+            if (this.esTrasladoEspecial) {
+                query['tipoTraslado'] = true;
+                if (this.organizacionOrigen) {
+                    query.organizacionOrigen = this.organizacionOrigen.id;
+                }
+            } else {
+                query.organizacionDestino = this.auth.organizacion.id;
             }
+
         } else {
             if (!this.esCOM) {
                 query.organizacionOrigen = this.auth.organizacion.id;
@@ -157,18 +180,8 @@ export class ComPuntoInicioComponent implements OnInit {
         if (this.paciente) {
             query.paciente = `^${this.paciente}`;
         }
-        this.puntoInicioService.get(query).subscribe((data) => {
-            this.derivaciones = this.derivaciones.concat(data);
-            this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
-            this.skip = this.derivaciones.length;
-            this.derivaciones$ = this.puntoInicioService.derivacionesOrdenadas$;
-            if (!data.length || data.length < this.limit) {
-                this.scrollEnd = true;
-            }
-            this.puntoInicioService.sortOrder.next(this.sortBy);
-            this.puntoInicioService.sortOrder.next(this.sortOrder);
-            this.loading = false;
-        });
+
+        return query;
     }
 
     ocultarSidebars() {
