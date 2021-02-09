@@ -58,6 +58,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     guardar(form) {
         if (form.formValid) {
             if (this.selectedCama) {
+                this.selectedCama.extras = null;
                 if (this.selectedCama.estado === 'bloqueada') {
                     this.selectedCama.observaciones = '';
                 }
