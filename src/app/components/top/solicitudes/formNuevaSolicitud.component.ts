@@ -210,58 +210,69 @@ export class FormNuevaSolicitudComponent implements OnInit {
         }
     }
 
-    guardarSolicitud($event) {
+    confirmGuardar($event) {
         if ($event.formValid) {
-            if (this.tipoSolicitud === 'entrada') {
-                this.modelo.solicitud.organizacion = this.auth.organizacion;
-                // ------- solo solicitudes de entrada pueden ser autocitadas  ------
-                if (this.autocitado) {
-                    this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
-                    this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
-                    this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
-                    // solicitudes autocitadas
-                    this.modelo.estados = [{ tipo: 'pendiente' }];
-                }
+            if (this.tipoSolicitud === 'entrada' && !this.modelo.solicitud.profesionalOrigen) {
+                this.plex.confirm('Está a punto de guardar una solicitud de entrada sin indicar profesional de origen', '¿Desea continuar?').then((resultado) => {
+                    if (resultado) {
+                        this.guardarSolicitud($event);
+                    }
+                });
             } else {
-                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-                let reglaAplicada = this.arrayReglasDestino.find(r => r.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
-                    r.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
-                let reglaOrigen = reglaAplicada.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
-                if (reglaOrigen.auditable) {
-                    this.modelo.estados = [{ tipo: 'auditoria' }];
-                } else {
-                    this.modelo.estados = [{ tipo: 'pendiente' }];
-                }
+                this.guardarSolicitud($event);
             }
-            this.modelo.solicitud.registros.push({
-                nombre: this.modelo.solicitud.tipoPrestacion.term,
-                concepto: this.modelo.solicitud.tipoPrestacion,
-                valor: {
-                    solicitudPrestacion: {
-                        motivo: this.motivo,
-                        autocitado: this.autocitado
-                    },
-                    documentos: this.documentos
-                },
-                tipo: 'solicitud'
-            });
-            this.modelo.paciente = {
-                id: this.paciente.id,
-                nombre: this.paciente.nombre,
-                apellido: this.paciente.apellido,
-                documento: this.paciente.documento,
-                sexo: this.paciente.sexo,
-                fechaNacimiento: this.paciente.fechaNacimiento
-            };
-            // Se guarda la solicitud 'pendiente' de prestación
-            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                this.operacionFinalizada.emit(true);
-            });
-
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
         }
+    }
+
+    guardarSolicitud($event) {
+        if (this.tipoSolicitud === 'entrada') {
+            this.modelo.solicitud.organizacion = this.auth.organizacion;
+            // ------- solo solicitudes de entrada pueden ser autocitadas  ------
+            if (this.autocitado) {
+                this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
+                this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
+                // solicitudes autocitadas
+                this.modelo.estados = [{ tipo: 'pendiente' }];
+            }
+        } else {
+            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            let reglaAplicada = this.arrayReglasDestino.find(r => r.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
+                r.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
+            let reglaOrigen = reglaAplicada.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
+            if (reglaOrigen.auditable) {
+                this.modelo.estados = [{ tipo: 'auditoria' }];
+            } else {
+                this.modelo.estados = [{ tipo: 'pendiente' }];
+            }
+        }
+        this.modelo.solicitud.registros.push({
+            nombre: this.modelo.solicitud.tipoPrestacion.term,
+            concepto: this.modelo.solicitud.tipoPrestacion,
+            valor: {
+                solicitudPrestacion: {
+                    motivo: this.motivo,
+                    autocitado: this.autocitado
+                },
+                documentos: this.documentos
+            },
+            tipo: 'solicitud'
+        });
+        this.modelo.paciente = {
+            id: this.paciente.id,
+            nombre: this.paciente.nombre,
+            apellido: this.paciente.apellido,
+            documento: this.paciente.documento,
+            sexo: this.paciente.sexo,
+            fechaNacimiento: this.paciente.fechaNacimiento
+        };
+        // Se guarda la solicitud 'pendiente' de prestación
+        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+            this.operacionFinalizada.emit(true);
+        });
     }
 
     cancelar() {

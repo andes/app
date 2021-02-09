@@ -3,7 +3,7 @@
                  (click)="cancelar()">
     </plex-button>
     <plex-button [size]="size? size : ''" position="right" class="float-right mr-1" type="success" label="Guardar"
-                 (click)="guardarSolicitud($event)" [validateForm]="form"> </plex-button>
+                 (click)="confirmGuardar($event)" [validateForm]="form"> </plex-button>
 </plex-title>
 <form #form="ngForm">
     <!-- SOLICITUD ENTRADA -->
@@ -41,7 +41,7 @@
                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
                              (getData)="loadProfesionales($event)" label="Profesional solicitante"
                              placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-                             [required]="true" (change)="checkProfesional()" grow="full">
+                             (change)="checkProfesional()" grow="full">
                 </plex-select>
                 <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino"
                              name="profesional" (getData)="loadProfesionales($event)" (change)="checkProfesional()"
