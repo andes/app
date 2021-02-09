@@ -12,8 +12,11 @@ export interface IMaquinaEstados {
     columns: MapaCamaListadoColumns;
     ingresos: { [key: string]: string };
     turnero: { [key: string]: string };
-
     historialMedico?: boolean;
+    configPases: {
+        sala: string;
+        allowCama: boolean;
+    };
 }
 
 export interface IMAQEstado {

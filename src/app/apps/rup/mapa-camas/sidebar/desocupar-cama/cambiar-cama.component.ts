@@ -2,9 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { Observable, combineLatest, Subscription, forkJoin } from 'rxjs';
+import { Observable, combineLatest, Subscription, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -27,6 +28,11 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
     public disableButton = false;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
+    public salaPases$: Observable<any>;
+    public camasParaPases$: Observable<ISnapshot[]>;
+    public paseConfig = false;
+    public allowCama = false;
+    public selectCama = false;
 
     constructor(
         public auth: Auth,
@@ -35,13 +41,45 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnDestroy() {
-
     }
 
     ngOnInit() {
-        this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
-            switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
-        );
+        combineLatest([
+            this.mapaCamasService.maquinaDeEstado$,
+            this.camaSelectedSegunView$
+        ]).pipe(take(1)).subscribe(([maquinaEstados, camaActual]) => {
+            this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
+                switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
+            );
+
+            this.salaPases$ = of({});
+
+            if (maquinaEstados.configPases && maquinaEstados.configPases.allowCama) {
+                this.allowCama = true;
+            }
+
+            if (maquinaEstados.configPases && maquinaEstados.configPases.sala) {
+                if (maquinaEstados.configPases.sala !== camaActual.id) {
+                    this.paseConfig = true;
+                    this.salaPases$ = this.camasDisponibles$.pipe(
+                        map(cama => {
+                            const sala = cama.camasDistintaUO.filter((c: ISnapshot) => c.sala && c.id === maquinaEstados.configPases.sala)[0];
+                            return sala;
+                        })
+                    );
+
+                    this.camasParaPases$ = combineLatest([
+                        this.camasDisponibles$,
+                        this.salaPases$,
+                    ]).pipe(
+                        map(([camasDisp, sala]) => {
+                            return camasDisp.camasDistintaUO.filter((c: ISnapshot) => c.id !== sala.id);
+                        })
+                    );
+                }
+            }
+
+        });
     }
 
     guardar(valid) {
@@ -49,12 +87,14 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
             this.disableButton = true;
             combineLatest(
                 this.mapaCamasService.fecha2,
-                this.camaSelectedSegunView$
+                this.camaSelectedSegunView$,
+                this.salaPases$,
             ).pipe(
                 take(1),
-                switchMap(([fechaCambio, camaActual]) => {
+                switchMap(([fechaCambio, camaActual, salaPases]) => {
                     this.fecha = fechaCambio;
-                    return this.cambiarCama(camaActual, this.nuevaCama, fechaCambio);
+                    const proximaCama = this.nuevaCama || salaPases;
+                    return this.cambiarCama(camaActual, proximaCama, fechaCambio);
                 })
             ).subscribe(
                 () => {

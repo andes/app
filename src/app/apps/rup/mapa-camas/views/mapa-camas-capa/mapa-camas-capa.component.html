@@ -37,9 +37,11 @@
                         <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool label="Sexo" [(ngModel)]="columns.sexo" (change)="toggleColumns()"></plex-bool>
-                        <plex-bool label="Prioridad" [(ngModel)]="columns.prioridad" (change)="toggleColumns()">
+                        <plex-bool *ngIf="(ambito$ | async) === 'guardia'" label="Prioridad"
+                                   [(ngModel)]="columns.prioridad" (change)="toggleColumns()">
                         </plex-bool>
-                        <plex-bool label="Guardia" [(ngModel)]="columns.guardia" (change)="toggleColumns()">
+                        <plex-bool *ngIf="(ambito$ | async) === 'guardia'" label="Guardia" [(ngModel)]="columns.guardia"
+                                   (change)="toggleColumns()">
                         </plex-bool>
                     </plex-grid>
                 </plex-dropdown>
