@@ -1,3 +1,20 @@
+# [5.33.0](https://github.com/andes/app/compare/v5.32.1...v5.33.0) (2021-02-10)
+
+
+### Bug Fixes
+
+* **citas:** solapamiento de turnos en agendas dinamicas ([#2129](https://github.com/andes/app/issues/2129)) ([0775fab](https://github.com/andes/app/commit/0775fab346944fd13f419d354355c9f528d82d4a))
+
+
+### Features
+
+* **citas:** activar/desactivar envio de mensajes de una agenda ([#2115](https://github.com/andes/app/issues/2115)) ([68df51f](https://github.com/andes/app/commit/68df51f73bd48f3c00aa86c78c0e8425904e691d))
+* **COM:** incluye traslados especiales ([6e38715](https://github.com/andes/app/commit/6e38715bbef61744f9abad549eb2633ce1433acb))
+* **huds:** agrega filtro organizaciones ([#2128](https://github.com/andes/app/issues/2128)) ([bf38f84](https://github.com/andes/app/commit/bf38f843c8e34e1f3b73ca2223380307b15a9f09))
+* **mapa-camas:** nuevo pase de UO configurable por maquina de estados ([#2074](https://github.com/andes/app/issues/2074)) ([7e028e4](https://github.com/andes/app/commit/7e028e43893598a54ce38349e82d15e08e32f196))
+* **rup:** cambia a lote tabulado en vacunacion ([#2121](https://github.com/andes/app/issues/2121)) ([51cfdbb](https://github.com/andes/app/commit/51cfdbb0d3ecfe2adfffe6c7360b97dfa4ee198c))
+* **top:** poder guardar solicitudes sin profesional de origen ([#2127](https://github.com/andes/app/issues/2127)) ([ea287ed](https://github.com/andes/app/commit/ea287ede7a328285c2574ecc7e787e56cba5f0b9))
+
 ## [5.32.1](https://github.com/andes/app/compare/v5.32.0...v5.32.1) (2021-02-03)
 
 
