@@ -201,6 +201,8 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         this.desplegarOS = this.desplegarObraSocial();
+        // Si es solicitud con profesional asignado, lo carga por defecto la primera vez
+        this.opciones.profesional = this._solicitudPrestacion?.solicitud?.profesional ? this._solicitudPrestacion.solicitud.profesional : this.opciones.profesional;
         this.actualizar();
     }
 
@@ -340,11 +342,7 @@ export class DarTurnosComponent implements OnInit {
     actualizar() {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
-            if (this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
-                this.opciones.profesional = this._solicitudPrestacion.solicitud.profesional;
-            }
         }
-
         // 1) Auth general (si puede ver esta pantalla)
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
