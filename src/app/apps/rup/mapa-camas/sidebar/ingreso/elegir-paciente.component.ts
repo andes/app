@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { Subscription, combineLatest } from 'rxjs';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'app-elegir-paciente',
@@ -19,7 +20,8 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
     constructor(
         private plex: Plex,
         private mapaCamasService: MapaCamasService,
-        private ingresoPacienteService: IngresoPacienteService
+        private ingresoPacienteService: IngresoPacienteService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnDestroy() {
@@ -39,6 +41,8 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
     }
 
     onPacienteSelected(paciente: IPaciente) {
+        // Si se seleccionó por error un paciente fallecido
+        this.pacienteService.checkFallecido(paciente);
         let cama = this.verificarPaciente(paciente);
         if (cama) {
             this.plex.info('warning', `${paciente.nombreCompleto} (${paciente.documento}) se encuentra internado

@@ -109,6 +109,8 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     seleccionarPaciente(paciente: IPaciente) {
         if (!this.registro.valor.informe.pacientes.some((p) => p.id === paciente.id)) {
+            // Si se seleccionó por error un paciente fallecido
+            this.pacienteService.checkFallecido(paciente);
             this.pacienteActivo = paciente;
             this.registro.valor.informe.pacientes.push(paciente);
         } else {

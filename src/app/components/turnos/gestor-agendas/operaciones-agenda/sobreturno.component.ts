@@ -130,6 +130,8 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSelect(paciente: any): void {
+        // Si se seleccionó por error un paciente fallecido
+        this.servicePaciente.checkFallecido(paciente);
         this.servicePaciente.getById(paciente.id).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;

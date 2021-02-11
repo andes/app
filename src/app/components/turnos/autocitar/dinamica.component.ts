@@ -11,6 +11,7 @@ import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'dinamica',
@@ -33,7 +34,9 @@ export class DinamicaFormComponent implements OnInit {
         private router: Router,
         public serviceTurno: TurnoService,
         public servicioPrestacion: PrestacionesService,
-        private obraSocialService: ObraSocialService) {
+        private obraSocialService: ObraSocialService,
+        private pacienteService: PacienteService
+    ) {
     }
 
     ngOnInit() {
@@ -58,6 +61,8 @@ export class DinamicaFormComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente) {
+        // Si se seleccionó por error un paciente fallecido
+        this.pacienteService.checkFallecido(paciente);
         this.pacienteActivo = paciente;
         this.pacientes = null;
         if (paciente) {
