@@ -1,92 +1,90 @@
-<div class="prestaciones mt-3 ml-3" *ngIf="ready$ | async">
+<div *ngIf="ready$ | async">
     <ng-container *ngIf="prestacion">
 
-        <plex-title main titulo="{{ prestacion.solicitud.tipoPrestacion.term }}">
+        <plex-title main titulo="{{ prestacion.solicitud.tipoPrestacion.term }}" size="sm">
             <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF"
                          [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
-        <div class="row">
-            <div class="col-6">
-                <b> Fecha: </b>
-                {{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}
-            </div>
-            <div class="col-6"
-                 *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000">
-                <b> Solicitada el: </b>
-                {{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}
-            </div>
-            <div class="col-12">
-                <b> Solicitada por el profesional: </b>
-                {{ prestacion.solicitud.profesional | nombre }}
-            </div>
-            <div class="col-12">
-                <b> Desde la Organización: </b>
-                {{ prestacion.solicitud.organizacion.nombre }}
-            </div>
-            <div class="col-12">
-                <b> Ámbito: </b>
-                {{ prestacion.solicitud.ambitoOrigen }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <hr>
-                <h4>Registros de la consulta:</h4>
-                <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
+        <plex-grid size="md" type="full">
+            <plex-label icon="reloj" size="md" case="capitalize" titulo="Fecha/hora"
+                        subtitulo="{{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}">
+            </plex-label>
+            <plex-label icon="reloj" size="md" case="capitalize"
+                        *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000"
+                        titulo="Fecha de solicitud"
+                        subtitulo="{{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}"></plex-label>
+            <plex-label icon="medico" size="md" case="capitalize" titulo="Solicitante"
+                        subtitulo="{{ prestacion.solicitud.profesional | nombre }}"></plex-label>
+            <plex-label icon="hospital" size="md" case="capitalize" titulo="Organización origen"
+                        subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
+            </plex-label>
+            <plex-label icon="estetoscopio" size="md" case="capitalize" titulo="Ámbito"
+                        subtitulo="{{ prestacion.solicitud.ambitoOrigen }}"></plex-label>
+        </plex-grid>
 
-                    <div class="rup-card {{ elemento | semanticClass }}">
-                        <div class="rup-header">
-                            <div class="icon-rup">
-                                <i class="adi {{ elemento | semanticIcon }}"></i>
-                            </div>
-                            <div class="title">
-                                <ng-container *ngIf="elemento?.nombre">
-                                    {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
+        <!-- Registros -->
+        <plex-title titulo="Registros de la consulta" size="sm"></plex-title>
+        <plex-wrapper>
+            <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
+                <div class="rup-card {{ elemento | semanticClass }}">
+                    <div class="rup-header">
+                        <div class="icon-rup">
+                            <i class="adi {{ elemento | semanticIcon }}"></i>
+                        </div>
+                        <div class="title">
+                            <ng-container *ngIf="elemento?.nombre">
+                                {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
+                            </ng-container>
+                            <div class="float-left"
+                                 *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
+                                <b class="clearfix">Relacionado con:</b>
+                                <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
+                                    <plex-badge size="sm" type="info mr-1">
+                                        {{ relacionado | relacionRUP }}
+                                    </plex-badge>
                                 </ng-container>
-                                <div class="float-left"
-                                     *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 1">
-                                    <b class="clearfix">Relacionado con:</b>
-                                    <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                        <plex-badge size="sm" type="info mr-1">
-                                            {{ relacionado | relacionRUP }}
-                                        </plex-badge>
-                                    </ng-container>
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
-                                            size="sm" type="info">
-                                    <b> Relacionado con: </b>
-                                    {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </plex-badge>
-                                <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                    Procedimiento / diagnóstico principal
-                                </plex-badge>
                             </div>
                         </div>
-                        <div class="rup-body">
-                            <div class="legend">
-                                <span>
-                                    {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}
-                                </span>
-                            </div>
-                            <div class="content">
-                                <div class="row" *ngIf="prestacion.paciente">
-                                    <div class="col-12">
-                                        <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
-                                             [params]="elementosRUPService.getParams(elemento)"
-                                             [prestacion]="prestacion" [registro]="elemento"
-                                             [paciente]="prestacion.paciente" [soloValores]="true" [vistaHUDS]="false">
-                                        </rup>
-                                    </div>
+                        <div class="actions">
+                            <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
+                                        size="sm" type="info">
+                                <b> Relacionado con: </b>
+                                {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() +
+                                elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                            </plex-badge>
+                            <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                Procedimiento / diagnóstico principal
+                            </plex-badge>
+                        </div>
+                    </div>
+                    <div class="rup-body">
+                        <div class="legend">
+                            <span>
+                                {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}
+                            </span>
+                        </div>
+                        <div class="content">
+                            <div class="row" *ngIf="prestacion.paciente">
+                                <div class="col-12">
+                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                         [params]="elementosRUPService.getParams(elemento)" [prestacion]="prestacion"
+                                         [registro]="elemento" [paciente]="prestacion.paciente" [soloValores]="true"
+                                         [vistaHUDS]="false">
+                                    </rup>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </ng-container>
-            </div>
-        </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="prestacion.ejecucion.registros.length === 0">
+                <plex-label type="info" titulo="Sin registros"
+                            subtitulo="La prestación aún no ha sido validada. Posiblemente aún se encuentra en ejecución."
+                            size="lg" class="my-4 w-100" icon="zoom" direction="column">
+                </plex-label>
+            </ng-container>
+        </plex-wrapper>
     </ng-container>
 </div>
