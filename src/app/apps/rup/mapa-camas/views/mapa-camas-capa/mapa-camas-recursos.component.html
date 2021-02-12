@@ -1,0 +1,58 @@
+<plex-layout [aspect]="9" resizable="true" [min]="3" [max]="7" [steps]="2">
+    <plex-layout-main>
+        <plex-title main size="lg" titulo="Mapa de recursos">
+            <plex-button *mobile="false" type="info" size="sm" routerLink="/templates" label="historial médico"
+                         class="ml-2">
+            </plex-button>
+            <plex-button *mobile type="info" size="sm" routerLink="/templates" icon="medico" class="ml-2">
+            </plex-button>
+            <plex-button *mobile="false" type="info" size="sm" routerLink="/templates" label="listado de internación"
+                         class="ml-2">
+            </plex-button>
+            <plex-button *mobile type="info" size="sm" routerLink="/templates" icon="format-list-bulleted" class="ml-2">
+            </plex-button>
+            <plex-dropdown *mobile="false" type="info" size="sm" label="generar censo" [items]="items" class="ml-2">
+            </plex-dropdown>
+            <plex-dropdown *mobile type="info" size="sm" icon="export" [items]="items" class="ml-2"></plex-dropdown>
+            <plex-wrapper>
+                <plex-select grow="3" [(ngModel)]="sec" [data]="mapaSectores$  | async"
+                             label-field="nombre + ' (' + continente + ')'" label="Sector"></plex-select>
+                <plex-text [(ngModel)]="templateModel2.nombre" name="apellido" label="Paciente">
+                </plex-text>
+                <plex-text [(ngModel)]="templateModel2.nombre" name="apellido" label="Unidad organizativa">
+                </plex-text>
+
+                <plex-select grow="3" [(ngModel)]="modelo1.select" [data]="opciones2"
+                             label-field="nombre + ' (' + continente + ')'" label="Estado"></plex-select>
+
+                <div collapse>
+                    <plex-select [(ngModel)]="modelo1.select" [data]="opciones1"
+                                 label-field="nombre + ' (' + continente + ')'" label="Tipo de cama"></plex-select>
+                    <plex-text [(ngModel)]="templateModel2.nombre" name="apellido" label="Equipamiento">
+                    </plex-text>
+                    <plex-bool [(ngModel)]="modelo" type="slide" label="¿Es censable?" name="activo">
+                    </plex-bool>
+                </div>
+            </plex-wrapper>
+        </plex-title>
+
+        <recursos-listado>
+
+        </recursos-listado>
+    </plex-layout-main>
+
+    <plex-layout-sidebar type="invert">
+        <plex-tabs size="full">
+            <plex-tab label="CAMA" active="true">
+                <router-outlet></router-outlet>
+            </plex-tab>
+            <plex-tab label="INTERNACIÓN" active="true">
+
+            </plex-tab>
+
+            <plex-tab label="HISTORIAL" active="true">
+
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-sidebar>
+</plex-layout>

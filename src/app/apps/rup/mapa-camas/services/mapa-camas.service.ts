@@ -42,7 +42,7 @@ export class MapaCamasService {
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
 
-    public view = new BehaviorSubject<'mapa-camas' | 'listado-internacion'>('mapa-camas');
+    public view = new BehaviorSubject<'mapa-camas' | 'listado-internacion' | 'mapa-recursos'>('mapa-camas');
 
     public prestacion$: Observable<IPrestacion>;
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
@@ -95,7 +95,6 @@ export class MapaCamasService {
             }),
             cache()
         );
-
         this.estado$ = this.maquinaDeEstado$.pipe(pluck('estados'));
         this.relaciones$ = this.maquinaDeEstado$.pipe(pluck('relaciones'));
 
@@ -307,7 +306,7 @@ export class MapaCamasService {
         this.fecha = fecha;
     }
 
-    setView(view: 'mapa-camas' | 'listado-internacion') {
+    setView(view: 'mapa-camas' | 'listado-internacion' | 'mapa-recursos') {
         this.view.next(view);
     }
 
