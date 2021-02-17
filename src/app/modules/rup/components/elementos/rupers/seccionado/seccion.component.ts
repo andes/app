@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 import { IPrestacionRegistro } from '../../../../interfaces/prestacion.registro.interface';
@@ -26,7 +26,7 @@ import { takeUntil, filter } from 'rxjs/operators';
     styleUrls: ['seccion.component.scss']
 })
 @RupElement('SeccionComponent')
-export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy {
+export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
@@ -53,6 +53,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
     // suscriptionBuscador: Subscription;
     seleccionado: any;
     conceptoSeleccionado: any;
+    afterInit = false;
 
     onDestroy$ = new Subject();
 
@@ -113,6 +114,11 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         }
 
 
+    }
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.afterInit = true;
+        }, 300);
     }
 
     get colForText() {

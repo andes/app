@@ -15,14 +15,17 @@
             </ng-container>
 
         </div>
-        <div [class]="colForText" *ngIf="!(conceptosSeleccionar?.length > 0) && params.showText">
-            <textarea *ngIf="!soloValores" class="form-control" [class.svgTextarea]="!registro?.valor"
-                      [(ngModel)]="registro.valor" rows="6" name="descripcion" [required]="params.textRequired">
-            </textarea>
-            <p *ngIf="params.showText && soloValores" class="readonly mb-5">
-                {{registro.valor}}
-            </p>
-        </div>
+        <ng-container *ngIf="!(conceptosSeleccionar?.length > 0) && params.showText">
+            <plex-text [html]="true" *ngIf="!soloValores && afterInit" class="form-control" [(ngModel)]="registro.valor"
+                       name="descripcion" [required]="params.textRequired" rows="6" [height]="'200px'"
+                       placeholder="Describir tratamiento">
+            </plex-text>
+
+            <ng-container *ngIf="params.showText && soloValores">
+                <span [innerHTML]="registro.valor"></span>
+            </ng-container>
+
+        </ng-container>
         <!-- Area droppable del elemento -->
         <div [class]="colForRegistros" class="mt-4" droppable [dropScope]="'registros-rup'"
              [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
