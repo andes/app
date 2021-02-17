@@ -1,3 +1,15 @@
+# [5.34.0](https://github.com/andes/app/compare/v5.33.0...v5.34.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* **top:** permite modificar profesional al dar turno ([#2125](https://github.com/andes/app/issues/2125)) ([b8fdd00](https://github.com/andes/app/commit/b8fdd0077b9a92161c0c3d9b1b34c695f8f007d3))
+
+
+### Features
+
+* **mpi:** Aviso ante selección de paciente fallecido ([#2132](https://github.com/andes/app/issues/2132)) ([8ebd0ee](https://github.com/andes/app/commit/8ebd0ee1983070e130843e7f793526b77726c429))
+
 # [5.33.0](https://github.com/andes/app/compare/v5.32.1...v5.33.0) (2021-02-10)
 
 
