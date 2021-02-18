@@ -153,6 +153,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
                 } else {
                     const concepto = this.elementoRupService.getConceptoDerivacion();
+
                     let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
                     this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
