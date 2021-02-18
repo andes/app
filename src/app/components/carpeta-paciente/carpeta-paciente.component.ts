@@ -42,6 +42,7 @@ export class CarpetaPacienteComponent implements OnInit {
     showEdit = false;
     nroCarpetaSugerido: string;
     nuevoNroCarpeta: string;
+    public editarCarpeta = false;
     constructor(
         public auth: Auth,
         public plex: Plex,
@@ -51,6 +52,7 @@ export class CarpetaPacienteComponent implements OnInit {
     ngOnInit() {
         // Verificamos permiso para editar carpeta de un paciente
         this.autorizado = this.auth.check(this.permisosRequeridos);
+        this.editarCarpeta = this.auth.getPermissions('turnos:agenda:puedeEditarCarpeta:?').length > 0;
         this.carpetaPaciente = {
             organizacion: {
                 _id: this.auth.organizacion.id,

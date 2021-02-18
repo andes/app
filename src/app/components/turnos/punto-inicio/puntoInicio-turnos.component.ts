@@ -35,6 +35,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showIngresarSolicitud = false;
     public paciente: IPaciente;
     public autorizado = false;
+    public puedeActivarAppMobile = false;
+
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
     showDarTurnos = false;
@@ -51,6 +53,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
+
+    canCreate = this.auth.check('mpi:paciente:postAndes');
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -73,6 +77,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.puedeActivarAppMobile = this.auth.getPermissions('turnos:puntoInicio:activarMobile:?').length > 0;
         this.updateTitle('Punto de inicio');
     }
 

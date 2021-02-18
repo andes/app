@@ -64,11 +64,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public espacioFisico: any = [];
     public estado: any = [];
     public parametros;
+    public soloLectura = false;
     public btnDarTurnos = false;
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
     public puedeCrearAgenda: Boolean;
+    public puedeRevisarAgendas: Boolean;
     private scrollEnd = false;
 
     // ultima request de profesionales que se almacena con el subscribe
@@ -108,10 +110,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.soloLectura = this.auth.getPermissions('turnos:agenda:read:?').length > 0;
         this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.puedeCrearAgenda = this.auth.check('turnos:crearAgendas');
+        this.puedeRevisarAgendas = this.auth.check('turnos:agenda:puedeRevisions');
 
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
@@ -120,7 +124,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
-
         // Verifica permisos para crear agenda
         this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
 

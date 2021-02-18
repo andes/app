@@ -27,8 +27,8 @@
 </section>
 <ng-container *ngIf="showNuevaCarpeta">
     <plex-title titulo="carpeta del paciente" size="sm">
-        <plex-button type="success" size="sm" label="registrar nueva carpeta" (click)="crearCarpetaPaciente()"
-                     tooltipPosition="left" tooltip="registrar número de carpeta">
+        <plex-button *ngIf="editarCarpeta" type="success" size="sm" label="registrar nueva carpeta"
+                     (click)="crearCarpetaPaciente()" tooltipPosition="left" tooltip="registrar número de carpeta">
         </plex-button>
     </plex-title>
     <plex-badge *ngIf="showList" type="warning" size="block" class="my-4">

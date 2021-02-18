@@ -4,7 +4,7 @@
 
         <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
                          (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
-                         [create]="true">
+                         [create]="canCreate">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -35,13 +35,13 @@
                             <br>
                             <b>Documento: </b>
                             <span *ngIf="paciente.documento">{{ paciente.documento |
-                                    number}}</span>
+                                number}}</span>
                             <span *ngIf="!paciente.documento" class="text-danger">Sin documento</span>
                             |
                             <b>Fecha de Nacimiento: </b>
                             <span *ngIf="paciente.fechaNacimiento">{{
-                                    paciente.fechaNacimiento
-                                    | fecha:'utc' }}</span>
+                                paciente.fechaNacimiento
+                                | fecha:'utc' }}</span>
                             <span *ngIf="!paciente.fechaNacimiento" class="text-danger">Sin fecha de
                                 nacimiento</span>
                             <br>
@@ -57,7 +57,7 @@
                                          (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
                         </td>
                         <td>
-                            <plex-button title="Activar App" icon="cellphone-android"
+                            <plex-button *ngIf="puedeActivarAppMobile" title="Activar App" icon="cellphone-android"
                                          (click)="verificarOperacion('activarApp', paciente)"></plex-button>
                         </td>
                     </tr>
@@ -73,7 +73,7 @@
             <estadisticas-agendas></estadisticas-agendas>
         </div>
         <div *ngIf="showMostrarEstadisticasPacientes && paciente" type="info">
-            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab" >
+            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab">
             </estadisticas-pacientes>
         </div>
         <div *ngIf="showIngresarSolicitud && paciente" type="info">
