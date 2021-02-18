@@ -153,11 +153,14 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
                 } else {
                     const concepto = this.elementoRupService.getConceptoDerivacion();
-                    let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
-                    this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
-                        this.modelo.prestacion = prestacion.id,
-                            this.modelo.organizacionOrigen = this.auth.organizacion;
+                    // TODO descomentar lineas 149, 150, 152 y 177 a la hora de habilitar el registro de prestación en la derivación.
+
+                    // let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
+                    // this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+
+                        // this.modelo.prestacion = prestacion.id,
+                        this.modelo.organizacionOrigen = this.auth.organizacion;
                         this.modelo.paciente = {
                             id: this.paciente.id,
                             nombre: this.paciente.nombre,
@@ -181,7 +184,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                             this.router.navigate(['/com']);
                             this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
                         });
-                    });
+                    // });
                 }
             });
         } else {
