@@ -9,6 +9,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { populateRelaciones } from '../../operators/populate-relaciones';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'vista-prestacion',
@@ -21,6 +22,8 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
+    @Input() puedeEditar: boolean;
+    @Input() ruta: boolean;
     @Input() indice = 0;
 
     public ready$ = this.elementosRUPService.ready;
@@ -33,7 +36,8 @@ export class VistaPrestacionComponent implements OnInit {
         private servicioDocumentos: DocumentosService,
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
-        public elementosRUPService: ElementosRUPService
+        public elementosRUPService: ElementosRUPService,
+        private router: Router
     ) {
     }
 
@@ -58,6 +62,7 @@ export class VistaPrestacionComponent implements OnInit {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.prestacion = prestacion;
                 this.paciente = paciente;
+                this.puedeEditar = this.puedeEditar && this.prestacion.createdBy.id === this.auth.usuario.id;
             });
         });
     }
@@ -83,6 +88,13 @@ export class VistaPrestacionComponent implements OnInit {
 
     onPacs() {
         this.servicioPrestacion.visualizarImagen(this.prestacion);
+    }
+
+    abrirPrestacion() {
+        if (this.ruta) {
+            this.servicioPrestacion.notificaRuta(this.ruta);
+        }
+        this.router.navigate(['./rup/ejecucion', this.prestacion.id]);
     }
 
 }
