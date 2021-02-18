@@ -528,11 +528,6 @@ $rotate: -90deg;
     border-left: 8px solid;
 }
 
-// Debería ser global (Plex)
-// .bg-inverse {
-//     background-color: #002738 !important;
-// }
-
 // VISTA HUDS
 .grid-envolvente {
     display: grid;
@@ -751,5 +746,29 @@ observaciones {
     a.active {
         background-color: $solicitud !important;
         color: white !important;
+    }
+}
+
+// INVERT
+// Adaptación Rup-card
+plex-layout [type="invert"] {
+    .rup-card .rup-header {
+        
+        .title {
+            background: transparent;
+        }
+        
+        .actions {
+            background: transparent;
+            plex-badge {
+                & > span {
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .readonly span {
+        color: white;
     }
 }
