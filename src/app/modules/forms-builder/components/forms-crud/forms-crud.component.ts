@@ -61,6 +61,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.form.type = formulario.type;
                 this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
+                let campos = [];
                 formulario.sections.forEach(s => {
                     s.fields.forEach(f => {
                         f.type = this.tiposList.find(t => t.id === f.type) as any;
@@ -71,10 +72,11 @@ export class AppFormsCrudComponent implements OnInit {
                             f.sections = [];
                             f.sections.push(this.secciones.find(sec => sec.name === s.name) as any);
                             fieldsAssigns.push(f);
-                            this.form.fields.push(f);
+                            campos.push(f);
                         }
                     });
                 });
+                this.form.fields = campos;
             }
         });
     }

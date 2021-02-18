@@ -1,4 +1,5 @@
 import { PlexModule } from '@andes/plex';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -25,7 +26,8 @@ import { FormResourcesService } from './services/resources.service';
         RouterModule,
         NgxObserveModule,
         PlexModule,
-        FormsRouting
+        FormsRouting,
+        ScrollingModule
     ],
     // prettier-ignore
     providers: [

@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { OrganizacionService } from '../../../../services/organizacion.service';
@@ -12,7 +12,7 @@ import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.se
   selector: 'app-ficha-covid',
   templateUrl: './ficha-covid.component.html'
 })
-export class FichaCovidComponent implements OnInit {
+export class FichaCovidComponent implements OnInit, OnChanges {
   @Input() paciente: IPaciente;
   @Input() fichaPaciente: any;
   @Output() volver = new EventEmitter<any>();
@@ -100,12 +100,12 @@ export class FichaCovidComponent implements OnInit {
     },
     {
       key: 'fechaContacto',
-      label: 'fecha último contacto',
+      label: 'Fecha último contacto',
       sorteable: true
     },
     {
       key: 'tipoContacto',
-      label: 'tipo de contacto',
+      label: 'Tipo de contacto',
       sorteable: true
     },
     {
@@ -134,7 +134,8 @@ export class FichaCovidComponent implements OnInit {
 
   ) { }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.contactosEstrechos = [];
     this.formsService.search({ name: 'covid19' }).subscribe((ficha: any) => {
       this.secciones = ficha[0].sections;
       if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
@@ -155,10 +156,18 @@ export class FichaCovidComponent implements OnInit {
         this.setFields();
       }
     });
+  }
+
+  ngOnInit(): void {
     this.organizaciones$ = this.auth.organizaciones();
   }
 
   registrarFicha() {
+    this.getValues();
+    this.setFicha();
+  }
+
+  getValues() {
     this.secciones.map(seccion => {
       let campos = [];
       if (seccion.name !== 'Contactos Estrechos') {
@@ -204,7 +213,9 @@ export class FichaCovidComponent implements OnInit {
         }
       }
     });
+  }
 
+  setFicha() {
     const fichaFinal = {
       type: 'covid19',
       createdAt: new Date(),
@@ -239,7 +250,6 @@ export class FichaCovidComponent implements OnInit {
     }
   }
 
-
   setFields() {
     this.secciones.map(seccion => {
       switch (seccion.id) {
@@ -269,10 +279,8 @@ export class FichaCovidComponent implements OnInit {
       if (seccion.id === 'clasificacionFinal') {
         if (seccion.fields['antigeno']?.id === 'positivo' && seccion.fields['pcr']?.id === 'positivo') {
           seccion.fields['clasificacionfinal'] = 'Confirmado';
-        } else {
-          if (seccion.fields['pcr']?.id === 'negativo') {
-            seccion.fields['clasificacionfinal'] = 'Descartado';
-          }
+        } else if (seccion.fields['pcr']?.id === 'negativo') {
+          seccion.fields['clasificacionfinal'] = 'Descartado';
         }
       }
     });

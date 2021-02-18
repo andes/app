@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 
@@ -19,7 +19,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public pacienteSelected = null;
   public resultadoBusqueda = null;
   public fichasPaciente: Observable<any>;
-  public fichaPaciente = '';
+  public fichaPaciente$: Observable<any>;
   public permisoHuds = false;
 
   public columns = [
@@ -96,9 +96,9 @@ export class FichaEpidemiologicaComponent implements OnInit {
   }
 
   mostrarFicha(nombreFicha, ficha?) {
-    this.fichaPaciente = '';
+    this.fichaPaciente$ = of(null);
     if (ficha) {
-      this.fichaPaciente = ficha;
+      this.fichaPaciente$ = of(ficha);
     }
     this.showFicha = nombreFicha;
 

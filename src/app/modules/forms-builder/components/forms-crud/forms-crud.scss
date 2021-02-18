@@ -17,4 +17,9 @@
         position: relative;
         bottom: 15px;
     }
+    
+}
+$alturaItem: 60px;
+cdk-virtual-scroll-viewport {
+    height: #{$alturaItem * 6};       
 }
