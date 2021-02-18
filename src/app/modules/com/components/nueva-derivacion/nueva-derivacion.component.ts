@@ -168,9 +168,12 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 } else {
 
                     const concepto = this.elementoRupService.getConceptoDerivacion();
+
                     let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
 
                     this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+
+                        this.modelo.prestacion = prestacion.id;
                         this.modelo.paciente = {
                             id: this.paciente.id,
                             nombre: this.paciente.nombre,
