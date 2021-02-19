@@ -79,6 +79,8 @@ export class DatosContactoComponent implements OnInit {
     provinciaActual = null;
     localidadActual = null;
     organizacionActual = null;
+    patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    patronContactoAlfabetico = /^[a-z,A-Z]+@[a-z]+(.[a-z]+)+$/;
 
 
     constructor(
@@ -142,6 +144,10 @@ export class DatosContactoComponent implements OnInit {
             cache());
     }
 
+    contactoTelefonico(index) {
+        let tipoContacto = this.paciente.contacto[index].tipo;
+        return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
+    }
 
     public checkForm() {
         this.ngForm.control.markAllAsTouched();
