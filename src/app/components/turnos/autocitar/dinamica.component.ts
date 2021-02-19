@@ -153,6 +153,7 @@ export class DinamicaFormComponent implements OnInit {
         if (this.agenda.dinamica) {
             this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
                 '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+                    let fechaTurno;
                     if (confirmacion) {
                         let datosConfirma = {
                             nota: '',
@@ -164,11 +165,12 @@ export class DinamicaFormComponent implements OnInit {
                         // guardamos el turno
                         this.serviceTurno.saveDinamica(datosConfirma).pipe(
                             map(turnoDado => {
+                                fechaTurno = turnoDado.horaInicio;
                                 return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
                             }),
                             switchMap(idturnoDado => {
                                 if (idturnoDado) {
-                                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', new Date(), idturnoDado).pipe(
+                                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(
                                         tap(prestacion => {
                                             this.router.navigate(['rup/ejecucion/', prestacion.id]);
                                         })

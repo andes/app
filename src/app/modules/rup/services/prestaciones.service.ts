@@ -733,4 +733,9 @@ export class PrestacionesService {
         });
     }
 
+    getFechaPrestacionTurnoDinamico(fechaTurno) {
+        const esAnterior = (moment(fechaTurno).format('YYYY-MM-DD') < moment().startOf('day').format('YYYY-MM-DD'));
+        return esAnterior ? fechaTurno : new Date();
+    }
+
 }
