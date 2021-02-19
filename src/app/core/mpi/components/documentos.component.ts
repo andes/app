@@ -1,4 +1,4 @@
-import { FileObject, FILE_EXT, IMAGENES_EXT, } from '@andes/shared';
+import { FileObject, IMAGENES_EXT, } from '@andes/shared';
 import { OnInit, Component, Input } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { DriveService } from 'src/app/services/drive.service';
@@ -11,7 +11,7 @@ export class DocumentosPacienteComponent implements OnInit {
 
     @Input() paciente: IPaciente;
 
-    extensions = [...FILE_EXT, ...IMAGENES_EXT];
+    extensions = [...['pdf', 'doc', 'docx'], ...IMAGENES_EXT];
 
     public tipoDocumentos = [{
         id: '1',
