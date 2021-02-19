@@ -5,6 +5,8 @@ import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../../../services/turnos/listaEspera.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { getMotivosLiberacion } from '../../../../utils/enumerados';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'liberar-turno',
@@ -30,7 +32,10 @@ export class LiberarTurnoComponent implements OnInit {
     public motivoLiberacionSelect;
     public otroMotivoLiberacion;
 
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
+    constructor(public plex: Plex,
+        public listaEsperaService: ListaEsperaService,
+        public serviceAgenda: AgendaService,
+        public prestacionesService: PrestacionesService) { }
 
     ngOnInit() {
         this.turnos = this.turnosSeleccionados;
@@ -38,25 +43,34 @@ export class LiberarTurnoComponent implements OnInit {
     }
 
     liberarTurno() {
-        if (this.motivoLiberacionSelect) {
-            let patch = {
-                op: 'liberarTurno',
-                turnos: this.turnos.map(resultado => resultado._id),
-                observaciones: this.motivoLiberacionSelect.nombre === 'Otro' ? this.otroMotivoLiberacion : this.motivoLiberacionSelect.nombre
-            };
-            let mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
-
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', mensaje, 'Liberar turno', 4000);
-                this.saveLiberarTurno.emit(this.agenda);
-            },
-            err => {
-                if (err) {
-                    this.plex.info('warning', 'Turno en ejecución', 'Error');
-                    this.cancelaLiberarTurno.emit(true);
+        this.prestacionesService.get({ turnos: this.turnos[0].id }).subscribe((prestacion: any) => {
+            if (prestacion?.length) {
+                const estadoPrestacion = prestacion[0].estados[prestacion[0].estados.length - 1].tipo;
+                if (estadoPrestacion === 'ejecucion' || estadoPrestacion === 'validada') {
+                    this.plex.info('danger', 'El turno seleccionado está asociado a una prestación ya iniciada', 'No se puede liberar el turno');
+                    return;
                 }
-            });
-        }
+            }
+            if (this.motivoLiberacionSelect) {
+                let patch = {
+                    op: 'liberarTurno',
+                    turnos: this.turnos.map(resultado => resultado._id),
+                    observaciones: this.motivoLiberacionSelect.nombre === 'Otro' ? this.otroMotivoLiberacion : this.motivoLiberacionSelect.nombre
+                };
+                let mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
+
+                this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                    this.plex.toast('success', mensaje, 'Liberar turno', 4000);
+                    this.saveLiberarTurno.emit(this.agenda);
+                },
+                    err => {
+                        if (err) {
+                            this.plex.info('warning', 'Turno en ejecución', 'Error');
+                            this.cancelaLiberarTurno.emit(true);
+                        }
+                    });
+            }
+        });
     }
 
     agregarPacienteListaEspera() {
