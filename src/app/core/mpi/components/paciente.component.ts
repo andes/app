@@ -484,7 +484,8 @@ export class PacienteComponent implements OnInit {
         this.subscripcionValidar = this.pacienteService.get({
             documento: this.pacienteModel.documento,
             sexo: sexoPaciente,
-            estado: 'validado'
+            estado: 'validado',
+            activo: true
         }).pipe(
             map((resultado: any) => {
                 if (!this.pacienteModel.id) {
