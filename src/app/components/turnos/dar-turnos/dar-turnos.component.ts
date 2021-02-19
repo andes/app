@@ -30,8 +30,6 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
-import { ModificadoresService } from 'src/app/services/modificadores/modificadores.service';
-
 
 @Component({
     selector: 'dar-turnos',
@@ -156,7 +154,7 @@ export class DarTurnosComponent implements OnInit {
     private busquedas = this.cacheBusquedas;
     private eventoProfesional: any = null;
     public mostrarCalendario = false;
-    public modificadorLlaveAgenda: any;
+    public condicionLlaveAgenda: any;
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -172,8 +170,7 @@ export class DarTurnosComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         private router: Router,
-        private osService: ObraSocialCacheService,
-        private modificadoresService: ModificadoresService) { }
+        private osService: ObraSocialCacheService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -343,11 +340,14 @@ export class DarTurnosComponent implements OnInit {
             }
         }
         if (!this.solicitudPrestacion) {
-            this.modificadoresService.search({
-                prestacion: this.prestacionSeleccionada,
-                paciente: this.pacienteSeleccionado
-            }).subscribe(resp => {
-                this.modificadorLlaveAgenda = resp.result || false;
+            let regla: any = {
+                paciente: this.pacienteSeleccionado.id
+            };
+            if (this.prestacionSeleccionada && this.prestacionSeleccionada.conceptId) {
+                regla.prestacion = this.prestacionSeleccionada.conceptId;
+            }
+            this.serviceTurno.getRules(regla).subscribe(resp => {
+                this.condicionLlaveAgenda = resp.length > 0 || false;
                 this.actualizar();
             });
         } else {
@@ -396,7 +396,7 @@ export class DarTurnosComponent implements OnInit {
                 // Filtrar agendas disponibles o publicadas
                 this.agendas = agendas.filter(data => {
                     if (data.turnosRestantesGestion > 0 && !this.solicitudPrestacion) {
-                        data.modificadorLlave = this.modificadorLlaveAgenda;
+                        data.condicionLlave = this.condicionLlaveAgenda;
                     }
                     if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                         if (this._solicitudPrestacion && this.contieneExclusivoGestion(data)) {
@@ -405,7 +405,7 @@ export class DarTurnosComponent implements OnInit {
                             return (data.estado === 'publicada');
                         }
                     } else {
-                        if (this._solicitudPrestacion || data.modificadorLlave) {
+                        if (this._solicitudPrestacion || data.condicionLlave) {
                             return (data.estado === 'disponible' || data.estado === 'publicada');
                         } else {
                             return (data.estado === 'publicada');
@@ -423,7 +423,7 @@ export class DarTurnosComponent implements OnInit {
                                 (!this.autocitado && agenda.turnosRestantesGestion > 0))) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0 && !this._solicitudPrestacion) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && !this._solicitudPrestacion) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.modificadorLlave)
+                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.condicionLlave)
                             );
                         return cond;
 
@@ -515,7 +515,7 @@ export class DarTurnosComponent implements OnInit {
                             this.estadoT = 'dinamica';
                         } else {
                             // Tiene solicitud
-                            if (this._solicitudPrestacion || this.agenda.modificadorLlave) {
+                            if (this._solicitudPrestacion || this.agenda.condicionLlave) {
                                 if (this.autocitado) {
                                     this.tiposTurnosSelect = 'profesional';
                                 } else {
@@ -632,7 +632,7 @@ export class DarTurnosComponent implements OnInit {
             this.bloques = this.bloques.filter(bloque => bloque.tipoPrestaciones.map(e => e.conceptId).includes(this.opciones.tipoPrestacion.conceptId));
         }
 
-        if (this.solicitudPrestacion || this.agenda.modificadorLlave) {
+        if (this.solicitudPrestacion || this.agenda.condicionLlave) {
             if (!this.contieneExclusivoGestion(this.agenda)) {
                 // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
                 this.bloques = this.bloques.filter(
@@ -1116,7 +1116,7 @@ export class DarTurnosComponent implements OnInit {
 
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
-        if (this._solicitudPrestacion || this.agenda.modificadorLlave) {
+        if (this._solicitudPrestacion || this.agenda.condicionLlave) {
 
             if (this.autocitado && bloque.restantesProfesional > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;

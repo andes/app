@@ -87,9 +87,6 @@ import { SIISAService } from './services/siisa.service';
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
-// MODIFICADORES
-import { ModificadoresService } from './services/modificadores/modificadores.service';
-
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { CDAService } from './modules/rup/services/CDA.service';
@@ -440,8 +437,7 @@ registerLocaleData(localeEs, 'es');
         CommonNovedadesService,
         QueriesService,
         CarpetaPacienteService,
-        { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler },
-        ModificadoresService
+        { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler }
     ]
 })
 

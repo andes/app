@@ -98,7 +98,7 @@ export class CalendarioDia {
                                     } else {
                                         this.turnosDisponibles += unBloque.restantesGestion;
                                     }
-                                } else if (unaAgenda.modificadorLlave && unBloque.restantesGestion > 0) {
+                                } else if (unaAgenda.condicionLlave && unBloque.restantesGestion > 0) {
                                     this.turnosDisponibles += unBloque.restantesGestion;
                                 } else {
                                     this.turnosDisponibles += unBloque.restantesProgramados;
