@@ -10,6 +10,7 @@ import { IPaciente } from '../interfaces/IPaciente';
 export class DocumentosPacienteComponent implements OnInit {
 
     @Input() paciente: IPaciente;
+    @Input() delete: false;
 
     extensions = [...['pdf', 'doc', 'docx'], ...IMAGENES_EXT];
 
@@ -107,14 +108,14 @@ export class DocumentosPacienteComponent implements OnInit {
     }
 
     removeItem(item) {
-        forkJoin(
-            item.archivos.map(
-                el => this.driveService.deleteFile(el.id)
-            )
-        ).subscribe(() => {
-
-            const index = this.paciente.documentos.findIndex((doc) => doc === item);
-            this.paciente.documentos.splice(index, 1);
-        });
+        const index = this.paciente.documentos.findIndex((doc) => doc === item);
+        this.paciente.documentos.splice(index, 1);
+        if (this.delete) {
+            forkJoin(
+                item.archivos.map(
+                    el => this.driveService.deleteFile(el.id)
+                )
+            );
+        }
     }
 }

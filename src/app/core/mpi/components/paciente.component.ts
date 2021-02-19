@@ -44,7 +44,7 @@ export class PacienteComponent implements OnInit {
     disableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
-
+    delete = false;
     changeRelaciones = false;
     posibleDuplicado = false;
     loading = true;
@@ -263,6 +263,7 @@ export class PacienteComponent implements OnInit {
 
 
     save(ignoreSuggestions = false) {
+        this.delete = true;
         let contactoValid = this.datosContacto.checkForm();
         let datosBasicosValid = this.datosBasicos.checkForm();
         if (!contactoValid || !datosBasicosValid) {

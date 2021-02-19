@@ -111,7 +111,7 @@
     </plex-list>
 </ng-container>
 
-<ng-container *ngIf='this.paciente.documentos?.length > 0'>
+<ng-container *ngIf='showDocumentos && this.paciente.documentos?.length > 0'>
     <plex-title titulo="Documentos adjuntos" size="sm"></plex-title>
     <plex-accordion>
         <plex-panel *ngFor="let item of paciente.documentos">

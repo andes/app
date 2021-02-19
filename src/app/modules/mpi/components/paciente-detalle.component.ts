@@ -16,6 +16,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
+    @Input() showDocumentos = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
