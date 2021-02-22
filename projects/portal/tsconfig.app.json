@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/app",
+    "types": [
+      "node",
+      "jquery"
+    ]
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "**/*.ts",
+    "../../node_modules/@andes/plex/**/*.ts",
+  ],
+  "exclude": [
+    "src/test-setup.ts",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts",
+    "../../node_modules/@andes/plex/**/*.spec.ts",
+    "../../node_modules/@schematics/**/*.ts",
+    "../../node_modules/karma/**/*.ts"
+  ]
+}
