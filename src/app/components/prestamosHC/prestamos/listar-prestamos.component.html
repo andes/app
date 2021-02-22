@@ -1,57 +1,50 @@
 <fieldset>
-    <legend>Préstamos de Carpetas
-        <div class='float-right'>
-            <span *ngIf="carpetasSeleccionadas.length > 0">
-                <plex-button type='success' icon="clipboard-arrow-left" title="Devolver todas"
-                             (click)="devolverCarpetas()">
-                </plex-button>
-            </span>
-        </div>
-    </legend>
+    <plex-title titulo="Préstamos de Carpetas" size="lg">
+        <plex-button *ngIf="carpetasSeleccionadas.length > 0" type='success' icon="clipboard-arrow-left"
+                     title="Devolver todas" (click)="devolverCarpetas()">
+        </plex-button>
+    </plex-title>
+
     <!-- Filtros -->
-    <div class="row">
-        <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
-                           name="fechaDesde" label="Desde" class="fechas">
-            </plex-datetime>
+    <plex-wrapper>
+        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
+                       name="fechaDesde" label="Desde" class="fechas" grow="4">
+        </plex-datetime>
+
+        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
+                       name="fechaHasta" label="Hasta" class="fechas" grow="4">
+        </plex-datetime>
+
+        <div grow="2">
+            <label>&nbsp;</label>
+            <plex-bool class="pl-4 float-right" [(ngModel)]="sortDescending" label="Order Nro. Carpeta Descendente"
+                       (change)="sortCarpetas()">
+            </plex-bool>
         </div>
-        <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
-                           name="fechaHasta" label="Hasta" class="fechas">
-            </plex-datetime>
-        </div>
-        <div class="col-5" (click)="toogleSort()" style="margin-top: 45px;">
-            <i *ngIf="sortDescending" class="checkbox-marked">Order Nro. Carpeta
-                Descendente</i>
-            <i *ngIf="!sortDescending" class="checkbox-blank-outline">Order Nro. Carpeta
-                Descendente</i>
-        </div>
-        <div class="col-1 text-right">
-            <label>
-                &nbsp;</label>
-            <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+        <div grow="1">
+            <label>&nbsp;</label>
+            <plex-button class="pt-2 float-right" type="primary"
+                         [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
                          (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
-    </div>
-    <div class="row" *ngIf="mostrarMasOpciones">
-        <div class="col-4">
-            <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
-                         preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
-            </plex-select>
-        </div>
-        <div class="col-4">
-            <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico"
-                         (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
-                         labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
-            </plex-select>
-        </div>
-        <div class="col-4">
-            <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
-                         (getData)="loadProfesionales($event)" label="Profesional"
-                         placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-        </div>
-    </div>
+    </plex-wrapper>
+
+    <plex-wrapper *ngIf="mostrarMasOpciones">
+        <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
+                     preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
+        </plex-select>
+
+        <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico"
+                     (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
+                     labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
+        </plex-select>
+        <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
+                     (getData)="loadProfesionales($event)" label="Profesional"
+                     placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+        </plex-select>
+    </plex-wrapper>
+
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
     <table *ngIf="carpetas.length" class="table table-striped table-sm">
         <thead>
@@ -108,9 +101,9 @@
                 </td>
                 <td *ngIf='carpeta.datosSolicitudManual'>
                     {{carpeta.datosSolicitudManual.profesional ?
-                                    carpeta.datosSolicitudManual.profesional.nombre + ', ' +
-                                    carpeta.datosSolicitudManual.profesional.apellido
-                                    : ''}}
+                    carpeta.datosSolicitudManual.profesional.nombre + ', ' +
+                    carpeta.datosSolicitudManual.profesional.apellido
+                    : ''}}
                 </td>
                 <td *ngIf='!carpeta.datosSolicitudManual'>
                     {{carpeta.datosPrestamo.observaciones}}
@@ -126,4 +119,12 @@
             </tr>
         </tbody>
     </table>
+
+    <div *ngIf="!loading && !carpetas.length" justify="center" class="pt-4">
+        <plex-label direction="column" titulo="No hay prestamos para los filtros consultados"
+                    subtitulo="Comience realizando una búsqueda mediante los filtros en la parte superior de la pantalla"
+                    size="xl">
+            <plex-icon prefix="mdi" name="folder-remove"></plex-icon>
+        </plex-label>
+    </div>
 </fieldset>

@@ -1,171 +1,166 @@
 <fieldset>
+    <plex-title titulo="Solicitudes de Carpetas" size="lg">
+        <plex-button class="pr-1" *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch" type='success'
+                     icon="share" title="Prestar todas" (click)="prestarCarpetas()">
+        </plex-button>
+        <plex-button class="pr-1" *ngIf="carpetas.length" icon="printer" type="primary" title="Imprimir solicitudes"
+                     (click)="showImprimirCarpetas()">
+        </plex-button>
+        <plex-button class="pr-1" type="success" icon="plus" title="Agregar solicitud manual"
+                     (click)="showSolicitudManual()">
+        </plex-button>
+    </plex-title>
 
-    <legend>
-        Solicitudes de Carpetas
-        <div class='float-right'>
-            <span *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch">
-                <plex-button type='success' icon="share" title="Prestar todas" (click)="prestarCarpetas()">
-                </plex-button>
-            </span>
-            <span>
-                <plex-button icon="printer" *ngIf="carpetas.length" title="Imprimir solicitudes"
-                             (click)="showImprimirCarpetas()">
-                </plex-button>
-            </span>
-            <span>
-                <plex-button type="primary" icon="plus" title="Agregar solicitud manual"
-                             (click)="showSolicitudManual()">
-                </plex-button>
-            </span>
-        </div>
-    </legend>
+    <!-- Filtros -->
+    <plex-wrapper>
+        <plex-badge *ngIf="mostrarMsjMultiCarpeta" type="warning">
+            Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente
+            y la
+            misma fecha.
+        </plex-badge>
 
-    <div class="row">
-        <!-- <div class="col-12"> -->
-        <div class="col-12" *ngIf="mostrarMsjMultiCarpeta">
-            <plex-badge type="warning">
-                Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la
-                misma fecha.
-            </plex-badge>
-        </div>
-        <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
-                           name="fechaDesde" label="Desde" class="fechas">
-            </plex-datetime>
-        </div>
-        <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
-                           name="fechaHasta" label="Hasta" class="fechas">
-            </plex-datetime>
-        </div>
-        <div class="col-6" (click)="toogleSort()" style="margin-top: 45px;">
-            <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">
-                Order Nro. Carpeta Descendente</i>
-            <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">
-                Order Nro. Carpeta Descendente</i>
-        </div>
-    </div>
+        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
+                       name="fechaDesde" label="Desde" class="fechas" grow="1">
+        </plex-datetime>
 
-    <div class="row">
-        <div class="col-6">
-            <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
-                         preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
-            </plex-select>
+        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
+                       name="fechaHasta" label="Hasta" class="fechas" grow="1">
+        </plex-datetime>
+
+        <div grow="2">
+            <label>&nbsp;</label>
+            <plex-bool [(ngModel)]="sortDescending" label="Order Nro. Carpeta Descendente" (change)="sortCarpetas()">
+            </plex-bool>
         </div>
-        <div class="col-6">
-            <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
-                         (getData)="loadProfesionales($event)" label="Profesional"
-                         placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-        </div>
-    </div>
+    </plex-wrapper>
+
+    <plex-wrapper>
+        <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
+                     preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
+        </plex-select>
+
+        <plex-select [(ngModel)]=" profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
+                     (getData)="loadProfesionales($event)" label="Profesional"
+                     placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+        </plex-select>
+    </plex-wrapper>
+
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
     <!-- </header> -->
-    <div class="plex-box-content">
-        <table *ngIf="carpetas.length" class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th (click)="switchMarcarTodas()">
-                        <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
-                        <i *ngIf="!marcarTodas" class="mdi mdi-checkbox-blank-outline"></i>
-                    </th>
-                    <th>Fecha&nbsp;&nbsp; </th>
-                    <th>Carpeta</th>
-                    <th>Paciente</th>
-                    <th>Prestación</th>
-                    <th>Responsables</th>
-                    <th>Observaciones</th>
-                    <th>Actualización de HUDS</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let carpeta of carpetas; let i=index"
-                    [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
-                    <td (click)="switchSeleccionCarpeta(carpeta)">
-                        <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                           class="mdi mdi-checkbox-marked"></i>
-                        <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                           class="mdi mdi-checkbox-blank-outline"></i>
-                    </td>
-                    <td>
-                        {{carpeta.fecha | date:'dd-MM-yyyy'}}
-                    </td>
-                    <td>
-                        <b>{{carpeta.numero}}</b>
-                        <br>
-                        <plex-badge type="{{carpeta.tipo === 'Automatica' ? 'success':'info'}}">
-                            {{carpeta.tipo === 'Automatica' ? 'Automática':'Manual'}}
-                        </plex-badge>
-                    </td>
-                    <td>
-                        <b>
-                            {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
-                        </b>
-                        <br> Documento:
-                        <b>{{carpeta.paciente.documento}}</b>
-                    </td>
-                    <!-- Prestacion -->
-                    <td *ngIf="carpeta.datosPrestamo?.turno">
-                        {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
-                    </td>
-                    <td *ngIf="carpeta.datosSolicitudManual">
-                        {{carpeta.datosSolicitudManual.prestacion?.term}}
-                    </td>
-                    <!-- Profesional -->
-                    <td *ngIf="carpeta.datosPrestamo?.turno">
-                        <ng-container *ngIf="carpeta.datosPrestamo.turno.profesionales">
-                            {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
-                        </ng-container>
+    <table *ngIf="carpetas.length" class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th (click)="switchMarcarTodas()">
+                    <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
+                    <i *ngIf="!marcarTodas" class="mdi mdi-checkbox-blank-outline"></i>
+                </th>
+                <th>Fecha&nbsp;&nbsp; </th>
+                <th>Carpeta</th>
+                <th>Paciente</th>
+                <th>Prestación</th>
+                <th>Responsables</th>
+                <th>Observaciones</th>
+                <th>Actualización de HUDS</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let carpeta of carpetas; let i=index"
+                [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                <td (click)="switchSeleccionCarpeta(carpeta)">
+                    <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
+                       class="mdi mdi-checkbox-marked"></i>
+                    <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
+                       class="mdi mdi-checkbox-blank-outline"></i>
+                </td>
+                <td>
+                    {{carpeta.fecha | date:'dd-MM-yyyy'}}
+                </td>
+                <td>
+                    <b>{{carpeta.numero}}</b>
+                    <br>
+                    <plex-badge type="{{carpeta.tipo === 'Automatica' ? 'success':'info'}}">
+                        {{carpeta.tipo === 'Automatica' ? 'Automática':'Manual'}}
+                    </plex-badge>
+                </td>
+                <td>
+                    <b>
+                        {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
+                    </b>
+                    <br> Documento:
+                    <b>{{carpeta.paciente.documento}}</b>
+                </td>
+                <!-- Prestacion -->
+                <td *ngIf="carpeta.datosPrestamo?.turno">
+                    {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
+                </td>
+                <td *ngIf="carpeta.datosSolicitudManual">
+                    {{carpeta.datosSolicitudManual.prestacion?.term}}
+                </td>
+                <!-- Profesional -->
+                <td *ngIf="carpeta.datosPrestamo?.turno">
+                    <ng-container *ngIf="carpeta.datosPrestamo.turno.profesionales">
+                        {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                    </ng-container>
 
-                    </td>
-                    <td *ngIf="carpeta.datosSolicitudManual">
-                        {{carpeta.datosSolicitudManual.profesional ?
-                                            carpeta.datosSolicitudManual.profesional.nombre + ', ' +
-                                            carpeta.datosSolicitudManual.profesional.apellido
-                                            : ''}}
-                    </td>
-                    <!-- Observaciones -->
-                    <td *ngIf="carpeta.datosPrestamo">
-                        {{carpeta.datosPrestamo.observaciones}}
-                    </td>
-                    <td *ngIf="carpeta.datosSolicitudManual">
-                        {{carpeta.datosSolicitudManual.observaciones}}
-                    </td>
-                    <!-- Fecha de Actualización de la HUDS digitalizada -->
-                    <td>
-                        <span *ngIf="carpeta.ultimoCDA[0]">
-                            Fecha: <b>{{carpeta.ultimoCDA[0].fecha | fecha}}</b>
-                            <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}}
-                                {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
-                            <br>
-                            <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
-                                Descargar documento adjunto
-                                <!-- <i class="mdi mdi-36px mdi-file-pdf"></i> -->
-                            </a>
-                        </span>
-                    </td>
-                    <!-- Boton para subir HUDS digitalizada -->
-                    <td>
-                        <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
-                                     (onUpload)="onUpload($event, carpeta)" [modulo]="'prestamosHC'"></upload-file>
-                        <br><br>
-                        <span *ngIf="errorExt===i">
-                            <plex-badge type="danger">Archivo inválido. Solo se admite PDF</plex-badge>
-                        </span>
-                    </td>
-                    <!-- Estado -->
-                    <td *ngIf="carpeta.estado == 'En archivo'">
-                        <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)"
-                                     [disabled]="carpetasSeleccionadas.length > 0">
-                        </plex-button>
-                    </td>
-                    <td *ngIf="carpeta.estado == 'Prestada'">
-                        <plex-badge type="warning">Prestada</plex-badge>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                </td>
+                <td *ngIf="carpeta.datosSolicitudManual">
+                    {{carpeta.datosSolicitudManual.profesional ?
+                    carpeta.datosSolicitudManual.profesional.nombre + ', ' +
+                    carpeta.datosSolicitudManual.profesional.apellido
+                    : ''}}
+                </td>
+                <!-- Observaciones -->
+                <td *ngIf="carpeta.datosPrestamo">
+                    {{carpeta.datosPrestamo.observaciones}}
+                </td>
+                <td *ngIf="carpeta.datosSolicitudManual">
+                    {{carpeta.datosSolicitudManual.observaciones}}
+                </td>
+                <!-- Fecha de Actualización de la HUDS digitalizada -->
+                <td>
+                    <span *ngIf="carpeta.ultimoCDA[0]">
+                        Fecha: <b>{{carpeta.ultimoCDA[0].fecha | fecha}}</b>
+                        <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}}
+                            {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
+                        <br>
+                        <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
+                            Descargar documento adjunto
+                            <!-- <i class="mdi mdi-36px mdi-file-pdf"></i> -->
+                        </a>
+                    </span>
+                </td>
+                <!-- Boton para subir HUDS digitalizada -->
+                <td>
+                    <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
+                                 (onUpload)="onUpload($event, carpeta)" [modulo]="'prestamosHC'">
+                    </upload-file>
+                    <br><br>
+                    <span *ngIf="errorExt===i">
+                        <plex-badge type="danger">Archivo inválido. Solo se admite PDF</plex-badge>
+                    </span>
+                </td>
+                <!-- Estado -->
+                <td *ngIf="carpeta.estado == 'En archivo'">
+                    <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)"
+                                 [disabled]="carpetasSeleccionadas.length > 0">
+                    </plex-button>
+                </td>
+                <td *ngIf="carpeta.estado == 'Prestada'">
+                    <plex-badge type="warning">Prestada</plex-badge>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!loading && !carpetas.length" justify="center" class="pt-4">
+        <plex-label direction="column" titulo="No hay solicitudes para los filtros consultados"
+                    subtitulo="Comience realizando una búsqueda mediante los filtros en la parte superior de la pantalla"
+                    size="xl">
+            <plex-icon prefix="mdi" name="folder-remove"></plex-icon>
+        </plex-label>
     </div>
 
 </fieldset>
