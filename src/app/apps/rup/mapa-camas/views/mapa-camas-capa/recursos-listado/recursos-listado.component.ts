@@ -1,76 +1,84 @@
 import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { CamaMainComponent } from '../../cama/cama.component';
 import { Observable } from 'rxjs';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
-import { map, pluck } from 'rxjs/operators';
-import { OrganizacionService } from '../../../../../../services/organizacion.service';
-import { cache } from '@andes/shared';
+import { map } from 'rxjs/operators';
+import { ISnapshot } from '../../../interfaces/ISnapshot';
+
 @Component({
-    selector: 'recursos-listado',
+    selector: 'app-recursos-listado',
     templateUrl: './recursos-listado.component.html'
 })
 export class RecursosListadoComponent implements OnInit {
 
-
-    camas$: Observable<any[]>;
-    public sectorList$: Observable<any[]>;
-    fecha = moment().toDate();
-    selectedId: string;
-    items = [];
-    items2 = [];
-    organizacion$: Observable<any>;
-    mapaSectores$: Observable<any[]>;
-    public camas = [];
-    public salida;
+    sectore$: Observable<any[]>;
+    selectedCama$: Observable<ISnapshot>;
+    accion;
+    selectedId;
+    estadoRelacion: any;
     constructor(
         private mapaCamasService: MapaCamasService,
-        private router: Router,
-        private route: ActivatedRoute,
         public auth: Auth,
-        private organizacionService: OrganizacionService
+
     ) {
 
     }
     ngOnInit() {
-        this.organizacion$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
-            cache()
+        this.sectore$ = this.mapaCamasService.snapshotOrdenado$.pipe(
+            map(snapshots => {
+                const arreglo = [];
+                snapshots = snapshots.filter(snap => snap.estado !== 'inactiva');
+                snapshots.map(c => {
+                    if (!(arreglo.length > 0)) {
+                        arreglo.push(c);
+                    } else
+                        if (!(arreglo.find(d => d.sectorName === c.sectorName))) {
+                            arreglo.push(c);
+                        }
+                });
+                return arreglo.map(sector => {
+
+                    return {
+                        nombre: sector.sectorName.split(',').reverse().join(','),
+                        camasSector: snapshots.filter(c => c.sectorName === sector.sectorName)
+                    };
+                });
+
+            })
         );
 
-        this.mapaSectores$ = this.organizacion$.pipe(pluck('mapaSectores'));
-
-        this.mapaCamasService.snapshotOrdenado$.pipe(
-            map(snapshots => {
-
-                return snapshots.filter(snap => snap.estado !== 'inactiva');
+        this.selectedCama$ = this.mapaCamasService.selectedCama.pipe(
+            map((cama) => {
+                if (cama.id && !this.accion) {
+                    this.accion = 'verDetalle';
+                }
+                return cama;
             })
-        ).subscribe((d) => {
+        );
 
-            const salida = d.filter(h => h.sectores !== undefined);
-            this.camas = salida.filter(s => s.sectores.find(n => n.nombre === 'Habitación 509'));
-            console.log(this.camas);
-        });
-
-
-        this.items = [
-            { label: 'Censo diario' },
-            { label: 'Censo mensual' },
-        ];
-
-        this.items2 = [
-            { label: 'hoy a las 00:00' },
-            { label: 'hoy a las 12:00' },
-            { label: 'hoy a las 23:59' },
-        ];
 
     }
 
-    selected(cama) {
-        this.selectedId = cama.id;
-        this.router.navigate(['templates', 'internacion', this.selectedId]);
+    verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
+        if (!selectedCama.id || cama !== selectedCama) {
+            this.mapaCamasService.select(cama);
+            this.accion = 'verDetalle';
+        } else {
+            this.accion = null;
+            this.mapaCamasService.select(null);
+        }
     }
+
+    selectCama(cama, relacion) {
+        this.mapaCamasService.resetView();
+        this.mapaCamasService.select(cama);
+        if (relacion) {
+            this.estadoRelacion = relacion;
+            this.accion = relacion.accion;
+        }
+    }
+
+
 
 
 

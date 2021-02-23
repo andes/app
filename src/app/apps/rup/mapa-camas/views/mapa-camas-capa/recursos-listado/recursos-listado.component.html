@@ -1,60 +1,22 @@
-<plex-title titulo="Listado de recursos">
-    <plex-button type="success" size="sm" label="nuevo recurso" class="ml-2"></plex-button>
-    <plex-button type="info" size="sm" icon="format-list-checks" class="ml-2"></plex-button>
-    <plex-button type="info" size="sm" icon="view-grid" class="ml-2"></plex-button>
-    <plex-dropdown type="info" size="sm" icon="camara-foto" class="ml-2" [items]="items2"></plex-dropdown>
-    <plex-button type="info" size="sm" icon="clock" class="ml-2 mr-3"></plex-button>
-</plex-title>
-<plex-accordion *ngFor="let unidadOrganizativa of mapaSectores$ | async">
+<plex-accordion *ngFor="let sector of sectore$| async ">
     <plex-panel>
         <div plex-accordion-title justify>
             <section class="w-50">
-                <plex-label size="lg" case="capitalize" titulo="{{ unidadOrganizativa.nombre }}" icon="hospital">
+                <plex-label size="lg" case="capitalize" titulo="{{ sector.nombre }}" icon="hospital">
                 </plex-label>
-            </section>
-            <section justify="end" class="w-50">
-                <plex-dropdown type="info" size="sm" label="generar censo" [items]="items"></plex-dropdown>
-                <plex-button type="info" size="sm" icon="impresora" class="ml-2"></plex-button>
             </section>
         </div>
-        <ng-container *ngFor="let sector_cama of unidadOrganizativa.hijos">
-
-            <ng-container *ngIf="sector_cama.tipoSector.conceptId==='2431000013108'">
-                <plex-label titulo="{{ sector_cama.nombre }}" size="lg">
-                </plex-label>
-                <ng-container *ngFor="let habitacion of sector_cama.hijos">
-                    <plex-title titulo="{{habitacion.nombre }}" size="md">
-                    </plex-title>
-                    <ng-container *ngIf="habitacion.nombre==='Habitación 509'">
-                        <plex-grid size="md" type="full">
-
-                            <plex-card *ngFor="let cama of camas" (click)="selected(cama)" align="center">
-
-                                <plex-badge type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}">{{
-                                    cama.estado}}
-                                </plex-badge>
-                                <plex-icon size="xl" type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}"
-                                           name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}"></plex-icon>
-                                <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ cama.sectorName }}">
-                                </plex-label>
-
-                            </plex-card>
-
-                        </plex-grid>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
-
-            <ng-container *ngIf="sector_cama.tipoSector.conceptId==='2401000013100'">
-                <plex-title titulo="{{sector_cama.nombre }}" size="md">
-                </plex-title>
-            </ng-container>
-
-
-
-        </ng-container>
-
-
-
+        <plex-grid size="md" type="full">
+            <plex-card *ngFor="let cama of sector.camasSector" (click)="verDetalle(cama, cama.id)" align="center">
+                <plex-badge type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}">{{ cama.estado}}
+                </plex-badge>
+                <plex-icon size="xl" type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}"
+                           name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}"></plex-icon>
+                <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ cama.sector }}"></plex-label>
+                <plex-button size="sm" type="{{ cama.estado === 'ocupada' ? 'danger' : 'success'}}"
+                             icon="{{ cama.estado === 'ocupada' ? 'menos' : 'mas'}}"></plex-button>
+                <plex-button size="sm" type="warning" icon="pencil"></plex-button>
+            </plex-card>
+        </plex-grid>
     </plex-panel>
 </plex-accordion>

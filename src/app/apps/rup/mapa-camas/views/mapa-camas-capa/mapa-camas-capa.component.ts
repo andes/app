@@ -40,6 +40,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     opcionesCamas = [];
     accion = null;
     cambiarUO;
+    listadoRecursos = false;
     camasDisponibles;
 
     puedeVerHistorial$: Observable<boolean>;
@@ -79,6 +80,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
         public ws: WebSocketService
+
     ) { }
 
 
@@ -181,7 +183,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             })
         );
     }
+    verListadoRecursos() {
+        this.listadoRecursos = this.listadoRecursos ? false : true;
 
+
+    }
     verListadoInternacion() {
         this.router.navigate([`/mapa-camas/listado-internacion`]);
     }
@@ -189,9 +195,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     verListadoInternacionMedico() {
         this.router.navigate([`/mapa-camas/listado-internacion-medico`]);
     }
-    verMapaRecursos() {
-        this.router.navigate([`/mapa-camas/mapa-recursos`]);
-    }
+
     onEdit(accion) {
         this.accion = accion;
     }
