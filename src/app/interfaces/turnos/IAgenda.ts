@@ -54,4 +54,5 @@ export interface IAgenda {
         fecha: Date
     }];
     enviarSms: String;
+    condicionLlave: boolean;
 }

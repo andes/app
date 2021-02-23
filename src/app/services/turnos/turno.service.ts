@@ -48,4 +48,8 @@ export class TurnoService {
         return this.server.patch(this.turnoUrl + '/turno/' + idTurno + '/' + idBloque + '/' + idAgenda, data);
     }
 
+    getRules(params) {
+        return this.server.get(this.turnoUrl + '/rules', { params: params, showError: true });
+    }
+
 }
