@@ -186,7 +186,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     getHUDS(paciente) {
-        return this.prestacionService.getByPaciente(paciente.id, true);
+        return this.prestacionService.getByPaciente(paciente.id, true).pipe(
+            map((prestaciones) => {
+                return prestaciones.sort((a, b) => {
+                    return b.solicitud.fecha.getTime() - a.solicitud.fecha.getTime();
+                });
+            })
+        );
     }
 
     onNuevoRegistrio() {

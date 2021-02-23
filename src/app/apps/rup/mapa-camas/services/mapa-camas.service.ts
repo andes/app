@@ -15,7 +15,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
-import { InternacionResumenHTTP } from './resumen-internacion.http';
+import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
 
 @Injectable()
 export class MapaCamasService {
@@ -58,7 +58,7 @@ export class MapaCamasService {
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
 
-    public resumenInternacion$: Observable<any>;
+    public resumenInternacion$: Observable<IResumenInternacion>;
 
 
     public fechaActual$: Observable<Date>;
@@ -222,7 +222,7 @@ export class MapaCamasService {
                 return of({});
             }),
             cache()
-        );
+        ) as Observable<IResumenInternacion>;
     }
 
     resetView() {

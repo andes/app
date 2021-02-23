@@ -25,4 +25,8 @@ export interface IResumenInternacion {
     };
     fechaIngreso: string;
     fechaEgreso: string;
+    ingreso: {
+        registros: any[];
+        elementoRUP: any;
+    };
 }

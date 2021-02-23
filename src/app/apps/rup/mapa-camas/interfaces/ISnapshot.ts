@@ -67,5 +67,7 @@ export interface ISnapshot {
         username: Number,
         documento: Number
     };
+
+    sectorName?: string;
 }
 
