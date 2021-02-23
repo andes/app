@@ -1,0 +1,48 @@
+<plex-layout [main]="prestacionIdSelected ? 6 : 12">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="Exploración Visual">
+                <plex-datetime [(ngModel)]="desde" size="sm" class="mr-1"></plex-datetime>
+                <plex-datetime [(ngModel)]="hasta" size="sm" class="mr-1"></plex-datetime>
+
+                <plex-text *ngIf="textoFiltroVisivility" size="sm" [(ngModel)]="textoFiltro" [debounce]="400"
+                           (change)="zoomChange()">
+                </plex-text>
+                <plex-button size="sm" type="info" (click)="textoFiltroVisivility = !textoFiltroVisivility">
+                    <plex-icon name="zoom"></plex-icon>
+                </plex-button>
+            </plex-title>
+            <div #prueba></div>
+        </header>
+
+        <plex-list size="sm" [columns]="columns" #table2="plTable" height="100%">
+
+            <plex-item *ngFor="let data of dataSetVisible$ | plSort:table2 | async" (click)="onItemSelect(data)"
+                       [selected]="datoIdSelected === data.id">
+
+                <plex-label [titulo]="data.term" size="sm"></plex-label>
+
+                <plex-label [titulo]="data.organizacion.nombre" size="sm"></plex-label>
+
+                <plex-label [titulo]="data.profesional.nombre" size="sm"></plex-label>
+
+
+                <plex-badge> {{ data.fecha | fecha }} {{ data.fecha | hora }} </plex-badge>
+            </plex-item>
+
+        </plex-list>
+
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+
+        <vista-prestacion *ngIf="prestacionIdSelected" [idPrestacion]="prestacionIdSelected">
+
+            <plex-button type="danger" (click)="onClose()" size="sm">
+                <plex-icon name="close"></plex-icon>
+            </plex-button>
+
+        </vista-prestacion>
+
+    </plex-layout-sidebar>
+</plex-layout>

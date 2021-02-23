@@ -14,6 +14,8 @@ import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 
 @Component({
@@ -74,7 +76,8 @@ export class CamaDetalleComponent implements OnInit {
         private mapaCamasHTTP: MapaCamasHTTP,
         private prestacionesService: PrestacionesService,
         public permisosMapaCamasService: PermisosMapaCamasService,
-        private turneroService: TurneroService
+        private turneroService: TurneroService,
+        private motivoAccesoService: ModalMotivoAccesoHudsService
     ) {
     }
 
@@ -208,5 +211,13 @@ export class CamaDetalleComponent implements OnInit {
 
     llamarTurnero(pantalla: string, cama: ISnapshot) {
         this.turneroService.llamarInternacion(pantalla, cama);
+    }
+
+    onVerResumen(cama: ISnapshot) {
+        this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
+            const capa = this.mapaCamasService.capa;
+            const ambito = this.mapaCamasService.ambito;
+            this.router.navigate([`/mapa-camas/${ambito}/${capa}/resumen/${cama.idInternacion}`]);
+        });
     }
 }

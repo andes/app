@@ -73,6 +73,10 @@
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
 
+                <plex-button *feature="'resumenInternacion'" label="EXPLORACIÓN VISUAL" size="sm" type="info"
+                             (click)="onVerResumen(cama)" class="mr-1">
+                </plex-button>
+
                 <ng-container *ngIf="turnero$ | async as pantalla">
                     <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">
                         <plex-icon name="bell-ring-outline"></plex-icon>
@@ -80,7 +84,7 @@
                 </ng-container>
 
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
-                    <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                    <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
                     <plex-button title="Deshacer Internacion" icon="account-off" type="danger" size="sm"
