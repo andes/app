@@ -30,7 +30,6 @@ export class PacienteComponent implements OnInit {
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
-    tabIndex = 0;
     showRelaciones = false; // en paciente-panel (sidebar)
     parentescoModel: any[];
     relacionesBorradas: any[] = [];
