@@ -121,6 +121,6 @@ export class DocumentosPacienteComponent implements OnInit {
             item.archivos.map(
                 el => this.driveService.deleteFile(el.id)
             )
-        );
+        ).subscribe();
     }
 }
