@@ -15,13 +15,15 @@
 
         </div>
         <div [ngClass]="{'col-5': !soloValores, 'col-12': soloValores}" *ngIf="!params?.seleccionarOpcion">
-            <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro?.valor }"
-                      [(ngModel)]="registro.valor" rows="6" id="descripcion" name="descripcion"
-                      [required]="params.required"></textarea>
-            <p *ngIf="soloValores" class="readonly mb-5">
-                {{registro.valor}}
+            <plex-text [html]="true" *ngIf="!soloValores && afterInit" class="form-control" [(ngModel)]="registro.valor"
+                       name="descripcion" [required]="params.required" rows="6" placeholder="Describir tratamiento"
+                       id="descripcion" name="descripcion">
+            </plex-text>
 
-            </p>
+            <ng-container *ngIf="soloValores">
+                <span [innerHTML]="registro.valor"></span>
+            </ng-container>
+
         </div>
         <!-- Area droppable del elemento -->
         <div [ngClass]="{'col-7': !soloValores, 'col-12': soloValores}" droppable [dropScope]="'registros-rup'"
