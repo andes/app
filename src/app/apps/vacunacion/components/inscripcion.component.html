@@ -1,0 +1,69 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Inscripción a vacunación Covid 19">
+            <plex-button label="Guardar" type="info" 
+            [disabled]="!recaptcha || !formulario.valid" [validateForm]="formulario">
+            </plex-button>
+            <plex-button label="Cancelar" type="danger" (click)="cancelar()"> </plex-button>
+        </plex-title>
+        <div class="row w-100">
+            <div class="col-2">
+            </div>
+            <div class="col-6">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <plex-label titulo="Completá los datos para realizar la petición de turno de vacunación"
+                                    size="lg">
+                        </plex-label>
+                    </div>
+                </div>
+                <form #formulario="ngForm">
+                    <div class="form-group">
+                        <plex-text [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()" name="documento"
+                                   label="Documento" [required]="true">
+                        </plex-text>
+                    </div>
+                    <div class="form-group">
+                        <plex-radio (change)="seleccionarSexo($event)" [(ngModel)]="ciudadano.sexo" label="Sexo" type="horizontal"
+                                    [data]="opcionesSexo" name="sexo">
+                        </plex-radio>
+                    </div>
+                    <div class="form-group">
+                        <plex-text [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
+                                   label="Número de Trámite" [required]="true">
+                        </plex-text>
+                    </div>
+                    <div class="form-group">
+                        <plex-text [(ngModel)]="ciudadano.nombre" (change)="limpiarRespuesta()" name="nombre"
+                                   label="Nombre" [required]="true">
+                        </plex-text>
+                    </div>
+                    <div class="form-group">
+                        <plex-text [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()" name="apellido"
+                                   label="Apellido" [required]="true">
+                        </plex-text>
+                    </div>
+                    <div class="form-group">
+                        <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="ciudadano.fechaNacimiento" name="fechaNacimiento"></plex-datetime>
+                    </div>
+                    <div class="form-group">
+                        <plex-select name="localidades" [data]="localidades" label="Localidad" idField="_id"
+                                 labelField="nombre" [required]="true" [(ngModel)]="ciudadano.localidad">
+                    </plex-select>
+                    </div>
+                    <div class="form-group">
+                    <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
+                                placeholder="Ej: 2990000000">
+                    </plex-phone>
+                </div>
+                    <div class="form-group mt-2">
+                        <re-captcha (resolved)="resolved($event)" siteKey="6Lc5nUsaAAAAALJ15OtJMKpdW9XSEOl13A_3Hx6i">
+                        </re-captcha>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+            </div>
+        </div>
+    </plex-layout-main>
+</plex-layout>
