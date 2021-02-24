@@ -1,3 +1,17 @@
+# [5.35.0](https://github.com/andes/app/compare/v5.34.0...v5.35.0) (2021-02-24)
+
+
+### Bug Fixes
+
+* **mpi:** check validado activo ([#2139](https://github.com/andes/app/issues/2139)) ([003500c](https://github.com/andes/app/commit/003500ca1b5f3a34e42a78c0def981827f2366d4))
+
+
+### Features
+
+* **citas:** se agrega permiso soloLectura ([#2114](https://github.com/andes/app/issues/2114)) ([ef227f0](https://github.com/andes/app/commit/ef227f0c8520af01d40307bfb92ab6ca24b50e82))
+* **mapa-camas:** varios ajustes ([#2133](https://github.com/andes/app/issues/2133)) ([16fbab5](https://github.com/andes/app/commit/16fbab5a00ca31e59c108defebb44b759e525659))
+* **rup:** incorpora componentes plex a vista prestacion ([#2134](https://github.com/andes/app/issues/2134)) ([3d45474](https://github.com/andes/app/commit/3d454742068e93d81db6f9238ff651daa10c0df7))
+
 # [5.34.0](https://github.com/andes/app/compare/v5.33.0...v5.34.0) (2021-02-17)
 
 
