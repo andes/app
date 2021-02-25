@@ -50,23 +50,23 @@ export class FiltrosCamasComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.unidadOrganizativaList$ = this.mapaCamasService.snapshot$.pipe(
+        this.unidadOrganizativaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas, 'conceptId', (item) => item.unidadOrganizativa))
         );
 
-        this.sectorList$ = this.mapaCamasService.snapshot$.pipe(
+        this.sectorList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores))
         );
 
-        this.tipoCamaList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas.filter( snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
+        this.tipoCamaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
+            map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
         );
 
-        this.equipamientoList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas.filter( snap => !snap.sala), 'conceptId', ((item) => item.equipamiento ? item.equipamiento : []))),
+        this.equipamientoList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
+            map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', ((item) => item.equipamiento ? item.equipamiento : []))),
         );
 
-        this.estadoList$ = this.mapaCamasService.snapshot$.pipe(
+        this.estadoList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas, 'estado', (item) => item)),
             map(estados => estados.map(e => ({ estado: e.estado })))
         );
