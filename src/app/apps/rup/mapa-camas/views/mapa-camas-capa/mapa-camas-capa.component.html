@@ -15,16 +15,15 @@
                                size="sm" label="VER CENSO" type="primary" class="d-inline-block" [right]="true"
                                [items]="itemsCensoDropdown">
                 </plex-dropdown>
-                <plex-button class="mr-1" size="sm"
-                             label="{{(!listadoRecursos)?'listado de recursos':'listado de camas'}}" type="primary"
-                             (click)="verListadoRecursos()">
-                </plex-button>
-
             </plex-title>
 
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
+                <plex-button class="mr-1" size="sm"
+                             label="{{(!listadoRecursos)?'listado de recursos':'listado de camas'}}" type="primary"
+                             (click)="verListadoRecursos()">
+                </plex-button>
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE"
                              type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">

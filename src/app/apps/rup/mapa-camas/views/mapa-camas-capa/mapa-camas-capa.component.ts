@@ -185,8 +185,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
     verListadoRecursos() {
         this.listadoRecursos = this.listadoRecursos ? false : true;
-
-
     }
     verListadoInternacion() {
         this.router.navigate([`/mapa-camas/listado-internacion`]);

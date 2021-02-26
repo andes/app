@@ -34,8 +34,6 @@ export const INTERNACION_ROUTES = [
 
     { path: ':ambito/:capa', component: MapaCamasCapaComponent },
 
-
-
     { path: '', redirectTo: 'internacion', pathMatch: 'full' }
 
 ];

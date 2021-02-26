@@ -55,8 +55,6 @@ export class RecursosListadoComponent implements OnInit {
                 return cama;
             })
         );
-
-
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
@@ -77,9 +75,4 @@ export class RecursosListadoComponent implements OnInit {
             this.accion = relacion.accion;
         }
     }
-
-
-
-
-
 }
