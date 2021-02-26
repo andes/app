@@ -1,9 +1,7 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
 // Servicios
-import { TurnoService } from '../../../services/turnos/turno.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
 import { IContacto } from '../../../interfaces/IContacto';
 import * as enumerados from './../../../utils/enumerados';
@@ -33,7 +31,8 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     paciente: IPaciente;
-    arrayContactos: IContacto[] = [];
+    contactosTelefonicos: IContacto[] = [];
+    contactosEmail: IContacto[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
     localidadRequerida = true;
@@ -67,6 +66,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     tipoComunicacion: any;
     barriosNeuquen: any[];
+    patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
 
     // Inicialización
     constructor(private pacienteService: PacienteService,
@@ -96,7 +96,6 @@ export class UpdateContactoDireccionComponent implements OnInit {
             this.provincias = rta;
         });
 
-
         this.provinciaService.get({
             nombre: 'Neuquén'
         }).subscribe(Prov => {
@@ -106,10 +105,12 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     private loadPaciente() {
         if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
-            this.arrayContactos = this.paciente.contacto;
+            this.contactosTelefonicos = this.paciente.contacto.filter(c => c.tipo !== 'email');
+            this.contactosEmail = this.paciente.contacto.filter(c => c.tipo === 'email');
         } else {
-            this.arrayContactos = [this.contacto];
+            this.contactosTelefonicos = [this.contacto];
         }
+
         if (this.paciente && this.paciente.direccion && this.paciente.direccion.length) {
             let direccionOriginal = this.paciente.direccion[0];
             if (direccionOriginal.valor) {
@@ -126,9 +127,9 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     addContacto(key, valor) {
-        let indexUltimo = this.arrayContactos.length - 1;
+        let indexUltimo = this.contactosTelefonicos.length - 1;
 
-        if (this.arrayContactos[indexUltimo].valor) {
+        if (this.contactosTelefonicos[indexUltimo].valor) {
             let nuevoContacto = Object.assign({}, {
                 tipo: key,
                 valor: valor,
@@ -137,20 +138,22 @@ export class UpdateContactoDireccionComponent implements OnInit {
                 ultimaActualizacion: new Date()
             });
 
-            this.arrayContactos.push(nuevoContacto);
+            this.contactosTelefonicos.push(nuevoContacto);
         } else {
             this.plex.toast('info', 'Debe completar los contactos anteriores.');
         }
     }
 
     changeTipoContacto(indice, keyTipo) {
-        this.arrayContactos[indice].tipo = keyTipo.id;
-        this.disableGuardar = false;
+        if (keyTipo) {
+            this.contactosTelefonicos[indice].tipo = keyTipo.id;
+            this.disableGuardar = false;
+        }
     }
 
     removeContacto(i) {
         if (i >= 0) {
-            this.arrayContactos.splice(i, 1);
+            this.contactosTelefonicos.splice(i, 1);
             this.disableGuardar = false;
         }
     }
@@ -159,8 +162,8 @@ export class UpdateContactoDireccionComponent implements OnInit {
     eliminarContactosVacios() {
         let indice = 0;
 
-        while (indice < this.arrayContactos.length) {
-            if (!this.arrayContactos[indice].valor) {
+        while (indice < this.contactosTelefonicos.length) {
+            if (!this.contactosTelefonicos[indice].valor) {
                 this.removeContacto(indice);
             } else {
                 indice++;
@@ -202,7 +205,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     save(valid) {
         if (valid.formValid) {
             this.eliminarContactosVacios();
-            this.paciente.contacto = this.arrayContactos;
+            this.paciente.contacto = this.contactosTelefonicos.concat(this.contactosEmail);
             this.paciente.direccion[0] = this.direccion;
 
             this.pacienteService.save(this.paciente).subscribe();
@@ -211,7 +214,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
             this.plex.toast('success', 'Los cambios han sido guardados.', 'Información');
 
             if (!this.paciente.contacto.length) {
-                this.arrayContactos = [this.contacto];
+                this.contactosTelefonicos = [this.contacto];
             }
         } else {
             this.plex.toast('warning', 'Verifique los datos ingresados por favor.', 'Aviso');
