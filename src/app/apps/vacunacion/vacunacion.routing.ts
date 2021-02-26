@@ -2,7 +2,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InscripcionComponent } from './components/inscripcion.component';
-//import { ListadoVacunasComponent } from './components/listado.component';
+// import { ListadoVacunasComponent } from './components/listado.component';
 
 const routes: Routes = [
     // { path: 'consulta', component: VacunacionConsultaComponent },
