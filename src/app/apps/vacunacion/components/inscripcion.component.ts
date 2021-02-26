@@ -99,6 +99,7 @@ export class InscripcionComponent implements OnInit {
     }
 
     cancelar() {
+        window.location.reload();
     }
 
     seleccionaGrupo() {
@@ -121,6 +122,11 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
+            if (inscripto.documento) {
+                this.plex.toast('success', 'Su inscripción a la vacunación COVID se realizó correctamente');
+            }
+        }, (error) => {
+            this.plex.info('danger', error, 'La inscripción no pudo realizarse ');
         });
     }
 
