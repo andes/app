@@ -1,6 +1,9 @@
+import { ILocalidad } from 'src/app/interfaces/ILocalidad';
+
 export interface ICiudadano {
     id: string;
     fechaRegistro: Date;
+    tieneTramite: boolean;
     nroTramite: string;
     grupo: string;
     documento: string;
@@ -10,7 +13,7 @@ export interface ICiudadano {
     fechaNacimiento: Date;
     telefono: string;
     email: string;
-    localidad: string;
+    localidad: ILocalidad;
     estado: string;
     alergia: boolean;
     condicion: boolean;
@@ -19,8 +22,10 @@ export interface ICiudadano {
     aislamiento: boolean;
     vacuna: boolean;
     plasma: boolean;
-    mamar: boolean;
+    amamantando: boolean;
     embarazada: boolean;
+    profesion: string;
+    matricula: number;
     establecimiento: string;
     localidadEstablecimiento: string;
     relacion: string;

@@ -9,11 +9,15 @@ import { PlexModule } from '@andes/plex';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { InscripcionComponent } from './components/inscripcion.component';
 import { ProfesionService } from 'src/app/services/profesion.service';
+import { InscripcionService } from './services/inscripcion.service';
 // import { ListadoVacunasComponent } from './components/listado-vacunas.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, HttpClientModule, PlexModule, VacunacionRouting, RecaptchaModule],
     declarations: [InscripcionComponent],
-    providers: [ProfesionService]
+    providers: [
+        ProfesionService,
+        InscripcionService
+    ]
 })
 export class VacunacionModule { }
