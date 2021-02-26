@@ -120,7 +120,7 @@ export class DatosBasicosComponent implements OnInit {
             return;
         }
         this.searchClear = false;
-        if (resultado.pacientes.length === 1 && resultado.escaneado) {
+        if (resultado.pacientes.length === 1 && resultado.scan?.length) {
             let pacienteScaneado = resultado.pacientes[0];
             if (!pacienteScaneado.id) {
                 pacienteScaneado.estado = 'validado'; // este paciente fue scaneado

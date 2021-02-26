@@ -101,18 +101,18 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.loading = true;
     }
 
-    onSearchEnd(pacientes: any[], escaneado: boolean) {
+    onSearchEnd(pacientes: any[], scan: string) {
+        this.esEscaneado = scan?.length > 0;
         this.searchClear = false;
         this.loading = false;
-        this.pacienteCache.setScanState(escaneado);
-        if (escaneado && pacientes.length === 1) {
+        if (this.esEscaneado && pacientes.length === 1) {
             if (pacientes[0].paciente) {
                 this.pacienteCache.setPaciente(pacientes[0].paciente);
-                this.pacienteCache.setScanState(escaneado);
+                this.pacienteCache.setScanCode(scan);
                 this.onPacienteSelected(pacientes[0].paciente);
             } else {
                 this.pacienteCache.setPaciente(pacientes[0]);
-                this.pacienteCache.setScanState(escaneado);
+                this.pacienteCache.setScanCode(scan);
                 this.onPacienteSelected(pacientes[0]);
             }
 

@@ -52,8 +52,7 @@
             </span>
         </form>
         <ng-container *ngIf="!showSobreturno && pacientesSearch">
-            <paciente-buscar (searchStart)="onSearchStart()"
-                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+            <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
                              (searchClear)="onSearchClear()">
             </paciente-buscar>
 

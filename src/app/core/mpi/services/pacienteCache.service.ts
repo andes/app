@@ -24,11 +24,11 @@ export class PacienteCacheService {
         this.pacienteCache.next(null);
     }
 
-    setScanState(scanState: boolean) {
-        this.isScannedCache.next(scanState);
+    setScanCode(scan: string) {
+        this.isScannedCache.next(scan);
     }
 
-    getScanState(): boolean {
+    getScan(): string {
         return this.isScannedCache.value;
     }
 
