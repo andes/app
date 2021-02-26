@@ -48,7 +48,6 @@ export class InscripcionComponent implements OnInit {
         localidad: undefined,
         telefono: '',
         email: '',
-        estado: '',
         alergia: false,
         condicion: false,
         enfermedad: false,
@@ -63,6 +62,7 @@ export class InscripcionComponent implements OnInit {
         establecimiento: '',
         localidadEstablecimiento: '',
         relacion: '',
+        estado: 'pendiente'
     };
 
     public relacion = null;
@@ -119,7 +119,9 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.grupo = this.grupo.id;
         this.ciudadano.sexo = this.sexo.id;
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
-        // this.inscripcionService.save();
+        this.ciudadano.fechaRegistro = new Date();
+        this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
+        });
     }
 
 }
