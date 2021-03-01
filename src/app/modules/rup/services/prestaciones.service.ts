@@ -734,7 +734,7 @@ export class PrestacionesService {
     }
 
     getFechaPrestacionTurnoDinamico(fechaTurno) {
-        const esAnterior = (moment(fechaTurno).format('YYYY-MM-DD') < moment().startOf('day').format('YYYY-MM-DD'));
+        const esAnterior = moment(fechaTurno).isBefore(new Date(), 'day');
         return esAnterior ? fechaTurno : new Date();
     }
 
