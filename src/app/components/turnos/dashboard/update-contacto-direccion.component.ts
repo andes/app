@@ -104,23 +104,24 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     private loadPaciente() {
-        if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
+        if (this.paciente?.contacto?.length) {
             this.contactosTelefonicos = this.paciente.contacto.filter(c => c.tipo !== 'email');
             this.contactosEmail = this.paciente.contacto.filter(c => c.tipo === 'email');
-        } else {
+        }
+        if (!this.paciente?.contacto?.length || !this.contactosTelefonicos.length) {
             this.contactosTelefonicos = [this.contacto];
         }
 
-        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length) {
+        if (this.paciente?.direccion?.length) {
             let direccionOriginal = this.paciente.direccion[0];
             if (direccionOriginal.valor) {
                 this.direccion.valor = direccionOriginal.valor;
             }
-            if (direccionOriginal.ubicacion && direccionOriginal.ubicacion.provincia) {
+            if (direccionOriginal?.ubicacion?.provincia) {
                 this.direccion.ubicacion.provincia = direccionOriginal.ubicacion.provincia;
                 this.changeProvincia(this.direccion.ubicacion.provincia);
             }
-            if (direccionOriginal.ubicacion && direccionOriginal.ubicacion.localidad) {
+            if (direccionOriginal?.ubicacion?.localidad) {
                 this.direccion.ubicacion.localidad = direccionOriginal.ubicacion.localidad;
             }
         }
@@ -206,8 +207,12 @@ export class UpdateContactoDireccionComponent implements OnInit {
         if (valid.formValid) {
             this.eliminarContactosVacios();
             this.paciente.contacto = this.contactosTelefonicos.concat(this.contactosEmail);
-            this.paciente.direccion[0] = this.direccion;
 
+            if (this.paciente.direccion?.length) {
+                this.paciente.direccion[0] = this.direccion;
+            } else {
+                this.paciente.direccion = [this.direccion];
+            }
             this.pacienteService.save(this.paciente).subscribe();
 
             this.disableGuardar = true;

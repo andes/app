@@ -10,7 +10,7 @@
             </plex-select>
             <plex-phone [readonly]="soloLectura" label="Número" [(ngModel)]="_unContacto.valor"
                         placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false"
-                        [pattern]="patronContactoNumerico">
+                        [pattern]="patronContactoNumerico" required="true">
             </plex-phone>
             <ng-container *ngIf="i > 0">
                 <plex-button class="pr-3 pb-1" label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)">
