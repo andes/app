@@ -49,7 +49,7 @@
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                                     placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                         </plex-phone>
-                        <plex-text *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'" [(ngModel)]="ciudadano.cue" (change)="limpiarRespuesta()" name="cue"
+                        <plex-text *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'" [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
                         label="Certificado Único de Discapacidad" [required]="true" grow="4">
                         </plex-text>
                     </plex-grid>
@@ -97,7 +97,7 @@
                         </plex-int>
                     </ng-container>
                     <div class="form-group mt-2">
-                        <re-captcha (resolved)="resolved($event)" siteKey="6Lc5nUsaAAAAALJ15OtJMKpdW9XSEOl13A_3Hx6i">
+                        <re-captcha (resolved)="resolved($event)">
                         </re-captcha>
                     </div>
                     <div class="form-group mt-2" justify>

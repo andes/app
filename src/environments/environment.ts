@@ -15,5 +15,6 @@ export const environment = {
   MAPS_KEY: '',
   HOTJAR_KEY: '',
   ANALYTICS_KEY: '',
-  PASSWORD_RECOVER: ''
+  PASSWORD_RECOVER: '',
+  SITE_KEY: ''
 };

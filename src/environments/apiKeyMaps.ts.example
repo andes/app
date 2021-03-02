@@ -16,3 +16,7 @@ export const analytics = {
 export const password_recovery = {
     key: 'enabled' // Para activar, si no se quiere activar poner cualquier otra cosa. Sugerencia: disabled
 };
+
+export const captcha = {
+    key: 'XXXX'
+};
