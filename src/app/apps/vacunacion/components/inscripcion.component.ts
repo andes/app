@@ -8,6 +8,7 @@ import { cache } from '@andes/shared';
 import { ProfesionService } from 'src/app/services/profesion.service';
 import * as moment from 'moment';
 import { InscripcionService } from '../services/inscripcion.service';
+import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 
 @Component({
     selector: 'inscripcion',
@@ -19,13 +20,9 @@ export class InscripcionComponent implements OnInit {
     recaptcha: any = null;
     public localidades$: Observable<any>;
     public profesiones$: Observable<any>;
+    public opcionesGrupos$: Observable<any>;
 
     public sexos: any[];
-    public opcionesGrupos = [
-        { id: 'mayores60', nombre: 'Mayores de 60' },
-        { id: 'personal-salud', nombre: 'Personal de Salud' }
-    ];
-
     public relacionLaboral = [
         { id: 'planta', label: 'Personal de planta' },
         { id: 'eventual', label: 'Personal con contrato eventual' },
@@ -42,7 +39,7 @@ export class InscripcionComponent implements OnInit {
         apellido: '',
         tieneTramite: true,
         nroTramite: '',
-        grupo: null,
+        grupo: undefined,
         sexo: null,
         fechaNacimiento: null,
         localidad: undefined,
@@ -60,28 +57,34 @@ export class InscripcionComponent implements OnInit {
         profesion: '',
         matricula: null,
         establecimiento: '',
-        localidadEstablecimiento: '',
+        localidadEstablecimiento: undefined,
         relacion: '',
         estado: 'pendiente'
     };
 
     public relacion = null;
-    public grupo = null;
     public sexo = null;
     public seleccionTramite = true;
     public fechaMaximaNacimiento;
     public profesion;
+    public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
+    public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+
     constructor(
         private plex: Plex,
         private localidadService: LocalidadService,
         private profesionesService: ProfesionService,
-        private inscripcionService: InscripcionService
+        private inscripcionService: InscripcionService,
+        private grupoPoblacionalService: GrupoPoblacionalService,
     ) {
         this.plex.updateTitle('VACUNACIÓN');
-        this.localidades$ = this.localidadService.get({codigo: 15}).pipe(
+        this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
             cache()
         );
         this.profesiones$ = this.profesionesService.get().pipe(
+            cache()
+        );
+        this.opcionesGrupos$ = this.grupoPoblacionalService.search({ activo: true }).pipe(
             cache()
         );
     }
@@ -103,9 +106,9 @@ export class InscripcionComponent implements OnInit {
     }
 
     seleccionaGrupo() {
-        const grupo = this.grupo;
+        const grupo = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
-        if (this.grupo.id === 'mayores60') {
+        if (grupo.nombre === 'mayores60') {
             this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
         } else {
             this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
@@ -117,7 +120,6 @@ export class InscripcionComponent implements OnInit {
             this.plex.info('danger', 'Reviso los datos ingresados');
             return;
         }
-        this.ciudadano.grupo = this.grupo.id;
         this.ciudadano.sexo = this.sexo.id;
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();

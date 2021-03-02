@@ -20,18 +20,18 @@
                 <form #formulario="ngForm">
                     <plex-label titulo="Datos Personales" size="lg"></plex-label>
                     <plex-grid type="full" cols="1">
-                        <plex-select [(ngModel)]="grupo" label="Seleccione grupo" [data]="opcionesGrupos" name="grupo" 
-                            [required]="true" (change)="seleccionaGrupo()">
+                        <plex-select [(ngModel)]="ciudadano.grupo" label="Seleccione grupo" [data]="opcionesGrupos$ | async" name="grupo" 
+                        idField="nombre" labelField="descripcion" [required]="true" (change)="seleccionaGrupo()">
                         </plex-select>
                         <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
                             placeholder="maria@gmail.com" [required]="true">
                         </plex-text>
                         <plex-text [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()" name="documento"
-                                   label="Documento" [required]="true">
+                                   label="Documento" [pattern]="patronDocumento" [required]="true">
                         </plex-text>
-                        <plex-bool *ngIf="grupo && grupo.id === 'mayores60'" type="slide" name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite" label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
+                        <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide" name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite" label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
 
-                        <plex-text *ngIf="ciudadano.tieneTramite" [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
+                        <plex-text *ngIf="ciudadano.tieneTramite || grupo.nombre === 'personal-salud' " [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                    label="Número de Trámite del DNI" [required]="true">
                         </plex-text>
                         <plex-select [(ngModel)]="sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
@@ -50,7 +50,7 @@
                         <plex-select name="localidades" [data]="localidades$ | async" label="Localidad" [(ngModel)]="ciudadano.localidad" [required]="true">
                         </plex-select>
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
-                                    placeholder="Ej: 2990000000">
+                                    placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                         </plex-phone>
                     </plex-grid>
                     <hr>
@@ -77,7 +77,7 @@
                         </div>
                     </ng-container>
                     <hr>
-                    <ng-container *ngIf="grupo && grupo.id === 'personal-salud'">
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'">
                         <plex-label titulo="Datos Laborales" size="lg"></plex-label>
                         <plex-text [(ngModel)]="ciudadano.establecimiento" (change)="limpiarRespuesta()" name="establecimiento"
                                    label="Establecimiento donde cumple la mayor carga horaria" [required]="true">

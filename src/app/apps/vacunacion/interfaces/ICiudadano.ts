@@ -5,7 +5,10 @@ export interface ICiudadano {
     fechaRegistro: Date;
     tieneTramite: boolean;
     nroTramite: string;
-    grupo: string;
+    grupo: {
+        id: String,
+        nombre: String
+    };
     documento: string;
     nombre: string;
     apellido: string;
@@ -27,6 +30,6 @@ export interface ICiudadano {
     profesion: string;
     matricula: number;
     establecimiento: string;
-    localidadEstablecimiento: string;
+    localidadEstablecimiento: ILocalidad;
     relacion: string;
 }
