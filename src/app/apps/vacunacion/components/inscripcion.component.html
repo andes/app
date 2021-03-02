@@ -110,3 +110,20 @@
         </div>
     </plex-layout-main>
 </plex-layout>
+<plex-modal [allowClose]="true" [allowEscClose]="false" #modal (closed)="limpiarForm()">
+    <plex-icon name="check" type="success"></plex-icon>
+    <plex-modal-title type="success">Inscripción a Vacunación contra el covid-19</plex-modal-title>
+    <main>
+        <div class="pr-5 pl-5 h5">
+            Has sido inscripto correctamente en el plan público, gratuito y optativo contra COVID-19. 
+            <hr> 
+            Tenemos toda la información necesaria para contactarnos con usted una vez que la dosis esté disponible. 
+            <hr>
+            Recuerde que la inscripción no garantiza la reserva del turno.
+            
+        </div>
+    </main>
+    <plex-button modal right type="success" (click)="limpiarForm()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>

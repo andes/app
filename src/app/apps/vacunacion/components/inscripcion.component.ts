@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ICiudadano } from '../interfaces/ICiudadano';
 import { Observable } from 'rxjs';
@@ -9,12 +9,14 @@ import { ProfesionService } from 'src/app/services/profesion.service';
 import * as moment from 'moment';
 import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'inscripcion',
     templateUrl: './inscripcion.component.html'
 })
 export class InscripcionComponent implements OnInit {
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     public resultado = null;
     recaptcha: any = null;
@@ -126,11 +128,46 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.fechaRegistro = new Date();
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
             if (inscripto.documento) {
-                this.plex.toast('success', 'Su inscripción a la vacunación COVID se realizó correctamente');
+                this.modal.showed = true;
             }
         }, (error) => {
             this.plex.info('danger', error, 'La inscripción no pudo realizarse ');
         });
+    }
+
+    limpiarForm() {
+        this.modal.showed = false;
+        this.ciudadano = {
+            id: null,
+            fechaRegistro: null,
+            documento: '',
+            nombre: '',
+            apellido: '',
+            tieneTramite: true,
+            nroTramite: '',
+            grupo: null,
+            sexo: null,
+            fechaNacimiento: null,
+            localidad: undefined,
+            telefono: '',
+            email: '',
+            cue: '',
+            alergia: false,
+            condicion: false,
+            enfermedad: false,
+            convaleciente: false,
+            aislamiento: false,
+            vacuna: false,
+            plasma: false,
+            amamantando: false,
+            embarazada: false,
+            profesion: '',
+            matricula: null,
+            establecimiento: '',
+            localidadEstablecimiento: undefined,
+            relacion: '',
+            estado: 'pendiente'
+        };
     }
 
 }
