@@ -21,6 +21,10 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public fichasPaciente: Observable<any>;
   public fichaPaciente$: Observable<any>;
   public permisoHuds = false;
+  public puedeEditar: boolean;
+  public puedeCrear: boolean;
+  public puedeVer: boolean;
+  public editFicha = false;
 
   public columns = [
     {
@@ -49,6 +53,13 @@ export class FichaEpidemiologicaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (!this.auth.getPermissions('epidemiologia:?').length) {
+      this.router.navigate(['inicio']);
+    }
+    this.puedeEditar = this.auth.check('epidemiologia:update');
+    this.puedeVer = this.auth.check('epidemiologia:read');
+    this.puedeCrear = this.auth.check('epidemiologia:create');
+
     this.plex.updateTitle([
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Ficha epidemiológica' }
@@ -101,7 +112,13 @@ export class FichaEpidemiologicaComponent implements OnInit {
       this.fichaPaciente$ = of(ficha);
     }
     this.showFicha = nombreFicha;
+    this.editFicha = true;
+  }
 
+  verFicha(ficha) {
+    this.fichaPaciente$ = of(ficha);
+    this.showFicha = ficha.type;
+    this.editFicha = false;
   }
 
   volver() {

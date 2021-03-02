@@ -21,10 +21,11 @@
             </plex-label>
         </div>
     </plex-layout-main>
-    <ng-template #elseFicha [ngSwitch]="showFicha">
-        <plex-layout-main *ngSwitchCase="'covid19'">
-            <app-ficha-covid [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente$ | async" (volver)="volver()">
-            </app-ficha-covid>
+    <ng-template #elseFicha>
+        <plex-layout-main>
+            <app-ficha-epidemiologica-crud [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente$ | async"
+                                           [editFicha]="editFicha" [fichaName]="showFicha" (volver)="volver()">
+            </app-ficha-epidemiologica-crud>
         </plex-layout-main>
     </ng-template>
     <plex-layout-sidebar [type]="'invert'">
@@ -36,8 +37,8 @@
             </plex-title>
             <paciente-detalle [paciente]="pacienteSelected" orientacion="horizontal"></paciente-detalle>
             <plex-title size="sm" titulo="Fichas epidemiológicas">
-                <plex-dropdown size="sm" type="success" class="mr-1" [right]="true" label="NUEVA FICHA"
-                               [items]="itemsDropdownFichas">
+                <plex-dropdown *ngIf="puedeCrear" size="sm" type="success" class="mr-1" [right]="true"
+                               label="NUEVA FICHA" [items]="itemsDropdownFichas">
                 </plex-dropdown>
             </plex-title>
             <plex-table [columns]="columns" #table="plTable">
@@ -47,7 +48,10 @@
                     <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
                     <td *plTableCol="'nombre'">{{ficha.type}}</td>
                     <td *plTableCol="'acciones'">
-                        <plex-button type="info" icon="pencil" size="sm" (click)="mostrarFicha(ficha.type, ficha)">
+                        <plex-button *ngIf="puedeEditar" type="info" icon="pencil" size="sm"
+                                     (click)="mostrarFicha(ficha.type, ficha)">
+                        </plex-button>
+                        <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
                         </plex-button>
                     </td>
                 </tr>

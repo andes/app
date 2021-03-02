@@ -19,7 +19,6 @@
     }
     
 }
-$alturaItem: 60px;
 cdk-virtual-scroll-viewport {
-    height: #{$alturaItem * 6};       
+    height: calc(100% -  205px);     
 }
