@@ -83,6 +83,7 @@ export class ListarSolicitudesComponent implements OnInit {
     carpetaEfector: any;
     mostrarMsjMultiCarpeta = false;
     puedeAdjutarHUDS: Boolean;
+    loading = false;
 
     constructor(
         public plex: Plex,
@@ -112,7 +113,9 @@ export class ListarSolicitudesComponent implements OnInit {
 
     @Unsubscribe()
     searchCarpetas() {
+        this.loading = true;
         return this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
+            this.loading = false;
             this.carpetas = carpetas;
             this.sortCarpetas();
         });
@@ -140,7 +143,7 @@ export class ListarSolicitudesComponent implements OnInit {
             }
         }
         if (filter === 'prestaciones') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['tipoPrestacion'] = value.value.conceptId;
                 delete this.filters['idTipoPrestaciones'];
             } else {
@@ -148,14 +151,14 @@ export class ListarSolicitudesComponent implements OnInit {
             }
         }
         if (filter === 'profesionales') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['idProfesional'] = value.value.id;
             } else {
                 this.filters['idProfesional'] = '';
             }
         }
         if (filter === 'espacioFisico') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['idEspacioFisico'] = value.value.id;
             } else {
                 this.filters['idEspacioFisico'] = '';
@@ -324,11 +327,6 @@ export class ListarSolicitudesComponent implements OnInit {
         let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
         this.carpetas = carpetas_sort;
-    }
-
-    toogleSort() {
-        this.sortDescending = !this.sortDescending;
-        this.sortCarpetas();
     }
 
     onCarpeta(value) {

@@ -26,6 +26,7 @@ export class PrestamosHcComponent implements OnInit {
     pacientesSearch = false;
     listaCarpetas: any;
     paciente: any;
+    searchClear = true;
 
     carpetaSeleccionada: any;
 
@@ -75,6 +76,7 @@ export class PrestamosHcComponent implements OnInit {
     // -------------- SOBRE BUSCADOR PACIENTES ----------------
 
     searchStart() {
+        this.searchClear = false;
         this.paciente = null;
         this.loading = true;
     }
@@ -89,11 +91,13 @@ export class PrestamosHcComponent implements OnInit {
     }
 
     onSearchClear() {
+        this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
 
     onSelectPaciente(event) {
+        this.searchClear = true;
         this.paciente = event;
         this.pacientesSearch = false;
         this.verSolicitudManual = true;
@@ -165,17 +169,13 @@ export class PrestamosHcComponent implements OnInit {
         this.prestamos.getCarpetas({}, null);
     }
 
-    // Se usa tanto para guardar como cancelar
     afterComponenteCarpeta(carpetas) {
-        this.verNuevaCarpeta = false;
-
         if (carpetas && carpetas.length) {
+            this.verNuevaCarpeta = false;
             this.carpetaSeleccionada = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
             let msj = `Nro de Carpeta ${this.carpetaSeleccionada.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
-            this.plex.info('warning', msj);
+            this.plex.info('success', msj, 'Carpeta asignada');
             this.verSolicitudManual = true;
-        } else {
-            this.hideSidebar();
         }
     }
 }

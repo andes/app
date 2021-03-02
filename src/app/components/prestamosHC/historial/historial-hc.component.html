@@ -1,23 +1,21 @@
 <fieldset>
-    <legend>Historial de Préstamos</legend>
+    <plex-title titulo="Historial de Préstamos" size="lg"></plex-title>
     <!-- Filtros -->
-    <div class="row" style="margin-bottom: 0.25rem">
-        <div class="col-4">
-            <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
-                placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
-            </plex-text>
-        </div>
-        <div class="col-2" style="margin-top:36px;">
-            <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
-            </plex-button>
-        </div>
-        <div class="col-6 text-right" *ngIf="paciente">
-            <h5>Paciente: <strong>{{ paciente.apellido }}, {{ paciente.nombre }}</strong> |
-                Documento: <strong>{{ paciente.documento }}</strong></h5>
-        </div>
-    </div>
+    <plex-wrapper>
+        <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
+                   placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+        </plex-text>
 
-    <table *ngIf="historial.length" class="table table-striped">
+        <plex-button label="Buscar" type="primary" (click)="buscarHistorial()" grow="2">
+        </plex-button>
+    </plex-wrapper>
+
+    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+    <plex-title *ngIf="paciente" titulo="Paciente: {{ paciente.apellido }}, {{ paciente.nombre }} |
+            Documento: {{ paciente.documento }}" size="md"></plex-title>
+
+    <table *ngIf="historial?.length" class="table table-striped">
         <thead>
             <tr>
                 <th>Fecha</th>
@@ -36,7 +34,7 @@
                 <td *ngIf="!movimiento.datosSolicitudManual">
                     {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
                     {{movimiento.datosPrestamo.turno.profesionales |
-                                            enumerar:['apellido','nombre'] }}
+                    enumerar:['apellido','nombre'] }}
                     <br>
                     <plex-badge type="success">Solicitud Automática</plex-badge>
                 </td>
@@ -73,7 +71,7 @@
                 </td>
                 <td>
                     <span
-                        *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
+                          *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
                 </td>
                 <td>
                     <span *ngIf="movimiento.estado === 'En archivo'">
@@ -83,16 +81,15 @@
             </tr>
         </tbody>
     </table>
-    <div class="row" *ngIf="inicioBusqueda && !historial.length">
-        <div class="col-12 text-center" style="margin: 3rem">
-            <h3 *ngIf="paciente">
-                <i class="mdi mdi-folder-remove"></i> No hay movimientos de prestamos de la
-                carpeta consultada
-            </h3>
-            <h3 *ngIf="!paciente">
-                <i class="mdi mdi-folder-remove"></i> No existe este número de carpeta en esta
-                organización
-            </h3>
-        </div>
+
+    <div *ngIf="!loading && historial && !historial.length" justify="center" class="pt-4">
+        <plex-label *ngIf="paciente" direction="column"
+                    titulo="No hay movimientos de prestamos de la carpeta consultada" size="xl">
+            <plex-icon prefix="mdi" name="folder-remove"></plex-icon>
+        </plex-label>
+        <plex-label *ngIf="!paciente" direction="column" titulo="No existe este número de carpeta en esta organización"
+                    size="xl">
+            <plex-icon prefix="mdi" name="folder-remove"></plex-icon>
+        </plex-label>
     </div>
 </fieldset>

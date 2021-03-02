@@ -1,36 +1,18 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <plex-box>
-            <fieldset>
-                <legend>
-                    <div class="clearfix">
-                        <span class="float-left">Devolver Carpeta
-                            <b>{{prestamo._id}}</b>
-                        </span>
-                    </div>
-                </legend>
-            </fieldset>
+<form #form="ngForm">
 
-            <div class="row">
-                <div class="col-12">
-                    <plex-select label='Estado' [(ngModel)]="devolverHC.estado" name="nombre" [required]="true" placeholder="Seleccione un estado..."
-                        [data]="estadosDevolucion">
-                    </plex-select>
-                </div>
-                <div class="col-12">
-                    <plex-text label="Observaciones" [(ngModel)]="devolverHC.observaciones" name="observaciones" placeholder="Ingrese observaciones...">
-                    </plex-text>
-                </div>
-            </div>
-        </plex-box>
+    <plex-title titulo="Devolver Carpeta" size="md"></plex-title>
 
-    </section>
-    <footer>
-        <div class="text-right">
-            <button label="Cancelar" class="btn btn-danger" (click)="cancel()">Cancelar
-            </button>
-            <button label="Guardar" class="btn btn-primary" (click)="save()">Guardar
-            </button>
-        </div>
-    </footer>
+    <plex-select label='Estado' [(ngModel)]="devolverHC.estado" name="nombre" [required]="true"
+                 placeholder="Seleccione un estado..." [data]="estadosDevolucion">
+    </plex-select>
+    <plex-text label="Observaciones" [(ngModel)]="devolverHC.observaciones" name="observaciones"
+               placeholder="Ingrese observaciones...">
+    </plex-text>
+
+    <div class="pt-2">
+        <plex-button class="float-left" label="Cancelar" type="danger" (click)="cancel()">Cancelar
+        </plex-button>
+        <plex-button class="float-right" label="Guardar" type="success" (click)="save()">Guardar
+        </plex-button>
+    </div>
 </form>

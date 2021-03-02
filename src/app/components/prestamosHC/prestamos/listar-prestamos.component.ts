@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -35,6 +35,7 @@ export class ListarPrestamosComponent implements OnInit {
     public mostrarMasOpciones = false;
     public sortDescending = false;
     public _listarCarpetas;
+    public loading = false;
 
     get cssLayout() {
         return { 'col-8': this.verDevolver, 'col': !this.verDevolver };
@@ -61,6 +62,8 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     getCarpetas(value, filter) {
+        this.loading = true;
+
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             let _fechaHasta = moment(this.fechaHasta).endOf('day');
@@ -82,7 +85,7 @@ export class ListarPrestamosComponent implements OnInit {
             }
         }
         if (filter === 'prestaciones') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['tipoPrestacion'] = value.value.conceptId;
                 delete this.filters['idTipoPrestaciones'];
             } else {
@@ -90,14 +93,14 @@ export class ListarPrestamosComponent implements OnInit {
             }
         }
         if (filter === 'profesionales') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['idProfesional'] = value.value.id;
             } else {
                 this.filters['idProfesional'] = '';
             }
         }
         if (filter === 'espacioFisico') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.filters['idEspacioFisico'] = value.value.id;
             } else {
                 this.filters['idEspacioFisico'] = '';
@@ -109,6 +112,7 @@ export class ListarPrestamosComponent implements OnInit {
 
         this.prestamosService.getCarpetasPrestamo(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
+            this.loading = false;
         });
     }
 
@@ -213,11 +217,6 @@ export class ListarPrestamosComponent implements OnInit {
         let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
         this.carpetas = carpetas_sort;
-    }
-
-    toogleSort() {
-        this.sortDescending = !this.sortDescending;
-        this.sortCarpetas();
     }
 
     onShowDevolver(event) {

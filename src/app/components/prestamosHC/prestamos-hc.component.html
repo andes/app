@@ -25,11 +25,13 @@
         </form>
     </plex-layout-main>
 
-    <plex-layout-sidebar *ngIf="showSidebar">
+    <plex-layout-sidebar *ngIf="showSidebar" type="invert">
 
         <!-- ----------- Búsqueda de pacientes -------------- -->
         <ng-container *ngIf="pacientesSearch">
-            <plex-title titulo="Buscar Paciente" size="md"></plex-title>
+            <plex-title titulo="Buscar Paciente" size="md">
+                <plex-button icon="close" type="danger" size="sm" (click)="hideSidebar()"></plex-button>
+            </plex-title>
 
             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
                              (searchClear)="onSearchClear()">
@@ -40,15 +42,15 @@
             <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                               (selected)="onSelectPaciente($event)" [offset]="110">
             </paciente-listado>
-            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                ¡No se encontró ningún paciente!
+            <div *ngIf="!searchClear && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>
         </ng-container>
 
         <app-prestar-hc *ngIf="verPrestar" [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="hideSidebar($event)"
                         (carpetaPrestadaEmit)="onCarpetaPrestada()"></app-prestar-hc>
 
-        <solicitud-manual-hc *ngIf="verSolicitudManual" [pacienteSeleccionado]="paciente"
+        <solicitud-manual-hc type="invert" *ngIf="verSolicitudManual" [pacienteSeleccionado]="paciente"
                              (crearNuevaCarpetaEmmiter)="crearNuevaCarpeta()"
                              (cancelSolicitudManualEmit)="hideSidebar($event)"
                              (nuevaCarpetaManualEmit)="onCarpetaPrestada($event)">
@@ -59,7 +61,9 @@
         </app-devolver-hc>
 
         <fieldset *ngIf="verNuevaCarpeta">
-            <legend>Paciente {{paciente.apellido}}, {{paciente.nombre}}</legend>
+            <plex-title titulo="{{paciente.apellido}}, {{paciente.nombre}}" size="md">
+                <plex-button icon="close" type="danger" size="sm" (click)="hideSidebar()"></plex-button>
+            </plex-title>
             <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
             <carpeta-paciente [turnoSeleccionado]="null" [pacienteSeleccionado]="paciente"
                               (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
