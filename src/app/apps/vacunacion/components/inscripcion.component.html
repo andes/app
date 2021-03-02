@@ -1,10 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Inscripción a vacunación Covid 19">
-            <plex-button label="Guardar" type="info" 
-            [disabled]="!recaptcha || !formulario.valid" [validateForm]="formulario" (click)="save($event)">
-            </plex-button>
-            <plex-button label="Cancelar" type="danger" (click)="cancelar()"> </plex-button>
+            
         </plex-title>
         <div class="row w-100">
             <div class="col-md-3">
@@ -31,9 +28,9 @@
                         </plex-text>
                         <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide" name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite" label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
 
-                        <plex-text *ngIf="ciudadano.tieneTramite || ciudadano.grupo.nombre === 'personal-salud' " [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
+                        <plex-int *ngIf="ciudadano.tieneTramite || ciudadano.grupo.nombre === 'personal-salud' " [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                    label="Número de Trámite del DNI" [required]="true">
-                        </plex-text>
+                        </plex-int>
                         <plex-select [(ngModel)]="sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                  required="true" placeholder="Seleccione..">
                         </plex-select>
@@ -47,7 +44,7 @@
                                     label="Nombre" [required]="true" grow="4">
                         </plex-text>
                         
-                        <plex-select name="localidades" [data]="localidades$ | async" label="Localidad" [(ngModel)]="ciudadano.localidad" [required]="true">
+                        <plex-select name="localidades" [data]="localidades$ | async" label="Localidad de Residencia" [(ngModel)]="ciudadano.localidad" [required]="true">
                         </plex-select>
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                                     placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
@@ -56,9 +53,9 @@
                         label="Certificado Único de Discapacidad" [required]="true" grow="4">
                         </plex-text>
                     </plex-grid>
-                    <hr>
-                    <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>
-                    <ng-container>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
+                        <hr>
+                        <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>
                         <div>
                             <plex-bool type="checkbox" name="alergia" [(ngModel)]="ciudadano.alergia" 
                                 label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento"></plex-bool>
@@ -79,8 +76,8 @@
                             <plex-bool type="checkbox" name="amamantando" [(ngModel)]="ciudadano.amamantando" label="Me encuentro amamantando"></plex-bool>
                         </div>
                     </ng-container>
-                    <hr>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'">
+                        <hr>
                         <plex-label titulo="Datos Laborales" size="lg"></plex-label>
                         <plex-text [(ngModel)]="ciudadano.establecimiento" (change)="limpiarRespuesta()" name="establecimiento"
                                    label="Establecimiento donde cumple la mayor carga horaria" [required]="true">
@@ -102,6 +99,11 @@
                     <div class="form-group mt-2">
                         <re-captcha (resolved)="resolved($event)" siteKey="6Lc5nUsaAAAAALJ15OtJMKpdW9XSEOl13A_3Hx6i">
                         </re-captcha>
+                    </div>
+                    <div class="form-group mt-2" justify>
+                        <plex-button label="Inscribirme" type="success" 
+                        [disabled]="!recaptcha || !formulario.valid" [validateForm]="formulario" (click)="save($event)">
+                        </plex-button>
                     </div>
                 </form>
             </div>

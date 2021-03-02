@@ -33,4 +33,5 @@ export interface ICiudadano {
     establecimiento: string;
     localidadEstablecimiento: ILocalidad;
     relacion: string;
+    recaptcha: string;
 }

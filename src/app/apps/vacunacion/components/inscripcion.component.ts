@@ -17,7 +17,7 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 })
 export class InscripcionComponent implements OnInit {
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
-
+    @ViewChild('formulario', { static: true }) formulario;
     public resultado = null;
     recaptcha: any = null;
     public localidades$: Observable<any>;
@@ -62,7 +62,8 @@ export class InscripcionComponent implements OnInit {
         establecimiento: '',
         localidadEstablecimiento: undefined,
         relacion: '',
-        estado: 'pendiente'
+        estado: 'pendiente',
+        recaptcha: ''
     };
 
     public relacion = null;
@@ -80,7 +81,7 @@ export class InscripcionComponent implements OnInit {
         private inscripcionService: InscripcionService,
         private grupoPoblacionalService: GrupoPoblacionalService,
     ) {
-        this.plex.updateTitle('VACUNACIÓN');
+        this.plex.updateTitle('Inscripción a vacunación COVID-19 - Provincia de Neuquén');
         this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
             cache()
         );
@@ -102,16 +103,13 @@ export class InscripcionComponent implements OnInit {
 
     resolved(captchaResponse: any[]) {
         this.recaptcha = captchaResponse;
-    }
-
-    cancelar() {
-        window.location.reload();
+        this.ciudadano.recaptcha = this.recaptcha;
     }
 
     seleccionaGrupo() {
         const grupo = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
-        if (grupo.nombre === 'mayores60') {
+        if (grupo && grupo.nombre === 'mayores60') {
             this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
         } else {
             this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
@@ -120,7 +118,7 @@ export class InscripcionComponent implements OnInit {
 
     save(valid) {
         if (!valid.formValid) {
-            this.plex.info('danger', 'Reviso los datos ingresados');
+            this.plex.info('danger', 'Revise los datos ingresados');
             return;
         }
         this.ciudadano.sexo = this.sexo.id;
@@ -137,6 +135,7 @@ export class InscripcionComponent implements OnInit {
 
     limpiarForm() {
         this.modal.showed = false;
+        this.formulario.form.reset();
         this.ciudadano = {
             id: null,
             fechaRegistro: null,
@@ -145,7 +144,7 @@ export class InscripcionComponent implements OnInit {
             apellido: '',
             tieneTramite: true,
             nroTramite: '',
-            grupo: null,
+            grupo: undefined,
             sexo: null,
             fechaNacimiento: null,
             localidad: undefined,
@@ -166,8 +165,10 @@ export class InscripcionComponent implements OnInit {
             establecimiento: '',
             localidadEstablecimiento: undefined,
             relacion: '',
-            estado: 'pendiente'
+            estado: 'pendiente',
+            recaptcha: ''
         };
+        this.formulario.form.markAsPristine();
     }
 
 }
