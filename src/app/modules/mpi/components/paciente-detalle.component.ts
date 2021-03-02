@@ -4,6 +4,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'paciente-detalle',
@@ -16,10 +17,13 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
+    @Input() showDocumentos = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
     notasDestacadas = [];
+
+    documentacionPermiso = this.auth.check('mpi:paciente:documentacion');
 
     get justificado() {
         return this.orientacion === 'vertical' ? 'center' : 'start';
@@ -125,7 +129,8 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
 
     constructor(
         private obraSocialCacheService: ObraSocialCacheService,
-        private pacienteService: PacienteService
+        private pacienteService: PacienteService,
+        private auth: Auth
     ) {
     }
 

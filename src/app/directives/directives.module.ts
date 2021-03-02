@@ -11,6 +11,7 @@ import { SelectOrganizacionDirective } from './organizacion-select.directive';
 import { SelectPrestacionesDirective } from './prestaciones-select.directive';
 import { SelectProfesionalesDirective } from './profesionales-select.directive';
 
+import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
 @NgModule({
     imports: [
         CommonModule,
@@ -25,7 +26,8 @@ import { SelectProfesionalesDirective } from './profesionales-select.directive';
         HoverClassDirective,
         SelectOrganizacionDirective,
         SelectPrestacionesDirective,
-        SelectProfesionalesDirective
+        SelectProfesionalesDirective,
+        GaleriaPipe
 
     ],
     exports: [
@@ -33,7 +35,8 @@ import { SelectProfesionalesDirective } from './profesionales-select.directive';
         HoverClassDirective,
         SelectOrganizacionDirective,
         SelectPrestacionesDirective,
-        SelectProfesionalesDirective
+        SelectProfesionalesDirective,
+        GaleriaPipe
     ],
 })
 export class DirectiveLibModule {

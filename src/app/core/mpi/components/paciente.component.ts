@@ -16,7 +16,7 @@ import { DatosBasicosComponent } from './datos-basicos.component';
 import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
 import { Subscription, EMPTY } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-
+import { Auth } from '@andes/auth';
 @Component({
     selector: 'paciente',
     templateUrl: 'paciente.html',
@@ -30,21 +30,20 @@ export class PacienteComponent implements OnInit {
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
-    tabIndex = 0;
     showRelaciones = false; // en paciente-panel (sidebar)
     parentescoModel: any[];
     relacionesBorradas: any[] = [];
     relacionesEdit: any[] = []; // relaciones nuevas o editadas
     backUpDatos = [];
     pacientesSimilares = [];
-
+    documentacionPermiso = false;
     validado = false;
     disableGuardar = false;
     visualizarIgnorarGuardar = false;
     disableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
-
+    delete = false;
     changeRelaciones = false;
     posibleDuplicado = false;
     loading = true;
@@ -104,7 +103,8 @@ export class PacienteComponent implements OnInit {
         scan: null,
         reportarError: false,
         notaError: '',
-        vinculos: [null]
+        vinculos: [null],
+        documentos: []
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];
@@ -122,6 +122,8 @@ export class PacienteComponent implements OnInit {
     activacionMobilePendiente = null;
     dataMobile;
 
+
+
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private pacienteService: PacienteService,
@@ -130,10 +132,14 @@ export class PacienteComponent implements OnInit {
         private pacienteCache: PacienteCacheService,
         private _router: Router,
         public plex: Plex,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        public auth: Auth
+
+    ) {
     }
 
     ngOnInit() {
+        this.documentacionPermiso = this.auth.getPermissions('mpi:paciente:documentacion:?').length > 0;
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
@@ -258,6 +264,7 @@ export class PacienteComponent implements OnInit {
 
 
     save(ignoreSuggestions = false) {
+        this.delete = true;
         let contactoValid = this.datosContacto.checkForm();
         let datosBasicosValid = this.datosBasicos.checkForm();
         if (!contactoValid || !datosBasicosValid) {
@@ -439,7 +446,9 @@ export class PacienteComponent implements OnInit {
             this.actualizarRelaciones(data);
         }
     }
-
+    documentos(documentosNew) {
+        this.pacienteModel.documentos = documentosNew;
+    }
     notasNotification(notasNew) {
         this.pacienteModel.notas = notasNew;
     }

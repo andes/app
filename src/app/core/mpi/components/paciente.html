@@ -25,32 +25,34 @@
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}" class="h-100">
 
-            <plex-tabs [activeIndex]="tabIndex" (change)="setMainSize($event)">
+            <plex-tabs (change)="setMainSize($event)">
 
-                <plex-tab label="datos básicos" icon="" (click)="tabIndex = 0">
+                <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
                                    (changes)="datosBasicosForm($event)" name="datos basicos">
                     </datos-basicos>
                 </plex-tab>
 
-                <plex-tab label="datos de contacto" icon="" (click)="tabIndex = 1">
+                <plex-tab label="datos de contacto" icon="">
                     <datos-contacto #datosContacto [paciente]="pacienteModel" (mobileApp)="mobileNotification($event)">
                     </datos-contacto>
                 </plex-tab>
 
-                <plex-tab *ngIf="tipoPaciente !== 'bebe'" label="Relaciones" icon="account-multiple"
-                          (click)="tabIndex = 2">
+                <plex-tab *ngIf="tipoPaciente !== 'bebe'" label="Relaciones" icon="account-multiple">
                     <!-- FAMILIARES: No se muestra para el caso del bebé -->
                     <relaciones-pacientes #relaciones [paciente]="pacienteModel"
                                           (actualizar)="actualizarRelaciones($event)">
                     </relaciones-pacientes>
                 </plex-tab>
 
-                <plex-tab label="Notas" icon="file-multiple" (click)="tabIndex = 3">
+                <plex-tab label="Notas" icon="file-multiple">
                     <notas-paciente [notas]="pacienteModel.notas" (notasNew)="notasNotification($event)">
                     </notas-paciente>
                 </plex-tab>
 
+                <plex-tab label="Documentos" icon="file-multiple" *ngIf="documentacionPermiso">
+                    <documentos-paciente [paciente]="pacienteModel"></documentos-paciente>
+                </plex-tab>
 
             </plex-tabs>
         </form>

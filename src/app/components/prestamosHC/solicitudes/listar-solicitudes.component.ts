@@ -344,7 +344,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     onUpload($event, carpeta) {
-        if ($event.status = 200) {
+        if ($event.status === 200) {
             let _id;
             const id = $event.body.id;
             let profesional = this.auth.usuario;

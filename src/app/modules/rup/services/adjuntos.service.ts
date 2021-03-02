@@ -76,7 +76,7 @@ export class AdjuntosService {
     }
 
 
-    createUrl(modulo: 'rup', doc, token: string) {
+    createUrl(modulo: 'rup' | 'drive', doc, token: string) {
         if (doc.id) {
             let apiUri = environment.API;
             return apiUri + modulos[modulo] + doc.id + '?token=' + token;
@@ -90,5 +90,6 @@ export class AdjuntosService {
  * shotcut para moduloes
  */
 const modulos = {
-    rup: '/modules/rup/store/'
+    rup: '/modules/rup/store/',
+    drive: '/drive/'
 };

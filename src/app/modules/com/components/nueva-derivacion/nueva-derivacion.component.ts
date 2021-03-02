@@ -194,7 +194,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     }
 
     onUpload($event) {
-        if ($event.status = 200) {
+        if ($event.status === 200) {
             this.adjuntos.push({
                 ext: $event.body.ext,
                 id: $event.body.id

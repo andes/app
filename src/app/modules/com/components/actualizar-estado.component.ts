@@ -79,7 +79,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     }
 
     onUpload($event) {
-        if ($event.status = 200) {
+        if ($event.status === 200) {
             this.adjuntosEstado.push({
                 ext: $event.body.ext,
                 id: $event.body.id

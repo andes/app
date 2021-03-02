@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 import { PacienteBuscarComponent } from './components/paciente-buscar.component';
 import { PacienteListadoComponent } from './components/paciente-listado.component';
@@ -26,7 +27,9 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PlexModule,
         FormsModule,
         HttpClientModule,
-        SharedModule
+        SharedModule,
+        DirectiveLibModule
+
     ],
     declarations: [
         PacienteBuscarComponent,
@@ -37,6 +40,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
         FotoDirective
+
     ],
     entryComponents: [
     ],
