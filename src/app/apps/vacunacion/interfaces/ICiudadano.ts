@@ -16,6 +16,7 @@ export interface ICiudadano {
     fechaNacimiento: Date;
     telefono: string;
     email: string;
+    cue: string;
     localidad: ILocalidad;
     estado: string;
     alergia: boolean;

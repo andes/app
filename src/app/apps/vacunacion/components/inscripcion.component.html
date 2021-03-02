@@ -31,7 +31,7 @@
                         </plex-text>
                         <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide" name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite" label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
 
-                        <plex-text *ngIf="ciudadano.tieneTramite || grupo.nombre === 'personal-salud' " [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
+                        <plex-text *ngIf="ciudadano.tieneTramite || ciudadano.grupo.nombre === 'personal-salud' " [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                    label="Número de Trámite del DNI" [required]="true">
                         </plex-text>
                         <plex-select [(ngModel)]="sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
@@ -52,6 +52,9 @@
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                                     placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                         </plex-phone>
+                        <plex-text *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'" [(ngModel)]="ciudadano.cue" (change)="limpiarRespuesta()" name="cue"
+                        label="Certificado Único de Discapacidad" [required]="true" grow="4">
+                        </plex-text>
                     </plex-grid>
                     <hr>
                     <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>

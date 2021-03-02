@@ -45,6 +45,7 @@ export class InscripcionComponent implements OnInit {
         localidad: undefined,
         telefono: '',
         email: '',
+        cue: '',
         alergia: false,
         condicion: false,
         enfermedad: false,
