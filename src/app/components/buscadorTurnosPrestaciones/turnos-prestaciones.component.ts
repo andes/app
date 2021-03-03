@@ -346,13 +346,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     selectPrestacion(item, $event) {
-        let prestacionesSelected = [];
         this.accion$.next({ type: 'select', value: $event.value, key: item.key });
-        Object.values(this.selectPrestaciones$.getValue()).map(element => {
-            if (element) {
-                prestacionesSelected.push(element);
-            }
-        });
+        const prestacionesSelected = Object.values(this.selectPrestaciones$.getValue()).filter(element => element);
         this.showHint = prestacionesSelected.length > this.prestacionesMax;
     }
 
