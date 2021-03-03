@@ -56,10 +56,14 @@
         <!-- Resultados -->
         <ng-container *ngIf="state$ | async as state">
             <plex-title titulo="Listado" size="sm">
-                <plex-button label="Exportar" size="sm" type="success" class="mr-2" (click)="exportPrestaciones()"
-                             [disabled]="!state.enableExport">
+                <plex-button *ngIf="!showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
+                             [disabled]="!state.enableExport"></plex-button>
+                <plex-button *ngIf="showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
+                             [disabled]="true" hint="El máximo permitido de prestaciones es de {{prestacionesMax}}"
+                             hintType="warning" hintIcon="lock" detach="top">
                 </plex-button>
-                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true">
+                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true"
+                               class="ml-2">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
                         </plex-bool>
@@ -174,7 +178,8 @@
                                     {{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}
                                 </td>
                                 <td *ngIf="sumarB">
-                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}
+                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin
+                                    Comprobante'}}
                                 </td>
                             </tr>
                         </tbody>
@@ -274,7 +279,8 @@
                 <div class="col">
 
                     <div *ngIf="prestacion.prestacion">
-                        <label>Tipo de prestación</label>{{prestacion.prestacion?.term}}</div>
+                        <label>Tipo de prestación</label>{{prestacion.prestacion?.term}}
+                    </div>
                 </div>
             </div>
             <div class="row">
