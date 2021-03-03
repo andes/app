@@ -55,10 +55,6 @@
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                                     placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                         </plex-phone>
-                        <plex-text *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'"
-                                   [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
-                                   label="Certificado Único de Discapacidad" [required]="true" grow="4">
-                        </plex-text>
                     </plex-grid>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
                         <hr>
@@ -114,6 +110,18 @@
                         <plex-int name="matricula" [(ngModel)]="ciudadano.matricula" label="Número de Matricula">
 
                         </plex-int>
+                    </ng-container>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'">
+                        <hr>
+                        <plex-text [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
+                            label="Certificado Único de Discapacidad" [required]="true" grow="4">
+                        </plex-text>
+                        <a class="d-inline-block" href="javascript:void(0)" (click)="infoCUD()">
+                            Consulta donde encontrar el Certificado único de discapacidad
+                        </a>
+                        <div *ngIf="infoCud"> 
+                            <img src="assets/img/ficha-corregida-CUD.png" width="600" height="auto">
+                        </div>
                     </ng-container>
                     <div class="form-group mt-2">
                         <re-captcha [(ngModel)]="recaptcha" name="mycaptcha" (resolved)="resolved($event)">

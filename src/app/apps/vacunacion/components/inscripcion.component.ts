@@ -23,7 +23,7 @@ export class InscripcionComponent implements OnInit {
     public localidades$: Observable<any>;
     public profesiones$: Observable<any>;
     public opcionesGrupos$: Observable<any>;
-
+    public infoCud = false;
     public sexos: any[];
     public relacionLaboral = [
         { id: 'planta', label: 'Personal de planta' },
@@ -109,11 +109,20 @@ export class InscripcionComponent implements OnInit {
     seleccionaGrupo() {
         const grupo = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
-        if (grupo && grupo.nombre === 'mayores60') {
-            this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
-        } else {
-            this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
+        if (grupo) {
+            if (grupo.nombre !== 'discapacidad') {
+                this.infoCud = false;
+                if (grupo.nombre === 'mayores60') {
+                    this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
+                } else {
+                    this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
+                }
+            }
         }
+    }
+
+    infoCUD() {
+        this.infoCud = !this.infoCud;
     }
 
     save(valid) {
