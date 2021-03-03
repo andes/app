@@ -21,9 +21,6 @@
                                      [data]="opcionesGrupos$ | async" name="grupo" idField="nombre"
                                      labelField="descripcion" [required]="true" (change)="seleccionaGrupo()">
                         </plex-select>
-                        <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
-                                   placeholder="maria@gmail.com" [required]="true">
-                        </plex-text>
                         <plex-text [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()" name="documento"
                                    label="Documento" [pattern]="patronDocumento" [required]="true">
                         </plex-text>
@@ -55,6 +52,9 @@
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                                     placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                         </plex-phone>
+                        <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
+                                   placeholder="maria@gmail.com" [required]="true">
+                        </plex-text>
                     </plex-grid>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
                         <hr>
@@ -117,11 +117,18 @@
                             label="Certificado Único de Discapacidad" [required]="true" grow="4">
                         </plex-text>
                         <a class="d-inline-block" href="javascript:void(0)" (click)="infoCUD()">
+                            <plex-icon *ngIf="!infoCud" name="chevron-right" type="info"></plex-icon>
+                            <plex-icon *ngIf="infoCud" name="chevron-down" type="info"></plex-icon>
                             Consulta donde encontrar el Certificado único de discapacidad
                         </a>
                         <div *ngIf="infoCud"> 
                             <img src="assets/img/ficha-corregida-CUD.png" width="600" height="auto">
                         </div>
+                        <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación" size="lg"></plex-label>
+
+                        <plex-select name="diaseleccionados" [data]="dias" label="Días en los que asiste al centro habitualmente"
+                                     [(ngModel)]="diaSeleccion">
+                        </plex-select>
                     </ng-container>
                     <div class="form-group mt-2">
                         <re-captcha [(ngModel)]="recaptcha" name="mycaptcha" (resolved)="resolved($event)">

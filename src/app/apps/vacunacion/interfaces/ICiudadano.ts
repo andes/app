@@ -33,5 +33,6 @@ export interface ICiudadano {
     establecimiento: string;
     localidadEstablecimiento: ILocalidad;
     relacion: string;
+    diaseleccionados: string;
     recaptcha: string;
 }

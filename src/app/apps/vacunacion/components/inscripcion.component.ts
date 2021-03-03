@@ -33,6 +33,11 @@ export class InscripcionComponent implements OnInit {
         { id: 'locacion', label: 'Personal autónomo que factura honorarios a través de colegios o instituciones similares' },
         { id: 'otros', label: 'Otros' },
     ];
+    public dias = [
+        { id: 'lunes', nombre: 'Lunes, miércoles y viernes' },
+        { id: 'martes', nombre: 'Martes, jueves y sábados' },
+        { id: 'nocorresponde', nombre: 'No corresponde a mi situación' },
+    ];
     public ciudadano: ICiudadano = {
         id: null,
         fechaRegistro: null,
@@ -63,11 +68,13 @@ export class InscripcionComponent implements OnInit {
         localidadEstablecimiento: undefined,
         relacion: '',
         estado: 'pendiente',
-        recaptcha: ''
+        diaseleccionados: '',
+        recaptcha: '',
     };
 
     public relacion = null;
     public sexo = null;
+    diaSeleccion = null;
     public seleccionTramite = true;
     public fechaMaximaNacimiento;
     public profesion;
@@ -133,6 +140,7 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.sexo = this.sexo.id;
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
+        this.ciudadano.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
             if (inscripto.documento) {
                 this.modal.showed = true;
@@ -176,6 +184,7 @@ export class InscripcionComponent implements OnInit {
             localidadEstablecimiento: undefined,
             relacion: '',
             estado: 'pendiente',
+            diaseleccionados: '',
             recaptcha: ''
         };
         this.formulario.form.markAsPristine();
