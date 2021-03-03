@@ -1,3 +1,22 @@
+# [5.36.0](https://github.com/andes/app/compare/v5.35.0...v5.36.0) (2021-03-03)
+
+
+### Bug Fixes
+
+* **mapa-camas:** filtrar sectores a partir de la unidad organizativa ([#2147](https://github.com/andes/app/issues/2147)) ([58b6d5b](https://github.com/andes/app/commit/58b6d5ba99dc6627dc5f77c1e179cf61135997fe))
+* **mpi:** bug update contactos ventanilla ([#2148](https://github.com/andes/app/issues/2148)) ([0bf64ce](https://github.com/andes/app/commit/0bf64ceb9a208c7036342de9b7f59fc40e06cf21))
+* **mpi:** edicion de contactos ([#2141](https://github.com/andes/app/issues/2141)) ([f403de5](https://github.com/andes/app/commit/f403de534c18649287cf33d26634bdbc0a43a82e))
+* **mpi:** salva valor de scan utilizado en la busqueda ([#2124](https://github.com/andes/app/issues/2124)) ([8f8faca](https://github.com/andes/app/commit/8f8facab6ae278ca9112dd0c8bf2819a990eec58))
+* **rup:** ajuste encolumnado secciones ([8ac0101](https://github.com/andes/app/commit/8ac01016b0f1e6611dd48aff2a2524f37489573c))
+* **rup:** fecha de ejecucion del turno ([#2142](https://github.com/andes/app/issues/2142)) ([759b45e](https://github.com/andes/app/commit/759b45eadc806c3d63340ddfd0d4c8a2ff58eb3a))
+
+
+### Features
+
+* **carpetas:** filtro prestaciones y componentes plex ([#2144](https://github.com/andes/app/issues/2144)) ([7b998ff](https://github.com/andes/app/commit/7b998fff6222a994d7c21a8069f73f77bf008f21))
+* **mpi:** documentos paciente ([#2116](https://github.com/andes/app/issues/2116)) ([3b0a585](https://github.com/andes/app/commit/3b0a5850c5b394c94bd2021416c3469a3fb57612))
+* **rup:** mantiene el formato de texto en las diferentes pest… ([#2135](https://github.com/andes/app/issues/2135)) ([53934da](https://github.com/andes/app/commit/53934da19c0a250fb7fad9a5d35a0f160146dca0))
+
 # [5.35.0](https://github.com/andes/app/compare/v5.34.0...v5.35.0) (2021-02-24)
 
 
