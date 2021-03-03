@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { ICiudadano } from '../interfaces/ICiudadano';
-import { Observable } from 'rxjs';
-import * as enumerados from '../../../utils/enumerados';
-import { LocalidadService } from 'src/app/services/localidad.service';
-import { cache } from '@andes/shared';
-import { ProfesionService } from 'src/app/services/profesion.service';
-import * as moment from 'moment';
-import { InscripcionService } from '../services/inscripcion.service';
-import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { cache } from '@andes/shared';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
+import { LocalidadService } from 'src/app/services/localidad.service';
+import { ProfesionService } from 'src/app/services/profesion.service';
+import * as enumerados from '../../../utils/enumerados';
+import { ICiudadano } from '../interfaces/ICiudadano';
+import { InscripcionService } from '../services/inscripcion.service';
 
 @Component({
     selector: 'inscripcion',
@@ -129,6 +129,7 @@ export class InscripcionComponent implements OnInit {
                 this.modal.showed = true;
             }
         }, (error) => {
+            this.recaptcha = '';
             this.plex.info('danger', error, 'La inscripción no pudo realizarse ');
         });
     }
