@@ -1,0 +1,25 @@
+.table-lista-vacunacion {
+    height:65%; 
+    tbody {
+        display: block;
+        height: 100%;
+        overflow: scroll;
+    }
+    thead,
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    .w-20 {
+        width: 20%;
+    }
+}
+
+::ng-deep {
+    // Se quita scroll del padre del contenedor con scroll infinito
+    body > app > plex-app > div > listado-inscriptos > plex-layout > section > div > div > plex-layout-main > div > div {
+        overflow-y: hidden !important;
+        padding-right: 0 !important;
+    }
+}
