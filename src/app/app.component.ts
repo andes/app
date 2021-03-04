@@ -109,6 +109,7 @@ export class AppComponent {
         this.menuList = [];
         this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
+
         if (this.auth.loggedIn()) {
             this.auth.organizaciones().subscribe(data => {
                 if (data.length > 1) {

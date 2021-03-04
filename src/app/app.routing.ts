@@ -115,7 +115,12 @@ const appRoutes: Routes = [
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
     },
-
+    {
+        path: 'forms',
+        loadChildren: () => import('./modules/forms-builder/forms.module').then(m => m.FormBuilderModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        runGuardsAndResolvers: 'always'
+    },
     // Mapa de camas
     { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -154,6 +159,7 @@ const appRoutes: Routes = [
     { path: 'dashboard', loadChildren: () => import('./modules/estadisticas/estadistica.module').then(m => m.EstadisticaModule), canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'gestor-usuarios', loadChildren: () => import('./apps/gestor-usuarios/gestor-usuarios.module').then(m => m.GestorUsuariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'visualizacion-informacion', loadChildren: () => import('./modules/visualizacion-informacion/visualizacion-informacion.module').then(m => m.VisualizacionInformacionModule), canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'epidemiologia', loadChildren: () => import('./modules/epidemiologia/epidemiologia.module').then(m => m.EpidemiologiaModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
     // Campañas Salud
     { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },

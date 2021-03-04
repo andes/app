@@ -1,0 +1,61 @@
+<plex-layout [main]='8'>
+    <plex-layout-main *ngIf="!showFicha ; else elseFicha">
+        <plex-title titulo="punto de inicio - ficha epidemiológica"></plex-title>
+        <div class="row">
+            <div class="col-12">
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                 (searchClear)="onSearchClear()">
+                </paciente-buscar>
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-12">
+                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                                  (selected)="onSelect($event)">
+                </paciente-listado>
+            </div>
+        </div>
+        <div *ngIf="!pacienteSelected" justify="center" class="h-75">
+            <plex-label icon="arrow-up" type="default" size="xl" direction="column"
+                        titulo='Comience buscando y seleccionando un paciente en la barra superior'>
+            </plex-label>
+        </div>
+    </plex-layout-main>
+    <ng-template #elseFicha>
+        <plex-layout-main>
+            <app-ficha-epidemiologica-crud [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente$ | async"
+                                           [editFicha]="editFicha" [fichaName]="showFicha" (volver)="volver()">
+            </app-ficha-epidemiologica-crud>
+        </plex-layout-main>
+    </ng-template>
+    <plex-layout-sidebar [type]="'invert'">
+        <ng-container *ngIf="pacienteSelected">
+            <plex-title size="sm" titulo="Datos del paciente">
+                <plex-button *ngIf="permisoHuds" size="sm" type="info" (click)="ruteo(pacienteSelected.id)">
+                    VER HUDS
+                </plex-button>
+            </plex-title>
+            <paciente-detalle [paciente]="pacienteSelected" orientacion="horizontal"></paciente-detalle>
+            <plex-title size="sm" titulo="Fichas epidemiológicas">
+                <plex-dropdown *ngIf="puedeCrear" size="sm" type="success" class="mr-1" [right]="true"
+                               label="NUEVA FICHA" [items]="itemsDropdownFichas">
+                </plex-dropdown>
+            </plex-title>
+            <plex-table [columns]="columns" #table="plTable">
+                <plex-table-columns>
+                </plex-table-columns>
+                <tr *ngFor="let ficha of fichasPaciente | async">
+                    <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
+                    <td *plTableCol="'nombre'">{{ficha.type}}</td>
+                    <td *plTableCol="'acciones'">
+                        <plex-button *ngIf="puedeEditar" type="info" icon="pencil" size="sm"
+                                     (click)="mostrarFicha(ficha.type, ficha)">
+                        </plex-button>
+                        <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
+                        </plex-button>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
