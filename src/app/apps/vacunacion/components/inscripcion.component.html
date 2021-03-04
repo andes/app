@@ -1,0 +1,165 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Inscripción a vacunación Covid 19">
+
+        </plex-title>
+        <div class="row w-100">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <plex-label titulo="Completá los datos para realizar la petición de turno de vacunación"
+                                    size="lg">
+                        </plex-label>
+                    </div>
+                </div>
+                <form #formulario="ngForm">
+                    <plex-label titulo="Datos Personales" size="lg"></plex-label>
+                    <plex-grid type="full" cols="1">
+                        <plex-select [(ngModel)]="ciudadano.grupo" label="Seleccione grupo"
+                                     [data]="opcionesGrupos$ | async" name="grupo" idField="nombre"
+                                     labelField="descripcion" [required]="true" (change)="seleccionaGrupo()">
+                        </plex-select>
+                        <plex-text [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()" name="documento"
+                                   label="Documento" [pattern]="patronDocumento" [required]="true">
+                        </plex-text>
+                        <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide"
+                                   name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite"
+                                   label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
+
+                        <plex-int *ngIf="ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud' "
+                                  [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
+                                  label="Número de Trámite del DNI" [required]="true">
+                        </plex-int>
+                        <plex-select [(ngModel)]="sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
+                                     required="true" placeholder="Seleccione..">
+                        </plex-select>
+                        <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="ciudadano.fechaNacimiento"
+                            class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy" 
+                            [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
+                        </plex-datetime>
+                        <plex-text [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()" name="apellido"
+                                   label="Apellido" [required]="true">
+                        </plex-text>
+                        <plex-text [(ngModel)]="ciudadano.nombre" (change)="limpiarRespuesta()" name="nombre"
+                                   label="Nombre" [required]="true" grow="4">
+                        </plex-text>
+
+                        <plex-select name="localidades" [data]="localidades$ | async" label="Localidad de Residencia"
+                                     [(ngModel)]="ciudadano.localidad" [required]="true">
+                        </plex-select>
+                        <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
+                                    placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
+                        </plex-phone>
+                        <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
+                                   placeholder="maria@gmail.com" [required]="true">
+                        </plex-text>
+                    </plex-grid>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
+                        <hr>
+                        <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>
+                        <div>
+                            <plex-bool type="checkbox" name="alergia" [(ngModel)]="ciudadano.alergia"
+                                       label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento">
+                            </plex-bool>
+                            <plex-bool type="checkbox" name="condicion" [(ngModel)]="ciudadano.condicion"
+                                       label="Tengo una enfermedad / condición que compromete GRAVEMENTE mis defensas">
+                            </plex-bool>
+                            <plex-bool type="checkbox" name="enfermedad" [(ngModel)]="ciudadano.enfermedad"
+                                       label="Estoy cursando una enfermedad / complicación aguda (clínica o quirúrgica) que me debilita">
+                            </plex-bool>
+                            <plex-bool type="checkbox" name="convaleciente" [(ngModel)]="ciudadano.convaleciente"
+                                       label="Estoy todavía debilitado y recuperándome de una enfermedad / complicación aguda (convaleciente)">
+                            </plex-bool>
+                            <plex-bool type="checkbox" name="aislamiento" [(ngModel)]="ciudadano.aislamiento"
+                                       label="Estoy esperando el alta de aislamiento por tener COVID confirmado o por haber sido contacto estrecho de un caso COVID">
+                            </plex-bool>
+                            <plex-bool type="checkbox" name="vacuna" [(ngModel)]="ciudadano.vacuna"
+                                       label="He recibido otra vacuna hace MENOS de 4 semanas"></plex-bool>
+                            <plex-bool type="checkbox" name="plasma" [(ngModel)]="ciudadano.plasma"
+                                       label="He recibido plasma / suero hiperinmune / inmunoglobulinas / anticuerpos monoclonales hace menos de 3 meses">
+                            </plex-bool>
+                            <plex-bool justify="left" type="checkbox" name="embarazada"
+                                       [(ngModel)]="ciudadano.embarazada"
+                                       label="Estoy embarazada / Sospecho que podría estar embarazada"></plex-bool>
+                            <plex-bool type="checkbox" name="amamantando" [(ngModel)]="ciudadano.amamantando"
+                                       label="Me encuentro amamantando"></plex-bool>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'">
+                        <hr>
+                        <plex-label titulo="Datos Laborales" size="lg"></plex-label>
+                        <plex-text [(ngModel)]="ciudadano.establecimiento" (change)="limpiarRespuesta()"
+                                   name="establecimiento" label="Establecimiento donde cumple la mayor carga horaria"
+                                   [required]="true">
+                        </plex-text>
+                        <plex-select name="localidades" [data]="localidades$ | async"
+                                     label="Localidad del establecimiento"
+                                     [(ngModel)]="ciudadano.localidadEstablecimiento" [required]="true">
+                        </plex-select>
+                        <hr>
+                        <plex-label titulo="Relación laboral" size="lg"></plex-label>
+                        <plex-radio [(ngModel)]="ciudadano.relacion" [data]="relacionLaboral" name="relacion">
+                        </plex-radio>
+                        <hr>
+                        <plex-label titulo="Solo para matriculados" size="lg"></plex-label>
+                        <plex-select name="profesiones" [data]="profesiones$ | async" label="Tipo de matrícula"
+                                     [(ngModel)]="profesion">
+                        </plex-select>
+                        <plex-int name="matricula" [(ngModel)]="ciudadano.matricula" label="Número de Matricula">
+
+                        </plex-int>
+                    </ng-container>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'">
+                        <hr>
+                        <plex-text [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
+                            label="Certificado Único de Discapacidad" [required]="true" grow="4">
+                        </plex-text>
+                        <a class="d-inline-block" href="javascript:void(0)" (click)="infoCUD()">
+                            <plex-icon *ngIf="!infoCud" name="chevron-right" type="info"></plex-icon>
+                            <plex-icon *ngIf="infoCud" name="chevron-down" type="info"></plex-icon>
+                            Consulta donde encontrar el Certificado único de discapacidad
+                        </a>
+                        <div *ngIf="infoCud"> 
+                            <img src="assets/img/ficha-corregida-CUD.png" width="600" height="auto">
+                        </div>
+                        <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación" size="lg"></plex-label>
+
+                        <plex-select name="diaseleccionados" [data]="dias" label="Días en los que asiste al centro habitualmente"
+                                     [(ngModel)]="diaSeleccion">
+                        </plex-select>
+                    </ng-container>
+                    <div class="form-group mt-2">
+                        <re-captcha [(ngModel)]="recaptcha" name="mycaptcha" (resolved)="resolved($event)">
+                        </re-captcha>
+                    </div>
+                    <div class="form-group mt-2" justify>
+                        <plex-button label="Inscribirme" type="success" [disabled]="!recaptcha || !formulario.valid"
+                                     [validateForm]="formulario" (click)="save($event)">
+                        </plex-button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </plex-layout-main>
+</plex-layout>
+<plex-modal [allowClose]="true" [allowEscClose]="false" #modal (closed)="limpiarForm()">
+    <plex-icon name="check" type="success"></plex-icon>
+    <plex-modal-title type="success">Inscripción a Vacunación contra el covid-19</plex-modal-title>
+    <main>
+        <div class="pr-5 pl-5 h5">
+            Ha sido inscripto correctamente en el plan público, gratuito y optativo contra COVID-19.
+            <hr>
+            Tenemos toda la información necesaria para contactarnos con usted una vez que la dosis esté disponible.
+            <hr>
+            Recuerde que la inscripción no garantiza la reserva del turno.
+
+        </div>
+    </main>
+    <plex-button modal right type="success" (click)="limpiarForm()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>

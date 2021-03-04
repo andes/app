@@ -167,6 +167,7 @@ const appRoutes: Routes = [
     { path: 'novedades/:modulo', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades/:modulo/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'vacunacion', loadChildren: () => import('./apps/vacunacion/vacunacion.module').then(m => m.VacunacionModule), canActivate: [] },
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }
 ];
