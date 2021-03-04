@@ -1,0 +1,15 @@
+<ng-container *ngIf="problema$ | async as problema">
+    <plex-detail size="md">
+        <plex-icon name="{{ problema.icono }}" class="bg-poblema"></plex-icon>
+        <plex-badge type="success">{{ problema.fecha }}</plex-badge>
+        <plex-badge type="info">{{ problema.semanticTag }}</plex-badge>
+        <div case="capitalize" title>{{ problema.term }}</div>
+        <div subtitle>Fuiste atendido por: Monteverde, María Laura</div>
+        <plex-label titulo="Lugar" subtitulo="Hospital Provincial Neuquén | Dr. Eduardo Castro Rendón"></plex-label>
+        <plex-label titulo="Ambito" subtitulo="Internación"></plex-label>
+        <plex-label titulo="Servicio" subtitulo="Servicio de Clínica Médica"> </plex-label>
+        <plex-label titulo="Equipo de Salud" subtitulo="Monteverde, María Laura"> </plex-label>
+    </plex-detail>
+    <plex-title size="sm" titulo="evolución"></plex-title>
+    <p>{{ problema.evolucion }}</p>
+</ng-container>

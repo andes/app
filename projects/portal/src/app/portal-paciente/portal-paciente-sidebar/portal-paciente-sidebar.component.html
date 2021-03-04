@@ -1,0 +1,14 @@
+<plex-wrapper>
+    <plex-datetime label="Ingrese la fecha" [(ngModel)]="tModel.fechaHora" name="fechaHora" required>
+    </plex-datetime>
+    <plex-select grow="3" [(ngModel)]="modelo1.select" [data]="opciones" label-field="nombre + ' (' + continente + ')'"
+                 label="Seleccione una prestación">
+    </plex-select>
+    <plex-text label="Buscar paciente" [(ngModel)]="templateModel2.nombre" name="nombre">
+    </plex-text>
+</plex-wrapper>
+<section justify="center" class="align-items-center h-50">
+    <plex-label size="xl" type="info" titulo="Busca y selecciona un paciente"
+                subtitulo="podrás ver detalles del registro" icon="magnify" direction="column">
+    </plex-label>
+</section>

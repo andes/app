@@ -1,0 +1,32 @@
+<plex-grid size="md" type="full">
+    <ng-container *ngFor="let paciente of pacientes$ | async | slice:1:2">
+        <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
+            <plex-badge></plex-badge>
+            <img src="{{ paciente.foto }}" alt="">
+            <div title>{{ paciente.nombre }}<br>{{ paciente.apellido }}</div>
+            <div subtitle>{{ paciente.documento }}<br>
+                <plex-button size="sm" type="warning"
+                             label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
+                             class="mt-4 mr-2">
+                </plex-button>
+                <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios"
+                             (click)="ocultarDatos()">
+                </plex-button>
+            </div>
+            <plex-label [style.display]="datosSecundarios === true ? 'block' : 'none'"
+                        *ngFor="let registro of registros" titulo="{{ registro.valor }}"
+                        subtitulo="{{ registro.dato }} {{ registro.fecha }}"></plex-label>
+        </plex-detail>
+
+        <!-- Alertas -->
+        <plex-grid size="sm" type="full" *mobile="false">
+            <plex-card size="md" *ngFor="let alerta of alertas" align="center" type="{{ alerta.tipo }}"
+                       color="{{ alerta.color }}" [routerLink]="[{ outlets: { listado: [alerta.path] } }]">
+                <plex-label direction="column" titulo="{{ alerta.dato }}" subtitulo="" icon="">
+                    <p class="" dato>{{ alerta.valor }}</p>
+                </plex-label>
+            </plex-card>
+        </plex-grid>
+
+    </ng-container>
+</plex-grid>

@@ -1,0 +1,12 @@
+<paciente-detalle></paciente-detalle>
+
+<plex-title size="sm" titulo="Mis consultas">
+    <plex-badge *mobile="false" type="info">27/01/2021</plex-badge>
+    <plex-button type="info" icon="zoom" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="mostrarFiltros()">
+        <plex-button *mobile="false" size="sm" type="info" icon="impresora" class="mr-3"></plex-button>
+    </plex-button>
+</plex-title>
+
+<filtros-huds></filtros-huds>
+
+<router-outlet name="listado"></router-outlet>

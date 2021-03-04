@@ -1,0 +1,20 @@
+<ng-container *ngIf="familiar$ | async as familiar">
+    <plex-detail size="lg">
+        <img src="{{ familiar.foto }}" alt="">
+        <plex-badge type="success">{{ familiar.relacion }}</plex-badge>
+        <div title>{{ familiar.apellido }}, {{ familiar.nombre }} </div>
+        <div subtitle>{{ familiar.dni }} </div>
+        <plex-label titulo="Edad" subtitulo="{{ familiar.edad }}"></plex-label>
+        <plex-label titulo="Documento" subtitulo="{{ familiar.dni }}"></plex-label>
+    </plex-detail>
+    <plex-title titulo="datos de contacto" size="sm"></plex-title>
+    <plex-grid type="auto" size="md">
+        <plex-label icon="celular" titulo="telefono" subtitulo="{{ familiar.telefono }}"></plex-label>
+        <plex-label icon="home" titulo="domicilio" subtitulo="{{ familiar.domicilio }}"></plex-label>
+        <plex-label icon="city" titulo="localidad" subtitulo="{{ familiar.localidad }}"></plex-label>
+        <plex-label icon="map-marker" titulo="provincia" subtitulo="{{ familiar.provincia }}"></plex-label>
+    </plex-grid>
+    <hr>
+    <plex-button class="mt-4" *ngIf="familiar.relacion === 'hijo'" type="warning" size="block" label="acceder a HUDS">
+    </plex-button>
+</ng-container>

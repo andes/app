@@ -1,0 +1,15 @@
+<ng-container *ngIf="hud$ | async as hud">
+
+    <plex-detail>
+        <plex-icon name="{{ hud.icono }}" type="{{ hud.color }}"></plex-icon>
+        <plex-badge type="success">{{ hud.fecha }}</plex-badge>
+        <plex-badge type="info">{{ hud.badgePrincipal }}</plex-badge>
+        <plex-badge type="info">{{ hud.badgeSecundario }}</plex-badge>
+        <plex-badge type="info">{{ hud.badgeTerciario }}</plex-badge>
+        <div case="capitalize" title>{{ hud.tituloPrincipal }}</div>
+        <div subtitle>{{ hud.subtituloPrincipal }}</div>
+        <plex-label titulo="{{ hud.tituloSecundario }}" subtitulo="{{ hud.subtituloSecundario }}"></plex-label>
+        <plex-label titulo="{{ hud.tituloTerciario }}" subtitulo="{{ hud.subtituloTerciario }}"></plex-label>
+    </plex-detail>
+
+</ng-container>

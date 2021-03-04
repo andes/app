@@ -1,0 +1,35 @@
+<ng-container *ngIf="prescripcion$ | async as prescripcion">
+    <plex-detail>
+        <plex-icon name="pildoras" class="bg-producto"></plex-icon>
+        <div title case="capitalize" title>{{ prescripcion.nombre }} | {{ prescripcion.indicacion.formaFarmaceutica }}
+        </div>
+        <div subtitle>Prescripto por: {{ prescripcion.profesional }}</div>
+        <plex-badge type="{{ prescripcion.activo ? 'success' : 'warning'}}">{{ prescripcion.activo ? 'activo' :
+            'inactivo'}}</plex-badge>
+        <plex-badge type="info">{{ prescripcion.fechaIndicacion }}</plex-badge>
+
+        <plex-label titulo="Lugar" subtitulo="{{ prescripcion.organizacion }}"></plex-label>
+        <plex-label titulo="Servicio" subtitulo="{{ prescripcion.servicio }}"></plex-label>
+        <plex-label titulo="Ambito" subtitulo="{{ prescripcion.ambito }}"></plex-label>
+        <plex-label titulo="Equipo de Salud" subtitulo="{{ prescripcion.profesional }}"> </plex-label>
+    </plex-detail>
+    <plex-title size="sm" titulo="indicación"></plex-title>
+    <section justify>
+        <plex-label size="md" icon="clock" titulo="Horario"
+                    subtitulo="{{ prescripcion.indicacion.horario }} | {{ prescripcion.indicacion.referencia }}">
+        </plex-label>
+        <plex-label size="md" icon="bloques-reloj" titulo="Distribución"
+                    subtitulo="{{ prescripcion.indicacion.dosis }} {{ prescripcion.indicacion.referencia }} durante {{ prescripcion.indicacion.vigencia }}">
+        </plex-label>
+    </section>
+
+    <plex-grid type="full" size="sm">
+        <plex-card align="center" *ngFor="let dia of prescripcion.indicacion.distribucion">
+            <plex-label class="{{ dia === 'dom' ? 'disabled' : null }}" type="{{ dia === 'dom' ? 'default' : 'info' }}"
+                        titulo="{{ dia }}" subtitulo="{{ prescripcion.indicacion.dosis }}">
+            </plex-label>
+        </plex-card>
+    </plex-grid>
+    <plex-title size="sm" titulo="nota"></plex-title>
+    <p>{{ prescripcion.nota }}</p>
+</ng-container>

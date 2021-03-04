@@ -1,0 +1,26 @@
+<plex-wrapper *ngIf="filtros">
+    <plex-text label="busacador global de tu HUDS"
+               placeholder="ingrese nombres de diagnósticos, médicos, organizaciones, medicamentos, etc."
+               [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}"></plex-text>
+
+    <plex-datetime *mobile="false" label="Desde" [skipBy]="'day'" [(ngModel)]="tModel.fechaHora" name="fechaHora"
+                   case="lowercase" required>
+    </plex-datetime>
+    <plex-datetime *mobile="false" label="Hasta" [skipBy]="'day'" [(ngModel)]="tModel.fechaHora" name="fechaHora"
+                   case="lowercase" required>
+    </plex-datetime>
+    <plex-button *mobile="false" type="info" label="reset" size="md"></plex-button>
+
+    <div collapse>
+        <plex-grid cols="12" type="auto" size="sm">
+            <plex-card *ngFor="let semantic of cards$ | async" align="center" size="sm"
+                       type="{{ semantic.selected ? 'custom' : 'dark' }}" [selected]="semantic.selected"
+                       (click)="semantic.selected = !semantic.selected" color="{{ semantic.color }}"
+                       [routerLink]="[{ outlets: { listado: [semantic.path] } }]">
+                <plex-label direction="column" size="xl" icon="{{ semantic.icono }}" titulo=""
+                            subtitulo="{{ semantic.nombre }}" tooltip="{{ semantic.nombre }}">
+                </plex-label>
+            </plex-card>
+        </plex-grid>
+    </div>
+</plex-wrapper>

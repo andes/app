@@ -5,7 +5,15 @@
     "types": [
       "node",
       "jquery"
-    ]
+    ],
+    "declaration": false,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es6",
+      "dom"
+    ],
   },
   "files": [
     "src/main.ts",
@@ -22,5 +30,10 @@
     "../../node_modules/@andes/plex/**/*.spec.ts",
     "../../node_modules/@schematics/**/*.ts",
     "../../node_modules/karma/**/*.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": true
+  }
+
 }

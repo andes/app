@@ -1,0 +1,167 @@
+<!-- <plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Ventanas Modales">
+            <plex-badge type="danger">
+                Modal md (50% ancho) con Formulario
+                <plex-button icon="eye" (click)="openModal(0)">
+                </plex-button>
+            </plex-badge>
+            <plex-badge type="warning" class="ml-2">
+                Modal md con texto largo
+                <plex-button icon="eye" (click)="openModal(1)">
+                </plex-button>
+            </plex-badge>
+            <plex-badge type="success" class="ml-2">
+                Modal sm (25% ancho)
+                <plex-button icon="eye" (click)="openModal(2)"></plex-button>
+            </plex-badge>
+            <plex-badge type="info" class="ml-2">
+                Modal lg (80% ancho)
+                <plex-button icon="eye" (click)="openModal(3)"></plex-button>
+            </plex-badge>
+        </plex-title>
+
+        <main role="main" class="inner">
+<p class="lead">Además de soportar múliples propiedades (o Inputs) y opciones<br>
+    los modals de Plex pueden cumplir varias funciones:</p>
+<ul>
+    <li class="list-item">Realizar acción contextual de un módulo</li>
+    <li class="list-item">Advertir al usuario de tomar una acción necesaria para continuar</li>
+    <li class="list-item">Simplemente comunicar, de una manera agradable para el usuario</li>
+</ul>
+<div class="lead">
+    Algunas de las propiedades (Inputs) que soporta <em>plex-modal</em> son:
+</div>
+<ol>
+    <li class="list-item">startOpen: se abre apenas carga</li>
+    <li class="list-item">allowClose: muestra una cruz en la esquina</li>
+    <li class="list-item">allowEscClose: permite cerrar con tecla ESC
+    <li class="list-item">allowBackdropClose: permite cerrar con un click afuera</li>
+</ol>
+<b>Todas aceptan valores true | false</b><br>
+Para más opciones ver <a href="https://ui.andes.gob.ar/components/plex-modal/overview" target="_blank">la
+    documentación oficial</a>.
+</main>
+
+<plex-modal #modal [startOpen]="true" [allowEscClose]="false" [allowBackdropClose]="false">
+    <plex-icon name="alert-circle" type="danger"></plex-icon>
+    <plex-modal-title type="danger">¡Modal Invasivo!</plex-modal-title>
+    <plex-modal-subtitle>
+        Este modal bloquea el flujo de la aplicación
+    </plex-modal-subtitle>
+    <main>
+        <div>
+            <div class="mb-2">
+                <b>No se puede continuar sin elegir una opción y aceptar:</b>
+            </div>
+            <form #formulario="ngForm" (close)="notificarAccion(false)">
+                <plex-radio name="motivos" [(ngModel)]="motivoSelected" [data]="motivosAccesoHuds">
+                </plex-radio>
+                <plex-text email type="email" label="Ingrese su email" [(ngModel)]="email" name="email" prefix="email">
+                </plex-text>
+            </form>
+        </div>
+    </main>
+
+    <plex-button modal left type="danger" (click)="closeModal(0, formulario.form)" [validateForm]="formulario">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="closeModal(0, formulario.form)" [disabled]="motivoSelect()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+
+<plex-modal size="md" #modal [startOpen]="false" (closed)="notificarAccion(false)">
+    <plex-icon name="alert-circle" type="warning"></plex-icon>
+    <plex-modal-title type="warning">Modal 50% ancho</plex-modal-title>
+    <plex-modal-subtitle type="warning">Con un texto bien largo</plex-modal-subtitle>
+    <main>
+        <div>
+            <p>El Ministerio de Salud de la Provincia de Neuquén en el contexto de la Plataforma ANDES se
+                encuentra
+                comprometido y comparte la responsabilidad de resguardar los derechos a la intimidad y
+                confidencialidad de la información de los pacientes.</p>
+            <p>Cualquier integrante de los equipos de salud, que en función de hacer posible el proceso de
+                asistencia sanitaria a dichas personas, tenga acceso a esta información almacenada en ANDES,
+                debe
+                cumplir con la normativa jurídica que protege estos derechos:</p>
+            <ol>
+                <li>Artículos 18, 19 y 43 de la Constitución Nacional (derechos a la intimidad y habeas data);
+                </li>
+                <li> Artículo 52 de Código Civil y Comercial Nacional (derecho a la intimidad);</li>
+                <li> Artículo 11 de la Ley Nacional 17132 de Ejercicio de la Medicina, Odontología, y
+                    actividades de
+                    colaboración con ambas disciplinas (secreto profesional);</li>
+                <li> Artículo 2 incisos c y d de la Ley nacional 26.529 de Derechos del Paciente en su Relación
+                    con
+                    los Profesionales e Instituciones de la Salud (derechos a la intimidad y confidencialidad);
+                </li>
+                <li>Artículos 8 y 10 de la ley Nacional 25.326 de Protección de Datos Personales;</li>
+            </ol>
+            <p>Y las siguientes leyes provinciales:</p>
+            <ol>
+                <li>La ley 578, de Ejercicio de la medicina, odontología y actividades de colaboración;</li>
+                <li>Artículo 8 de la Ley 2611, de derechos y obligaciones de los pacientes y usuarios de los
+                    serviciosde Salud públicos y privados de la Provincia (derecho a la confidencialidad y a la
+                    intimidad);</li>
+                <li>La ley 2399 de protección de Datos Personales.</li>
+            </ol>
+            <p>Ante incumplimiento de estas obligaciones sepa que puede tener consecuencias legales. Asimismo,
+                desde
+                este Ministerio se procederá a:</p>
+            <ul>
+                <li>Iniciar sumario administrativo por falta grave.</li>
+                <li>Se le suspenderán en forma automática los permisos de acceso a ANDES.</li>
+                <li>En caso de ser profesional se informará al comité de ética deontológico correspondiente.
+                </li>
+            </ul>
+        </div>
+    </main>
+    <plex-button modal left type="danger" (click)="closeModal(1)">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="closeModal(1)">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+
+<plex-modal size="sm" [allowClose]="true" #modal (closed)="notificarAccion(false)">
+    <plex-icon name="alert-circle" type="success"></plex-icon>
+    <plex-modal-title type="success">Modal 25% ancho</plex-modal-title>
+    <plex-modal-subtitle type="success">Puede usarse como confirm</plex-modal-subtitle>
+    <main>
+        <div>
+            <plex-title size="sm" titulo="Con mayor funcionalidad"></plex-title>
+            Ya que además de permitir estilos
+            <u class="text-warning hover" title="tengo complejos">más complejos</u>, puede<br>
+            contener formularios y otros componentes
+            <div class="mt-2">
+                <b>
+                    Este modal se puede cerrar con la tecla ESC, con la cruz en la esquina superior derecha, o
+                    haciendo click fuera del mismo.
+                </b>
+            </div>
+        </div>
+    </main>
+    <plex-button modal center type="success" (click)="closeModal(2)">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+
+<plex-modal size="lg" #modal [startOpen]="false" (closed)="notificarAccion(false)">
+    <plex-modal-title type="info">Modal 80% ancho, sin ícono</plex-modal-title>
+    <main>
+        <plex-text label="Escriba el informe" [(ngModel)]="contenido" name="contenido2" [html]="true" [height]="'50vh'"
+                   [readonly]="false" class="w-100">
+        </plex-text>
+    </main>
+    <plex-button modal left type="danger" (click)="closeModal(3)">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="closeModal(3)">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+
+</plex-layout-main>
+</plex-layout> -->

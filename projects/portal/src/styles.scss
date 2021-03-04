@@ -1,9 +1,95 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Codigo repetido hasta que acomodemos la paleta de colores de PLEX y RUP.
+ * Faltan algunas tareas de refactor más.
+ **/
+
+plex-grid[size="md"] {
+    grid-gap: 0 !important;
+}
+
+$problema: #f1930d; // deprecated
+$trastorno: #ff4a1a;
+$hallazgo: #f4a03b;
+$procedimiento: #92278e;
+$solicitud: #0070cc;
+// $productos: #ef0993;
+$producto: #00bcb4;
+$adjunto: #b9c512;
+$todos: #111;
+$otro: #b9c512;
+$invert: #002738;
+$calificador: #660520;
+$laboratorio: #a0a0a0;
+$registro: #8bc43f; // elemento de registro
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
+// la interpolacion del string a una variable directamente
+$plex-tabs-color-extend: (
+    problema: $problema,
+    calificador: $calificador,
+    laboratorio: $laboratorio,
+    trastorno: $trastorno,
+    situación: $problema,
+    hallazgo: $hallazgo,
+    procedimiento: $procedimiento,
+    regimen: $procedimiento,
+    entidad: $procedimiento,
+    solicitud: $solicitud,
+    producto: $producto,
+    adjunto: $adjunto,
+    elementoderegistro: $registro,
+    invert: $invert,
+    todos: $todos,
+    otro: $otro,
+);
+
+.logo-nav {
+    float: left;
+    background-color: var(--nav-bar-icon-color);
+    width: 100px;
+    height: 50px;
+    padding: 7px;
+}
+nav .actions {
+    position: absolute;
+    right: 0;
+}
+
+//@import 'app/modules/rup/assets/font.css';
+
 $adi-font-path: "~@andes/icons/fonts/";
 @import "~@andes/icons/scss/andes-icons";
-
-// [TODO]: Migrar a adi y eliminar
-$mdi-font-path: "~@mdi/font/fonts/";
-@import "~@mdi/font/scss/materialdesignicons";
-
+// Plex
 @import "~@andes/plex/src/lib/styles.scss";
+
+div[collapse] {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 140px;
+}
+
+#menu-vertical {
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+// TODO: Hacer mixins
+.bg-producto {
+    color: $producto;
+}
+
+.bg-poblema {
+    color: $trastorno;
+}
+
+.bg-vacuna {
+    color: $procedimiento;
+}
+
+.bg-laboratorio {
+    color: $laboratorio;
+}
+
+//
+.no-margin {
+    margin: 0 !important;
+}

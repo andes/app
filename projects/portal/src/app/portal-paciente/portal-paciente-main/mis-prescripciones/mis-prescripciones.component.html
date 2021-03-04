@@ -1,0 +1,18 @@
+<plex-list>
+    <plex-item *ngFor="let prescripcion of prescripciones$ | async" (click)="selected(prescripcion)">
+        <plex-label size="lg" icon="pildoras" class="bg-producto" titulo="{{ prescripcion.nombre }}"
+                    subtitulo="{{ prescripcion.formaFarmaceutica }} | {{ prescripcion.indicacion.administracion }} | {{ prescripcion.indicacion.dosis }}">
+        </plex-label>
+        <plex-label *mobile="false" size="md" titulo="indicacion"
+                    subtitulo="{{ prescripcion.indicacion.administracion }} | {{ prescripcion.indicacion.dosis }}">
+        </plex-label>
+
+        <plex-label *mobile="false" size="md" titulo="Vigencia" subtitulo="{{ prescripcion.indicacion.vigencia }}">
+        </plex-label>
+
+        <plex-badge type="{{ prescripcion.activo ? 'success' : 'warning'}}">{{ prescripcion.activo ? 'activo' :
+            'inactivo'}}</plex-badge>
+        <plex-badge type="info">{{ prescripcion.fechaIndicacion }}</plex-badge>
+        <plex-button type="info" icon="eye" size="sm" (click)="selected(prescripcion)"></plex-button>
+    </plex-item>
+</plex-list>

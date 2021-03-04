@@ -1,0 +1,31 @@
+<!--<plex-title size="sm" titulo="Mis consultas">
+    <plex-badge *mobile="false" type="info">27/01/2021</plex-badge>
+    <plex-button type="info" icon="filter" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="mostrarFiltros()">
+    </plex-button>
+</plex-title>
+-->
+
+<plex-list *ngIf="verHuds === true" height="60vh" size="md">
+    <ng-container *ngFor="let hud of huds$ | async | prestacionesFilter: searchTerm">
+        <plex-item (click)="selected(hud)">
+            <plex-label type="{{hud.color}}" icon="{{ hud.icono }}" titulo="{{ hud.tituloPrincipal }}" size="lg"
+                        subtitulo="{{ hud.subtituloPrincipal }}"></plex-label>
+            <plex-label *mobile="false" titulo="{{ hud.tituloSecundario }}" size="md"
+                        subtitulo="{{ hud.subtituloSecundario }}">
+            </plex-label>
+            <plex-badge type="warning">{{ hud.badgePrincipal }}</plex-badge>
+            <plex-badge type="success">{{ hud.badgeSecundario }}</plex-badge>
+            <plex-badge type="info">{{ hud.fecha }}</plex-badge>
+            <plex-button type="info" size="sm" icon="eye"></plex-button>
+        </plex-item>
+    </ng-container>
+</plex-list>
+
+<section *ngIf="verHuds === false" class="d-flex flex-column mt-4" align="center" justify="center">
+    <plex-label size="xl" case="capitalize-first" direction="column" titulo="Bienvenido a tu portal de salud!"
+                subtitulo="Aquí podrás visualizar tu Historia Unificada de Salud
+    y comunicarte con organizaciones y equipos de salud" icon="paciente"></plex-label>
+    <plex-button type="info" class="mt-4" size="md" label="Navegar mi historia de salud" (click)="mostrarHuds()"
+                 routerLink="miHuds">
+    </plex-button>
+</section>

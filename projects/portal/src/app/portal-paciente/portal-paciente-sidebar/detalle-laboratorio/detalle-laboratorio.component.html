@@ -1,0 +1,11 @@
+<ng-container *ngIf="laboratorio$ | async as laboratorio">
+    <plex-detail>
+        <plex-icon name="recipiente" type="danger"></plex-icon>
+        <plex-badge type="info">{{ laboratorio.fecha }}</plex-badge>
+        <plex-badge *ngIf="laboratorio.visibilidad === false" type="warning">retirar personalmente</plex-badge>
+        <div title case="capitalize">{{ laboratorio.tipo }} </div>
+        <div subtitle>{{ laboratorio.organizacion }}</div>
+    </plex-detail>
+    <plex-button *ngIf="laboratorio.visibilidad === true" type="info" size="block" label="descargar">
+    </plex-button>
+</ng-container>

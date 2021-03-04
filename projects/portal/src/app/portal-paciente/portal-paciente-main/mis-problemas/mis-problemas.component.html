@@ -1,0 +1,16 @@
+<!--<ng-container *ngFor="let prestacion of prestaciones$ | slice:0:1">-->
+<plex-list height="50vh">
+    <plex-item *ngFor="let problema of problemas$ | async" (click)="selected(problema)">
+        <plex-label icon="{{ problema.icono }}" titulo="{{ problema.term }}" size="lg"
+                    subtitulo="Profesional: Monteverde, María Laura"
+                    type="{{ problema.semanticTag === 'trastorno' ? 'danger' : 'warning' }}" class=""></plex-label>
+        <plex-label *mobile="false" titulo="Hospital Provincial Neuquén" icon="hospital"
+                    subtitulo="Servicio de Clínica Médica"></plex-label>
+        <plex-label *mobile="false" titulo="evolución" subtitulo="{{problema.evolucion }}"></plex-label>
+        <plex-badge type="{{ problema.estado === true ? 'success' : 'danger' }}">{{ problema.estado === true ?
+            'activa' : 'inactiva' }}</plex-badge>
+        <plex-badge type="info">{{ problema.fecha }}</plex-badge>
+        <plex-button type="info" size="sm" icon="eye"></plex-button>
+    </plex-item>
+</plex-list>
+<!--</ng-container>-->

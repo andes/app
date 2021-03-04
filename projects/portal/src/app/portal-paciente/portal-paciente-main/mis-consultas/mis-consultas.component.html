@@ -1,0 +1,11 @@
+<plex-list height="50vh">
+    <plex-item *ngFor="let prestacion of prestaciones$ | async | prestacionesFilter: searchTerm$"
+               (click)="selected(prestacion)">
+        <plex-label icon="{{ prestacion.icono }}" titulo="{{ prestacion.nombre }}" size="lg"
+                    subtitulo="Atendido por: {{ prestacion.profesional }}"></plex-label>
+        <plex-label *mobile="false" icon="hospital" titulo="{{ prestacion.organizacion }}"
+                    subtitulo="{{prestacion.servicio }} | {{ prestacion.sector }}"></plex-label>
+        <plex-badge type="info">{{ prestacion.fecha }}</plex-badge>
+        <plex-button type="info" size="sm" icon="eye"></plex-button>
+    </plex-item>
+</plex-list>

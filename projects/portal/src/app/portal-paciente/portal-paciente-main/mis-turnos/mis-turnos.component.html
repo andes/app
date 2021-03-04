@@ -1,0 +1,39 @@
+<!--<plex-title size="sm" titulo="Mis turnos">
+    <plex-badge type="info">27/01/2021</plex-badge>
+    <plex-button type="info" icon="filter" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="mostrarFiltros()">
+    </plex-button>
+    <plex-button *mobile="false" type="success" tooltip="solicitar turno" label="solicitar turno" class="ml-2 mr-3"
+                 size="sm">
+    </plex-button>
+    <plex-button *mobile type="success" tooltip="solicitar turno" icon="turno-tilde-bold" class="ml-2" size="sm">
+    </plex-button>
+    <plex-wrapper *ngIf="filtros">
+        <plex-select *mobile="false" grow="2" [(ngModel)]="modelo1.select" [data]="prestaciones"
+                     label-field="nombre + ' (' + continente + ')'" label="¿Por qué motivo fuiste al médico?">
+        </plex-select>
+        <plex-select grow="2" [(ngModel)]="modelo3.select" [data]="efectores"
+                     label-field="nombre + ' (' + continente + ')'" label="¿Dónde te atendiste?">
+        </plex-select>
+        <plex-select *mobile="false" grow="2" [(ngModel)]="modelo2.select" [data]="profesionales"
+                     label-field="nombre + ' (' + continente + ')'" label="¿Quién te atendió?">
+        </plex-select>
+
+        <plex-datetime label="¿Cuándo fuiste al médico?" [(ngModel)]="tModel.fechaHora" name="fechaHora"
+                       case="lowercase" required>
+        </plex-datetime>
+    </plex-wrapper>
+</plex-title>-->
+<plex-list>
+    <plex-item *ngFor="let turno of turnos$ | async" (click)="selected(turno)">
+        <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion }}"
+                    subtitulo="{{ turno.horaInicio }} hs.">
+        </plex-label>
+        <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.efector }}"
+                    subtitulo="Te atendió: {{ turno.profesional }}">
+        </plex-label>
+
+        <plex-badge type="{{ turno.estado ? 'success' : 'warning'}}">{{ turno.asistencia }}</plex-badge>
+        <plex-badge type="info">{{ turno.fecha }}</plex-badge>
+        <plex-button type="info" icon="eye" size="sm" (click)="selected(turno)"></plex-button>
+    </plex-item>
+</plex-list>

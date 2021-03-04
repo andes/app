@@ -1,0 +1,23 @@
+<plex-title size="sm" titulo="Mis relaciones">
+    <plex-badge type="info">27/01/2021</plex-badge>
+    <plex-button type="success" icon="account-plus" tooltip="agregar una relacion" class="ml-2" size="sm">
+    </plex-button>
+    <plex-button type="warning" label="delegar cuenta" tooltip="delegar cuenta" class="ml-2 mr-3" size="sm">
+    </plex-button>
+</plex-title>
+<plex-grid size="sm" type="full" cols="6">
+    <plex-card type="default" *ngFor="let familiar of familiares$ | async" (click)="selected(familiar)">
+        <img src="{{ familiar.foto }}" alt="">
+        <plex-label size="lg" direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
+                    subtitulo="{{ familiar.dni }}">
+        </plex-label>
+        <!--<plex-label *mobile="false" icon="cellphone" titulo="{{ familiar.telefono }}" subtitulo="Teléfono móvil">
+        </plex-label>
+        <plex-label *mobile="false" icon="marker" titulo="{{ familiar.domicilio }}"
+                    subtitulo="{{ familiar.provincia }} {{ familiar.localidad }}">
+        </plex-label>-->
+        <plex-badge type="success">{{ familiar.relacion }}</plex-badge>
+        <plex-button type="warning" size="sm" icon="pencil"></plex-button>
+        <plex-button type="danger" size="sm" icon="account-off"></plex-button>
+    </plex-card>
+</plex-grid>

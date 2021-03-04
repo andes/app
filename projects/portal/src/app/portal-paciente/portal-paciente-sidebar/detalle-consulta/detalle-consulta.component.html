@@ -1,0 +1,49 @@
+<ng-container *ngIf="prestacion$ | async as prestacion">
+
+    <plex-detail>
+        <plex-icon name="{{ prestacion.icono }}" type="{{ prestacion.color }}"></plex-icon>
+        <plex-badge type="success">{{ prestacion.fecha }}</plex-badge>
+        <plex-badge type="info">{{ prestacion.semanticTag }}</plex-badge>
+        <div case="capitalize" title>{{ prestacion.nombre }}</div>
+        <div subtitle>Fuiste atendido por: {{ prestacion.profesional }}</div>
+        <plex-label titulo="Lugar" subtitulo="{{ prestacion.organizacion }}"></plex-label>
+        <plex-label titulo="Ambito" subtitulo="{{ prestacion.sector }}"></plex-label>
+        <plex-label titulo="Servicio" subtitulo="{{ prestacion.servicio }}"> </plex-label>
+        <plex-label titulo="Equipo de Salud" subtitulo="{{ prestacion.profesional }}"> </plex-label>
+    </plex-detail>
+
+    <!-- Listado -->
+    <plex-list>
+        <plex-heading>
+            <b label></b>
+            <b label></b>
+            <b label></b>
+            <b label></b>
+        </plex-heading>
+
+        <plex-accordion *ngFor="let registro of prestacion.registros">
+            <plex-panel>
+                <section plex-accordion-title justify>
+                    <div class="w-50">
+                        <plex-label icon="{{ registro.icono }}" type="{{ registro.color }}" case="capitalize" size="lg"
+                                    titulo="{{ registro.term }}" subtitulo="">
+                        </plex-label>
+                    </div>
+                    <div>
+                        <plex-badge size="sm" class="ml-2" type="info">{{ registro.fecha }}</plex-badge>
+                        <plex-badge *ngIf="estado" size="sm" class="ml-2" type="warning">{{ registro.estado }}
+                        </plex-badge>
+                        <plex-button type="info" size="sm" icon="chevron-down" class="ml-2"></plex-button>
+                    </div>
+                </section>
+                <plex-grid type="full" size="md">
+                    <!--<plex-label titulo="Profesional" subtitulo="{{ registro.profesional }}"></plex-label>-->
+                    <plex-label titulo="Evolucion" subtitulo="{{ registro.evolucion}}"></plex-label>
+                    <plex-label titulo="Fecha" subtitulo="{{ registro.fecha }}"></plex-label>
+                    <plex-label titulo="Estado" subtitulo="{{ registro.estado ? 'activo' : 'inactivo' }}"
+                                type="{{ registro.estado ? 'success' : 'danger' }}"></plex-label>
+                </plex-grid>
+            </plex-panel>
+        </plex-accordion>
+    </plex-list>
+</ng-container>

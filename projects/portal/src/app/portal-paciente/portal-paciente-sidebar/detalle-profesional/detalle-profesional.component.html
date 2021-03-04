@@ -1,0 +1,21 @@
+<ng-container *ngIf="profesional$ | async as profesional">
+    <plex-detail size="lg">
+        <img src="{{ profesional.foto }}" alt="">
+        <plex-badge type="success">{{ profesional.relacion }}</plex-badge>
+        <div title>{{ profesional.apellido }}, {{ profesional.nombre }} </div>
+        <div subtitle>{{ profesional.dni }} </div>
+        <plex-label titulo="Edad" subtitulo="{{ profesional.edad }}"></plex-label>
+        <plex-label titulo="Documento" subtitulo="{{ profesional.dni }}"></plex-label>
+    </plex-detail>
+    <plex-title titulo="datos de contacto" size="sm"></plex-title>
+    <plex-grid type="auto" size="md">
+        <plex-label icon="celular" titulo="telefono" subtitulo="{{ profesional.telefono }}"></plex-label>
+        <plex-label icon="home" titulo="domicilio" subtitulo="{{ profesional.domicilio }}"></plex-label>
+        <plex-label icon="city" titulo="localidad" subtitulo="{{ profesional.localidad }}"></plex-label>
+        <plex-label icon="map-marker" titulo="provincia" subtitulo="{{ profesional.provincia }}"></plex-label>
+    </plex-grid>
+    <hr>
+    <plex-button class="mt-4" *ngIf="profesional.relacion === 'hijo'" type="warning" size="block"
+                 label="acceder a HUDS">
+    </plex-button>
+</ng-container>
