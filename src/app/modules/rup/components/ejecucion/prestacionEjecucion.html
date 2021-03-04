@@ -3,21 +3,31 @@
     <plex-layout-main *ngIf="prestacion">
         <form #form="ngForm" class="h-100">
             <div class="w-100 h-100">
-                <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)">
+                <plex-tabs [activeIndex]="activeIndex" (close)="onCloseTab($event)" (change)="activeIndex = $event">
+                    <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
+                        <plex-help class="text-left" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes"
+                                   size="sm">
+                            <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
+                        </plex-help>
+                    </ng-container>
+
+                    <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
+                        <help-solicitud [solicitud]='prestacion.solicitud'></help-solicitud>
+                    </ng-container>
+
+                    <plex-button (click)="toggleCollapse($event)" type="primary"
+                                 icon="{{ collapse ? 'chevron-double-down' : 'chevron-double-up'}}"
+                                 class="collapse-card"
+                                 title="{{ collapse ? 'Expandir los registros' : 'Colapsar los registros'}}"
+                                 titlePosition="left" *ngIf="activeIndex === 0" size="sm">
+                    </plex-button>
+
                     <plex-tab label="Registros de esta consulta">
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
                             <div class="col float-right text-right panel-acciones">
-                                <plex-help class="mr-1 text-left" titulo="Reglas Solicitudes"
-                                           tituloBoton="Reglas Solicitudes">
-                                    <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
-                                </plex-help>
-                                <help-solicitud [solicitud]='prestacion.solicitud' class='mr-1'></help-solicitud>
-                                <plex-button (click)="toggleCollapse($event)" type="primary"
-                                             icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}" class="collapse-card"
-                                             title="{{ collapse ? 'Expandir los registros' : 'Colapsar los registros'}}"
-                                             titlePosition="left">
-                                </plex-button>
+
+
                             </div>
                         </div>
 
@@ -141,7 +151,7 @@
                                              (onDragEnd)="draggingRegistro(i, registro, false)">
                                             <span>
                                                 {{ (registro.esSolicitud) ? 'solicitud' :
-                                                    registro.concepto.semanticTag}}
+                                                registro.concepto.semanticTag}}
                                             </span>
                                         </div>
 
@@ -167,8 +177,8 @@
                                             <div class="confirmarDesvincular">
                                                 <span>
                                                     ¿Quitar la relación con
-                                                    <em
-                                                        class="text-capitalize">«{{ mostrarVinculacion(registro) | relacionRUP }}»</em>?
+                                                    <em class="text-capitalize">«{{ mostrarVinculacion(registro) |
+                                                        relacionRUP }}»</em>?
                                                 </span>
                                                 <div class="buttons">
                                                     <plex-button type="danger" label="Mantener relación"
