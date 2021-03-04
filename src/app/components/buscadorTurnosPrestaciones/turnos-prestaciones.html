@@ -59,7 +59,7 @@
                 <plex-button *ngIf="!showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
                              [disabled]="!state.enableExport"></plex-button>
                 <plex-button *ngIf="showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
-                             [disabled]="true" hint="El máximo permitido de prestaciones es de {{prestacionesMax}}"
+                             class="disabled" hint="El máximo permitido de prestaciones es de {{prestacionesMax}}"
                              hintType="warning" hintIcon="lock" detach="top">
                 </plex-button>
                 <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true"
