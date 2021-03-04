@@ -28,7 +28,7 @@
                                    name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite"
                                    label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
 
-                        <plex-int *ngIf="ciudadano.tieneTramite || ciudadano.grupo.nombre === 'personal-salud' "
+                        <plex-int *ngIf="ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud' "
                                   [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                   label="Número de Trámite del DNI" [required]="true">
                         </plex-int>
@@ -36,8 +36,8 @@
                                      required="true" placeholder="Seleccione..">
                         </plex-select>
                         <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="ciudadano.fechaNacimiento"
-                                       name="fechaNacimiento" placeholder="dd/mm/yyyy" [max]="fechaMaximaNacimiento"
-                                       class="fechas">
+                            class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy" 
+                            [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
                         </plex-datetime>
                         <plex-text [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()" name="apellido"
                                    label="Apellido" [required]="true">

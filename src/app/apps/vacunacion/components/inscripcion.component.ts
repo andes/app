@@ -77,6 +77,8 @@ export class InscripcionComponent implements OnInit {
     diaSeleccion = null;
     public seleccionTramite = true;
     public fechaMaximaNacimiento;
+    public fechaMinimaNacimiento;
+
     public profesion;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
@@ -119,11 +121,19 @@ export class InscripcionComponent implements OnInit {
         if (grupo) {
             if (grupo.nombre !== 'discapacidad') {
                 this.infoCud = false;
+                // Mayores de 60
                 if (grupo.nombre === 'mayores60') {
+                    this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
+                // Personal de salud
                 } else {
+                    this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
                 }
+            // Adultos entre 18 y 59 años con discapacidad y factores de riesgos
+            } else {
+                this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                this.fechaMinimaNacimiento =  moment().subtract(59, 'years').toDate();
             }
         }
     }
