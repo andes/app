@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
             };
             this.inProgress = true;
             this.loginService.login(credentials).subscribe(res => {
-                this.router.navigateByUrl('/home');
+                this.router.navigateByUrl('/portal-paciente');
             },
                 (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');

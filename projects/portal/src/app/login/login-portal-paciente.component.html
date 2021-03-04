@@ -8,7 +8,7 @@
                 </div>
             </div>
 
-            <div class="usuario mb-2">
+            <div class="mb-2">
                 <plex-text [autoFocus]="true" [(ngModel)]="usuario" name="usuario" placeholder="usuario (e-mail)">
                     <plex-icon name="account-key" left></plex-icon>
                 </plex-text>
@@ -16,7 +16,7 @@
             <a class="hover small text-sala" justify="end">
                 (olvidé mi contraseña)
             </a>
-            <div class="password mb-3">
+            <div class="mb-3">
                 <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
                            placeholder="contraseña">
                     <plex-icon name="dialpad" left></plex-icon>
@@ -29,7 +29,7 @@
                 </plex-button>
             </div>
             <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
-            <div class="usuario-nuevo" justify="center">
+            <div justify="center">
                 ¿No tenés usuario?
                 <plex-button type="link" size="sm">
                     Solicitá una Cuenta

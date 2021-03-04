@@ -3,13 +3,13 @@
   "rules": {
     "prefer-const": true,
     "directive-selector": [
-      true,
+      false,
       "attribute",
       "pdp",
       "camelCase"
     ],
     "component-selector": [
-      true,
+      false,
       "element",
       "pdp",
       "kebab-case"
