@@ -1,0 +1,56 @@
+<plex-grid *ngIf="paciente" size="md" type="full">
+    <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
+        <plex-badge></plex-badge>
+        <img src="{{ paciente.foto }}" alt="">
+        <div title>{{ paciente.nombre }}<br>{{ paciente.apellido }}</div>
+        <div subtitle>{{ paciente.documento }}<br>
+            <plex-button class="mt-4 mr-2" size="sm" type="warning"
+                         label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
+                         (click)="openModal(0)">
+            </plex-button>
+            <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios"
+                         (click)="datosSecundarios = !datosSecundarios">
+            </plex-button>
+        </div>
+
+    </plex-detail>
+
+</plex-grid>
+
+
+<!-- MODAL: Reporte de errores -->
+<plex-modal size="md" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="false">
+    <plex-icon name="alert-circle" type="warning"></plex-icon>
+    <plex-modal-title type="default">Reportando error en sus datos</plex-modal-title>
+    <plex-modal-subtitle center class="font-subtitle text-muted text-center">
+        Al completar los siguientes datos y aceptar, usted iniciará un proceso que será sometido a auditoría
+        para corroborar el error reportado.
+    </plex-modal-subtitle>
+    <main>
+        <section class="w-100 h-100">
+            <plex-title titulo="Indique y describa el error" size="sm"></plex-title>
+            <form #formulario="ngForm" (close)="notificarAccion(false)">
+                <div>
+                    <plex-select placeholder="Seleccione un motivo" grow="2" [(ngModel)]="modelo2.select"
+                                 [data]="errores" label-field="nombre + ' (' + continente + ')'">
+                    </plex-select>
+                </div>
+                <div class="mt-4">
+                    <plex-text placeholder="Describa brevemente el error" multiline="true" name="multi"
+                               [(ngModel)]="prueba">
+                    </plex-text>
+                </div>
+                <plex-button modal left type="danger" (click)="closeModal(0, formulario.form)"
+                             [validateForm]="formulario">
+                    CANCELAR
+                </plex-button>
+                <plex-button modal right type="success" (click)="closeModal(0, formulario.form)"
+                             [disabled]="motivoSelect()">
+                    ACEPTAR
+                </plex-button>
+            </form>
+        </section>
+    </main>
+
+</plex-modal>
+<!-- FIN MODAL -->

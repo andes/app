@@ -13,6 +13,7 @@
   ],
   "include": [
     "**/*.ts",
+    "../../node_modules/ng2-slugify/**/*.ts",
     "../../node_modules/@andes/plex/**/*.ts",
   ],
   "exclude": [

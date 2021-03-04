@@ -9,12 +9,9 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
   title = 'portal';
-
-
-
-  constructor(private plex: Plex,
-    private server: Server
-  ) {
+  constructor(
+    private plex: Plex,
+    private server: Server) {
     server.setBaseURL(environment.API);
   }
 }

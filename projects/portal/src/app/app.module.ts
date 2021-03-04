@@ -1,22 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-
+import { HttpClientModule } from '@angular/common/http';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PlexModule } from '@andes/plex';
-import { HomeComponent } from './home/home.component';
+import { Server, SharedModule } from '@andes/shared';
+import { Auth } from '@andes/auth';
+
+// Declarations
+import { HomeComponent } from './home.component';
 import { LoginComponent } from './login/login-portal-paciente';
-import { FormsModule } from '@angular/forms';
 import { LoginService } from './login/service/login-portal-paciente.service';
-import { Server } from '@andes/shared';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
+import { PortalPacienteComponent } from './portal-paciente/portal-paciente.component';
+import { PortalPacienteMainComponent } from './portal-paciente/portal-paciente-main.component';
+import { PacienteDetalleComponent } from './components/paciente-detalle.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-
+    PortalPacienteComponent,
+    PacienteDetalleComponent,
+    PortalPacienteMainComponent
   ],
   imports: [
     BrowserModule,
@@ -25,8 +33,17 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule
   ],
-  providers: [LoginService,
-    Server, HttpClient],
+  providers: [
+    Server,
+    LoginService,
+    Auth,
+    HttpClientModule,
+    InfiniteScrollModule,
+    SharedModule,
+    FormsModule,
+    FormGroupDirective,
+    ReactiveFormsModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
