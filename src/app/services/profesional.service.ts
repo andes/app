@@ -75,4 +75,12 @@ export class ProfesionalService {
         //     .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
         //     .catch(this.handleError); //...errors if any
     }
+
+    validarProfesional(body): Observable<any> {
+        return this.server.post(this.profesionalUrl + '/validar', body);
+    }
+
+    actualizarProfesional(body): Observable<any> {
+        return this.server.put(this.profesionalUrl + '/actualizar', body);
+    }
 }

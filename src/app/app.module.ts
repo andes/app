@@ -36,10 +36,14 @@ import { OrganizacionLibModule } from './components/organizacion/organizacion-li
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 
 
+
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
 import { DocumentosService } from './services/documentos.service';
+import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+
+
 
 // Pipes
 
@@ -109,6 +113,8 @@ import { ProfesionalCreateUpdateComponent } from './components/profesional/profe
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
+import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
+
 
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
@@ -282,11 +288,14 @@ registerLocaleData(localeEs, 'es');
         DirectiveLibModule,
         CITASLibModule,
         RUPLibModule,
-        AuditoriaModule
+        AuditoriaModule,
+        RecaptchaModule,
+        RecaptchaFormsModule
     ],
     declarations: [
         AppComponent,
         InicioComponent,
+        InscripcionProfesionalesComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
@@ -353,8 +362,7 @@ registerLocaleData(localeEs, 'es');
         CampaniaFormComponent,
 
         LogoSvgComponent,
-        AcronimoSvgComponent,
-
+        AcronimoSvgComponent
     ],
     entryComponents: [
         HeaderPacienteComponent
@@ -442,7 +450,13 @@ registerLocaleData(localeEs, 'es');
         CommonNovedadesService,
         QueriesService,
         CarpetaPacienteService,
-        { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler }
+        { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler },
+        {
+            provide: RECAPTCHA_SETTINGS,
+            useValue: {
+                siteKey: environment.SITE_KEY,
+            } as RecaptchaSettings,
+        }
     ]
 })
 
