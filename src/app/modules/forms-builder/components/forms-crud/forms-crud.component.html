@@ -30,7 +30,7 @@
                 </plex-button>
             </plex-title>
 
-            <cdk-virtual-scroll-viewport [itemSize]="60">
+            <cdk-virtual-scroll-viewport [itemSize]="60" #vs>
                 <div class="row mb-4 mb-2-md" id="wrapper-{{ i }}"
                      *cdkVirtualFor="let field of form.fields; let i = index">
 
