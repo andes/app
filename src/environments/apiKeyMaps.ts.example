@@ -18,5 +18,6 @@ export const password_recovery = {
 };
 
 export const captcha = {
+    enabled: false,
     key: 'XXXX'
 };
