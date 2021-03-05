@@ -232,7 +232,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         documento: this.paciente.documento,
         nombre: this.paciente.nombre,
         apellido: this.paciente.apellido,
-        fechaNacimiento: this.paciente.fechaNacimiento
+        fechaNacimiento: this.paciente.fechaNacimiento,
+        sexo: this.paciente.sexo,
+        genero: this.paciente.sexo,
+        estado: this.paciente.estado
       }
     };
     if (this.fichaPaciente) {
