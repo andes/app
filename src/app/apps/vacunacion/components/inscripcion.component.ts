@@ -130,10 +130,10 @@ export class InscripcionComponent implements OnInit {
                     this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
                 }
-            // Adultos entre 18 y 59 años con discapacidad y factores de riesgos
+            // Adultos con certificado único de discapacidad, mayores de 18 años y factores de riesgo
             } else {
+                this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
                 this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
-                this.fechaMinimaNacimiento =  moment().subtract(59, 'years').toDate();
             }
         }
     }
