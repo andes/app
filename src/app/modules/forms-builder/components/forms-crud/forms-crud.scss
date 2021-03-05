@@ -1,7 +1,9 @@
 ::ng-deep {
-    plex-int, plex-bool {
+    plex-int,
+    plex-bool {
         &.sm {
-            .form-group, .form-control {
+            .form-group,
+            .form-control {
                 width: 60px;
             }
         }
@@ -17,8 +19,10 @@
         position: relative;
         bottom: 15px;
     }
-    
+    .cdk-virtual-scroll-content-wrapper {
+        height: 100%;
+    }
 }
 cdk-virtual-scroll-viewport {
-    height: calc(100% -  205px);     
+    height: 100%;
 }
