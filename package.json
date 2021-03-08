@@ -44,6 +44,7 @@
     "@angular/platform-browser-dynamic": "^9.1.12",
     "@angular/platform-server": "9.1.12",
     "@angular/router": "9.1.12",
+    "@auth0/angular-jwt": "^5.0.2",
     "bowser": "^1.9.4",
     "bson": "^4.0.0-rc5",
     "chart.js": "^2.7.3",
