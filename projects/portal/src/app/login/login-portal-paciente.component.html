@@ -1,0 +1,41 @@
+<plex-layout>
+    <plex-layout-main>
+
+        <form #formulario="ngForm">
+            <div class="flex-column" justify="center">
+                <div class="andes"></div>
+                <div class="sala">PORTAL DE PACIENTES
+                </div>
+            </div>
+
+            <div class="usuario mb-2">
+                <plex-text [autoFocus]="true" [(ngModel)]="usuario" name="usuario" placeholder="usuario (e-mail)">
+                    <plex-icon name="account-key" left></plex-icon>
+                </plex-text>
+            </div>
+            <a class="hover small text-sala" justify="end">
+                (olvidé mi contraseña)
+            </a>
+            <div class="password mb-3">
+                <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
+                           placeholder="contraseña">
+                    <plex-icon name="dialpad" left></plex-icon>
+                </plex-text>
+            </div>
+            <div class="mb-3">
+                <plex-button type="success" [validateForm]="formulario" [disabled]="!formulario.form.valid"
+                             (click)="login()" size="block">
+                    Iniciar sesión
+                </plex-button>
+            </div>
+            <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+            <div class="usuario-nuevo" justify="center">
+                ¿No tenés usuario?
+                <plex-button type="link" size="sm">
+                    Solicitá una Cuenta
+                </plex-button>
+            </div>
+        </form>
+
+    </plex-layout-main>
+</plex-layout>
