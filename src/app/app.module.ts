@@ -36,14 +36,11 @@ import { OrganizacionLibModule } from './components/organizacion/organizacion-li
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 
 
-
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
 import { DocumentosService } from './services/documentos.service';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
-
-
 
 // Pipes
 

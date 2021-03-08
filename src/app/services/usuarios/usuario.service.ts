@@ -10,6 +10,8 @@ export class UsuarioService {
 
     private permisosUrl = '/core/tm/permisos';
 
+    private gestorUsuariosUrl = '/modules/gestor-usuarios/usuarios';
+
     constructor(private server: Server) { }
 
     permisos(): Observable<any> {
@@ -50,17 +52,24 @@ export class UsuarioService {
 
     saveDisclaimer(usuario: any, disclaimer: any): Observable<any> {
         if (usuario.username) {
-            return this.server.post(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers/${disclaimer.id}`, { usuario: usuario, disclaimer: disclaimer });
+            return this.server.post(`${this.gestorUsuariosUrl}/${usuario.username}/disclaimers/${disclaimer.id}`, { usuario: usuario, disclaimer: disclaimer });
         }
 
     }
 
     getDisclaimers(usuario: any): Observable<any> {
         if (usuario.username) {
-            return this.server.get(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers`);
+            return this.server.get(`${this.gestorUsuariosUrl}/${usuario.username}/disclaimers`);
         }
 
     }
 
+    updateUsuario(usuario, permisos): Observable<any> {
+        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { permisos });
+    }
 
+    createUsuario(usuario): Observable<any> {
+        return this.server.post(`${this.gestorUsuariosUrl}/create`, usuario);
+
+    }
 }

@@ -175,7 +175,7 @@ const appRoutes: Routes = [
     { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'vacunacion', loadChildren: () => import('./apps/vacunacion/vacunacion.module').then(m => m.VacunacionModule), canActivate: [] },
 
-    //Inscripcion de profesionales
+    // Inscripcion de profesionales
     { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // dejar siempre al último porque no encuentra las url después de esta
