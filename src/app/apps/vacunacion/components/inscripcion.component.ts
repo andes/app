@@ -10,6 +10,8 @@ import { ProfesionService } from 'src/app/services/profesion.service';
 import * as enumerados from '../../../utils/enumerados';
 import { ICiudadano } from '../interfaces/ICiudadano';
 import { InscripcionService } from '../services/inscripcion.service';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'inscripcion',
@@ -82,6 +84,7 @@ export class InscripcionComponent implements OnInit {
     public profesion;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    public grupoSelected;
 
     constructor(
         private plex: Plex,
@@ -89,6 +92,7 @@ export class InscripcionComponent implements OnInit {
         private profesionesService: ProfesionService,
         private inscripcionService: InscripcionService,
         private grupoPoblacionalService: GrupoPoblacionalService,
+        private route: ActivatedRoute
     ) {
         this.plex.updateTitle('Inscripción a vacunación COVID-19 - Provincia de Neuquén');
         this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
@@ -104,6 +108,18 @@ export class InscripcionComponent implements OnInit {
 
     ngOnInit() {
         this.sexos = enumerados.getObjSexos();
+        this.route.params.subscribe(params => {
+            if (params.grupo) {
+                this.opcionesGrupos$.pipe(
+                    map(grupos => {
+                        this.grupoSelected = grupos.find(g => g.nombre === params.grupo);
+                        if (this.grupoSelected) {
+                            this.ciudadano.grupo = this.grupoSelected;
+                        }
+                    })
+                ).subscribe();
+            }
+        });
     }
 
     limpiarRespuesta() {
@@ -123,16 +139,16 @@ export class InscripcionComponent implements OnInit {
                 this.infoCud = false;
                 // Mayores de 60
                 if (grupo.nombre === 'mayores60') {
-                    this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
-                // Personal de salud
+                    // Personal de salud
                 } else {
-                    this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
                 }
-            // Adultos con certificado único de discapacidad, mayores de 18 años y factores de riesgo
+                // Adultos con certificado único de discapacidad, mayores de 18 años y factores de riesgo
             } else {
-                this.fechaMinimaNacimiento =  moment('1900-01-01').toDate();
+                this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                 this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
             }
         }
