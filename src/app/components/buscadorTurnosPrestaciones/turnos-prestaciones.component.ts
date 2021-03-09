@@ -46,6 +46,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public profesionales;
     public arrayAmbito = [{ id: 'ambulatorio', nombre: 'ambulatorio' }, { id: 'internacion', nombre: 'internación' }];
     public ambito;
+    public prestacionesMax = 500;
+    public showHint = false;
 
     public columnas = {
         fecha: true,
@@ -163,6 +165,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                             ...selected,
                             [key]: value
                         });
+                        break;
                 }
             }),
         ).subscribe();
@@ -344,10 +347,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     selectPrestacion(item, $event) {
         this.accion$.next({ type: 'select', value: $event.value, key: item.key });
+        const prestacionesSelected = Object.values(this.selectPrestaciones$.getValue()).filter(element => element);
+        this.showHint = prestacionesSelected.length > this.prestacionesMax;
     }
 
     selectAll($event) {
         this.accion$.next({ type: 'select-all', value: $event.value });
+        this.showHint = Object.values(this.selectPrestaciones$.getValue()).length > this.prestacionesMax;
     }
 
     mostrarPendientes() {
