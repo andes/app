@@ -254,6 +254,16 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         return item.idCama;
     }
 
+    accionListadoRecurso(data) {
+        if (data.verDetalle) {
+            this.verDetalle(data.cama, data.selectedCama);
+        }
+        if (data.selectCama) {
+            this.selectCama(data.cama, data.relacion);
+        }
+
+    }
+
     sortTable(event: string) {
         if (this.sortBy === event) {
             this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';

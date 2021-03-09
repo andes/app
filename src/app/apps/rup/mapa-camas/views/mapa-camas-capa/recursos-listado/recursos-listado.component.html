@@ -2,20 +2,40 @@
     <plex-panel>
         <div plex-accordion-title justify>
             <section class="w-50">
-                <plex-label size="lg" case="capitalize" titulo="{{ sector.nombre }}" icon="hospital">
+                <plex-label size="lg" case="capitalize" titulo="{{ sector.nombre }}" subtitulo="{{ sector.subtitulo }}"
+                            icon="hospital">
                 </plex-label>
             </section>
         </div>
-        <plex-grid size="md" type="full">
-            <plex-card *ngFor="let cama of sector.camasSector" (click)="verDetalle(cama, cama.id)" align="center">
+        <plex-grid size="md" cols="3">
+            <plex-card *ngFor="let cama of sector.camasSector" [selected]="cama.selected"
+                       (click)=" cama.selected = !cama.selected ; verDetalle(cama, cama.id)" align="center">
                 <plex-badge type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}">{{ cama.estado}}
                 </plex-badge>
                 <plex-icon size="xl" type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}"
                            name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}"></plex-icon>
-                <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ cama.sector }}"></plex-label>
-                <plex-button size="sm" type="{{ cama.estado === 'ocupada' ? 'danger' : 'success'}}"
-                             icon="{{ cama.estado === 'ocupada' ? 'menos' : 'mas'}}"></plex-button>
-                <plex-button size="sm" type="warning" icon="pencil"></plex-button>
+                <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ sector.nombre }}"></plex-label>
+                <ng-container *ngIf="cama.paciente">
+                    <section>
+                        <plex-label align="start" icon="paciente" size="sm"
+                                    titulo="{{ cama.paciente?.nombre }} {{ cama.paciente?.apellido }}"
+                                    subtitulo="{{ cama.paciente?.documento }}"></plex-label>
+                    </section>
+                </ng-container>
+
+                <ng-container ngProjectAs="plex-button" *ngIf="permisosMapaCamasService.movimientos">
+                    <ng-container *ngFor="let relacion of mapaCamasService.getRelacionesPosibles(cama) | async">
+                        <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
+                                  || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
+                            <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                         size="sm" (click)="selectCama(cama,relacion,$event)">
+                            </plex-button>
+
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+
+                <plex-button size="sm" type="warning" icon="pencil" (click)="goTo(cama)" *ngIf="canEdit"></plex-button>
             </plex-card>
         </plex-grid>
     </plex-panel>

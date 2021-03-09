@@ -55,7 +55,8 @@
         </header>
 
         <ng-container *ngIf="listadoRecursos">
-            <app-recursos-listado></app-recursos-listado>
+            <app-recursos-listado [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                  (accionRecurso)='accionListadoRecurso($event)'></app-recursos-listado>
 
         </ng-container>
 
