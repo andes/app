@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Injectable()
@@ -28,7 +28,8 @@ export class ListadoInternacionService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
-            ).pipe(
+        ).pipe(
+            auditTime(1),
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     const filtros = {
@@ -62,7 +63,7 @@ export class ListadoInternacionService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.includes(paciente));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
