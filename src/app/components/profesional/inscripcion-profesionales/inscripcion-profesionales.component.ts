@@ -54,7 +54,11 @@ export class InscripcionProfesionalesComponent implements OnInit {
   getProfesional() {
     this.enProceso = true;
     this.recaptcha = '';
-    this.profesionalService.validarProfesional({ documento: this.profesional.documento, sexo: this.profesional.sexo.id, nroTramite: this.profesional.nroTramite }).subscribe(datos => {
+    this.profesionalService.validarProfesional({
+      documento: this.profesional.documento,
+      sexo: this.profesional.sexo.id,
+      nroTramite: this.profesional.nroTramite
+    }).subscribe(datos => {
       if (datos.errMsg) {
         this.plex.info('danger', datos.errMsg, 'Sus datos no pudieron ser validados');
         this.enProceso = false;
