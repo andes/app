@@ -10,20 +10,12 @@ export class InscripcionService {
 
     constructor(private server: Server) { }
 
-    // get(params: any): Observable<any[]> {
-    //     return this.server.get(this.reglaUrl, { params: params, showError: true });
-    // }
-
-    // getById(id: String): Observable<any> {
-    //     return this.server.get(this.reglaUrl + '/' + id, null);
-    // }
+    search(params): Observable<any> {
+        return this.server.get(`${this.inscripcionUrl}/consultas`, { params });
+    }
 
     save(ciudadano: ICiudadano): Observable<any> {
         return this.server.post(this.inscripcionUrl, ciudadano);
     }
-
-    // delete(params: any): Observable<any[]> {
-    //     return this.server.delete(this.reglaUrl, { params: params, showError: true });
-    // }
 
 }

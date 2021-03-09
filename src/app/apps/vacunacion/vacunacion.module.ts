@@ -1,5 +1,3 @@
-// import { InscripcionVacunasService } from './service/inscripcion-vacunas.service';
-// import { VaccinationConsultComponent } from './components/consult/consult.component';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,10 +10,11 @@ import { environment } from '../../../../src/environments/environment';
 import { InscripcionComponent } from './components/inscripcion.component';
 import { InscripcionService } from './services/inscripcion.service';
 import { VacunacionRouting } from './vacunacion.routing';
+import { ConsultaComponent } from './components/consulta.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, HttpClientModule, PlexModule, VacunacionRouting, RecaptchaModule, RecaptchaFormsModule],
-    declarations: [InscripcionComponent],
+    declarations: [InscripcionComponent, ConsultaComponent],
     providers: [
         {
             provide: RECAPTCHA_SETTINGS,
