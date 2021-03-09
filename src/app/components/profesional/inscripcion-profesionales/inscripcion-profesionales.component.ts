@@ -5,6 +5,7 @@ import { UsuarioService } from 'src/app/services/usuarios/usuario.service';
 import { UsuariosHttp } from '../../../apps/gestor-usuarios/services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { getObjSexos } from '../../../utils/enumerados';
+import { certificadosProfesionalesCovid } from '../../../utils/permisos/permisos-update.component';
 
 
 @Component({
@@ -168,7 +169,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
 
   agregarPermisos() {
     this.enProceso = true;
-    const permisos = ['mpi:paciente:getbyId', 'rup:keyDeMoleculaDeCertificado'];
+    const permisos = certificadosProfesionalesCovid;
     this.usuarioService.updateUsuario(this.user[0]._id, permisos).subscribe(user => {
       if (user) {
         const contactoProfesional = this.updateContactos();
@@ -190,7 +191,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
       nombre: this.profesional.nombre,
       apellido: this.profesional.apellido,
       email: this.profesional.email,
-      permisos: ['mpi:paciente:getbyId', 'rup:keyDeMoleculaDeCertificado']
+      permisos: certificadosProfesionalesCovid
     };
     this.usuarioService.createUsuario(newUser).subscribe(user => {
       if (user) {
