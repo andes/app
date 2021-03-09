@@ -75,7 +75,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public conceptoAEliminar: any;
 
     // boleean para verificar si estan todos los conceptos colapsados
-    public collapse = true;
+    public collapse = false;
 
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
@@ -270,7 +270,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
             this.prestacion.ejecucion.registros.forEach(registro => {
-                this.itemsRegistros[registro.id] = { collapse: true, items: null };
+                this.itemsRegistros[registro.id] = { collapse: false, items: null };
             });
             this.armarRelaciones(this.prestacion.ejecucion.registros);
         }
