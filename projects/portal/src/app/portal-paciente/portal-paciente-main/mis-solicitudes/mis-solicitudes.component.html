@@ -1,5 +1,6 @@
 <plex-list height="50vh">
-    <plex-item *ngFor="let solicitud of solicitudes$ | async" (click)="selected(solicitud)">
+    <plex-item *ngFor="let solicitud of solicitudes$ | async" (click)="selected(solicitud)"
+               [selected]="solicitud.selected">
         <plex-label icon="arrow-up" titulo="Desde" size="lg"
                     subtitulo="{{ solicitud.organizacionOrigen }} Profesional de origen: {{ solicitud.profesionalOrigen }} | Prestación: {{ solicitud.prestacionOrigen }}">
         </plex-label>

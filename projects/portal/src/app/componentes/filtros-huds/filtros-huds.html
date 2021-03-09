@@ -1,7 +1,7 @@
-<plex-wrapper *ngIf="filtros">
+<plex-wrapper>
     <plex-text label="busacador global de mi HUDS"
                placeholder="busque por diagnósticos, médicos, organizaciones, medicamentos, etc."
-               [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}"></plex-text>
+               (ngModel)="searchTerm"></plex-text>
 
     <plex-datetime *mobile="false" label="Desde" [skipBy]="'day'" [(ngModel)]="tModel.fechaHora" name="fechaHora"
                    case="lowercase" required>

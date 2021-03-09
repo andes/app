@@ -39,6 +39,7 @@ export class MisConsultasComponent implements OnInit {
     }
 
     selected(prestacion) {
+        prestacion.selected = !prestacion.selected;
         this.nuevoValor();
         this.prestacionService.resetOutlet();
         setTimeout(() => {

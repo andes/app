@@ -37,10 +37,14 @@ export class MiEquipoComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
-
     selected(profesional) {
+        this.nuevoValor();
         this.selectedId = profesional.id;
-        this.router.navigate(['portal-paciente', { outlets: { detalleProfesional: [this.selectedId] } }]);
+        this.prestacionService.resetOutlet();
+        setTimeout(() => {
+            profesional.selected = !profesional.selected;
+            this.router.navigate(['portal-paciente', { outlets: { detalleProfesional: [this.selectedId] } }]);
+        }, 500);
     }
 }
 

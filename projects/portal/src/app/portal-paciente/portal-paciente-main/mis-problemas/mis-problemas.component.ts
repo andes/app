@@ -40,6 +40,7 @@ export class MisProblemasComponent implements OnInit {
 
     selected(problema) {
         this.nuevoValor();
+        problema.selected = !problema.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = problema.id;

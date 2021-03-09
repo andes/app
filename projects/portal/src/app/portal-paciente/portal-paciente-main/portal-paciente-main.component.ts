@@ -6,8 +6,8 @@ import { Agenda } from '../../modelos/agenda';
 import { Paciente } from '../../modelos/paciente';
 import { Prestacion } from '../../modelos/prestacion';
 import { Plex } from '@andes/plex';
-import { EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
     selector: 'plex-portal-paciente-main',
@@ -15,14 +15,18 @@ import { Observable } from 'rxjs';
 })
 export class PortalPacienteMainComponent implements OnInit {
 
+    // Oculta filtros
+    valorFiltros = true;
+
+    // Expande sidebar
     sidebarValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
+
     agendas$: Observable<Agenda[]>;
     pacientes$: Observable<Paciente[]>;
     prestaciones$: Observable<Prestacion[]>;
     selectedId: string;
     width = 0;
-    filtros = true;
 
     public duracion = '1 hs. 34 min.';
     public plex: Plex;
@@ -39,8 +43,6 @@ export class PortalPacienteMainComponent implements OnInit {
     public templateModel2: any;
     public modelo: any;
     public showModal = false;
-    public prueba = '';
-    public cambio = '';
 
     updateMaxHora() {
         this.tModel.minHora = moment().add(30, 'minutes').add(1, 'days');
@@ -123,15 +125,16 @@ export class PortalPacienteMainComponent implements OnInit {
 
     }
 
-    mostrarFiltros() {
-        this.filtros = !this.filtros;
+    enviarFiltros() {
+        this.valorFiltros = !this.valorFiltros;
     }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
-        if (this.width >= 980) {
+        if (this.width > 780) {
             return true;
         }
         else false;
     }
+
 }

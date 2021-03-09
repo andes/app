@@ -40,7 +40,7 @@ export class MisFamiliaresComponent implements OnInit {
 
     selected(familiar) {
         this.nuevoValor();
-
+        familiar.selected = !familiar.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = familiar.id;

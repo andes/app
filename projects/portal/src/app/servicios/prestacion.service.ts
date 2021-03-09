@@ -29,6 +29,8 @@ import { DOCUMENTOS } from '../mock-data/mock-documentos';
 import { Documento } from '../modelos/documento';
 import { SOLICITUDES } from '../mock-data/mock-solicitudes';
 import { Solicitud } from '../modelos/solicitud';
+import { REGISTROS } from '../mock-data/mock-registros';
+import { Registro } from '../modelos/registro';
 
 @Injectable()
 
@@ -37,6 +39,7 @@ export class PrestacionService {
     private previousUrl: string;
     private currentUrl: string;
 
+    // Recupero ultima URL
     public getPreviousUrl() {
         return this.previousUrl;
     }
@@ -54,9 +57,35 @@ export class PrestacionService {
         });
     }
 
+    // Navego a ultima URL
+    goTo(path: string[]) {
+        console.log(path);
+        this.router.navigate(path);
+    }
+
     actualizarValor(sidebarValue: number) {
         this.valorInicial.next(sidebarValue)
     }
+
+    // Limpio los ruteos auxiliares
+    resetOutlet() {
+        this.router.navigate(['portal-paciente', {
+            outlets: {
+                //detalle: null,
+                detalleHuds: null,
+                detalleVacuna: null,
+                detalleTurno: null,
+                detalleFamiliar: null,
+                detallePrescripcion: null,
+                detalleLaboratorio: null,
+                detalleProblema: null,
+                detalleProfesional: null,
+                detalleMensaje: null,
+            }
+        }]);
+    }
+
+    // Modelos y mock-data
 
     getHuds(): Observable<Huds[]> {
         return of(HUDS);
@@ -188,27 +217,100 @@ export class PrestacionService {
         );
     }
 
-    // Limpio los ruteos auxiliares
-    resetOutlet() {
-        this.router.navigate(['portal-paciente', {
-            outlets: {
-                //detalle: null,
-                detalleHuds: null,
-                detalleVacuna: null,
-                detalleTurno: null,
-                detalleFamiliar: null,
-                detallePrescripcion: null,
-                detalleLaboratorio: null,
-                detalleProblema: null,
-                detalleProfesional: null,
-                detalleMensaje: null,
-            }
-        }]);
+    getRegistros(): Observable<Registro[]> {
+        return of(REGISTROS);
     }
 
-    goto(path: string[]) {
-        console.log(path);
-        this.router.navigate(path);
+    getRegistro(id: number | string) {
+        return this.getRegistros().pipe(
+            map((registros: Registro[]) => registros.find(registro => registro.id === +id))
+        );
     }
 
+    registros: [
+        {
+            id: 123,
+            evolucion: "Tensión arterial dentro de los valores de referencia. T.A baja: 96, alta: 125 mmHg.",
+            valor: "96/125 mmHg",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "trastorno",
+            icono: "trastorno",
+            color: "danger",
+            term: "Hipertensión Arterial",
+            fecha: "27/01/2021",
+            estado: true,
+        },
+        {
+            id: 123,
+            evolucion: "El paciente se presenta con dolor agudo en la zona del abdomen",
+            valor: "37,5º",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "trastorno",
+            icono: "trastorno",
+            color: "danger",
+            term: "lesión traumática del abdomen",
+            fecha: "27/01/2021",
+            estado: true,
+        },
+        {
+            id: 123,
+            evolucion: "El paciente presenta signos y síntomas frecuentes de la alergia a la penicilina: urticaria, sarpullido y picazón",
+            valor: "125 mm",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "hallazgo",
+            icono: "lupa-ojo",
+            color: "warning",
+            term: "Alergia A Penicilina",
+            fecha: "11/09/2020",
+            estado: false,
+        },
+        {
+            id: 123,
+            evolucion: "Tensión arterial dentro de los valores de referencia",
+            valor: "96/125 mmHg",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "elemento de registro",
+            icono: "documento-lapiz",
+            color: "success",
+            term: "documento adjunto",
+            fecha: "27/01/2021",
+            estado: false,
+        },
+        {
+            id: 123,
+            evolucion: "Temperatura de 37,5. T.A baja: 96, alta: 125 mmHg. Saturación: 96%. Peso: 75 Kg. Talla: 185 cms.",
+            valor: "96 kgs.",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "procedimiento",
+            icono: "termometro",
+            color: "info",
+            term: "Registro de signos vitales",
+            fecha: "27/01/2021",
+            estado: true,
+        },
+        {
+            id: 123,
+            evolucion: "paciente refiere disnea que se intensifica con el esfuerzo. Presencia de sibilancias autoescuchadas durante la noche. Tos, No presenta historia de alergias. Antecedentes familiar de Asma. Durante los ultimos dias presenta fiebre que no cede 38º. Mucosidad serosa",
+            valor: "38º",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "hallazgo",
+            icono: "lupa-ojo",
+            color: "warning",
+            term: "Antecedente familiar de asma",
+            fecha: "17/11/2021",
+            estado: false,
+        },
+        {
+            id: 123,
+            evolucion: "El paciente se encuentra apto para desarrollar actividad física.",
+            valor: "96 kgs.",
+            esDiagnosticoPrincipal: true,
+            semanticTag: "elemento de registro",
+            icono: "documento-lapiz",
+            color: "success",
+            term: "certificado médico",
+            fecha: "27/01/2021",
+            estado: false,
+        },
+    ]
 }

@@ -35,7 +35,13 @@ export class MisVacunasComponent implements OnInit {
         );
     }
 
+    nuevoValor() {
+        this.prestacionService.actualizarValor(9);
+    }
+
     selected(vacuna) {
+        this.nuevoValor();
+        vacuna.selected = !vacuna.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = vacuna.id;

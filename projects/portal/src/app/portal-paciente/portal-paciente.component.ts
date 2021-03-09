@@ -25,9 +25,14 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 export class PortalPacienteComponent implements OnInit {
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
+    @Output() eventoSidebar = new EventEmitter<number>();
+
+    // Menu lateral
+    valorMain = 11;
+    valorMenu = 1;
+    valorResultante = this.valorMain - this.valorMenu;
 
     selectedId: number;
-    @Output() eventoSidebar = new EventEmitter<number>();
     card$: Observable<Card>;
     sidebarValue: number;
     previousUrl: string;
@@ -69,19 +74,9 @@ export class PortalPacienteComponent implements OnInit {
     cards$: Observable<Card[]>;
 
     foco = 'main';
-    public prueba = '';
-    public cambio = '';
 
     onChange() {
         this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
-    }
-
-    isResponsive() {
-        this.width = this.el.nativeElement.clientWidth;
-        if (this.width >= 980) {
-            return true;
-        }
-        else false;
     }
 
     recibirSidebar($event) {
@@ -94,5 +89,24 @@ export class PortalPacienteComponent implements OnInit {
         this.router.navigate(['portal-paciente']);
         this.sidebarValue = 12;
         console.log(this.prestacionService.getPreviousUrl());
+    }
+
+    // Nav lateral
+    expandirMenu() {
+        this.valorMenu = 2;
+    }
+
+    contraerMenu() {
+        this.valorMenu = 1;
+    }
+
+    isResponsive() {
+        this.width = this.el.nativeElement.clientWidth;
+        if (this.width < 780) {
+            this.valorResultante = 12;
+            return true;
+        }
+        else false;
+        this.valorResultante = 11;
     }
 }

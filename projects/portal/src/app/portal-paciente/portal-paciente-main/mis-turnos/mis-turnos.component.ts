@@ -3,7 +3,6 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { EventEmitter, Output } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-mis-turnos',
@@ -40,6 +39,7 @@ export class MisTurnosComponent implements OnInit {
 
     selected(turno) {
         this.nuevoValor();
+        turno.selected = !turno.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = turno.id;

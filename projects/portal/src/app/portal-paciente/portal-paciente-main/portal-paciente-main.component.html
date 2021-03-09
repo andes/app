@@ -5,10 +5,10 @@
     <plex-button type="success" icon="plus" tooltip="agregar registro" class="ml-2" size="sm">
     </plex-button>
 
-    <plex-button type="info" icon="zoom" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="mostrarFiltros()">
+    <plex-button type="info" icon="zoom" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="enviarFiltros()">
     </plex-button>
 </plex-title>
 
-<filtros-huds></filtros-huds>
+<filtros-huds *ngIf="valorFiltros"></filtros-huds>
 
 <router-outlet name="listado"></router-outlet>

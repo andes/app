@@ -45,7 +45,7 @@ export class MisMensajesComponent implements OnInit {
 
     selected(mensaje) {
         this.nuevoValor();
-
+        mensaje.selected = !mensaje.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = mensaje.id;

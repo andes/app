@@ -39,8 +39,6 @@ export class MiHudsComponent implements OnInit {
     public modelo: any;
 
     public showModal = false;
-    public prueba = '';
-    public cambio = '';
 
     @Output() eventoSidebar = new EventEmitter<number>();
 
@@ -188,6 +186,7 @@ export class MiHudsComponent implements OnInit {
     }
 
     selected(hud) {
+        hud.selected = !hud.selected;
         this.nuevoValor();
         this.hudsService.resetOutlet();
         setTimeout(() => {

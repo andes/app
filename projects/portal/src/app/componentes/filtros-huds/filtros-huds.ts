@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { EventEmitter, Output } from '@angular/core';
+import { EventEmitter, Output, Input } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Plex } from '@andes/plex';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,10 +15,11 @@ import { Card } from '../../modelos/card';
 })
 export class FiltrosHudsComponent implements OnInit {
 
-    searchTerm$ = new BehaviorSubject<string>('');
+    searchTerm = new BehaviorSubject<string>('');
 
     // switchea mensaje por listado
     @Output() eventoValor = new EventEmitter<boolean>();
+
     valor: boolean;
     card$: Observable<Card>;
     cards$: Observable<Card[]>;
@@ -27,7 +28,6 @@ export class FiltrosHudsComponent implements OnInit {
     public prestacion$;
     public prestaciones$;
     sidebarValue: number;
-    filtros = true;
 
     public duracion = '1 hs. 34 min.';
     public plex: Plex;
@@ -48,8 +48,6 @@ export class FiltrosHudsComponent implements OnInit {
     public modelo: any;
 
     public showModal = false;
-    public prueba = '';
-    public cambio = '';
 
     @Output() eventoSidebar = new EventEmitter<number>();
 
@@ -74,7 +72,6 @@ export class FiltrosHudsComponent implements OnInit {
 
     ngOnInit(): void {
         this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
-        //this.data.currentValor.subscribe(valor => this.valor = valor)
 
         // Servicios
         this.prestaciones$ = this.prestacionService.getConsultas();
@@ -191,10 +188,6 @@ export class FiltrosHudsComponent implements OnInit {
 
         // plex-bool
         this.modelo = { checkbox: false, slide: false };
-    }
-
-    mostrarFiltros() {
-        this.filtros = !this.filtros;
     }
 }
 

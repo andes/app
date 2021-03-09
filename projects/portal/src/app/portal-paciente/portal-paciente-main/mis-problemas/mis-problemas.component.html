@@ -1,5 +1,5 @@
 <plex-list height="50vh">
-    <plex-item *ngFor="let problema of problemas$ | async" (click)="selected(problema)">
+    <plex-item *ngFor="let problema of problemas$ | async" (click)="selected(problema)" [selected]="problema.selected">
         <plex-label icon="{{ problema.icono }}" titulo="{{ problema.term }}" size="lg"
                     subtitulo="Profesional: Monteverde, María Laura"
                     type="{{ problema.semanticTag === 'trastorno' ? 'danger' : 'warning' }}" class=""></plex-label>

@@ -39,7 +39,7 @@ export class MisOrganizacionesComponent implements OnInit {
 
     selected(organizacion) {
         this.nuevoValor();
-
+        organizacion.selected = !organizacion.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = organizacion.id;

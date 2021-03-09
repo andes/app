@@ -56,6 +56,8 @@ import { FiltrosHudsComponent } from './componentes/filtros-huds/filtros-huds';
 import { MisSolicitudesComponent } from './portal-paciente/portal-paciente-main/mis-solicitudes/mis-solicitudes.component';
 import { DetalleSolicitudComponent } from './portal-paciente/portal-paciente-sidebar/detalle-solicitud/detalle-solicitud.component';
 import { MapsComponent } from './utils/mapsComponent';
+import { ModalTemplateComponent } from './componentes/plex-modal-template/plex-modal-template';
+import { PortalPacienteSidebarComponent } from './portal-paciente/portal-paciente-sidebar/portal-paciente-sidebar.component';
 import { appPortalRouting, appPortalRoutingProviders } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -94,7 +96,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         DetalleSolicitudComponent,
         PacienteDetalleComponent,
         FiltrosHudsComponent,
-        PrestacionPipe
+        ModalTemplateComponent,
+        PortalPacienteComponent,
+        PortalPacienteMainComponent,
+        PortalPacienteSidebarComponent,
+        PrestacionPipe,
+        MapsComponent
     ],
     imports: [
         BrowserModule,

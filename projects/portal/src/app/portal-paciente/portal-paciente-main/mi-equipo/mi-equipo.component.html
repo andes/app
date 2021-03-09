@@ -5,7 +5,8 @@
     </plex-button>
 </plex-title>
 <plex-grid size="sm" type="full" cols="5">
-    <plex-card type="default" *ngFor="let profesional of equipo$ | async" (click)="selected(profesional)">
+    <plex-card type="default" *ngFor="let profesional of equipo$ | async" (click)="selected(profesional)"
+               [selected]="profesional.selected">
         <img src="{{ profesional.foto }}" alt="">
         <plex-label size="md" direction="column" titulo="{{ profesional.nombre }} {{ profesional.apellido }}"
                     subtitulo="{{ profesional.rol }}">

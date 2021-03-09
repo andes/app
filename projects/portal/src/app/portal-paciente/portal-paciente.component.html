@@ -1,38 +1,58 @@
-<plex-layout main="{{ sidebarValue }}" resizable="true">
+<!--<plex-layout main="{{ sidebarValue }}"  resizable="true">-->
+<plex-layout [aspect]="9">
     <plex-layout-main type="invert">
-        <plex-title size="{{ isResponsive() ? 'md' : 'sm' }}"
-                    titulo="{{ isResponsive() ? 'bienvenido a tu portal de salud' : 'tu portal' }}" main>
-            <plex-button size="sm" [icon]="isResponsive() ? null : 'mail-outline'" class="ml-2" type="link">
+        <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}"
+                    titulo="{{ isResponsive() ? 'mi portal' : 'mi portal de salud' }}" main>
+            <plex-button size="sm" [icon]="isResponsive() ? 'mail-outline' : null" class="ml-2" type="link">
                 info@andes.gob.ar
             </plex-button>
-            <plex-button size="sm" [label]="isResponsive() ? 'www.andes.gob.ar' : null" class="ml-2" type="link">
+            <plex-button size="sm" [label]="isResponsive() ? null : 'www.andes.gob.ar'" class="ml-2" type="link">
                 <ng-container>
                     <plex-icon name="web"></plex-icon>
                 </ng-container>
             </plex-button>
-            <plex-button type="info" icon="message-alert" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
+            <plex-button type="link" icon="message-alert" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
                          hintType="warning" detach="top" [routerLink]="[{ outlets: { listado: ['misMensajes'] } }]">
             </plex-button>
             <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión">
             </plex-button>
-            <plex-button *mobile size="sm" class="ml-2" type="danger" icon="close" (click)="isResponsive()">
-            </plex-button>
+
+            <!-- Menu hamburguesa -->
+            <plex-help *ngIf="isResponsive()" size="sm" class="ml-2" type="info" icon="menu">
+                <div info>
+                    <plex-grid size="xs">
+                        <ng-container *ngFor="let card of cards$ | async">
+                            <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}"
+                                        titulo="{{ card.nombre }}" subtitulo=""
+                                        [routerLink]="[{ outlets: { listado: [card.path] } }]">
+                            </plex-label>
+                        </ng-container>
+                    </plex-grid>
+                    <plex-label size="block" class="ml-2" type="danger" icon="logout" titulo="cerrar sesión"
+                                routerLink="/">
+                    </plex-label>
+                </div>
+            </plex-help>
         </plex-title>
 
         <plex-grid cols="12" size="md">
 
             <!-- Menu Lateral -->
-            <plex-grid id="menu-vertical" *mobile="false" span="1" class="align-self-start mr-4 flex-column"
-                       justify="start" size="xs">
+            <plex-grid id="menu-vertical" *ngIf="!isResponsive()" span="{{ valorMenu }}"
+                       class="d-flex align-self-start mr-2 flex-column" size="xs">
+                <plex-button *ngIf="valorMenu === 2" size="sm" type="link" icon="close" (click)="contraerMenu()">
+                </plex-button>
                 <ng-container *ngFor="let card of cards$ | async">
-                    <plex-button icon="{{ card.icono }}" size="md" type="link" tooltip="{{ card.path }}" class="mb-2"
-                                 tooltipPosition="right" [routerLink]="[{ outlets: { listado: [card.path] } }]">
-                    </plex-button>
+                    <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}" titulo=""
+                                subtitulo="" [routerLink]="[{ outlets: { listado: [card.path] } }]"
+                                tooltip="{{ card.path }}" class="mb-2" tooltipPosition="right" (click)="expandirMenu()">
+                        <p *ngIf="valorMenu === 2">{{ card.nombre }}</p>
+                    </plex-label>
                 </ng-container>
             </plex-grid>
 
             <!-- Listado -->
-            <section span="{{ isResponsive() ? '11' : '12' }}">
+            <section span="{{ valorResultante }}">
                 <plex-portal-paciente-main (eventoSidebar)="recibirSidebar($event)">
                 </plex-portal-paciente-main>
             </section>
@@ -46,7 +66,7 @@
         </plex-grid>
 
     </plex-layout-main>
-    <plex-layout-sidebar type="{{ invert === false ? 'invert' : null }}">
+    <plex-layout-sidebar>
         <plex-title size="{{ isResponsive() ? 'md' : 'sm' }}"
                     titulo="{{ isResponsive() ? 'DETALLE' : 'detalle de la consulta' }}">
             <plex-button type="danger" icon="close" size="sm" (click)="contraerSidebar()" class="ml-2"></plex-button>

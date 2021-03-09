@@ -1,5 +1,6 @@
 <plex-grid size="lg" type="full">
-    <plex-card *ngFor="let organizacion of organizaciones$ | async" (click)="selected(organizacion)">
+    <plex-card *ngFor="let organizacion of organizaciones$ | async" (click)="selected(organizacion)"
+               [selected]="organizacion.selected">
         <img src="{{ organizacion.foto }}" alt="">
         <plex-label direction="column" size="md" type="info" titulo="{{ organizacion.nombre }}"
                     subtitulo="{{ organizacion.direccion }} | {{ organizacion.ciudad }} | {{organizacion.contacto }}">

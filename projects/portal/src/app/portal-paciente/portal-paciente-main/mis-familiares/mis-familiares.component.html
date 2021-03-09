@@ -1,12 +1,12 @@
 <plex-title size="sm" titulo="Mis relaciones">
-    <plex-badge type="info">27/01/2021</plex-badge>
     <plex-button type="success" icon="account-plus" tooltip="agregar una relacion" class="ml-2" size="sm">
     </plex-button>
     <plex-button type="warning" label="delegar cuenta" tooltip="delegar cuenta" class="ml-2 mr-3" size="sm">
     </plex-button>
 </plex-title>
-<plex-grid size="sm" type="full" cols="6">
-    <plex-card type="default" *ngFor="let familiar of familiares$ | async" (click)="selected(familiar)">
+<plex-grid size="sm" type="full">
+    <plex-card type="default" size="md" *ngFor="let familiar of familiares$ | async" (click)="selected(familiar)"
+               [selected]="familiar.selected">
         <img src="{{ familiar.foto }}" alt="">
         <plex-label size="lg" direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
                     subtitulo="{{ familiar.dni }}">

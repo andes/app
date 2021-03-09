@@ -1,5 +1,5 @@
 <plex-list>
-    <plex-item *ngFor="let vacuna of vacunas$ | async" (click)="selected(vacuna)">
+    <plex-item *ngFor="let vacuna of vacunas$ | async" (click)="selected(vacuna)" [selected]="vacuna.selected">
         <plex-label case="capitalize-first" size="lg" icon="vacuna" titulo="{{ vacuna.nombre }}"
                     subtitulo="{{ vacuna.organizacion }}">
         </plex-label>

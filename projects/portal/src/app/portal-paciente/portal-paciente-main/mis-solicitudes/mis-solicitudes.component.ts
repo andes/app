@@ -41,6 +41,7 @@ export class MisSolicitudesComponent implements OnInit {
 
     selected(solicitud) {
         this.nuevoValor();
+        solicitud.selected = !solicitud.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = solicitud.id;
