@@ -1,6 +1,6 @@
 <ng-container *ngIf="prescripcion$ | async as prescripcion">
     <plex-detail>
-        <plex-icon name="pildoras" class="bg-producto"></plex-icon>
+        <plex-icon name="pildoras" class="color-producto"></plex-icon>
         <div title case="capitalize" title>{{ prescripcion.nombre }} | {{ prescripcion.indicacion.formaFarmaceutica }}
         </div>
         <div subtitle>Prescripto por: {{ prescripcion.profesional }}</div>

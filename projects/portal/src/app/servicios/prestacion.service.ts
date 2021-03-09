@@ -21,6 +21,14 @@ import { Problema } from '../modelos/problema';
 import { PROBLEMAS } from '../mock-data/mock-problemas';
 import { Profesional } from '../modelos/profesional';
 import { PROFESIONALES } from '../mock-data/mock-equipo';
+import { MENSAJES } from '../mock-data/mock-mensajes';
+import { Mensaje } from '../modelos/mensaje';
+import { Organizacion } from '../modelos/organizacion';
+import { ORGANIZACIONES } from '../mock-data/mock-organizaciones';
+import { DOCUMENTOS } from '../mock-data/mock-documentos';
+import { Documento } from '../modelos/documento';
+import { SOLICITUDES } from '../mock-data/mock-solicitudes';
+import { Solicitud } from '../modelos/solicitud';
 
 @Injectable()
 
@@ -140,18 +148,60 @@ export class PrestacionService {
         );
     }
 
+    getMensajes(): Observable<Mensaje[]> {
+        return of(MENSAJES);
+    }
+
+    getMensaje(id: number | string) {
+        return this.getMensajes().pipe(
+            map((mensajes: Mensaje[]) => mensajes.find(mensaje => mensaje.id === +id))
+        );
+    }
+
+    getOrganizaciones(): Observable<Organizacion[]> {
+        return of(ORGANIZACIONES);
+    }
+
+    getOrganizacion(id: number | string) {
+        return this.getOrganizaciones().pipe(
+            map((organizaciones: Organizacion[]) => organizaciones.find(organizacion => organizacion.id === +id))
+        );
+    }
+
+    getDocumentos(): Observable<Documento[]> {
+        return of(DOCUMENTOS);
+    }
+
+    getDocumento(id: number | string) {
+        return this.getDocumentos().pipe(
+            map((documentos: Documento[]) => documentos.find(documento => documento.id === +id))
+        );
+    }
+
+    getSolicitudes(): Observable<Solicitud[]> {
+        return of(SOLICITUDES);
+    }
+
+    getSolicitud(id: number | string) {
+        return this.getSolicitudes().pipe(
+            map((solicitudes: Solicitud[]) => solicitudes.find(solicitud => solicitud.id === +id))
+        );
+    }
 
     // Limpio los ruteos auxiliares
     resetOutlet() {
         this.router.navigate(['portal-paciente', {
             outlets: {
-                detalle: null,
+                //detalle: null,
                 detalleHuds: null,
                 detalleVacuna: null,
                 detalleTurno: null,
                 detalleFamiliar: null,
+                detallePrescripcion: null,
                 detalleLaboratorio: null,
                 detalleProblema: null,
+                detalleProfesional: null,
+                detalleMensaje: null,
             }
         }]);
     }

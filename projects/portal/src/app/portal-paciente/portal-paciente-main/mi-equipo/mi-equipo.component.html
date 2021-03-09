@@ -1,18 +1,20 @@
 <plex-title size="sm" titulo="Mi equipo de salud">
-    <plex-badge type="info">29/05/2021</plex-badge>
-    <plex-button type="success" icon="account-plus" tooltip="agregar una relacion" class="ml-2" size="sm">
+    <plex-button type="success" icon="account-plus" tooltip="agregar miembro" class="ml-2" size="sm">
     </plex-button>
-    <plex-button type="warning" label="delegar cuenta" tooltip="delegar cuenta" class="ml-2 mr-3" size="sm">
+    <plex-button type="warning" label="evaluar profesional" tooltip="evaluar" class="ml-2 mr-3" size="sm">
     </plex-button>
 </plex-title>
-<plex-grid size="sm" type="full" cols="6">
+<plex-grid size="sm" type="full" cols="5">
     <plex-card type="default" *ngFor="let profesional of equipo$ | async" (click)="selected(profesional)">
         <img src="{{ profesional.foto }}" alt="">
-        <plex-label size="lg" direction="column" titulo="{{ profesional.nombre }} {{ profesional.apellido }}"
-                    subtitulo="{{ profesional.dni }}">
+        <plex-label size="md" direction="column" titulo="{{ profesional.nombre }} {{ profesional.apellido }}"
+                    subtitulo="{{ profesional.rol }}">
         </plex-label>
-        <plex-badge type="success">{{ profesional.sexo }}</plex-badge>
-        <plex-button type="warning" size="sm" icon="pencil"></plex-button>
+        <p *ngFor="let esp of especialidad">{{ esp.nombre }}</p>
+        <plex-badge *ngFor=" let matricula of profesional.matriculas" type="info">MAT. NRO {{ matricula.numero }}
+        </plex-badge>
+        <plex-button type="info" size="sm" icon="mail"></plex-button>
+        <plex-button type="warning" size="sm" icon="star"></plex-button>
         <plex-button type="danger" size="sm" icon="account-off"></plex-button>
     </plex-card>
 </plex-grid>

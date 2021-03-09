@@ -1,0 +1,10 @@
+<plex-grid size="sm" type="full" cols="5">
+    <plex-card type="default" *ngFor="let doc of documentos$ | async" (click)="selected(doc)">
+        <img src="{{ doc.url }}" alt="">
+        <plex-label size="md" direction="column" titulo="{{ doc.nombre }}" subtitulo="{{ doc.extension }}">
+        </plex-label>
+        <plex-button type="info" size="sm" icon="eye"></plex-button>
+        <plex-button type="warning" size="sm" icon="share"></plex-button>
+        <plex-button type="danger" size="sm" icon="delete"></plex-button>
+    </plex-card>
+</plex-grid>

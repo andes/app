@@ -1,0 +1,32 @@
+<ng-container *ngIf="solicitud$ | async as solicitud">
+    <plex-detail>
+        <plex-icon name="nodos" class=""></plex-icon>
+        <div title case="capitalize">Solicitud a {{ solicitud.organizacion }}
+        </div>
+        <div subtitle>{{ solicitud.prestacion }}</div>
+        <plex-badge type="info">{{ solicitud.fecha }}</plex-badge>
+        <plex-badge type="warning">{{ solicitud.estado }}</plex-badge>
+        <plex-label icon="arrow-up" titulo="Desde" subtitulo="{{
+            solicitud.organizacionOrigen }}"></plex-label>
+        <plex-label icon="arrow-down" titulo="Hasta" subtitulo="{{
+            solicitud.organizacion }}"></plex-label>
+        <plex-label icon="medico" titulo="Profesional de origen" subtitulo="{{
+            solicitud.profesionalOrigen }}"></plex-label>
+        <plex-label icon="informe-medico" titulo="Profesional de destino" subtitulo="{{
+            solicitud.profesional }}"></plex-label>
+    </plex-detail>
+
+    <!-- Timeline -->
+    <plex-title size="sm" titulo="Cronología"></plex-title>
+    <ng-container *ngFor="let item of cronologia">
+        <plex-label size="md" titulo="{{ item.evento }}"
+                    subtitulo="{{ item.organizacion }} | Solicitante: {{ item.profesional }}">
+            <p dato>
+                <plex-label size="sm" direction="row" type="{{ item.tipo }}" icon="{{ item.icono }}"
+                            titulo="{{ item.fecha }}" subtitulo="{{ item.hora }} hs.">
+                </plex-label>
+            </p>
+        </plex-label>
+        <hr>
+    </ng-container>
+</ng-container>

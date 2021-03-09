@@ -1,7 +1,7 @@
-<plex-layout [aspect]="9" resizable="true">
-    <plex-layout-main type="{{ invert === true ? 'invert' : '' }}">
+<plex-layout main="{{ sidebarValue }}" resizable="true">
+    <plex-layout-main type="invert">
         <plex-title size="{{ isResponsive() ? 'md' : 'sm' }}"
-                    titulo="{{ isResponsive() ? 'Bienvenido a tu portal de salud' : 'tu portal' }}" main>
+                    titulo="{{ isResponsive() ? 'bienvenido a tu portal de salud' : 'tu portal' }}" main>
             <plex-button size="sm" [icon]="isResponsive() ? null : 'mail-outline'" class="ml-2" type="link">
                 info@andes.gob.ar
             </plex-button>
@@ -11,54 +11,13 @@
                 </ng-container>
             </plex-button>
             <plex-button type="info" icon="message-alert" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
-                         hintType="warning" detach="top" [routerLink]="[{ outlets: { listado: ['misTurnos'] } }]">
+                         hintType="warning" detach="top" [routerLink]="[{ outlets: { listado: ['misMensajes'] } }]">
             </plex-button>
-            <!--<plex-button *mobile="false" type="info" icon="auto-fix" size="sm" (click)="setInvert()"></plex-button>-->
-            <!--<plex-button *mobile size="sm" class="ml-2" type="warning" icon="send" >
-            </plex-button>-->
-            <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión"
-                         (click)="openModal(0)">
+            <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión">
             </plex-button>
             <plex-button *mobile size="sm" class="ml-2" type="danger" icon="close" (click)="isResponsive()">
             </plex-button>
         </plex-title>
-
-        <!-- MODAL: Reporte de errores -->
-        <plex-modal size="md" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="false">
-            <plex-icon name="alert-circle" type="warning"></plex-icon>
-            <plex-modal-title type="default">Reportando error en sus datos</plex-modal-title>
-            <plex-modal-subtitle center class="font-subtitle text-muted text-center">
-                Al completar los siguientes datos y aceptar, usted iniciará un proceso que será sometido a auditoría
-                para corroborar el error reportado.
-            </plex-modal-subtitle>
-            <main>
-                <section class="w-100 h-100">
-                    <plex-title titulo="Indique y describa el error" size="sm"></plex-title>
-                    <form #formulario="ngForm" (close)="notificarAccion(false)">
-                        <div>
-                            <plex-select placeholder="Seleccione un motivo" grow="2" [(ngModel)]="modelo2.select"
-                                         [data]="errores" label-field="nombre + ' (' + continente + ')'"
-                                         (change)="cambio" name="motivo">
-                            </plex-select>
-                        </div>
-                        <div class="mt-4">
-                            <plex-text placeholder="Describa brevemente el error" multiline="true" [(ngModel)]="prueba"
-                                       (change)="cambio" name="error">
-                            </plex-text>
-                        </div>
-                    </form>
-                </section>
-            </main>
-
-            <plex-button modal left type="danger" (click)="closeModal(0, formulario.form)" [validateForm]="formulario">
-                CANCELAR
-            </plex-button>
-            <plex-button modal right type="success" (click)="closeModal(0, formulario.form)"
-                         [disabled]="motivoSelect()">
-                ACEPTAR
-            </plex-button>
-        </plex-modal>
-        <!-- FIN MODAL -->
 
         <plex-grid cols="12" size="md">
 
@@ -89,10 +48,8 @@
     </plex-layout-main>
     <plex-layout-sidebar type="{{ invert === false ? 'invert' : null }}">
         <plex-title size="{{ isResponsive() ? 'md' : 'sm' }}"
-                    titulo="{{ isResponsive() ? 'detalle de esta consulta' : 'detalle de la consulta' }}">
-            <plex-button type="warning" size="sm" (click)="resetOutlet()" icon="delete"></plex-button>
+                    titulo="{{ isResponsive() ? 'DETALLE' : 'detalle de la consulta' }}">
             <plex-button type="danger" icon="close" size="sm" (click)="contraerSidebar()" class="ml-2"></plex-button>
-            <!--<plex-button type="warning" (click)="goto([ 'portal-paciente' , 'null' ])" icon="close"></plex-button>-->
         </plex-title>
         <!--<router-outlet name="detalle"></router-outlet>-->
         <router-outlet name="detalleHuds"></router-outlet>
@@ -104,5 +61,8 @@
         <router-outlet name="detalleProblema"></router-outlet>
         <router-outlet name="detalleConsulta"></router-outlet>
         <router-outlet name="detalleProfesional"></router-outlet>
+        <router-outlet name="detalleMensaje"></router-outlet>
+        <router-outlet name="detalleOrganizacion"></router-outlet>
+        <router-outlet name="detalleSolicitud"></router-outlet>
     </plex-layout-sidebar>
 </plex-layout>

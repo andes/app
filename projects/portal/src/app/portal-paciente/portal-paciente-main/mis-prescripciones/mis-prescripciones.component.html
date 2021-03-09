@@ -1,6 +1,6 @@
 <plex-list>
     <plex-item *ngFor="let prescripcion of prescripciones$ | async" (click)="selected(prescripcion)">
-        <plex-label size="lg" icon="pildoras" class="bg-producto" titulo="{{ prescripcion.nombre }}"
+        <plex-label size="lg" icon="pildoras" class="color-producto" titulo="{{ prescripcion.nombre }}"
                     subtitulo="{{ prescripcion.formaFarmaceutica }} | {{ prescripcion.indicacion.administracion }} | {{ prescripcion.indicacion.dosis }}">
         </plex-label>
         <plex-label *mobile="false" size="md" titulo="indicacion"

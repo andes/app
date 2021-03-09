@@ -1,0 +1,28 @@
+<ng-container *ngIf="mensaje$ | async as mensaje">
+    <plex-detail>
+        <!--<plex-icon name="mensaje-bold" type="info"></plex-icon>-->
+        <div title case="capitalize" title>{{ mensaje.titulo }}</div>
+        <div subtitle>Enviado por: {{ mensaje.autor }} de {{ mensaje.organizacion }} el {{ mensaje.fecha }} a las {{
+            mensaje.hora }}
+            <section justify="start" class="mt-4">
+                <plex-button size="sm" type="success" class="mr-2" icon="arrow-left"></plex-button>
+                <plex-button size="sm" type="warning" class="mr-2" icon="share"></plex-button>
+                <plex-button size="sm" type="danger" class="mr-2" icon="delete"></plex-button>
+            </section>
+        </div>
+        <plex-badge type="info">{{ mensaje.tipoPrestacion }}</plex-badge>
+        <plex-badge *ngIf="mensaje.prioridad > 5" type="danger">importante</plex-badge>
+    </plex-detail>
+    <p>{{ mensaje.nota }}</p>
+    <plex-title *ngIf="adjuntos" size="sm" titulo="adjuntos"></plex-title>
+    <plex-grid size="xs" type="full">
+        <plex-card type="default" *ngFor="let adjunto of mensaje.adjuntos">
+            <img src="{{ adjunto.url }}" alt="">
+            <plex-label type="default" titulo="{{ adjunto.nombre }}" subtitulo="{{ adjunto.extension }}">
+            </plex-label>
+            <!--<plex-button size="sm" type="info" icon="eye"></plex-button>-->
+            <plex-button size="sm" type="warning" icon="share"></plex-button>
+            <plex-button size="sm" type="danger" icon="delete"></plex-button>
+        </plex-card>
+    </plex-grid>
+</ng-container>

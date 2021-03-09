@@ -1,21 +1,50 @@
 <ng-container *ngIf="profesional$ | async as profesional">
     <plex-detail size="lg">
         <img src="{{ profesional.foto }}" alt="">
-        <plex-badge type="success">{{ profesional.relacion }}</plex-badge>
+        <plex-badge *ngFor="let esp of especialidad" type="success">{{ esp.nombre }}</plex-badge>
         <div title>{{ profesional.apellido }}, {{ profesional.nombre }} </div>
-        <div subtitle>{{ profesional.dni }} </div>
-        <plex-label titulo="Edad" subtitulo="{{ profesional.edad }}"></plex-label>
-        <plex-label titulo="Documento" subtitulo="{{ profesional.dni }}"></plex-label>
+        <div subtitle>{{ profesional.rol }} </div>
+        <plex-label titulo="Organización" subtitulo="Hospital Provincial Neuquén 'Dr. Eduardo Castro Rendón'">
+        </plex-label>
+        <plex-label *ngFor="let especialidad of profesional.especialidad" titulo="Especialidad"
+                    subtitulo="{{ especialidad.nombre }}"></plex-label>
+        <plex-label *ngFor="let matricula of profesional.matriculas" titulo="Matrícula"
+                    subtitulo="{{ matricula.numero }}"></plex-label>
+        <plex-label *ngFor="let contacto of profesional.contacto" titulo="{{ contacto.tipo }}"
+                    subtitulo="{{ contacto.valor }}" case="lowercase"></plex-label>
+        <plex-label *ngFor="let rank of profesional.direccion" titulo="Ranking" subtitulo="{{ rank.ranking }}">
+        </plex-label>
     </plex-detail>
-    <plex-title titulo="datos de contacto" size="sm"></plex-title>
-    <plex-grid type="auto" size="md">
-        <plex-label icon="celular" titulo="telefono" subtitulo="{{ profesional.telefono }}"></plex-label>
-        <plex-label icon="home" titulo="domicilio" subtitulo="{{ profesional.domicilio }}"></plex-label>
-        <plex-label icon="city" titulo="localidad" subtitulo="{{ profesional.localidad }}"></plex-label>
-        <plex-label icon="map-marker" titulo="provincia" subtitulo="{{ profesional.provincia }}"></plex-label>
-    </plex-grid>
+    <plex-title titulo="registros" size="sm">
+        <plex-bool type="slide" label="Dar acceso a mis datos"></plex-bool>
+    </plex-title>
+    <!-- Listado -->
+    <plex-list>
+        <plex-accordion *ngFor="let registro of registros | slice:0:3">
+            <plex-panel>
+                <section plex-accordion-title justify>
+                    <div class="w-50">
+                        <plex-label icon="{{ registro.icono }}" class="color-{{ registro.semanticTag }}"
+                                    case="capitalize" size="lg" titulo="{{ registro.term }}" subtitulo="">
+                        </plex-label>
+                    </div>
+                    <div>
+                        <plex-badge size="sm" class="ml-2" type="info">{{ registro.fecha }}</plex-badge>
+                        <plex-badge *ngIf="estado" size="sm" class="ml-2" type="warning">{{ registro.estado }}
+                        </plex-badge>
+                        <plex-button type="info" size="sm" icon="chevron-down" class="ml-2"></plex-button>
+                    </div>
+                </section>
+                <plex-grid type="full" size="md">
+                    <!--<plex-label titulo="Profesional" subtitulo="{{ registro.profesional }}"></plex-label>-->
+                    <plex-label titulo="Evolucion" subtitulo="{{ registro.evolucion}}"></plex-label>
+                    <plex-label titulo="Fecha" subtitulo="{{ registro.fecha }}"></plex-label>
+                    <plex-label titulo="Estado" subtitulo="{{ registro.estado ? 'activo' : 'inactivo' }}"
+                                type="{{ registro.estado ? 'success' : 'danger' }}"></plex-label>
+                </plex-grid>
+            </plex-panel>
+        </plex-accordion>
+    </plex-list>
     <hr>
-    <plex-button class="mt-4" *ngIf="profesional.relacion === 'hijo'" type="warning" size="block"
-                 label="acceder a HUDS">
-    </plex-button>
+    <plex-title titulo="comunicacion" size="sm"></plex-title>
 </ng-container>

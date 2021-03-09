@@ -3,20 +3,16 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { EventEmitter, Output } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { Plex } from '@andes/plex';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'app-mis-consultas',
     templateUrl: './mis-consultas.component.html',
 })
 export class MisConsultasComponent implements OnInit {
-    searchTerm$ = new BehaviorSubject<string>('');
 
     public selectedId;
     public prestacion$;
     public prestaciones$;
-
 
     @Output() eventoSidebar = new EventEmitter<number>();
 
@@ -39,13 +35,15 @@ export class MisConsultasComponent implements OnInit {
     }
 
     nuevoValor() {
-        this.prestacionService.actualizarValor(8);
+        this.prestacionService.actualizarValor(9);
     }
 
     selected(prestacion) {
-        this.selectedId = prestacion.id;
-        //this.router.navigate(['portal-paciente', this.selectedId]);
-        this.router.navigate(['portal-paciente', { outlets: { detalleConsulta: [this.selectedId] } }]);
         this.nuevoValor();
+        this.prestacionService.resetOutlet();
+        setTimeout(() => {
+            this.selectedId = prestacion.id;
+            this.router.navigate(['portal-paciente', { outlets: { detalleConsulta: [this.selectedId] } }]);
+        }, 500);
     }
 }

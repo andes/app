@@ -184,14 +184,16 @@ export class MiHudsComponent implements OnInit {
     }
 
     nuevoValor() {
-        this.hudsService.actualizarValor(8);
+        this.hudsService.actualizarValor(9);
     }
 
     selected(hud) {
-        this.selectedId = hud.id;
-        //this.router.navigate(['portal-paciente', this.selectedId]);
-        this.router.navigate(['portal-paciente', { outlets: { detalleHuds: [this.selectedId] } }]);
         this.nuevoValor();
+        this.hudsService.resetOutlet();
+        setTimeout(() => {
+            this.selectedId = hud.id;
+            this.router.navigate(['portal-paciente', { outlets: { detalleHuds: [this.selectedId] } }]);
+        }, 500);
     }
 }
 

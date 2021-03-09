@@ -33,10 +33,10 @@ export class MiEquipoComponent implements OnInit {
         );
     }
 
-    enviarSidebar() {
-        this.eventoSidebar.emit(this.sidebarValue);
-        this.sidebarValue = 8;
+    nuevoValor() {
+        this.prestacionService.actualizarValor(9);
     }
+
 
     selected(profesional) {
         this.selectedId = profesional.id;

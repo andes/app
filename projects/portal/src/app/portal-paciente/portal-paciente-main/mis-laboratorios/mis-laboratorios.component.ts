@@ -34,13 +34,17 @@ export class MisLaboratoriosComponent implements OnInit {
         );
     }
 
-    enviarSidebar() {
-        this.eventoSidebar.emit(this.sidebarValue);
-        this.sidebarValue = 8;
+    nuevoValor() {
+        this.prestacionService.actualizarValor(9);
     }
 
+
     selected(laboratorio) {
-        this.selectedId = laboratorio.id;
-        this.router.navigate(['portal-paciente', { outlets: { detalleLaboratorio: [this.selectedId] } }]);
+        this.nuevoValor();
+        this.prestacionService.resetOutlet();
+        setTimeout(() => {
+            this.selectedId = laboratorio.id;
+            this.router.navigate(['portal-paciente', { outlets: { detalleLaboratorio: [this.selectedId] } }]);
+        }, 500);
     }
 }

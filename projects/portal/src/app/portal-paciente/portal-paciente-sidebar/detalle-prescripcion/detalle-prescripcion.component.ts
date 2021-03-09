@@ -15,7 +15,6 @@ export class DetallePrescripcionComponent implements OnInit {
     public selectedId;
     public prescripciones$;
     public prestaciones$;
-    public listadoPrestacion: Prestacion[];
     prestacion$: Observable<Prestacion>;
     prescripcion$: Observable<Prescripcion>;
 

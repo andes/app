@@ -32,6 +32,10 @@ import { MisTurnosComponent } from './portal-paciente/portal-paciente-main/mis-t
 import { MisProblemasComponent } from './portal-paciente/portal-paciente-main/mis-problemas/mis-problemas.component';
 import { MisPrescripcionesComponent } from './portal-paciente/portal-paciente-main/mis-prescripciones/mis-prescripciones.component';
 import { MiEquipoComponent } from './portal-paciente/portal-paciente-main/mi-equipo/mi-equipo.component';
+import { MisOrganizacionesComponent } from './portal-paciente/portal-paciente-main/mis-organizaciones/mis-organizaciones.component';
+import { MisConsultasComponent } from './portal-paciente/portal-paciente-main/mis-consultas/mis-consultas.component';
+import { MisMensajesComponent } from './portal-paciente/portal-paciente-main/mis-mensajes/mis-mensajes.component';
+import { MisDocumentosComponent } from './portal-paciente/portal-paciente-main/mis-documentos/mis-documentos.component';
 
 // Detalles
 import { DetalleFamiliarComponent } from './portal-paciente/portal-paciente-sidebar/detalle-familiar/detalle-familiar.component';
@@ -42,14 +46,15 @@ import { DetalleVacunaComponent } from './portal-paciente/portal-paciente-sideba
 import { DetalleProblemaComponent } from './portal-paciente/portal-paciente-sidebar/detalle-problema/detalle-problema.component';
 import { DetallePrescripcionComponent } from './portal-paciente/portal-paciente-sidebar/detalle-prescripcion/detalle-prescripcion.component';
 import { DetalleProfesionalComponent } from './portal-paciente/portal-paciente-sidebar/detalle-profesional/detalle-profesional.component';
+import { DetalleMensajeComponent } from './portal-paciente/portal-paciente-sidebar/detalle-mensaje/detalle-mensaje.component';
+import { DetalleConsultaComponent } from './portal-paciente/portal-paciente-sidebar/detalle-consulta/detalle-consulta.component';
+import { DetalleOrganizacionComponent } from './portal-paciente/portal-paciente-sidebar/detalle-organizacion/detalle-organizacion.component';
 
 // Componentes
-import { PacienteDetalleComponent } from './componentes/paciente-detalle/paciente-detalle';
+import { PacienteDetalleComponent } from './componentes/paciente-detalle/paciente-detalle'
 import { FiltrosHudsComponent } from './componentes/filtros-huds/filtros-huds';
-import { MisConsultasComponent } from './portal-paciente/portal-paciente-main/mis-consultas/mis-consultas.component';
-import { DetalleConsultaComponent } from './portal-paciente/portal-paciente-sidebar/detalle-consulta/detalle-consulta.component';
-import { ModalTemplateComponent } from './componentes/plex-modal-template/plex-modal-template';
-import { PortalPacienteSidebarComponent } from './portal-paciente/portal-paciente-sidebar/portal-paciente-sidebar.component';
+import { MisSolicitudesComponent } from './portal-paciente/portal-paciente-main/mis-solicitudes/mis-solicitudes.component';
+import { DetalleSolicitudComponent } from './portal-paciente/portal-paciente-sidebar/detalle-solicitud/detalle-solicitud.component';
 import { MapsComponent } from './utils/mapsComponent';
 import { appPortalRouting, appPortalRoutingProviders } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -57,62 +62,66 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PortalPacienteComponent,
-    PortalPacienteMainComponent,
-    MiHudsComponent,
-    MisLaboratoriosComponent,
-    MisVacunasComponent,
-    MisTurnosComponent,
-    MisFamiliaresComponent,
-    MisProblemasComponent,
-    MisPrescripcionesComponent,
-    MisConsultasComponent,
-    MiEquipoComponent,
-    ModalTemplateComponent,
-    DetalleHudsComponent,
-    DetalleVacunaComponent,
-    DetalleLaboratorioComponent,
-    DetalleTurnoComponent,
-    DetalleFamiliarComponent,
-    DetalleProblemaComponent,
-    DetallePrescripcionComponent,
-    DetalleConsultaComponent,
-    DetalleProfesionalComponent,
-    PacienteDetalleComponent,
-    FiltrosHudsComponent,
-    PrestacionPipe,
-    MapsComponent,
-    PortalPacienteSidebarComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    RouterModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    PlexModule.forRoot({
-      networkLoading: true
-    }),
-    AgmCoreModule.forRoot({
-      apiKey: environment.MAPS_KEY
-    }),
-    appPortalRouting,
-  ],
-  providers: [
-    Plex,
-    FormGroupDirective,
-    CardService,
-    PrestacionService,
-    PacienteService,
-    AgendaService,
-    appPortalRoutingProviders,
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        PortalPacienteComponent,
+        PortalPacienteMainComponent,
+        MiHudsComponent,
+        MisLaboratoriosComponent,
+        MisVacunasComponent,
+        MisTurnosComponent,
+        MisFamiliaresComponent,
+        MisProblemasComponent,
+        MisPrescripcionesComponent,
+        MisConsultasComponent,
+        MiEquipoComponent,
+        MisMensajesComponent,
+        MisOrganizacionesComponent,
+        MisDocumentosComponent,
+        MisSolicitudesComponent,
+        DetalleHudsComponent,
+        DetalleVacunaComponent,
+        DetalleLaboratorioComponent,
+        DetalleTurnoComponent,
+        DetalleFamiliarComponent,
+        DetalleProblemaComponent,
+        DetallePrescripcionComponent,
+        DetalleConsultaComponent,
+        DetalleProfesionalComponent,
+        DetalleMensajeComponent,
+        DetalleOrganizacionComponent,
+        DetalleSolicitudComponent,
+        PacienteDetalleComponent,
+        FiltrosHudsComponent,
+        PrestacionPipe
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        RouterModule,
+        FormsModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        PlexModule.forRoot({
+            networkLoading: true
+        }),
+        AgmCoreModule.forRoot({
+            apiKey: environment.MAPS_KEY
+        }),
+        appPortalRouting,
+    ],
+    providers: [
+        Plex,
+        FormGroupDirective,
+        CardService,
+        PrestacionService,
+        PacienteService,
+        AgendaService,
+        appPortalRoutingProviders,
 
-  ],
-  bootstrap: [AppComponent]
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
 

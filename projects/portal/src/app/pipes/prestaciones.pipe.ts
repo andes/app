@@ -1,17 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Huds } from '../modelos/huds';
 import { Prestacion } from '../modelos/prestacion';
 
 
 @Pipe({
-    name: 'prestacionesFilter'
+    name: 'hudsFilter'
 })
 export class PrestacionPipe implements PipeTransform {
 
-    transform(prestacion: Prestacion[], searchTerm: string): any[] {
-        if (!prestacion || !searchTerm) {
-            return prestacion;
+    transform(hud: Huds[], searchTerm: string): any[] {
+        if (!hud || !searchTerm) {
+            return hud;
         }
 
-        return prestacion.filter(prestacion => prestacion.nombre.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+        return hud.filter(hud => hud.tituloPrincipal.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1);
+
     }
 }

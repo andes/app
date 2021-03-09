@@ -1,14 +1,7 @@
-<!--<plex-title size="sm" titulo="Mis consultas">
-    <plex-badge *mobile="false" type="info">27/01/2021</plex-badge>
-    <plex-button type="info" icon="filter" tooltip="mostrar filtros" class="ml-2" size="sm" (click)="mostrarFiltros()">
-    </plex-button>
-</plex-title>
--->
-
 <plex-list *ngIf="verHuds === true" height="60vh" size="md">
-    <ng-container *ngFor="let hud of huds$ | async | prestacionesFilter: searchTerm">
+    <ng-container *ngFor="let hud of huds$ | async | hudsFilter: searchTerm">
         <plex-item (click)="selected(hud)">
-            <plex-label type="{{hud.color}}" icon="{{ hud.icono }}" titulo="{{ hud.tituloPrincipal }}" size="lg"
+            <plex-label type="{{ hud.color }}" icon="{{ hud.icono }}" titulo="{{ hud.tituloPrincipal }}" size="lg"
                         subtitulo="{{ hud.subtituloPrincipal }}"></plex-label>
             <plex-label *mobile="false" titulo="{{ hud.tituloSecundario }}" size="md"
                         subtitulo="{{ hud.subtituloSecundario }}">

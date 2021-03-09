@@ -1,6 +1,6 @@
 <ng-container *ngIf="problema$ | async as problema">
     <plex-detail size="md">
-        <plex-icon name="{{ problema.icono }}" class="bg-poblema"></plex-icon>
+        <plex-icon name="{{ problema.icono }}" class="color-{{ problema.semanticTag }}"></plex-icon>
         <plex-badge type="success">{{ problema.fecha }}</plex-badge>
         <plex-badge type="info">{{ problema.semanticTag }}</plex-badge>
         <div case="capitalize" title>{{ problema.term }}</div>

@@ -21,36 +21,13 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
     styleUrls: ['./portal-paciente.component.scss']
 })
 
+
 export class PortalPacienteComponent implements OnInit {
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @ViewChildren('modal') modalRefs: QueryList<PlexModalComponent>;
 
-    // public prueba = '';
-    public templateModel2: any;
-    public modelo: any;
-    public showModal = false;
-
-    // public listadoPaciente: Paciente[];
-    pacientes$: Observable<Paciente[]>;
-    agendas$: Observable<Agenda[]>;
-    cards$: Observable<Card[]>;
-
-    foco = 'main';
-    public prueba = '';
-    public cambio = '';
-    public invert = true;
-    public contenido = '';
-    public email = '';
-    public motivoSelected = null;
-    public errores: any[];
-    public modelo2 = {
-        select: null,
-        soloLectura: false,
-        selectMultiple: null
-    };
     selectedId: number;
+    @Output() eventoSidebar = new EventEmitter<number>();
     card$: Observable<Card>;
     sidebarValue: number;
     previousUrl: string;
@@ -72,61 +49,39 @@ export class PortalPacienteComponent implements OnInit {
         this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
 
         this.cards$ = this.cardService.getCards();
-        // mostrar detalle de prestacion
+        //mostrar detalle de prestacion
         this.card$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.cardService.getCard(params.get('id')))
         );
 
-        this.plex.navVisible(false);
-
-        // plex-select errores
-        this.errores = [{
-            id: 1,
-            nombre: 'Error en mis registros de salud',
-        },
-        {
-            id: 2,
-            nombre: 'Error en mis datos personales',
-        },
-        {
-            id: 3,
-            nombre: 'Otro error',
-        }
-        ];
+        this.plex.navbarVisible = false;
     }
 
-    openModal(index) {
-        this.modalRefs.find((x, i) => i === index).show();
-    }
+    // public prueba = '';
+    public templateModel2: any;
+    public modelo: any;
+    public showModal = false;
 
-    closeModal(index, formulario?) {
-        this.modalRefs.find((x, i) => i === index).close();
-        if (formulario) {
-            formulario.reset();
-        }
-    }
+    // public listadoPaciente: Paciente[];
+    pacientes$: Observable<Paciente[]>;
+    agendas$: Observable<Agenda[]>;
+    cards$: Observable<Card[]>;
 
-    motivoSelect() {
-        return this.motivoSelected === null;
-    }
+    foco = 'main';
+    public prueba = '';
+    public cambio = '';
 
-    notificarAccion(flag: boolean) {
-        if (flag) {
-            const item = this.errores.find((elem) => elem.id === this.motivoSelected);
-            this.motivoAccesoHuds.emit(item.label);
-        } else {
-            this.motivoAccesoHuds.emit(null);
-        }
+    onChange() {
+        this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
     }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
         if (this.width >= 980) {
             return true;
-        } else {
-            return false
-        };
+        }
+        else false;
     }
 
     recibirSidebar($event) {
@@ -135,20 +90,9 @@ export class PortalPacienteComponent implements OnInit {
     }
 
     contraerSidebar() {
+        //this.router.navigate(['portal-paciente', this.previousUrl]);
         this.router.navigate(['portal-paciente']);
         this.sidebarValue = 12;
         console.log(this.prestacionService.getPreviousUrl());
-    }
-
-    setInvert() {
-        this.invert = !this.invert;
-    }
-
-    onChange() {
-        this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
-    }
-
-    resetOutlet() {
-        this.prestacionService.resetOutlet();
     }
 }

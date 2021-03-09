@@ -1,0 +1,51 @@
+<ng-container *ngIf="organizacion$ | async as organizacion">
+    <plex-detail size="md">
+        <plex-icon name="{{ organizacion.tipoEstablecimiento }}" type="info"></plex-icon>
+        <div title case="capitalize" title>{{ organizacion.nombre }}</div>
+        <div subtitle>{{ organizacion.direccion }} | {{ organizacion.ciudad }}
+        </div>
+        <plex-label titulo="Tipo" subtitulo="{{ organizacion.tipoEstablecimiento }}"></plex-label>
+        <plex-label titulo="Complejidad" subtitulo="{{ organizacion.nivelComplejidad }}"></plex-label>
+        <plex-label titulo="Mail" subtitulo="{{ organizacion.contacto }}"></plex-label>
+        <plex-label titulo="Telefono" subtitulo="{{ organizacion.telefono }}"></plex-label>
+        <plex-label titulo="Zona" subtitulo="{{ organizacion.zona }}"></plex-label>
+    </plex-detail>
+    <plex-title size="sm" titulo="Profesionales en esta organizacion"></plex-title>
+    <plex-grid size="sm" type="full" cols="2">
+        <plex-card type="default" *ngFor="let profesional of profesionales"
+                   routerLink="[{ outlets: { listado: miEquipo } }]">
+            <img src="{{ profesional.foto }}" alt="">
+            <plex-label size="md" direction="column" titulo="{{ profesional.nombre }} {{ profesional.apellido }}"
+                        subtitulo="{{ profesional.rol }}">
+            </plex-label>
+            <p *ngFor="let esp of especialidad">{{ esp.nombre }}</p>
+            <plex-badge *ngFor=" let matricula of profesional.matriculas" type="info">MAT. NRO {{ matricula.numero }}
+            </plex-badge>
+        </plex-card>
+    </plex-grid>
+
+    <plex-title size="sm" titulo="Registros en esta organizacion"></plex-title>
+    <plex-accordion *ngFor="let registro of prestacionService.registros | slice:1:3">
+        <plex-panel>
+            <section plex-accordion-title justify>
+                <div class="w-50">
+                    <plex-label icon="{{ registro.icono }}" class="color-{{ registro.semanticTag }}" case="capitalize"
+                                size="lg" titulo="{{ registro.term }}" subtitulo="">
+                    </plex-label>
+                </div>
+                <div>
+                    <plex-badge size="sm" class="ml-2" type="info">{{ registro.fecha }}</plex-badge>
+                    <plex-badge *ngIf="estado" size="sm" class="ml-2" type="warning">{{ registro.estado }}
+                    </plex-badge>
+                    <plex-button type="info" size="sm" icon="chevron-down" class="ml-2"></plex-button>
+                </div>
+            </section>
+            <plex-grid type="full" size="md">
+                <plex-label titulo="Evolucion" subtitulo="{{ registro.evolucion}}"></plex-label>
+                <plex-label titulo="Fecha" subtitulo="{{ registro.fecha }}"></plex-label>
+                <plex-label titulo="Estado" subtitulo="{{ registro.estado ? 'activo' : 'inactivo' }}"
+                            type="{{ registro.estado ? 'success' : 'danger' }}"></plex-label>
+            </plex-grid>
+        </plex-panel>
+    </plex-accordion>
+</ng-container>

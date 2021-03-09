@@ -31,12 +31,11 @@ export class PacienteDetalleComponent implements OnInit {
     ]
 
     alertas = [
-        { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'danger', color: '', icono: 'trastorno', path: 'misProblemas' },
-        { dato: 'alergias', valor: '3', subdato: 'penicilina, carbamazepina y metmorfina', tipo: 'warning', color: '', icono: 'lupa-ojo', path: 'misProblemas' },
-        { dato: 'prescripciones', valor: '5', subdato: 'subutamol, enalapril y 3 más...', tipo: 'custom', color: '#00cab6', icono: 'pildoras', path: 'misPrescripciones' },
-        { dato: 'laboratorios', valor: '1', subdato: 'Resultados del hemograma', tipo: 'custom', color: '#a0a0a0', icono: 'pildoras', path: 'misLaboratorios' },
-        { dato: 'vacunas', valor: '1', subdato: 'subutamol, enalapril y 3 más...', tipo: 'custom', color: '#92278e', icono: 'pildoras', path: 'misVacunas' },
-
+        { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'dark', color: '', icono: 'trastorno', path: 'misProblemas', semanticTag: 'trastorno' },
+        { dato: 'alergias', valor: '3', subdato: 'penicilina, carbamazepina y metmorfina', tipo: 'dark', color: '', icono: 'lupa-ojo', path: 'misProblemas', semanticTag: 'hallazgo' },
+        { dato: 'prescripciones', valor: '5', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#00cab6', icono: 'pildoras', path: 'misPrescripciones', semanticTag: 'producto' },
+        { dato: 'laboratorios', valor: '1', subdato: 'Resultados del hemograma', tipo: 'dark', color: '#a0a0a0', icono: 'recipiente', path: 'misLaboratorios', semanticTag: 'laboratorio' },
+        { dato: 'vacunas', valor: '1', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#92278e', icono: 'vacuna', path: 'misVacunas', semanticTag: 'procedimiento' },
     ]
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
@@ -48,12 +47,41 @@ export class PacienteDetalleComponent implements OnInit {
     selectedId: number;
     @Output() eventoSidebar = new EventEmitter<number>();
 
-    isResponsive() {
-        this.width = this.el.nativeElement.clientWidth;
-        if (this.width >= 980) {
-            return true;
+    public contenido = '';
+    public email = '';
+    public motivoSelected = null;
+    public errores: any[];
+    public modelo2 = {
+        select: null,
+        soloLectura: false,
+        selectMultiple: null
+    };
+
+
+    @ViewChildren('modal') modalRefs: QueryList<PlexModalComponent>;
+
+    openModal(index) {
+        this.modalRefs.find((x, i) => i === index).show();
+    }
+
+    closeModal(index, formulario?) {
+        this.modalRefs.find((x, i) => i === index).close();
+        if (formulario) {
+            formulario.reset();
         }
-        else false;
+    }
+
+    motivoSelect() {
+        return this.motivoSelected === null;
+    }
+
+    notificarAccion(flag: boolean) {
+        if (flag) {
+            const item = this.errores.find((elem) => elem.id === this.motivoSelected);
+            this.motivoAccesoHuds.emit(item.label);
+        } else {
+            this.motivoAccesoHuds.emit(null);
+        }
     }
 
     constructor(
@@ -66,6 +94,21 @@ export class PacienteDetalleComponent implements OnInit {
 
     ngOnInit() {
         this.pacientes$ = this.pacienteService.getPacientes();
+
+        // plex-select errores
+        this.errores = [{
+            id: 1,
+            nombre: 'Error en mis registros de salud',
+        },
+        {
+            id: 2,
+            nombre: 'Error en mis datos personales',
+        },
+        {
+            id: 3,
+            nombre: 'Otro error',
+        }
+        ];
     }
 
     ocultarDatos() {
@@ -73,8 +116,12 @@ export class PacienteDetalleComponent implements OnInit {
         console.log(this.datosSecundarios);
     }
 
-    onChange() {
-        this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
+    isResponsive() {
+        this.width = this.el.nativeElement.clientWidth;
+        if (this.width >= 980) {
+            return true;
+        }
+        else false;
     }
 
 }

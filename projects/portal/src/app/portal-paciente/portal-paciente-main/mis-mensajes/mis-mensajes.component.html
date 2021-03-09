@@ -1,0 +1,16 @@
+<plex-list>
+    <plex-item *ngFor="let mensaje of mensajes$ | async" (click)="selected(mensaje)">
+        <plex-label size="lg" icon="mail" type="info" titulo="{{ mensaje.titulo }}"
+                    subtitulo="{{ mensaje.nota | slice:0:35 }}...">
+        </plex-label>
+        <plex-label *mobile="false" icon="medico" case="lowercase" size="md"
+                    titulo="De: {{ mensaje.autor }} | {{ mensaje.remitente }}" subtitulo="{{ mensaje.efector }}">
+        </plex-label>
+
+        <plex-badge type="success">
+            <plex-icon *ngIf="mensaje.adjuntos.length > 0" name="documento"></plex-icon>
+        </plex-badge>
+        <plex-badge type="info">{{ mensaje.fecha }} | {{ mensaje.hora }} hs.</plex-badge>
+        <plex-button type="info" icon="eye" size="sm" (click)="selected(mensaje)"></plex-button>
+    </plex-item>
+</plex-list>

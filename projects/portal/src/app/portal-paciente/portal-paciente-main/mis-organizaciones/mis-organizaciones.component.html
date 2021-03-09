@@ -1,0 +1,13 @@
+<plex-grid size="lg" type="full">
+    <plex-card *ngFor="let organizacion of organizaciones$ | async" (click)="selected(organizacion)">
+        <img src="{{ organizacion.foto }}" alt="">
+        <plex-label direction="column" size="md" type="info" titulo="{{ organizacion.nombre }}"
+                    subtitulo="{{ organizacion.direccion }} | {{ organizacion.ciudad }} | {{organizacion.contacto }}">
+        </plex-label>
+
+        <plex-badge type="info">zona {{ organizacion.zona }}</plex-badge>
+        <plex-badge type="success">
+            <plex-icon name="{{ organizacion.tipoEstablecimiento }}"></plex-icon>
+        </plex-badge>
+    </plex-card>
+</plex-grid>

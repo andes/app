@@ -1,0 +1,13 @@
+<plex-list height="50vh">
+    <plex-item *ngFor="let solicitud of solicitudes$ | async" (click)="selected(solicitud)">
+        <plex-label icon="arrow-up" titulo="Desde" size="lg"
+                    subtitulo="{{ solicitud.organizacionOrigen }} Profesional de origen: {{ solicitud.profesionalOrigen }} | Prestación: {{ solicitud.prestacionOrigen }}">
+        </plex-label>
+        <plex-label icon="arrow-down" titulo="Hasta" size="lg"
+                    subtitulo="{{ solicitud.organizacion }} Profesional: {{ solicitud.profesional }} | Prestación: {{ solicitud.prestacion }}">
+        </plex-label>
+        <plex-badge type="warning">{{ solicitud.estado }}</plex-badge>
+        <plex-badge type="info">{{ solicitud.fecha }}</plex-badge>
+        <plex-button type="info" size="sm" icon="eye"></plex-button>
+    </plex-item>
+</plex-list>

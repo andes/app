@@ -33,14 +33,19 @@ export class MisFamiliaresComponent implements OnInit {
         );
     }
 
-    enviarSidebar() {
-        this.eventoSidebar.emit(this.sidebarValue);
-        this.sidebarValue = 8;
+    nuevoValor() {
+        this.prestacionService.actualizarValor(9);
     }
 
+
     selected(familiar) {
-        this.selectedId = familiar.id;
-        this.router.navigate(['portal-paciente', { outlets: { detalleFamiliar: [this.selectedId] } }]);
+        this.nuevoValor();
+
+        this.prestacionService.resetOutlet();
+        setTimeout(() => {
+            this.selectedId = familiar.id;
+            this.router.navigate(['portal-paciente', { outlets: { detalleFamiliar: [this.selectedId] } }]);
+        }, 500);
     }
 }
 
