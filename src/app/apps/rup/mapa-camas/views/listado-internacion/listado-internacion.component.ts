@@ -49,7 +49,7 @@ export class InternacionListadoComponent implements OnInit {
         }, {
             name: 'Listado de Internacion'
         }]);
-
+        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
             map((prestacion) => {
                 this.puedeValidar = (prestacion.ejecucion && prestacion.ejecucion.registros[1] &&
@@ -95,6 +95,7 @@ export class InternacionListadoComponent implements OnInit {
                 this.mapaCamasService.selectPrestacion(null);
                 this.mapaCamasService.select(null);
             } else {
+
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                 this.verificarPrestacion(prestacion);

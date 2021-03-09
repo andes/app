@@ -453,7 +453,9 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama.pipe(filter(snap => !!snap.id)),
+            this.selectedCama.pipe(filter(snap => {
+                return !!snap.id;
+            })),
             this.selectedPrestacion,
             this.view
         ).pipe(
