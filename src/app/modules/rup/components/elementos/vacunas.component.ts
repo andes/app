@@ -172,14 +172,15 @@ export class VacunasComponent extends RUPComponent implements OnInit {
         if (this.registro.valor.vacuna.dosis && this.vacunasEncontradas && this.vacunasEncontradas.length) {
             const ultimoRegistro = this.vacunasEncontradas[0];
             const tiempoInterdosis = this.registro.valor.vacuna.dosis.tiempoInterdosis;
-            let diasdiferencia = this.registro.valor.vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
-            let contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
-            if (contdias < tiempoInterdosis) {
-                this.plex.info('danger', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
-                this.registro.valor.vacuna.dosis = Object.assign({}, null);
+            if (tiempoInterdosis > 0) {
+                let diasdiferencia = this.registro.valor.vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
+                let contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
+                if (contdias < tiempoInterdosis) {
+                    this.plex.info('danger', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
+                    this.registro.valor.vacuna.dosis = Object.assign({}, null);
+                }
             }
         }
-
     }
 
     onValidate() {
