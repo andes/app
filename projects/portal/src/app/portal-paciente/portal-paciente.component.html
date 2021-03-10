@@ -1,5 +1,5 @@
-<!--<plex-layout main="{{ sidebarValue }}"  resizable="true">-->
-<plex-layout [aspect]="9">
+<plex-layout main="{{ sidebarValue }}">
+    <!--<plex-layout [aspect]="9">-->
     <plex-layout-main type="invert">
         <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}"
                     titulo="{{ isResponsive() ? 'mi portal' : 'mi portal de salud' }}" main>
@@ -40,13 +40,11 @@
             <!-- Menu Lateral -->
             <plex-grid id="menu-vertical" *ngIf="!isResponsive()" span="{{ valorMenu }}"
                        class="d-flex align-self-start mr-2 flex-column" size="xs">
-                <plex-button *ngIf="valorMenu === 2" size="sm" type="link" icon="close" (click)="contraerMenu()">
-                </plex-button>
                 <ng-container *ngFor="let card of cards$ | async">
-                    <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}" titulo=""
-                                subtitulo="" [routerLink]="[{ outlets: { listado: [card.path] } }]"
-                                tooltip="{{ card.path }}" class="mb-2" tooltipPosition="right" (click)="expandirMenu()">
-                        <p *ngIf="valorMenu === 2">{{ card.nombre }}</p>
+                    <plex-label icon="{{ card.icono }}" size="md" direction="column"
+                                class="mb-2 color-{{ card.semanticTag}}" titulo="" subtitulo=""
+                                [routerLink]="[{ outlets: { listado: [card.path] } }]" tooltip="{{ card.path }}"
+                                class="mb-2" tooltipPosition="right">
                     </plex-label>
                 </ng-container>
             </plex-grid>
