@@ -93,5 +93,5 @@ export interface Prestacion {
             fecha: string;
             estado: boolean;
         }
-    ],
+    ];
 }

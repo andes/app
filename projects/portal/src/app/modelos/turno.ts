@@ -59,7 +59,7 @@ export class Turno {
         estado: String;
         tipo: String;
         numeroComprobante: String;
-    }
+    };
     auditable: Boolean;
     emitidoPor: String;
     fechaHoraDacion: String;

@@ -22,12 +22,12 @@ export class MisProblemasComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
+        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         // Servicios
         this.problemas$ = this.prestacionService.getProblemas();
 
-        //mostrar listado
+        // Mostrar listado
         this.problema$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getProblema(params.get('id')))

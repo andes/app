@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { AgendaService } from '../../servicios/agenda.service';
 import { Agenda } from '../../modelos/agenda';
-//import { DropdownItem } from '../../../../../lib/dropdown/dropdown-item.inteface';
 
 @Component({
-    selector: 'plex-portal-paciente-sidebar',
+    selector: 'app-plex-portal-paciente-sidebar',
     templateUrl: './portal-paciente-sidebar.component.html',
 })
 export class PortalPacienteSidebarComponent implements OnInit {
 
     public listadoAgenda: Agenda[];
-    //public items: DropdownItem[];
+    // public items: DropdownItem[];
     public modelo1;
     public templateModel2;
     public opciones: any[];
@@ -28,7 +26,7 @@ export class PortalPacienteSidebarComponent implements OnInit {
 
     ngOnInit() {
         // plex-dropdown
-        //this.items = [
+        // this.items = [
         //    {
         //        label: 'opcion 1',
         //        icon: 'star',
@@ -37,7 +35,7 @@ export class PortalPacienteSidebarComponent implements OnInit {
         //            alert('Este es un handler');
         //        })
         //    }
-        //];
+        // ];
 
         // plex-datetime
         this.tModel = {

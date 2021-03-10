@@ -7,7 +7,7 @@ import { Prestacion } from '../../../modelos/prestacion';
 import { Prescripcion } from '../../../modelos/prescripcion';
 
 @Component({
-    selector: 'detalle-prescripcion',
+    selector: 'app-detalle-prescripcion',
     templateUrl: './detalle-prescripcion.component.html',
 })
 export class DetallePrescripcionComponent implements OnInit {
@@ -27,7 +27,7 @@ export class DetallePrescripcionComponent implements OnInit {
     ngOnInit() {
         this.prescripciones$ = this.prestacionService.getPrescripciones();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.prescripcion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getPrescripcion(params.get('id')))

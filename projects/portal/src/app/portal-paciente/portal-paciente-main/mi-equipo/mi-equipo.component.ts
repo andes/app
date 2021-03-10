@@ -20,13 +20,13 @@ export class MiEquipoComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.equipo$ = this.prestacionService.getEquipo();
 
-        //mostrar listado (profesionales, historia, labs)
+        // Mostrar listado (profesionales, historia, labs)
         this.profesional$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getProfesional(params.get('id')))

@@ -30,7 +30,7 @@ export class DetalleFamiliarComponent implements OnInit {
     ngOnInit() {
         this.familiares$ = this.prestacionService.getFamiliares();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.familiar$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getFamiliar(params.get('id')))

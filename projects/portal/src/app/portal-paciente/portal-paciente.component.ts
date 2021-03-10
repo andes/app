@@ -13,10 +13,9 @@ import { EventEmitter, Output } from '@angular/core';
 import { CardService } from '../servicios/card.service';
 import { Card } from '../modelos/card';
 import { PrestacionService } from '../servicios/prestacion.service';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
-    selector: 'plex-portal-paciente',
+    selector: 'app-plex-portal-paciente',
     templateUrl: './portal-paciente.component.html',
     styleUrls: ['./portal-paciente.component.scss']
 })
@@ -48,13 +47,13 @@ export class PortalPacienteComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.modelo = { invert: false }
+        this.modelo = { invert: false };
 
         // Paso valor del sidebar
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
+        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         this.cards$ = this.cardService.getCards();
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.card$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.cardService.getCard(params.get('id')))
@@ -81,14 +80,12 @@ export class PortalPacienteComponent implements OnInit {
 
     recibirSidebar($event) {
         this.sidebarValue = $event;
-        console.log(this.sidebarValue);
     }
 
     contraerSidebar() {
-        //this.router.navigate(['portal-paciente', this.previousUrl]);
+        // this.router.navigate(['portal-paciente', this.previousUrl]);
         this.router.navigate(['portal-paciente']);
         this.sidebarValue = 12;
-        console.log(this.prestacionService.getPreviousUrl());
     }
 
     // Nav lateral
@@ -105,8 +102,8 @@ export class PortalPacienteComponent implements OnInit {
         if (this.width < 780) {
             this.valorResultante = 12;
             return true;
+        } else {
+            this.valorResultante = 11;
         }
-        else false;
-        this.valorResultante = 11;
     }
 }

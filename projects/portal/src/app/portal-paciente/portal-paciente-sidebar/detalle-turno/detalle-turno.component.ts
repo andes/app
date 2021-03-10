@@ -7,7 +7,7 @@ import { Prestacion } from '../../../modelos/prestacion';
 import { Turno } from '../../../modelos/turno';
 
 @Component({
-    selector: 'plex-detalle-turno',
+    selector: 'app-detalle-turno',
     templateUrl: './detalle-turno.component.html',
 })
 export class DetalleTurnoComponent implements OnInit {
@@ -28,7 +28,7 @@ export class DetalleTurnoComponent implements OnInit {
     ngOnInit() {
         this.turnos$ = this.prestacionService.getTurnos();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.turno$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getTurno(params.get('id')))

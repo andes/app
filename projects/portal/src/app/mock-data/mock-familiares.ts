@@ -41,4 +41,4 @@ export const FAMILIARES: Familiar[] = [
         provincia: 'Neuquén',
         foto: 'https://http2.mlstatic.com/fotos-4x4-3x3-5x5-varios-embajada-pasaporte-6-fotos-carnet-D_NQ_NP_990542-MLA31020537999_062019-O.webp',
     },
-]
+];

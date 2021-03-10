@@ -6,7 +6,7 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Organizacion } from '../../../modelos/organizacion';
 
 @Component({
-    selector: 'detalle-organizacion',
+    selector: 'app-detalle-organizacion',
     templateUrl: './detalle-organizacion.component.html',
 })
 export class DetalleOrganizacionComponent implements OnInit {
@@ -107,8 +107,7 @@ export class DetalleOrganizacionComponent implements OnInit {
             }],
             profesionalMatriculado: true,
         },
-    ]
-
+    ];
 
     constructor(
         private prestacionService: PrestacionService,
@@ -118,7 +117,7 @@ export class DetalleOrganizacionComponent implements OnInit {
     ngOnInit() {
         this.organizaciones$ = this.prestacionService.getOrganizaciones();
 
-        //mostrar detalle de organizacion
+        // Mostrar detalle de organizacion
         this.organizacion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getOrganizacion(params.get('id')))

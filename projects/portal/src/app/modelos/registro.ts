@@ -9,4 +9,4 @@ export class Registro {
     term: string;
     fecha: string;
     estado: boolean;
-} []
+}

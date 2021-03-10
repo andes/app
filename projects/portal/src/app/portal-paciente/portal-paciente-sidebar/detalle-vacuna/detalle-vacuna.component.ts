@@ -7,7 +7,7 @@ import { Prestacion } from '../../../modelos/prestacion';
 import { Vacuna } from '../../../modelos/vacuna';
 
 @Component({
-    selector: 'plex-detalle-vacuna',
+    selector: 'app-detalle-vacuna',
     templateUrl: './detalle-vacuna.component.html',
 })
 export class DetalleVacunaComponent implements OnInit {
@@ -30,7 +30,7 @@ export class DetalleVacunaComponent implements OnInit {
     ngOnInit() {
         this.vacunas$ = this.prestacionService.getVacunas();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.vacuna$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getVacuna(params.get('id')))

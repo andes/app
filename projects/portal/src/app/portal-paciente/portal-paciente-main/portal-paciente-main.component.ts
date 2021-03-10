@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { EventEmitter, Output } from '@angular/core';
 
 @Component({
-    selector: 'plex-portal-paciente-main',
+    selector: 'app-portal-paciente-main',
     templateUrl: './portal-paciente-main.component.html',
 })
 export class PortalPacienteMainComponent implements OnInit {
@@ -64,7 +64,7 @@ export class PortalPacienteMainComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        //Inicio servicios
+        // Inicio servicios
         this.agendas$ = this.agendaService.getAgendas();
         this.pacientes$ = this.pacienteService.getPacientes();
         this.prestaciones$ = this.prestacionService.getConsultas();
@@ -96,7 +96,7 @@ export class PortalPacienteMainComponent implements OnInit {
                 label: 'mías',
                 key: 2,
             },
-        ]
+        ];
 
         // plex-select
         this.opciones = [{
@@ -134,7 +134,5 @@ export class PortalPacienteMainComponent implements OnInit {
         if (this.width > 780) {
             return true;
         }
-        else false;
     }
-
 }

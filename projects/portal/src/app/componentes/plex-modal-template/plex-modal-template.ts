@@ -3,7 +3,7 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 
 @Component({
-    selector: 'plex-modal-template',
+    selector: 'app-modal-template',
     templateUrl: 'plex-modal-template.html'
 })
 

@@ -27,7 +27,7 @@ export class MisConsultasComponent implements OnInit {
         // Servicios
         this.prestaciones$ = this.prestacionService.getConsultas();
 
-        //mostrar listado
+        // Mostrar listado
         this.prestacion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getConsulta(params.get('id')))

@@ -51,7 +51,7 @@ import { DetalleConsultaComponent } from './portal-paciente/portal-paciente-side
 import { DetalleOrganizacionComponent } from './portal-paciente/portal-paciente-sidebar/detalle-organizacion/detalle-organizacion.component';
 
 // Componentes
-import { PacienteDetalleComponent } from './componentes/paciente-detalle/paciente-detalle'
+import { PacienteDetalleComponent } from './componentes/paciente-detalle/paciente-detalle';
 import { FiltrosHudsComponent } from './componentes/filtros-huds/filtros-huds';
 import { MisSolicitudesComponent } from './portal-paciente/portal-paciente-main/mis-solicitudes/mis-solicitudes.component';
 import { DetalleSolicitudComponent } from './portal-paciente/portal-paciente-sidebar/detalle-solicitud/detalle-solicitud.component';

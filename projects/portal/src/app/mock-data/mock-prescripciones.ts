@@ -116,4 +116,4 @@ export const PRESCRIPCIONES: Prescripcion[] = [
         ambito: 'internación',
         nota: 'El paciente presenta 1 episodios por día',
     },
-]
+];

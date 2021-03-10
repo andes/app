@@ -151,4 +151,4 @@ export const CARDS: Card[] = [
         color: '#0070cc',
         outlet: 'listado',
     },
-]
+];

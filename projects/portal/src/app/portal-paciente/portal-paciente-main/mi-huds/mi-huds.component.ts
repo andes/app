@@ -61,12 +61,12 @@ export class MiHudsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.hudsService.valorActual.subscribe(valor => this.sidebarValue = valor)
+        this.hudsService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         // Servicios
         this.huds$ = this.hudsService.getHuds();
 
-        //mostrar listado
+        // Mostrar listado
         this.hud$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.hudsService.getHud(params.get('id')))
@@ -99,7 +99,7 @@ export class MiHudsComponent implements OnInit {
                 label: 'mías',
                 key: 2,
             },
-        ]
+        ];
 
         // plex-select efectores
         this.efectores = [{

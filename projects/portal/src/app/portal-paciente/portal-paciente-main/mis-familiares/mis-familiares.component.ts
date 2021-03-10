@@ -20,13 +20,13 @@ export class MisFamiliaresComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.familiares$ = this.prestacionService.getFamiliares();
 
-        //mostrar listado (familiares, historia, labs)
+        // Mostrar listado (familiares, historia, labs)
         this.familiar$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getFamiliar(params.get('id')))

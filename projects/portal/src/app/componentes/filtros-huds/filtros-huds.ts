@@ -10,7 +10,7 @@ import { CardService } from '../../servicios/card.service';
 import { Card } from '../../modelos/card';
 
 @Component({
-    selector: 'filtros-huds',
+    selector: 'app-filtros-huds',
     templateUrl: './filtros-huds.html',
 })
 export class FiltrosHudsComponent implements OnInit {
@@ -71,19 +71,19 @@ export class FiltrosHudsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
+        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         // Servicios
         this.prestaciones$ = this.prestacionService.getConsultas();
         this.cards$ = this.cardService.getCards();
 
-        //mostrar semantics
+        // Mostrar semantics
         this.card$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.cardService.getCard(params.get('id')))
         );
 
-        //mostrar listado
+        // Mostrar listado
         this.prestacion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getConsulta(params.get('id')))
@@ -116,7 +116,7 @@ export class FiltrosHudsComponent implements OnInit {
                 label: 'mías',
                 key: 2,
             },
-        ]
+        ];
 
         // plex-select efectores
         this.efectores = [{

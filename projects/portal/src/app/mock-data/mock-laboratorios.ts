@@ -25,4 +25,4 @@ export const LABORATORIOS: Laboratorio[] = [
         tipo: 'Determinación de Médula Ósea',
         valor: 432,
     }
-] 
+];

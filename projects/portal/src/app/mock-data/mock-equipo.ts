@@ -361,4 +361,4 @@ export const PROFESIONALES: Profesional[] = [
         }],
         profesionalMatriculado: true,
     },
-]
+];

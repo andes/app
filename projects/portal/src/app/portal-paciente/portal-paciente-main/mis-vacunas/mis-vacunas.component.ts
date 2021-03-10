@@ -20,15 +20,15 @@ export class MisVacunasComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor)
+        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         // Servicios
         this.vacunas$ = this.prestacionService.getVacunas();
 
-        //mostrar listado (vacunas, historia, labs)
+        // Mostrar listado (vacunas, historia, labs)
         this.vacuna$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getVacuna(params.get('id')))

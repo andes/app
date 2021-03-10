@@ -20,13 +20,13 @@ export class MisOrganizacionesComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.organizaciones$ = this.prestacionService.getOrganizaciones();
 
-        //mostrar listado (organizaciones, historia, labs)
+        // Mostrar listado (organizaciones, historia, labs)
         this.organizacion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getOrganizacion(params.get('id')))

@@ -6,7 +6,7 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Laboratorio } from '../../../modelos/laboratorio';
 
 @Component({
-    selector: 'plex-detalle-laboratorio',
+    selector: 'app-detalle-laboratorio',
     templateUrl: './detalle-laboratorio.component.html',
 })
 export class DetalleLaboratorioComponent implements OnInit {
@@ -26,7 +26,7 @@ export class DetalleLaboratorioComponent implements OnInit {
     ngOnInit() {
         this.laboratorios$ = this.laboratorioService.getLaboratorios();
 
-        //mostrar detalle de laboratorio
+        // Mostrar detalle de laboratorio
         this.laboratorio$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.laboratorioService.getLaboratorio(params.get('id')))

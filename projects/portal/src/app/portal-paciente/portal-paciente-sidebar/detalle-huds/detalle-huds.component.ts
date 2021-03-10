@@ -6,7 +6,7 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Huds } from '../../../modelos/huds';
 
 @Component({
-    selector: 'detalle-huds',
+    selector: 'app-detalle-huds',
     templateUrl: './detalle-huds.component.html',
 })
 export class DetalleHudsComponent implements OnInit {
@@ -26,7 +26,7 @@ export class DetalleHudsComponent implements OnInit {
         this.huds$ = this.prestacionService.getHuds();
         this.prestacionService.getPreviousUrl();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.hud$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getHud(params.get('id')))

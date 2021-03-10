@@ -11,7 +11,7 @@ import { MisTurnosComponent } from './portal-paciente/portal-paciente-main/mis-t
 import { MisFamiliaresComponent } from './portal-paciente/portal-paciente-main/mis-familiares/mis-familiares.component';
 import { MisProblemasComponent } from './portal-paciente/portal-paciente-main/mis-problemas/mis-problemas.component';
 import { MisPrescripcionesComponent } from './portal-paciente/portal-paciente-main/mis-prescripciones/mis-prescripciones.component';
-import { MisConsultasComponent } from './portal-paciente/portal-paciente-main/mis-consultas/mis-consultas.component'
+import { MisConsultasComponent } from './portal-paciente/portal-paciente-main/mis-consultas/mis-consultas.component';
 import { MiEquipoComponent } from './portal-paciente/portal-paciente-main/mi-equipo/mi-equipo.component';
 import { MisMensajesComponent } from './portal-paciente/portal-paciente-main/mis-mensajes/mis-mensajes.component';
 import { MisOrganizacionesComponent } from './portal-paciente/portal-paciente-main/mis-organizaciones/mis-organizaciones.component';
@@ -32,54 +32,54 @@ import { DetalleOrganizacionComponent } from './portal-paciente/portal-paciente-
 import { DetalleSolicitudComponent } from './portal-paciente/portal-paciente-sidebar/detalle-solicitud/detalle-solicitud.component';
 
 const appRoutes: Routes = [
-  {
-    path: 'portal-paciente', component: PortalPacienteComponent,
+    {
+        path: 'portal-paciente', component: PortalPacienteComponent,
 
-    children: [
-      { path: 'miHuds', component: MiHudsComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleHudsComponent, outlet: 'detalleHuds' },
+        children: [
+            { path: 'miHuds', component: MiHudsComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleHudsComponent, outlet: 'detalleHuds' },
 
-      { path: 'misVacunas', component: MisVacunasComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleVacunaComponent, outlet: 'detalleVacuna' },
+            { path: 'misVacunas', component: MisVacunasComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleVacunaComponent, outlet: 'detalleVacuna' },
 
-      { path: 'misLaboratorios', component: MisLaboratoriosComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleLaboratorioComponent, outlet: 'detalleLaboratorio' },
+            { path: 'misLaboratorios', component: MisLaboratoriosComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleLaboratorioComponent, outlet: 'detalleLaboratorio' },
 
-      { path: 'misTurnos', component: MisTurnosComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleTurnoComponent, outlet: 'detalleTurno' },
+            { path: 'misTurnos', component: MisTurnosComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleTurnoComponent, outlet: 'detalleTurno' },
 
-      { path: 'misFamiliares', component: MisFamiliaresComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleFamiliarComponent, outlet: 'detalleFamiliar' },
+            { path: 'misFamiliares', component: MisFamiliaresComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleFamiliarComponent, outlet: 'detalleFamiliar' },
 
-      { path: 'misProblemas', component: MisProblemasComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleProblemaComponent, outlet: 'detalleProblema' },
+            { path: 'misProblemas', component: MisProblemasComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleProblemaComponent, outlet: 'detalleProblema' },
 
-      { path: 'misPrescripciones', component: MisPrescripcionesComponent, outlet: 'listado' },
-      { path: ':id', component: DetallePrescripcionComponent, outlet: 'detallePrescripcion' },
+            { path: 'misPrescripciones', component: MisPrescripcionesComponent, outlet: 'listado' },
+            { path: ':id', component: DetallePrescripcionComponent, outlet: 'detallePrescripcion' },
 
-      { path: 'misConsultas', component: MisConsultasComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleConsultaComponent, outlet: 'detalleConsulta' },
+            { path: 'misConsultas', component: MisConsultasComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleConsultaComponent, outlet: 'detalleConsulta' },
 
-      { path: 'miEquipo', component: MiEquipoComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleProfesionalComponent, outlet: 'detalleProfesional' },
+            { path: 'miEquipo', component: MiEquipoComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleProfesionalComponent, outlet: 'detalleProfesional' },
 
-      { path: 'misMensajes', component: MisMensajesComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleMensajeComponent, outlet: 'detalleMensaje' },
+            { path: 'misMensajes', component: MisMensajesComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleMensajeComponent, outlet: 'detalleMensaje' },
 
-      { path: 'misOrganizaciones', component: MisOrganizacionesComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleOrganizacionComponent, outlet: 'detalleOrganizacion' },
+            { path: 'misOrganizaciones', component: MisOrganizacionesComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleOrganizacionComponent, outlet: 'detalleOrganizacion' },
 
-      { path: 'misSolicitudes', component: MisSolicitudesComponent, outlet: 'listado' },
-      { path: ':id', component: DetalleSolicitudComponent, outlet: 'detalleSolicitud' },
+            { path: 'misSolicitudes', component: MisSolicitudesComponent, outlet: 'listado' },
+            { path: ':id', component: DetalleSolicitudComponent, outlet: 'detalleSolicitud' },
 
-      { path: 'misDocumentos', component: MisDocumentosComponent, outlet: 'listado' },
-    ]
-  },
-  { path: '', component: HomeComponent },
+            { path: 'misDocumentos', component: MisDocumentosComponent, outlet: 'listado' },
+        ]
+    },
+    { path: '', component: HomeComponent },
 ];
 
 export const appPortalRoutingProviders: any[] = [];
 export const appPortalRouting: ModuleWithProviders = RouterModule.forRoot(appRoutes,
-  { enableTracing: true });
+    { enableTracing: true });
 
 export class AppRoutingModule { }

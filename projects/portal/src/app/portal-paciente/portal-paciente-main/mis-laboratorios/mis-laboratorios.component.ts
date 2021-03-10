@@ -21,13 +21,13 @@ export class MisLaboratoriosComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.laboratorios$ = this.prestacionService.getLaboratorios();
 
-        //mostrar listado
+        // Mostrar listado
         this.laboratorio$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getLaboratorio(params.get('id')))

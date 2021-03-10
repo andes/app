@@ -1,4 +1,4 @@
-import { Problema } from './../modelos/problema'
+import { Problema } from './../modelos/problema';
 
 // TODO: O un objeto enorme que contemple toda la HUDS o interfaces que segementen la HUDS
 export interface Prestacion {
@@ -17,5 +17,5 @@ export interface Prestacion {
     icono: string;
     color: string;
     noNominalizada?: boolean;
-    registros: Problema[],
+    registros: Problema[];
 }

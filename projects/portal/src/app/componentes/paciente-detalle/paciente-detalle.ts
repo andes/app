@@ -14,7 +14,7 @@ import { PacienteService } from '../../servicios/paciente.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
-    selector: 'paciente-detalle',
+    selector: 'app-paciente-detalle',
     templateUrl: './paciente-detalle.html',
 })
 
@@ -28,7 +28,7 @@ export class PacienteDetalleComponent implements OnInit {
         { dato: 'grupo/factor', valor: 'A+', fecha: '21/03/2020' },
         { dato: 'Saturación', valor: '96%', fecha: '31/01/2021' },
         { dato: 'Frecuencia', valor: '78 PPM', fecha: '13/03/2018' },
-    ]
+    ];
 
     alertas = [
         { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'dark', color: '', icono: 'trastorno', path: 'misProblemas', semanticTag: 'trastorno' },
@@ -36,13 +36,13 @@ export class PacienteDetalleComponent implements OnInit {
         { dato: 'prescripciones', valor: '5', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#00cab6', icono: 'pildoras', path: 'misPrescripciones', semanticTag: 'producto' },
         { dato: 'laboratorios', valor: '1', subdato: 'Resultados del hemograma', tipo: 'dark', color: '#a0a0a0', icono: 'recipiente', path: 'misLaboratorios', semanticTag: 'laboratorio' },
         { dato: 'vacunas', valor: '1', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#92278e', icono: 'vacuna', path: 'misVacunas', semanticTag: 'procedimiento' },
-    ]
+    ];
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
     @Output() eventoSidebar = new EventEmitter<number>();
 
-    pacientes$: Observable<Paciente[]>
-    paciente$: Observable<Paciente>
+    pacientes$: Observable<Paciente[]>;
+    paciente$: Observable<Paciente>;
     width: number;
     datosSecundarios = true;
     selectedId: number;
@@ -114,15 +114,14 @@ export class PacienteDetalleComponent implements OnInit {
 
     ocultarDatos() {
         this.datosSecundarios = !this.datosSecundarios;
-        console.log(this.datosSecundarios);
     }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
         if (this.width < 780) {
             return true;
+        } else {
+            this.datosSecundarios = false;
         }
-        else false;
-        this.datosSecundarios = false;
     }
 }

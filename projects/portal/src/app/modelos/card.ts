@@ -1,5 +1,3 @@
-import { Prestacion } from "./prestacion";
-
 export class Card {
     id: number;
     nombre: string;

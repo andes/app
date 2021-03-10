@@ -28,7 +28,7 @@ export class MisSolicitudesComponent implements OnInit {
         // Servicios
         this.solicitudes$ = this.prestacionService.getSolicitudes();
 
-        //mostrar listado
+        // Mostrar listado
         this.solicitud$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getSolicitud(params.get('id')))

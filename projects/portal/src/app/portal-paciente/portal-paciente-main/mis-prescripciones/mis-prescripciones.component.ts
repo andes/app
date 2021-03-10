@@ -21,13 +21,13 @@ export class MisPrescripcionesComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.prescripciones$ = this.prestacionService.getPrescripciones();
 
-        //mostrar listado (prescripciones, historia, labs)
+        // Mostrar listado (prescripciones, historia, labs)
         this.prescripcion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getPrescripcion(params.get('id')))

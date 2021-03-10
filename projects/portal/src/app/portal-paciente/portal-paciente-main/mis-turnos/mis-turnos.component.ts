@@ -20,13 +20,13 @@ export class MisTurnosComponent implements OnInit {
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
-        private router: Router,) { }
+        private router: Router) { }
 
     ngOnInit(): void {
         // Servicios
         this.turnos$ = this.prestacionService.getTurnos();
 
-        //mostrar listado (turnos, historia, labs)
+        // Mostrar listado (turnos, historia, labs)
         this.turno$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getTurno(params.get('id')))

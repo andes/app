@@ -6,7 +6,7 @@ import { PrestacionService } from '../../../servicios/prestacion.service';
 import { Prestacion } from '../../../modelos/prestacion';
 
 @Component({
-    selector: 'detalle-consulta',
+    selector: 'app-detalle-consulta',
     templateUrl: './detalle-consulta.component.html',
 })
 export class DetalleConsultaComponent implements OnInit {
@@ -26,7 +26,7 @@ export class DetalleConsultaComponent implements OnInit {
         this.prestaciones$ = this.prestacionService.getConsultas();
         this.prestacionService.getPreviousUrl();
 
-        //mostrar detalle de prestacion
+        // Mostrar detalle de prestacion
         this.prestacion$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
                 this.prestacionService.getConsulta(params.get('id')))

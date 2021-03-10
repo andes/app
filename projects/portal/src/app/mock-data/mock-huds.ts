@@ -200,4 +200,4 @@ export const HUDS: Huds[] = [
         badgeSecundario: 'próximo a renovar',
         badgeTerciario: '',
     },
-]
+];
