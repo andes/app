@@ -1,0 +1,57 @@
+<plex-layout>
+    <plex-layout-main *ngIf="!showFicha; else elseFicha">
+        <plex-title titulo="Fichas epidemiologicas">
+            <plex-button type="success" label="Buscar" (click)="searchFichas()" [disabled]='form.invalid'>
+            </plex-button>
+        </plex-title>
+        <form #form="ngForm">
+            <plex-wrapper>
+                <plex-label titulo="Buscar Paciente"></plex-label>
+                <paciente-buscar grow="full" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
+                </paciente-buscar>
+                <paciente-listado grow="full" *ngIf="resultadoBusqueda?.length" [pacientes]="resultadoBusqueda"
+                                  (selected)="onSelect($event)">
+                </paciente-listado>
+                <plex-item size="xs" grow="auto" *ngIf="pacienteSelected">
+                    <plex-label titulo="{{ pacienteSelected | nombre }}"
+                                subtitulo="{{ (pacienteSelected.documento | number) || 'Sin DNI'}}">
+                    </plex-label>
+                    <plex-button type="danger" size="sm" (click)="limpiarPaciente()">Eliminar</plex-button>
+                </plex-item>
+                <plex-datetime grow="auto" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
+                               [max]="fechaHasta">
+                </plex-datetime>
+                <plex-datetime grow="auto" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                               [min]="fechaDesde">
+                </plex-datetime>
+                <plex-select grow="auto" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
+                             labelField="name" name="selectType">
+                </plex-select>
+            </plex-wrapper>
+        </form>
+        <plex-table [columns]="columns" #table="plTable">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let ficha of fichas$ | async">
+                <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
+                <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
+                <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
+                <td *plTableCol="'tipo'">{{ficha.type}}</td>
+                <td *plTableCol="'acciones'">
+                    <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm"
+                                 (click)="editarFicha(ficha)">
+                    </plex-button>
+                    <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
+                    </plex-button>
+                </td>
+            </tr>
+        </plex-table>
+    </plex-layout-main>
+    <ng-template #elseFicha>
+        <plex-layout-main>
+            <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
+                                           (volver)="volver()" [fichaName]="showFicha">
+            </app-ficha-epidemiologica-crud>
+        </plex-layout-main>
+    </ng-template>
+</plex-layout>

@@ -12,11 +12,17 @@ import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiolog
 import { SelectSearchDirective } from '../../directives/select-search.directive';
 import { SelectSearchService } from '../../services/select-search.service';
 import { SharedModule } from '@andes/shared';
+import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 
 
 
 @NgModule({
-  declarations: [FichaEpidemiologicaComponent, FichaEpidemiologicaCrudComponent, SelectSearchDirective],
+  declarations: [
+    FichaEpidemiologicaComponent,
+    FichaEpidemiologicaCrudComponent,
+    SelectSearchDirective,
+    BuscadorFichaEpidemiologicaComponent
+  ],
   imports: [
     CommonModule,
     EpidemiologiaRoutingModule,
