@@ -5,6 +5,7 @@ import { InscripcionComponent } from './components/inscripcion.component';
 
 const routes: Routes = [
     { path: 'inscripcion', component: InscripcionComponent },
+    { path: 'inscripcion/:grupo', component: InscripcionComponent },
     { path: '', redirectTo: 'inscripcion' }
 ];
 

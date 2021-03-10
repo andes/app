@@ -19,10 +19,11 @@
                     <plex-grid type="full" cols="1">
                         <plex-select [(ngModel)]="ciudadano.grupo" label="Seleccione grupo"
                                      [data]="opcionesGrupos$ | async" name="grupo" idField="nombre"
-                                     labelField="descripcion" [required]="true" (change)="seleccionaGrupo()">
+                                     labelField="descripcion" [required]="true" [readonly]="grupoSelected"
+                                     (change)="seleccionaGrupo()">
                         </plex-select>
-                        <plex-text [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()" name="documento"
-                                   label="Documento" [pattern]="patronDocumento" [required]="true">
+                        <plex-text type="number" [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()"
+                                   name="documento" label="Documento" [pattern]="patronDocumento" [required]="true">
                         </plex-text>
                         <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide"
                                    name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite"
@@ -36,14 +37,14 @@
                                      required="true" placeholder="Seleccione..">
                         </plex-select>
                         <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="ciudadano.fechaNacimiento"
-                            class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy" 
-                            [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
+                                       class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy"
+                                       [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
                         </plex-datetime>
-                        <plex-text [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()" name="apellido"
-                                   label="Apellido" [required]="true">
+                        <plex-text type="text" [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()"
+                                   name="apellido" label="Apellido" [required]="true">
                         </plex-text>
-                        <plex-text [(ngModel)]="ciudadano.nombre" (change)="limpiarRespuesta()" name="nombre"
-                                   label="Nombre" [required]="true" grow="4">
+                        <plex-text type="text" [(ngModel)]="ciudadano.nombre" (change)="limpiarRespuesta()"
+                                   name="nombre" label="Nombre" [required]="true" grow="4">
                         </plex-text>
 
                         <plex-select name="localidades" [data]="localidades$ | async" label="Localidad de Residencia"
@@ -113,21 +114,22 @@
                     </ng-container>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'">
                         <hr>
-                        <plex-text [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
-                            label="Certificado Único de Discapacidad" [required]="true" grow="4">
+                        <plex-text type="number" [(ngModel)]="ciudadano.cud" (change)="limpiarRespuesta()" name="cud"
+                                   label="Certificado Único de Discapacidad" [required]="true" grow="4">
                         </plex-text>
                         <a class="d-inline-block" href="javascript:void(0)" (click)="infoCUD()">
                             <plex-icon *ngIf="!infoCud" name="chevron-right" type="info"></plex-icon>
                             <plex-icon *ngIf="infoCud" name="chevron-down" type="info"></plex-icon>
                             Consulta donde encontrar el Certificado único de discapacidad
                         </a>
-                        <div *ngIf="infoCud"> 
+                        <div *ngIf="infoCud">
                             <img src="assets/img/ficha-corregida-CUD.png" width="600" height="auto">
                         </div>
-                        <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación" size="lg"></plex-label>
+                        <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación"
+                                    size="lg"></plex-label>
 
-                        <plex-select name="diaseleccionados" [data]="dias" label="Días en los que asiste al centro habitualmente"
-                                     [(ngModel)]="diaSeleccion">
+                        <plex-select name="diaseleccionados" [data]="dias"
+                                     label="Días en los que asiste al centro habitualmente" [(ngModel)]="diaSeleccion">
                         </plex-select>
                     </ng-container>
                     <div class="form-group mt-2">
