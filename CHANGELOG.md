@@ -1,3 +1,43 @@
+# [5.37.0](https://github.com/andes/app/compare/v5.36.0...v5.37.0) (2021-03-10)
+
+
+### Bug Fixes
+
+* **discapacidad:** quita restricción a grupo discapacidad para limite de edad maxima ([01c562e](https://github.com/andes/app/commit/01c562e7b7555ae1a5b9ffa0b3e34eaf3b7d47ad))
+* **epidemiologia:** boton general para registrar ficha ([b8cbb4f](https://github.com/andes/app/commit/b8cbb4f6ad38db2f43ea960560efce549c7557f1))
+* **epidemiologia:** change fichas, virtualScroll ([caba926](https://github.com/andes/app/commit/caba9267981baa008d82acca80008537f953ad24))
+* **ficha-epidemiologica:** agregamos información que falta en el test ([#2154](https://github.com/andes/app/issues/2154)) ([a76dda1](https://github.com/andes/app/commit/a76dda16088fa0e6a0f2753ef7edbad1ad284580))
+* **form-crud:** modificamos campos de acuerdo a nueva actualizacion de api ([2741d5a](https://github.com/andes/app/commit/2741d5a45083e23a6082fb184e1fce943a923082))
+* **forms-crud:** altura extra para plex-select ([6387bf3](https://github.com/andes/app/commit/6387bf322045924223b156f693e9be07ced7735d))
+* **mapa-camas:** movimientos en listado internacion ([#2159](https://github.com/andes/app/issues/2159)) ([33c3363](https://github.com/andes/app/commit/33c3363fe9d83d5f18719e3df0b46df5cdcfc914))
+* **RUP:** Se agrega un control en vacunas para saber si se debe hacer el chequeo interdosis o no ([#2160](https://github.com/andes/app/issues/2160)) ([0f9eb70](https://github.com/andes/app/commit/0f9eb709bf40313f404b28d825a5a2993e3ee31b))
+
+
+### Features
+
+* **epidemiologia:** agrego component seccion ([b211b69](https://github.com/andes/app/commit/b211b69af9c8eb598a265f8b8c04d616f84ed8d6))
+* **epidemiologia:** nueva seccion ([f0d8219](https://github.com/andes/app/commit/f0d821963cf2fd89b519d7f42e84d012e2234bdf))
+* **epidemiologia:** nueva tabla contactosEstrechos ([f08fe87](https://github.com/andes/app/commit/f08fe878b3edc39c7ae4bc02e060d251d4b06727))
+* **epidemiologia:** nuevo modulo y ficha-epidemiologica component ([c509bba](https://github.com/andes/app/commit/c509bba4ba585352fed0e9b306cc5731d6f9d4d3))
+* **epidemiologia:** save y update ficha ([02f02a4](https://github.com/andes/app/commit/02f02a4220447f5a2d3bd94d8ea7fe227800cefb))
+* **epidemiologia:** table contactos estrechos ([c84018b](https://github.com/andes/app/commit/c84018bc0616de44635ba9b6efdabefe62b7cca0))
+* **epidemiologia:** table contactos estrechos ([b4b7998](https://github.com/andes/app/commit/b4b79986338f28506c4f6219143b1bcd6385db51))
+* **ficha-epidemio:** altura formBuilder, ficha-crud, permisos ([c4365da](https://github.com/andes/app/commit/c4365da255234f9cfab654d68416dfa64061f7a3))
+* **formBuilder:** Add snomed codification to fields and form ([9e6f995](https://github.com/andes/app/commit/9e6f995134c3b1364c648fbad6c2296d684a2c95))
+* **formBuilder:** add type table ([1fba268](https://github.com/andes/app/commit/1fba2687e25d789d258ac6e56826bcfd41649564))
+* **formBuilder:** agregamos plex-table y fixeamos algunos detalles ([5405a17](https://github.com/andes/app/commit/5405a17b2d0eb9be392756f666d4fa9f80cdb9c5))
+* **formBuilder:** formulario generico se le agregan secciones por campo ([1cffe2f](https://github.com/andes/app/commit/1cffe2ff1958b2a9c274646a6bab27f0e4febde1))
+* **formBuilder:** primer commit ([cf21663](https://github.com/andes/app/commit/cf216631b676c2b1c1d141e366a4b01a07fbf4a5))
+* **formBuilder:** set subfilter false by default ([0dde344](https://github.com/andes/app/commit/0dde344d1d86193fa55dfb746e6d3c65bc2029a1))
+* **forms:** Add phone option ([12a7a27](https://github.com/andes/app/commit/12a7a270a1dccc3c18043e8bd238a18d3144dbce))
+* **mpi:** reemplaza toast de ciudadano no encontrado ([#2146](https://github.com/andes/app/issues/2146)) ([491715b](https://github.com/andes/app/commit/491715b51beda6b902cd914e477ab5dd5291ac66))
+* **rup:** ajuste visual botones en ejecucion ([#2151](https://github.com/andes/app/issues/2151)) ([fe4ef33](https://github.com/andes/app/commit/fe4ef33e70d76ada936c9553a52be453f1ecddb4))
+
+
+### Performance Improvements
+
+* **turnos-prestaciones:** maximo de prestaciones para exportar ([#2150](https://github.com/andes/app/issues/2150)) ([4725e23](https://github.com/andes/app/commit/4725e23c1c0cdb2fa74d4cca3039c7c41d0ba03e))
+
 # [5.36.0](https://github.com/andes/app/compare/v5.35.0...v5.36.0) (2021-03-03)
 
 
