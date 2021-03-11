@@ -25,6 +25,7 @@ export class PortalPacienteComponent implements OnInit {
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     // Menu lateral
     valorMain = 11;
@@ -33,7 +34,8 @@ export class PortalPacienteComponent implements OnInit {
 
     selectedId: number;
     card$: Observable<Card>;
-    sidebarValue: number;
+    sidebarValue: number = 12;
+    valorFoco: string;
     previousUrl: string;
     width = 0;
 
@@ -51,6 +53,9 @@ export class PortalPacienteComponent implements OnInit {
 
         // Paso valor del sidebar
         this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+
+        // Paso valor del foco
+        this.prestacionService.focoActual.subscribe(valor => this.valorFoco = valor)
 
         this.cards$ = this.cardService.getCards();
         // Mostrar detalle de prestacion
@@ -72,8 +77,6 @@ export class PortalPacienteComponent implements OnInit {
     agendas$: Observable<Agenda[]>;
     cards$: Observable<Card[]>;
 
-    foco = 'main';
-
     onChange() {
         this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
     }
@@ -86,6 +89,7 @@ export class PortalPacienteComponent implements OnInit {
         // this.router.navigate(['portal-paciente', this.previousUrl]);
         this.router.navigate(['portal-paciente']);
         this.sidebarValue = 12;
+        this.valorFoco = 'main';
     }
 
     // Nav lateral

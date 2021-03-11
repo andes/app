@@ -16,6 +16,7 @@ export class MisVacunasComponent implements OnInit {
 
     sidebarValue: number;
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -39,8 +40,13 @@ export class MisVacunasComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
+    }
+
     selected(vacuna) {
         this.nuevoValor();
+        this.cambiaFoco();
         vacuna.selected = !vacuna.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

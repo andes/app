@@ -41,6 +41,7 @@ export class MiHudsComponent implements OnInit {
     public showModal = false;
 
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     updateMaxHora() {
         this.tModel.minHora = moment().add(30, 'minutes').add(1, 'days');
@@ -55,21 +56,21 @@ export class MiHudsComponent implements OnInit {
     }
 
     constructor(
-        private hudsService: PrestacionService,
+        private prestacionService: PrestacionService,
         private route: ActivatedRoute,
         private router: Router,
     ) { }
 
     ngOnInit(): void {
-        this.hudsService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
 
         // Servicios
-        this.huds$ = this.hudsService.getHuds();
+        this.huds$ = this.prestacionService.getHuds();
 
         // Mostrar listado
         this.hud$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.hudsService.getHud(params.get('id')))
+                this.prestacionService.getHud(params.get('id')))
         );
 
         // plex-datetime
@@ -182,13 +183,18 @@ export class MiHudsComponent implements OnInit {
     }
 
     nuevoValor() {
-        this.hudsService.actualizarValor(9);
+        this.prestacionService.actualizarValor(9);
+    }
+
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
     }
 
     selected(hud) {
         hud.selected = !hud.selected;
         this.nuevoValor();
-        this.hudsService.resetOutlet();
+        this.cambiaFoco();
+        this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = hud.id;
             this.router.navigate(['portal-paciente', { outlets: { detalleHuds: [this.selectedId] } }]);

@@ -17,6 +17,7 @@ export class MisLaboratoriosComponent implements OnInit {
 
     sidebarValue = 12;
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -38,9 +39,14 @@ export class MisLaboratoriosComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
+    }
+
 
     selected(laboratorio) {
         this.nuevoValor();
+        this.cambiaFoco();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = laboratorio.id;

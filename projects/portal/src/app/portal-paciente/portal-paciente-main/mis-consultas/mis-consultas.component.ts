@@ -15,6 +15,7 @@ export class MisConsultasComponent implements OnInit {
     public prestaciones$;
 
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -38,9 +39,14 @@ export class MisConsultasComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
+    }
+
     selected(prestacion) {
         prestacion.selected = !prestacion.selected;
         this.nuevoValor();
+        this.cambiaFoco();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = prestacion.id;

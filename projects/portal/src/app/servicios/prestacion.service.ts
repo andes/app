@@ -44,8 +44,13 @@ export class PrestacionService {
         return this.previousUrl;
     }
 
+    // Modifica main ante evento
     private valorInicial = new BehaviorSubject<number>(9);
     valorActual = this.valorInicial.asObservable();
+
+    // Cambia foco ante evento
+    private focoInicial = new BehaviorSubject<string>('main');
+    focoActual = this.focoInicial.asObservable();
 
     constructor(private router: Router) {
         this.currentUrl = this.router.url;
@@ -64,6 +69,10 @@ export class PrestacionService {
 
     actualizarValor(sidebarValue: number) {
         this.valorInicial.next(sidebarValue);
+    }
+
+    actualizarFoco(valorFoco: string) {
+        this.focoInicial.next(valorFoco);
     }
 
     // Limpio los ruteos auxiliares
@@ -85,7 +94,6 @@ export class PrestacionService {
     }
 
     // Modelos y mock-data
-
     getHuds(): Observable<Huds[]> {
         return of(HUDS);
     }

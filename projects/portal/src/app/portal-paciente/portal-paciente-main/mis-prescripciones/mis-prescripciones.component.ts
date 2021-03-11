@@ -17,6 +17,7 @@ export class MisPrescripcionesComponent implements OnInit {
 
     sidebarValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -38,8 +39,13 @@ export class MisPrescripcionesComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
+    }
+
     selected(prescripcion) {
         this.nuevoValor();
+        this.cambiaFoco();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = prescripcion.id;

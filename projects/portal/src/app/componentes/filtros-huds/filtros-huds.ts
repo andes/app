@@ -50,6 +50,7 @@ export class FiltrosHudsComponent implements OnInit {
     public showModal = false;
 
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     updateMaxHora() {
         this.tModel.minHora = moment().add(30, 'minutes').add(1, 'days');

@@ -1,5 +1,4 @@
-<plex-layout main="{{ sidebarValue }}">
-    <!--<plex-layout [aspect]="9">-->
+<plex-layout main="{{ sidebarValue }}" foco="{{ valorFoco }}">
     <plex-layout-main type="invert">
         <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}"
                     titulo="{{ isResponsive() ? 'mi portal' : 'mi portal de salud' }}" main>
@@ -51,7 +50,7 @@
 
             <!-- Listado -->
             <section span="{{ valorResultante }}">
-                <app-portal-paciente-main (eventoSidebar)="recibirSidebar($event)">
+                <app-portal-paciente-main (eventoSidebar)="recibirSidebar($event)" (eventoFoco)="recibirFoco($event)">
                 </app-portal-paciente-main>
             </section>
         </plex-grid>

@@ -16,6 +16,7 @@ export class MisSolicitudesComponent implements OnInit {
 
 
     @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -39,8 +40,13 @@ export class MisSolicitudesComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    cambiaFoco() {
+        this.prestacionService.actualizarFoco('sidebar');
+    }
+
     selected(solicitud) {
         this.nuevoValor();
+        this.cambiaFoco();
         solicitud.selected = !solicitud.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

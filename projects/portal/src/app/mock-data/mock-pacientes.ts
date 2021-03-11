@@ -22,7 +22,7 @@ export const PACIENTES: Paciente[] = [
         fechaFallecimiento: null,
         domicilio: 'Avenida San Juan 798',
         estadoCivil: undefined,
-        foto: 'https://http2.mlstatic.com/fotos-4x4-3x3-5x5-varios-embajada-pasaporte-6-fotos-carnet-D_NQ_NP_990542-MLA31020537999_062019-O.webp',
+        foto: 'https://library.kissclipart.com/20180901/krw/kissclipart-user-thumbnail-clipart-user-lorem-ipsum-is-simply-bfcb758bf53bea22.jpg',
         relaciones: 'hermana',
         financiador: 'HOSPITAL PROVINCIAL NEUQUEN - CASTRO RENDON',
         identificadores: 'HOSPITAL PROVINCIAL NEUQUEN - CASTRO RENDON',
