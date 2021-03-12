@@ -29,6 +29,12 @@ export class RecursosListadoComponent implements OnInit {
 
     }
     ngOnInit() {
+
+        this.selectedCama$ = this.mapaCamasService.selectedCama.pipe(
+            map((cama) => {
+                return cama;
+            })
+        );
         this.canEdit = this.permisosMapaCamasService.camaEdit;
         this.sectore$ = this.mapaCamasService.snapshotOrdenado$.pipe(
             map(snapshots => {
