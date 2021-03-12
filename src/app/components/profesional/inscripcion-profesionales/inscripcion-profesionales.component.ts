@@ -5,7 +5,7 @@ import { UsuarioService } from 'src/app/services/usuarios/usuario.service';
 import { UsuariosHttp } from '../../../apps/gestor-usuarios/services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { getObjSexos } from '../../../utils/enumerados';
-import { certificadosProfesionalesCovid } from '../../../utils/permisos/permisos-update.component';
+import { certificadosProfesionalesCovid } from '../../../utils/permisos/permisos-update';
 import { tokenFormularioProfesional } from '../../../../../src/environments/apiKeyMaps';
 
 
@@ -116,13 +116,13 @@ export class InscripcionProfesionalesComponent implements OnInit {
   }
 
   getEmail(contacto: Array<any>) {
-    const email: any = contacto.filter(elem => elem.tipo === 'email');
-    return (email.length ? email[0].valor : null);
+    const email: any = contacto.find(elem => elem.tipo === 'email');
+    return (email ? email.valor : null);
   }
 
   getTelefono(contacto: Array<any>) {
-    const telefono: any = contacto.filter(elem => elem.tipo === 'celular');
-    return (telefono.length ? telefono[0].valor : null);
+    const telefono: any = contacto.find(elem => elem.tipo === 'celular');
+    return (telefono ? telefono.valor : null);
   }
 
   getMatricula(profesional) {
@@ -213,9 +213,9 @@ export class InscripcionProfesionalesComponent implements OnInit {
 
   updateContactos() {
     let nuevoContacto = [];
-    const telFijo = this.contactos.filter(contacto => contacto.tipo === 'fijo');
-    if (telFijo[0]) {
-      nuevoContacto.push(telFijo[0]);
+    const telFijo = this.contactos.find(contacto => contacto.tipo === 'fijo');
+    if (telFijo) {
+      nuevoContacto.push(telFijo);
     }
     if (this.profesional.email) {
       nuevoContacto.push({ tipo: 'email', valor: this.profesional.email, activo: true });
