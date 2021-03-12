@@ -76,8 +76,8 @@ export class ProfesionalService {
         //     .catch(this.handleError); //...errors if any
     }
 
-    validarProfesional(body, options?: Options): Observable<any> {
-        return this.server.post(this.profesionalUrl + '/validar', body, options);
+    validarProfesional(body): Observable<any> {
+        return this.server.post(this.profesionalUrl + '/validar', body);
     }
 
     actualizarProfesional(body, options?: Options): Observable<any> {

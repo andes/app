@@ -21,6 +21,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   public contactos = [];
   public recaptcha = null;
   public enProceso = false;
+  public token = '';
   public profesional = {
     id: '',
     documento: '',
@@ -59,21 +60,23 @@ export class InscripcionProfesionalesComponent implements OnInit {
     this.profesionalService.validarProfesional({
       documento: this.profesional.documento,
       sexo: this.profesional.sexo.id,
-      nroTramite: this.profesional.nroTramite
-    }, { token: tokenFormularioProfesional.key }).subscribe(
+      nroTramite: this.profesional.nroTramite,
+      permisos: certificadosProfesionalesCovid
+    }).subscribe(
       (datos) => {
         if (datos) {
-          this.profesional.id = datos.id;
-          this.profesional.nombre = datos.nombre;
-          this.profesional.apellido = datos.apellido;
-          this.contactos = datos.contactos;
-          const datosMatricula: any = this.getMatricula(datos);
-          this.profesional.nombreCompleto = datos.nombreCompleto;
-          this.profesional.fechaNacimiento = moment(datos.fechaNacimiento).format('L');
+          this.token = datos.token;
+          this.profesional.id = datos.profesional.id;
+          this.profesional.nombre = datos.profesional.nombre;
+          this.profesional.apellido = datos.profesional.apellido;
+          this.contactos = datos.profesional.contactos;
+          const datosMatricula: any = this.getMatricula(datos.profesional);
+          this.profesional.nombreCompleto = datos.profesional.nombreCompleto;
+          this.profesional.fechaNacimiento = moment(datos.profesional.fechaNacimiento).format('L');
           this.profesional.matricula = datosMatricula.numeroMatricula;
           this.profesional.profesion = datosMatricula.profesion;
-          this.profesional.email = datos.contactos ? this.getEmail(datos.contactos) : '';
-          this.profesional.telefono = datos.contactos ? this.getTelefono(datos.contactos) : '';
+          this.profesional.email = datos.profesional.contactos ? this.getEmail(datos.profesional.contactos) : '';
+          this.profesional.telefono = datos.profesional.contactos ? this.getTelefono(datos.profesional.contactos) : '';
           this.profesional.estaMatriculado = Object.keys(datosMatricula).length ? true : false;
           this.profesional.caducidadMatricula = datosMatricula?.fechaFin;
           this.estaValidado = true;

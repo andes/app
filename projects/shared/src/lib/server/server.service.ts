@@ -55,7 +55,7 @@ export class Server {
         const result: any = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : options.params?.token ? options.params.token : options.token ? options.token : ''
+                'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : options?.params?.token ? options.params.token : options?.token ? options.token : ''
             }),
         };
         if (options && options.responseType) {
