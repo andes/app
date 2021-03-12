@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Server } from '@andes/shared';
+import { Options } from 'projects/shared/src/lib/server/options';
 
 
 @Injectable()
@@ -64,12 +65,12 @@ export class UsuarioService {
 
     }
 
-    updateUsuario(usuario, permisos): Observable<any> {
-        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { permisos });
+    updateUsuario(usuario, permisos, options?: Options): Observable<any> {
+        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { permisos }, options);
     }
 
-    createUsuario(usuario): Observable<any> {
-        return this.server.post(`${this.gestorUsuariosUrl}/create`, usuario);
+    createUsuario(usuario, options?: Options): Observable<any> {
+        return this.server.post(`${this.gestorUsuariosUrl}/create`, usuario, options);
 
     }
 }

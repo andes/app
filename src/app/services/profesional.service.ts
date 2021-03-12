@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
+import { Options } from 'projects/shared/src/lib/server/options';
 
 @Injectable()
 export class ProfesionalService {
@@ -76,11 +76,11 @@ export class ProfesionalService {
         //     .catch(this.handleError); //...errors if any
     }
 
-    validarProfesional(body): Observable<any> {
-        return this.server.post(this.profesionalUrl + '/validar', body);
+    validarProfesional(body, options?: Options): Observable<any> {
+        return this.server.post(this.profesionalUrl + '/validar', body, options);
     }
 
-    actualizarProfesional(body): Observable<any> {
-        return this.server.put(this.profesionalUrl + '/actualizar', body);
+    actualizarProfesional(body, options?: Options): Observable<any> {
+        return this.server.put(this.profesionalUrl + '/actualizar', body, options);
     }
 }

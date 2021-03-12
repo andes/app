@@ -6,6 +6,7 @@ import { UsuariosHttp } from '../../../apps/gestor-usuarios/services/usuarios.ht
 import { ProfesionalService } from '../../../services/profesional.service';
 import { getObjSexos } from '../../../utils/enumerados';
 import { certificadosProfesionalesCovid } from '../../../utils/permisos/permisos-update.component';
+import { tokenFormularioProfesional } from '../../../../../src/environments/apiKeyMaps';
 
 
 @Component({
@@ -59,29 +60,32 @@ export class InscripcionProfesionalesComponent implements OnInit {
       documento: this.profesional.documento,
       sexo: this.profesional.sexo.id,
       nroTramite: this.profesional.nroTramite
-    }).subscribe(datos => {
-      if (datos.errMsg) {
-        this.plex.info('danger', datos.errMsg, 'Sus datos no pudieron ser validados');
+    }, { token: tokenFormularioProfesional.key }).subscribe(
+      (datos) => {
+        if (datos) {
+          this.profesional.id = datos.id;
+          this.profesional.nombre = datos.nombre;
+          this.profesional.apellido = datos.apellido;
+          this.contactos = datos.contactos;
+          const datosMatricula: any = this.getMatricula(datos);
+          this.profesional.nombreCompleto = datos.nombreCompleto;
+          this.profesional.fechaNacimiento = moment(datos.fechaNacimiento).format('L');
+          this.profesional.matricula = datosMatricula.numeroMatricula;
+          this.profesional.profesion = datosMatricula.profesion;
+          this.profesional.email = datos.contactos ? this.getEmail(datos.contactos) : '';
+          this.profesional.telefono = datos.contactos ? this.getTelefono(datos.contactos) : '';
+          this.profesional.estaMatriculado = Object.keys(datosMatricula).length ? true : false;
+          this.profesional.caducidadMatricula = datosMatricula?.fechaFin;
+          this.estaValidado = true;
+          this.enProceso = false;
+        }
+      },
+      (error) => {
+        this.plex.info('danger', error, 'Sus datos no pudieron ser validados');
         this.enProceso = false;
         this.profesional.recaptcha = '';
-      } else {
-        this.profesional.id = datos.id;
-        this.profesional.nombre = datos.nombre;
-        this.profesional.apellido = datos.apellido;
-        this.contactos = datos.contactos;
-        const datosMatricula: any = this.getMatricula(datos);
-        this.profesional.nombreCompleto = datos.nombreCompleto;
-        this.profesional.fechaNacimiento = moment(datos.fechaNacimiento).format('L');
-        this.profesional.matricula = datosMatricula.numeroMatricula;
-        this.profesional.profesion = datosMatricula.profesion;
-        this.profesional.email = datos.contactos ? this.getEmail(datos.contactos) : '';
-        this.profesional.telefono = datos.contactos ? this.getTelefono(datos.contactos) : '';
-        this.profesional.estaMatriculado = Object.keys(datosMatricula).length ? true : false;
-        this.profesional.caducidadMatricula = datosMatricula?.fechaFin;
-        this.estaValidado = true;
-        this.enProceso = false;
       }
-    });
+    );
   }
 
   resolved(captchaResponse: any[]) {
@@ -161,7 +165,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   }
 
   verificarUsuario() {
-    this.usuariosHttp.find({ documento: this.profesional.documento }).subscribe(user => {
+    this.usuariosHttp.find({ documento: this.profesional.documento, token: tokenFormularioProfesional.key }).subscribe(user => {
       this.user = user;
       this.existeUsuario = user.length ? true : false;
     });
@@ -170,10 +174,10 @@ export class InscripcionProfesionalesComponent implements OnInit {
   agregarPermisos() {
     this.enProceso = true;
     const permisos = certificadosProfesionalesCovid;
-    this.usuarioService.updateUsuario(this.user[0]._id, permisos).subscribe(user => {
+    this.usuarioService.updateUsuario(this.user[0]._id, permisos, { token: tokenFormularioProfesional.key }).subscribe(user => {
       if (user) {
         const contactoProfesional = this.updateContactos();
-        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }).subscribe((res) => {
+        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: tokenFormularioProfesional.key }).subscribe((res) => {
           if (res) {
             this.enProceso = false;
             this.plex.info('success', 'Sus permisos fueron actualizado correctamente', 'Se encuentra autorizado para generar certificados COVID19');
@@ -193,10 +197,10 @@ export class InscripcionProfesionalesComponent implements OnInit {
       email: this.profesional.email,
       permisos: certificadosProfesionalesCovid
     };
-    this.usuarioService.createUsuario(newUser).subscribe(user => {
+    this.usuarioService.createUsuario(newUser, { token: tokenFormularioProfesional.key }).subscribe(user => {
       if (user) {
         const contactoProfesional = this.updateContactos();
-        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }).subscribe((res) => {
+        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: tokenFormularioProfesional.key }).subscribe((res) => {
           if (res) {
             this.plex.info('success', `Un email a ${newUser.email} fue enviado con sus datos de inicio de sesión`, 'Su usuario fue creado correctamente');
             this.enProceso = false;

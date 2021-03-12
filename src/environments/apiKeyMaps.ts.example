@@ -21,3 +21,8 @@ export const captcha = {
     enabled: false,
     key: 'XXXX'
 };
+
+export const tokenFormularioProfesional = {
+    key: 'XXXX'
+};
+
