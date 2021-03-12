@@ -27,7 +27,7 @@ export class FiltrosHudsComponent implements OnInit {
     public selectedId;
     public prestacion$;
     public prestaciones$;
-    sidebarValue: number;
+    mainValue: number;
 
     public duracion = '1 hs. 34 min.';
     public plex: Plex;
@@ -72,7 +72,7 @@ export class FiltrosHudsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
 
         // Servicios
         this.prestaciones$ = this.prestacionService.getConsultas();

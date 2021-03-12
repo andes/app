@@ -15,7 +15,7 @@ export class MisLaboratoriosComponent implements OnInit {
     public laboratorios$;
     filtros = true;
 
-    sidebarValue = 12;
+    mainValue = 12;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 

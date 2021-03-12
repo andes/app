@@ -15,7 +15,7 @@ export class MisMensajesComponent implements OnInit {
     public mensaje$;
     public mensajes$;
 
-    sidebarValue = 9;
+    mainValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
     filtros = true;

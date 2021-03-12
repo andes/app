@@ -67,8 +67,8 @@ export class PrestacionService {
         this.router.navigate(path);
     }
 
-    actualizarValor(sidebarValue: number) {
-        this.valorInicial.next(sidebarValue);
+    actualizarValor(mainValue: number) {
+        this.valorInicial.next(mainValue);
     }
 
     actualizarFoco(valorFoco: string) {

@@ -15,7 +15,7 @@ export class MisPrescripcionesComponent implements OnInit {
     public prescripcion$;
     public prescripciones$;
 
-    sidebarValue = 9;
+    mainValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 

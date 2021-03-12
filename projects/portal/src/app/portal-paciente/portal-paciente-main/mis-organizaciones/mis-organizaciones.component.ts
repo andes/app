@@ -14,7 +14,7 @@ export class MisOrganizacionesComponent implements OnInit {
     public organizacion$;
     public organizaciones$;
 
-    sidebarValue = 9;
+    mainValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 

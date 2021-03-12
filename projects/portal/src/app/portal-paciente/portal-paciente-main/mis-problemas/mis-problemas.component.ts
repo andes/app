@@ -13,7 +13,7 @@ export class MisProblemasComponent implements OnInit {
     public selectedId;
     public problema$;
     public problemas$;
-    sidebarValue: number;
+    mainValue: number;
 
     constructor(
         private prestacionService: PrestacionService,
@@ -22,7 +22,7 @@ export class MisProblemasComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
 
         // Servicios
         this.problemas$ = this.prestacionService.getProblemas();

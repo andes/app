@@ -31,10 +31,11 @@ export class PortalPacienteComponent implements OnInit {
     valorMain = 11;
     valorMenu = 1;
     valorResultante = this.valorMain - this.valorMenu;
-
+    main = 12
     selectedId: number;
     card$: Observable<Card>;
-    sidebarValue: number = 12;
+    mainValue: number;
+    sidebarValue: number;
     valorFoco: string;
     previousUrl: string;
     width = 0;
@@ -52,7 +53,7 @@ export class PortalPacienteComponent implements OnInit {
         this.modelo = { invert: false };
 
         // Paso valor del sidebar
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
 
         // Paso valor del foco
         this.prestacionService.focoActual.subscribe(valor => this.valorFoco = valor)
@@ -82,13 +83,13 @@ export class PortalPacienteComponent implements OnInit {
     }
 
     recibirSidebar($event) {
-        this.sidebarValue = $event;
+        this.mainValue = $event;
     }
 
     contraerSidebar() {
         // this.router.navigate(['portal-paciente', this.previousUrl]);
         this.router.navigate(['portal-paciente']);
-        this.sidebarValue = 12;
+        this.mainValue = 12;
         this.valorFoco = 'main';
     }
 

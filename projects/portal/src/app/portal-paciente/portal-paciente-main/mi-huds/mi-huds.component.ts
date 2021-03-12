@@ -16,7 +16,7 @@ export class MiHudsComponent implements OnInit {
     public selectedId;
     public hud$;
     public huds$;
-    sidebarValue: number;
+    mainValue: number;
     filtros = true;
     verHuds = false;
 
@@ -62,7 +62,7 @@ export class MiHudsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
 
         // Servicios
         this.huds$ = this.prestacionService.getHuds();

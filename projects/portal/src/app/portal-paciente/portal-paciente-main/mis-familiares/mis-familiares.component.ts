@@ -14,7 +14,7 @@ export class MisFamiliaresComponent implements OnInit {
     public familiar$;
     public familiares$;
 
-    sidebarValue = 12;
+    mainValue = 12;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 

@@ -1,18 +1,31 @@
-<plex-layout main="{{ sidebarValue }}" foco="{{ valorFoco }}">
+<plex-layout main="{{ mainValue }}" foco="{{ valorFoco }}">
     <plex-layout-main type="invert">
         <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}"
                     titulo="{{ isResponsive() ? 'mi portal' : 'mi portal de salud' }}" main>
-            <plex-button size="sm" [icon]="isResponsive() ? 'mail-outline' : null" class="ml-2" type="link">
-                info@andes.gob.ar
+            <plex-button *mobile="false" size="sm" icon="mail-outline" label="info@andes.gob.ar" class="ml-2"
+                         type="link">
             </plex-button>
-            <plex-button size="sm" [label]="isResponsive() ? null : 'www.andes.gob.ar'" class="ml-2" type="link">
-                <ng-container>
-                    <plex-icon name="web"></plex-icon>
-                </ng-container>
+            <plex-button *mobile="false" size="sm" icon="web" label="www.andes.gob.ar" class="ml-2" type="link">
             </plex-button>
-            <plex-button type="link" icon="message-alert" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
+
+            <!-- Alertas mobile -->
+            <plex-button *mobile type="link" icon="vacuna" class="color-procedimiento" size="sm"
+                         hint="2da dosis pendiente" hintIcon="bell" hintType="warning" detach="top"
+                         [routerLink]="[{ outlets: { listado: ['misVacunas'] } }]">
+            </plex-button>
+            <plex-button *mobile type="link" icon="recipiente" class="color-procedimiento" size="sm"
+                         hint="resultados sin leer" hintIcon="bell" hintType="warning" detach="top"
+                         [routerLink]="[{ outlets: { listado: ['misLaboratorios'] } }]">
+            </plex-button>
+            <plex-button *mobile type="link" icon="lupa-ojo" class="color-hallazgo" size="sm"
+                         hint="nuevo hallazgo registrado" hintIcon="bell" hintType="warning" detach="top"
+                         [routerLink]="[{ outlets: { listado: ['misProblemas'] } }]">
+            </plex-button>
+
+            <plex-button type="link" icon="mail" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
                          hintType="warning" detach="top" [routerLink]="[{ outlets: { listado: ['misMensajes'] } }]">
             </plex-button>
+
             <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión">
             </plex-button>
 
@@ -35,7 +48,6 @@
         </plex-title>
 
         <plex-grid cols="12" size="md">
-
             <!-- Menu Lateral -->
             <plex-grid id="menu-vertical" *ngIf="!isResponsive()" span="{{ valorMenu }}"
                        class="d-flex align-self-start mr-2 flex-column" size="xs">
@@ -64,7 +76,7 @@
 
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title size="{{ isResponsive() ? 'md' : 'sm' }}"
+        <plex-title size=" {{ isResponsive() ? 'md' : 'sm' }}"
                     titulo="{{ isResponsive() ? 'DETALLE' : 'detalle de la consulta' }}">
             <plex-button type="danger" icon="close" size="sm" (click)="contraerSidebar()" class="ml-2"></plex-button>
         </plex-title>

@@ -14,7 +14,7 @@ export class MisVacunasComponent implements OnInit {
     public vacuna$;
     public vacunas$;
 
-    sidebarValue: number;
+    mainValue: number;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 
@@ -24,7 +24,7 @@ export class MisVacunasComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit(): void {
-        this.prestacionService.valorActual.subscribe(valor => this.sidebarValue = valor);
+        this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
 
         // Servicios
         this.vacunas$ = this.prestacionService.getVacunas();

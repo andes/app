@@ -14,7 +14,7 @@ export class MisDocumentosComponent implements OnInit {
     public documento$;
     public documentos$;
 
-    sidebarValue = 12;
+    mainValue = 12;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 

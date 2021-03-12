@@ -14,7 +14,7 @@ export class MisTurnosComponent implements OnInit {
     public turno$;
     public turnos$;
 
-    sidebarValue = 9;
+    mainValue = 9;
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 
