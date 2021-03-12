@@ -35,4 +35,5 @@ export interface ICiudadano {
     relacion: string;
     diaseleccionados: string;
     recaptcha: string;
+    morbilidades?: any[];
 }

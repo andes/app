@@ -57,6 +57,17 @@
                                    placeholder="maria@gmail.com" [required]="true">
                         </plex-text>
                     </plex-grid>
+                    <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre == 'factores-riesgo'">
+                        <hr>
+                        <div>
+                            <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
+                                        name="plex-morbilidades" [data]="morbilidades"
+                                        [(ngModel)]="ciudadano.morbilidades" [multiple]="true"></plex-radio>
+                            <plex-label
+                                        titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
+                            </plex-label>
+                        </div>
+                    </ng-container>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
                         <hr>
                         <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>
