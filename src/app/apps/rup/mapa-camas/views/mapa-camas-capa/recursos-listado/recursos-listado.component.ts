@@ -16,8 +16,10 @@ export class RecursosListadoComponent implements OnInit {
     selectedCama$: Observable<ISnapshot>;
     @Output() accionRecurso = new EventEmitter<any>();
     @Input() permisoIngreso: boolean;
+    @Input() permisoBloqueo: boolean;
     selectedId;
     estadoRelacion: any;
+    canEdit: Boolean;
     constructor(
         private mapaCamasService: MapaCamasService,
         public auth: Auth,
@@ -27,6 +29,7 @@ export class RecursosListadoComponent implements OnInit {
 
     }
     ngOnInit() {
+        this.canEdit = this.permisosMapaCamasService.camaEdit;
         this.sectore$ = this.mapaCamasService.snapshotOrdenado$.pipe(
             map(snapshots => {
                 const arreglo = [];

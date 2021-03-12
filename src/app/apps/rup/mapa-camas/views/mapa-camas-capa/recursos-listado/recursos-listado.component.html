@@ -16,11 +16,9 @@
                            name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}"></plex-icon>
                 <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ sector.nombre }}"></plex-label>
                 <ng-container *ngIf="cama.paciente">
-                    <section>
-                        <plex-label align="start" icon="paciente" size="sm"
-                                    titulo="{{ cama.paciente?.nombre }} {{ cama.paciente?.apellido }}"
-                                    subtitulo="{{ cama.paciente?.documento }}"></plex-label>
-                    </section>
+                    <plex-label align="center" icon="paciente" size="sm" direction="column"
+                                titulo="{{ cama.paciente?.nombre }} {{ cama.paciente?.apellido }}"
+                                subtitulo="{{ cama.paciente?.documento }}"></plex-label>
                 </ng-container>
 
                 <ng-container ngProjectAs="plex-button" *ngIf="permisosMapaCamasService.movimientos">

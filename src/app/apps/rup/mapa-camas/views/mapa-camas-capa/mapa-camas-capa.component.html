@@ -56,6 +56,7 @@
 
         <ng-container *ngIf="listadoRecursos">
             <app-recursos-listado [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                  [permisoBloqueo]="permisosMapaCamasService.bloqueo"
                                   (accionRecurso)='accionListadoRecurso($event)'></app-recursos-listado>
 
         </ng-container>
