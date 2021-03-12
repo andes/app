@@ -42,11 +42,11 @@ export class InscripcionComponent implements OnInit {
         { id: 'nocorresponde', nombre: 'No corresponde a mi situación' },
     ];
     public morbilidades = [
-        { id: 'Diabetes (insulinodependiente y no insulinodependiente)', label: 'Diabetes (insulinodependiente y no insulinodependiente)' },
-        { id: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)', label: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)' },
-        { id: 'Enfermedad cardiovascular', label: 'Enfermedad cardiovascular' },
-        { id: 'Enfermedad renal crónica', label: 'Enfermedad renal crónica' },
-        { id: 'Enfermedad respiratoria crónica', label: 'Enfermedad respiratoria crónica' }
+        { id: 'diabetes', label: 'Diabetes (insulinodependiente y no insulinodependiente)' },
+        { id: 'obesidad', label: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)' },
+        { id: 'cardiovascular', label: 'Enfermedad cardiovascular' },
+        { id: 'renal', label: 'Enfermedad renal crónica' },
+        { id: 'respiratoria', label: 'Enfermedad respiratoria crónica' }
     ];
     public ciudadano: ICiudadano = {
         id: null,
@@ -145,22 +145,27 @@ export class InscripcionComponent implements OnInit {
     seleccionaGrupo() {
         const grupo = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
+        this.infoCud = false;
         if (grupo) {
-            if (grupo.nombre !== 'discapacidad') {
-                this.infoCud = false;
-                // Mayores de 60
-                if (grupo.nombre === 'mayores60') {
+            switch (grupo.nombre) {
+                case 'discapacidad':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
+                case 'mayores60':
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
-                    // Personal de salud
-                } else {
+                    break;
+                case 'personal-salud':
+                case 'policia':
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
+                    break;
+                case 'factores-riesgo': {
+                    this.fechaMinimaNacimiento = moment().subtract(59, 'years').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
                 }
-                // Adultos con certificado único de discapacidad, mayores de 18 años y factores de riesgo
-            } else {
-                this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
             }
         }
     }
@@ -178,7 +183,7 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
         this.ciudadano.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
-        this.ciudadano.morbilidades = this.ciudadano.morbilidades.length > 0 ? this.ciudadano.morbilidades.map(c => c.label) : [];
+        this.ciudadano.morbilidades = this.ciudadano.morbilidades ? this.ciudadano.morbilidades.map(c => c.id) : [];
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
             if (inscripto.documento) {
                 this.modal.showed = true;
