@@ -12,6 +12,7 @@ import { ICiudadano } from '../interfaces/ICiudadano';
 import { InscripcionService } from '../services/inscripcion.service';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { captcha } from '../../../../environments/apiKeyMaps';
 
 @Component({
     selector: 'inscripcion',
@@ -85,6 +86,7 @@ export class InscripcionComponent implements OnInit {
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
     public grupoSelected;
+    public captchaEnabled = true;
 
     constructor(
         private plex: Plex,
@@ -94,6 +96,7 @@ export class InscripcionComponent implements OnInit {
         private grupoPoblacionalService: GrupoPoblacionalService,
         private route: ActivatedRoute
     ) {
+        this.captchaEnabled = captcha.enabled;
         this.plex.updateTitle('Inscripción a vacunación COVID-19 - Provincia de Neuquén');
         this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
             cache()
