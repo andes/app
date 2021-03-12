@@ -41,6 +41,13 @@ export class InscripcionComponent implements OnInit {
         { id: 'martes', nombre: 'Martes, jueves y sábados' },
         { id: 'nocorresponde', nombre: 'No corresponde a mi situación' },
     ];
+    public morbilidades = [
+        { id: 'Diabetes (insulinodependiente y no insulinodependiente)', label: 'Diabetes (insulinodependiente y no insulinodependiente)' },
+        { id: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)', label: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)' },
+        { id: 'Enfermedad cardiovascular', label: 'Enfermedad cardiovascular' },
+        { id: 'Enfermedad renal crónica', label: 'Enfermedad renal crónica' },
+        { id: 'Enfermedad respiratoria crónica', label: 'Enfermedad respiratoria crónica' }
+    ];
     public ciudadano: ICiudadano = {
         id: null,
         fechaRegistro: null,
@@ -73,6 +80,7 @@ export class InscripcionComponent implements OnInit {
         estado: 'pendiente',
         diaseleccionados: '',
         recaptcha: '',
+        morbilidades: undefined
     };
 
     public relacion = null;
@@ -170,6 +178,7 @@ export class InscripcionComponent implements OnInit {
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
         this.ciudadano.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
+        this.ciudadano.morbilidades = this.ciudadano.morbilidades.length > 0 ? this.ciudadano.morbilidades.map(c => c.label) : [];
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
             if (inscripto.documento) {
                 this.modal.showed = true;
@@ -214,7 +223,8 @@ export class InscripcionComponent implements OnInit {
             relacion: '',
             estado: 'pendiente',
             diaseleccionados: '',
-            recaptcha: ''
+            recaptcha: '',
+            morbilidades: undefined,
         };
         this.formulario.form.markAsPristine();
     }
