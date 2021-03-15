@@ -10,6 +10,14 @@
                    case="lowercase" required>
     </plex-datetime>
     <plex-button *mobile="false" type="info" icon="backup-restore" size="md"></plex-button>
+    <plex-dropdown *mobile icon="calendar" type="info" right="false">
+        <plex-datetime label="Desde" [skipBy]="'day'" [(ngModel)]="tModel.fechaHora" name="fechaHora" case="lowercase"
+                       required>
+        </plex-datetime>
+        <plex-datetime label="Hasta" [skipBy]="'day'" [(ngModel)]="tModel.fechaHora" name="fechaHora" case="lowercase"
+                       required>
+        </plex-datetime>
+    </plex-dropdown>
 
     <div collapse>
         <plex-grid type="auto" size="sm" cols="12">

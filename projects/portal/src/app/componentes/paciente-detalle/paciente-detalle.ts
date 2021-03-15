@@ -45,7 +45,7 @@ export class PacienteDetalleComponent implements OnInit {
     pacientes$: Observable<Paciente[]>;
     paciente$: Observable<Paciente>;
     width: number;
-    datosSecundarios = true;
+    datosSecundarios = false;
     selectedId: number;
 
     public contenido = '';

@@ -1,4 +1,4 @@
-<plex-list>
+<plex-list height="60vh">
     <plex-item *ngFor="let laboratorio of laboratorios$ | async" (click)="selected(laboratorio)">
         <plex-bool *ngIf="seleccionMultiple" type="checkbox"></plex-bool>
         <plex-label size="lg" icon="recipiente" titulo="{{ laboratorio.tipo }}"

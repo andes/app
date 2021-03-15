@@ -13,7 +13,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -106,7 +106,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -199,7 +199,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -292,7 +292,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -385,7 +385,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -478,7 +478,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -571,7 +571,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -664,7 +664,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [
             {
@@ -756,7 +756,7 @@ export const AGENDAS: Agenda[] = [
         paciente: [{
             id: '2ebqd',
             nombre: 'Nombre completo',
-            apellido: 'Apellido del paciente',
+            apellido: 'Apellido',
         }],
         turnos: [{
             horaInicio: '10:30 hs.',

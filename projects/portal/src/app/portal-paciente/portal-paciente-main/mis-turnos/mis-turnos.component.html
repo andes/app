@@ -1,4 +1,4 @@
-<plex-list>
+<plex-list height="60vh">
     <plex-item *ngFor="let turno of turnos$ | async" (click)="selected(turno)" [selected]="turno.selected">
         <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion }}"
                     subtitulo="{{ turno.horaInicio }} hs.">

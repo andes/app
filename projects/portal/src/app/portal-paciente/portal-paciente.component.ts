@@ -27,16 +27,16 @@ export class PortalPacienteComponent implements OnInit {
     @Output() eventoSidebar = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 
-    // Menu lateral
+    // Navegación lateral
     valorMain = 11;
     valorMenu = 1;
     valorResultante = this.valorMain - this.valorMenu;
-    main = 12
+
     selectedId: number;
     card$: Observable<Card>;
-    mainValue: number;
+    mainValue = 12;
     sidebarValue: number;
-    valorFoco: string;
+    valorFoco: string = 'main';
     previousUrl: string;
     width = 0;
 

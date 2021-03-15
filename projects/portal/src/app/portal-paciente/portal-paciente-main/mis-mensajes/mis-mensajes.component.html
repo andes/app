@@ -1,4 +1,4 @@
-<plex-list>
+<plex-list height="60vh">
     <plex-item *ngFor="let mensaje of mensajes$ | async" (click)="selected(mensaje)" [selected]="mensaje.selected">
         <plex-label size="lg" icon="mail" type="info" titulo="{{ mensaje.titulo }}"
                     subtitulo="{{ mensaje.nota | slice:0:35 }}...">

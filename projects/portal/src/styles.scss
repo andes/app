@@ -193,11 +193,26 @@ div[collapse] {
     margin: 0!important;
 }
 
-// Override
+// Overrides (buscar soluciones PLEX!)
 plex-item section.item.custom-colors.selectable.selected {
     background-color: #edf8fd!important;
     
     &:hover {
         color: black!important;
+    }
+}
+
+@media screen and (max-width: 780px) {
+    plex-detail {
+        & > section {
+            width: 100%;
+            &.direction-row {
+                & div.contenedor-textos {
+                    margin-right: 0!important;
+                    justify-content: space-between;
+                    width: 100%!important;
+                }    
+            }
+        } 
     }
 }

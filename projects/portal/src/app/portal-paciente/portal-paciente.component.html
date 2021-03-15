@@ -9,34 +9,25 @@
             </plex-button>
 
             <!-- Alertas mobile -->
-            <plex-button *mobile type="link" icon="vacuna" class="color-procedimiento" size="sm"
-                         hint="2da dosis pendiente" hintIcon="bell" hintType="warning" detach="top"
-                         [routerLink]="[{ outlets: { listado: ['misVacunas'] } }]">
-            </plex-button>
-            <plex-button *mobile type="link" icon="recipiente" class="color-procedimiento" size="sm"
-                         hint="resultados sin leer" hintIcon="bell" hintType="warning" detach="top"
-                         [routerLink]="[{ outlets: { listado: ['misLaboratorios'] } }]">
-            </plex-button>
-            <plex-button *mobile type="link" icon="lupa-ojo" class="color-hallazgo" size="sm"
-                         hint="nuevo hallazgo registrado" hintIcon="bell" hintType="warning" detach="top"
-                         [routerLink]="[{ outlets: { listado: ['misProblemas'] } }]">
-            </plex-button>
+            <ng-container *ngFor="let card of cards$ | async | slice:4:8">
+                <plex-icon *mobile name="{{ card.icono }}"
+                           class="px-2 py-1 color-{{ card.semanticTag }} border-{{ card.semanticTag }}" size="sm"
+                           hint="2da dosis pendiente" hintIcon="bell" hintType="warning" detach="top"
+                           [routerLink]="[{ outlets: { listado: [card.path] } }]">
+                </plex-icon>
+            </ng-container>
 
-            <plex-button type="link" icon="mail" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
-                         hintType="warning" detach="top" [routerLink]="[{ outlets: { listado: ['misMensajes'] } }]">
-            </plex-button>
-
-            <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión">
+            <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión" routerLink="/">
             </plex-button>
 
             <!-- Menu hamburguesa -->
             <plex-help *ngIf="isResponsive()" size="sm" class="ml-2" type="info" icon="menu">
-                <div info>
+                <div info id="menuHelp">
                     <plex-grid size="xs">
                         <ng-container *ngFor="let card of cards$ | async">
                             <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}"
                                         titulo="{{ card.nombre }}" subtitulo=""
-                                        [routerLink]="[{ outlets: { listado: [card.path] } }]">
+                                        [routerLink]="[{ outlets: { listado: [card.path] } }]" (click)="cerrarHelp()">
                             </plex-label>
                         </ng-container>
                     </plex-grid>
@@ -47,7 +38,7 @@
             </plex-help>
         </plex-title>
 
-        <plex-grid cols="12" size="md">
+        <plex-grid cols="12" size="md" class="mr-2">
             <!-- Menu Lateral -->
             <plex-grid id="menu-vertical" *ngIf="!isResponsive()" span="{{ valorMenu }}"
                        class="d-flex align-self-start mr-2 flex-column" size="xs">
@@ -76,8 +67,7 @@
 
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title size=" {{ isResponsive() ? 'md' : 'sm' }}"
-                    titulo="{{ isResponsive() ? 'DETALLE' : 'detalle de la consulta' }}">
+        <plex-title size=" {{ isResponsive() ? 'md' : 'sm' }}" titulo="{{ isResponsive() ? 'detalle' : 'detalles' }}">
             <plex-button type="danger" icon="close" size="sm" (click)="contraerSidebar()" class="ml-2"></plex-button>
         </plex-title>
         <!--<router-outlet name="detalle"></router-outlet>-->

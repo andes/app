@@ -13,6 +13,7 @@ export class DetalleOrganizacionComponent implements OnInit {
 
     public selectedId;
     public organizaciones$;
+    public registros$;
     public prestaciones$;
     organizacion$: Observable<Organizacion>;
 
@@ -116,6 +117,7 @@ export class DetalleOrganizacionComponent implements OnInit {
 
     ngOnInit() {
         this.organizaciones$ = this.prestacionService.getOrganizaciones();
+        this.registros$ = this.prestacionService.getRegistros();
 
         // Mostrar detalle de organizacion
         this.organizacion$ = this.route.paramMap.pipe(

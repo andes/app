@@ -25,7 +25,7 @@
     </plex-grid>
 
     <plex-title size="sm" titulo="Registros en esta organizacion"></plex-title>
-    <plex-accordion *ngFor="let registro of prestacionService.registros | slice:1:3">
+    <plex-accordion *ngFor="let registro of registros$ | async | slice:1:4">
         <plex-panel>
             <section plex-accordion-title justify>
                 <div class="w-50">

@@ -1,10 +1,20 @@
 <plex-grid size="md" type="full">
     <ng-container *ngFor="let paciente of pacientes$ | async | slice:0:1">
-        <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin'">
+        <plex-detail justify size="{{ isResponsive() ? 'sm' : 'md' }}"
+                     [ngClass]="isResponsive() ? 'no-margin' : 'no-margin'">
             <plex-badge></plex-badge>
             <img src="{{ paciente.foto }}" alt="">
-            <div title>{{ paciente.nombre }}<br>{{ paciente.apellido }}</div>
-            <div subtitle>{{ paciente.documento }}<br>
+            <div class="no-margin" title justify aligned="center">{{ paciente.nombre }}<br>{{ paciente.apellido }}
+                <section class="flex-column" aligned="center">
+                    <plex-button *mobile size="sm" type="warning" (click)="openModal(0)"
+                                 [icon]="isResponsive() ? 'account-alert' : null" class="ml-4">
+                    </plex-button>
+                    <plex-button *mobile size="sm" type="info" icon="information-variant"
+                                 tooltip="ver datos secundarios" (click)="ocultarDatos()" class="ml-4 mt-1">
+                    </plex-button>
+                </section>
+            </div>
+            <div subtitle *mobile="false">{{ paciente.documento }}<br>
                 <plex-button size="sm" type="warning" (click)="openModal(0)"
                              label="{{ isResponsive() ? 'reportar error' : 'reportar error en mis datos' }}"
                              class="mt-4 mr-2">
@@ -35,9 +45,9 @@
 
 
 <!-- MODAL: Reporte de errores -->
-<plex-modal size="md" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="false">
+<plex-modal size="sm" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="false">
     <plex-icon name="alert-circle" type="warning"></plex-icon>
-    <plex-modal-title type="default">Reportando error en sus datos</plex-modal-title>
+    <plex-modal-title class="text-center" type="default">Reportando error en sus datos</plex-modal-title>
     <plex-modal-subtitle center class="font-subtitle text-muted text-center">
         Al completar los siguientes datos y aceptar, usted iniciará un proceso que será sometido a auditoría
         para corroborar el error reportado.

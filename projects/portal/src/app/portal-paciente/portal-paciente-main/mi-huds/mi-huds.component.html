@@ -13,10 +13,9 @@
     </plex-item>
 </plex-list>
 
-<section *ngIf="verHuds === false" class="d-flex flex-column mt-4" align="center" justify="center">
-    <plex-label size="xl" case="capitalize-first" direction="column" titulo="Bienvenido a mi portal de salud!"
-                subtitulo="Aquí podrás visualizar tu Historia Unificada de Salud
-    y comunicarte con organizaciones y equipos de salud" icon="paciente"></plex-label>
+<section *ngIf="verHuds === false" class="d-flex flex-column mt-4 h-50" aligned="center" justify="center">
+    <plex-label size="xl" case="capitalize-first" direction="column" titulo="Mi portal de salud" subtitulo="Aquí podrás navegar tu Historia Unificada de Salud
+    y comunicarte con organizaciones y con tu equipo de salud" icon="paciente"></plex-label>
     <plex-button type="info" class="mt-4" size="md" label="Navegar mi historia de salud" (click)="mostrarHuds()"
                  routerLink="miHuds">
     </plex-button>
