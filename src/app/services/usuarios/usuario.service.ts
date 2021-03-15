@@ -65,8 +65,8 @@ export class UsuarioService {
 
     }
 
-    updateUsuario(usuario, permisos, options?: Options): Observable<any> {
-        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { permisos }, options);
+    updateUsuarioPermisos(usuario, tipoPermisos, options?: Options): Observable<any> {
+        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { tipoPermisos }, options);
     }
 
     createUsuario(usuario, options?: Options): Observable<any> {

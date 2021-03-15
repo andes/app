@@ -5,8 +5,6 @@ import { UsuarioService } from 'src/app/services/usuarios/usuario.service';
 import { UsuariosHttp } from '../../../apps/gestor-usuarios/services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { getObjSexos } from '../../../utils/enumerados';
-import { certificadosProfesionalesCovid } from '../../../utils/permisos/permisos-update';
-import { tokenFormularioProfesional } from '../../../../../src/environments/apiKeyMaps';
 
 
 @Component({
@@ -41,6 +39,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   };
   public estaValidado = false;
   public user = null;
+  private tipoPermisos = 'certificadosCovid19';
 
   constructor(
     private profesionalService: ProfesionalService,
@@ -60,8 +59,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
     this.profesionalService.validarProfesional({
       documento: this.profesional.documento,
       sexo: this.profesional.sexo.id,
-      nroTramite: this.profesional.nroTramite,
-      permisos: certificadosProfesionalesCovid
+      nroTramite: this.profesional.nroTramite
     }).subscribe(
       (datos) => {
         if (datos) {
@@ -168,7 +166,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   }
 
   verificarUsuario() {
-    this.usuariosHttp.find({ documento: this.profesional.documento, token: tokenFormularioProfesional.key }).subscribe(user => {
+    this.usuariosHttp.find({ documento: this.profesional.documento, token: this.token }).subscribe(user => {
       this.user = user;
       this.existeUsuario = user.length ? true : false;
     });
@@ -176,11 +174,10 @@ export class InscripcionProfesionalesComponent implements OnInit {
 
   agregarPermisos() {
     this.enProceso = true;
-    const permisos = certificadosProfesionalesCovid;
-    this.usuarioService.updateUsuario(this.user[0]._id, permisos, { token: tokenFormularioProfesional.key }).subscribe(user => {
+    this.usuarioService.updateUsuarioPermisos(this.user[0]._id, this.tipoPermisos, { token: this.token }).subscribe(user => {
       if (user) {
         const contactoProfesional = this.updateContactos();
-        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: tokenFormularioProfesional.key }).subscribe((res) => {
+        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: this.token }).subscribe((res) => {
           if (res) {
             this.enProceso = false;
             this.plex.info('success', 'Sus permisos fueron actualizado correctamente', 'Se encuentra autorizado para generar certificados COVID19');
@@ -198,12 +195,12 @@ export class InscripcionProfesionalesComponent implements OnInit {
       nombre: this.profesional.nombre,
       apellido: this.profesional.apellido,
       email: this.profesional.email,
-      permisos: certificadosProfesionalesCovid
+      tipoPermisos: this.tipoPermisos
     };
-    this.usuarioService.createUsuario(newUser, { token: tokenFormularioProfesional.key }).subscribe(user => {
+    this.usuarioService.createUsuario(newUser, { token: this.token }).subscribe(user => {
       if (user) {
         const contactoProfesional = this.updateContactos();
-        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: tokenFormularioProfesional.key }).subscribe((res) => {
+        this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: this.token }).subscribe((res) => {
           if (res) {
             this.plex.info('success', `Un email a ${newUser.email} fue enviado con sus datos de inicio de sesión`, 'Su usuario fue creado correctamente');
             this.enProceso = false;
