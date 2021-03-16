@@ -2,6 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuarios/usuario.service';
+import { captcha } from 'src/environments/apiKeyMaps';
 import { UsuariosHttp } from '../../../apps/gestor-usuarios/services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { getObjSexos } from '../../../utils/enumerados';
@@ -20,6 +21,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   public recaptcha = null;
   public enProceso = false;
   public token = '';
+  public captchaEnabled = true;
   public profesional = {
     id: '',
     documento: '',
@@ -47,7 +49,9 @@ export class InscripcionProfesionalesComponent implements OnInit {
     private usuarioService: UsuarioService,
     private plex: Plex,
     private router: Router
-  ) { }
+  ) {
+    this.captchaEnabled = captcha.enabled;
+  }
 
   ngOnInit(): void {
     this.sexos = getObjSexos();

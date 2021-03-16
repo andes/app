@@ -17,13 +17,17 @@
                     <plex-int [(ngModel)]="profesional.nroTramite" name="nroTramite" label="Número de Trámite del DNI"
                               required="true">
                     </plex-int>
-                    <div class="mt-3">
-                        <re-captcha [(ngModel)]="profesional.recaptcha" name="recaptcha" (resolved)="resolved($event)">
+                    <div class="mt-3" *ngIf="captchaEnabled">
+                        <re-captcha [(ngModel)]=" profesional.recaptcha" name="recaptcha" (resolved)="resolved($event)">
                         </re-captcha>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3" *ngIf="captchaEnabled">
                         <plex-button [disabled]="formInscripcion.invalid || !recaptcha" type="success"
                                      (click)="getProfesional()">
+                            VALIDAR</plex-button>
+                    </div>
+                    <div class="mt-3" *ngIf="!captchaEnabled">
+                        <plex-button [disabled]="formInscripcion.invalid" type="success" (click)="getProfesional()">
                             VALIDAR</plex-button>
                     </div>
                 </form>
