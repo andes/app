@@ -9,7 +9,7 @@
             </div>
 
             <div class="mb-2">
-                <plex-text [autoFocus]="true" [(ngModel)]="usuario" name="usuario" placeholder="usuario (e-mail)">
+                <plex-text email [autoFocus]="true" [(ngModel)]="usuario" name="usuario" placeholder="usuario (e-mail)">
                     <plex-icon name="account-key" left></plex-icon>
                 </plex-text>
             </div>
@@ -23,8 +23,8 @@
                 </plex-text>
             </div>
             <div class="mb-3">
-                <plex-button type="success" [validateForm]="formulario" [disabled]="!formulario.form.valid"
-                             (click)="login()" size="block">
+                <plex-button type="success" [validateForm]="formulario" name="enviar"
+                             [disabled]="!formulario.form.valid" (click)="login()" size="block">
                     Iniciar sesión
                 </plex-button>
             </div>
