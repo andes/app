@@ -7,18 +7,21 @@ import { Observable } from 'rxjs';
 })
 
 export class PacientePortalService {
-    private hudsURl = '/modules/rup/prestaciones/huds/';
-    private pacienteV2 = '/modules/mobileApp/paciente';
+    private mobileUrl = '/modules/mobileApp/';
 
     constructor(
-        private server: Server,
+        private server: Server
     ) { }
 
     getById(id: String, options?: any): Observable<any> {
-        return this.server.get(`${this.pacienteV2}/${id}`, options);
+        return this.server.get(`${this.mobileUrl}/paciente/${id}`, options);
     }
 
-    getHuds(id, expresionSnomed): Observable<any> {
-        return this.server.get(`${this.hudsURl}${id}?expresion=${expresionSnomed}`);
+    getHuds(id, expresionSnomed, valor = true): Observable<any> {
+        const params = {
+            expresion: expresionSnomed,
+            valor
+        };
+        return this.server.get(`${this.mobileUrl}/prestaciones/huds/${id}`, { params });
     }
 }

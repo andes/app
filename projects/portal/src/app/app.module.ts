@@ -12,11 +12,12 @@ import { Auth } from '@andes/auth';
 // Declarations
 import { HomeComponent } from './home.component';
 import { LoginComponent } from './login/login-portal-paciente';
-import { LoginService } from './login/service/login-portal-paciente.service';
 import { PortalPacienteComponent } from './portal-paciente/portal-paciente.component';
 import { PortalPacienteMainComponent } from './portal-paciente/portal-paciente-main.component';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
-
+import { RoutingGuard } from './app.routings-guard.class';
+import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
+import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,18 +32,18 @@ import { PacienteDetalleComponent } from './components/paciente-detalle.componen
     AppRoutingModule,
     PlexModule.forRoot({ networkLoading: true }),
     FormsModule,
-    HttpClientModule
-  ],
-  providers: [
-    Server,
-    LoginService,
-    Auth,
     HttpClientModule,
     InfiniteScrollModule,
     SharedModule,
-    FormsModule,
+    ReactiveFormsModule,
+    MPILibModule
+  ],
+  providers: [
+    Server,
+    Auth,
     FormGroupDirective,
-    ReactiveFormsModule
+    RoutingGuard,
+    AdjuntosService
   ],
   bootstrap: [AppComponent]
 })
