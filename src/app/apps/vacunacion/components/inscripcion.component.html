@@ -33,6 +33,17 @@
                                   [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                   label="Número de Trámite del DNI" [required]="true">
                         </plex-int>
+                        <a class="d-inline-block"
+                           *ngIf="ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'"
+                           href="javascript:void(0)" (click)="infoNT()">
+                            <plex-icon *ngIf="!infoNrotramite" name="chevron-right" type="info"></plex-icon>
+                            <plex-icon *ngIf="infoNrotramite" name="chevron-down" type="info"></plex-icon>
+                            Consulta donde encontrar el número de trámite
+                        </a>
+                        <plex-grid cols="2" *ngIf="infoNrotramite">
+                            <img src="assets/img/andes-dni-frente.jpg">
+                            <img src="assets/img/andes-dni-dorso.jpg">
+                        </plex-grid>
                         <plex-select [(ngModel)]="sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                      required="true" placeholder="Seleccione..">
                         </plex-select>
