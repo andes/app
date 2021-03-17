@@ -81,7 +81,8 @@
                     </ng-container>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre !== 'discapacidad'">
                         <hr>
-                        <plex-label titulo="Condiciones de Salud" size="lg"></plex-label>
+                        <plex-label titulo="Precauciones relacionadas con la seguridad de la inmunización" size="lg">
+                        </plex-label>
                         <div>
                             <plex-bool type="checkbox" name="alergia" [(ngModel)]="ciudadano.alergia"
                                        label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento">
@@ -89,14 +90,8 @@
                             <plex-bool type="checkbox" name="condicion" [(ngModel)]="ciudadano.condicion"
                                        label="Tengo una enfermedad / condición que compromete GRAVEMENTE mis defensas">
                             </plex-bool>
-                            <plex-bool type="checkbox" name="enfermedad" [(ngModel)]="ciudadano.enfermedad"
-                                       label="Estoy cursando una enfermedad / complicación aguda (clínica o quirúrgica) que me debilita">
-                            </plex-bool>
                             <plex-bool type="checkbox" name="convaleciente" [(ngModel)]="ciudadano.convaleciente"
                                        label="Estoy todavía debilitado y recuperándome de una enfermedad / complicación aguda (convaleciente)">
-                            </plex-bool>
-                            <plex-bool type="checkbox" name="aislamiento" [(ngModel)]="ciudadano.aislamiento"
-                                       label="Estoy esperando el alta de aislamiento por tener COVID confirmado o por haber sido contacto estrecho de un caso COVID">
                             </plex-bool>
                             <plex-bool type="checkbox" name="vacuna" [(ngModel)]="ciudadano.vacuna"
                                        label="He recibido otra vacuna hace MENOS de 4 semanas"></plex-bool>
