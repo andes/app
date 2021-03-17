@@ -36,7 +36,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         ConsultaComponent,
         InscripcionComponent,
         ListadoInscriptosVacunacionComponent,
-        FiltrosVacunacionComponent
+        FiltrosVacunacionComponent,
+        ConsultaComponent
     ],
     providers: [
         {
