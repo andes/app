@@ -57,4 +57,10 @@ export class DocumentosService {
             saveAs(nombreArchivo, 'pdf')
         );
     }
+
+    descargarAgenda(params, nombreArchivo: string): Observable<any> {
+        return this.download('agenda/pdf', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
 }

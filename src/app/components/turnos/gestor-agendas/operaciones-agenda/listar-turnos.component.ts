@@ -1,10 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import * as moment from 'moment';
-
+import { DocumentosService } from '../../../../services/documentos.service';
 @Component({
     selector: 'listar-turnos',
     templateUrl: 'listar-turnos.html',
@@ -34,7 +31,7 @@ export class ListarTurnosComponent implements OnInit {
     // turnosAsignados = [];
     public idOrganizacion = this.auth.organizacion.id;
 
-    constructor(public plex: Plex, public servicePaciente: PacienteService, public auth: Auth) { }
+    constructor(public plex: Plex, private documentosService: DocumentosService, private auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
@@ -42,8 +39,9 @@ export class ListarTurnosComponent implements OnInit {
     }
 
     // Abre diálogo de impresión del navegador
-    imprimir() {
-        window.print();
+    printAgenda(agendas) {
+        const agendaId = agendas[0].id;
+        this.documentosService.descargarAgenda({ agendaId }, 'agenda').subscribe();
     }
 
     // Vuelve al gestor
