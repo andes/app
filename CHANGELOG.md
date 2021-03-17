@@ -1,3 +1,16 @@
+# [5.38.0](https://github.com/andes/app/compare/v5.37.0...v5.38.0) (2021-03-17)
+
+
+### Bug Fixes
+
+* **VAC:** Agrega la selección de factores de riesgo en la inscripción ([#2164](https://github.com/andes/app/issues/2164)) ([4f28281](https://github.com/andes/app/commit/4f282812870f87c4d8d33b952718607e2cda2038))
+
+
+### Features
+
+* **vac:** formulario segun grupo poblacional ([#2158](https://github.com/andes/app/issues/2158)) ([b30e044](https://github.com/andes/app/commit/b30e044a9b4faeead7d4b1490a0c537f10b11868))
+* **vac:** variable para deshabilitar control de captcha ([#2155](https://github.com/andes/app/issues/2155)) ([3099dbf](https://github.com/andes/app/commit/3099dbf0306f736bc1e59b54f318276e737fddb3))
+
 # [5.37.0](https://github.com/andes/app/compare/v5.36.0...v5.37.0) (2021-03-10)
 
 
