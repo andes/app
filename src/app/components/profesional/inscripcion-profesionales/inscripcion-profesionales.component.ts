@@ -66,7 +66,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
       nroTramite: this.profesional.nroTramite
     }).subscribe(
       (datos) => {
-        if (datos) {
+        if (datos.profesional) {
           this.token = datos.token;
           this.profesional.id = datos.profesional.id;
           this.profesional.nombre = datos.profesional.nombre;
@@ -158,11 +158,13 @@ export class InscripcionProfesionalesComponent implements OnInit {
       if (profesional.formacionGrado?.length) {
         ultimaEspecialidad = profesional.formacionGrado.length - 1;
         especialidad = profesional.formacionGrado[ultimaEspecialidad];
-        ultimaMatricula = especialidad.matriculacion[especialidad.matriculacion.length - 1];
-        if (ultimaMatricula.fin > new Date()) {
-          resultado['numeroMatricula'] = ultimaMatricula.matriculaNumero;
-          resultado['profesion'] = especialidad.profesion.nombre;
-          resultado['fechaFin'] = ultimaMatricula.fin;
+        if (especialidad.matriculado) {
+          ultimaMatricula = especialidad.matriculacion[especialidad.matriculacion.length - 1];
+          if (ultimaMatricula.fin > new Date()) {
+            resultado['numeroMatricula'] = ultimaMatricula.matriculaNumero;
+            resultado['profesion'] = especialidad.profesion.nombre;
+            resultado['fechaFin'] = ultimaMatricula.fin;
+          }
         }
       }
     }
