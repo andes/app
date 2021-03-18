@@ -233,60 +233,68 @@ export class FormNuevaSolicitudComponent implements OnInit {
                 'pendiente',
                 'ejecucion'
             ],
-            paciente: this.paciente.documento,
+            idPaciente: this.paciente.id,
             prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId
         };
         this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
             if (resultado.length) {
-                this.plex.toast('danger', `El paciente ya tiene una solicitud en curso para ${this.modelo.solicitud.tipoPrestacion.term}`);
+                this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${this.modelo.solicitud.tipoPrestacion.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                    if (confirmar) {
+                        this.postSolicitud();
+                    }
+                });
             } else {
-                if (this.tipoSolicitud === 'entrada') {
-                    this.modelo.solicitud.organizacion = this.auth.organizacion;
-                    // ------- solo solicitudes de entrada pueden ser autocitadas  ------
-                    if (this.autocitado) {
-                        this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
-                        this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
-                        this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
-                        // solicitudes autocitadas
-                        this.modelo.estados = [{ tipo: 'pendiente' }];
-                    }
-                } else {
-                    this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-                    let reglaAplicada = this.arrayReglasDestino.find(r => r.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
-                        r.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
-                    let reglaOrigen = reglaAplicada.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
-                    if (reglaOrigen.auditable) {
-                        this.modelo.estados = [{ tipo: 'auditoria' }];
-                    } else {
-                        this.modelo.estados = [{ tipo: 'pendiente' }];
-                    }
-                }
-                this.modelo.solicitud.registros.push({
-                    nombre: this.modelo.solicitud.tipoPrestacion.term,
-                    concepto: this.modelo.solicitud.tipoPrestacion,
-                    valor: {
-                        solicitudPrestacion: {
-                            motivo: this.motivo,
-                            autocitado: this.autocitado
-                        },
-                        documentos: this.documentos
-                    },
-                    tipo: 'solicitud'
-                });
-                this.modelo.paciente = {
-                    id: this.paciente.id,
-                    nombre: this.paciente.nombre,
-                    apellido: this.paciente.apellido,
-                    documento: this.paciente.documento,
-                    sexo: this.paciente.sexo,
-                    fechaNacimiento: this.paciente.fechaNacimiento
-                };
-                // Se guarda la solicitud 'pendiente' de prestación
-                this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-                    this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                    this.operacionFinalizada.emit(true);
-                });
+                this.postSolicitud();
             }
+        });
+    }
+
+    private postSolicitud() {
+        if (this.tipoSolicitud === 'entrada') {
+            this.modelo.solicitud.organizacion = this.auth.organizacion;
+            // ------- solo solicitudes de entrada pueden ser autocitadas  ------
+            if (this.autocitado) {
+                this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
+                this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
+                // solicitudes autocitadas
+                this.modelo.estados = [{ tipo: 'pendiente' }];
+            }
+        } else {
+            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            const reglaAplicada = this.arrayReglasDestino.find(regla => regla.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
+                regla.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
+            const reglaOrigen = reglaAplicada.origen.prestaciones.find(regla => { return regla.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
+            if (reglaOrigen.auditable) {
+                this.modelo.estados = [{ tipo: 'auditoria' }];
+            } else {
+                this.modelo.estados = [{ tipo: 'pendiente' }];
+            }
+        }
+        this.modelo.solicitud.registros.push({
+            nombre: this.modelo.solicitud.tipoPrestacion.term,
+            concepto: this.modelo.solicitud.tipoPrestacion,
+            valor: {
+                solicitudPrestacion: {
+                    motivo: this.motivo,
+                    autocitado: this.autocitado
+                },
+                documentos: this.documentos
+            },
+            tipo: 'solicitud'
+        });
+        this.modelo.paciente = {
+            id: this.paciente.id,
+            nombre: this.paciente.nombre,
+            apellido: this.paciente.apellido,
+            documento: this.paciente.documento,
+            sexo: this.paciente.sexo,
+            fechaNacimiento: this.paciente.fechaNacimiento
+        };
+        // Se guarda la solicitud 'pendiente' de prestación
+        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+            this.operacionFinalizada.emit(true);
         });
     }
 
