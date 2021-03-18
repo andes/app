@@ -4,9 +4,11 @@ import { cache } from '@andes/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ProvinciaService } from 'src/app/services/provincia.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
@@ -172,8 +174,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     private plex: Plex,
     private auth: Auth,
     private organizacionService: OrganizacionService,
-    private router: Router
-
+    private router: Router,
+    private snomedService: SnomedService,
+    public servicePaciente: PacienteService
   ) { }
 
   ngOnChanges(): void {
@@ -229,9 +232,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
               if (valor instanceof Date) {
                 params[key] = valor;
               } else {
-                if (valor.id) {
+                if (valor?.id) {
                   // caso en el que los select usan el select-search.directive que viene con los dos campos
-                  if (valor.nombre) {
+                  if (valor?.nombre) {
                     params[key] = {
                       id: valor.id,
                       nombre: valor.nombre
@@ -280,6 +283,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       },
       zonaSanitaria: this.zonaSanitaria
     };
+    const contactosPaciente = fichaFinal.secciones.find(elem => elem.name === 'Mpi');
+    if (contactosPaciente) {
+      this.setMpiPaciente(contactosPaciente.fields);
+    }
     if (this.fichaPaciente) {
       this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
         res => {
@@ -431,6 +438,66 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           });
         }
       });
+    }
+  }
+
+  getSnomed(query, event) {
+    this.snomedService.getQuery({ expression: query }).subscribe(res => {
+      event.callback(res);
+    });
+  }
+
+  setMpiPaciente(contactosPaciente) {
+    const nuevoContacto = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'telefonocaso');
+    if (nuevoContacto >= 0) {
+      this.addContactoMpi('celular', Object.values(contactosPaciente[nuevoContacto])[0]);
+    }
+    const dirPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'direccioncaso');
+    const provinciaPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'lugarresidencia');
+    const localidadPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'localidadresidencia');
+    if (dirPaciente >= 0 || provinciaPaciente >= 0 || localidadPaciente >= 0) {
+      const nuevaLocalidad = Object.values(contactosPaciente[localidadPaciente])[0];
+      const nuevaProvincia = Object.values(contactosPaciente[provinciaPaciente])[0];
+      const nuevaDireccion = {
+        valor: dirPaciente >= 0 ? Object.values(contactosPaciente[dirPaciente])[0]?.toString() : null,
+        ultimaActualizacion: new Date(),
+        activo: true,
+        ubicacion: {
+          localidad: nuevaLocalidad ? {
+            id: nuevaLocalidad['id'],
+            nombre: nuevaLocalidad['nombre'],
+          } : null,
+          provincia: nuevaProvincia ? {
+            id: nuevaProvincia['id'],
+            nombre: nuevaProvincia['nombre'],
+          } : null,
+          barrio: null,
+          pais: null
+        },
+        codigoPostal: '',
+        ranking: 0,
+        geoReferencia: null
+      };
+      this.paciente.direccion[0] = nuevaDireccion.ubicacion.localidad?.id ||
+        nuevaDireccion.ubicacion.provincia?.id ||
+        nuevaDireccion.valor ? nuevaDireccion : this.paciente.direccion[0];
+    }
+    this.servicePaciente.save(this.paciente).subscribe();
+  }
+
+  addContactoMpi(key, value) {
+    let index = this.paciente.contacto.findIndex(item => item.tipo === key);
+    if (index >= 0) {
+      this.paciente.contacto[index].valor = value;
+    } else {
+      let nuevo = {
+        tipo: key,
+        valor: value,
+        ranking: 1,
+        activo: true,
+        ultimaActualizacion: new Date()
+      };
+      this.paciente.contacto.push(nuevo);
     }
   }
 }
