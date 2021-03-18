@@ -10,7 +10,7 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente$ | async" [operacion]="'operacionTurnos'" [paciente]='paciente'
+        <turnos-paciente [paciente]='paciente' [turnos]="turnosPaciente$ | async" [operacion]="'operacionTurnos'"
                          (turnosPacienteChanged)="refresh()" *plTab>
         </turnos-paciente>
     </plex-tab>
@@ -21,8 +21,7 @@
                     [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
-                            <plex-badge *ngIf="turno.estado === 'fuera-agenda'" 
-                                        type="warning">
+                            <plex-badge *ngIf="turno.estado === 'fuera-agenda'" type="warning">
                                 FUERA DE AGENDA</plex-badge>
                             <plex-badge *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
                                         type="success">
