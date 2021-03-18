@@ -2,7 +2,7 @@
     <plex-layout-main>
       <plex-title main titulo="Listado de Formularios">
         <plex-button type="danger" [routerLink]="'/home'"> Cancelar </plex-button>
-        <plex-button type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
+        <plex-button *ngIf="canCreate" type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
       </plex-title>
       <div *ngxObserve="forms$ as forms; before: loadingTemplate; error: errorTemplate">
 
@@ -20,7 +20,7 @@
                   </plex-badge>
               </td>
               <td *plTableCol="'col-4'">
-                <plex-button type="info" icon="pencil" size="sm" [routerLink]="[item.id]"></plex-button>
+                <plex-button *ngIf="canUpdate" type="info" icon="pencil" size="sm" [routerLink]="[item.id]"></plex-button>
               </td>
           </tr>
         </plex-table>
