@@ -4,57 +4,53 @@
             <plex-button *ngIf="estaValidado" type="warning" (click)="resetForm()">
                 VOLVER</plex-button>
         </plex-title>
-        <div class="row w-100" *ngIf="!estaValidado">
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-6 col-12">
-                <form #formInscripcion="ngForm">
-                    <plex-text [(ngModel)]="profesional.documento" name="documento" label="Documento" required="true">
+        <plex-grid cols="3" size="xl">
+            <div></div>
+            <form #formInscripcion="ngForm">
+                <plex-wrapper *ngIf="!estaValidado">
+                    <plex-text [(ngModel)]="profesional.documento" name="documento" label="Documento" required="true"
+                               grow="full">
                     </plex-text>
                     <plex-select [(ngModel)]="profesional.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
-                                 required="true">
+                                 required="true" grow="full">
                     </plex-select>
                     <plex-int [(ngModel)]="profesional.nroTramite" name="nroTramite" label="Número de Trámite del DNI"
-                              required="true">
+                              required="true" grow="full">
                     </plex-int>
-                    <div class="mt-3" *ngIf="captchaEnabled">
+                    <div class="mt-3" grow="full" *ngIf="captchaEnabled">
                         <re-captcha [(ngModel)]=" profesional.recaptcha" name="recaptcha" (resolved)="resolved($event)">
                         </re-captcha>
                     </div>
-                    <div class="mt-3" *ngIf="captchaEnabled">
-                        <plex-button [disabled]="formInscripcion.invalid || !recaptcha" type="success"
-                                     (click)="getProfesional()">
-                            VALIDAR</plex-button>
-                    </div>
-                    <div class="mt-3" *ngIf="!captchaEnabled">
-                        <plex-button [disabled]="formInscripcion.invalid" type="success" (click)="getProfesional()">
-                            VALIDAR</plex-button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row w-100" *ngIf="estaValidado">
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-6 col-12">
-                <form #formValidado="ngForm">
+                    <plex-button class="mt-3" *ngIf="captchaEnabled" [disabled]="formInscripcion.invalid || !recaptcha"
+                                 type="success" (click)="getProfesional()" grow="full">
+                        VALIDAR</plex-button>
+                    <plex-button class="mt-3" *ngIf="!captchaEnabled" [disabled]="formInscripcion.invalid"
+                                 type="success" (click)="getProfesional()" grow="full">
+                        VALIDAR</plex-button>
+                </plex-wrapper>
+            </form>
+            <div></div>
+            <div></div>
+            <form #formValidado="ngForm">
+                <plex-wrapper *ngIf="estaValidado">
                     <plex-text [(ngModel)]="profesional.nombreCompleto" name="nombreCompleto" label="Apellido y Nombre"
-                               readonly="true">
+                               readonly="true" grow="full">
                     </plex-text>
                     <plex-text [(ngModel)]="profesional.fechaNacimiento" name="fechaNacimiento"
-                               label="Fecha de nacimiento" readonly="true"></plex-text>
-                    <plex-text [(ngModel)]="profesional.matricula" name="matricula" label="Matrícula" readonly="true">
+                               label="Fecha de nacimiento" readonly="true" grow="full"></plex-text>
+                    <plex-text [(ngModel)]="profesional.matricula" name="matricula" label="Matrícula" readonly="true"
+                               grow="full">
                     </plex-text>
                     <plex-text [(ngModel)]="profesional.profesion" name="profesion" label="Profesión / Especialidad"
-                               readonly="true">
+                               readonly="true" grow="full">
                     </plex-text>
                     <plex-text email [(ngModel)]="profesional.email" name="email" label="Email"
-                               [required]="!existeUsuario">
+                               [required]="!existeUsuario" grow="full">
                     </plex-text>
-                    <plex-text [(ngModel)]="profesional.telefono" name="telefono" label="Telefono">
+                    <plex-text [(ngModel)]="profesional.telefono" name="telefono" label="Telefono" grow="full">
                     </plex-text>
                     <div class="mt-3" *ngIf="profesional.estaMatriculado">
-                        <plex-badge type="success">
+                        <plex-badge type="success" size="block">
                             Su matrícula se encuentra vigente hasta la fecha: {{profesional.caducidadMatricula | fecha}}
                         </plex-badge>
                         <plex-bool (change)="verificarUsuario()" type="checkbox" name="aceptaPermisos"
@@ -63,7 +59,7 @@
                         </plex-bool>
                     </div>
                     <div class="mt-3" *ngIf="!profesional.estaMatriculado">
-                        <plex-badge type="danger">
+                        <plex-badge type="danger" size="block">
                             Su matrícula no se encuentra vigente</plex-badge>
                         <plex-label titulo="Atención"
                                     subtitulo="Deberá renovar su matrícula para continuar con el proceso de habilitación">
@@ -73,16 +69,17 @@
                     </div>
                     <div class="mt-3" *ngIf="aceptaPermisos">
                         <plex-button [disabled]="enProceso || formValidado.invalid" *ngIf="existeUsuario" type="success"
-                                     (click)="agregarPermisos()">Certificado de vacuna
+                                     (click)="agregarPermisos()" grow="full">Certificado de vacuna
                             COVID19
                         </plex-button>
                         <plex-button [disabled]="enProceso || formValidado.invalid" *ngIf="!existeUsuario"
-                                     type="success" (click)="createUser()">
+                                     type="success" (click)="createUser()" grow="full">
                             Nuevo Usuario
                         </plex-button>
                     </div>
-                </form>
-            </div>
-        </div>
+                </plex-wrapper>
+            </form>
+            <div></div>
+        </plex-grid>
     </plex-layout-main>
 </plex-layout>
