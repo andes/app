@@ -27,6 +27,7 @@ export class InscripcionComponent implements OnInit {
     public profesiones$: Observable<any>;
     public opcionesGrupos$: Observable<any>;
     public infoCud = false;
+    public infoNrotramite = false;
     public sexos: any[];
     public relacionLaboral = [
         { id: 'planta', label: 'Personal de planta' },
@@ -65,9 +66,7 @@ export class InscripcionComponent implements OnInit {
         cud: '',
         alergia: false,
         condicion: false,
-        enfermedad: false,
         convaleciente: false,
-        aislamiento: false,
         vacuna: false,
         plasma: false,
         amamantando: false,
@@ -146,6 +145,7 @@ export class InscripcionComponent implements OnInit {
         const grupo = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
         this.infoCud = false;
+        this.infoNrotramite = false;
         if (grupo) {
             switch (grupo.nombre) {
                 case 'discapacidad':
@@ -172,6 +172,10 @@ export class InscripcionComponent implements OnInit {
 
     infoCUD() {
         this.infoCud = !this.infoCud;
+    }
+
+    infoNT() {
+        this.infoNrotramite = !this.infoNrotramite;
     }
 
     save(valid) {
@@ -214,9 +218,7 @@ export class InscripcionComponent implements OnInit {
             cud: '',
             alergia: false,
             condicion: false,
-            enfermedad: false,
             convaleciente: false,
-            aislamiento: false,
             vacuna: false,
             plasma: false,
             amamantando: false,

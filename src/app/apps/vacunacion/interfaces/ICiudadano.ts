@@ -21,9 +21,7 @@ export interface ICiudadano {
     estado: string;
     alergia: boolean;
     condicion: boolean;
-    enfermedad: boolean;
     convaleciente: boolean;
-    aislamiento: boolean;
     vacuna: boolean;
     plasma: boolean;
     amamantando: boolean;
