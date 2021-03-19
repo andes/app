@@ -2,6 +2,7 @@ import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { environment } from '../../../../environments/environment';
+import { Auth } from '@andes/auth';
 
 @Directive({
     selector: '[mpiFotoPaciente]'
@@ -25,7 +26,8 @@ export class FotoDirective implements OnDestroy {
 
     constructor(
         private el: ElementRef,
-        private fileService: AdjuntosService
+        private fileService: AdjuntosService,
+        private auth: Auth
     ) { }
 
     ngOnDestroy() {
@@ -43,7 +45,6 @@ export class FotoDirective implements OnDestroy {
                         this.io.unobserve(this.el.nativeElement);
                         this.showImage(paciente, token);
                     }
-
                 },
                 { rootMargin: '20px', threshold: 0 }
             );
@@ -59,7 +60,10 @@ export class FotoDirective implements OnDestroy {
     }
 
     private makeURL(paciente: IPaciente, token: string) {
-        const url = `${environment.API}/core-v2/mpi/pacientes/${paciente.id}/foto/${paciente.fotoId}?token=${token}`;
+        let url = `${environment.API}/core-v2/mpi/pacientes/${paciente.id}/foto/${paciente.fotoId}?token=${token}`;
+        if (this.auth.mobileUser) {
+            url += `&pacienteToken=${window.sessionStorage.getItem('jwt')}`;
+        }
         return url;
     }
 

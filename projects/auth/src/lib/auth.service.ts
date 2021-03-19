@@ -43,6 +43,7 @@ export class Auth {
     public profesional: string;
     public orgs = [];
     private permisos: string[];
+    public mobileUser: any;
 
 
     constructor(private server: Server) {
@@ -85,6 +86,16 @@ export class Auth {
             tap((data) => {
                 window.sessionStorage.setItem('jwt', data.token);
                 this.estado = Estado.inProgress;
+            })
+        );
+    }
+
+    mobileLogin(email: string, password: string): Observable<any> {
+        return this.server.post('/modules/mobileApp/login', { email, password }, {}).pipe(
+            tap((data) => {
+                window.sessionStorage.setItem('jwt', data.token);
+                this.mobileUser = data.user;
+                this.estado = Estado.active;
             })
         );
     }
@@ -144,12 +155,12 @@ export class Auth {
 
     // Metodo que invoca a la api para realizar el recovering de la password
     setValidationTokenAndNotify(usuario: Number): Observable<any> {
-        return this.server.post('/auth/setValidationTokenAndNotify', {username: usuario}, {showError: false});
+        return this.server.post('/auth/setValidationTokenAndNotify', { username: usuario }, { showError: false });
     }
 
     // Método que modifica la contraseña del usuario
     resetPassword(data): Observable<any> {
-        return this.server.post('/auth/resetPassword', data, {showError: false});
+        return this.server.post('/auth/resetPassword', data, { showError: false });
     }
 
 
