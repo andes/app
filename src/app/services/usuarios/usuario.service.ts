@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Server } from '@andes/shared';
+import { Options } from 'projects/shared/src/lib/server/options';
 
 
 @Injectable()
@@ -9,6 +10,8 @@ export class UsuarioService {
     private usuarioUrl = '/modules/usuarios';  // URL to web api
 
     private permisosUrl = '/core/tm/permisos';
+
+    private gestorUsuariosUrl = '/modules/gestor-usuarios/usuarios';
 
     constructor(private server: Server) { }
 
@@ -50,17 +53,24 @@ export class UsuarioService {
 
     saveDisclaimer(usuario: any, disclaimer: any): Observable<any> {
         if (usuario.username) {
-            return this.server.post(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers/${disclaimer.id}`, { usuario: usuario, disclaimer: disclaimer });
+            return this.server.post(`${this.gestorUsuariosUrl}/${usuario.username}/disclaimers/${disclaimer.id}`, { usuario: usuario, disclaimer: disclaimer });
         }
 
     }
 
     getDisclaimers(usuario: any): Observable<any> {
         if (usuario.username) {
-            return this.server.get(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers`);
+            return this.server.get(`${this.gestorUsuariosUrl}/${usuario.username}/disclaimers`);
         }
 
     }
 
+    updateUsuarioPermisos(usuario, tipoPermisos, options?: Options): Observable<any> {
+        return this.server.put(`${this.gestorUsuariosUrl}/${usuario}/organizaciones/permisos`, { tipoPermisos }, options);
+    }
 
+    createUsuario(usuario, options?: Options): Observable<any> {
+        return this.server.post(`${this.gestorUsuariosUrl}/create`, usuario, options);
+
+    }
 }

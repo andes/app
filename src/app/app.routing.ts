@@ -52,6 +52,7 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 // Buscador de turnos y prestaciones
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
+import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 
 const appRoutes: Routes = [
 
@@ -168,12 +169,15 @@ const appRoutes: Routes = [
 
     { path: 'mapa-camas', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-    // dejar siempre al último porque no encuentra las url después de esta
     { path: 'novedades/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades/:modulo', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades/:modulo/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'vacunacion', loadChildren: () => import('./apps/vacunacion/vacunacion.module').then(m => m.VacunacionModule), canActivate: [] },
+
+    // Inscripcion de profesionales
+    { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar] },
+
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }
 ];

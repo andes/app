@@ -52,11 +52,13 @@ export class Server {
     }
 
     private prepareOptions(options: Options) {
+        let token = window.sessionStorage.getItem('jwt') || options?.token || options?.params?.token;
+        token = token ? `JWT ${token}` : '';
         const result: any = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : ''
-            }),
+                'Authorization': token
+            })
         };
         if (options && options.responseType) {
             result.responseType = options.responseType;

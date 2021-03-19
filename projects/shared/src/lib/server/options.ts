@@ -3,4 +3,5 @@ export interface Options {
   showError?: boolean;
   showLoader?: boolean;
   responseType?: 'json' | 'blob';
+  token?: string;
 }

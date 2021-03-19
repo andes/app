@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
+import { Options } from 'projects/shared/src/lib/server/options';
 
 @Injectable()
 export class ProfesionalService {
@@ -74,5 +74,13 @@ export class ProfesionalService {
         // return this.http.put(this.profesionalUrl + "/" + profesional.id, bodyString, options) // ...using post request
         //     .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
         //     .catch(this.handleError); //...errors if any
+    }
+
+    validarProfesional(body): Observable<any> {
+        return this.server.post(this.profesionalUrl + '/validar', body);
+    }
+
+    actualizarProfesional(body, options?: Options): Observable<any> {
+        return this.server.put(this.profesionalUrl + '/actualizar', body, options);
     }
 }
