@@ -22,6 +22,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
   public enProceso = false;
   public token = '';
   public captchaEnabled = true;
+  public infoNroTramite = false;
   public profesional = {
     id: '',
     documento: '',
@@ -234,5 +235,9 @@ export class InscripcionProfesionalesComponent implements OnInit {
 
   renovarMatricula() {
     this.router.navigate(['matriculaciones']);
+  }
+
+  infoTramite() {
+    this.infoNroTramite = !this.infoNroTramite;
   }
 }
