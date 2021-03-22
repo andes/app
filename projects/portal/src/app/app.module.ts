@@ -10,10 +10,9 @@ import { Server, SharedModule } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
 // Declarations
-import { HomeComponent } from './home.component';
-import { LoginComponent } from './login/login-portal-paciente';
-import { PortalPacienteComponent } from './portal-paciente/portal-paciente.component';
-import { PortalPacienteMainComponent } from './portal-paciente/portal-paciente-main.component';
+import { LoginComponent } from './pages/login/login-portal-paciente';
+import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
+import { PortalPacienteMainComponent } from './pages/portal-paciente/portal-paciente-main.component';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
@@ -21,7 +20,6 @@ import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     LoginComponent,
     PortalPacienteComponent,
     PacienteDetalleComponent,

@@ -2,11 +2,15 @@
     <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
         <plex-badge></plex-badge>
         <img [mpiFotoPaciente]="paciente">
-        <div title>{{ paciente.nombre }}<br>{{ paciente.apellido }}</div>
-        <div subtitle>{{ paciente.documento }}<br>
+        <div title>
+            {{ paciente.nombre }} <br> {{ paciente.apellido }}
+        </div>
+        <div subtitle>
+            {{ paciente.documento }}
+            <br>
             <plex-button class="mt-4 mr-2" size="sm" type="warning"
                          label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
-                         (click)="openModal()">
+                         (click)="modal.show()">
             </plex-button>
             <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios"
                          (click)="datosSecundarios = !datosSecundarios">
@@ -19,7 +23,7 @@
 
 
 <!-- MODAL: Reporte de errores -->
-<plex-modal size="md" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="false">
+<plex-modal size="md" #modal [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="true">
     <plex-icon name="alert-circle" type="warning"></plex-icon>
     <plex-modal-title type="default">Reportando error en sus datos</plex-modal-title>
     <plex-modal-subtitle center class="font-subtitle text-muted text-center">
@@ -40,10 +44,10 @@
                                [(ngModel)]="descripcionError">
                     </plex-text>
                 </div>
-                <plex-button modal left type="danger" (click)="closeModal()" [validateForm]="formulario">
+                <plex-button modal left type="danger" (click)="modal.close()" [validateForm]="formulario">
                     CANCELAR
                 </plex-button>
-                <plex-button modal right type="success" (click)="closeModal()">
+                <plex-button modal right type="success" (click)="modal.close()">
                     ACEPTAR
                 </plex-button>
             </form>

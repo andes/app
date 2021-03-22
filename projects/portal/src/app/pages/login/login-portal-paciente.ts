@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 
 @Component({
-    selector: 'app-login-portal',
+    selector: 'pdp-login-portal',
     templateUrl: 'login-portal-paciente.component.html'
 })
 export class LoginComponent implements OnInit {
@@ -13,7 +13,8 @@ export class LoginComponent implements OnInit {
     public password: string;
     public loading = false;
 
-    constructor(private plex: Plex,
+    constructor(
+        private plex: Plex,
         private router: Router,
         private auth: Auth
     ) { }
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.usuario = this.usuario.toLocaleLowerCase();
         this.auth.mobileLogin(this.usuario, this.password).subscribe(() => {
-            this.router.navigate(['/portal-paciente']);
+            this.router.navigate(['/home']);
         },
             (err) => {
                 this.plex.info('danger', 'Usuario o contraseña incorrectos');

@@ -26,7 +26,6 @@ export class PacienteDetalleComponent implements OnInit {
     public descripcionError = '';
     public errores: any[];
 
-    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     constructor(
         private pacienteService: PacientePortalService,
@@ -58,11 +57,4 @@ export class PacienteDetalleComponent implements OnInit {
         return this.width >= 980;
     }
 
-    openModal() {
-        this.modal.show();
-    }
-
-    closeModal() {
-        this.modal.close();
-    }
 }
