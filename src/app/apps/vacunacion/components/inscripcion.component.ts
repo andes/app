@@ -125,6 +125,7 @@ export class InscripcionComponent implements OnInit {
                         this.grupoSelected = grupos.find(g => g.nombre === params.grupo);
                         if (this.grupoSelected) {
                             this.ciudadano.grupo = this.grupoSelected;
+                            this.seleccionaGrupo();
                         }
                     })
                 ).subscribe();
