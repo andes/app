@@ -2,7 +2,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 import { Plex } from '@andes/plex';
 import { Options } from './options';
@@ -12,11 +12,19 @@ import { throwError } from 'rxjs';
 // Constantes
 const defaultOptions: Options = { params: null, showError: true, showLoader: true };
 
+export const APP_HOST = new InjectionToken<boolean>('APP_HOST');
+
 @Injectable()
 export class Server {
     private baseURL: string;
 
-    constructor(private http: HttpClient, private plex: Plex) { }
+    constructor(
+        private http: HttpClient,
+        private plex: Plex,
+        @Inject(APP_HOST) private host: string
+    ) {
+        this.baseURL = this.host;
+    }
 
     private parse(data: any): any {
         let dateISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.,]\d+)?Z/i;

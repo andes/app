@@ -11,7 +11,6 @@ export class AppComponent {
         private server: Server,
         private plex: Plex
     ) {
-        this.server.setBaseURL(environment.API);
         this.plex.navVisible(false);
     }
 }

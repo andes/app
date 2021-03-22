@@ -17,6 +17,8 @@ import { PacienteDetalleComponent } from './components/paciente-detalle.componen
 import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +34,7 @@ import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
     FormsModule,
     HttpClientModule,
     InfiniteScrollModule,
-    SharedModule,
+    SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
     MPILibModule
   ],

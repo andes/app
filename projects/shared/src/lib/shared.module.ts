@@ -3,7 +3,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
 
-import { Server } from './server/server.service';
+import { APP_HOST, Server } from './server/server.service';
 import { FechaPipe } from './pipes/fecha.pipe';
 import { HoraPipe } from './pipes/hora.pipe';
 import { EdadPipe } from './pipes/edad.pipe';
@@ -54,11 +54,12 @@ import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-
     ]
 })
 export class SharedModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(host: string): ModuleWithProviders {
         return {
             ngModule: SharedModule,
             providers: [
-                Server
+                Server,
+                { provide: APP_HOST, useValue: host }
             ]
         };
     }
