@@ -160,7 +160,7 @@ export class InscripcionComponent implements OnInit {
                 case 'personal-salud':
                 case 'policia':
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                    this.fechaMaximaNacimiento = moment().add(1, 'hour').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
                     break;
                 case 'factores-riesgo': {
                     this.fechaMinimaNacimiento = moment().subtract(59, 'years').toDate();
