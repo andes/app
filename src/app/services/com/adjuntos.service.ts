@@ -21,7 +21,4 @@ export class COMAdjuntosService {
         return this.server.post(this.url + '/store', { file, metadata });
     }
 
-    generateToken() {
-        return this.server.post('/auth/file-token', {});
-    }
 }

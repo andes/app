@@ -1,3 +1,4 @@
+import { AdjuntosService } from './../../../rup/services/adjuntos.service';
 import { DriveService } from 'src/app/services/drive.service';
 import { DerivacionesService } from './../../../../services/com/derivaciones.service';
 import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy } from '@angular/core';
@@ -8,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { TipoTrasladoService } from 'src/app/services/com/tipoTraslados.service';
 
@@ -25,7 +25,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     detalle: '';
     // Adjuntar Archivo
     errorExt = false;
-    fileToken: String = null;
+    fileToken: string = null;
     adjuntos = [];
     adjuntosUrl = [];
     imagenes = IMAGENES_EXT;
@@ -66,7 +66,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private profesionalService: ProfesionalService,
         private pacienteService: PacienteService,
         public sanitazer: DomSanitizer,
-        public adjuntosService: COMAdjuntosService,
+        public adjuntosService: AdjuntosService,
         private route: ActivatedRoute,
         private router: Router,
         private driveService: DriveService
@@ -215,7 +215,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         this.adjuntosUrl = this.adjuntos.map((doc) => {
             return {
                 ...doc,
-                url: this.derivacionesService.getUrlImage(doc.id, this.fileToken)
+                url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
             };
         });
     }

@@ -1,13 +1,12 @@
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Plex } from '@andes/plex';
 import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
-import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
+import { AdjuntosService } from '../../rup/services/adjuntos.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -28,7 +27,7 @@ export class DetalleDerivacionComponent implements OnInit {
     // Adjuntar Archivo
     errorExt = false;
     fotos: any[] = [];
-    fileToken: String = null;
+    fileToken: string = null;
     public adjuntosEstado = [];
     timeout = null;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
@@ -45,16 +44,19 @@ export class DetalleDerivacionComponent implements OnInit {
     @Input('derivacion')
     set _derivacion(value) {
         this.derivacion = value;
-        this.reglaSeleccionada = {};
-        this.adjuntosEstado = [];
-        this.documentosEstadoUrl = [];
-        this.adjuntosUrl = this.derivacion.adjuntos.map((doc) => {
-            return {
-                ...doc,
-                url: this.derivacionService.getUrlImage(doc.id, this.fileToken)
-            };
+        this.adjuntosService.generateToken().subscribe((data: any) => {
+            this.fileToken = data.token;
+            this.reglaSeleccionada = {};
+            this.adjuntosEstado = [];
+            this.documentosEstadoUrl = [];
+            this.adjuntosUrl = this.derivacion.adjuntos.map((doc) => {
+                return {
+                    ...doc,
+                    url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
+                };
+            });
+            this.cargarEstado();
         });
-        this.cargarEstado();
     }
 
     @Input('reglasDerivacion')
@@ -75,20 +77,17 @@ export class DetalleDerivacionComponent implements OnInit {
     public esCOM = false;
 
     constructor(
-        public adjuntosService: COMAdjuntosService,
         public sanitazer: DomSanitizer,
         private organizacionService: OrganizacionService,
         private derivacionService: DerivacionesService,
         private auth: Auth,
         public plex: Plex,
-        public driveService: DriveService
+        public driveService: DriveService,
+        private adjuntosService: AdjuntosService
     ) { }
 
     ngOnInit() {
         this.extensions = this.extensions.concat(this.imagenes);
-        this.adjuntosService.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-        });
         this.getOrganizacionesDerivables();
     }
 
@@ -98,25 +97,6 @@ export class DetalleDerivacionComponent implements OnInit {
 
     esImagen(extension) {
         return this.imagenes.find(x => x === extension.toLowerCase());
-    }
-
-    createUrl(doc) {
-        if (doc.id) {
-            let apiUri = environment.API;
-            return apiUri + '/modules/com/store/' + doc.id + '?token=' + this.fileToken;
-        }
-    }
-
-    get documentos() {
-        let adjuntosDerivacion = this.derivacion.adjuntos;
-        if (adjuntosDerivacion) {
-            return adjuntosDerivacion.map((doc) => {
-                doc.url = this.createUrl(doc);
-                return doc;
-            });
-        } else {
-            return [];
-        }
     }
 
     cargarEstado() {
@@ -204,7 +184,7 @@ export class DetalleDerivacionComponent implements OnInit {
         this.documentosEstadoUrl = this.adjuntosEstado.map((doc) => {
             return {
                 ...doc,
-                url: this.derivacionService.getUrlImage(doc.id, this.fileToken)
+                url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
             };
         });
     }

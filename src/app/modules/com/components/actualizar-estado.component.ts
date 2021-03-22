@@ -1,8 +1,8 @@
+import { AdjuntosService } from './../../rup/services/adjuntos.service';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Plex } from '@andes/plex';
 import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
 
@@ -17,7 +17,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
-    fileToken: String = null;
+    fileToken: string = null;
     timeout = null;
     adjuntosEstado;
     imagenes = IMAGENES_EXT;
@@ -45,7 +45,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     @Output() returnEditarEstado: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        public adjuntosService: COMAdjuntosService,
+        public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer,
         private derivacionService: DerivacionesService,
         public plex: Plex,
@@ -100,7 +100,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
         this.documentosUrl = this.adjuntosEstado.map((doc) => {
             return {
                 ...doc,
-                url: this.derivacionService.getUrlImage(doc.id, this.fileToken)
+                url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
             };
         });
     }
