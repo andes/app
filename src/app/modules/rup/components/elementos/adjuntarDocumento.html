@@ -20,7 +20,7 @@
         </div>
         <div class="row">
             <div class="col-12" *ngIf="registro?.valor?.documentos?.length && fileToken && !parametroRegistro">
-                <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+
                 <div class="image-container hr-inline-group">
                     <table class=" table table-striped">
                         <thead>
@@ -35,10 +35,9 @@
                             <tr *ngFor="let doc of registro.valor.documentos; let i = index">
                                 <td>
                                     <div class="image hover">
-                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
-                                             (click)="visualizador.open(i)">
+                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
                                         <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                           class="adjunto" (click)="visualizador.open(i)">
+                                           class="adjunto" (click)="open(i)">
                                             {{ doc.ext }}
                                         </a>
                                     </div>
@@ -70,14 +69,12 @@
                 </div>
             </div>
             <div class="col-12" *ngIf="parametroRegistro">
-                <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
                 <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
                     <a>
                         <div class="image hover">
                             <a [href]="createUrl(doc)" target="_blank" [class.adjunto]="!esImagen(doc.ext)">
                                 <ng-container *ngIf="!esImagen(doc.ext)">{{ doc.ext }}</ng-container>
-                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
-                                     (click)="visualizador.open(i)">
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
                             </a>
                         </div>
                     </a>

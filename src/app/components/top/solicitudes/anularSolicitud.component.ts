@@ -4,6 +4,7 @@ import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service'
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { PlexVisualizadorService } from '@andes/plex';
 
 @Component({
     selector: 'anular-solicitud',
@@ -26,6 +27,7 @@ export class AnularSolicitudComponent implements OnInit {
         public plex: Plex,
         public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer,
+        private plexVisualizador: PlexVisualizadorService
 
     ) { }
 
@@ -83,6 +85,10 @@ export class AnularSolicitudComponent implements OnInit {
         } else {
             return [];
         }
+    }
+
+    open(index: number) {
+        this.plexVisualizador.open(this.documentos, index);
     }
 
 }

@@ -150,5 +150,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             });
         }
     }
+
+    open(index: number) {
+        this.plexVisualizador.open(this.documentos, index);
+    }
 }
 // ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);
