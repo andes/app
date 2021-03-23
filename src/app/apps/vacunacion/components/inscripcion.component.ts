@@ -163,7 +163,7 @@ export class InscripcionComponent implements OnInit {
                     this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
                     break;
                 case 'factores-riesgo': {
-                    this.fechaMinimaNacimiento = moment().subtract(59, 'years').toDate();
+                    this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
                     break;
                 }
@@ -194,6 +194,9 @@ export class InscripcionComponent implements OnInit {
                 this.modal.showed = true;
             }
         }, (error) => {
+            this.ciudadano.morbilidades = this.ciudadano.morbilidades.map(element => {
+                return this.morbilidades.find(morbilidad => morbilidad.id === element);
+            });
             this.recaptcha = '';
             this.plex.info('danger', error, 'La inscripción no pudo realizarse ');
         });
