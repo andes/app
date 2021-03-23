@@ -280,7 +280,7 @@ registerLocaleData(localeEs, 'es');
         GestorUsuariosProvidersModule,
         MPILibModule,
         OrganizacionLibModule,
-        SharedModule,
+        SharedModule.forRoot(environment.API),
         TOPLibModule,
         DirectiveLibModule,
         CITASLibModule,

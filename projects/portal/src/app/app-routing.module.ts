@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { RoutingGuard, RoutingNavBar } from 'src/app/app.routings-guard.class';
-import { HomeComponent } from './home/home.component';
 
+import { LoginComponent } from './pages/login/login-portal-paciente';
+import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
+import { RoutingGuard } from './app.routings-guard.class';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: PortalPacienteComponent, canActivate: [RoutingGuard] }
 ];
 
 @NgModule({

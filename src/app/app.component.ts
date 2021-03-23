@@ -51,8 +51,6 @@ export class AppComponent {
         public adjuntos: AdjuntosService,
         private modulosService: ModulosService,
     ) {
-        // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
-        server.setBaseURL(environment.API);
 
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps de Salud');

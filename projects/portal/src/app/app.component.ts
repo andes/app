@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
-import { Plex} from '@andes/plex';
-
+import { Server } from '@andes/shared';
+import { environment } from '../environments/environment';
+import { Plex } from '@andes/plex';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'pdp-root',
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'portal';
-  constructor(private plex: Plex) {
-  }
+    constructor(
+        private server: Server,
+        private plex: Plex
+    ) {
+        this.plex.navVisible(false);
+    }
 }
