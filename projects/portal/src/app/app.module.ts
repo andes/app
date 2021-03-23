@@ -29,6 +29,8 @@ import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certif
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
 import { CertificadoService } from './services/certificado.service';
 import { CategoriasService } from './services/categoria.service';
+import { PrestacionService } from './services/prestacion.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +69,8 @@ import { CategoriasService } from './services/categoria.service';
     RoutingGuard,
     AdjuntosService,
     CertificadoService,
-    CategoriasService
+    CategoriasService,
+    PrestacionService
   ],
   bootstrap: [AppComponent]
 })
