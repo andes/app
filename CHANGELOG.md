@@ -1,3 +1,17 @@
+# [5.39.0](https://github.com/andes/app/compare/v5.38.0...v5.39.0) (2021-03-24)
+
+
+### Bug Fixes
+
+* **vac:** arrelgo de seteo de fechas cuando el grupo viene por parámetro ([#2175](https://github.com/andes/app/issues/2175)) ([145df10](https://github.com/andes/app/commit/145df107d779282e065e70e3484613a409bbacdc))
+* **VAC:** agrega variable para resguardar los factores de riesgo seleccionados en caso de error ([#2181](https://github.com/andes/app/issues/2181)) ([e3c3df3](https://github.com/andes/app/commit/e3c3df323daf59c5b140ee2ae9f4686096b732f9))
+
+
+### Features
+
+* **inscripcion:** agrega control de edad mayor a 18 en grupo policia y personal de salud ([#2177](https://github.com/andes/app/issues/2177)) ([dbb33d5](https://github.com/andes/app/commit/dbb33d5070dff11eff9ea205985f13aa595a996d))
+* **VAC:** agrega imágenes de número de trámite ([#2165](https://github.com/andes/app/issues/2165)) ([871e8eb](https://github.com/andes/app/commit/871e8eb25e1a9883f783c0fe790a1aee36cee8c9))
+
 # [5.38.0](https://github.com/andes/app/compare/v5.37.0...v5.38.0) (2021-03-17)
 
 
