@@ -26,6 +26,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public puedeEditar: boolean;
   public puedeVer: boolean;
   public pacienteSelected: IPaciente;
+  public query = null;
 
   public columns = [
     {
@@ -78,12 +79,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   }
 
   searchFichas() {
-    let query = {
+    this.query = {
       fechaCondicion: this.formEpidemiologiaService.queryDateParams(this.fechaDesde, this.fechaHasta),
       type: this.typeFicha?.name,
       paciente: this.pacienteSelected?.id
     };
-    this.fichas$ = this.formEpidemiologiaService.search(query);
+    this.fichas$ = this.formEpidemiologiaService.search(this.query);
   }
 
   editarFicha(ficha) {
@@ -121,7 +122,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     this.onSearchClear();
   }
 
-  limpiarPaciente() {
+  resetPacienteSelected() {
     this.pacienteSelected = null;
   }
 }
