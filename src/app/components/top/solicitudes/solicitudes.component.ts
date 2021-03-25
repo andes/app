@@ -58,6 +58,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'asignada', nombre: 'ASIGNADA' },
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
+        { id: 'ejecucion', nombre: 'EJECUCIÓN' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' }
@@ -67,6 +68,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'asignada', nombre: 'ASIGNADA' },
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
+        { id: 'ejecucion', nombre: 'EJECUCIÓN' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' }
@@ -636,8 +638,8 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
-                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional ?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional ?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
                             this.setRouteToParams(['paciente', prestacion.paciente.id]);
