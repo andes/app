@@ -3,6 +3,7 @@ import { CommonNovedadesService } from '../../common-novedades.service';
 import { INovedad } from '../../../../interfaces/novedades/INovedad.interface';
 import { environment } from '../../../../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { PlexVisualizadorService } from '@andes/plex';
 
 @Component({
     selector: 'detalle-novedad',
@@ -14,7 +15,9 @@ export class DetalleNovedadComponent implements OnInit {
 
     constructor(
         private commonNovedadesService: CommonNovedadesService,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private plexVisualizador: PlexVisualizadorService
+    ) {
     }
 
     ngOnInit() {
@@ -48,6 +51,10 @@ export class DetalleNovedadComponent implements OnInit {
             let apiUri = environment.API;
             return apiUri + '/modules/registro-novedades/store/' + doc.id;
         }
+    }
+
+    open(index: number) {
+        this.plexVisualizador.open(this.fotos, index);
     }
 
 }

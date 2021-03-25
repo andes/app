@@ -1,3 +1,4 @@
+import { PlexVisualizadorService } from '@andes/plex';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 
@@ -57,6 +58,12 @@ export class GaleriaArchivosComponent {
 
     extensions = FILE_EXT;
 
+    constructor(
+        private plexVisualizador: PlexVisualizadorService
+    ) {
+
+    }
+
     onRemove(archivo: FileObject) {
         this.remove.emit(archivo);
     }
@@ -69,7 +76,10 @@ export class GaleriaArchivosComponent {
 
     openUrl(archivo: FileObject) {
         window.open(archivo.url);
+    }
 
+    open(index: number) {
+        this.plexVisualizador.open(this.files, index);
     }
 
 

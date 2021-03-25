@@ -7,6 +7,7 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { PlexVisualizadorService } from '@andes/plex';
 
 @Component({
     selector: 'auditar-solicitud',
@@ -56,6 +57,7 @@ export class AuditarSolicitudComponent implements OnInit {
         public sanitazer: DomSanitizer,
         public servicioProfesional: ProfesionalService,
         public auth: Auth,
+        private plexVisualizador: PlexVisualizadorService
 
     ) { }
 
@@ -231,4 +233,7 @@ export class AuditarSolicitudComponent implements OnInit {
         }
     }
 
+    open(index: number) {
+        this.plexVisualizador.open(this.documentos, index);
+    }
 }

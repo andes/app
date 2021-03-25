@@ -24,8 +24,8 @@
             <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" class="text-left">
                 <b>Profesional Origen</b>
                 <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
-                    prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
-                    }}
+                prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
+                }}
             </span>
         </div>
     </div>
@@ -61,12 +61,11 @@
                     <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                         <ng-container
                                       *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                            <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+
                             <div class="image hover">
-                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
-                                     (click)="visualizador.open(i)">
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
                                 <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
-                                   (click)="visualizador.open(i)">
+                                   (click)="open(i)">
                                     {{ doc.ext }}
                                 </a>
                             </div>

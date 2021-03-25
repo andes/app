@@ -16,10 +16,9 @@
             <div class="contenedor-texto">
                 <article [innerHTML]=" novedad.descripcion ">
                 </article>
-                <plex-visualizador [files]="fotos" #visualizador></plex-visualizador>
                 <div class="galeria-imagenes">
-                    <img *ngFor="let item of fotos; let i = index" [src]="item.url" (click)="visualizador.open(i)"
-                         [hidden]="(i===0)" class="img-thumbnail">
+                    <img *ngFor="let item of fotos; let i = index" [src]="item.url" (click)="open(i)" [hidden]="(i===0)"
+                         class="img-thumbnail">
                 </div>
             </div>
         </section>

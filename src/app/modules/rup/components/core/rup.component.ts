@@ -31,6 +31,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { DriveService } from 'src/app/services/drive.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { PlexVisualizadorService } from '@andes/plex';
 
 @Component({
     selector: 'rup',
@@ -148,7 +149,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public vacunasService: VacunasService,
         public driveService: DriveService,
         @Optional() public ejecucionService: RupEjecucionService,
-        public pacienteService: PacienteService
+        public pacienteService: PacienteService,
+        public plexVisualizador: PlexVisualizadorService
     ) {
     }
 
