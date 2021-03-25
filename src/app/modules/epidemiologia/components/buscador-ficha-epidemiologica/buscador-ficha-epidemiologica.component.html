@@ -1,34 +1,29 @@
-<plex-layout>
+<plex-layout [main]="showFicha? 12 : 8">
     <plex-layout-main *ngIf="!showFicha; else elseFicha">
         <plex-title titulo="Fichas epidemiologicas">
-            <plex-button type="success" label="Buscar" (click)="searchFichas()" [disabled]='form.invalid'>
-            </plex-button>
         </plex-title>
-        <form #form="ngForm">
+        <plex-grid type="full" size="lg">
+            <plex-detail size="md" *ngIf="pacienteSelected">
+                <img [mpiFotoPaciente]="pacienteSelected" />
+                <div title>{{ pacienteSelected | nombre }}</div>
+                <div subtitle>{{ (pacienteSelected.documento | number) || 'Sin DNI'}}
+                    <plex-button class="d-block" label="buscar otro paciente" size="sm" type="info"
+                                 (click)="resetPacienteSelected()">
+                    </plex-button>
+                </div>
+            </plex-detail>
             <plex-wrapper>
-                <plex-label titulo="Buscar Paciente"></plex-label>
-                <paciente-buscar grow="full" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
-                </paciente-buscar>
-                <paciente-listado grow="full" *ngIf="resultadoBusqueda?.length" [pacientes]="resultadoBusqueda"
-                                  (selected)="onSelect($event)">
-                </paciente-listado>
-                <plex-item size="xs" grow="auto" *ngIf="pacienteSelected">
-                    <plex-label titulo="{{ pacienteSelected | nombre }}"
-                                subtitulo="{{ (pacienteSelected.documento | number) || 'Sin DNI'}}">
-                    </plex-label>
-                    <plex-button type="danger" size="sm" (click)="limpiarPaciente()">Eliminar</plex-button>
-                </plex-item>
-                <plex-datetime grow="auto" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                               [max]="fechaHasta">
+                <plex-datetime grow="1" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" [max]="fechaHasta">
                 </plex-datetime>
-                <plex-datetime grow="auto" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                               [min]="fechaDesde">
+                <plex-datetime grow="1" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta" [min]="fechaDesde">
                 </plex-datetime>
-                <plex-select grow="auto" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
+                <plex-select grow="1" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
                              labelField="name" name="selectType">
                 </plex-select>
+                <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()">
+                </plex-button>
             </plex-wrapper>
-        </form>
+        </plex-grid>
         <plex-table [columns]="columns" #table="plTable">
             <plex-table-columns>
             </plex-table-columns>
@@ -46,7 +41,29 @@
                 </td>
             </tr>
         </plex-table>
+        <div *ngIf="!(fichas$ | async)?.length" class="h-50" justify="center">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                        [titulo]="query?'No hay resultados': 'Realice una búsqueda'"
+                        subtitulo="Complete los filtros deseados y/o busque por paciente en el panel lateral y presione Buscar Fichas">
+            </plex-label>
+        </div>
     </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="Búsqueda de fichas por paciente">
+        </plex-title>
+        <plex-label titulo="Buscar Paciente"></plex-label>
+        <paciente-buscar (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
+        </paciente-buscar>
+        <paciente-listado *ngIf="resultadoBusqueda?.length && !pacienteSelected" [pacientes]="resultadoBusqueda"
+                          (selected)="onSelect($event)">
+        </paciente-listado>
+        <div *ngIf="!pacienteSelected" class="h-75" justify="center">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                        titulo="Buscar por DNI, Nombre o Apellido"
+                        subtitulo="Seleccione un paciente y presione en Buscar Fichas">
+            </plex-label>
+        </div>
+    </plex-layout-sidebar>
     <ng-template #elseFicha>
         <plex-layout-main>
             <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
