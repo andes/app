@@ -478,7 +478,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     getPrestaciones() {
         return this.servicioPrestacion.get({
             fechaDesde: this.fecha ? this.fecha : new Date(),
-            fechaHasta: new Date(),
+            fechaHasta: this.fecha,
             organizacion: this.auth.organizacion.id,
             sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
