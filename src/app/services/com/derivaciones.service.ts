@@ -8,10 +8,6 @@ export class DerivacionesService extends ResourceBaseHttp {
     constructor(protected server: Server) { super(server); }
     private apiUrl = environment.API;
 
-    getUrlImage(id, fileToken) {
-        return this.apiUrl + '/modules/com/store/' + id + '?token=' + fileToken;
-    }
-
     updateHistorial(id, movimiento) {
         return this.server.post(`/modules/com/derivaciones/${id}/historial`, movimiento);
     }

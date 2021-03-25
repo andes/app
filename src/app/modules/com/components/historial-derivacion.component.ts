@@ -1,8 +1,8 @@
-import { Input, Component, OnInit } from '@angular/core';
-import { COMAdjuntosService } from 'src/app/services/com/adjuntos.service';
+import { Input, Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { Auth } from '@andes/auth';
+import { AdjuntosService } from '../../rup/services/adjuntos.service';
 
 @Component({
     selector: 'historial-derivacion',
@@ -21,14 +21,14 @@ export class HistorialDerivacionComponent {
         this.derivacion = value;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
+            this.cargarItemsHistorial();
         });
-        this.cargarItemsHistorial();
     }
 
     constructor(
         public auth: Auth,
         private derivacionesService: DerivacionesService,
-        public adjuntosService: COMAdjuntosService,
+        public adjuntosService: AdjuntosService,
         public plex: Plex
     ) { }
 
@@ -47,7 +47,7 @@ export class HistorialDerivacionComponent {
         let adjuntosEstado = estado.adjuntos;
         if (adjuntosEstado) {
             return adjuntosEstado.map((doc) => {
-                doc.url = this.derivacionesService.getUrlImage(doc.id, this.fileToken);
+                doc.url = this.adjuntosService.createUrl('drive', doc, this.fileToken);
                 return doc;
             });
         } else {

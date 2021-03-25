@@ -1,7 +1,6 @@
 import { ActualizarEstadoDerivacionComponent } from './components/actualizar-estado.component';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
 import { TipoTrasladoService } from './../../services/com/tipoTraslados.service';
-import { COMAdjuntosService } from './../../services/com/adjuntos.service';
 import { HistorialDerivacionComponent } from './components/historial-derivacion.component';
 import { ComPuntoInicioComponent } from './components/punto-inicio.component';
 import { NgModule } from '@angular/core';
@@ -33,7 +32,6 @@ export const COM_COMPONENTS = [
 ];
 
 export const COM_PROVIDERS = [
-    COMAdjuntosService,
     DerivacionesService,
     ReglasDerivacionService,
     TipoTrasladoService,
