@@ -115,7 +115,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.puedeCrearAgenda = this.auth.check('turnos:crearAgendas');
-        this.puedeRevisarAgendas = this.auth.check('turnos:agenda:puedeRevisions');
+        this.puedeRevisarAgendas = this.auth.check('turnos:agenda:puedeRevision');
 
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
