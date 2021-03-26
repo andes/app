@@ -53,7 +53,8 @@
 
             <!-- Listado -->
             <section span="{{ valorResultante }}">
-                <app-portal-paciente-main (eventoSidebar)="recibirSidebar($event)" (eventoFoco)="recibirFoco($event)">
+                <app-portal-paciente-main (eventoMain)="recibirMain($event)" (eventoSidebar)="recibirSidebar($event)"
+                                          (eventoFoco)="recibirFoco($event)">
                 </app-portal-paciente-main>
             </section>
         </plex-grid>
@@ -66,7 +67,7 @@
         </plex-grid>
 
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <plex-layout-sidebar *ngIf="sidebarValue">
         <plex-title size=" {{ isResponsive() ? 'md' : 'sm' }}" titulo="{{ isResponsive() ? 'detalle' : 'detalles' }}">
             <plex-button type="danger" icon="close" size="sm" (click)="contraerSidebar()" class="ml-2"></plex-button>
         </plex-title>

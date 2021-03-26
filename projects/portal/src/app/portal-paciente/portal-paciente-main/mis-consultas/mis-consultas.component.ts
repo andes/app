@@ -14,8 +14,8 @@ export class MisConsultasComponent implements OnInit {
     public prestacion$;
     public prestaciones$;
 
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -37,6 +37,10 @@ export class MisConsultasComponent implements OnInit {
 
     nuevoValor() {
         this.prestacionService.actualizarValor(9);
+    }
+
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
     }
 
     cambiaFoco() {

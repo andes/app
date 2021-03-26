@@ -14,7 +14,8 @@ export class MiEquipoComponent implements OnInit {
     public profesional$;
     public equipo$;
 
-    @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>();
     @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
@@ -37,6 +38,10 @@ export class MiEquipoComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -44,6 +49,7 @@ export class MiEquipoComponent implements OnInit {
     selected(profesional) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         this.selectedId = profesional.id;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

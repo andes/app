@@ -15,8 +15,8 @@ export class MisTurnosComponent implements OnInit {
     public turnos$;
 
     mainValue = 9;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -38,6 +38,10 @@ export class MisTurnosComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -45,6 +49,7 @@ export class MisTurnosComponent implements OnInit {
     selected(turno) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         turno.selected = !turno.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

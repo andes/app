@@ -39,8 +39,8 @@ export class PacienteDetalleComponent implements OnInit {
     ];
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     pacientes$: Observable<Paciente[]>;
     paciente$: Observable<Paciente>;

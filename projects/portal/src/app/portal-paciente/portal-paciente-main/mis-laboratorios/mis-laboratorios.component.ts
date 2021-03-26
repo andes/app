@@ -16,8 +16,8 @@ export class MisLaboratoriosComponent implements OnInit {
     filtros = true;
 
     mainValue = 12;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -39,6 +39,10 @@ export class MisLaboratoriosComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -47,6 +51,7 @@ export class MisLaboratoriosComponent implements OnInit {
     selected(laboratorio) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = laboratorio.id;

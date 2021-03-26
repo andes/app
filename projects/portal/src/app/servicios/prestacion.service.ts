@@ -35,7 +35,6 @@ import { Registro } from '../modelos/registro';
 @Injectable()
 
 export class PrestacionService {
-
     private previousUrl: string;
     private currentUrl: string;
 
@@ -45,8 +44,12 @@ export class PrestacionService {
     }
 
     // Modifica main ante evento
-    private valorInicial = new BehaviorSubject<number>(9);
+    private valorInicial = new BehaviorSubject<number>(12);
     valorActual = this.valorInicial.asObservable();
+
+    // Muestra/Oculta sidebar ante evento
+    private sidebarInicial = new BehaviorSubject<boolean>(false);
+    sidebarActual = this.sidebarInicial.asObservable();
 
     // Cambia foco ante evento
     private focoInicial = new BehaviorSubject<string>('main');
@@ -69,6 +72,10 @@ export class PrestacionService {
 
     actualizarValor(mainValue: number) {
         this.valorInicial.next(mainValue);
+    }
+
+    actualizarSidebar(sidebarValue: boolean) {
+        this.sidebarInicial.next(sidebarValue);
     }
 
     actualizarFoco(valorFoco: string) {

@@ -38,6 +38,10 @@ export class MisProblemasComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -45,6 +49,7 @@ export class MisProblemasComponent implements OnInit {
     selected(problema) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         problema.selected = !problema.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

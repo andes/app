@@ -15,8 +15,8 @@ export class MisOrganizacionesComponent implements OnInit {
     public organizaciones$;
 
     mainValue = 9;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -38,6 +38,10 @@ export class MisOrganizacionesComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -45,6 +49,7 @@ export class MisOrganizacionesComponent implements OnInit {
     selected(organizacion) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         organizacion.selected = !organizacion.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

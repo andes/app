@@ -16,8 +16,8 @@ export class MisMensajesComponent implements OnInit {
     public mensajes$;
 
     mainValue = 9;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
     filtros = true;
 
     constructor(
@@ -44,6 +44,10 @@ export class MisMensajesComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -51,6 +55,7 @@ export class MisMensajesComponent implements OnInit {
     selected(mensaje) {
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         mensaje.selected = !mensaje.selected;
         this.prestacionService.resetOutlet();
         setTimeout(() => {

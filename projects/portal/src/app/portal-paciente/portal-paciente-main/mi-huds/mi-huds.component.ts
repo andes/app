@@ -40,8 +40,8 @@ export class MiHudsComponent implements OnInit {
 
     public showModal = false;
 
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     updateMaxHora() {
         this.tModel.minHora = moment().add(30, 'minutes').add(1, 'days');
@@ -186,6 +186,10 @@ export class MiHudsComponent implements OnInit {
         this.prestacionService.actualizarValor(9);
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     cambiaFoco() {
         this.prestacionService.actualizarFoco('sidebar');
     }
@@ -194,6 +198,7 @@ export class MiHudsComponent implements OnInit {
         hud.selected = !hud.selected;
         this.nuevoValor();
         this.cambiaFoco();
+        this.mostrarSidebar();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = hud.id;

@@ -15,8 +15,8 @@ export class MisDocumentosComponent implements OnInit {
     public documentos$;
 
     mainValue = 12;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     constructor(
         private prestacionService: PrestacionService,
@@ -35,7 +35,11 @@ export class MisDocumentosComponent implements OnInit {
     }
 
     nuevoValor() {
-        this.prestacionService.actualizarValor(12);
+        this.prestacionService.actualizarValor(9);
+    }
+
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
     }
 
     cambiaFoco() {
@@ -45,7 +49,7 @@ export class MisDocumentosComponent implements OnInit {
     selected(documento) {
         this.nuevoValor();
         this.cambiaFoco();
-
+        this.mostrarSidebar();
         this.prestacionService.resetOutlet();
         setTimeout(() => {
             this.selectedId = documento.id;

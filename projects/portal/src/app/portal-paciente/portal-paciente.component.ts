@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 
 // rxjs
@@ -24,7 +24,7 @@ import { PrestacionService } from '../servicios/prestacion.service';
 export class PortalPacienteComponent implements OnInit {
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
-    @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoMain = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
 
     // Navegación lateral
@@ -34,11 +34,14 @@ export class PortalPacienteComponent implements OnInit {
 
     selectedId: number;
     card$: Observable<Card>;
-    mainValue = 12;
-    sidebarValue: number;
+    mainValue: number;
+    sidebarValue: boolean;
     valorFoco: string = 'main';
     previousUrl: string;
     width = 0;
+
+    public sidebar;
+    public i;
 
     constructor(
         private cardService: CardService,
@@ -49,11 +52,20 @@ export class PortalPacienteComponent implements OnInit {
         private el: ElementRef,
     ) { }
 
+    ngAfterViewInit() {
+        this.sidebarValue = false;
+        this.valorFoco = null;
+    }
+
     ngOnInit() {
+
         this.modelo = { invert: false };
 
-        // Paso valor del sidebar
+        // Paso valor del main
         this.prestacionService.valorActual.subscribe(valor => this.mainValue = valor);
+
+        // Paso valor del sidebar
+        this.prestacionService.sidebarActual.subscribe(valor => this.sidebarValue = valor);
 
         // Paso valor del foco
         this.prestacionService.focoActual.subscribe(valor => this.valorFoco = valor)
@@ -82,15 +94,29 @@ export class PortalPacienteComponent implements OnInit {
         this.plex.info('success', 'Este cartel se demoro un segundo en aparecer después de escribir.');
     }
 
-    recibirSidebar($event) {
+    recibirMain($event) {
         this.mainValue = $event;
     }
 
+    recibirSidebar($event) {
+        this.sidebarValue = $event;
+        console.log(this.sidebarValue)
+
+    }
+
+    // fuerza not-focused (que solo funciona en responsive)
+    //killSidebar() {
+    //    this.sidebar = document.getElementsByClassName("h-100 col-0 not-focused");
+
+    //    for (this.i = 0; this.i < this.sidebar.length; this.i++) {
+    //        this.sidebar[this.i].style.display = 'none';
+    //    }
+    //}
+
     contraerSidebar() {
-        // this.router.navigate(['portal-paciente', this.previousUrl]);
-        this.router.navigate(['portal-paciente']);
         this.mainValue = 12;
-        this.valorFoco = 'main';
+        this.valorFoco = null;
+        this.sidebarValue = false;
     }
 
     // Nav lateral

@@ -20,8 +20,8 @@ export class PortalPacienteMainComponent implements OnInit {
 
     // Expande sidebar
     //mainValue = 9;
-    @Output() eventoSidebar = new EventEmitter<number>();
-    @Output() eventoFoco = new EventEmitter<string>();
+    @Output() eventoMain = new EventEmitter<number>();
+    @Output() eventoSidebar = new EventEmitter<boolean>(); @Output() eventoFoco = new EventEmitter<string>();
 
     agendas$: Observable<Agenda[]>;
     pacientes$: Observable<Paciente[]>;
