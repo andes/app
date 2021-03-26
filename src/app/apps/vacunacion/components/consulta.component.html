@@ -1,0 +1,55 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Estado de inscripción">
+        </plex-title>
+        <plex-grid type="auto" size="lg" cols="3" justify="center">
+            <div>
+                <plex-label direction="row" titulo="Campaña de vacunación COVID-19"
+                            subtitulo="Completá los datos para conocer el estado de tu inscripción" size="xl"
+                            icon="informacion" type="info">
+                </plex-label>
+                <form #formulario="ngForm" class="consulta">
+                    <ng-container *ngIf="!resultado?.status">
+                        <div class="form-group">
+                            <plex-int [(ngModel)]="documento" (change)="limpiarRespuesta()" name="documento"
+                                       label="Documento" [required]="true">
+                            </plex-int>
+                        </div>
+                        <div class="form-group">
+                            <plex-radio (change)="seleccionarSexo($event)" [(ngModel)]="sexo" label="Sexo"
+                                        type="horizontal" [data]="opcionesSexo" name="sexo" [required]="true">
+                            </plex-radio>
+                        </div>
+                        <div class="form-group mt-2" *ngIf="captchaEnabled">
+                            <re-captcha [(ngModel)]="recaptcha" name="mycaptcha">
+                            </re-captcha>
+                        </div>
+                        <div class="form-group mt-2">
+                            <plex-button label="Buscar" type="info" (click)="buscar()"
+                                         [disabled]="(captchaEnabled && !recaptcha) || !formulario.valid"
+                                         [validateForm]="formulario">
+                            </plex-button>
+                        </div>
+                    </ng-container>
+                </form>
+
+            </div>
+        </plex-grid>
+        <!-- No se usa plex-grid por issue en con text-transform -->
+        <div class="row" justify="center">
+            <div class="col-4"></div>
+            <div class="col">
+                <plex-card *ngIf="resultado?.status" align="start" size="sm" 
+                           class="form-group mt-2 w-50">
+                    <h4>{{ resultado.titulo }}</h4>
+                    <h5>{{ resultado.subtitulo }}</h5>
+                    <p [innerHTML]="resultado.body"></p>
+                    <plex-button type="info" label="Nueva búsqueda" (click)="nuevaBusqueda()">
+                    </plex-button>
+                </plex-card>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+    </plex-layout-main>
+</plex-layout>

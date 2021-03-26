@@ -1,5 +1,4 @@
-// import { InscripcionVacunasService } from './service/inscripcion-vacunas.service';
-// import { VaccinationConsultComponent } from './components/consult/consult.component';
+import { SharedModule } from './../../../../projects/shared/src/lib/shared.module';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,10 +11,19 @@ import { environment } from '../../../../src/environments/environment';
 import { InscripcionComponent } from './components/inscripcion.component';
 import { InscripcionService } from './services/inscripcion.service';
 import { VacunacionRouting } from './vacunacion.routing';
+import { ConsultaComponent } from './components/consulta.component';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, HttpClientModule, PlexModule, VacunacionRouting, RecaptchaModule, RecaptchaFormsModule],
-    declarations: [InscripcionComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        PlexModule,
+        SharedModule,
+        VacunacionRouting,
+        RecaptchaModule,
+        RecaptchaFormsModule],
+    declarations: [InscripcionComponent, ConsultaComponent],
     providers: [
         {
             provide: RECAPTCHA_SETTINGS,
@@ -25,7 +33,7 @@ import { VacunacionRouting } from './vacunacion.routing';
         },
         ProfesionService,
         InscripcionService,
-        GrupoPoblacionalService
+        GrupoPoblacionalService,
     ]
 })
 export class VacunacionModule { }
