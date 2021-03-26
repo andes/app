@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PrestacionService } from '../../services/prestaciones.service';
 // Servicios y modelo
@@ -10,7 +10,7 @@ import { Plex } from '@andes/plex';
 })
 
 
-export class PortalPacienteComponent implements OnInit {
+export class PortalPacienteComponent implements OnInit, AfterViewInit {
 
     public width = 0;
     mainValue: number;
@@ -38,7 +38,11 @@ export class PortalPacienteComponent implements OnInit {
         // paso valor del sidebar
         this.prestacionService.sidebarActual.subscribe(valor => this.sidebarValue = valor);
     }
-
+    ngAfterViewInit() {
+        this.mainValue = 12;
+        this.sidebarValue = false;
+        this.valorFoco = null;
+    }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
@@ -56,7 +60,7 @@ export class PortalPacienteComponent implements OnInit {
     contraerSidebar() {
         this.router.navigate(['home']);
         this.mainValue = 12;
-        this.valorFoco = 'main';
+        this.valorFoco = null;
         this.sidebarValue = false;
 
     }
