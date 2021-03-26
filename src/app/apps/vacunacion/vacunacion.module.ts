@@ -1,3 +1,4 @@
+import { SharedModule } from './../../../../projects/shared/src/lib/shared.module';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,7 +14,15 @@ import { VacunacionRouting } from './vacunacion.routing';
 import { ConsultaComponent } from './components/consulta.component';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, HttpClientModule, PlexModule, VacunacionRouting, RecaptchaModule, RecaptchaFormsModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        PlexModule,
+        SharedModule,
+        VacunacionRouting,
+        RecaptchaModule,
+        RecaptchaFormsModule],
     declarations: [InscripcionComponent, ConsultaComponent],
     providers: [
         {
@@ -24,7 +33,7 @@ import { ConsultaComponent } from './components/consulta.component';
         },
         ProfesionService,
         InscripcionService,
-        GrupoPoblacionalService
+        GrupoPoblacionalService,
     ]
 })
 export class VacunacionModule { }

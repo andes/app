@@ -11,7 +11,7 @@ export class InscripcionService {
     constructor(private server: Server) { }
 
     search(params): Observable<any> {
-        return this.server.get(`${this.inscripcionUrl}/consultas`, { params });
+        return this.server.get(`${this.inscripcionUrl}/consultas`, { params, showError: false, showLoader: true });
     }
 
     save(ciudadano: ICiudadano): Observable<any> {

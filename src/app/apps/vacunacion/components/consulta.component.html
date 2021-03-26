@@ -1,14 +1,15 @@
 <plex-layout>
     <plex-layout-main>
-        <plex-title titulo="Estado de mi inscripción">
+        <plex-title titulo="Estado de inscripción">
         </plex-title>
         <plex-grid type="auto" size="lg" cols="3" justify="center">
             <div>
-                <plex-label direction="column" titulo="Campaña de vacunación COVID-19"
+                <plex-label direction="row" titulo="Campaña de vacunación COVID-19"
                             subtitulo="Completá los datos para conocer el estado de tu inscripción" size="xl"
-                            icon="information-variant" type="info">
+                            icon="informacion" type="info">
                 </plex-label>
-                <form #formulario="ngForm">
+                <form #formulario="ngForm" class="consulta">
+                <ng-container *ngIf="!resultado?.status">
                     <div class="form-group">
                         <plex-text [(ngModel)]="documento" (change)="limpiarRespuesta()" name="documento"
                                    label="Documento" [required]="true">
@@ -29,16 +30,24 @@
                                      [validateForm]="formulario">
                         </plex-button>
                     </div>
-                </form>
-                <div class="alert alert-danger w-100 mt-2" *ngIf="resultado && !resultado.estado">
-                    No existe una inscripción para los datos ingresados.
-                </div>
-
-                <div class="alert alert-success w-100 mt-2" *ngIf="resultado?.estado">
-                    Su inscripción se encuentra en estado
-                    <b>{{resultado.estado}}</b>
-                </div>
-            </div>
-        </plex-grid>
+                </ng-container>                
+            </form>
+            
+        </div>
+    </plex-grid>
+    <!-- No se usa plex-grid por issue en con text-transform -->
+    <div class="row" justify="center">
+        <div class="col-4"></div>
+        <div class="col">
+            <plex-card *ngIf="resultado?.status" align="start" size="sm"  [ngClass]="bg-info" class="form-group mt-2 w-50">
+                <h4>{{ resultado.titulo }}</h4>
+                <h5>{{ resultado.subtitulo }}</h5>
+                <p [innerHTML]="resultado.body"></p>
+                <plex-button [type]="cardType" size="sm" label="Nueva búsqueda" (click)="nuevaBusqueda()"></plex-button>
+            </plex-card>
+        </div>
+        <div class="col-4"></div>
+    </div>
+        
     </plex-layout-main>
 </plex-layout>
