@@ -11,7 +11,7 @@ import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.serv
 export class ListadoInscriptosVacunacionComponent implements OnInit {
     public mainSize = 12;
     public showSidebar = false;
-    public personalSelected: any = [];
+    public pacienteSelected: any;
     public listado: any[] = [];
     public gruposPoblacionales: any[];
 
@@ -27,9 +27,9 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         });
     }
 
-    showInSidebar(persona) {
-        if (persona) {
-            this.personalSelected = persona;
+    showInSidebar(paciente) {
+        if (paciente) {
+            this.pacienteSelected = paciente;
             this.showSidebar = true;
             this.mainSize = 8;
         }
@@ -38,13 +38,13 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     closeSidebar() {
         this.showSidebar = false;
         this.mainSize = 12;
-        this.personalSelected = null;
+        this.pacienteSelected = null;
     }
 
     grupoPoblacional(nombre: string) {
         const maxLength = 35;
-        let descripcion = this.gruposPoblacionales.find(item => item.nombre === nombre).descripcion;
-        if (descripcion.length > maxLength) {
+        let descripcion = this.gruposPoblacionales?.find(item => item.nombre === nombre).descripcion;
+        if (descripcion?.length > maxLength) {
             return `${descripcion.substring(0, maxLength)} ..`;
         }
         return descripcion;

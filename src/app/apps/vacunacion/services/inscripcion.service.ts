@@ -35,7 +35,8 @@ export class InscripcionService {
                 }
                 let params: any = {
                     limit: this.limit,
-                    skip: this.skip
+                    skip: this.skip,
+                    fields: '-nroTramite'
                 };
                 if (grupo) {
                     params.grupo = grupo.nombre;

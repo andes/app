@@ -25,14 +25,15 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         PlexModule,
         SharedModule,
         RecaptchaModule,
-        RecaptchaFormsModule],
-    declarations: [InscripcionComponent, ConsultaComponent,
-        VacunacionRouting,
-        RecaptchaModule,
-        RecaptchaFormsModule,
+        InfiniteScrollModule,
         SharedModule,
         MPILibModule,
-        InfiniteScrollModule,
+        VacunacionRouting,
+        RecaptchaFormsModule
+    ],
+    declarations: [
+        InscripcionComponent,
+        ConsultaComponent,
         InscripcionComponent,
         ListadoInscriptosVacunacionComponent,
         FiltrosVacunacionComponent
