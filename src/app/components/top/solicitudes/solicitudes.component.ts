@@ -277,7 +277,14 @@ export class SolicitudesComponent implements OnInit {
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
         this.scrollEnd = false;
-        this.buscarSolicitudes();
+
+        if (this.tipoSolicitud === 'entrada' && this.fechaDesdeEntrada && this.fechaHastaEntrada) {
+            this.buscarSolicitudes();
+        }
+
+        if (this.tipoSolicitud === 'salida' && this.fechaDesdeSalida && this.fechaHastaSalida) {
+            this.buscarSolicitudes();
+        }
     }
 
     getParams() {
