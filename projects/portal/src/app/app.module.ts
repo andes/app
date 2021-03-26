@@ -11,25 +11,24 @@ import { Auth } from '@andes/auth';
 
 // Declarations
 import { LoginComponent } from './pages/login/login-portal-paciente';
-import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
-import { PortalPacienteMainComponent } from './pages/portal-paciente/portal-paciente-main.component';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
+
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
 import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 
+import { PrestacionService } from './services/prestaciones.service';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    PortalPacienteComponent,
     PacienteDetalleComponent,
-    PortalPacienteMainComponent,
     PDPMisFamiliaresComponent,
     PDPTituloComponent,
     PDPMenuComponent,
@@ -51,7 +50,8 @@ import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-fam
     Auth,
     FormGroupDirective,
     RoutingGuard,
-    AdjuntosService
+    AdjuntosService,
+    PrestacionService
   ],
   bootstrap: [AppComponent]
 })
