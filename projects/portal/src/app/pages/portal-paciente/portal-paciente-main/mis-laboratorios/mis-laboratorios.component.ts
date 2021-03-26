@@ -15,9 +15,9 @@ export class MisLaboratoriosComponent implements OnInit {
     public laboratorio$: Observable<any>;
     public laboratorios$: Observable<any[]>;
 
-    @Output() eventoSidebar = new EventEmitter<number>();
+    @Output() eventoMain = new EventEmitter<number>();
     @Output() eventoFoco = new EventEmitter<string>();
-
+    @Output() eventoSidebar = new EventEmitter<boolean>();
     constructor(
         private prestacionService: PrestacionService,
         private route: ActivatedRoute,
@@ -45,13 +45,18 @@ export class MisLaboratoriosComponent implements OnInit {
         this.prestacionService.actualizarFoco('sidebar');
     }
 
+    mostrarSidebar() {
+        this.prestacionService.actualizarSidebar(true);
+    }
+
     selected(laboratorio) {
+        this.mostrarSidebar();
         this.prestacionService.resetOutlet();
         this.cambiaFoco();
         this.nuevoValor();
         setTimeout(() => {
             this.selectedId = laboratorio.cda_id;
             this.router.navigate(['home', { outlets: { detalleLaboratorio: [this.selectedId] } }]);
-        }, 500);
+        }, 300);
     }
 }
