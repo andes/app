@@ -25,10 +25,12 @@
                     <form #formEntrada="ngForm">
                         <plex-wrapper>
                             <plex-datetime type="date" [(ngModel)]="fechaDesdeEntrada" (change)="cargarSolicitudes()"
-                                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHastaEntrada">
+                                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHastaEntrada"
+                                           required>
                             </plex-datetime>
                             <plex-datetime type="date" [(ngModel)]="fechaHastaEntrada" (change)="cargarSolicitudes()"
-                                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesdeEntrada">
+                                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesdeEntrada"
+                                           required>
                             </plex-datetime>
                             <plex-select [(ngModel)]="prestacionesDestinoEntrada" name="nombrePrestacion"
                                          label="Prestación destino" name="prestacionDestino"
@@ -107,12 +109,14 @@
                                 <plex-badge type="info" *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
                                     CONTRARREFERIDA
                                 </plex-badge>
-                                
-                                <ng-container *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
+
+                                <ng-container
+                                              *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
                                     <plex-badge type="warning" class="mr-0">
                                         {{prestacion.estadoActual.tipo}}
                                     </plex-badge>
-                                    <plex-badge type="danger bg-danger" class="ml-0" *ngIf="prestacion | auditoriasSolicitud as auditorias">
+                                    <plex-badge type="danger bg-danger" class="ml-0"
+                                                *ngIf="prestacion | auditoriasSolicitud as auditorias">
                                         <span class="text-white">
                                             <strong>{{auditorias}}</strong>
                                         </span>
@@ -160,10 +164,12 @@
                     <form #formSalida="ngForm">
                         <plex-wrapper>
                             <plex-datetime type="date" [(ngModel)]="fechaDesdeSalida" (change)="cargarSolicitudes()"
-                                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHastaSalida">
+                                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHastaSalida"
+                                           required>
                             </plex-datetime>
                             <plex-datetime type="date" [(ngModel)]="fechaHastaSalida" (change)="cargarSolicitudes()"
-                                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesdeSalida">
+                                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesdeSalida"
+                                           required>
                             </plex-datetime>
                             <plex-select [(ngModel)]="prestacionesDestinoSalida" name="nombrePrestacion"
                                          label="Prestación destino" name="prestacionDestino"
@@ -288,7 +294,8 @@
 <plex-modal #modal (closed)="cerrarDevolver()">
     <plex-icon name="alert-circle" type="info"></plex-icon>
     <plex-modal-title type="danger" *ngIf="prestacionDevolver">
-        {{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' : 'Deshacer Asignación' }}
+        {{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' : 'Deshacer
+        Asignación' }}
     </plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo:</plex-modal-subtitle>
     <main>
