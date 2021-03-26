@@ -25,6 +25,9 @@ import { TurnoService } from './services/turno.service';
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
 import { LaboratorioService } from './services/laboratorio.service';
+import { MisVacunasComponent } from './pages/portal-paciente/portal-paciente-main/mis-vacunas/mis-vacunas.component';
+import { DetalleVacunaComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-vacuna/detalle-vacuna.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +40,9 @@ import { LaboratorioService } from './services/laboratorio.service';
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
+    MisVacunasComponent,
+    DetalleVacunaComponent
+
   ],
   imports: [
     BrowserModule,
