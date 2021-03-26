@@ -5,6 +5,8 @@ import { Component } from '@angular/core';
 })
 export class PortalPacienteMainComponent {
 
+    public fechaActual = new Date();
+
     constructor() { }
 
 }

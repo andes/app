@@ -12,6 +12,10 @@ export class PrestacionService {
     private vacunasURL = '/modules/vacunas';
     private valorInicial = new BehaviorSubject<number>(12);
     valorActual = this.valorInicial.asObservable();
+
+    private sidebarInicial = new BehaviorSubject<Boolean>(false);
+    sidebarActual = this.sidebarInicial.asObservable();
+
     private focoInicial = new BehaviorSubject<string>('main');
     focoActual = this.focoInicial.asObservable();
     constructor(
@@ -30,12 +34,16 @@ export class PrestacionService {
         );
     }
 
-    actualizarValor(sidebarValue: number) {
-        this.valorInicial.next(sidebarValue);
+    actualizarValor(mainValue: number) {
+        this.valorInicial.next(mainValue);
     }
 
     actualizarFoco(valorFoco: string) {
         this.focoInicial.next(valorFoco);
+    }
+    actualizarSidebar(valorSidebar: boolean) {
+
+        this.sidebarInicial.next(valorSidebar);
     }
 
     resetOutlet() {

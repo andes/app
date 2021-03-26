@@ -8,21 +8,21 @@ import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'home', component: PortalPacienteComponent, canActivate: [RoutingGuard] },
-    {
-        path: 'mis-familiares',
-        component: PDPMisFamiliaresComponent,
-        canActivate: [RoutingGuard],
-        children: [
-            { path: ':id', component: PDPMisFamiliaresDetalleComponent }
-        ]
-    }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: PortalPacienteComponent, canActivate: [RoutingGuard] },
+  {
+    path: 'mis-familiares',
+    component: PDPMisFamiliaresComponent,
+    canActivate: [RoutingGuard],
+    children: [
+      { path: ':id', component: PDPMisFamiliaresDetalleComponent }
+    ]
+  }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }
