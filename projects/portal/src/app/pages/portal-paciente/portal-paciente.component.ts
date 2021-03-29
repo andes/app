@@ -17,6 +17,16 @@ export class PortalPacienteComponent implements OnInit, AfterViewInit {
     valorFoco: string;
 
     sidebarValue: Boolean;
+    cards = [{
+        id: 12,
+        nombre: 'turnos',
+        tipo: 'info',
+        semanticTag: 'solicitud',
+        icono: 'turno-bold',
+        path: 'misTurnos',
+        color: '#0070cc',
+        outlet: 'listado',
+    }];
 
     constructor(
         private el: ElementRef,

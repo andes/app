@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 @Injectable({
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class PrestacionService {
 
     private vacunasURL = '/modules/vacunas';
+    private agendaUrl = '/modules/turnos/agenda';
     private valorInicial = new BehaviorSubject<number>(12);
     valorActual = this.valorInicial.asObservable();
 
@@ -18,6 +19,8 @@ export class PrestacionService {
 
     private focoInicial = new BehaviorSubject<string>('main');
     focoActual = this.focoInicial.asObservable();
+
+
     constructor(
         private server: Server,
         private router: Router
@@ -31,6 +34,26 @@ export class PrestacionService {
     getVacuna(id: number | string, idPaciente) {
         return this.getVacunas(idPaciente).pipe(
             map((vacunas) => vacunas.find(vacuna => vacuna.id === id))
+        );
+    }
+
+
+    getTurnos(idPaciente: String): Observable<any[]> {
+
+        return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
+
+    }
+
+    getTurno(id: number | string, idPaciente) {
+        return this.getTurnos(idPaciente).pipe(
+            map((turnos) => turnos.map(turno => turno.bloques.find(c => c.turnos.find(g => {
+                if (g.id === id) {
+                    console.log(id);
+                    return g;
+                }
+            }
+
+            ))))
         );
     }
 

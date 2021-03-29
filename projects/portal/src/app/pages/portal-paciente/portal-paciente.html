@@ -22,13 +22,21 @@
         <plex-grid cols="12" size="md">
 
             <!-- Menu Lateral -->
-            <plex-grid id="menu-vertical" *mobile="false" span="1" class="align-self-start mr-4 flex-column"
-                       justify="start" size="xs">
-                <!-- PENDIENTE A DESARROLLAR -->
+            <plex-grid id="menu-vertical" *ngIf="!isResponsive()" span="{{ valorMenu }}"
+                       class="d-flex align-self-start mr-2 flex-column" size="xs">
+                <plex-button *ngIf="valorMenu === 2" size="sm" type="link" icon="close" (click)="contraerMenu()">
+                </plex-button>
+                <ng-container *ngFor="let card of cards">
+                    <plex-label icon="{{ card.icono }}" size="md" direction="column"
+                                class="mb-2 color-{{ card.semanticTag}}" titulo="" subtitulo=""
+                                [routerLink]="[{ outlets: { listado: [card.path] } }]" tooltip="{{ card.path }}"
+                                tooltipPosition="right">
+                    </plex-label>
+                </ng-container>
             </plex-grid>
 
             <!-- Listado -->
-            <section span="{{ isResponsive() ? '11' : '12' }}">
+            <section span="{{ isResponsive() ? '12' : '11' }}">
                 <pdp-portal-paciente-main>
                 </pdp-portal-paciente-main>
             </section>
@@ -41,5 +49,6 @@
             <plex-button type="danger" icon="close" (click)="contraerSidebar()" size="sm" class="ml-2"></plex-button>
         </plex-title>
         <router-outlet name="detalleVacuna"></router-outlet>
+        <router-outlet name="detalleTurno"></router-outlet>
     </plex-layout-sidebar>
 </plex-layout>
