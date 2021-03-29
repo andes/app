@@ -5,7 +5,7 @@
         <plex-grid type="auto" size="lg" cols="3" justify="center">
             <div>
                 <plex-label direction="row" titulo="Campaña de vacunación COVID-19"
-                            subtitulo="Completá los datos para conocer el estado de tu inscripción" size="xl"
+                            [subtitulo]="subtitulo" size="xl"
                             icon="informacion" type="info">
                 </plex-label>
                 <form #formulario="ngForm" class="consulta">
@@ -38,7 +38,7 @@
 
         <!-- No se usa plex-grid por issue en con text-transform -->
         <div class="row" justify="center">
-            <div class="col-4"></div>
+            <div class="col-1 col-md-3"></div>
             <div class="col">
                 <plex-card *ngIf="resultado?.status" align="start" size="sm" class="form-group mt-2 w-50">
                     <h4>{{ resultado.titulo }}</h4>
@@ -56,7 +56,7 @@
                     </plex-button>
                 </plex-card>
             </div>
-            <div class="col-4"></div>
+            <div class="col-1 col-md-3"></div>
         </div>
 
     </plex-layout-main>
