@@ -12,7 +12,7 @@
                     <ng-container *ngIf="!resultado?.status">
                         <div class="form-group">
                             <plex-int [(ngModel)]="documento" (change)="limpiarRespuesta()" name="documento"
-                                       label="Documento" [required]="true">
+                                      label="Documento" [required]="true">
                             </plex-int>
                         </div>
                         <div class="form-group">
@@ -35,14 +35,22 @@
 
             </div>
         </plex-grid>
+
         <!-- No se usa plex-grid por issue en con text-transform -->
         <div class="row" justify="center">
             <div class="col-4"></div>
             <div class="col">
-                <plex-card *ngIf="resultado?.status" align="start" size="sm" 
-                           class="form-group mt-2 w-50">
+                <plex-card *ngIf="resultado?.status" align="start" size="sm" class="form-group mt-2 w-50">
                     <h4>{{ resultado.titulo }}</h4>
                     <h5>{{ resultado.subtitulo }}</h5>
+                    <p *ngIf="resultado.inscripto">
+                        Inscripto: {{ resultado.inscripto.apellido }},
+                        {{ resultado.inscripto.nombre }}<br>
+                        Documento: {{ resultado.inscripto.documento }}<br>
+                        Sexo: {{ resultado.inscripto.sexo }}<br>
+                        Fecha de nacimiento: {{ resultado.inscripto.fechaNacimiento | fecha }}<br>
+                        Localidad:
+                        {{ resultado.inscripto.localidad? resultado.inscripto.localidad.nombre : 'Sin datos' }}<br></p>
                     <p [innerHTML]="resultado.body"></p>
                     <plex-button type="info" label="Nueva búsqueda" (click)="nuevaBusqueda()">
                     </plex-button>
