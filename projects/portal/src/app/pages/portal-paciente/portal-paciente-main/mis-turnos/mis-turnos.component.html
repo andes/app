@@ -1,5 +1,5 @@
 <plex-list>
-    <plex-item *ngFor="let turno of turnos" (click)="selected(turno)" [selected]="turno.selected">
+    <plex-item *ngFor="let turno of turnos$ | async" (click)="selected(turno)" [selected]="turno.selected">
         <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
                     subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
         </plex-label>

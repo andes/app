@@ -1,9 +1,0 @@
-<plex-list>
-    <plex-item *ngFor="let vacuna of vacunas$ | async" (click)="selected(vacuna)" [selected]="vacuna.selected">
-        <plex-label case="capitalize-first" size="lg" icon="vacuna" titulo="{{ vacuna.vacuna }}"
-                    subtitulo="{{ vacuna.efector }}">
-        </plex-label>
-        <plex-badge type="success">{{ vacuna.dosis}}</plex-badge>
-        <plex-badge type="info">{{ vacuna.fechaAplicacion | date:'dd/MM/yyyy HH:mm'}}</plex-badge>
-    </plex-item>
-</plex-list>

@@ -26,36 +26,50 @@ export class PrestacionService {
         private router: Router
     ) { }
 
-    getVacunas(idPaciente: String): Observable<any[]> {
-        return this.server.get(this.vacunasURL + '/paciente/' + idPaciente, null);
-    }
-
-
-    getVacuna(id: number | string, idPaciente) {
-        return this.getVacunas(idPaciente).pipe(
-            map((vacunas) => vacunas.find(vacuna => vacuna.id === id))
-        );
-    }
-
 
     getTurnos(idPaciente: String): Observable<any[]> {
 
-        return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
+        return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente).pipe(
+
+            map(
+                agendas => {
+                    const turnos = [];
+                    agendas.forEach((agenda, indexAgenda) => {
+                        agenda.bloques.forEach((bloque, indexBloque) => {
+                            bloque.turnos.forEach((turno, indexTurno) => {
+                                if (turno.paciente) {
+
+                                    if (turno.paciente.id === idPaciente) {
+                                        turnos.push({
+                                            tipoPrestacion: turno.tipoPrestacion,
+                                            horaInicio: turno.horaInicio,
+                                            estado: turno.estado,
+                                            organizacion: agenda.organizacion.nombre,
+                                            profesionales: agenda.profesionales,
+                                            asistencia: turno.asistencia,
+                                            id: turno.id,
+                                            fechaHoraDacion: turno.fechaHoraDacion,
+                                            horaAsistencia: turno.horaAsistencia,
+                                            nota: turno.nota
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                    return turnos;
+                }));
+
+
+
 
     }
 
     getTurno(id: number | string, idPaciente) {
         return this.getTurnos(idPaciente).pipe(
-            map((turnos) => turnos.map(turno => turno.bloques.find(c => c.turnos.find(g => {
-                if (g.id === id) {
-                    console.log(id);
-                    return g;
-                }
-            }
-
-            ))))
-        );
+            map((turnos) => turnos.find(turno => turno.id === id)));
     }
+
 
     actualizarValor(mainValue: number) {
         this.valorInicial.next(mainValue);

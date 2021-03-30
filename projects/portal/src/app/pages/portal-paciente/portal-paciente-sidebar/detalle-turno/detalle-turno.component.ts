@@ -30,8 +30,7 @@ export class DetalleTurnoComponent implements OnInit {
 
         this.turno$ = this.route.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.prestacionService.getTurno(params.get('id'), idPaciente)),
-            map(g => g[0].turnos[0])
+                this.prestacionService.getTurno(params.get('id'), idPaciente))
         );
     }
 

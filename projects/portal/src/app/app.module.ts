@@ -25,8 +25,6 @@ import { PDPMenuComponent } from './components/portal-menu/portal-menu.component
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 
 import { PrestacionService } from './services/prestaciones.service';
-import { MisVacunasComponent } from './pages/portal-paciente/portal-paciente-main/mis-vacunas/mis-vacunas.component';
-import { DetalleVacunaComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-vacuna/detalle-vacuna.component';
 import { MisTurnosComponent } from './pages/portal-paciente/portal-paciente-main/mis-turnos/mis-turnos.component';
 import { DetalleTurnoComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-turno/detalle-turno.component';
 @NgModule({
@@ -35,12 +33,15 @@ import { DetalleTurnoComponent } from './pages/portal-paciente/portal-paciente-s
     LoginComponent,
     PacienteDetalleComponent,
 
+
     PDPMisFamiliaresComponent,
     PDPTituloComponent,
     PDPMenuComponent,
     PDPMisFamiliaresDetalleComponent,
-    MisVacunasComponent,
-    DetalleVacunaComponent,
+
+
+    PortalPacienteMainComponent,
+
     MisTurnosComponent,
     DetalleTurnoComponent
   ],
