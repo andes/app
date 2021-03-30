@@ -1,0 +1,95 @@
+<plex-layout main="{{mainSize}}">
+    <plex-layout-main>
+        <plex-title titulo="Listado de inscriptos para vacunación" size="lg"> </plex-title>
+
+        <filtros-vacunacion></filtros-vacunacion>
+
+        <table class="table table-striped table-hover table-lista-vacunacion">
+            <thead>
+                <tr>
+                    <th class="w-20">Grupo</th>
+                    <th>Documento</th>
+                    <th class="w-20">Apellido y nombre</th>
+                    <th>Sexo</th>
+                    <th>Edad</th>
+                    <th>Fecha de registro</th>
+                    <th>Localidad</th>
+                </tr>
+            </thead>
+            <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="80" (scrolled)="onScroll()"
+                   [scrollWindow]="false">
+                <tr *ngFor="let paciente of listado" (click)="showInSidebar(paciente)">
+                    <td class="w-20"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
+                    <td> {{ paciente.documento }} </td>
+                    <td class="w-20"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
+                    <td> {{ paciente.sexo }} </td>
+                    <td> {{ paciente | edad }} </td>
+                    <td> {{ paciente.fechaRegistro | fecha }} </td>
+                    <td> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </plex-layout-main>
+
+    <plex-layout-sidebar *ngIf="showSidebar" type="invert">
+        <plex-title titulo="Detalle paciente" size="md">
+            <plex-button type="danger" icon="close" size="sm" (click)="closeSidebar()"></plex-button>
+        </plex-title>
+
+        <ng-container *ngIf="pacienteSelected">
+            <!-- personales -->
+            <paciente-detalle *ngIf="pacienteSelected.paciente" [paciente]="pacienteSelected.paciente" reload="true"
+                              orientacion="horizontal">
+            </paciente-detalle>
+            <plex-label *ngIf="!pacienteSelected.paciente" class="pb-2"
+                        titulo="No se ha encontrado ningún paciente asociado"></plex-label>
+
+            <plex-title titulo="Estado del paciente" size="sm"></plex-title>
+            <plex-grid cols="3">
+                <plex-label titulo="Alergia" subtitulo="{{ pacienteSelected.alergia ? 'Si' : 'No' }}">
+                </plex-label>
+                <plex-label *ngIf="pacienteSelected.cud" titulo="CUD" subtitulo="{{ pacienteSelected.cud }}">
+                </plex-label>
+
+                <!-- estado -->
+                <plex-label titulo="En aislamiento" subtitulo="{{ pacienteSelected.aislamiento ? 'Si' : 'No' }}"> :
+                </plex-label>
+                <plex-label *ngIf="pacienteSelected.sexo === 'femenino'" titulo="Amamantando"
+                            subtitulo="{{ pacienteSelected.amamantando ? 'Si' : 'No' }}">
+                </plex-label>
+                <plex-label *ngIf="pacienteSelected.sexo === 'femenino'" titulo="Embarazada"
+                            subtitulo="{{ pacienteSelected.embarazada ? 'Si' : 'No' }}">
+                </plex-label>
+                <plex-label titulo="Enfermedad" subtitulo="{{ pacienteSelected.enfermedad ? 'Si' : 'No' }}">
+                </plex-label>
+                <plex-label titulo="Condición" subtitulo="{{ pacienteSelected.condicion ? 'Si' : 'No' }}">
+                </plex-label>
+                <plex-label titulo="Convaleciente" subtitulo="{{ pacienteSelected.convaleciente ? 'Si' : 'No' }}">
+                </plex-label>
+
+                <!-- personal salud -->
+                <ng-container *ngIf="pacienteSelected.personal_salud">
+                    <plex-label titulo="Profesión" subtitulo="{{ pacienteSelected.profesion }}"></plex-label>
+                    <plex-label titulo="Establecimiento" subtitulo="{{ pacienteSelected.establecimiento }}">
+                    </plex-label>
+                    <plex-label titulo="Relación" subtitulo="{{ pacienteSelected.relacion }}"></plex-label>
+                    <plex-label titulo="Matricula" subtitulo="{{ pacienteSelected.matricula }}"></plex-label>
+                </ng-container>
+
+                <!-- inscripcion -->
+                <plex-label titulo="Estado" subtitulo="{{ pacienteSelected.estado }}"></plex-label>
+                <plex-label titulo="Fecha de registro" subtitulo="{{ pacienteSelected.fechaRegistro | fecha }}">
+                </plex-label>
+                <plex-label titulo="Plasma" subtitulo="{{ pacienteSelected.plasma ? 'Si' : 'No' }}"></plex-label>
+                <plex-label titulo="Vacuna" subtitulo="{{ pacienteSelected.vacuna ? 'Si' : 'No' }}"></plex-label>
+                <plex-label titulo="Validado" subtitulo="{{ pacienteSelected.validado ? 'Si' : 'No' }}">
+                </plex-label>
+
+                <div *ngIf="pacienteSelected.validaciones?.length">
+                    <label>Validaciones</label>
+                    <div *ngFor="let item of pacienteSelected.validaciones"><small>{{item}}</small></div>
+                </div>
+            </plex-grid>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>

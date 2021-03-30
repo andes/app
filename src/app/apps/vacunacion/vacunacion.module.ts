@@ -1,4 +1,3 @@
-import { SharedModule } from './../../../../projects/shared/src/lib/shared.module';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,6 +11,11 @@ import { InscripcionComponent } from './components/inscripcion.component';
 import { InscripcionService } from './services/inscripcion.service';
 import { VacunacionRouting } from './vacunacion.routing';
 import { ConsultaComponent } from './components/consulta.component';
+import { ListadoInscriptosVacunacionComponent } from './components/listado-inscriptos.component';
+import { SharedModule } from '@andes/shared';
+import { FiltrosVacunacionComponent } from './components/filtros-vacunacion.component';
+import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
     imports: [
@@ -20,10 +24,20 @@ import { ConsultaComponent } from './components/consulta.component';
         HttpClientModule,
         PlexModule,
         SharedModule,
-        VacunacionRouting,
         RecaptchaModule,
-        RecaptchaFormsModule],
-    declarations: [InscripcionComponent, ConsultaComponent],
+        InfiniteScrollModule,
+        SharedModule,
+        MPILibModule,
+        VacunacionRouting,
+        RecaptchaFormsModule
+    ],
+    declarations: [
+        InscripcionComponent,
+        ConsultaComponent,
+        InscripcionComponent,
+        ListadoInscriptosVacunacionComponent,
+        FiltrosVacunacionComponent
+    ],
     providers: [
         {
             provide: RECAPTCHA_SETTINGS,
