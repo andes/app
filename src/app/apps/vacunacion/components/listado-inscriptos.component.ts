@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
+import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'listado-inscriptos',
@@ -17,10 +19,15 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     constructor(
         private inscripcionService: InscripcionService,
-        private gruposService: GrupoPoblacionalService
+        private gruposService: GrupoPoblacionalService,
+        private auth: Auth,
+        private router: Router
     ) { }
 
     ngOnInit() {
+        if (!this.auth.check('visualizacionInformacion:listadoInscriptos')) {
+            this.router.navigate(['/inicio']);
+        }
         this.inscripcionService.inscriptosFiltrados$.subscribe(resp => this.listado = resp);
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;
