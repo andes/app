@@ -1,3 +1,19 @@
+# [5.40.0](https://github.com/andes/app/compare/v5.39.0...v5.40.0) (2021-03-31)
+
+
+### Bug Fixes
+
+* **citas:** type permisos ([#2185](https://github.com/andes/app/issues/2185)) ([ffb7686](https://github.com/andes/app/commit/ffb7686f1b849859e9b6d303a3b3e3fdf483f6dd))
+* **rup:** controles de fechas ([#2173](https://github.com/andes/app/issues/2173)) ([f6128f4](https://github.com/andes/app/commit/f6128f4641f2391b86e5fc5ad5ad97126bd03791))
+
+
+### Features
+
+* **pdp:** estructura inicial routing ([#2195](https://github.com/andes/app/issues/2195)) ([0587d78](https://github.com/andes/app/commit/0587d78c0bf327b895cd418f5c9c322551c5be69))
+* **plex:** v7.14 ([#2176](https://github.com/andes/app/issues/2176)) ([da57a97](https://github.com/andes/app/commit/da57a97a4661189d7fde30e5922026a801364514))
+* **top:** control de fechas vacias ([#2186](https://github.com/andes/app/issues/2186)) ([188681f](https://github.com/andes/app/commit/188681fd90d8822be9fe01d6a48bf353ef35c267))
+* **top:** se suma estado ejecución a filtros en solicitudes ([#2166](https://github.com/andes/app/issues/2166)) ([346104f](https://github.com/andes/app/commit/346104f3c9f4104fca6ad170b4413bb240d2a66b))
+
 # [5.39.0](https://github.com/andes/app/compare/v5.38.0...v5.39.0) (2021-03-24)
 
 
