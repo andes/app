@@ -14,18 +14,21 @@
                     <th>Edad</th>
                     <th>Fecha de registro</th>
                     <th>Localidad</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="80" (scrolled)="onScroll()"
                    [scrollWindow]="false">
                 <tr *ngFor="let paciente of listado" (click)="showInSidebar(paciente)">
-                    <td class="w-20"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
+                    <td class="w-20" *ngIf="paciente.grupo"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
+                    <td class="w-20" *ngIf="!paciente.grupo"> No indica </td>
                     <td> {{ paciente.documento }} </td>
                     <td class="w-20"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
                     <td> {{ paciente.sexo }} </td>
                     <td> {{ paciente | edad }} </td>
                     <td> {{ paciente.fechaRegistro | fecha }} </td>
                     <td> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
+                    <td> {{ paciente.estado }} </td>
                 </tr>
             </tbody>
         </table>
@@ -36,7 +39,15 @@
             <plex-button class="pr-1" *ngIf="!pacienteSelected.paciente" type="warning" size="sm"
                          label="Asociar paciente" [disabled]="candidatosBuscados" (click)="buscarCandidatos()">
             </plex-button>
-            <plex-button type="danger" icon="close" size="sm" (click)="closeSidebar()"></plex-button>
+            <plex-button type="warning" size="sm" (click)="editPaciente()"
+                         *ngIf="pacienteSelected.estado === 'pendiente'">
+                EDITAR
+            </plex-button>
+            <plex-button type="success" *ngIf="!domicilioValidado(pacienteSelected)" size="sm"
+                         (click)="validarDomicilio(pacienteSelected)" class='ml-2'>
+                VALIDAR DOMICILIO
+            </plex-button>
+            <plex-button type="danger" icon="close" size="sm" (click)="closeSidebar()" class='ml-2'></plex-button>
         </plex-title>
 
         <ng-container *ngIf="pacienteSelected">
@@ -89,10 +100,21 @@
             <paciente-detalle *ngIf="pacienteSelected.paciente" [paciente]="pacienteSelected.paciente" reload="true"
                               orientacion="horizontal">
             </paciente-detalle>
-
-            <!-- Seccion estado del paciente -->
-            <plex-title titulo="Estado del paciente" size="sm"></plex-title>
-            <plex-grid cols="3">
+            <plex-label *ngIf="!pacienteSelected.paciente" class="pb-2"
+                        titulo="No se ha encontrado ningún paciente asociado"></plex-label>
+            <!-- formulario para editar inscripción -->
+            <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected"
+                                (returnEdicion)="returnEdicion($event)"></editar-inscripcion>
+            <!-- datos de inscripción -->
+            <plex-title *ngIf="!editando" titulo="Datos de la inscripción" size="sm"></plex-title>
+            <plex-grid *ngIf="!editando" type="full" size="md">
+                <plex-label titulo="Email"
+                            subtitulo="{{ pacienteSelected.email? pacienteSelected.email : 'No indica' }}"
+                            case="lowercase">
+                </plex-label>
+                <plex-label titulo="Teléfono"
+                            subtitulo="{{ pacienteSelected.telefono? pacienteSelected.telefono : 'No inidica' }}">
+                </plex-label>
                 <plex-label titulo="Alergia" subtitulo="{{ pacienteSelected.alergia ? 'Si' : 'No' }}">
                 </plex-label>
                 <plex-label *ngIf="pacienteSelected.cud" titulo="CUD" subtitulo="{{ pacienteSelected.cud }}">
