@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { PacientePortalService } from '../../services/paciente-portal.service';
+import { Auth } from '@andes/auth';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'pdp-mis-familiares-detalle',
@@ -7,16 +11,30 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PDPMisFamiliaresDetalleComponent implements OnInit {
 
+    public selectedId;
+    public prestaciones$;
+    public familiar: IPaciente;
+
     constructor(
-        private activeRoute: ActivatedRoute
-    ) {
-
-    }
-
-    public miID = '';
+        private activeRoute: ActivatedRoute,
+        private pacienteService: PacientePortalService,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
-        this.miID = this.activeRoute.snapshot.paramMap.get('id');
+        this.activeRoute.paramMap.pipe(
+            map(resp => resp.get('id')),
+            switchMap((idFamiliar: string) => {
+                return this.pacienteService.getFamiliar(idFamiliar).pipe(
+                    map(data => this.familiar = data)
+                );
+            })
+        ).subscribe();
+    }
+
+    get vinculoFamiliar() {
+        const userId = this.auth.mobileUser?.pacientes[0].id;
+        return this.familiar.relaciones.find(f => f.referencia === userId).relacion.opuesto;
     }
 
 }

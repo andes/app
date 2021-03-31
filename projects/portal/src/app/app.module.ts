@@ -11,8 +11,6 @@ import { Auth } from '@andes/auth';
 
 // Declarations
 import { LoginComponent } from './pages/login/login-portal-paciente';
-import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
-import { PortalPacienteMainComponent } from './pages/portal-paciente/portal-paciente-main/portal-paciente-main.component';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
@@ -23,14 +21,13 @@ import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 import { PrestacionService } from './services/prestacion.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    PortalPacienteComponent,
     PacienteDetalleComponent,
-    PortalPacienteMainComponent,
     PDPMisFamiliaresComponent,
     PDPTituloComponent,
     PDPMenuComponent,
@@ -45,7 +42,8 @@ import { PrestacionService } from './services/prestacion.service';
     InfiniteScrollModule,
     SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
-    MPILibModule
+    MPILibModule,
+    BrowserAnimationsModule
   ],
   providers: [
     Server,

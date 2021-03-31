@@ -1,4 +1,3 @@
-import { Plex } from '@andes/plex';
 import { Component, ElementRef } from '@angular/core';
 
 @Component({
@@ -6,11 +5,10 @@ import { Component, ElementRef } from '@angular/core';
     templateUrl: './portal-titulo.component.html'
 })
 export class PDPTituloComponent {
-    public width = 0;
+    public width: number;
 
     constructor(
-        private el: ElementRef,
-        private plex: Plex,
+        private el: ElementRef
     ) { }
 
     isResponsive() {

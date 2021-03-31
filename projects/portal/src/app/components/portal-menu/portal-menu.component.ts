@@ -1,5 +1,5 @@
-import { Plex } from '@andes/plex';
 import { Component, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'pdp-menu',
@@ -10,7 +10,8 @@ export class PDPMenuComponent {
 
     constructor(
         private el: ElementRef,
-        private plex: Plex,
+        private router: Router,
+        private activeRoute: ActivatedRoute
     ) { }
 
     isResponsive() {
@@ -25,10 +26,14 @@ export class PDPMenuComponent {
             tipo: 'info',
             semanticTag: 'solicitud',
             icono: 'familia',
-            path: 'misFamiliares',
+            path: 'mis-familiares',
             color: '#0070cc',
             outlet: 'listado'
         }
     ];
+
+    gotTo(path) {
+        this.router.navigate([path]);
+    }
 
 }
