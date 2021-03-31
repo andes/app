@@ -46,8 +46,11 @@ export class InscripcionComponent implements OnInit {
         { id: 'diabetes', label: 'Diabetes (insulinodependiente y no insulinodependiente)' },
         { id: 'obesidad', label: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)' },
         { id: 'cardiovascular', label: 'Enfermedad cardiovascular' },
-        { id: 'renal', label: 'Enfermedad renal crónica' },
-        { id: 'respiratoria', label: 'Enfermedad respiratoria crónica' }
+        { id: 'renal', label: 'Enfermedad renal crónica, incluidos pacientes en diálisis crónica' },
+        { id: 'respiratoria', label: 'Enfermedad respiratoria crónica' },
+        { id: 'cirrosis', label: 'Cirrosis' },
+        { id: 'retroviral', label: 'Personas en seguimiento por enfermedad retroviral' },
+        { id: 'lista-espera', label: 'Pacientes en lista de espera para trasplante y trasplantados (excepto córnea)' }
     ];
     public ciudadano: ICiudadano = {
         id: null,
