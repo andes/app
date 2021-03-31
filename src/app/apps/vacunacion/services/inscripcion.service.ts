@@ -21,9 +21,7 @@ export class InscripcionService extends ResourceBaseHttp {
 
 
     constructor(protected server: Server) {
-
         super(server);
-
         this.inscriptosFiltrados$ = combineLatest(
             this.documentoText,
             this.gruposSelected,
@@ -89,6 +87,10 @@ export class InscripcionService extends ResourceBaseHttp {
 
     get(params: any): Observable<any[]> {
         return this.server.get(this.url, { params: params, showError: true });
+    }
+
+    save(ciudadano: ICiudadano): Observable<any> {
+        return this.server.post(this.url, ciudadano);
     }
 
     patch(inscripcion): Observable<any> {
