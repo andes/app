@@ -56,6 +56,12 @@
                     <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
                 </plex-tab>
 
+                <plex-tab [allowClose]="true" label="Ficha Epidemilógica" 
+                    *ngIf="registro.tipo === 'ficha-epidemiologica'">
+                    <app-ficha-epidemiologica-crud [fichaPaciente]="registro.data" [fichaName]="registro.data.type.name"
+                        [paciente]="paciente" [editFicha]="false" [hideVolver]="true"></app-ficha-epidemiologica-crud>
+                </plex-tab>
+
             </ng-container>
         </plex-tabs>
     </plex-layout-main>

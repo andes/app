@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ficha {{fichaName}}" main>
-            <plex-button type="danger" (click)="toBack()">Volver
+            <plex-button *ngIf="!hideVolver" type="danger" (click)="toBack()">Volver
             </plex-button>
             <plex-button *ngIf="editFicha" position="right" type="success" (click)="registrarFicha()"
                          [disabled]="form.invalid">

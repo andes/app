@@ -80,6 +80,11 @@ export class HUDSService {
                             return i;
                         }
                         break;
+                    case 'ficha-epidemiologica':
+                        if (registro.id === _registro.id) {
+                            return i;
+                        }
+                        break;
                 }
             }
         }

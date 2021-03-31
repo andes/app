@@ -20,6 +20,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   @Input() paciente: IPaciente;
   @Input() fichaPaciente: any;
   @Input() editFicha: boolean;
+  @Input() hideVolver: boolean;
   @Input() fichaName: string;
   @Input() form: any;
   @Output() volver = new EventEmitter<any>();
