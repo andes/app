@@ -18,6 +18,10 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
+import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
+import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
+import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
+import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,11 @@ import { environment } from '../environments/environment';
     LoginComponent,
     PortalPacienteComponent,
     PacienteDetalleComponent,
-    PortalPacienteMainComponent
+    PortalPacienteMainComponent,
+    PDPMisFamiliaresComponent,
+    PDPTituloComponent,
+    PDPMenuComponent,
+    PDPMisFamiliaresDetalleComponent
   ],
   imports: [
     BrowserModule,

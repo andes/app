@@ -1,25 +1,17 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-
-// Servicios y modelo
 import { Plex } from '@andes/plex';
+import { Component, ElementRef } from '@angular/core';
 
 @Component({
-    selector: 'pdp-portal-paciente',
-    templateUrl: './portal-paciente.html'
+    selector: 'pdp-titulo',
+    templateUrl: './portal-titulo.component.html'
 })
-
-
-export class PortalPacienteComponent implements OnInit {
-
+export class PDPTituloComponent {
     public width = 0;
 
     constructor(
         private el: ElementRef,
         private plex: Plex,
     ) { }
-
-    ngOnInit() {
-    }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
