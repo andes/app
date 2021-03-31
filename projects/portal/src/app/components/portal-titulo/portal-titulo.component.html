@@ -1,0 +1,17 @@
+<plex-title size="{{ isResponsive() ? 'md' : 'sm' }}" titulo="{{ isResponsive() ? 'Mi portal de salud' : 'tu portal' }}"
+            main>
+    <plex-button size="sm" [icon]="isResponsive() ? null : 'mail-outline'" class="ml-2" type="link">
+        info@andes.gob.ar
+    </plex-button>
+    <plex-button size="sm" [label]="isResponsive() ? 'www.andes.gob.ar' : null" class="ml-2" type="link">
+        <plex-icon name="web"></plex-icon>
+    </plex-button>
+    <plex-button type="info" icon="message-alert" size="sm" hint="tienes dos elementos sin leer" hintIcon="bell"
+                 hintType="warning" detach="top">
+    </plex-button>
+
+    <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión">
+    </plex-button>
+    <plex-button *mobile size="sm" class="ml-2" type="danger" icon="close">
+    </plex-button>
+</plex-title>

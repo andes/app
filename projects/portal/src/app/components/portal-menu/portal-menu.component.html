@@ -1,0 +1,21 @@
+<plex-grid cols="12" size="md">
+
+    <!-- Menu Lateral -->
+    <plex-grid id="menu-vertical" *mobile="false" span="1" class="align-self-start mr-4 flex-column" justify="start"
+               size="xs">
+        <ng-container *ngFor="let card of cards">
+            <plex-label icon="{{ card.icono }}" size="md" direction="column" class="mb-2 color-{{ card.semanticTag}}"
+                        titulo="" subtitulo="" [routerLink]="[{ outlets: { listado: [card.path] } }]"
+                        tooltip="{{ card.path }}" tooltipPosition="right">
+            </plex-label>
+        </ng-container>
+    </plex-grid>
+
+    <!-- Listado -->
+    <section span="11">
+        <pdp-paciente-detalle></pdp-paciente-detalle>
+
+        <ng-content></ng-content>
+
+    </section>
+</plex-grid>
