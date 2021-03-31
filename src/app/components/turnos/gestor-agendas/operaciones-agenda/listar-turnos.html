@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col">
                     <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
-                    <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+                    <plex-button type="success" label="Imprimir" (click)="printAgenda(agendas)"></plex-button>
                 </div>
             </div>
             <span *ngFor="let agenda of agendas">
@@ -14,7 +14,8 @@
                         <div>
                             <div class="row">
                                 <div class="col">
-                                    <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                    <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{
+                                    agenda.horaInicio
                                     | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                     date: 'HH:mm'}} hs
                                 </div>
@@ -105,8 +106,8 @@
                                            *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small
-                                           *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | fecha:'utc' }}</small>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{
+                                        turno.paciente.fechaNacimiento | fecha:'utc' }}</small>
                                 </td>
                                 <td>
                                     <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente |
@@ -178,8 +179,8 @@
                                            *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small
-                                           *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | fecha:'utc' }}</small>
+                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{
+                                        sobreturno.paciente.fechaNacimiento | fecha:'utc' }}</small>
                                 </td>
                                 <td>
                                     <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{
@@ -203,7 +204,6 @@
                         </div>
                     </div>
                     <hr>
-                    <!-- Hardcodear está mal, sin embargo el style del css -->
                     <div style="page-break-before:always"></div>
                 </plex-box>
             </span>
