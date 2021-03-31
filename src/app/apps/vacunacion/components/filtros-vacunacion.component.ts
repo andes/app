@@ -15,6 +15,7 @@ export class FiltrosVacunacionComponent implements OnInit {
     public filtro: any = {};
     public localidades$: Observable<ILocalidad[]>;
     public gruposPoblacionales$: Observable<any[]>;
+    public hoy = new Date();
     private idNeuquenProv = '57f3f3aacebd681cc2014c53';
 
     constructor(
@@ -33,5 +34,7 @@ export class FiltrosVacunacionComponent implements OnInit {
         this.inscripcionService.grupoSelected.next(this.filtro.grupo);
         this.inscripcionService.documentoText.next(this.filtro.documento);
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
+        this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
+        this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
     }
 }

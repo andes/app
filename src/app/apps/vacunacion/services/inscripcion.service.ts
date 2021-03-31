@@ -12,6 +12,8 @@ export class InscripcionService {
     public documentoText = new BehaviorSubject<string>(null);
     public grupoSelected = new BehaviorSubject<any>(null);
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
+    public fechaDesde = new BehaviorSubject<Date>(null);
+    public fechaHasta = new BehaviorSubject<Date>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
@@ -23,9 +25,11 @@ export class InscripcionService {
             this.documentoText,
             this.grupoSelected,
             this.localidadSelected,
+            this.fechaDesde,
+            this.fechaHasta,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupo, localidad, lastResults]) => {
+            switchMap(([documento, grupo, localidad, fechaDesde, fechaHasta, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -36,7 +40,8 @@ export class InscripcionService {
                 let params: any = {
                     limit: this.limit,
                     skip: this.skip,
-                    fields: '-nroTramite'
+                    fields: '-nroTramite',
+                    incluirVacunados: false
                 };
                 if (grupo) {
                     params.grupo = grupo.nombre;
@@ -46,6 +51,19 @@ export class InscripcionService {
                 }
                 if (documento) {
                     params.documento = documento;
+                }
+                const desdeF = moment(fechaDesde).startOf('day').toDate();
+                const hastaF = moment(fechaHasta).endOf('day').toDate();
+                if (fechaDesde) {
+                    if (fechaHasta) {
+                        params.fechaRegistro = `${desdeF}|${hastaF}`;
+                    } else {
+                        params.fechaRegistro = `>${desdeF}`;
+                    }
+                } else {
+                    if (fechaHasta) {
+                        params.fechaRegistro = `<${hastaF}`;
+                    }
                 }
 
                 return this.get(params).pipe(
@@ -68,6 +86,10 @@ export class InscripcionService {
     }
 
     save(ciudadano: ICiudadano): Observable<any> {
-        return this.server.post(this.inscripcionUrl, ciudadano);
+        if (ciudadano.id) {
+            return this.server.patch(`${this.inscripcionUrl}/${ciudadano.id}`, ciudadano);
+        } else {
+            return this.server.post(this.inscripcionUrl, ciudadano);
+        }
     }
 }

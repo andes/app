@@ -33,17 +33,64 @@
 
     <plex-layout-sidebar *ngIf="showSidebar" type="invert">
         <plex-title titulo="Detalle paciente" size="md">
+            <plex-button class="pr-1" *ngIf="!pacienteSelected.paciente" type="warning" size="sm"
+                         label="Asociar paciente" [disabled]="candidatosBuscados" (click)="buscarCandidatos()">
+            </plex-button>
             <plex-button type="danger" icon="close" size="sm" (click)="closeSidebar()"></plex-button>
         </plex-title>
 
         <ng-container *ngIf="pacienteSelected">
-            <!-- personales -->
+            <!-- Si no tiene paciente de mpi asociado -->
+            <ng-container *ngIf="!pacienteSelected.paciente">
+
+                <plex-label *ngIf="!candidatosBuscados" titulo="No se encontró ningún paciente asociado">
+                </plex-label>
+
+
+                <plex-list *ngIf="candidatos?.length">
+                    <plex-item *ngFor="let candidato of candidatos">
+                        <img [ngClass]="{'img-fallecido' : candidato.fechaFallecimiento}"
+                             [mpiFotoPaciente]="candidato" />
+
+                        <plex-label *ngIf="!candidato.numeroIdentificacion" titulo="{{ candidato | nombre }}"
+                                    subtitulo="{{ (candidato.documento | number) || 'Sin DNI' }}">
+                        </plex-label>
+
+                        <plex-label *ngIf="candidato.numeroIdentificacion" titulo="{{ candidato | nombre }}"
+                                    subtitulo="{{ candidato.numeroIdentificacion }}"></plex-label>
+
+                        <plex-label titulo="{{ candidato | edad }}"
+                                    subtitulo="{{ candidato.fechaNacimiento | fecha:'utc' }}">
+                        </plex-label>
+
+                        <plex-badge *ngIf="candidato.fechaFallecimiento" type="danger">Fallecido:
+                            {{ candidato.fechaFallecimiento | fecha:'utc'}}
+                        </plex-badge>
+
+                        <plex-badge type="info">{{ candidato | sexo }}
+                        </plex-badge>
+
+                        <plex-badge type="" class=""
+                                    [ngClass]="{'text-success' : candidato.estado === 'validado' , 'text-warning' : candidato.estado === 'temporal'} ">
+                            {{ candidato.estado }}
+                        </plex-badge>
+
+                        <plex-button type="info" size="sm" label="Seleccionar" (click)="asociarCandidato(candidato)">
+                        </plex-button>
+                    </plex-item>
+                </plex-list>
+
+                <div class="pt-2" *ngIf="!candidatos?.length && candidatosBuscados" grow="full">
+                    No se encontró ningún paciente candidato para asociar. Asegúrese de que
+                    el paciente se encuentra registrado en MPI.</div>
+            </ng-container>
+
+            <!-- Seccion datos personales -->
             <paciente-detalle *ngIf="pacienteSelected.paciente" [paciente]="pacienteSelected.paciente" reload="true"
                               orientacion="horizontal">
             </paciente-detalle>
-            <plex-label *ngIf="!pacienteSelected.paciente" class="pb-2"
-                        titulo="No se ha encontrado ningún paciente asociado"></plex-label>
 
+            <!-- Seccion estado del paciente -->
             <plex-title titulo="Estado del paciente" size="sm"></plex-title>
             <plex-grid cols="3">
                 <plex-label titulo="Alergia" subtitulo="{{ pacienteSelected.alergia ? 'Si' : 'No' }}">
@@ -51,7 +98,6 @@
                 <plex-label *ngIf="pacienteSelected.cud" titulo="CUD" subtitulo="{{ pacienteSelected.cud }}">
                 </plex-label>
 
-                <!-- estado -->
                 <plex-label titulo="En aislamiento" subtitulo="{{ pacienteSelected.aislamiento ? 'Si' : 'No' }}"> :
                 </plex-label>
                 <plex-label *ngIf="pacienteSelected.sexo === 'femenino'" titulo="Amamantando"
@@ -81,7 +127,6 @@
                 <plex-label titulo="Fecha de registro" subtitulo="{{ pacienteSelected.fechaRegistro | fecha }}">
                 </plex-label>
                 <plex-label titulo="Plasma" subtitulo="{{ pacienteSelected.plasma ? 'Si' : 'No' }}"></plex-label>
-                <plex-label titulo="Vacuna" subtitulo="{{ pacienteSelected.vacuna ? 'Si' : 'No' }}"></plex-label>
                 <plex-label titulo="Validado" subtitulo="{{ pacienteSelected.validado ? 'Si' : 'No' }}">
                 </plex-label>
 
