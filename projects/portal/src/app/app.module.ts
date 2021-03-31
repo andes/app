@@ -30,6 +30,7 @@ import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-
 import { CertificadoService } from './services/certificado.service';
 import { CategoriasService } from './services/categoria.service';
 import { PrestacionService } from './services/prestacion.service';
+import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { PrestacionService } from './services/prestacion.service';
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
+    PDPMisFamiliaresComponent,
     PDPTituloComponent,
     PDPMenuComponent,
     PDPMisVacunasComponent,

@@ -1,0 +1,38 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+
+        <pdp-titulo></pdp-titulo>
+
+        <!-- Nombre mas descriptivo capaz -->
+        <pdp-menu>
+
+            <plex-title size="sm" titulo="Mis relaciones">
+                <plex-button type="success" icon="account-plus" tooltip="Agregar una relacion" class="ml-2" size="sm">
+                </plex-button>
+                <plex-button type="warning" label="delegar cuenta" tooltip="Delegar cuenta" class="ml-2 mr-3" size="sm">
+                </plex-button>
+            </plex-title>
+
+            <plex-grid size="xl" type="auto">
+                <plex-card type="default" size="md" *ngFor="let familiar of familiares$ | async"
+                           (click)="gotTo(familiar.id)" [selected]="familiar?.id === selectedId">
+                    <img [mpiFotoPaciente]="familiar">
+                    <plex-label size="lg" direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
+                                subtitulo="{{ familiar.documento }}">
+                    </plex-label>
+                    <plex-badge type="success">{{ familiar.relacion.nombre }}</plex-badge>
+                    <plex-button type="warning" size="sm" icon="pencil"></plex-button>
+                    <plex-button type="danger" size="sm" icon="account-off"></plex-button>
+                </plex-card>
+            </plex-grid>
+
+        </pdp-menu>
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle familiar">
+            <plex-button type="danger" icon="close" size="sm" (click)="gotTo()"></plex-button>
+        </plex-title>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>

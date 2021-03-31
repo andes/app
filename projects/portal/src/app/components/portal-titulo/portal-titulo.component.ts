@@ -5,7 +5,7 @@ import { Component, ElementRef } from '@angular/core';
     templateUrl: './portal-titulo.component.html'
 })
 export class PDPTituloComponent {
-    public width = 0;
+    public width: number;
 
     constructor(
         private el: ElementRef
