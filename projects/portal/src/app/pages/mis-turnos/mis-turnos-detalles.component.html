@@ -13,7 +13,7 @@
         <plex-label type="warning" titulo="Hora de asistencia" subtitulo="{{ turno.horaAsistencia | date:'HH:mm' }}">
         </plex-label>
         <plex-label titulo="Equipo de Salud"
-                    subtitulo="{{ turno.profesionales[0].nombre}} {{ turno.profesionales[0].apellido}}"> </plex-label>
+                    subtitulo="{{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}"> </plex-label>
     </plex-detail>
     <plex-title size="sm" titulo="nota"></plex-title>
     <p>{{ turno.nota }} {{ turno.motivoSuspension }}</p>

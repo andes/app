@@ -1,29 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { LoginComponent } from './pages/login/login-portal-paciente';
-import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
 import { RoutingGuard } from './app.routings-guard.class';
-
-
-import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
-import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
-
-
-import { MisTurnosComponent } from './pages/portal-paciente/portal-paciente-main/mis-turnos/mis-turnos.component';
-import { DetalleTurnoComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-turno/detalle-turno.component';
-
-
+import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
+import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: PortalPacienteComponent, canActivate: [RoutingGuard] },
+
   {
-    path: 'mis-familiares',
-    component: PDPMisFamiliaresComponent,
+    path: 'mis-turnos',
+    component: PDPMisTurnosComponent,
     canActivate: [RoutingGuard],
     children: [
-      { path: ':id', component: PDPMisFamiliaresDetalleComponent }
+      { path: ':id', component: PDPMisTurnosDetallesComponent }
     ]
   }
 ];

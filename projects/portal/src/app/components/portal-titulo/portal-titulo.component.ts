@@ -1,4 +1,3 @@
-import { Plex } from '@andes/plex';
 import { Component, ElementRef } from '@angular/core';
 
 @Component({
@@ -9,8 +8,7 @@ export class PDPTituloComponent {
     public width = 0;
 
     constructor(
-        private el: ElementRef,
-        private plex: Plex,
+        private el: ElementRef
     ) { }
 
     isResponsive() {

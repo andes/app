@@ -11,39 +11,27 @@ import { Auth } from '@andes/auth';
 
 // Declarations
 import { LoginComponent } from './pages/login/login-portal-paciente';
-import { PortalPacienteComponent } from './pages/portal-paciente/portal-paciente.component';
-import { PortalPacienteMainComponent } from './pages/portal-paciente/portal-paciente-main/portal-paciente-main.component';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
-
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
-import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
-import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
-
+import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
+import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
 import { PrestacionService } from './services/prestaciones.service';
-import { MisTurnosComponent } from './pages/portal-paciente/portal-paciente-main/mis-turnos/mis-turnos.component';
-import { DetalleTurnoComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-turno/detalle-turno.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     PacienteDetalleComponent,
-
-
-    PDPMisFamiliaresComponent,
+    PDPMisTurnosComponent,
+    PDPMisTurnosDetallesComponent,
     PDPTituloComponent,
     PDPMenuComponent,
-    PDPMisFamiliaresDetalleComponent,
-
-
-    PortalPacienteMainComponent,
-
-    MisTurnosComponent,
-    DetalleTurnoComponent
   ],
   imports: [
     BrowserModule,

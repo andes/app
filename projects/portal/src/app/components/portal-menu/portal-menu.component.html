@@ -5,7 +5,7 @@
                size="xs">
         <ng-container *ngFor="let card of cards">
             <plex-label icon="{{ card.icono }}" size="md" direction="column" class="mb-2 color-{{ card.semanticTag}}"
-                        titulo="" subtitulo="" [routerLink]="[{ outlets: { listado: [card.path] } }]"
+                        titulo="" subtitulo="" (click)="goTo(card.path)" tooltip="{{ card.path }}"
                         tooltip="{{ card.path }}" tooltipPosition="right">
             </plex-label>
         </ng-container>

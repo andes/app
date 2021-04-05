@@ -1,0 +1,35 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+
+        <pdp-titulo></pdp-titulo>
+
+        <!-- Nombre mas descriptivo capaz -->
+        <pdp-menu>
+
+
+            <plex-list>
+                <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno.id)" [selected]="turno.selected">
+                    <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
+                                subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
+                    </plex-label>
+                    <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion }}">
+                    </plex-label>
+
+                    <plex-badge type="{{ turno.asistencia ? 'success' : 'warning'}}">{{ turno.asistencia? 'ASISTIO':'NO
+                        ASISTIO' }}
+                    </plex-badge>
+                    <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
+                    <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>
+                </plex-item>
+            </plex-list>
+
+        </pdp-menu>
+
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle Turno">
+            <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+        </plex-title>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>

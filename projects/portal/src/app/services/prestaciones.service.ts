@@ -9,21 +9,10 @@ import { Router } from '@angular/router';
 
 export class PrestacionService {
 
-    private vacunasURL = '/modules/vacunas';
     private agendaUrl = '/modules/turnos/agenda';
-    private valorInicial = new BehaviorSubject<number>(12);
-    valorActual = this.valorInicial.asObservable();
-
-    private sidebarInicial = new BehaviorSubject<Boolean>(false);
-    sidebarActual = this.sidebarInicial.asObservable();
-
-    private focoInicial = new BehaviorSubject<string>('main');
-    focoActual = this.focoInicial.asObservable();
-
 
     constructor(
-        private server: Server,
-        private router: Router
+        private server: Server
     ) { }
 
 
@@ -71,32 +60,4 @@ export class PrestacionService {
     }
 
 
-    actualizarValor(mainValue: number) {
-        this.valorInicial.next(mainValue);
-    }
-
-    actualizarFoco(valorFoco: string) {
-        this.focoInicial.next(valorFoco);
-    }
-    actualizarSidebar(valorSidebar: boolean) {
-
-        this.sidebarInicial.next(valorSidebar);
-    }
-
-    resetOutlet() {
-        this.router.navigate(['home', {
-            outlets: {
-                // detalle: null,
-                detalleHuds: null,
-                detalleVacuna: null,
-                detalleTurno: null,
-                detalleFamiliar: null,
-                detallePrescripcion: null,
-                detalleLaboratorio: null,
-                detalleProblema: null,
-                detalleProfesional: null,
-                detalleMensaje: null,
-            }
-        }]);
-    }
 }
