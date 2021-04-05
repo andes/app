@@ -22,10 +22,9 @@ import { PDPMenuComponent } from './components/portal-menu/portal-menu.component
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
 import { TurnoService } from './services/turno.service';
-
-
+import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
+import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
 import { PrestacionService } from './services/prestaciones.service';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +32,9 @@ import { PrestacionService } from './services/prestaciones.service';
     PacienteDetalleComponent,
     PDPMisTurnosComponent,
     PDPMisTurnosDetallesComponent,
+    PDPMisLaboratoriosComponent,
+    PacienteDetalleComponent,
+    PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
   ],

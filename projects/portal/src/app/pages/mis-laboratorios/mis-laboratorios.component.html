@@ -1,0 +1,34 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+
+        <pdp-titulo></pdp-titulo>
+
+        <!-- Nombre mas descriptivo capaz -->
+        <pdp-menu>
+
+
+            <plex-list>
+                <plex-item *ngFor="let laboratorio of laboratorios$ | async" (click)="goTo(laboratorio.cda_id)">
+                    <plex-bool *ngIf="seleccionMultiple" type="checkbox"></plex-bool>
+                    <plex-label size="lg" icon="recipiente" titulo="{{ laboratorio.prestacion.snomed.term }}"
+                                subtitulo="{{ laboratorio.organizacion }}">
+                    </plex-label>
+                    <plex-badge *ngIf="laboratorio.visibilidad === false" type="warning">retirar resultados
+                        personalmente
+                    </plex-badge>
+                    <plex-badge type="info">{{ laboratorio.fecha | date:'dd/MM/yyyy HH:mm'}}</plex-badge>
+                    <plex-button *ngIf="laboratorio.visibilidad === true" type="info" size="sm" icon="download">
+                    </plex-button>
+                </plex-item>
+            </plex-list>
+
+        </pdp-menu>
+
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle laboratorio">
+            <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+        </plex-title>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>
