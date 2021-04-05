@@ -1,4 +1,4 @@
-<plex-accordion *ngFor="let sector of sectore$| async ">
+<plex-accordion *ngFor="let sector of sectore$ | async ">
     <plex-panel>
         <div plex-accordion-title justify>
             <section class="w-50">
@@ -9,12 +9,15 @@
         </div>
         <plex-grid size="md" cols="3">
             <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+
                 <plex-card *ngFor="let cama of sector.camasSector" [selected]="cama.selected"
                            (click)=" cama.selected = !cama.selected ; verDetalle(cama, selectedCama)" align="center">
-                    <plex-badge type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}">{{ cama.estado}}
+                    <plex-badge [type]="(mapaCamasService.getEstadoCama(cama) | async).color">
+                        {{ cama.estado}}
                     </plex-badge>
-                    <plex-icon size="xl" type="{{ cama.estado === 'ocupada' ? 'warning' : 'success'}}"
-                               name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}"></plex-icon>
+                    <plex-icon size="xl" [type]="(mapaCamasService.getEstadoCama(cama) | async).color"
+                               name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}">
+                    </plex-icon>
                     <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ sector.nombre }}"></plex-label>
                     <ng-container *ngIf="cama.paciente">
                         <plex-label align="center" icon="paciente" size="sm" direction="column"

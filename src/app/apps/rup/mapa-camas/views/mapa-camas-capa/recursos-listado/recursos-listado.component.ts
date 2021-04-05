@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 @Component({
     selector: 'app-recursos-listado',
-    templateUrl: './recursos-listado.component.html'
+    templateUrl: './recursos-listado.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecursosListadoComponent implements OnInit {
 
@@ -21,7 +22,7 @@ export class RecursosListadoComponent implements OnInit {
     estadoRelacion: any;
     canEdit: Boolean;
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         public auth: Auth,
         private router: Router,
         public permisosMapaCamasService: PermisosMapaCamasService

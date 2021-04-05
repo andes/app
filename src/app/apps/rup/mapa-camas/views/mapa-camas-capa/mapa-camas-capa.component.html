@@ -20,19 +20,16 @@
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
-                <plex-button class="mr-1" size="sm"
-                             label="{{(!listadoRecursos)?'listado de recursos':'listado de camas'}}" type="primary"
-                             (click)="verListadoRecursos()">
-                </plex-button>
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE"
                              type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
+
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
                                class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
                 </plex-dropdown>
                 <plex-dropdown *ngIf="!listadoRecursos" icon="format-list-checks" type="info" size="sm"
-                               class="d-inline-block" [right]="true">
+                               class="d-inline-block mr-1" [right]="true">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
                                    (change)="toggleColumns()"></plex-bool>
@@ -50,6 +47,10 @@
                         </plex-bool>
                     </plex-grid>
                 </plex-dropdown>
+                <plex-button size="sm" type="primary" (click)="verListadoRecursos()"
+                             [title]="!listadoRecursos ? 'Agrupar por sector' : 'Ver listado de camas'">
+                    <plex-icon [name]="!listadoRecursos ? 'file-tree' : 'format-list-bulleted'"></plex-icon>
+                </plex-button>
             </plex-title>
 
         </header>
