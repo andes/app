@@ -70,7 +70,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
         if (element.snomedCode) {
           this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
             this.itemsDropdownFichas.push({
-              'label': res[0].fsn, handler: () => {
+              'label': res[0] ? res[0].fsn : element.name, handler: () => {
                 this.mostrarFicha(element.name);
               }
             });
