@@ -16,7 +16,6 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
-
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
@@ -25,8 +24,9 @@ import { TurnoService } from './services/turno.service';
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
 import { LaboratorioService } from './services/laboratorio.service';
-import { MisVacunasComponent } from './pages/portal-paciente/portal-paciente-main/mis-vacunas/mis-vacunas.component';
-import { DetalleVacunaComponent } from './pages/portal-paciente/portal-paciente-sidebar/detalle-vacuna/detalle-vacuna.component';
+import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.component';
+import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -40,9 +40,10 @@ import { DetalleVacunaComponent } from './pages/portal-paciente/portal-paciente-
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
-    MisVacunasComponent,
-    DetalleVacunaComponent
-
+    PDPTituloComponent,
+    PDPMenuComponent,
+    PDPMisVacunasComponent,
+    PDPDetalleVacunaComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +54,8 @@ import { DetalleVacunaComponent } from './pages/portal-paciente/portal-paciente-
     InfiniteScrollModule,
     SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
-    MPILibModule
+    MPILibModule,
+    BrowserAnimationsModule
   ],
   providers: [
     Server,

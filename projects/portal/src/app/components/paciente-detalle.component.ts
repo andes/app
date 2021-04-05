@@ -6,7 +6,6 @@ import { Auth } from '@andes/auth';
 import { LaboratorioService } from '../services/laboratorio.service';
 import { Router } from '@angular/router';
 import { PrestacionService } from '../services/prestaciones.service';
-
 @Component({
     selector: 'pdp-paciente-detalle',
     templateUrl: './paciente-detalle.html'
@@ -29,11 +28,11 @@ export class PacienteDetalleComponent implements OnInit {
     public errores: any[];
 
     alertas = [
-        { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'dark', color: '', icono: 'trastorno', path: 'misProblemas', semanticTag: 'trastorno' },
+        { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'dark', color: '', icono: 'trastorno', path: 'mis-problemas', semanticTag: 'trastorno' },
         { dato: 'alergias', valor: '3', subdato: 'penicilina, carbamazepina y metmorfina', tipo: 'dark', color: '', icono: 'lupa-ojo', path: 'misProblemas', semanticTag: 'hallazgo' },
         { dato: 'prescripciones', valor: '5', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#00cab6', icono: 'pildoras', path: 'misPrescripciones', semanticTag: 'producto' },
-        { dato: 'laboratorios', valor: '0', subdato: 'Resultados del hemograma', tipo: 'dark', color: '#a0a0a0', icono: 'recipiente', path: 'misLaboratorios', semanticTag: 'laboratorio' },
-        { dato: 'vacunas', valor: '0', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#92278e', icono: 'vacuna', path: 'misVacunas', semanticTag: 'procedimiento' },
+        { dato: 'laboratorios', valor: '0', subdato: 'Resultados del hemograma', tipo: 'dark', color: '#a0a0a0', icono: 'recipiente', path: 'mis-laboratorios', semanticTag: 'laboratorio' },
+        { dato: 'vacunas', valor: '0', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#92278e', icono: 'vacuna', path: 'mis-vacunas', semanticTag: 'procedimiento' },
     ];
 
     constructor(
@@ -68,20 +67,22 @@ export class PacienteDetalleComponent implements OnInit {
             });
         });
 
-        this.errores = [{
-            id: 1,
-            nombre: 'Error en mis registros de salud',
-        },
-        {
-            id: 2,
-            nombre: 'Error en mis datos personales',
-        },
-        {
-            id: 3,
-            nombre: 'Otro error',
-        }
+        this.errores = [
+            {
+                id: 1,
+                nombre: 'Error en mis registros de salud',
+            },
+            {
+                id: 2,
+                nombre: 'Error en mis datos personales',
+            },
+            {
+                id: 3,
+                nombre: 'Otro error',
+            }
         ];
     }
+
     goTo(path) {
         if (path) {
             this.router.navigate(['/' + path]);
