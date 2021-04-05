@@ -38,7 +38,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public tipoContacto = [
     { id: 'conviviente', nombre: 'Conviviente' },
     { id: 'laboral', nombre: 'Laboral' },
-    { id: 'social', nombre: 'Social' }
+    { id: 'social', nombre: 'Social' },
+    { id: 'noConviviente', nombre: 'Familiar no conviviente' }
   ];
   public tipoInstitucion = [
     { id: 'residencia', nombre: 'Residencia de larga estadía' },
@@ -55,10 +56,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'demandaEspontanea', nombre: 'Demanda espontanea' },
   ];
   public segundaClasificacion = [
-    { id: 'criterioClinicoEpidemiologico', nombre: 'Criterio clínico epidemiológico' },
+    { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
     { id: 'antigeno', nombre: 'Antígeno' },
-    { id: 'pcr', nombre: 'PCR' },
-    { id: 'nexo', nombre: 'Nexo' }
+    { id: 'pcr', nombre: 'PCR-RT' },
+    { id: 'lamp', nombre: 'LAMP (NeoKit)' }
   ];
   public tipoMuestra = [
     { id: 'aspirado', nombre: 'Aspirado' },
@@ -66,9 +67,42 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'esputo', nombre: 'Esputo' },
     { id: 'lavadoBroncoalveolar', nombre: 'Lavado broncoalveolar' },
   ];
-  public resultadoTest = [
-    { id: 'positivo', nombre: 'Positivo' },
-    { id: 'negativo', nombre: 'Negativo' }
+  public resultadoAntigeno = [
+    { id: 'confirmado', nombre: 'Reactivo' },
+    { id: 'noReactivo', nombre: 'No reactivo' }
+  ];
+  public resultadoDetectable = [
+    { id: 'confirmado', nombre: 'Se detecta genoma de SARS-CoV-2 ' },
+    { id: 'descartado', nombre: 'No se detecta genoma de SARS-CoV-2' },
+    { id: 'muestra', nombre: 'Muestra tomada' }
+  ];
+  public trabajaInstitucion = [
+    { id: 'residenciaAdultos', nombre: 'Residencia adultos mayores' },
+    { id: 'comisaria', nombre: 'Comisarias' },
+    { id: 'penales', nombre: 'Penales' },
+    { id: 'monovalentes', nombre: 'Monovalentes' }
+  ];
+  public estadoCovid = [
+    { id: 'completa', nombre: 'Completa' },
+    { id: 'incompleta', nombre: 'Incompleta' }
+  ];
+  public tipoConglomerado = [
+    { id: 'hospital', nombre: 'Hospital/Clínica/Centro asistencial' },
+    { id: 'penitenciaria', nombre: 'Institución penitenciaria' },
+    { id: 'saludMental', nombre: 'Institución de Salud Mental' },
+    { id: 'residenciaMayores', nombre: 'Residencia para adultos mayores' },
+    { id: 'empresas', nombre: 'Empresas' },
+    { id: 'instituciones', nombre: 'Instituciones educativas/Instituciones de asistencia infantil (jardín, guarderías, etc)' }
+  ];
+  public reqCuidado = [
+    { id: 'salaGeneral', nombre: 'Sala General' },
+    { id: 'uce', nombre: 'UCE' },
+    { id: 'ut', nombre: 'UT Intermedia' },
+    { id: 'uti', nombre: 'UTI' },
+  ];
+  public selectGral = [
+    { id: 'si', nombre: 'SI' },
+    { id: 'no', nombre: 'NO' }
   ];
 
   public contacto = {
@@ -284,15 +318,25 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   // Funcion para calcular automáticamente la clasificacion final segun resultados de los hisopados
-  resultadoFinal() {
+  resultadoFinal(key) {
     this.secciones.map(seccion => {
       if (seccion.id === 'clasificacionFinal') {
-        if (seccion.fields['segundaclasificacion']?.id === 'nexo') {
-          seccion.fields['clasificacionfinal'] = 'Confirmado';
-        } else if (seccion.fields['antigeno']?.id === 'positivo' && seccion.fields['pcr']?.id === 'positivo') {
-          seccion.fields['clasificacionfinal'] = 'Confirmado';
-        } else if (seccion.fields['pcr']?.id === 'negativo') {
-          seccion.fields['clasificacionfinal'] = 'Descartado';
+        const clasificaciones = {
+          segundaclasificacion: seccion.fields['segundaclasificacion']?.id,
+          antigeno: seccion.fields['antigeno']?.id,
+          pcr: seccion.fields['pcr']?.id,
+          lamp: seccion.fields['lamp']?.id
+        };
+        switch (clasificaciones[key]) {
+          case 'confirmado':
+            seccion.fields['clasificacionfinal'] = 'Confirmado';
+            break;
+          case 'descartado':
+            seccion.fields['clasificacionfinal'] = 'Descartado';
+            break;
+          case 'muestra':
+            seccion.fields['clasificacionfinal'] = 'Sospechoso';
+            break;
         }
       }
     });
@@ -307,7 +351,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         seccion.fields['semanaepidemiologica'] = Math.round(hoy.diff(fechaSintoma, 'days') / 7);
       }
     });
-
   }
 
   setOrganizacion(seccion, organizacion) {
