@@ -8,6 +8,7 @@ import { captcha } from '../../../../environments/apiKeyMaps';
     templateUrl: './consulta.component.html'
 })
 export class ConsultaComponent implements OnInit {
+    public subtitulo = 'Completá los datos para conocer el estado de tu inscripción';
     public sexo;
     public documento = null;
     public resultado = null;
@@ -17,6 +18,7 @@ export class ConsultaComponent implements OnInit {
     ];
     recaptcha: any = null;
     public captchaEnabled = true;
+
 
     @ViewChild('formulario', { static: true }) formulario;
 
@@ -51,6 +53,7 @@ export class ConsultaComponent implements OnInit {
                 .search({ documento: this.documento, sexo: this.sexo, recaptcha: this.recaptcha })
                 .subscribe(resultado => {
                     this.resultado = resultado;
+                    this.subtitulo = `Búsqueda: ${this.documento} / ${this.sexo}`;
                 });
             this.limpiarCaptcha();
         } else {
@@ -60,6 +63,7 @@ export class ConsultaComponent implements OnInit {
 
     nuevaBusqueda() {
         // Limpia búsqueda
+        this.subtitulo = 'Completá los datos para conocer el estado de tu inscripción';
         this.resultado = null;
         this.sexo = null;
         this.documento = null;
