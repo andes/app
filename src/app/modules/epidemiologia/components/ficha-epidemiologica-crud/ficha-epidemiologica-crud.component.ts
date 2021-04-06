@@ -128,6 +128,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public telefono = null;
   public contactosEstrechos = [];
   public nuevoContacto = false;
+  public identifier = null;
 
   constructor(
     private formsService: FormsService,
@@ -168,6 +169,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       this.router.navigate(['inicio']);
     }
     this.organizaciones$ = this.auth.organizaciones();
+    this.identifier = this.fichaPaciente.identifier ? this.fichaPaciente.identifier : null;
   }
 
   registrarFicha() {
@@ -226,6 +228,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   setFicha() {
     const fichaFinal = {
       type: this.fichaName,
+      identifier: this.identifier,
       secciones: this.ficha,
       paciente: {
         id: this.paciente.id,

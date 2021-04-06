@@ -11,6 +11,9 @@
         </plex-title>
         <section class="my-3">
             <form #form="ngForm">
+                <plex-text label="Identificador único de ficha" grow="auto" name="identifier" [(ngModel)]="identifier"
+                           required="true" [readonly]="!editFicha">
+                </plex-text>
                 <ng-container *ngFor="let seccion of secciones">
                     <plex-title *ngIf="seccion.name==='Contactos Estrechos';else notContactos" size="sm"
                                 titulo="{{seccion.name}}">

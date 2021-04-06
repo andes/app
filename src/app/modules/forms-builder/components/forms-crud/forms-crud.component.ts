@@ -1,5 +1,5 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Plex } from '@andes/plex';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -167,6 +167,7 @@ export class AppFormsCrudComponent implements OnInit {
             });
             const dataSaved: Form = {
                 active: this.form.active,
+                identifier: '',
                 name: this.form.name,
                 type: this.form.type,
                 snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,

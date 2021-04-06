@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 export interface Form {
     name: string;
+    identifier: string;
     type: string;
     snomedCode: string;
     active: boolean;
