@@ -169,7 +169,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       this.router.navigate(['inicio']);
     }
     this.organizaciones$ = this.auth.organizaciones();
-    this.identifier = this.fichaPaciente.identifier ? this.fichaPaciente.identifier : null;
+    this.identifier = this.fichaPaciente?.identifier ? this.fichaPaciente.identifier : null;
   }
 
   registrarFicha() {
