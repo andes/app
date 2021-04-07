@@ -1,3 +1,15 @@
+# [5.41.0](https://github.com/andes/app/compare/v5.40.0...v5.41.0) (2021-04-07)
+
+
+### Features
+
+* **inscripcion:** Agrega morbilidades ([#2194](https://github.com/andes/app/issues/2194)) ([7075a6c](https://github.com/andes/app/commit/7075a6cd46b96c0e6a5b9c1cd45d2a825aefdd5f))
+* **inscripcion-profesionales:** agrega imagenes nro de trmite ([#2179](https://github.com/andes/app/issues/2179)) ([89400b0](https://github.com/andes/app/commit/89400b0932579fe0f7638999edb643672b3ee585))
+* **vac:** mostrar los datos del inscripto al consultar por la inscripción ([#2192](https://github.com/andes/app/issues/2192)) ([14f5890](https://github.com/andes/app/commit/14f589075d046dabe2d2a3f3da592fa32a57ea60))
+* **vac:** nuevo acceso a consultas de inscripción ([#2193](https://github.com/andes/app/issues/2193)) ([287726c](https://github.com/andes/app/commit/287726c64acabd451e1ff57cdbf80aa0b8945d71))
+* **vac:** reduce peso de imagen 1.3Mb => 260Kb ([#2189](https://github.com/andes/app/issues/2189)) ([4bdf1d6](https://github.com/andes/app/commit/4bdf1d6a963e3df15df1a3cecb5ccfb874b7bd84))
+* **vac:** responsive, se mejora subtítulo ppal ([#2190](https://github.com/andes/app/issues/2190)) ([37dd3ac](https://github.com/andes/app/commit/37dd3acbf375e11c9537703b8e5d15cd67f7fcbc))
+
 # [5.40.0](https://github.com/andes/app/compare/v5.39.0...v5.40.0) (2021-03-31)
 
 
