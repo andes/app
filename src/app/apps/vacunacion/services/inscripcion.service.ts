@@ -1,31 +1,34 @@
 import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { ICiudadano } from '../interfaces/ICiudadano';
+import { Server, ResourceBaseHttp } from '@andes/shared';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
-export class InscripcionService {
+export class InscripcionService extends ResourceBaseHttp {
     // URL to web api
-    private inscripcionUrl = '/modules/vacunas/inscripcion-vacunas';
+    protected url = '/modules/vacunas/inscripcion-vacunas';
     public documentoText = new BehaviorSubject<string>(null);
     public grupoSelected = new BehaviorSubject<any>(null);
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
+    public filtroGrupos = new BehaviorSubject<any[]>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
     private skip;
 
-    constructor(private server: Server) {
+    constructor(protected server: Server) {
+
+        super(server);
 
         this.inscriptosFiltrados$ = combineLatest(
             this.documentoText,
             this.grupoSelected,
             this.localidadSelected,
+            this.filtroGrupos,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupo, localidad, lastResults]) => {
+            switchMap(([documento, grupo, localidad, filtroGrupos, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -40,6 +43,8 @@ export class InscripcionService {
                 };
                 if (grupo) {
                     params.grupo = grupo.nombre;
+                } else if (filtroGrupos) {
+                    params.grupo = filtroGrupos;
                 }
                 if (localidad) {
                     params.localidad = localidad.id;
@@ -60,14 +65,10 @@ export class InscripcionService {
     }
 
     search(params): Observable<any> {
-        return this.server.get(`${this.inscripcionUrl}/consultas`, { params, showError: false, showLoader: true });
+        return this.server.get(`${this.url}/consultas`, { params, showError: false, showLoader: true });
     }
 
     get(params: any): Observable<any[]> {
-        return this.server.get(this.inscripcionUrl, { params: params, showError: true });
-    }
-
-    save(ciudadano: ICiudadano): Observable<any> {
-        return this.server.post(this.inscripcionUrl, ciudadano);
+        return this.server.get(this.url, { params: params, showError: true });
     }
 }
