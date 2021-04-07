@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Server, ResourceBaseHttp } from '@andes/shared';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { map, switchMap } from 'rxjs/operators';
+import { ICiudadano } from '../interfaces/ICiudadano';
 
 @Injectable()
 export class InscripcionService extends ResourceBaseHttp {
@@ -87,6 +88,10 @@ export class InscripcionService extends ResourceBaseHttp {
 
     get(params: any): Observable<any[]> {
         return this.server.get(this.url, { params: params, showError: true });
+    }
+
+    save(ciudadano: ICiudadano): Observable<any> {
+        return this.server.post(`${this.url}/registro`, ciudadano);
     }
 
     patch(inscripcion): Observable<any> {

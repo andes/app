@@ -22,6 +22,8 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public showSidebar = false;
     public showAgregarNota = false;
     public nuevaNota = '';
+    public showDetalle = false;
+    public showNueva = false;
     public pacienteSelected: any;
     public listado$: Observable<any[]>;
     private listadoActual: any[];
@@ -109,6 +111,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             opcional: false
         }];
 
+    public permisosAlta;
 
     constructor(
         private inscripcionService: InscripcionService,
@@ -128,19 +131,23 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
             map(resp => this.listadoActual = resp)
         );
+        this.permisosAlta = this.auth.getPermissions('vacunacion:crear:?');
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;
         });
     }
 
     showInSidebar(paciente) {
+        this.showNueva = false;
         if (paciente) {
             this.pacienteSelected = paciente;
             this.showSidebar = true;
+            this.showDetalle = true;
             this.mainSize = 8;
             this.candidatosBuscados = false;
             this.editando = false;
             this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
+            this.editInscripcion = false;
         }
     }
 
@@ -198,11 +205,11 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.candidatos = [];
     }
 
-    closeSidebar() {
-        this.showSidebar = false;
-        this.mainSize = 12;
-        this.editInscripcion = false;
-        this.pacienteSelected = null;
+    nuevaInscripcion() {
+        this.showDetalle = false;
+        this.showSidebar = true;
+        this.showNueva = true;
+        this.mainSize = 8;
     }
 
     grupoPoblacional(nombre: string) {
@@ -292,4 +299,22 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.showAgregarNota = false;
         this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
     }
+
+    returnBusqueda(event) {
+        if (event.status) {
+            this.router.navigate([`/vacunacion/nueva/${event.paciente}`]);
+        } else {
+            this.closeSidebar();
+        }
+    }
+
+    closeSidebar() {
+        this.pacienteSelected = null;
+        this.showSidebar = false;
+        this.showDetalle = false;
+        this.showNueva = false;
+        this.mainSize = 12;
+        this.editInscripcion = false;
+    }
+
 }

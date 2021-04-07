@@ -4,12 +4,14 @@ import { InscripcionComponent } from './components/inscripcion.component';
 import { ConsultaComponent } from './components/consulta.component';
 import { ListadoInscriptosVacunacionComponent } from './components/listado-inscriptos.component';
 import { RoutingNavBar, RoutingGuard } from 'src/app/app.routings-guard.class';
+import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-inscripcion.component';
 
 const routes: Routes = [
     { path: 'inscripcion', component: InscripcionComponent },
     { path: 'inscripcion/:grupo', component: InscripcionComponent },
     { path: 'consulta-inscripcion', component: ConsultaComponent },
     { path: 'listado', component: ListadoInscriptosVacunacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'nueva/:paciente', component: NuevaInscripcionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: '', redirectTo: 'inscripcion' }
 ];
 

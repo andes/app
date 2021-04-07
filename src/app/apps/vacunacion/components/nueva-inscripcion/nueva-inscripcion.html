@@ -1,0 +1,102 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <plex-title main titulo="NUEVA INSCRIPCIÓN">
+            <plex-button class="float-left mr-1" position="left" type="danger" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
+                         (click)="guardarInscripcion($event)" [validateForm]="formulario"
+                         [disabled]="formulario.invalid">
+            </plex-button>
+        </plex-title>
+        <form #formulario="ngForm">
+            <plex-label titulo="Datos Personales" size="lg"></plex-label>
+            <plex-grid type="full" cols="1">
+                <plex-select [(ngModel)]="ciudadano.grupo" label="Seleccione grupo" [data]="opcionesGrupos" name="grupo"
+                             idField="nombre" labelField="descripcion" [required]="true" [readonly]="grupoSelected">
+                </plex-select>
+                <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
+                            placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
+                </plex-phone>
+                <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
+                           placeholder="maria@gmail.com" [required]="true">
+                </plex-text>
+            </plex-grid>
+            <ng-container *ngIf="ciudadano.grupo?.nombre === 'factores-riesgo'">
+                <hr>
+                <div>
+                    <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
+                                name="plex-morbilidades" [data]="morbilidades" [(ngModel)]="ciudadano.morbilidades"
+                                [multiple]="true"></plex-radio>
+                    <plex-label
+                                titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
+                    </plex-label>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="ciudadano.grupo?.nombre !== 'discapacidad'">
+                <hr>
+                <plex-label titulo="Precauciones relacionadas con la seguridad de la inmunización" size="lg">
+                </plex-label>
+                <div>
+                    <plex-bool class="d-block" type="checkbox" name="alergia" [(ngModel)]="ciudadano.alergia"
+                               label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento">
+                    </plex-bool>
+                    <plex-bool class="d-block" type="checkbox" name="condicion" [(ngModel)]="ciudadano.condicion"
+                               label="Tengo una enfermedad / condición que compromete GRAVEMENTE mis defensas">
+                    </plex-bool>
+                    <plex-bool class="d-block" type="checkbox" name="convaleciente"
+                               [(ngModel)]="ciudadano.convaleciente"
+                               label="Estoy todavía debilitado y recuperándome de una enfermedad / complicación aguda (convaleciente)">
+                    </plex-bool>
+                    <plex-bool class="d-block" type="checkbox" name="vacuna" [(ngModel)]="ciudadano.vacuna"
+                               label="He recibido otra vacuna hace MENOS de 4 semanas"></plex-bool>
+                    <plex-bool class="d-block" type="checkbox" name="plasma" [(ngModel)]="ciudadano.plasma"
+                               label="He recibido plasma / suero hiperinmune / inmunoglobulinas / anticuerpos monoclonales hace menos de 3 meses">
+                    </plex-bool>
+                    <plex-bool class="d-block" justify="left" type="checkbox" name="embarazada"
+                               [(ngModel)]="ciudadano.embarazada"
+                               label="Estoy embarazada / Sospecho que podría estar embarazada"></plex-bool>
+                    <plex-bool class="d-block" type="checkbox" name="amamantando" [(ngModel)]="ciudadano.amamantando"
+                               label="Me encuentro amamantando"></plex-bool>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'">
+                <hr>
+                <plex-label titulo="Datos Laborales" size="lg"></plex-label>
+                <plex-text [(ngModel)]="ciudadano.establecimiento" name="establecimiento"
+                           label="Establecimiento donde cumple la mayor carga horaria" [required]="true">
+                </plex-text>
+                <plex-select name="localidades" [data]="localidades$ | async" label="Localidad del establecimiento"
+                             [(ngModel)]="ciudadano.localidadEstablecimiento" [required]="true">
+                </plex-select>
+                <hr>
+                <plex-label titulo="Relación laboral" size="lg"></plex-label>
+                <plex-radio [(ngModel)]="ciudadano.relacion" [data]="relacionLaboral" name="relacion">
+                </plex-radio>
+                <hr>
+                <plex-label titulo="Solo para matriculados" size="lg"></plex-label>
+                <plex-select name="profesiones" [data]="profesiones$ | async" label="Tipo de matrícula"
+                             [(ngModel)]="profesion">
+                </plex-select>
+                <plex-int name="matricula" [(ngModel)]="ciudadano.matricula" label="Número de Matricula">
+
+                </plex-int>
+            </ng-container>
+            <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'discapacidad'">
+                <hr>
+                <plex-text type="number" [(ngModel)]="ciudadano.cud" name="cud"
+                           label="Certificado Único de Discapacidad" [required]="true" grow="4">
+                </plex-text>
+                <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación"
+                            size="lg"></plex-label>
+
+                <plex-select name="diaseleccionados" [data]="dias"
+                             label="Días en los que asiste al centro habitualmente" [(ngModel)]="diaSeleccion">
+                </plex-select>
+            </ng-container>
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="Detalle del paciente"></plex-title>
+        <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
+    </plex-layout-sidebar>
+</plex-layout>

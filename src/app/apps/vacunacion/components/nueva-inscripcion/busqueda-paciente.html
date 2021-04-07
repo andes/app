@@ -1,0 +1,6 @@
+<plex-title justify titulo="Seleccione un paciente">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<paciente-busqueda (searchEnd)="searchEnd($event)" (selected)="seleccionarPaciente($event)" [offset]="110">
+</paciente-busqueda>
