@@ -1,6 +1,6 @@
 <plex-layout>
     <plex-layout-main>
-        <form #formulario="ngForm" class="h-100">
+        <form #formulario="ngForm" class="form-scroll">
             <plex-title main titulo="Alta de tipo de formulario">
                 <plex-button type="danger" [routerLink]="'/forms'">
                     Cancelar
@@ -30,9 +30,9 @@
                 </plex-button>
             </plex-title>
 
-            <cdk-virtual-scroll-viewport [itemSize]="60" #vs>
-                <div class="row mb-4 mb-2-md" id="wrapper-{{ i }}"
-                     *cdkVirtualFor="let field of form.fields; let i = index">
+            <cdk-virtual-scroll-viewport class="form-items" itemSize="80">
+                <div *cdkVirtualFor="let field of form.fields; let i = index" class="form-item border-blue">
+                <div class="row mb-4 mb-2-md" id="wrapper-{{ i }}">
 
                     <div class="col-md col-sm-12">
                         <b>Clave</b>
@@ -118,6 +118,7 @@
                         </plex-button>
                     </div>
                 </div>
+            </div>
             </cdk-virtual-scroll-viewport>
         </form>
     </plex-layout-main>

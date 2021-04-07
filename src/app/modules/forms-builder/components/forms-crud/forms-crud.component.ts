@@ -1,7 +1,6 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
@@ -38,8 +37,6 @@ export class AppFormsCrudComponent implements OnInit {
         fields: []
     };
     private formToUpdate: Form;
-
-    @ViewChild('vs', { static: true }) virtualScroll: CdkVirtualScrollViewport;
 
     constructor(
         private plex: Plex,
@@ -124,10 +121,6 @@ export class AppFormsCrudComponent implements OnInit {
                 element.scrollIntoView({ block: 'end', behavior: 'smooth' });
             }
 
-            const virtualWrapper = this.virtualScroll.elementRef.nativeElement;
-            if (virtualWrapper) {
-                virtualWrapper.style.height = `calc(${virtualWrapper.getBoundingClientRect().height}px + 37px)`;
-            }
         }, 100);
     }
 
