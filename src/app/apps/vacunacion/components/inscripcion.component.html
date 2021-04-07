@@ -1,7 +1,9 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Inscripción a vacunación Covid 19">
-
+            <plex-button type="success" class="mr-1" (click)="redireccionarConsultas()">
+                Consultar estado de inscripción
+            </plex-button>
         </plex-title>
         <div class="row w-100">
             <div class="col-md-3">
@@ -155,7 +157,7 @@
                     </div>
                     <div class="form-group mt-2" justify>
                         <plex-button label="Inscribirme" type="success"
-                                     [disabled]="(captchaEnabled && !recaptcha) || !formulario.valid"
+                                     [disabled]="loading || (captchaEnabled && !recaptcha) || !formulario.valid"
                                      [validateForm]="formulario" (click)="save($event)">
                         </plex-button>
                     </div>

@@ -10,7 +10,7 @@ import { ProfesionService } from 'src/app/services/profesion.service';
 import * as enumerados from '../../../utils/enumerados';
 import { ICiudadano } from '../interfaces/ICiudadano';
 import { InscripcionService } from '../services/inscripcion.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { captcha } from '../../../../environments/apiKeyMaps';
 
@@ -97,6 +97,7 @@ export class InscripcionComponent implements OnInit {
     public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
     public grupoSelected;
     public captchaEnabled = true;
+    public loading = false;
 
     constructor(
         private plex: Plex,
@@ -104,7 +105,8 @@ export class InscripcionComponent implements OnInit {
         private profesionesService: ProfesionService,
         private inscripcionService: InscripcionService,
         private grupoPoblacionalService: GrupoPoblacionalService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         this.captchaEnabled = captcha.enabled;
         this.plex.updateTitle('Inscripción a vacunación COVID-19 - Provincia de Neuquén');
@@ -187,6 +189,7 @@ export class InscripcionComponent implements OnInit {
             this.plex.info('danger', 'Revise los datos ingresados');
             return;
         }
+        this.loading = true;
         this.ciudadano.sexo = this.sexo.id;
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
@@ -196,12 +199,14 @@ export class InscripcionComponent implements OnInit {
             if (inscripto.documento) {
                 this.modal.showed = true;
             }
+            this.loading = false;
         }, (error) => {
             this.ciudadano.morbilidades = this.ciudadano.morbilidades.map(element => {
                 return this.morbilidades.find(morbilidad => morbilidad.id === element);
             });
             this.recaptcha = '';
             this.plex.info('danger', error, 'La inscripción no pudo realizarse ');
+            this.loading = false;
         });
     }
 
@@ -243,5 +248,9 @@ export class InscripcionComponent implements OnInit {
         this.formulario.form.markAsPristine();
     }
 
+
+    redireccionarConsultas() {
+        this.router.navigate(['/vacunacion/consulta-inscripcion']);
+    }
 }
 
