@@ -24,7 +24,7 @@
     <ng-template #elseFicha>
         <plex-layout-main>
             <app-ficha-epidemiologica-crud [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente$ | async"
-                                           [editFicha]="editFicha" [fichaName]="showFicha" (volver)="volver()">
+                                           [editFicha]="editFicha" [fichaName]="showFicha" [form]="selectedForm" (volver)="volver()">
             </app-ficha-epidemiologica-crud>
         </plex-layout-main>
     </ng-template>
@@ -46,10 +46,10 @@
                 </plex-table-columns>
                 <tr *ngFor="let ficha of fichasPaciente | async">
                     <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
-                    <td *plTableCol="'nombre'">{{ficha.type}}</td>
+                    <td *plTableCol="'nombre'">{{ficha.type.name}}</td>
                     <td *plTableCol="'acciones'">
                         <plex-button *ngIf="puedeEditar" type="info" icon="pencil" size="sm"
-                                     (click)="mostrarFicha(ficha.type, ficha)">
+                                     (click)="mostrarFicha(ficha.type.name, ficha)">
                         </plex-button>
                         <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
                         </plex-button>
