@@ -43,33 +43,37 @@
         <ng-container *ngIf="pacienteSelected">
             <!-- edicion de datos -->
             <ng-container *ngIf="editarDatos">
-                <plex-select *ngIf="puedeEditar('grupoPoblacional')" [(ngModel)]="pacienteSelected.grupo"
-                             label="Seleccione grupo" [data]="gruposPoblacionales" name="grupo" idField="nombre"
-                             labelField="descripcion" [required]="true">
-                </plex-select>
-                <plex-select *ngIf="puedeEditar('estado')" [(ngModel)]="pacienteSelected.estado"
-                             [data]="estadosInscripcion" label="Seleccione estado" name="estado" [required]="true"
-                             idField="nombre" labelField="nombre">
-                </plex-select>
-                <plex-phone *ngIf="puedeEditar('contacto')" label="Teléfono" [(ngModel)]="pacienteSelected.telefono"
-                            name="telefono" [required]="true" placeholder="Ej: 2990000000"
-                            [pattern]="patronContactoNumerico">
-                </plex-phone>
-                <plex-wrapper *ngIf="puedeEditar('domicilio')">
-                    <plex-text label="Dirección actual" [(ngModel)]="pacienteMpi.direccion[0].valor" name="divValor"
-                               [required]="true" placeholder="Ej: Avenida Las Flores 1200" grow="2">
-                    </plex-text>
-                    <plex-select [(ngModel)]="pacienteSelected.localidad" [data]="localidades$ | async"
-                                 label="Seleccione localidad" name="localidad" [required]="true" idField="nombre"
-                                 labelField="nombre" grow="2">
+                <plex-wrapper>
+                    <plex-select *ngIf="puedeEditar('grupoPoblacional')" [(ngModel)]="pacienteSelected.grupo"
+                                 label="Seleccione grupo" [data]="gruposPoblacionales" name="grupo" idField="nombre"
+                                 labelField="descripcion" [required]="true" grow="full">
                     </plex-select>
+
+                    <plex-select *ngIf="puedeEditar('estado')" [(ngModel)]="pacienteSelected.estado"
+                                 [data]="estadosInscripcion" label="Seleccione estado" name="estado" [required]="true"
+                                 idField="nombre" labelField="nombre" grow="full">
+                    </plex-select>
+
+                    <plex-phone *ngIf="puedeEditar('contacto')" label="Teléfono" [(ngModel)]="pacienteSelected.telefono"
+                                name="telefono" [required]="true" placeholder="Ej: 2990000000"
+                                [pattern]="patronContactoNumerico" grow="full">
+                    </plex-phone>
+
+                    <ng-container *ngIf="puedeEditar('domicilio')">
+                        <plex-text label="Dirección actual" [(ngModel)]="pacienteMpi.direccion[0].valor" name="divValor"
+                                   [required]="true" placeholder="Ej: Avenida Las Flores 1200" grow="2">
+                        </plex-text>
+                        <plex-select [(ngModel)]="pacienteSelected.localidad" [data]="localidades$ | async"
+                                     label="Seleccione localidad" name="localidad" [required]="true" idField="nombre"
+                                     labelField="nombre" grow="2">
+                        </plex-select>
+                    </ng-container>
+
                 </plex-wrapper>
-                <div>
-                    <plex-button class="float-left" type="danger" size="md" label="Cancelar"
-                                 (click)="editarDatos = false">
+                <div justify>
+                    <plex-button type="danger" size="md" label="Cancelar" (click)="editarDatos = false">
                     </plex-button>
-                    <plex-button class="float-right" type="success" size="md" label="Guardar"
-                                 (click)="guardarEdicion()">
+                    <plex-button type="success" size="md" label="Guardar" (click)="guardarEdicion()">
                     </plex-button>
                 </div>
             </ng-container>
@@ -79,6 +83,7 @@
                 <!-- personales -->
                 <paciente-detalle *ngIf="pacienteMpi" [paciente]="pacienteMpi" orientacion="horizontal">
                 </paciente-detalle>
+
                 <plex-label *ngIf="!pacienteMpi" class="pb-2" titulo="No se ha encontrado ningún paciente asociado">
                 </plex-label>
 
