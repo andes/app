@@ -29,6 +29,7 @@ export class InscripcionComponent implements OnInit {
     public infoCud = false;
     public infoNrotramite = false;
     public sexos: any[];
+    public morbilidades: any[];
     public relacionLaboral = [
         { id: 'planta', label: 'Personal de planta' },
         { id: 'eventual', label: 'Personal con contrato eventual' },
@@ -41,16 +42,6 @@ export class InscripcionComponent implements OnInit {
         { id: 'lunes', nombre: 'Lunes, miércoles y viernes' },
         { id: 'martes', nombre: 'Martes, jueves y sábados' },
         { id: 'nocorresponde', nombre: 'No corresponde a mi situación' },
-    ];
-    public morbilidades = [
-        { id: 'diabetes', label: 'Diabetes (insulinodependiente y no insulinodependiente)' },
-        { id: 'obesidad', label: 'Obesidad grado 2 o mayor (índice de masa corporal -IMC- mayor a 35)' },
-        { id: 'cardiovascular', label: 'Enfermedad cardiovascular' },
-        { id: 'renal', label: 'Enfermedad renal crónica, incluidos pacientes en diálisis crónica' },
-        { id: 'respiratoria', label: 'Enfermedad respiratoria crónica' },
-        { id: 'cirrosis', label: 'Cirrosis' },
-        { id: 'retroviral', label: 'Personas en seguimiento por enfermedad retroviral' },
-        { id: 'lista-espera', label: 'Pacientes en lista de espera para trasplante y trasplantados (excepto córnea)' }
     ];
     public ciudadano: ICiudadano = {
         id: null,
@@ -124,17 +115,21 @@ export class InscripcionComponent implements OnInit {
     ngOnInit() {
         this.sexos = enumerados.getObjSexos();
         this.route.params.subscribe(params => {
-            if (params.grupo) {
-                this.opcionesGrupos$.pipe(
-                    map(grupos => {
+            this.opcionesGrupos$.pipe(
+                map(grupos => {
+                    if (params.grupo) {
                         this.grupoSelected = grupos.find(g => g.nombre === params.grupo);
                         if (this.grupoSelected) {
                             this.ciudadano.grupo = this.grupoSelected;
                             this.seleccionaGrupo();
                         }
-                    })
-                ).subscribe();
-            }
+                    }
+                    let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+                    if (grupofr) {
+                        this.morbilidades = grupofr.morbilidades;
+                    }
+                })
+            ).subscribe();
         });
     }
 
