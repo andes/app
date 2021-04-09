@@ -12,8 +12,9 @@
                     <th class="w-20">Apellido y nombre</th>
                     <th>Sexo</th>
                     <th>Edad</th>
-                    <th>Fecha de registro</th>
+                    <th>Teléfono</th>
                     <th>Localidad</th>
+                    <th>Fecha de registro</th>
                     <th>Estado</th>
                 </tr>
             </thead>
@@ -26,8 +27,9 @@
                     <td class="w-20"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
                     <td> {{ paciente.sexo }} </td>
                     <td> {{ paciente | edad }} </td>
-                    <td> {{ paciente.fechaRegistro | fecha }} </td>
+                    <td> {{ paciente.telefono }} </td>
                     <td> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
+                    <td> {{ paciente.fechaRegistro | fecha }} </td>
                     <td> {{ paciente.estado }} </td>
                 </tr>
             </tbody>
@@ -40,7 +42,7 @@
                          label="Asociar paciente" [disabled]="candidatosBuscados" (click)="buscarCandidatos()">
             </plex-button>
             <plex-button type="warning" size="sm" (click)="editPaciente()"
-                         *ngIf="pacienteSelected.estado === 'pendiente'">
+                         *ngIf="pacienteSelected.estado === 'pendiente' && permisosEdicion.length && !editando">
                 EDITAR
             </plex-button>
             <plex-button type="success" *ngIf="!domicilioValidado(pacienteSelected)" size="sm"
@@ -100,11 +102,14 @@
             <paciente-detalle *ngIf="pacienteSelected.paciente" [paciente]="pacienteSelected.paciente" reload="true"
                               orientacion="horizontal">
             </paciente-detalle>
+
             <plex-label *ngIf="!pacienteSelected.paciente" class="pb-2"
                         titulo="No se ha encontrado ningún paciente asociado"></plex-label>
+
             <!-- formulario para editar inscripción -->
             <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected"
                                 (returnEdicion)="returnEdicion($event)"></editar-inscripcion>
+
             <!-- datos de inscripción -->
             <plex-title *ngIf="!editando" titulo="Datos de la inscripción" size="sm"></plex-title>
             <plex-grid *ngIf="!editando" type="full" size="md">

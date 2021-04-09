@@ -1,16 +1,17 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { cache } from '@andes/shared';
 import { InscripcionService } from '../services/inscripcion.service';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'editar-inscripcion',
     templateUrl: 'editar-inscripcion.html'
 })
 
-export class EditarInscripcionComponent {
+export class EditarInscripcionComponent implements OnInit {
     public inscripcion: any;
     public estados = [
         { id: 'pendiente', nombre: 'pendiente' },
@@ -22,6 +23,9 @@ export class EditarInscripcionComponent {
     public permiteCambioFechaNacimiento = false;
     public permiteCambioGrupo = false;
     public nuevoEstado;
+    public opcionesGrupos$: Observable<any>;
+    public permisosEdicion;
+
     @Input('inscripcion')
     set _inscripcion(value) {
         this.inscripcion = value;
@@ -40,16 +44,24 @@ export class EditarInscripcionComponent {
         this.nuevoEstado = this.inscripcion.estado;
     }
     @Output() returnEdicion: EventEmitter<any> = new EventEmitter<any>();
-    public opcionesGrupos$: Observable<any>;
 
     constructor(
         private grupoPoblacionalService: GrupoPoblacionalService,
         private inscripcionService: InscripcionService,
-        public plex: Plex
+        public plex: Plex,
+        private auth: Auth
     ) {
         this.opcionesGrupos$ = this.grupoPoblacionalService.search({ nombre: ['discapacidad', 'factores-riesgo'] }).pipe(
             cache()
         );
+    }
+
+    ngOnInit() {
+        this.permisosEdicion = this.auth.getPermissions('visualizacionInformacion:listadoInscriptos:editar:?');
+    }
+
+    permiteEditar(campo: string) {
+        return this.permisosEdicion[0] === '*' || this.permisosEdicion.some(p => p === campo);
     }
 
     cerrar() {

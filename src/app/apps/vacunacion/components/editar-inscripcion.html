@@ -1,25 +1,29 @@
 <plex-title titulo="Editar" size="sm">
+    <plex-button type="danger" size="sm" (click)="cerrar()" class='ml-2'>
+        CANCELAR
+    </plex-button>
     <plex-button type="success" size="sm" (click)="guardar()" [disabled]="!formulario.valid" [validateForm]="
                  formulario">
         GUARDAR
-    </plex-button>
-    <plex-button type="danger" size="sm" (click)="cerrar()" class='ml-2'>
-        CANCELAR
     </plex-button>
 </plex-title>
 <plex-grid cols="1">
     <form #formulario="ngForm">
         <plex-select [(ngModel)]="inscripcion.grupo" label="Grupo" [data]="opcionesGrupos$ | async" name="grupo"
-                     idField="nombre" labelField="descripcion" [required]="true" *ngIf="permiteCambioGrupo">
+                     idField="nombre" labelField="descripcion" [required]="true"
+                     *ngIf="permiteEditar('grupoPoblacional') && permiteCambioGrupo">
         </plex-select>
         <plex-datetime *ngIf="permiteCambioFechaNacimiento" label="Fecha de Nacimiento" type="date"
                        [(ngModel)]="nuevaFechaNacimiento" class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy"
                        [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
         </plex-datetime>
-        <plex-text grow="full" label="Email" name="email" [(ngModel)]="inscripcion.email">
+        <plex-text grow="full" label="Email" name="email" [(ngModel)]="inscripcion.email"
+                   *ngIf="permiteEditar('contacto')">
         </plex-text>
-        <plex-text grow="full" label="Teléfono" name="telefono" [(ngModel)]="inscripcion.telefono">
+        <plex-text grow="full" label="Teléfono" name="telefono" [(ngModel)]="inscripcion.telefono"
+                   *ngIf="permiteEditar('contacto')">
         </plex-text>
-        <plex-select label="Estado" [(ngModel)]="nuevoEstado" name="estado" [data]="estados"></plex-select>
+        <plex-select label="Estado" [(ngModel)]="nuevoEstado" name="estado" [data]="estados"
+                     *ngIf="permiteEditar('estado')"></plex-select>
     </form>
 </plex-grid>

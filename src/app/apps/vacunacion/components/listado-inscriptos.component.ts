@@ -21,6 +21,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public candidatos: any[];
     public candidatosBuscados = false;
     public editando = false;
+    public permisosEdicion;
 
     constructor(
         private inscripcionService: InscripcionService,
@@ -32,9 +33,10 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.auth.check('visualizacionInformacion:listadoInscriptos')) {
+        if (!this.auth.check('visualizacionInformacion:listadoInscriptos:ver')) {
             this.router.navigate(['/inicio']);
         }
+        this.permisosEdicion = this.auth.getPermissions('visualizacionInformacion:listadoInscriptos:editar:?');
         this.inscripcionService.inscriptosFiltrados$.subscribe(resp => this.listado = resp);
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;
@@ -113,8 +115,12 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     validarDomicilio(inscripcion) {
         this.inscripcionService.patch(inscripcion).subscribe(resultado => {
-            this.pacienteSelected = resultado;
-            this.plex.toast('success', 'El domicilio ha sido validado exitosamente');
+            if (resultado.validaciones.some(v => v === 'domicilio')) {
+                this.pacienteSelected = resultado;
+                this.plex.toast('success', 'El domicilio ha sido validado exitosamente');
+            } else {
+                this.plex.toast('danger', 'El domicilio no pudo ser validado');
+            }
         });
     }
 
