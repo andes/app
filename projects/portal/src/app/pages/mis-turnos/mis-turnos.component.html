@@ -8,15 +8,17 @@
 
 
             <plex-list>
-                <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno.id)" [selected]="turno.selected">
+                <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno._id)" [selected]="turno.selected">
                     <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
                                 subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
                     </plex-label>
-                    <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion }}">
+                    <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion.nombre }}"
+                                subtitulo="Te atendió: {{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}">
                     </plex-label>
 
-                    <plex-badge type="{{ turno.asistencia ? 'success' : 'warning'}}">{{ turno.asistencia? 'ASISTIO':'NO
-                        ASISTIO' }}
+                    <plex-badge *ngIf="turno.asistencia"
+                                type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
+                        turno.asistencia }}
                     </plex-badge>
                     <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
                     <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>

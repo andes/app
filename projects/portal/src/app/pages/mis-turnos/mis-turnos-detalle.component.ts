@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PrestacionService } from '../../services/prestaciones.service';
-import { Auth } from '@andes/auth';
+
 @Component({
     selector: 'pdp-mis-turnos-detalle',
     templateUrl: 'mis-turnos-detalles.component.html',
@@ -11,21 +11,21 @@ import { Auth } from '@andes/auth';
 export class PDPMisTurnosDetallesComponent implements OnInit {
 
     public turno$: Observable<any>;
-
+    public familiar: any = false;
     constructor(
         private prestacionService: PrestacionService,
         private activeRoute: ActivatedRoute,
-        private auth: Auth
+
     ) { }
 
     ngOnInit() {
+        this.familiar = window.sessionStorage.getItem('familiar');
 
-        const idPaciente = this.auth.mobileUser.pacientes[0].id;
-
+        const parametros = { horaInicio: moment(new Date()).format(), familiar: JSON.stringify(this.familiar) };
 
         this.turno$ = this.activeRoute.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.prestacionService.getTurno(params.get('id'), idPaciente))
+                this.prestacionService.getTurno(params.get('id'), parametros))
         );
     }
 }

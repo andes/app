@@ -7,3 +7,17 @@ $mdi-font-path: "~@mdi/font/fonts/";
 @import "~@mdi/font/scss/materialdesignicons";
 
 @import "~@andes/plex/src/lib/styles.scss";
+
+// Importo colores RUP
+@import "./../../../../app/src/app/modules/rup/components/variables.scss";
+@each $bg, $color in $rup_colors {
+    .rup-bg-#{$bg} {
+        background-color: $color;
+    }
+    .rup-color-#{$bg} {
+        color: $color;
+    }
+    .rup-border-#{$bg} {
+        border: solid 1px $color;
+    }
+}
