@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
     providedIn: 'root',
 })
 
-export class PrestacionService {
+export class VacunaService {
 
     private vacunasURL = '/modules/vacunas';
 

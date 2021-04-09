@@ -4,8 +4,8 @@ import { PacientePortalService } from '../services/paciente-portal.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
 import { LaboratorioService } from '../services/laboratorio.service';
+import { VacunaService } from '../services/vacuna.service';
 import { Router } from '@angular/router';
-import { PrestacionService } from '../services/prestaciones.service';
 @Component({
     selector: 'pdp-paciente-detalle',
     templateUrl: './paciente-detalle.html'
@@ -41,7 +41,7 @@ export class PacienteDetalleComponent implements OnInit {
         private auth: Auth,
         private laboratorioService: LaboratorioService,
         private router: Router,
-        private prestacionesService: PrestacionService
+        private vacunaService: VacunaService
     ) { }
 
     ngOnInit() {
@@ -57,13 +57,11 @@ export class PacienteDetalleComponent implements OnInit {
             });
         });
 
-        this.prestacionesService.getVacunas(idPaciente).subscribe(vacunas => {
+        this.vacunaService.getVacunas(idPaciente).subscribe(vacunas => {
             this.alertas.map(a => {
                 if (a.dato === 'vacunas') {
                     a.valor = vacunas.length.toString();
                 }
-
-
             });
         });
 

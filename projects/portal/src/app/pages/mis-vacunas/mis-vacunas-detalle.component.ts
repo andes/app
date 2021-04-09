@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PrestacionService } from '../../services/prestaciones.service';
+import { VacunaService } from '../../services/vacuna.service';
 import { Auth } from '@andes/auth';
 @Component({
     selector: 'pdp-detalle-vacuna',
@@ -10,26 +10,35 @@ import { Auth } from '@andes/auth';
 })
 export class PDPDetalleVacunaComponent implements OnInit {
 
-
-
     vacuna$: Observable<any>;
-
-
+    public width: number;
 
     constructor(
-        private prestacionService: PrestacionService,
-        private route: ActivatedRoute,
-        private auth: Auth
+        private vacunaService: VacunaService,
+        private activeRoute: ActivatedRoute,
+        private auth: Auth,
+        private router: Router,
+        private el: ElementRef
     ) { }
 
     ngOnInit() {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
         // mostrar detalle de prestacion
-        this.vacuna$ = this.route.paramMap.pipe(
+        this.vacuna$ = this.activeRoute.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.prestacionService.getVacuna(params.get('id'), idPaciente))
+                this.vacunaService.getVacuna(params.get('id'), idPaciente))
         );
     }
 
+    goTo() {
+
+        this.router.navigate(['mis-vacunas']);
+
+    }
+
+    isResponsive() {
+        this.width = this.el.nativeElement.clientWidth;
+        return this.width >= 980;
+    }
 
 }
