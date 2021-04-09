@@ -13,11 +13,11 @@
                     <plex-label size="lg" icon="recipiente" titulo="{{ laboratorio.prestacion.snomed.term }}"
                                 subtitulo="{{ laboratorio.organizacion }}">
                     </plex-label>
-                    <plex-badge *ngIf="laboratorio.visibilidad === false" type="warning">retirar resultados
-                        personalmente
+                    <plex-badge *ngIf="laboratorio.confidentialityCode=== 'R'" type="warning">retirar personalmente
                     </plex-badge>
                     <plex-badge type="info">{{ laboratorio.fecha | date:'dd/MM/yyyy HH:mm'}}</plex-badge>
-                    <plex-button *ngIf="laboratorio.visibilidad === true" type="info" size="sm" icon="download">
+                    <plex-button *ngIf="laboratorio.confidentialityCode !== 'R'" type="info" size="sm" icon="download"
+                                 (click)="descargar(laboratorio)">
                     </plex-button>
                 </plex-item>
             </plex-list>
@@ -26,9 +26,7 @@
 
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle laboratorio">
-            <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
-        </plex-title>
+
         <router-outlet></router-outlet>
     </plex-layout-sidebar>
 </plex-layout>

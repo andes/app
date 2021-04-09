@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
 @Injectable({
     providedIn: 'root',
 })
@@ -19,7 +18,7 @@ export class PrestacionService {
     focoActual = this.focoInicial.asObservable();
     constructor(
         private server: Server,
-        private router: Router
+
     ) { }
 
     getLaboratorios(id): Observable<any[]> {
@@ -33,33 +32,5 @@ export class PrestacionService {
         );
     }
 
-    actualizarValor(mainValue: number) {
-        this.valorInicial.next(mainValue);
-    }
 
-    actualizarFoco(valorFoco: string) {
-        this.focoInicial.next(valorFoco);
-    }
-
-    actualizarSidebar(valorSidebar: boolean) {
-
-        this.sidebarInicial.next(valorSidebar);
-    }
-
-    resetOutlet() {
-        this.router.navigate(['home', {
-            outlets: {
-                // detalle: null,
-                detalleHuds: null,
-                detalleVacuna: null,
-                detalleTurno: null,
-                detalleFamiliar: null,
-                detallePrescripcion: null,
-                detalleLaboratorio: null,
-                detalleProblema: null,
-                detalleProfesional: null,
-                detalleMensaje: null,
-            }
-        }]);
-    }
 }
