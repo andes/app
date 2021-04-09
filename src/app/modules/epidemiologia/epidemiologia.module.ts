@@ -13,6 +13,7 @@ import { SelectSearchDirective } from '../../directives/select-search.directive'
 import { SelectSearchService } from '../../services/select-search.service';
 import { SharedModule } from '@andes/shared';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
+import { DirectiveLibModule } from '../../directives/directives.module';
 
 
 
@@ -31,7 +32,8 @@ import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-fich
     FormsModule,
     ReactiveFormsModule,
     MPILibModule,
-    SharedModule
+    SharedModule,
+    DirectiveLibModule
   ],
   providers: [FormsService, SelectSearchService]
 })

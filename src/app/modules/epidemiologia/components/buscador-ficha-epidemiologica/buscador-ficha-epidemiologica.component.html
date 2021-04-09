@@ -20,6 +20,16 @@
                 <plex-select grow="1" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
                              labelField="name" name="selectType">
                 </plex-select>
+                <plex-select grow="1" name="localidades" [data]="localidades$ | async" label="Localidad de Residencia"
+                             [(ngModel)]="localidad">
+                </plex-select>
+                <plex-select grow="1" name="organizacion" tmOrganizaciones label="Efectores" [(ngModel)]="organizacion">
+                </plex-select>
+                <plex-select grow="1" name="zonaSanitaria" [data]="zonaSanitaria$ | async"
+                             label="Zona Sanitaria Efector" [(ngModel)]="zonaSanitaria" labelField="nombre">
+                </plex-select>
+                <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
+                </plex-text>
                 <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()">
                 </plex-button>
             </plex-wrapper>
