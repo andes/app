@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
     providedIn: 'root',
 })
 
-export class PrestacionService {
+export class LaboratorioService {
     private mobileUrl = '/modules/mobileApp/';
     private valorInicial = new BehaviorSubject<number>(12);
     valorActual = this.valorInicial.asObservable();

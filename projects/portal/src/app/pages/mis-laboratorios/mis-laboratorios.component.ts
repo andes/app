@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { PrestacionService } from '../../services/prestaciones.service';
+import { LaboratorioService } from '../../services/laboratorio.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ export class PDPMisLaboratoriosComponent implements OnInit {
 
     public width: number;
     constructor(
-        private prestacionService: PrestacionService,
+        private laboratorioService: LaboratorioService,
         private activeRoute: ActivatedRoute,
         private router: Router,
         private el: ElementRef,
@@ -26,7 +26,7 @@ export class PDPMisLaboratoriosComponent implements OnInit {
     ngOnInit(): void {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
 
-        this.laboratorios$ = this.prestacionService.getLaboratorios(idPaciente);
+        this.laboratorios$ = this.laboratorioService.getLaboratorios(idPaciente);
 
     }
 

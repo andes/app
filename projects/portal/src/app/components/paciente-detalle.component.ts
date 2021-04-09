@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { PacientePortalService } from '../services/paciente-portal.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
-import { PrestacionService } from '../services/prestaciones.service';
+import { LaboratorioService } from '../services/laboratorio.service';
 import { Router } from '@angular/router';
 @Component({
     selector: 'pdp-paciente-detalle',
@@ -37,14 +37,14 @@ export class PacienteDetalleComponent implements OnInit {
         private pacienteService: PacientePortalService,
         private el: ElementRef,
         private auth: Auth,
-        private prestacionesService: PrestacionService,
+        private laboratorioService: LaboratorioService,
         private router: Router
     ) { }
 
     ngOnInit() {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
         this.pacienteService.getById(idPaciente).subscribe(data => this.paciente = data);
-        this.prestacionesService.getLaboratorios(idPaciente).subscribe(laboratorios => {
+        this.laboratorioService.getLaboratorios(idPaciente).subscribe(laboratorios => {
             this.alertas.map(a => {
                 if (a.dato === 'laboratorios') {
                     a.valor = laboratorios.length.toString();

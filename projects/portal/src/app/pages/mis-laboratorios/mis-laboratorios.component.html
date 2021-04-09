@@ -1,12 +1,7 @@
 <plex-layout [aspect]="9">
     <plex-layout-main type="invert">
-
         <pdp-titulo></pdp-titulo>
-
-        <!-- Nombre mas descriptivo capaz -->
         <pdp-menu>
-
-
             <plex-list>
                 <plex-item *ngFor="let laboratorio of laboratorios$ | async" (click)="goTo(laboratorio.cda_id)">
                     <plex-bool *ngIf="seleccionMultiple" type="checkbox"></plex-bool>
@@ -21,12 +16,9 @@
                     </plex-button>
                 </plex-item>
             </plex-list>
-
         </pdp-menu>
-
     </plex-layout-main>
     <plex-layout-sidebar>
-
         <router-outlet></router-outlet>
     </plex-layout-sidebar>
 </plex-layout>

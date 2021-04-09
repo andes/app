@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PrestacionService } from '../../services/prestaciones.service';
+import { LaboratorioService } from '../../services/laboratorio.service';
 import { Auth } from '@andes/auth';
 import { environment } from '../../../environments/environment';
 @Component({
@@ -15,7 +15,7 @@ export class PDPMisLaboratoriosDetalleComponent implements OnInit {
     public laboratorio$: Observable<any>;
     public width: number;
     constructor(
-        private laboratorioService: PrestacionService,
+        private laboratorioService: LaboratorioService,
         private activeRoute: ActivatedRoute,
         private auth: Auth,
         private router: Router,

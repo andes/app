@@ -24,7 +24,7 @@ import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-det
 import { TurnoService } from './services/turno.service';
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
-import { PrestacionService } from './services/prestaciones.service';
+import { LaboratorioService } from './services/laboratorio.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +55,8 @@ import { PrestacionService } from './services/prestaciones.service';
     FormGroupDirective,
     RoutingGuard,
     AdjuntosService,
-    TurnoService
+    TurnoService,
+    LaboratorioService
   ],
   bootstrap: [AppComponent]
 })
