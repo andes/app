@@ -1,4 +1,7 @@
 <ng-container *ngIf="turno$ | async as turno">
+    <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle Turno">
+        <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+    </plex-title>
     <plex-detail>
         <plex-icon name="turno-bold" type="info"></plex-icon>
         <div title case="capitalize" title>{{ turno.horaInicio | date:'dd/MM/yyyy' }} | {{ turno.horaInicio |

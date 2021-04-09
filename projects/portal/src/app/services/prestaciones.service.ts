@@ -18,18 +18,12 @@ export class PrestacionService {
     ) { }
 
 
-    getTurnos(query): Observable<any[]> {
-        const token = this.auth.getToken();
-        const headers = new HttpHeaders({ Authorization: 'JWT ' + token });
-        const params = new HttpParams({ fromObject: query });
-        const options = { headers, params };
-        return this.server.get(this.agendaUrl + '/turnos', options);
-
-
+    getTurnos(): Observable<any[]> {
+        return this.server.get(this.agendaUrl + '/turnos');
     }
 
-    getTurno(id: number | string, params) {
-        return this.getTurnos(params).pipe(
+    getTurno(id: number | string) {
+        return this.getTurnos().pipe(
             map((turnos) => turnos.find(turno => turno._id === id)));
     }
 

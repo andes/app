@@ -13,7 +13,7 @@ export class PDPMisTurnosComponent implements OnInit {
 
     public width: number;
     public turnos$: Observable<any>;
-    public familiar: any = false;
+
 
     constructor(
         private prestacionService: PrestacionService,
@@ -22,8 +22,7 @@ export class PDPMisTurnosComponent implements OnInit {
         private el: ElementRef) { }
 
     ngOnInit(): void {
-        this.familiar = window.sessionStorage.getItem('familiar');
-        this.getTurnos();
+        this.turnos$ = this.prestacionService.getTurnos();
     }
 
     goTo(id?) {
@@ -36,11 +35,6 @@ export class PDPMisTurnosComponent implements OnInit {
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
         return this.width >= 980;
-    }
-
-    getTurnos() {
-        const params = { horaInicio: moment(new Date()).format(), familiar: JSON.stringify(this.familiar) };
-        this.turnos$ = this.prestacionService.getTurnos(params);
     }
 
 }
