@@ -98,6 +98,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
      */
     nuevoRegistro(concepto) {
         let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.pacienteSeleccionado, concepto, 'ejecucion', 'internacion');
+        this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/inicio' });
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.router.navigate(['rup/ejecucion', prestacion.id]);
         });
