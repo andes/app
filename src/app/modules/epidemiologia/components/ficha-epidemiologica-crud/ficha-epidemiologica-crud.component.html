@@ -240,6 +240,11 @@
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
+                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['segundaclasificacion']?.id==='pcr'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="seccion.fields['segundaclasificacion']?.id==='pcr'"
+                                           [readonly]="!editFicha"></plex-text>
                                 <plex-text *ngIf="field.key==='clasificacionfinal'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"

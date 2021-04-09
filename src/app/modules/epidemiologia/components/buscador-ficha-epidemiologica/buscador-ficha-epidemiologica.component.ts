@@ -2,10 +2,13 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { cache } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { LocalidadService } from '../../../../services/localidad.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',
@@ -15,6 +18,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public fechaDesde: Date;
   public fechaHasta: Date;
   public typeFicha = null;
+  public localidad = null;
+  public organizacion = null;
+  public zonaSanitaria = null;
+  public idPcr = null;
   public dataType$: Observable<any>;
   public fichas$: Observable<any>;
   public showFicha = false;
@@ -27,6 +34,9 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public puedeVer: boolean;
   public pacienteSelected: IPaciente;
   public query = null;
+  public localidades$: Observable<any>;
+  public zonaSanitaria$: Observable<any>;
+
 
   public columns = [
     {
@@ -62,7 +72,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private formsService: FormsService,
     private formEpidemiologiaService: FormsEpidemiologiaService,
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private localidadService: LocalidadService,
+    private zonaSanitariaService: ZonaSanitariaService,
+
   ) { }
 
   ngOnInit(): void {
@@ -75,14 +88,26 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Buscador Fichas epidemiologicas' }
     ]);
-    this.dataType$ = this.formsService.search();
+    this.dataType$ = this.formsService.search().pipe(
+      cache()
+    );
+    this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
+      cache()
+    );
+    this.zonaSanitaria$ = this.zonaSanitariaService.search().pipe(
+      cache()
+    );
   }
 
   searchFichas() {
     this.query = {
       fechaCondicion: this.formEpidemiologiaService.queryDateParams(this.fechaDesde, this.fechaHasta),
       type: this.typeFicha?.name,
-      paciente: this.pacienteSelected?.id
+      paciente: this.pacienteSelected?.id,
+      localidad: this.localidad?.nombre,
+      organizacion: this.organizacion?.id,
+      identificadorPcr: this.idPcr,
+      zonaSanitaria: this.zonaSanitaria?._id
     };
     this.fichas$ = this.formEpidemiologiaService.search(this.query);
   }
