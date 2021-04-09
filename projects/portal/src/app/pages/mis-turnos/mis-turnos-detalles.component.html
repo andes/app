@@ -11,9 +11,7 @@
         <plex-badge *ngIf="turno.asistencia" type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
             turno.asistencia }}
         </plex-badge>
-
         <plex-label titulo="Lugar" subtitulo="{{ turno.organizacion.nombre }}"></plex-label>
-
         <plex-label titulo="Equipo de Salud"
                     subtitulo="{{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}"> </plex-label>
     </plex-detail>

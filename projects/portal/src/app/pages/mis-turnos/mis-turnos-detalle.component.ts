@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PrestacionService } from '../../services/prestaciones.service';
+import { TurnoService } from '../../services/turno.service';
 
 @Component({
     selector: 'pdp-mis-turnos-detalle',
@@ -13,7 +13,7 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
     public turno$: Observable<any>;
     public width: number;
     constructor(
-        private prestacionService: PrestacionService,
+        private turnoService: TurnoService,
         private activeRoute: ActivatedRoute,
         private router: Router,
         private el: ElementRef
@@ -23,12 +23,9 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
     ngOnInit() {
         this.turno$ = this.activeRoute.paramMap.pipe(
             switchMap((params: ParamMap) =>
-                this.prestacionService.getTurno(params.get('id')))
+                this.turnoService.getTurno(params.get('id')))
         );
     }
-
-
-
 
     goTo() {
 

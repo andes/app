@@ -20,7 +20,7 @@ import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.com
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
-import { PrestacionService } from './services/prestaciones.service';
+import { TurnoService } from './services/turno.service';
 
 
 @NgModule({
@@ -50,7 +50,7 @@ import { PrestacionService } from './services/prestaciones.service';
     FormGroupDirective,
     RoutingGuard,
     AdjuntosService,
-    PrestacionService
+    TurnoService
   ],
   bootstrap: [AppComponent]
 })

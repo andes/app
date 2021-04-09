@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { PrestacionService } from '../../services/prestaciones.service';
+import { TurnoService } from '../../services/turno.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -16,13 +16,13 @@ export class PDPMisTurnosComponent implements OnInit {
 
 
     constructor(
-        private prestacionService: PrestacionService,
+        private turnoService: TurnoService,
         private router: Router,
         private activeRoute: ActivatedRoute,
         private el: ElementRef) { }
 
     ngOnInit(): void {
-        this.turnos$ = this.prestacionService.getTurnos();
+        this.turnos$ = this.turnoService.getTurnos();
     }
 
     goTo(id?) {
