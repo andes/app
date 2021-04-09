@@ -57,7 +57,7 @@ export class EditarInscripcionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.permisosEdicion = this.auth.getPermissions('visualizacionInformacion:listadoInscriptos:editar:?');
+        this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
     }
 
     permiteEditar(campo: string) {
@@ -69,7 +69,7 @@ export class EditarInscripcionComponent implements OnInit {
     }
 
     guardar() {
-        if (this.inscripcion.estado !== this.nuevoEstado.id) {
+        if (this.nuevoEstado.id && this.inscripcion.estado !== this.nuevoEstado.id) {
             this.inscripcion.estado = this.nuevoEstado.id;
         }
         if (this.inscripcion.grupo.nombre === 'mayores60' && this.nuevaFechaNacimiento) {

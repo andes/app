@@ -33,10 +33,10 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.auth.check('visualizacionInformacion:listadoInscriptos:ver')) {
-            this.router.navigate(['/inicio']);
+        if (!this.auth.getPermissions('vacunacion:?').length) {
+            this.router.navigate(['inicio']);
         }
-        this.permisosEdicion = this.auth.getPermissions('visualizacionInformacion:listadoInscriptos:editar:?');
+        this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
         this.inscripcionService.inscriptosFiltrados$.subscribe(resp => this.listado = resp);
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;

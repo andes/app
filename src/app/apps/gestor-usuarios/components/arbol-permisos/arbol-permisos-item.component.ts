@@ -1,3 +1,4 @@
+import { GrupoPoblacionalService } from './../../../../services/grupo-poblacional.service';
 import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
@@ -39,6 +40,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         private conceptosTurneablesService: ConceptosTurneablesService,
         private organizacionService: OrganizacionService,
         private queryService: QueriesService,
+        private grupoPoblacionalService: GrupoPoblacionalService,
         private auth: Auth,
         public plex: Plex
     ) { }
@@ -145,6 +147,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                     this.parseSelecionados();
                                 });
                                 break;
+                            case 'grupo-poblacional':
+                                this.grupoPoblacionalService.search({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
                             case 'queries':
                                 this.queryService.getAllQueries({ _id: items }).subscribe((data) => {
                                     this.loading = false;
@@ -196,6 +205,11 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 break;
             case 'queries':
                 this.queryService.getAllQueries({ desdeAndes: true }).subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'grupo-poblacional':
+                this.grupoPoblacionalService.search().subscribe((data) => {
                     event.callback(data);
                 });
                 break;

@@ -103,9 +103,6 @@
                               orientacion="horizontal">
             </paciente-detalle>
 
-            <plex-label *ngIf="!pacienteSelected.paciente" class="pb-2"
-                        titulo="No se ha encontrado ningún paciente asociado"></plex-label>
-
             <!-- formulario para editar inscripción -->
             <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected"
                                 (returnEdicion)="returnEdicion($event)"></editar-inscripcion>

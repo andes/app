@@ -10,7 +10,7 @@ export class InscripcionService extends ResourceBaseHttp {
     // URL to web api
     protected url = '/modules/vacunas/inscripcion-vacunas';
     public documentoText = new BehaviorSubject<string>(null);
-    public grupoSelected = new BehaviorSubject<any>(null);
+    public gruposSelected = new BehaviorSubject<any[]>(null);
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
@@ -19,19 +19,20 @@ export class InscripcionService extends ResourceBaseHttp {
     private limit = 15;
     private skip;
 
+
     constructor(protected server: Server) {
 
         super(server);
 
         this.inscriptosFiltrados$ = combineLatest(
             this.documentoText,
-            this.grupoSelected,
+            this.gruposSelected,
             this.localidadSelected,
             this.fechaDesde,
             this.fechaHasta,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupo, localidad, fechaDesde, fechaHasta, lastResults]) => {
+            switchMap(([documento, grupos, localidad, fechaDesde, fechaHasta, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -45,8 +46,8 @@ export class InscripcionService extends ResourceBaseHttp {
                     fields: '-nroTramite',
                     incluirVacunados: false
                 };
-                if (grupo) {
-                    params.grupo = grupo.nombre;
+                if (grupos) {
+                    params.grupos = grupos;
                 }
                 if (localidad) {
                     params.localidad = localidad.id;
