@@ -528,11 +528,9 @@ export class PacienteComponent implements OnInit {
                                 this.setBackup();
                                 this.validado = true;
                                 this.showDeshacer = true;
-                                if (this.pacienteModel.estado !== 'validado') {
-                                    this.pacienteModel.nombre = resultado.nombre;
-                                    this.pacienteModel.apellido = resultado.apellido;
-                                    this.pacienteModel.estado = resultado.estado;
-                                }
+                                this.pacienteModel.nombre = resultado.nombre;
+                                this.pacienteModel.apellido = resultado.apellido;
+                                this.pacienteModel.estado = resultado.estado;
                                 this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).toDate();
                                 this.pacienteModel.foto = resultado.foto;
                                 this.pacienteModel.fotoId = resultado.fotoId;
