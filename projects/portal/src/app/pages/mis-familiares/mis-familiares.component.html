@@ -14,8 +14,8 @@
             </plex-title>
 
             <plex-grid size="xl" type="auto">
-                <plex-card type="default" size="md" *ngFor="let familiar of familiares$ | async"
-                           (click)="gotTo(familiar.id)" [selected]="familiar?.id === selectedId">
+                <plex-card type="default" size="md" *ngFor="let familiar of familiares" (click)="gotTo(familiar.id)"
+                           [selected]="familiar?.id === selectedId">
                     <img [mpiFotoPaciente]="familiar">
                     <plex-label size="lg" direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
                                 subtitulo="{{ familiar.documento }}">

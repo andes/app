@@ -1,8 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacientePortalService } from '../../services/paciente-portal.service';
-import { Auth } from '@andes/auth';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'pdp-mis-familiares',
@@ -11,33 +9,25 @@ import { map } from 'rxjs/operators';
 export class PDPMisFamiliaresComponent implements OnInit {
 
     public selectedId;
-    public familiar$;
-    public familiares$;
-    public paciente;
+    public familiares;
     public width: number;
 
     constructor(
-        private pacienteService: PacientePortalService,
         private activeRoute: ActivatedRoute,
         private router: Router,
-        private auth: Auth,
-        private el: ElementRef
+        private el: ElementRef,
+        private pacienteService: PacientePortalService
     ) {
 
     }
 
     ngOnInit(): void {
-        this.paciente = this.auth.mobileUser.pacientes[0];
-        this.familiares$ = this.pacienteService.getById(this.paciente.id).pipe(
-            map(pac => {
-                const res = pac.relaciones.map(rel => {
-                    rel.id = rel.referencia;
-                    delete rel.referencia;
-                    return rel;
-                });
-                return res;
-            })
-        );
+        this.pacienteService.me().subscribe(paciente => {
+            this.familiares = paciente.relaciones.map(rel => {
+                rel.id = rel.referencia;
+                return rel;
+            });
+        });
     }
 
     gotTo(id?) {
