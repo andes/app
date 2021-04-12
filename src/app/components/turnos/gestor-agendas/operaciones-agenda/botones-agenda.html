@@ -1,60 +1,69 @@
 <div *ngIf="cantidadSeleccionadas > 0">
     <span *ngIf="vistaBotones.editarAgenda">
-        <plex-button icon="pencil" (click)="editarAgenda()" title="Editar">
+        <plex-button ariaLabel="editar agenda" icon="pencil" (click)="editarAgenda()" title="Editar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.pasarDisponibleAgenda">
-        <plex-button type="success" icon="arrow-up-bold-circle-outline" (click)="actualizarEstado( 'disponible' )"
-                     title="Cambiar a disponible">
+        <plex-button ariaLabel="pasar agenda a disponible" type="success" icon="arrow-up-bold-circle-outline"
+                     (click)="actualizarEstado( 'disponible' )" title="Cambiar a disponible">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.publicarAgenda">
-        <plex-button type="success" icon="arrow-up-bold-circle" (click)="actualizarEstado( 'publicada' )"
-                     title="Publicar">
+        <plex-button ariaLabel="publicar agenda" type="success" icon="arrow-up-bold-circle"
+                     (click)="actualizarEstado( 'publicada' )" title="Publicar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.borrarAgenda">
-        <plex-button type="danger" icon="delete" (click)="actualizarEstado( 'borrada' )" title="Borrar">
+        <plex-button ariaLabel="borrar agenda" type="danger" icon="delete" (click)="actualizarEstado( 'borrada' )"
+                     title="Borrar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.suspenderAgenda">
-        <plex-button type="danger" icon="stop" (click)="actualizarEstado( 'suspendida' )" title="Suspender">
+        <plex-button ariaLabel="suspender agenda" type="danger" icon="stop" (click)="actualizarEstado( 'suspendida' )"
+                     title="Suspender">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.pausarAgenda">
-        <plex-button type="warning" icon="pause" (click)="actualizarEstado( 'pausada' )" title="Pausar">
+        <plex-button ariaLabel="pausar agenda" type="warning" icon="pause" (click)="actualizarEstado( 'pausada' )"
+                     title="Pausar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.reasignarTurnos">
-        <plex-button type="info" icon="sync-alert" (click)="reasignarTurnos()" title="Reasignación de Turnos">
+        <plex-button ariaLabel="reasignar turnos" type="info" icon="sync-alert" (click)="reasignarTurnos()"
+                     title="Reasignación de Turnos">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.clonarAgenda">
-        <plex-button icon="content-copy" (click)="clonarAgenda()" title="Clonar">
+        <plex-button ariaLabel="clonar agenda" icon="content-copy" (click)="clonarAgenda()" title="Clonar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.reanudarAgenda">
-        <plex-button type="success" icon="play" (click)="actualizarEstado( 'prePausada' )" title="Reanudar">
+        <plex-button ariaLabel="reanudar agenda" type="success" icon="play" (click)="actualizarEstado( 'prePausada' )"
+                     title="Reanudar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.agregarNota">
-        <plex-button icon="comment-outline" (click)="agregarNotaAgenda()" title="Agregar una nota">
+        <plex-button ariaLabel="agregar nota" icon="comment-outline" (click)="agregarNotaAgenda()"
+                     title="Agregar una nota">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.agregarSobreturno">
-        <plex-button icon="account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
+        <plex-button ariaLabel="agregar sobreturno" icon="account-plus" (click)="agregarSobreturno()"
+                     title="Agregar Sobreturno">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.revisionAgenda">
-        <plex-button icon="format-list-checks" (click)="revisionAgenda()" title="Revisión de Agenda">
+        <plex-button ariaLabel="revisión de agenda" icon="format-list-checks" (click)="revisionAgenda()"
+                     title="Revisión de Agenda">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.listarTurnos">
-        <plex-button icon="printer" (click)="listarTurnos()" title="Imprimir">
+        <plex-button ariaLabel="imprimir listado de turnos" icon="printer" (click)="listarTurnos()" title="Imprimir">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.listarCarpetas">
-        <plex-button icon="folder-account" (click)="listarCarpetas()" title="Imprimir carpetas">
+        <plex-button ariaLabel="listar carpetas" icon="folder-account" (click)="listarCarpetas()"
+                     title="Imprimir carpetas">
         </plex-button>
     </span>
 </div>
