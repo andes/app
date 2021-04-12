@@ -94,6 +94,7 @@ export class Auth {
         return this.server.post('/modules/mobileApp/login', { email, password }, {}).pipe(
             tap((data) => {
                 window.sessionStorage.setItem('jwt', data.token);
+                window.sessionStorage.setItem('user', JSON.stringify(data.user));
                 this.mobileUser = data.user;
                 this.estado = Estado.active;
             })
