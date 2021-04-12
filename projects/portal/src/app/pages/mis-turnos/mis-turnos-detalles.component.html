@@ -1,0 +1,20 @@
+<ng-container *ngIf="turno$ | async as turno">
+    <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle Turno">
+        <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+    </plex-title>
+    <plex-detail>
+        <plex-icon name="turno-bold" type="info"></plex-icon>
+        <div title case="capitalize" title>{{ turno.horaInicio | date:'dd/MM/yyyy' }} | {{ turno.horaInicio |
+            date:'HH:mm' }}</div>
+        <div subtitle>{{ turno.tipoPrestacion.term }}</div>
+        <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
+        <plex-badge *ngIf="turno.asistencia" type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
+            turno.asistencia }}
+        </plex-badge>
+        <plex-label titulo="Lugar" subtitulo="{{ turno.organizacion.nombre }}"></plex-label>
+        <plex-label titulo="Equipo de Salud"
+                    subtitulo="{{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}"> </plex-label>
+    </plex-detail>
+    <plex-title size="sm" titulo="nota"></plex-title>
+    <p>{{ turno.nota }} {{ turno.motivoSuspension }}</p>
+</ng-container>

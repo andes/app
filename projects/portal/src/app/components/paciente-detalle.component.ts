@@ -1,7 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PacientePortalService } from '../services/paciente-portal.service';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
 
@@ -25,7 +24,6 @@ export class PacienteDetalleComponent implements OnInit {
     };
     public descripcionError = '';
     public errores: any[];
-
 
     constructor(
         private pacienteService: PacientePortalService,

@@ -1,6 +1,5 @@
-import { Plex } from '@andes/plex';
 import { Component, ElementRef } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'pdp-menu',
     templateUrl: './portal-menu.component.html'
@@ -10,7 +9,7 @@ export class PDPMenuComponent {
 
     constructor(
         private el: ElementRef,
-        private plex: Plex,
+        private router: Router
     ) { }
 
     isResponsive() {
@@ -18,17 +17,19 @@ export class PDPMenuComponent {
         return this.width >= 980;
     }
 
-    public cards = [
-        {
-            id: 10,
-            nombre: 'relaciones',
-            tipo: 'info',
-            semanticTag: 'solicitud',
-            icono: 'familia',
-            path: 'misFamiliares',
-            color: '#0070cc',
-            outlet: 'listado'
-        }
-    ];
+    cards = [{
+        id: 12,
+        nombre: 'turnos',
+        tipo: 'info',
+        semanticTag: 'solicitud',
+        icono: 'turno-bold',
+        path: 'mis-turnos',
+        color: '#0070cc',
+        outlet: 'listado',
+    }];
+
+    goTo(path) {
+        this.router.navigate([path]);
+    }
 
 }
