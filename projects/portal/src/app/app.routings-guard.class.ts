@@ -14,8 +14,8 @@ export class RoutingGuard implements CanActivate {
             return true;
         }
         if (this.auth.getToken()) {
-            const usu = window.sessionStorage.getItem('user');
-            this.auth.mobileUser = JSON.parse(usu);
+            const usuario = window.sessionStorage.getItem('user');
+            this.auth.mobileUser = JSON.parse(usuario);
             return true;
         }
         if (!this.auth.loggedIn()) {
