@@ -29,20 +29,6 @@
             </plex-label>
         </plex-card>
     </plex-grid>
-
-
-    <!-- Alertas -->
-    <plex-grid size="sm" type="full" *mobile="false">
-        <plex-card class="border-{{ alerta.semanticTag }}" size="md" *ngFor="let alerta of alertas" align="center"
-                   type="default" color="{{ alerta.color }}" (click)="alerta.selected = !alerta.selected"
-                   [selected]="alerta.selected" (click)="goTo(alerta.path)">
-            <plex-label direction="column" titulo="{{ alerta.dato }}" class="color-{{ alerta.semanticTag }}"
-                        subtitulo="" icon="">
-                <p class="" dato>{{ alerta.valor }}</p>
-            </plex-label>
-        </plex-card>
-    </plex-grid>
-
 </plex-grid>
 
 
