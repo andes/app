@@ -591,7 +591,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 break;
             case 'internacion':
                 if (ruta) {
-                    mensaje = 'Punto de Inicio';
+                    mensaje = this.btnVolver;
                     ruteo = ruta;
                 } else {
                     mensaje = 'Mapa de Camas';
