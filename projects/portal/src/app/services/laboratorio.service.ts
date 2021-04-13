@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { Auth } from '@andes/auth';
 @Injectable({
     providedIn: 'root',
 })
 
 export class LaboratorioService {
     private mobileUrl = '/modules/mobileApp/';
-    private valorInicial = new BehaviorSubject<number>(12);
-    valorActual = this.valorInicial.asObservable();
 
-    private sidebarInicial = new BehaviorSubject<Boolean>(false);
-    sidebarActual = this.sidebarInicial.asObservable();
-
-    private focoInicial = new BehaviorSubject<string>('main');
-    focoActual = this.focoInicial.asObservable();
     constructor(
         private server: Server,
-
+        private auth: Auth
     ) { }
 
     getLaboratorios(id): Observable<any[]> {
@@ -32,5 +27,11 @@ export class LaboratorioService {
         );
     }
 
+    descargar(cda) {
+        if (cda.confidentialityCode !== 'R') {
+            const url = environment.API + '/modules/cda/' + cda.adjuntos[0] + '?token=' + this.auth.getToken();
+            window.open(url);
+        }
+    }
 
 }

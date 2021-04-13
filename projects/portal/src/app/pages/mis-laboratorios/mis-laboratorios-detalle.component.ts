@@ -4,16 +4,14 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { LaboratorioService } from '../../services/laboratorio.service';
 import { Auth } from '@andes/auth';
-import { environment } from '../../../environments/environment';
 @Component({
     selector: 'pdp-mis-laboratorios-detalle',
     templateUrl: './mis-laboratorios-detalle.component.html'
 })
 export class PDPMisLaboratoriosDetalleComponent implements OnInit {
 
-    public laboratorios$: Observable<any[]>;
     public laboratorio$: Observable<any>;
-    public width: number;
+
     constructor(
         private laboratorioService: LaboratorioService,
         private activeRoute: ActivatedRoute,
@@ -37,15 +35,12 @@ export class PDPMisLaboratoriosDetalleComponent implements OnInit {
     }
 
     isResponsive() {
-        this.width = this.el.nativeElement.clientWidth;
-        return this.width >= 980;
+        const width = this.el.nativeElement.clientWidth;
+        return width >= 980;
     }
 
     descargar(cda) {
-        if (cda.confidentialityCode !== 'R') {
-            const url = environment.API + '/modules/cda/' + cda.adjuntos[0] + '?token=' + this.auth.getToken();
-            window.open(url);
-        }
+        this.laboratorioService.descargar(cda);
     }
 
 

@@ -4,13 +4,15 @@
         <pdp-menu>
             <plex-list>
                 <plex-item *ngFor="let laboratorio of laboratorios$ | async" (click)="goTo(laboratorio.cda_id)">
-                    <plex-bool *ngIf="seleccionMultiple" type="checkbox"></plex-bool>
-                    <plex-label size="lg" icon="recipiente" titulo="{{ laboratorio.prestacion.snomed.term }}"
-                                subtitulo="{{ laboratorio.organizacion }}">
+                    <plex-label size="lg" icon="recipiente" [titulo]="laboratorio.prestacion.snomed.term"
+                                [subtitulo]="laboratorio.organizacion">
                     </plex-label>
-                    <plex-badge *ngIf="laboratorio.confidentialityCode=== 'R'" type="warning">retirar personalmente
+                    <plex-badge *ngIf="laboratorio.confidentialityCode=== 'R'" type="warning">
+                        retirar personalmente
                     </plex-badge>
-                    <plex-badge type="info">{{ laboratorio.fecha | date:'dd/MM/yyyy HH:mm'}}</plex-badge>
+                    <plex-badge type="info">
+                        {{ laboratorio.fecha | fecha }}
+                    </plex-badge>
                     <plex-button *ngIf="laboratorio.confidentialityCode !== 'R'" type="info" size="sm" icon="download"
                                  (click)="descargar(laboratorio)">
                     </plex-button>

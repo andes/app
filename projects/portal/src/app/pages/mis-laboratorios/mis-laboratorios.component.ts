@@ -3,7 +3,6 @@ import { LaboratorioService } from '../../services/laboratorio.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 @Component({
     selector: 'pdp-mis-laboratorios',
     templateUrl: './mis-laboratorios.component.html'
@@ -12,15 +11,13 @@ export class PDPMisLaboratoriosComponent implements OnInit {
 
     public laboratorios$: Observable<any[]>;
 
-
-    public width: number;
     constructor(
         private laboratorioService: LaboratorioService,
         private activeRoute: ActivatedRoute,
         private router: Router,
         private el: ElementRef,
-
-        private auth: Auth) { }
+        private auth: Auth
+    ) { }
 
 
     ngOnInit(): void {
@@ -40,15 +37,12 @@ export class PDPMisLaboratoriosComponent implements OnInit {
     }
 
     isResponsive() {
-        this.width = this.el.nativeElement.clientWidth;
-        return this.width >= 980;
+        const width = this.el.nativeElement.clientWidth;
+        return width >= 980;
     }
 
     descargar(cda) {
-        if (cda.confidentialityCode !== 'R') {
-            const url = environment.API + '/modules/cda/' + cda.adjuntos[0] + '?token=' + this.auth.getToken();
-            window.open(url);
-        }
+        this.laboratorioService.descargar(cda);
     }
 
 }

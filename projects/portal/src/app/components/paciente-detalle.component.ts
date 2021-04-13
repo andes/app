@@ -23,7 +23,7 @@ export class PacienteDetalleComponent implements OnInit {
     public datosSecundarios = true;
     public registros$: Observable<any>;
     public paciente: IPaciente;
-    valor;
+
     // modal
     public motivoError = {
         select: null,
