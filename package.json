@@ -11,6 +11,7 @@
     "lint:fix": "ng lint:fix",
     "e2e": "ng e2e",
     "portal": "ng serve portal",
+    "portal:build:prod": "node --max_old_space_size=4096 ./node_modules/\\@angular/cli/bin/ng build portal --configuration=production",
     "build:prod": "node --max_old_space_size=4096 ./node_modules/\\@angular/cli/bin/ng build --configuration=production",
     "build:test": "node --max_old_space_size=4096 ./node_modules/\\@angular/cli/bin/ng build --configuration=test",
     "build:demo": "node --max_old_space_size=4096 ./node_modules/\\@angular/cli/bin/ng build --configuration=demo"
