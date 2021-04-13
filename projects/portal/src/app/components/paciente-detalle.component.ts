@@ -3,13 +3,21 @@ import { Observable } from 'rxjs';
 import { PacientePortalService } from '../services/paciente-portal.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
-
+import { LaboratorioService } from '../services/laboratorio.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'pdp-paciente-detalle',
     templateUrl: './paciente-detalle.html'
 })
 
 export class PacienteDetalleComponent implements OnInit {
+    alertas = [
+        { dato: 'problemas', valor: '7', subdato: 'hipertensión, diabetes y 5 más...', tipo: 'dark', color: '', icono: 'trastorno', path: 'misProblemas', semanticTag: 'trastorno' },
+        { dato: 'alergias', valor: '3', subdato: 'penicilina, carbamazepina y metmorfina', tipo: 'dark', color: '', icono: 'lupa-ojo', path: 'misProblemas', semanticTag: 'hallazgo' },
+        { dato: 'prescripciones', valor: '5', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#00cab6', icono: 'pildoras', path: 'misPrescripciones', semanticTag: 'producto' },
+        { dato: 'laboratorios', valor: '0', subdato: 'Resultados del hemograma', tipo: 'dark', color: '#a0a0a0', icono: 'recipiente', path: 'mis-laboratorios', semanticTag: 'laboratorio' },
+        { dato: 'vacunas', valor: '1', subdato: 'subutamol, enalapril y 3 más...', tipo: 'dark', color: '#92278e', icono: 'vacuna', path: 'misVacunas', semanticTag: 'procedimiento' },
+    ];
 
     public width: number;
     public datosSecundarios = true;
@@ -28,13 +36,25 @@ export class PacienteDetalleComponent implements OnInit {
     constructor(
         private pacienteService: PacientePortalService,
         private el: ElementRef,
-        private auth: Auth
+        private auth: Auth,
+        private laboratorioService: LaboratorioService,
+        private router: Router
     ) { }
 
     ngOnInit() {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
         this.pacienteService.getById(idPaciente).subscribe(data => this.paciente = data);
+        this.laboratorioService.getLaboratorios(idPaciente).subscribe(laboratorios => {
+            this.alertas.map(a => {
+                if (a.dato === 'laboratorios') {
+                    a.valor = laboratorios.length.toString();
+                }
 
+
+            });
+
+        }
+        );
         this.errores = [{
             id: 1,
             nombre: 'Error en mis registros de salud',
@@ -48,6 +68,11 @@ export class PacienteDetalleComponent implements OnInit {
             nombre: 'Otro error',
         }
         ];
+    }
+    goTo(path) {
+        if (path) {
+            this.router.navigate(['/' + path]);
+        }
     }
 
     isResponsive() {

@@ -1,0 +1,26 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+        <pdp-titulo></pdp-titulo>
+        <pdp-menu>
+            <plex-list>
+                <plex-item *ngFor="let laboratorio of laboratorios$ | async" (click)="goTo(laboratorio.cda_id)">
+                    <plex-label size="lg" icon="recipiente" [titulo]="laboratorio.prestacion.snomed.term"
+                                [subtitulo]="laboratorio.organizacion">
+                    </plex-label>
+                    <plex-badge *ngIf="laboratorio.confidentialityCode=== 'R'" type="warning">
+                        retirar personalmente
+                    </plex-badge>
+                    <plex-badge type="info">
+                        {{ laboratorio.fecha | fecha }}
+                    </plex-badge>
+                    <plex-button *ngIf="laboratorio.confidentialityCode !== 'R'" type="info" size="sm" icon="download"
+                                 (click)="descargar(laboratorio)">
+                    </plex-button>
+                </plex-item>
+            </plex-list>
+        </pdp-menu>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>

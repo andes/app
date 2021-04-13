@@ -16,13 +16,15 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
+
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
 import { TurnoService } from './services/turno.service';
-
-
+import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
+import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
+import { LaboratorioService } from './services/laboratorio.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +32,9 @@ import { TurnoService } from './services/turno.service';
     PacienteDetalleComponent,
     PDPMisTurnosComponent,
     PDPMisTurnosDetallesComponent,
+    PDPMisLaboratoriosComponent,
+    PacienteDetalleComponent,
+    PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
   ],
@@ -50,7 +55,8 @@ import { TurnoService } from './services/turno.service';
     FormGroupDirective,
     RoutingGuard,
     AdjuntosService,
-    TurnoService
+    TurnoService,
+    LaboratorioService
   ],
   bootstrap: [AppComponent]
 })
