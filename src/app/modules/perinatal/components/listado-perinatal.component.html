@@ -1,0 +1,51 @@
+<plex-layout [main]="12">
+    <plex-layout-main>
+        <plex-title main titulo="MÓDULO DE CONTROL PERINATAL">
+            <plex-button type="link" size="md">
+                <plex-icon name="documento-corazon" size="md"></plex-icon>IR A SIP-PLUS
+            </plex-button>
+            <plex-button type="danger mx-1" size="sm" icon="bell" hintType="warning" hint="notificaciones"
+                         hintIcon="star" detach="top"></plex-button>
+            <plex-button type="info" size="sm" label="IR A INICIO"></plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-datetime type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" label="Fecha Desde"
+                           class="fechas" [max]="fechaHastaEntrada"></plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" label="Fecha Hasta"
+                           class="fechas" [min]="fechaDesdeEntrada"></plex-datetime>
+            <plex-text [(ngModel)]="paciente" name="paciente" label="Buscar paciente" debounce="400"></plex-text>
+            <plex-datetime type="date" [(ngModel)]="fechaCita" name="fechaCita" label="Fecha de cita" class="fechas">
+            </plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl" label="Último control"
+                           class="fechas">
+            </plex-datetime>
+        </plex-wrapper>
+        <plex-table [columns]="columns" #table="plTable">
+            <plex-title titulo="Listado de pacientes" size="sm">
+                <plex-table-columns>
+                </plex-table-columns>
+            </plex-title>
+            <tr>
+                <td *plTableCol="'paciente'">Monteverde, Maria Laura</td>
+                <td *plTableCol="'documento'">31359294</td>
+                <td *plTableCol="'telefono'">299595355</td>
+                <td *plTableCol="'edad'">35</td>
+                <td class="float-right">
+                    <plex-badge size="sm" type="danger">AUSENTE
+                        <plex-button icon="alert-circle-outline" size="sm"></plex-button>
+                    </plex-badge>
+                </td>
+                <td *plTableCol="'fechaCita'">
+                    <plex-badge size="sm" type="success">19/12/2019
+                        <plex-button icon="calendar-today" size="sm"></plex-button>
+                    </plex-badge>
+                </td>
+                <td *plTableCol="'ultimoControl'">
+                    <plex-badge size="sm" type="info">19/12/2019
+                        <plex-button icon="calendar-today" size="sm"></plex-button>
+                    </plex-badge>
+                </td>
+            </tr>
+        </plex-table>
+    </plex-layout-main>
+</plex-layout>

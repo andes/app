@@ -117,6 +117,12 @@ const appRoutes: Routes = [
         runGuardsAndResolvers: 'always'
     },
     {
+        path: 'perinatal',
+        loadChildren: () => import('./modules/perinatal/perinatal.module').then(m => m.PerinatalModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        runGuardsAndResolvers: 'always'
+    },
+    {
         path: 'forms',
         loadChildren: () => import('./modules/forms-builder/forms.module').then(m => m.FormBuilderModule),
         canActivate: [RoutingNavBar, RoutingGuard],
