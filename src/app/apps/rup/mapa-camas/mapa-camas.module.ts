@@ -13,6 +13,7 @@ import { HammerModule } from '@angular/platform-browser';
 import { MapaCamasRouting } from './mapa-camas.routing';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
 import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
+
 import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario.component';
 import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-mensual.component';
 import { FiltrosCamasComponent } from './views/mapa-camas-capa/filtros-cama/filtros-camas.component';
@@ -34,7 +35,7 @@ import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.comp
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { PrestarDevolverRecursoComponent } from './sidebar/prestar-devolver-recurso/prestar-devolver-recurso.component';
-
+import { RecursosListadoComponent } from './views/mapa-camas-capa/recursos-listado/recursos-listado.component';
 import { MapaCamasService } from './services/mapa-camas.service';
 import { MitosModule } from '../../mitos';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
@@ -98,7 +99,8 @@ export const INTERNACION_COMPONENTS = [
     IngresoDinamicoComponent,
     PrestarDevolverRecursoComponent,
     ListadoInternacionCapasComponent,
-    FiltrosListadoCapasComponent
+    FiltrosListadoCapasComponent,
+    RecursosListadoComponent
 ];
 
 export const INTERNACION_PROVIDERS = [

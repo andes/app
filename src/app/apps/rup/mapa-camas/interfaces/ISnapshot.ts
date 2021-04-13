@@ -19,6 +19,7 @@ export interface ISnapshot {
     ambito: String;
     capa: String;
     unidadOrganizativaOriginal: ISnomedConcept;
+    sectorName?: String;
     sectores: ISectores[];
     nombre: String;
     tipoCama: ISnomedConcept;
@@ -68,6 +69,6 @@ export interface ISnapshot {
         documento: Number
     };
 
-    sectorName?: string;
+
 }
 

@@ -19,15 +19,17 @@
 
             <app-filtros-camas></app-filtros-camas>
 
-            <plex-title titulo="LISTADO DE CAMAS" size="sm">
+            <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE"
                              type="success" size="sm"
                              (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
+
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
                                class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
                 </plex-dropdown>
-                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true">
+                <plex-dropdown *ngIf="!listadoRecursos" icon="format-list-checks" type="info" size="sm"
+                               class="d-inline-block mr-1" [right]="true">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
                                    (change)="toggleColumns()"></plex-bool>
@@ -45,110 +47,125 @@
                         </plex-bool>
                     </plex-grid>
                 </plex-dropdown>
+                <plex-button size="sm" type="primary" (click)="verListadoRecursos()"
+                             [title]="!listadoRecursos ? 'Agrupar por sector' : 'Ver listado de camas'">
+                    <plex-icon [name]="!listadoRecursos ? 'file-tree' : 'format-list-bulleted'"></plex-icon>
+                </plex-button>
             </plex-title>
 
         </header>
-        <fieldset [hidden]="mainView !== 'mapa-camas'">
-            <cdk-virtual-scroll-viewport #scrollViewport [itemSize]="65.56">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th *ngIf="columns.prioridad" class="sortable col-prioridad"
-                                (click)="sortTable('prioridad')">
-                                PRIORIDAD
-                                <span *ngIf="sortBy === 'prioridad'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.guardia" class="sortable" (click)="sortTable('guardia')">
-                                GUARDIA
-                                <span *ngIf="sortBy === 'guardia'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.fechaMovimiento" class="sortable" (click)="sortTable('fechaMovimiento')">
-                                FECHA
-                                <span *ngIf="sortBy === 'fechaMovimiento'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th class="sortable" (click)="sortTable('cama')">
-                                CAMA
-                                <span *ngIf="sortBy === 'cama'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.sector" class="sortable" (click)="sortTable('sector')">
-                                SECTOR
-                                <span *ngIf="sortBy === 'sector'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th class="sortable" (click)="sortTable('paciente')">
-                                PACIENTE
-                                <span *ngIf="sortBy === 'paciente'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.documento" class="sortable" (click)="sortTable('documento')">
-                                DOCUMENTO
-                                <span *ngIf="sortBy === 'documento'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.sexo" class="sortable" (click)="sortTable('sexo')">
-                                SEXO
-                                <span *ngIf="sortBy === 'sexo'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th class="sortable" (click)="sortTable('unidadOrganizativa')">
-                                UNIDAD ORGANIZATIVA
-                                <span *ngIf="sortBy === 'unidadOrganizativa'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th *ngIf="columns.usuarioMovimiento" class="sortable" (click)="sortTable('usuario')">
-                                USUARIO
-                                <span *ngIf="sortBy === 'usuario'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th class="sortable col-estado" (click)="sortTable('estado')">
-                                ESTADO
-                                <span *ngIf="sortBy === 'estado'">
-                                    <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
-                                    <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
-                                </span>
-                            </th>
-                            <th class="col-acciones">ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
-                            <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama"
-                                [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
-                                [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
-                                [permisoIngreso]="permisosMapaCamasService.ingreso"
-                                [permisoBloqueo]="permisosMapaCamasService.bloqueo"
-                                (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
-                                [class.invert]="selectedCama._key === cama._key">
+
+        <ng-container *ngIf="listadoRecursos">
+            <app-recursos-listado [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                  [permisoBloqueo]="permisosMapaCamasService.bloqueo"
+                                  (accionRecurso)='accionListadoRecurso($event)'></app-recursos-listado>
+
+        </ng-container>
+
+        <ng-container *ngIf="!listadoRecursos">
+            <fieldset [hidden]="mainView !== 'mapa-camas'">
+                <cdk-virtual-scroll-viewport #scrollViewport [itemSize]="65.56">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th *ngIf="columns.prioridad" class="sortable col-prioridad"
+                                    (click)="sortTable('prioridad')">
+                                    PRIORIDAD
+                                    <span *ngIf="sortBy === 'prioridad'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.guardia" class="sortable" (click)="sortTable('guardia')">
+                                    GUARDIA
+                                    <span *ngIf="sortBy === 'guardia'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.fechaMovimiento" class="sortable"
+                                    (click)="sortTable('fechaMovimiento')">
+                                    FECHA
+                                    <span *ngIf="sortBy === 'fechaMovimiento'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th class="sortable" (click)="sortTable('cama')">
+                                    CAMA
+                                    <span *ngIf="sortBy === 'cama'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.sector" class="sortable" (click)="sortTable('sector')">
+                                    SECTOR
+                                    <span *ngIf="sortBy === 'sector'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th class="sortable" (click)="sortTable('paciente')">
+                                    PACIENTE
+                                    <span *ngIf="sortBy === 'paciente'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.documento" class="sortable" (click)="sortTable('documento')">
+                                    DOCUMENTO
+                                    <span *ngIf="sortBy === 'documento'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.sexo" class="sortable" (click)="sortTable('sexo')">
+                                    SEXO
+                                    <span *ngIf="sortBy === 'sexo'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th class="sortable" (click)="sortTable('unidadOrganizativa')">
+                                    UNIDAD ORGANIZATIVA
+                                    <span *ngIf="sortBy === 'unidadOrganizativa'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th *ngIf="columns.usuarioMovimiento" class="sortable" (click)="sortTable('usuario')">
+                                    USUARIO
+                                    <span *ngIf="sortBy === 'usuario'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th class="sortable col-estado" (click)="sortTable('estado')">
+                                    ESTADO
+                                    <span *ngIf="sortBy === 'estado'">
+                                        <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                        <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                    </span>
+                                </th>
+                                <th class="col-acciones">ACCIONES</th>
                             </tr>
-                        </ng-container>
-                    </tbody>
-                </table>
-            </cdk-virtual-scroll-viewport>
-        </fieldset>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+                                <tr app-item-cama *cdkVirtualFor="let cama of camas | async" [cama]="cama"
+                                    [estadoCama]="mapaCamasService.getEstadoCama(cama) | async"
+                                    [relacionesPosibles]="mapaCamasService.getRelacionesPosibles(cama) | async"
+                                    [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                    [permisoBloqueo]="permisosMapaCamasService.bloqueo"
+                                    (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
+                                    [class.invert]="selectedCama._key === cama._key">
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </cdk-virtual-scroll-viewport>
+            </fieldset>
+        </ng-container>
         <ng-container *ngIf="mainView !== 'mapa-camas'">
             <vista-prestacion [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>

@@ -40,6 +40,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     opcionesCamas = [];
     accion = null;
     cambiarUO;
+    listadoRecursos = false;
     camasDisponibles;
 
     puedeVerHistorial$: Observable<boolean>;
@@ -79,6 +80,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
         public ws: WebSocketService
+
     ) { }
 
 
@@ -181,7 +183,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             })
         );
     }
-
+    verListadoRecursos() {
+        this.listadoRecursos = this.listadoRecursos ? false : true;
+    }
     verListadoInternacion() {
         this.router.navigate([`/mapa-camas/listado-internacion`]);
     }
@@ -248,6 +252,16 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     trackByFn(item: ISnapshot) {
         return item.idCama;
+    }
+
+    accionListadoRecurso(data) {
+        if (data.verDetalle) {
+            this.verDetalle(data.cama, data.selectedCama);
+        }
+        if (data.selectCama) {
+            this.selectCama(data.cama, data.relacion);
+        }
+
     }
 
     sortTable(event: string) {
