@@ -1,0 +1,23 @@
+<ng-container *ngIf="vacuna$ | async as vacuna">
+    <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle de la dosis">
+        <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+    </plex-title>
+    <plex-detail>
+        <plex-icon name="vacuna" class="rup-color-vacuna"></plex-icon>
+        <plex-badge type="info">
+            {{ vacuna.fechaAplicacion | fecha }}
+        </plex-badge>
+        <plex-badge type="success">
+            {{ vacuna.dosis }}
+        </plex-badge>
+        <div case="capitalize" title>
+            {{ vacuna.vacuna }}
+        </div>
+        <div subtitle *ngIf="vacuna.esquema">
+            Esquema: {{ vacuna.esquema }}
+        </div>
+    </plex-detail>
+    <section *ngIf="vacuna.efector">
+        <plex-label size="md" titulo="Te atendiste en" [subtitulo]="vacuna.efector"></plex-label>
+    </section>
+</ng-container>

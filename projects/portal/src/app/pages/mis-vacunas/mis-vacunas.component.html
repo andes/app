@@ -1,0 +1,24 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+        <pdp-titulo></pdp-titulo>
+        <pdp-menu>
+            <plex-list>
+                <plex-item *ngFor="let vacuna of vacunas$ | async" (click)="goTo(vacuna.id)"
+                           [selected]="vacuna.selected">
+                    <plex-label case="capitalize-first" size="lg" icon="vacuna" [titulo]="vacuna.vacuna"
+                                [subtitulo]="vacuna.efector">
+                    </plex-label>
+                    <plex-badge type="success">
+                        {{ vacuna.dosis}}
+                    </plex-badge>
+                    <plex-badge type="info">
+                        {{ vacuna.fechaAplicacion | fecha }}
+                    </plex-badge>
+                </plex-item>
+            </plex-list>
+        </pdp-menu>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>

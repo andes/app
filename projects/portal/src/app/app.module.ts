@@ -16,15 +16,16 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
-
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
-import { TurnoService } from './services/turno.service';
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
-import { LaboratorioService } from './services/laboratorio.service';
+import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.component';
+import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,10 @@ import { LaboratorioService } from './services/laboratorio.service';
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
+    PDPTituloComponent,
+    PDPMenuComponent,
+    PDPMisVacunasComponent,
+    PDPDetalleVacunaComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,8 @@ import { LaboratorioService } from './services/laboratorio.service';
     InfiniteScrollModule,
     SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
-    MPILibModule
+    MPILibModule,
+    BrowserAnimationsModule
   ],
   providers: [
     Server,
@@ -55,8 +61,6 @@ import { LaboratorioService } from './services/laboratorio.service';
     FormGroupDirective,
     RoutingGuard,
     AdjuntosService,
-    TurnoService,
-    LaboratorioService
   ],
   bootstrap: [AppComponent]
 })
