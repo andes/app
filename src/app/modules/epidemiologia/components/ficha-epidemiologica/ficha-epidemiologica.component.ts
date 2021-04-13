@@ -30,18 +30,15 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public columns = [
     {
       key: 'fecha',
-      label: 'Fecha',
-      sorteable: true
+      label: 'Fecha'
     },
     {
       key: 'nombre',
-      label: 'Nombre',
-      sorteable: true
+      label: 'Nombre'
     },
     {
       key: 'acciones',
-      label: 'Acciones',
-      sorteable: false
+      label: 'Acciones'
     }
   ];
 

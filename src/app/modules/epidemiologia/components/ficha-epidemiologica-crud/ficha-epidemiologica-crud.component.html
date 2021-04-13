@@ -222,29 +222,29 @@
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>
-                                <plex-select *ngIf="field.key==='antigeno'" [label]="field.label?field.label:field.key"
-                                             grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                <plex-select *ngIf="field.key==='antigeno' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="seccion.fields['segundaclasificacion']?.id==='antigeno'"
                                              [data]="resultadoAntigeno" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='lamp'" [label]="field.label?field.label:field.key"
-                                             grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                <plex-select *ngIf="field.key==='lamp' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="seccion.fields['segundaclasificacion']?.id==='lamp'"
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='pcr'" [label]="field.label?field.label:field.key"
-                                             grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="seccion.fields['segundaclasificacion']?.id==='pcr'"
-                                             [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
-                                             [readonly]="!editFicha">
-                                </plex-select>
-                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['segundaclasificacion']?.id==='pcr'"
+                                <plex-bool *ngIf="field.key==='pcr'&& seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="seccion.fields['segundaclasificacion']?.id==='pcr'"
-                                           [readonly]="!editFicha"></plex-text>
+                                           (change)="resultadoFinal(field.key)" [readonly]="!editFicha">
+                                </plex-bool>
+                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcr']"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="field.required" [readonly]="!editFicha"></plex-text>
                                 <plex-text *ngIf="field.key==='clasificacionfinal'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"

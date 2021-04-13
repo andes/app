@@ -70,7 +70,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   ];
   public resultadoAntigeno = [
     { id: 'confirmado', nombre: 'Reactivo' },
-    { id: 'noReactivo', nombre: 'No reactivo' }
+    { id: 'muestra', nombre: 'No reactivo' }
   ];
   public resultadoDetectable = [
     { id: 'confirmado', nombre: 'Se detecta genoma de SARS-CoV-2 ' },
@@ -119,38 +119,31 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public columns = [
     {
       key: 'apellidoNombre',
-      label: 'Apellido y Nombre',
-      sorteable: true
+      label: 'Apellido y Nombre'
     },
     {
       key: 'dni',
-      label: 'Dni',
-      sorteable: true
+      label: 'Dni'
     },
     {
       key: 'telefono',
-      label: 'Teléfono',
-      sorteable: true
+      label: 'Teléfono'
     },
     {
       key: 'domicilio',
-      label: 'Domicilio',
-      sorteable: true
+      label: 'Domicilio'
     },
     {
       key: 'fechaContacto',
-      label: 'Fecha último contacto',
-      sorteable: true
+      label: 'Fecha último contacto'
     },
     {
       key: 'tipoContacto',
-      label: 'Tipo de contacto',
-      sorteable: true
+      label: 'Tipo de contacto'
     },
     {
       key: 'acciones',
-      label: 'Acciones',
-      sorteable: false
+      label: 'Acciones'
     }
   ];
 
@@ -220,7 +213,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           const key = arg.key;
           if (key) {
             const valor = seccion.fields[key];
-            if (valor !== undefined) {
+            if (valor !== undefined && valor !== null) {
               params[key] = valor;
               if (valor instanceof Date) {
                 params[key] = valor;
@@ -328,7 +321,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         const clasificaciones = {
           segundaclasificacion: seccion.fields['segundaclasificacion']?.id,
           antigeno: seccion.fields['antigeno']?.id,
-          pcr: seccion.fields['pcr']?.id,
+          pcr: seccion.fields['pcr'] ? 'muestra' : '',
           lamp: seccion.fields['lamp']?.id
         };
         switch (clasificaciones[key]) {
@@ -340,6 +333,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             break;
           case 'muestra':
             seccion.fields['clasificacionfinal'] = 'Sospechoso';
+            break;
+          default:
+            seccion.fields['clasificacionfinal'] = '';
             break;
         }
       }
