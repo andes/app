@@ -16,7 +16,7 @@ export class FiltrosVacunacionComponent implements OnInit {
     public filtro: any = {};
     public localidades$: Observable<ILocalidad[]>;
     public gruposPoblacionales$: Observable<any[]>;
-    public hoy = new Date();
+    public hoy = moment().toDate();
     private idNeuquenProv = '57f3f3aacebd681cc2014c53';
 
     constructor(
