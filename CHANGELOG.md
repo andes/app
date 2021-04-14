@@ -1,3 +1,23 @@
+# [5.42.0](https://github.com/andes/app/compare/v5.41.0...v5.42.0) (2021-04-14)
+
+
+### Bug Fixes
+
+* **mpi:** revalidacion de paciente ([#2183](https://github.com/andes/app/issues/2183)) ([d2c4cb8](https://github.com/andes/app/commit/d2c4cb8f9e945c2daac95d1c72821e0ec8046ab5))
+* **mpi:** se corrige error al mostrar badge "sin dni" en pacietes validados menores a 5 años ([#2172](https://github.com/andes/app/issues/2172)) ([bf77ec2](https://github.com/andes/app/commit/bf77ec2cfb633325e31dbd3a8feffc68668a2b9c))
+* **virtual-scroll:** corrige variables generales ([#2171](https://github.com/andes/app/issues/2171)) ([9d71238](https://github.com/andes/app/commit/9d71238b16796aa3867fd5e235e977962913d0a3))
+
+
+### Features
+
+* **ficha-epidemiologica:** nuevos campos ficha covid ([5759752](https://github.com/andes/app/commit/5759752ac3538f9c1cb9371cbc0f7c3c5229badd))
+* **internacion:** notifica ruta volver a mapa de camas ([#2207](https://github.com/andes/app/issues/2207)) ([ac0b323](https://github.com/andes/app/commit/ac0b323f53730eef248b0c31dca699aa15f1f8d6))
+* **mapa-camsa:** visualizar camas agrupadas por sector ([#2145](https://github.com/andes/app/issues/2145)) ([81ff32b](https://github.com/andes/app/commit/81ff32b777754402bf7f89c4d0ab04b8a75eb6d1))
+* **pdp:** al refrescar la pantalla mantener sesión abierta ([#2209](https://github.com/andes/app/issues/2209)) ([ac7dd18](https://github.com/andes/app/commit/ac7dd187480c774e8c1e73decc532e1e4528503f))
+* **pdp:** visualizar mis laboratorios ([#2188](https://github.com/andes/app/issues/2188)) ([9cd3708](https://github.com/andes/app/commit/9cd37081ebb5d2e0439ceed6687180c4a4fedb59))
+* **pdp:** visualizar mis turnos actuales ([#2191](https://github.com/andes/app/issues/2191)) ([bb6d44b](https://github.com/andes/app/commit/bb6d44bfe562b0b02d218c07e79d24e7a1a3a6d4))
+* **pdp:** visualizar mis vacunas ([#2187](https://github.com/andes/app/issues/2187)) ([fdddf15](https://github.com/andes/app/commit/fdddf1599ab3051389f03caac31fc2f5e4b8a84b))
+
 # [5.41.0](https://github.com/andes/app/compare/v5.40.0...v5.41.0) (2021-04-07)
 
 
