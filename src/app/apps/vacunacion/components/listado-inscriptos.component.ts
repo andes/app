@@ -20,6 +20,8 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public gruposPoblacionales: any[];
     public candidatos: any[];
     public candidatosBuscados = false;
+    public editando = false;
+    public permisosEdicion;
 
     constructor(
         private inscripcionService: InscripcionService,
@@ -31,9 +33,10 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.auth.check('visualizacionInformacion:listadoInscriptos')) {
-            this.router.navigate(['/inicio']);
+        if (!this.auth.getPermissions('vacunacion:?').length) {
+            this.router.navigate(['inicio']);
         }
+        this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
         this.inscripcionService.inscriptosFiltrados$.subscribe(resp => this.listado = resp);
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;
@@ -46,6 +49,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.showSidebar = true;
             this.mainSize = 8;
             this.candidatosBuscados = false;
+            this.editando = false;
         }
     }
 
@@ -80,8 +84,11 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     grupoPoblacional(nombre: string) {
         const maxLength = 35;
-        let descripcion = this.gruposPoblacionales?.find(item => item.nombre === nombre).descripcion;
-        if (descripcion?.length > maxLength) {
+        let descripcion;
+        if (this.gruposPoblacionales) {
+            descripcion = this.gruposPoblacionales.find(item => item.nombre === nombre).descripcion;
+        }
+        if (descripcion && descripcion.length > maxLength) {
             return `${descripcion.substring(0, maxLength)} ..`;
         }
         return descripcion;
@@ -90,4 +97,31 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     onScroll() {
         this.inscripcionService.lastResults.next(this.listado);
     }
+
+    editPaciente() {
+        this.editando = true;
+    }
+
+    domicilioValidado(inscripcion) {
+        return inscripcion.validaciones.includes('domicilio');
+    }
+
+    returnEdicion(inscripcionActualizada) {
+        if (inscripcionActualizada) {
+            this.pacienteSelected = inscripcionActualizada;
+        }
+        this.editando = false;
+    }
+
+    validarDomicilio(inscripcion) {
+        this.inscripcionService.patch(inscripcion).subscribe(resultado => {
+            if (resultado.validaciones.some(v => v === 'domicilio')) {
+                this.pacienteSelected = resultado;
+                this.plex.toast('success', 'El domicilio ha sido validado exitosamente');
+            } else {
+                this.plex.toast('danger', 'El domicilio no pudo ser validado');
+            }
+        });
+    }
+
 }

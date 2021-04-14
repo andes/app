@@ -22,7 +22,7 @@ import { UsuarioDetalleComponent } from './components/usuario-detalle/usuario-de
         FormsModule,
         RouterModule,
         HttpClientModule,
-        GestorUsuariosRouting,
+        GestorUsuariosRouting
     ],
     declarations: [
         PerfilListComponent,
