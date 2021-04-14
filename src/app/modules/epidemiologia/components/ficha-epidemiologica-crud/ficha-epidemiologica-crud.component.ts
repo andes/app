@@ -73,7 +73,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'muestra', nombre: 'No reactivo' }
   ];
   public resultadoDetectable = [
-    { id: 'confirmado', nombre: 'Se detecta genoma de SARS-CoV-2 ' },
+    { id: 'confirmado', nombre: 'Se detecta genoma de SARS-CoV-2' },
     { id: 'descartado', nombre: 'No se detecta genoma de SARS-CoV-2' },
     { id: 'muestra', nombre: 'Muestra tomada' }
   ];

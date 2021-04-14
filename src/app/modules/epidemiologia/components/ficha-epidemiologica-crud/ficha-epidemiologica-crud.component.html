@@ -152,11 +152,11 @@
                                                [readonly]="!editFicha">
                                 </plex-datetime>
 
-                                <plex-text *ngIf="field.key==='semanaepidemiologica'"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
+                                <plex-int *ngIf="field.key==='semanaepidemiologica'"
+                                          [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                          [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                          readonly="true">
+                                </plex-int>
                                 <plex-select *ngIf="field.key==='ambulatorio'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -270,6 +270,16 @@
                                              [required]="field.required" [data]="funcionPersonalSalud"
                                              [readonly]="!editFicha">
                                 </plex-select>
+                                <plex-bool *ngIf="field.key==='saludinfeccion'&& seccion.fields['personalsalud']?.id==='si'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [readonly]="!editFicha">
+                                </plex-bool>
+                                <plex-bool *ngIf="field.key==='saludinfeccioncontacto'&& seccion.fields['personalsalud']?.id==='si'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [readonly]="!editFicha">
+                                </plex-bool>
                                 <plex-select *ngIf="field.key==='personalseguridad'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -297,6 +307,16 @@
                                              [required]="field.required" [data]="trabajaInstitucion"
                                              [readonly]="!editFicha">
                                 </plex-select>
+                                <plex-select *ngIf="field.key==='asisteestablecimiento'"
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                             [required]="field.required" [data]="selectGral" [readonly]="!editFicha">
+                                </plex-select>
+                                <plex-text *ngIf="field.key==='nombreestablecimiento' && seccion.fields['asisteestablecimiento']?.id==='si'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="field.required" [readonly]="!editFicha">
+                                </plex-text>
                                 <plex-datetime *ngIf="field.key==='fechaantigripal' && seccion.fields['vacunacionantigripal']"
                                                [label]="field.label?field.label:field.key" grow="auto"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -342,28 +362,13 @@
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [required]="field.required" [readonly]="!editFicha">
                                 </plex-text>
-                                <plex-text *ngIf="field.key==='nombreestablecimiento' && seccion.fields['asisteestablecimiento']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
+
                                 <plex-datetime *ngIf="field.key==='fechaviajeriesgo' && seccion.fields['viajezonariesgo']"
                                                [label]="field.label?field.label:field.key" grow="auto"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>
                                 <plex-text *ngIf="field.key==='lugarviajeriesgo' && seccion.fields['viajezonariesgo']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
-                                <plex-select *ngIf="field.key==='tipoconglomerado' && seccion.fields['pertenececonglomerado']"
-                                             [label]="field.label?field.label:field.key" grow="auto"
-                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="tipoConglomerado"
-                                             [readonly]="!editFicha">
-                                </plex-select>
-                                <plex-text *ngIf="field.key==='nombreconglomerado' && seccion.fields['pertenececonglomerado']"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [required]="field.required" [readonly]="!editFicha">
