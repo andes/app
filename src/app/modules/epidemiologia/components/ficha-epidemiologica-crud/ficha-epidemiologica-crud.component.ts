@@ -163,6 +163,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public telefono = null;
   public contactosEstrechos = [];
   public nuevoContacto = false;
+  public zonaSanitaria = null;
 
   constructor(
     private formsService: FormsService,
@@ -272,7 +273,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         sexo: this.paciente.sexo,
         genero: this.paciente.sexo,
         estado: this.paciente.estado
-      }
+      },
+      zonaSanitaria: this.zonaSanitaria
     };
     if (this.fichaPaciente) {
       this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
@@ -367,6 +369,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         id: res.direccion.ubicacion.provincia.id,
         nombre: res.direccion.ubicacion.provincia.nombre
       };
+      this.zonaSanitaria = res.zonaSanitaria;
     });
   }
 

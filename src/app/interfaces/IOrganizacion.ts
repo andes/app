@@ -4,6 +4,7 @@ import { IContacto } from './IContacto';
 import { IDireccion } from '../core/mpi/interfaces/IDireccion';
 import { ITipoPrestacion } from './ITipoPrestacion';
 import { ITipoTraslado } from './ITipoTraslado';
+import { IZonaSanitaria } from './IZonaSanitaria';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
 
@@ -58,4 +59,5 @@ export interface IOrganizacion {
     aceptaDerivacion?: boolean;
     esCOM?: boolean;
     trasladosEspeciales?: [ITipoTraslado];
+    zonaSanitaria?: IZonaSanitaria;
 }
