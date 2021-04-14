@@ -16,6 +16,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
   itemsDropdownFichas = [];
   public showFicha = null;
   public showLabel = true;
+  public selectedForm;
   public pacienteSelected = null;
   public resultadoBusqueda = null;
   public fichasPaciente: Observable<any>;
@@ -69,6 +70,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
       fichas.forEach(element => {
         this.itemsDropdownFichas.push({
           'label': element.name, handler: () => {
+            this.selectedForm = element;
             this.mostrarFicha(element.name);
           }
         });
@@ -117,7 +119,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
 
   verFicha(ficha) {
     this.fichaPaciente$ = of(ficha);
-    this.showFicha = ficha.type;
+    this.showFicha = ficha.type.name;
     this.editFicha = false;
   }
 

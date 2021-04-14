@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
+import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class BiQueriesComponent implements OnInit {
     constructor(
         private queryService: QueriesService,
         private profesionalService: ProfesionalService,
+        private formsService: FormsService,
         private auth: Auth,
         private router: Router
     ) { }
@@ -91,6 +93,10 @@ export class BiQueriesComponent implements OnInit {
             { id: 'turnoDoble', nombre: 'Turno Doble' }
         ];
         event.callback(estadosTurnos);
+    }
+
+    loadFomTypes(event) {
+        this.formsService.search().subscribe(res => event.callback(res));
     }
 
     descargar() {

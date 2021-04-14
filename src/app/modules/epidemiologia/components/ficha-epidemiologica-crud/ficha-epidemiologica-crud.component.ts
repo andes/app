@@ -18,6 +18,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   @Input() fichaPaciente: any;
   @Input() editFicha: boolean;
   @Input() fichaName: string;
+  @Input() form: any;
   @Output() volver = new EventEmitter<any>();
 
   public laborPersonalSalud = [
@@ -258,8 +259,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   setFicha() {
+    const type = this.form ? { id: this.form.id, name: this.form. name} : this.fichaPaciente.type;
     const fichaFinal = {
-      type: this.fichaName,
+      type,
       secciones: this.ficha,
       paciente: {
         id: this.paciente.id,

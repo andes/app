@@ -29,7 +29,7 @@
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                      [required]="argumento.required && totalOrganizaciones"
-                                     [data]="organizaciones$ |async">>
+                                     [data]="organizaciones$ |async">
                         </plex-select>
                         <plex-select *ngSwitchCase="'conceptoTurneable'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
@@ -44,19 +44,25 @@
                                      [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                      [required]="argumento.required" labelField="nombreCompleto"
-                                     (getData)="loadProfesionales($event)">>
+                                     (getData)="loadProfesionales($event)">
                         </plex-select>
                         <plex-select *ngSwitchCase="'estadoAgenda'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                      [required]="argumento.required" labelField="nombre"
-                                     (getData)="loadEstadosAgenda($event)">>
+                                     (getData)="loadEstadosAgenda($event)">
                         </plex-select>
                         <plex-select *ngSwitchCase="'estadoTurno'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                      [required]="argumento.required" labelField="nombre"
-                                     (getData)="loadEstadosTurno($event)">>
+                                     (getData)="loadEstadosTurno($event)">
+                        </plex-select>
+                        <plex-select *ngSwitchCase="'formsEpidemiologia'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="type" 
+                                     (getData)="loadFomTypes($event)">
                         </plex-select>
                     </ng-container>
                 </plex-wrapper>
