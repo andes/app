@@ -13,6 +13,7 @@ export class InscripcionService extends ResourceBaseHttp {
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
+    public tieneCertificado = new BehaviorSubject<Boolean>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
@@ -29,9 +30,10 @@ export class InscripcionService extends ResourceBaseHttp {
             this.localidadSelected,
             this.fechaDesde,
             this.fechaHasta,
+            this.tieneCertificado,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupos, localidad, fechaDesde, fechaHasta, lastResults]) => {
+            switchMap(([documento, grupos, localidad, fechaDesde, fechaHasta, tieneCertificado, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -52,6 +54,9 @@ export class InscripcionService extends ResourceBaseHttp {
                 }
                 if (documento) {
                     params.documento = documento;
+                }
+                if (tieneCertificado) {
+                    params.tieneCertificado = true;
                 }
                 const desdeF = moment(fechaDesde).startOf('day').toDate();
                 const hastaF = moment(fechaHasta).endOf('day').toDate();

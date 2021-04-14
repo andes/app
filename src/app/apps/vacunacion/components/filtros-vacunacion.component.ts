@@ -50,5 +50,6 @@ export class FiltrosVacunacionComponent implements OnInit {
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
         this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
         this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
+        this.inscripcionService.tieneCertificado.next(this.filtro.tieneCertificado);
     }
 }

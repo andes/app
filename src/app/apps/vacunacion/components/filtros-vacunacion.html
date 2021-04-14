@@ -14,5 +14,8 @@
         <plex-datetime type="date" [(ngModel)]="filtro.fechaHasta" name="filtroFechaHasta" label="Hasta"
                        [min]="filtro.fechaDesde" [max]="hoy" [debounce]="600" skipBy="day" (change)="filtrar()">
         </plex-datetime>
+        <plex-bool label="Solo certificados" [(ngModel)]="filtro.tieneCertificado" name="tieneCertificado" type="slide"
+                   (change)="filtrar()">
+        </plex-bool>
     </plex-wrapper>
 </form>

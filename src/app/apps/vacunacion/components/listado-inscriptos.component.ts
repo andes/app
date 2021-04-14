@@ -101,6 +101,12 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             label: 'Vacunado',
             sorteable: false,
             opcional: false
+        },
+        {
+            key: 'certificado',
+            label: 'Certificado',
+            sorteable: false,
+            opcional: false
         }];
 
 

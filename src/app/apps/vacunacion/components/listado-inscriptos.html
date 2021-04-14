@@ -28,6 +28,15 @@
                     <plex-label type="{{ paciente.fechaVacunacion ? 'success' : 'danger' }}" titulo="" subtitulo=""
                                 icon="{{ paciente.fechaVacunacion ? 'check' : 'close' }}">
                     </plex-label>
+                </td>
+                <td *plTableCol="'certificado'">
+                    <plex-label *ngIf="paciente.grupo.nombre === 'factores-riesgo'"
+                                type="{{ paciente.idPrestacionCertificado ? 'success' : 'danger' }}" titulo=""
+                                subtitulo="" icon="{{ paciente.idPrestacionCertificado ? 'check' : 'close' }}">
+                    </plex-label>
+                    <plex-label *ngIf="paciente.grupo.nombre !== 'factores-riesgo'">No corresponde
+                    </plex-label>
+                </td>
             </tr>
         </plex-table>
     </plex-layout-main>
