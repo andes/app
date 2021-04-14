@@ -3,6 +3,8 @@ import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'listado-inscriptos',
@@ -16,12 +18,16 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public pacienteSelected: any;
     public listado: any[] = [];
     public gruposPoblacionales: any[];
+    public candidatos: any[];
+    public candidatosBuscados = false;
 
     constructor(
         private inscripcionService: InscripcionService,
         private gruposService: GrupoPoblacionalService,
         private auth: Auth,
-        private router: Router
+        private router: Router,
+        private pacienteService: PacienteService,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -39,7 +45,31 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.pacienteSelected = paciente;
             this.showSidebar = true;
             this.mainSize = 8;
+            this.candidatosBuscados = false;
         }
+    }
+
+    buscarCandidatos() {
+        if (this.pacienteSelected) {
+            this.candidatosBuscados = false;
+            this.pacienteService.get({
+                documento: this.pacienteSelected.documento,
+                sexo: this.pacienteSelected.sexo,
+                activo: true
+            }).subscribe(resp => {
+                this.candidatos = resp;
+                this.candidatosBuscados = true;
+            });
+        }
+    }
+
+    asociarCandidato(candidato) {
+        this.pacienteSelected.paciente = {
+            addAt: new Date(),
+            id: candidato.id
+        };
+        this.inscripcionService.save(this.pacienteSelected).subscribe(resp => this.pacienteSelected = resp);
+        this.plex.toast('success', 'El paciente se ha asociado correctamente.');
     }
 
     closeSidebar() {

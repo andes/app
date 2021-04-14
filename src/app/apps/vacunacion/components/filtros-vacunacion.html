@@ -8,5 +8,11 @@
         <plex-select name="localidad" label="Localidad" [(ngModel)]="filtro.localidad" idField="nombre"
                      labelField="nombre" [data]="localidades$ | async" (change)="filtrar()">
         </plex-select>
+        <plex-datetime type="date" [(ngModel)]="filtro.fechaDesde" name="filtroFechaDesde" label="Desde"
+                       [max]="filtro.fechaHasta" [debounce]="600" skipBy="day" (change)="filtrar()">
+        </plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="filtro.fechaHasta" name="filtroFechaHasta" label="Hasta"
+                       [min]="filtro.fechaDesde" [max]="hoy" [debounce]="600" skipBy="day" (change)="filtrar()">
+        </plex-datetime>
     </plex-wrapper>
 </form>

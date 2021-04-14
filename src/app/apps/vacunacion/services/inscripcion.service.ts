@@ -1,31 +1,36 @@
 import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { ICiudadano } from '../interfaces/ICiudadano';
+import { Server, ResourceBaseHttp } from '@andes/shared';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
-export class InscripcionService {
+export class InscripcionService extends ResourceBaseHttp {
     // URL to web api
-    private inscripcionUrl = '/modules/vacunas/inscripcion-vacunas';
+    protected url = '/modules/vacunas/inscripcion-vacunas';
     public documentoText = new BehaviorSubject<string>(null);
     public grupoSelected = new BehaviorSubject<any>(null);
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
+    public fechaDesde = new BehaviorSubject<Date>(null);
+    public fechaHasta = new BehaviorSubject<Date>(null);
     public inscriptosFiltrados$: Observable<any[]>;
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
     private skip;
 
-    constructor(private server: Server) {
+    constructor(protected server: Server) {
+
+        super(server);
 
         this.inscriptosFiltrados$ = combineLatest(
             this.documentoText,
             this.grupoSelected,
             this.localidadSelected,
+            this.fechaDesde,
+            this.fechaHasta,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupo, localidad, lastResults]) => {
+            switchMap(([documento, grupo, localidad, fechaDesde, fechaHasta, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -36,7 +41,8 @@ export class InscripcionService {
                 let params: any = {
                     limit: this.limit,
                     skip: this.skip,
-                    fields: '-nroTramite'
+                    fields: '-nroTramite',
+                    incluirVacunados: false
                 };
                 if (grupo) {
                     params.grupo = grupo.nombre;
@@ -46,6 +52,19 @@ export class InscripcionService {
                 }
                 if (documento) {
                     params.documento = documento;
+                }
+                const desdeF = moment(fechaDesde).startOf('day').toDate();
+                const hastaF = moment(fechaHasta).endOf('day').toDate();
+                if (fechaDesde) {
+                    if (fechaHasta) {
+                        params.fechaRegistro = `${desdeF}|${hastaF}`;
+                    } else {
+                        params.fechaRegistro = `>${desdeF}`;
+                    }
+                } else {
+                    if (fechaHasta) {
+                        params.fechaRegistro = `<${hastaF}`;
+                    }
                 }
 
                 return this.get(params).pipe(
@@ -60,14 +79,10 @@ export class InscripcionService {
     }
 
     search(params): Observable<any> {
-        return this.server.get(`${this.inscripcionUrl}/consultas`, { params, showError: false, showLoader: true });
+        return this.server.get(`${this.url}/consultas`, { params, showError: false, showLoader: true });
     }
 
     get(params: any): Observable<any[]> {
-        return this.server.get(this.inscripcionUrl, { params: params, showError: true });
-    }
-
-    save(ciudadano: ICiudadano): Observable<any> {
-        return this.server.post(this.inscripcionUrl, ciudadano);
+        return this.server.get(this.url, { params: params, showError: true });
     }
 }
