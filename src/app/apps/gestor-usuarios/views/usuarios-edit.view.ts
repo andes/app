@@ -152,14 +152,15 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     onChangePerfil($event, perfilSelected) {
         const added = $event.value;
-        const permisos = [...this.permisos];
+        const permisos = [...this.arbol.getPermisos()];
         if (added) {
             this.tooglePerfil(perfilSelected, true);
             perfilSelected.permisos.forEach(p => permisos.push(p));
             this.permisos = permisos;
         } else {
             this.tooglePerfil(perfilSelected, false);
-            this.perfiles.forEach(perfil => {
+            const pp = this.perfiles.filter(p => p.id === perfilSelected.id || this.habilitados[p.id]);
+            pp.forEach(perfil => {
                 for (let i = 0; i < permisos.length; i++) {
                     const pass = this.perfilesHttp.validatePermiso(perfil.permisos, permisos[i]);
                     if (pass) {
