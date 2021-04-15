@@ -334,6 +334,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           pcr: seccion.fields['pcr'] ? 'muestra' : '',
           lamp: seccion.fields['lamp']?.id
         };
+        if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
+          this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcr', 'identificadorpcr']);
+        }
         switch (clasificaciones[key]) {
           case 'confirmado':
             seccion.fields['clasificacionfinal'] = 'Confirmado';
@@ -342,10 +345,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             seccion.fields['clasificacionfinal'] = 'Descartado';
             break;
           case 'muestra':
-            seccion.fields['clasificacionfinal'] = 'Sospechoso';
+            seccion.fields['clasificacionfinal'] = clasificaciones.antigeno === 'confirmado' ? 'Confirmado' : 'Sospechoso';
             break;
           default:
-            seccion.fields['clasificacionfinal'] = '';
+            if (!clasificaciones.antigeno && !clasificaciones.pcr && !clasificaciones.lamp) {
+              seccion.fields['clasificacionfinal'] = '';
+            }
             break;
         }
       }
@@ -411,6 +416,20 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   setLocalidades(event) {
     if (event.value) {
       this.localidades$ = this.localidadService.get({ codigo: event.value.codigo });
+    }
+  }
+
+  clearDependencias(event, idSeccion, keys) {
+    if (event.value?.id === 'no' || event.value === false) {
+      this.secciones.map(seccion => {
+        if (seccion.id === idSeccion) {
+          keys.map(element => {
+            if (seccion.fields[element]) {
+              seccion.fields[element] = null;
+            }
+          });
+        }
+      });
     }
   }
 }
