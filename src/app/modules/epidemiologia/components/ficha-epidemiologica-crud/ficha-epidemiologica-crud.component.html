@@ -54,6 +54,16 @@
                             <!--Campos opcionales exclusivos de la ficha covid-->
 
                             <!--MPI-->
+                            <plex-select *ngIf="field.key==='lugarresidencia'"
+                                         [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                         [(ngModel)]="seccion.fields[field.key]" [data]="provincias$ | async"
+                                         [readonly]="!editFicha" (change)="setLocalidades($event)" required="true">
+                            </plex-select>
+                            <plex-select *ngIf="field.key==='localidadresidencia' && seccion.fields['lugarresidencia']"
+                                         [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                         [(ngModel)]="seccion.fields[field.key]" [data]="localidades$ | async"
+                                         [readonly]="!editFicha" required="true">
+                            </plex-select>
 
                             <plex-select *ngIf="field.key==='tipoinstitucion' && seccion.fields['resideinstitucion']"
                                          [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
