@@ -2,36 +2,22 @@
     <plex-layout-main>
         <plex-title titulo="Listado de inscriptos para vacunación" size="lg"> </plex-title>
         <filtros-vacunacion></filtros-vacunacion>
-        <table class="table table-striped table-hover table-lista-vacunacion">
-            <thead>
-                <tr>
-                    <th class="w-20">Grupo</th>
-                    <th>Documento</th>
-                    <th class="w-20">Apellido y nombre</th>
-                    <th>Sexo</th>
-                    <th>Edad</th>
-                    <th>Teléfono</th>
-                    <th>Localidad</th>
-                    <th>Fecha de registro</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="80" (scrolled)="onScroll()"
-                   [scrollWindow]="false">
-                <tr *ngFor="let paciente of listado" (click)="showInSidebar(paciente)">
-                    <td class="w-20" *ngIf="paciente.grupo"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
-                    <td class="w-20" *ngIf="!paciente.grupo"> No indica </td>
-                    <td> {{ paciente.documento }} </td>
-                    <td class="w-20"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
-                    <td> {{ paciente.sexo }} </td>
-                    <td> {{ paciente | edad }} </td>
-                    <td> {{ paciente.telefono }} </td>
-                    <td> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
-                    <td> {{ paciente.fechaRegistro | fecha }} </td>
-                    <td> {{ paciente.estado }} </td>
-                </tr>
-            </tbody>
-        </table>
+
+        <plex-table [columns]="columns" #table="plTable" [height]="400" (scroll)="onScroll()">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let paciente of listado$ | plSort:table | async" (click)="showInSidebar(paciente)"
+                class='selectable' [class.selected]=" paciente.id===pacienteSelected?.id">
+                <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
+                <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
+                <td *plTableCol="'apellido-nombre'"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
+                <td *plTableCol="'sexo'"> {{ paciente.sexo }} </td>
+                <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
+                <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
+                <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
+                <td *plTableCol="'estado'"> {{ paciente.estado }} </td>
+            </tr>
+        </plex-table>
     </plex-layout-main>
 
     <plex-layout-sidebar *ngIf="showSidebar" type="invert">

@@ -16,7 +16,6 @@ import { ListadoInscriptosVacunacionComponent } from './components/listado-inscr
 import { SharedModule } from '@andes/shared';
 import { FiltrosVacunacionComponent } from './components/filtros-vacunacion.component';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { EditarInscripcionComponent } from './components/editar-inscripcion.component';
 
 @NgModule({
@@ -27,7 +26,6 @@ import { EditarInscripcionComponent } from './components/editar-inscripcion.comp
         PlexModule,
         SharedModule,
         RecaptchaModule,
-        InfiniteScrollModule,
         SharedModule,
         MPILibModule,
         VacunacionRouting,

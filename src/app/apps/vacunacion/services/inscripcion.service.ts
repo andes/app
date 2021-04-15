@@ -1,7 +1,6 @@
 import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server, ResourceBaseHttp } from '@andes/shared';
-import { ICiudadano } from '../interfaces/ICiudadano';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { map, switchMap } from 'rxjs/operators';
 
