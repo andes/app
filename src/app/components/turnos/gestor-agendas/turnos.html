@@ -6,7 +6,7 @@
                 <header>
                     <plex-title titulo="Bloques y turnos" size="sm">
                         <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{
-                        estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
+                            estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
                         <plex-help type="help" icon="information-variant" titulo="Detalle de agenda">
                             <div class="container mb-4">
                                 <div class="row">
@@ -16,10 +16,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                    | date:
-                                    'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
-                                    'HH:mm'}} hs
+                                        <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{
+                                        agenda.horaInicio
+                                        | date:
+                                        'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
+                                        date:
+                                        'HH:mm'}} hs
                                     </div>
                                 </div>
                                 <div class="row">
@@ -47,7 +49,8 @@
                                     <div class="col-12">
                                         <label>Espacio físico</label>
                                         <span
-                                              *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                              *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda
+                                            | espacioFisico}}</span>
                                         <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
                                               class="text-danger">Espacio físico no
                                             asignado</span>
@@ -87,30 +90,36 @@
                 </td>
                 <td colspan="3" class="text-right">
                     <div *ngIf="turnosSeleccionados.length > 0">
-                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="account-remove"
-                                     (click)="eventosTurno('sacarAsistencia')" title="Registrar inasistencia">
+                        <plex-button *ngIf="botones.sacarAsistencia" ariaLabel="Registrar inasistencia" type="warning"
+                                     icon="account-remove" (click)="eventosTurno('sacarAsistencia')"
+                                     title="Registrar inasistencia">
                         </plex-button>
-                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="account-check"
-                                     (click)="eventosTurno('darAsistencia')" title="Registrar asistencia"></plex-button>
-                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="account-switch"
-                                     (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
+                        <plex-button *ngIf="botones.darAsistencia" ariaLabel="Registrar asistencia" type="success"
+                                     icon="account-check" (click)="eventosTurno('darAsistencia')"
+                                     title="Registrar asistencia"></plex-button>
+                        <plex-button *ngIf="botones.reasignarTurno" ariaLabel="Reasignar turno" type="default"
+                                     icon="account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
                                      title="Reasignar turno">
                         </plex-button>
-                        <plex-button *ngIf="botones.turnoDoble" type="default" icon="numeric-2-box-multiple-outline"
-                                     (click)="asignarTurnoDoble('darTurnoDoble')" title="Turno doble"></plex-button>
-                        <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="numeric-1-box-outline"
-                                     (click)="eventosTurno('quitarTurnoDoble')" title="Quitar Turno doble">
+                        <plex-button *ngIf="botones.turnoDoble" ariaLabel="Turno doble" type="default"
+                                     icon="numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')"
+                                     title="Turno doble"></plex-button>
+                        <plex-button *ngIf="botones.quitarTurnoDoble" ariaLabel="Quitar Turno doble" type="default"
+                                     icon="numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
+                                     title="Quitar Turno doble">
                         </plex-button>
-                        <plex-button *ngIf="botones.editarCarpeta" type="default" icon="folder-account"
-                                     (click)="editarCarpetaPaciente()" title="Editar Número de Carpeta"></plex-button>
-                        <plex-button *ngIf="botones.nota" type="default" icon="comment-outline"
+                        <plex-button *ngIf="botones.editarCarpeta" ariaLabel="Editar Número de Carpeta" type="default"
+                                     icon="folder-account" (click)="editarCarpetaPaciente()"
+                                     title="Editar Número de Carpeta"></plex-button>
+                        <plex-button *ngIf="botones.nota" ariaLabel="Agregar nota" type="default" icon="comment-outline"
                                      (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
-                        <plex-button *ngIf="botones.sms" type="default" icon="email-outline" (click)="enviarSMS()"
-                                     title="Enviar un mensaje al paciente"></plex-button>
-                        <plex-button *ngIf="botones.liberarTurno" type="danger" icon="account-off" title="Liberar turno"
-                                     (click)="liberarTurno()"></plex-button>
-                        <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="stop" title="Suspender turno"
-                                     (click)="suspenderTurno(agenda)"></plex-button>
+                        <plex-button *ngIf="botones.sms" ariaLabel="Enviar un mensaje al paciente" type="default"
+                                     icon="email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente">
+                        </plex-button>
+                        <plex-button *ngIf="botones.liberarTurno" ariaLabel="Liberar turno" type="danger"
+                                     icon="account-off" title="Liberar turno" (click)="liberarTurno()"></plex-button>
+                        <plex-button *ngIf="botones.suspenderTurno" ariaLabel="Suspender turno" type="danger"
+                                     icon="stop" title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
                     </div>
                 </td>
             </tr>
@@ -180,7 +189,8 @@
                                             <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
-                                                        {{bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramado : 0}}
+                                                        {{bloque.accesoDirectoProgramado ?
+                                                        bloque.accesoDirectoProgramado : 0}}
                                                     </h2>
                                                     <span class="small">Turnos <br><b>programados</b></span>
                                                     <small *ngIf="bloque.cupoMobile"><br>
@@ -191,7 +201,8 @@
                                             <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
-                                                        {{bloque.reservadoProfesional ? bloque.reservadoProfesional : 0}}
+                                                        {{bloque.reservadoProfesional ? bloque.reservadoProfesional :
+                                                        0}}
                                                     </h2>
                                                     <span class="small">Turnos <br><b>profesional</b></span>
                                                 </span>
