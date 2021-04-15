@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { InscripcionService } from '../services/inscripcion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
+import * as enumerados from '../../../utils/enumerados';
 
 @Component({
     selector: 'listado-inscriptos',
@@ -13,6 +14,8 @@ import { Plex } from '@andes/plex';
 })
 
 export class ListadoInscriptosVacunacionComponent implements OnInit {
+    @ViewChild('formulario', { static: false }) formulario;
+
     public mainSize = 12;
     public showSidebar = false;
     public pacienteSelected: any;
@@ -22,6 +25,15 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public candidatosBuscados = false;
     public editando = false;
     public permisosEdicion;
+    public editInscripcion;
+    public sexos;
+    public fechaMaximaNacimiento;
+    public fechaMinimaNacimiento;
+    public nombreCorregido;
+    public apellidoCorregido;
+    public sexoCorregido;
+    public dniCorregido;
+    public fechaNacimientoCorregida;
 
     constructor(
         private inscripcionService: InscripcionService,
@@ -33,6 +45,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.sexos = enumerados.getObjSexos();
         if (!this.auth.getPermissions('vacunacion:?').length) {
             this.router.navigate(['inicio']);
         }
@@ -50,6 +63,32 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.mainSize = 8;
             this.candidatosBuscados = false;
             this.editando = false;
+        }
+    }
+
+    seleccionaGrupo() {
+        const grupo = this.pacienteSelected.grupo;
+        if (grupo) {
+            switch (grupo.nombre) {
+                case 'discapacidad':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
+                case 'mayores60':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
+                    break;
+                case 'personal-salud':
+                case 'policia':
+                    this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
+                case 'factores-riesgo': {
+                    this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    break;
+                }
+            }
         }
     }
 
@@ -76,9 +115,15 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.plex.toast('success', 'El paciente se ha asociado correctamente.');
     }
 
+    cancelarBusqueda() {
+        this.candidatosBuscados = false;
+        this.candidatos = [];
+    }
+
     closeSidebar() {
         this.showSidebar = false;
         this.mainSize = 12;
+        this.editInscripcion = false;
         this.pacienteSelected = null;
     }
 
@@ -102,6 +147,15 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.editando = true;
     }
 
+    editDatosBasicos() {
+        this.editInscripcion = true;
+        this.nombreCorregido = this.pacienteSelected.nombre;
+        this.apellidoCorregido = this.pacienteSelected.apellido;
+        this.fechaNacimientoCorregida = this.pacienteSelected.fechaNacimiento;
+        this.dniCorregido = this.pacienteSelected.documento;
+        this.sexoCorregido = this.pacienteSelected.sexo;
+    }
+
     domicilioValidado(inscripcion) {
         return inscripcion.validaciones.includes('domicilio');
     }
@@ -122,6 +176,24 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
                 this.plex.toast('danger', 'El domicilio no pudo ser validado');
             }
         });
+    }
+
+    guardarPaciente() {
+        this.pacienteSelected.sexo = this.sexoCorregido.id;
+        this.pacienteSelected.nombre = this.nombreCorregido;
+        this.pacienteSelected.apellido = this.apellidoCorregido;
+        this.pacienteSelected.documento = this.dniCorregido;
+        this.pacienteSelected.fechaNacimiento = this.fechaNacimientoCorregida;
+        this.inscripcionService.patch(this.pacienteSelected).subscribe(resultado => {
+            if (resultado) {
+                this.plex.toast('success', 'Datos actualizados con éxito');
+            }
+            this.editInscripcion = false;
+        });
+    }
+
+    cancelarGuardarPaciente() {
+        this.editInscripcion = false;
     }
 
 }

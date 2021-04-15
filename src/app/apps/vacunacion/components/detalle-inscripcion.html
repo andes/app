@@ -1,0 +1,47 @@
+<plex-grid type="full" size="md">
+    <plex-label titulo="Email" subtitulo="{{ inscripcion.email? inscripcion.email : 'No indica' }}" case="lowercase">
+    </plex-label>
+    <plex-label titulo="Teléfono" subtitulo="{{ inscripcion.telefono? inscripcion.telefono : 'No inidica' }}">
+    </plex-label>
+    <plex-label titulo="Alergia" subtitulo="{{ inscripcion.alergia ? 'Si' : 'No' }}">
+    </plex-label>
+    <plex-label *ngIf="inscripcion.cud" titulo="CUD" subtitulo="{{ inscripcion.cud }}">
+    </plex-label>
+
+    <plex-label titulo="En aislamiento" subtitulo="{{ inscripcion.aislamiento ? 'Si' : 'No' }}"> :
+    </plex-label>
+    <plex-label *ngIf="inscripcion.sexo === 'femenino'" titulo="Amamantando"
+                subtitulo="{{ inscripcion.amamantando ? 'Si' : 'No' }}">
+    </plex-label>
+    <plex-label *ngIf="inscripcion.sexo === 'femenino'" titulo="Embarazada"
+                subtitulo="{{ inscripcion.embarazada ? 'Si' : 'No' }}">
+    </plex-label>
+    <plex-label titulo="Enfermedad" subtitulo="{{ inscripcion.enfermedad ? 'Si' : 'No' }}">
+    </plex-label>
+    <plex-label titulo="Condición" subtitulo="{{ inscripcion.condicion ? 'Si' : 'No' }}">
+    </plex-label>
+    <plex-label titulo="Convaleciente" subtitulo="{{ inscripcion.convaleciente ? 'Si' : 'No' }}">
+    </plex-label>
+
+    <!-- personal salud -->
+    <ng-container *ngIf="inscripcion.personal_salud">
+        <plex-label titulo="Profesión" subtitulo="{{ inscripcion.profesion }}"></plex-label>
+        <plex-label titulo="Establecimiento" subtitulo="{{ inscripcion.establecimiento }}">
+        </plex-label>
+        <plex-label titulo="Relación" subtitulo="{{ inscripcion.relacion }}"></plex-label>
+        <plex-label titulo="Matricula" subtitulo="{{ inscripcion.matricula }}"></plex-label>
+    </ng-container>
+
+    <!-- inscripcion -->
+    <plex-label titulo="Estado" subtitulo="{{ inscripcion.estado }}"></plex-label>
+    <plex-label titulo="Fecha de registro" subtitulo="{{ inscripcion.fechaRegistro | fecha }}">
+    </plex-label>
+    <plex-label titulo="Plasma" subtitulo="{{ inscripcion.plasma ? 'Si' : 'No' }}"></plex-label>
+    <plex-label titulo="Validado" subtitulo="{{ inscripcion.validado ? 'Si' : 'No' }}">
+    </plex-label>
+
+    <div *ngIf="inscripcion.validaciones?.length">
+        <label>Validaciones</label>
+        <div *ngFor="let item of inscripcion.validaciones"><small>{{item}}</small></div>
+    </div>
+</plex-grid>

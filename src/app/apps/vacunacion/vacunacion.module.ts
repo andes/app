@@ -1,3 +1,4 @@
+import { DetalleInscripcionComponent } from './components/detalle-inscripcion.component';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,7 +39,8 @@ import { EditarInscripcionComponent } from './components/editar-inscripcion.comp
         InscripcionComponent,
         ListadoInscriptosVacunacionComponent,
         FiltrosVacunacionComponent,
-        EditarInscripcionComponent
+        EditarInscripcionComponent,
+        DetalleInscripcionComponent
     ],
     providers: [
         {
