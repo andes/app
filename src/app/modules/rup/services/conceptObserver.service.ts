@@ -32,6 +32,10 @@ export class ConceptObserverService {
    * @param {IPrestacionRegistro} registro Registro
    */
   public notify(concepto: ISnomedConcept, registro: IPrestacionRegistro) {
+    if (registro.link) {
+      const url = registro.link;
+      window.open(url);
+    }
     if (this.observers[concepto.conceptId]) {
       this.observers[concepto.conceptId].next(registro);
     }

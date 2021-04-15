@@ -31,7 +31,7 @@ export class PlantillasRUPComponent implements OnInit {
     subject: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
     plantillas$: Observable<any> = this.subject.asObservable();
     mostrarDescendientes = false;
-
+    esArchivoLink = true;
     constructor(
         public plex: Plex,
         private sp: PlantillasService,
@@ -62,6 +62,7 @@ export class PlantillasRUPComponent implements OnInit {
                     title: '',
                     esSolicitud: false,
                     expression: `${this.procedimiento.conceptId}`,
+                    esArchivoLink: item.esArchivoLink
                 };
             } else {
                 plantilla = item;
@@ -199,13 +200,15 @@ export class PlantillasRUPComponent implements OnInit {
         }
     }
 
-    agregarPlantilla(procedimiento) {
+    agregarPlantilla(procedimiento, esLink) {
         const plantilla = {
             conceptos: [procedimiento],
             descripcion: '',
             title: '',
+            link: '',
             esSolicitud: false,
-            expression: `${procedimiento.conceptId}`
+            expression: `${procedimiento.conceptId}`,
+            esArchivoLink: esLink
         };
 
         this.addElementToObservableArray(plantilla);

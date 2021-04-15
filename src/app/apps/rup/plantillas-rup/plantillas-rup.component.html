@@ -30,7 +30,10 @@
                                      (click)="cerrarProcedimiento()">
                         </plex-button>
                         <plex-button *ngIf="procedimiento" type="info" label="Agregar plantilla"
-                                     (click)="agregarPlantilla(procedimiento)" class="ml-2">
+                                     (click)="agregarPlantilla(procedimiento,false)" class="ml-2">
+                        </plex-button>
+                        <plex-button *ngIf="procedimiento" type="info" label="Agregar archivo"
+                                     (click)="agregarPlantilla(procedimiento,true)" class="ml-2">
                         </plex-button>
                     </div>
                 </div>
@@ -84,9 +87,12 @@
                                     <plex-text label="Título" [(ngModel)]="plantilla.title" name="title"
                                                [required]="true">
                                     </plex-text>
-                                    <plex-text label="Texto de plantilla" [(ngModel)]="plantilla.descripcion"
-                                               name="contenido" [html]="true" [readonly]="false" class="w-100"
-                                               [required]="true">
+                                    <plex-text *ngIf="plantilla.esArchivoLink" label="Link" [(ngModel)]="plantilla.link"
+                                               name="title" [required]="true">
+                                    </plex-text>
+                                    <plex-text *ngIf="!plantilla.esArchivoLink" label="Texto de plantilla"
+                                               [(ngModel)]="plantilla.descripcion" name="contenido" [html]="true"
+                                               [readonly]="false" class="w-100" [required]="true">
                                     </plex-text>
                                 </div>
                             </div>
