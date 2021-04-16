@@ -42,8 +42,7 @@ export class InscripcionService extends ResourceBaseHttp {
                 let params: any = {
                     limit: this.limit,
                     skip: this.skip,
-                    fields: '-nroTramite',
-                    incluirVacunados: false
+                    fields: '-nroTramite'
                 };
                 if (grupos) {
                     params.grupos = grupos;

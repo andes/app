@@ -94,6 +94,12 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             sorteable: false,
             opcional: false,
             sort: (a, b) => { return a.estado.localeCompare(b.estado); }
+        },
+        {
+            key: 'vacunado',
+            label: 'Vacunado',
+            sorteable: false,
+            opcional: false
         }];
 
 
@@ -192,7 +198,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     }
 
     grupoPoblacional(nombre: string) {
-        const maxLength = 35;
+        const maxLength = 30;
         let descripcion;
         if (this.gruposPoblacionales) {
             descripcion = this.gruposPoblacionales.find(item => item.nombre === nombre).descripcion;

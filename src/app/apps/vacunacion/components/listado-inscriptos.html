@@ -3,7 +3,7 @@
         <plex-title titulo="Listado de inscriptos para vacunación" size="lg"> </plex-title>
         <filtros-vacunacion></filtros-vacunacion>
 
-        <plex-table [columns]="columns" #table="plTable" [height]="400" (scroll)="onScroll()">
+        <plex-table [columns]="columns" #table="plTable" [offset]="170" (scroll)="onScroll()">
             <plex-table-columns>
             </plex-table-columns>
             <tr *ngFor="let paciente of listado$ | async" (click)="showInSidebar(paciente)" class='selectable'
@@ -11,12 +11,20 @@
                 <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
                 <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
                 <td *plTableCol="'apellido-nombre'"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
-                <td *plTableCol="'sexo'"> {{ paciente.sexo }} </td>
+                <td *plTableCol="'sexo'"> {{ paciente.sexo === 'femenino' ? 'F' : 'M' }} </td>
                 <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
                 <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
                 <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
-                <td *plTableCol="'estado'"> {{ paciente.estado }} </td>
-            </tr>
+                <td *plTableCol="'estado'">
+                    <plex-badge
+                                type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
+                        {{ paciente.estado }}
+                    </plex-badge>
+                </td>
+                <td *plTableCol="'vacunado'">
+                    <plex-label type="{{ paciente.fechaVacunacion ? 'success' : 'danger' }}" titulo="" subtitulo=""
+                                icon="{{ paciente.fechaVacunacion ? 'check' : 'close' }}">
+                    </plex-label>
         </plex-table>
     </plex-layout-main>
 
