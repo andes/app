@@ -1,9 +1,7 @@
 <plex-layout main="{{mainSize}}">
     <plex-layout-main>
         <plex-title titulo="Listado de inscriptos para vacunación" size="lg"> </plex-title>
-
         <filtros-vacunacion></filtros-vacunacion>
-
         <table class="table table-striped table-hover table-lista-vacunacion">
             <thead>
                 <tr>
@@ -38,29 +36,73 @@
 
     <plex-layout-sidebar *ngIf="showSidebar" type="invert">
         <plex-title titulo="Detalle paciente" size="md">
-            <plex-button class="pr-1" *ngIf="!pacienteSelected.paciente" type="warning" size="sm"
-                         label="Asociar paciente" [disabled]="candidatosBuscados" (click)="buscarCandidatos()">
+            <plex-button *ngIf="!pacienteSelected.paciente && !editInscripcion && !candidatosBuscados" type="info"
+                         size="sm" label="Asociar paciente" [disabled]="candidatosBuscados"
+                         (click)="buscarCandidatos()">
             </plex-button>
-            <plex-button type="warning" size="sm" (click)="editPaciente()"
-                         *ngIf="pacienteSelected.estado === 'pendiente' && permisosEdicion.length && !editando">
-                EDITAR
+            <plex-button *ngIf="!pacienteSelected.paciente && !editInscripcion && candidatosBuscados" type="warning"
+                         size="sm" label="Cancelar asociación" (click)="cancelarBusqueda()">
             </plex-button>
-            <plex-button type="success" *ngIf="!domicilioValidado(pacienteSelected)" size="sm"
-                         (click)="validarDomicilio(pacienteSelected)" class='ml-2'>
+            <plex-button type="success" *ngIf="!domicilioValidado(pacienteSelected) && !editInscripcion" size="sm"
+                         (click)="validarDomicilio(pacienteSelected)" class='ml-1'>
                 VALIDAR DOMICILIO
             </plex-button>
-            <plex-button type="danger" icon="close" size="sm" (click)="closeSidebar()" class='ml-2'></plex-button>
+            <plex-button [validateForm]="formulario" [disabled]="!formulario?.valid" type="success"
+                         *ngIf="editInscripcion" size="sm" (click)="guardarPaciente()" class='ml-1'>
+                GUARDAR DATOS
+            </plex-button>
+            <plex-button [validateForm]="formulario" type="danger" *ngIf="editInscripcion" size="sm"
+                         (click)="cancelarGuardarPaciente()" class='ml-1 mr-1'>
+                CANCELAR
+            </plex-button>
+            <plex-button *ngIf="!editInscripcion" type="danger" icon="close" size="sm" (click)="closeSidebar()"
+                         class='ml-1 mr-1'></plex-button>
         </plex-title>
 
         <ng-container *ngIf="pacienteSelected">
             <!-- Si no tiene paciente de mpi asociado -->
             <ng-container *ngIf="!pacienteSelected.paciente">
-
-                <plex-label *ngIf="!candidatosBuscados" titulo="No se encontró ningún paciente asociado">
-                </plex-label>
-
-
-                <plex-list *ngIf="candidatos?.length">
+                <div justify *ngIf="!editInscripcion && !candidatosBuscados">
+                    <plex-grid type="full" size="sm">
+                        <plex-label titulo="Apellido" subtitulo="{{ pacienteSelected.apellido }}">
+                        </plex-label>
+                        <plex-label titulo="Nombre" subtitulo="{{ pacienteSelected.nombre }}">
+                        </plex-label>
+                        <plex-label titulo="DNI" subtitulo="{{ (pacienteSelected.documento | number) || 'Sin DNI' }}">
+                        </plex-label>
+                        <plex-label titulo="Sexo" subtitulo="{{pacienteSelected.sexo}}">
+                        </plex-label>
+                        <plex-label titulo="Fecha de nacimiento"
+                                    subtitulo="{{pacienteSelected.fechaNacimiento | fecha}}">
+                        </plex-label>
+                    </plex-grid>
+                    <plex-button size="sm" type="warning" icon="pencil" class="mr-1" (click)="editDatosBasicos()">
+                    </plex-button>
+                </div>
+                <plex-badge *ngIf="!editInscripcion && !candidatosBuscados" type="warning" size="block"
+                            class="mt-2 mb-2">
+                    No se encontró ningún paciente asociado</plex-badge>
+                <form #formulario="ngForm">
+                    <plex-item *ngIf="editInscripcion && !candidatosBuscados">
+                        <plex-text grow="full" label="Apellido" name="apellido" [required]="true"
+                                   [(ngModel)]="apellidoCorregido">
+                        </plex-text>
+                        <plex-text grow="full" label="Nombre" name="nombre" [required]="true"
+                                   [(ngModel)]="nombreCorregido">
+                        </plex-text>
+                        <plex-text grow="full" label="Documento" name="documento" [(ngModel)]="dniCorregido"
+                                   [required]="true">
+                        </plex-text>
+                        <plex-select [(ngModel)]="sexoCorregido" [required]="true" label="Seleccione sexo"
+                                     [data]="sexos" name="sexo" required="true" placeholder="Seleccione..">
+                        </plex-select>
+                        <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="fechaNacimientoCorregida"
+                                       class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy"
+                                       [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
+                        </plex-datetime>
+                    </plex-item>
+                </form>
+                <plex-list *ngIf="candidatos?.length && candidatosBuscados">
                     <plex-item *ngFor="let candidato of candidatos">
                         <img [ngClass]="{'img-fallecido' : candidato.fechaFallecimiento}"
                              [mpiFotoPaciente]="candidato" />
@@ -92,10 +134,10 @@
                         </plex-button>
                     </plex-item>
                 </plex-list>
-
                 <div class="pt-2" *ngIf="!candidatos?.length && candidatosBuscados" grow="full">
                     No se encontró ningún paciente candidato para asociar. Asegúrese de que
                     el paciente se encuentra registrado en MPI.</div>
+                <br>
             </ng-container>
 
             <!-- Seccion datos personales -->
@@ -108,57 +150,15 @@
                                 (returnEdicion)="returnEdicion($event)"></editar-inscripcion>
 
             <!-- datos de inscripción -->
-            <plex-title *ngIf="!editando" titulo="Datos de la inscripción" size="sm"></plex-title>
-            <plex-grid *ngIf="!editando" type="full" size="md">
-                <plex-label titulo="Email"
-                            subtitulo="{{ pacienteSelected.email? pacienteSelected.email : 'No indica' }}"
-                            case="lowercase">
-                </plex-label>
-                <plex-label titulo="Teléfono"
-                            subtitulo="{{ pacienteSelected.telefono? pacienteSelected.telefono : 'No inidica' }}">
-                </plex-label>
-                <plex-label titulo="Alergia" subtitulo="{{ pacienteSelected.alergia ? 'Si' : 'No' }}">
-                </plex-label>
-                <plex-label *ngIf="pacienteSelected.cud" titulo="CUD" subtitulo="{{ pacienteSelected.cud }}">
-                </plex-label>
-
-                <plex-label titulo="En aislamiento" subtitulo="{{ pacienteSelected.aislamiento ? 'Si' : 'No' }}"> :
-                </plex-label>
-                <plex-label *ngIf="pacienteSelected.sexo === 'femenino'" titulo="Amamantando"
-                            subtitulo="{{ pacienteSelected.amamantando ? 'Si' : 'No' }}">
-                </plex-label>
-                <plex-label *ngIf="pacienteSelected.sexo === 'femenino'" titulo="Embarazada"
-                            subtitulo="{{ pacienteSelected.embarazada ? 'Si' : 'No' }}">
-                </plex-label>
-                <plex-label titulo="Enfermedad" subtitulo="{{ pacienteSelected.enfermedad ? 'Si' : 'No' }}">
-                </plex-label>
-                <plex-label titulo="Condición" subtitulo="{{ pacienteSelected.condicion ? 'Si' : 'No' }}">
-                </plex-label>
-                <plex-label titulo="Convaleciente" subtitulo="{{ pacienteSelected.convaleciente ? 'Si' : 'No' }}">
-                </plex-label>
-
-                <!-- personal salud -->
-                <ng-container *ngIf="pacienteSelected.personal_salud">
-                    <plex-label titulo="Profesión" subtitulo="{{ pacienteSelected.profesion }}"></plex-label>
-                    <plex-label titulo="Establecimiento" subtitulo="{{ pacienteSelected.establecimiento }}">
-                    </plex-label>
-                    <plex-label titulo="Relación" subtitulo="{{ pacienteSelected.relacion }}"></plex-label>
-                    <plex-label titulo="Matricula" subtitulo="{{ pacienteSelected.matricula }}"></plex-label>
-                </ng-container>
-
-                <!-- inscripcion -->
-                <plex-label titulo="Estado" subtitulo="{{ pacienteSelected.estado }}"></plex-label>
-                <plex-label titulo="Fecha de registro" subtitulo="{{ pacienteSelected.fechaRegistro | fecha }}">
-                </plex-label>
-                <plex-label titulo="Plasma" subtitulo="{{ pacienteSelected.plasma ? 'Si' : 'No' }}"></plex-label>
-                <plex-label titulo="Validado" subtitulo="{{ pacienteSelected.validado ? 'Si' : 'No' }}">
-                </plex-label>
-
-                <div *ngIf="pacienteSelected.validaciones?.length">
-                    <label>Validaciones</label>
-                    <div *ngFor="let item of pacienteSelected.validaciones"><small>{{item}}</small></div>
-                </div>
-            </plex-grid>
+            <ng-container *ngIf="!editando">
+                <plex-title titulo="Datos de la inscripción" size="sm">
+                    <plex-button type="warning" size="sm" (click)="editPaciente()" class='mr-1' icon="pencil"
+                                 *ngIf="pacienteSelected.estado === 'pendiente' && permisosEdicion.length && !editando">
+                    </plex-button>
+                </plex-title>
+                <detalle-inscripcion [inscripcion]="pacienteSelected">
+                </detalle-inscripcion>
+            </ng-container>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
