@@ -115,14 +115,14 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   editarFicha(ficha) {
     this.paciente = ficha.paciente;
     this.fichaPaciente = ficha;
-    this.showFicha = ficha.type;
+    this.showFicha = ficha.type.name;
     this.editFicha = true;
   }
 
   verFicha(ficha) {
     this.paciente = ficha.paciente;
     this.fichaPaciente = ficha;
-    this.showFicha = ficha.type;
+    this.showFicha = ficha.type.name;
     this.editFicha = false;
   }
 

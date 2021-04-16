@@ -41,7 +41,7 @@
                 <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
                 <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
-                <td *plTableCol="'tipo'">{{ficha.type}}</td>
+                <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
                 <td *plTableCol="'acciones'">
                     <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm"
                                  (click)="editarFicha(ficha)">
