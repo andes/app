@@ -7,7 +7,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import * as enumerados from '../../../utils/enumerados';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'listado-inscriptos',
@@ -20,6 +20,8 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     public mainSize = 12;
     public showSidebar = false;
+    public showAgregarNota = false;
+    public nuevaNota = '';
     public pacienteSelected: any;
     public listado$: Observable<any[]>;
     private listadoActual: any[];
@@ -37,7 +39,6 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public sexoCorregido;
     public dniCorregido;
     public fechaNacimientoCorregida;
-    // public selectedColumn = null;
     public columns = [
         {
             key: 'grupo',
@@ -133,6 +134,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.mainSize = 8;
             this.candidatosBuscados = false;
             this.editando = false;
+            this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
         }
     }
 
@@ -266,4 +268,22 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         this.editInscripcion = false;
     }
 
+    onGuardarNota() {
+        this.showAgregarNota = false;
+        this.pacienteSelected.nota = this.nuevaNota;
+        this.listado$ = this.inscripcionService.save(this.pacienteSelected).pipe(
+            switchMap(paciente => {
+                this.pacienteSelected = paciente;
+                return this.inscripcionService.inscriptosFiltrados$.pipe(
+                    map(resp => this.listadoActual = resp)
+                );
+            })
+        );
+        this.plex.toast('info', 'La nota ha sido guardada correctamente.');
+    }
+
+    onCancelarNota() {
+        this.showAgregarNota = false;
+        this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
+    }
 }
