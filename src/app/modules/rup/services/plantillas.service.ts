@@ -81,7 +81,7 @@ export class PlantillasService {
         const ctid = plantilla.target?.conceptId || conceptId;
 
         if (plantilla.link) {
-            return () => { this.cos.notify({ conceptId: ctid } as any, { link: plantilla.link } as any); };
+            return () => { window.open(plantilla.link); };
 
         } else {
             return () => { this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any); };
