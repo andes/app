@@ -1,9 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { cache } from '@andes/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { LocalidadService } from 'src/app/services/localidad.service';
+import { ProvinciaService } from 'src/app/services/provincia.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
@@ -157,10 +160,14 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public contactosEstrechos = [];
   public nuevoContacto = false;
   public zonaSanitaria = null;
+  public localidades$: Observable<any>;
+  public provincias$: Observable<any>;
 
   constructor(
     private formsService: FormsService,
     private formEpidemiologiaService: FormsEpidemiologiaService,
+    private localidadService: LocalidadService,
+    private provinciaService: ProvinciaService,
     private plex: Plex,
     private auth: Auth,
     private organizacionService: OrganizacionService,
@@ -197,6 +204,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       this.router.navigate(['inicio']);
     }
     this.organizaciones$ = this.auth.organizaciones();
+    this.provincias$ = this.provinciaService.get({}).pipe(
+      cache()
+    );
   }
 
   registrarFicha() {
@@ -253,7 +263,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   setFicha() {
-    const type = this.form ? { id: this.form.id, name: this.form. name} : this.fichaPaciente.type;
+    const type = this.form ? { id: this.form.id, name: this.form.name } : this.fichaPaciente.type;
     const fichaFinal = {
       type,
       secciones: this.ficha,
@@ -324,6 +334,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           pcr: seccion.fields['pcr'] ? 'muestra' : '',
           lamp: seccion.fields['lamp']?.id
         };
+        if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
+          this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcr', 'identificadorpcr']);
+        }
         switch (clasificaciones[key]) {
           case 'confirmado':
             seccion.fields['clasificacionfinal'] = 'Confirmado';
@@ -332,10 +345,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             seccion.fields['clasificacionfinal'] = 'Descartado';
             break;
           case 'muestra':
-            seccion.fields['clasificacionfinal'] = 'Sospechoso';
+            seccion.fields['clasificacionfinal'] = clasificaciones.antigeno === 'confirmado' ? 'Confirmado' : 'Sospechoso';
             break;
           default:
-            seccion.fields['clasificacionfinal'] = '';
+            if (!clasificaciones.antigeno && !clasificaciones.pcr && !clasificaciones.lamp) {
+              seccion.fields['clasificacionfinal'] = '';
+            }
             break;
         }
       }
@@ -395,6 +410,26 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     if (index >= 0) {
       this.contactosEstrechos.splice(index, 1);
       this.contactosEstrechos = [...this.contactosEstrechos];
+    }
+  }
+
+  setLocalidades(event) {
+    if (event.value) {
+      this.localidades$ = this.localidadService.get({ codigo: event.value.codigo });
+    }
+  }
+
+  clearDependencias(event, idSeccion, keys) {
+    if (event.value?.id === 'no' || event.value === false) {
+      this.secciones.map(seccion => {
+        if (seccion.id === idSeccion) {
+          keys.map(element => {
+            if (seccion.fields[element]) {
+              seccion.fields[element] = null;
+            }
+          });
+        }
+      });
     }
   }
 }
