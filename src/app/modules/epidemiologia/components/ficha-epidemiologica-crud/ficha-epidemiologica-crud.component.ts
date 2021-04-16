@@ -448,40 +448,26 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   setMpiPaciente(contactosPaciente) {
-    const nuevoContacto = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'telefonocaso');
-    if (nuevoContacto >= 0) {
-      this.addContactoMpi('celular', Object.values(contactosPaciente[nuevoContacto])[0]);
-    }
-    const dirPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'direccioncaso');
-    const provinciaPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'lugarresidencia');
-    const localidadPaciente = contactosPaciente.findIndex(elem => (Object.keys(elem))[0] === 'localidadresidencia');
-    if (dirPaciente >= 0 || provinciaPaciente >= 0 || localidadPaciente >= 0) {
-      const nuevaLocalidad = Object.values(contactosPaciente[localidadPaciente])[0];
-      const nuevaProvincia = Object.values(contactosPaciente[provinciaPaciente])[0];
-      const nuevaDireccion = {
-        valor: dirPaciente >= 0 ? Object.values(contactosPaciente[dirPaciente])[0]?.toString() : null,
-        ultimaActualizacion: new Date(),
-        activo: true,
-        ubicacion: {
-          localidad: nuevaLocalidad ? {
-            id: nuevaLocalidad['id'],
-            nombre: nuevaLocalidad['nombre'],
-          } : null,
-          provincia: nuevaProvincia ? {
-            id: nuevaProvincia['id'],
-            nombre: nuevaProvincia['nombre'],
-          } : null,
-          barrio: null,
-          pais: null
-        },
-        codigoPostal: '',
-        ranking: 0,
-        geoReferencia: null
-      };
-      this.paciente.direccion[0] = nuevaDireccion.ubicacion.localidad?.id ||
-        nuevaDireccion.ubicacion.provincia?.id ||
-        nuevaDireccion.valor ? nuevaDireccion : this.paciente.direccion[0];
-    }
+    const nuevoContacto = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'telefonocaso');
+    this.addContactoMpi('celular', nuevoContacto.telefonocaso);
+    const dirPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'direccioncaso');
+    const provinciaPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'lugarresidencia');
+    const localidadPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'localidadresidencia');
+    const nuevaDireccion = {
+      valor: dirPaciente.direccioncaso,
+      ultimaActualizacion: new Date(),
+      activo: true,
+      ubicacion: {
+        localidad: localidadPaciente.localidadresidencia,
+        provincia: provinciaPaciente.lugarresidencia,
+        barrio: null,
+        pais: null
+      },
+      codigoPostal: '',
+      ranking: 0,
+      geoReferencia: null
+    };
+    this.paciente.direccion[0] = nuevaDireccion;
     this.servicePaciente.save(this.paciente).subscribe();
   }
 

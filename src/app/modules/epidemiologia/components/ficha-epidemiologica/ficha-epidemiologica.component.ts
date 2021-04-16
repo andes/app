@@ -71,6 +71,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
           this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
             this.itemsDropdownFichas.push({
               'label': res[0] ? res[0].fsn : element.name, handler: () => {
+                this.selectedForm = element;
                 this.mostrarFicha(element.name);
               }
             });
@@ -78,6 +79,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
         } else {
           this.itemsDropdownFichas.push({
             'label': element.name, handler: () => {
+              this.selectedForm = element;
               this.mostrarFicha(element.name);
             }
           });
