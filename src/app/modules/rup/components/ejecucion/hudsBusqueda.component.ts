@@ -9,6 +9,7 @@ import { gtag } from '../../../../shared/services/analytics.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -60,7 +61,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
         return this._prestaciones;
     }
     set prestaciones(value) {
-        this._prestaciones = value.sort((a, b) => (a.data.ejecucion && b.data.ejecucion) ? (b.data.ejecucion.fecha - a.data.ejecucion.fecha) : (b.fecha - a.fecha));
+        this._prestaciones = value.sort((a, b) => {
+            const dateA = a.data.ejecucion ? a.data.ejecucion.fecha : a.data.fecha;
+            const dateB = b.data.ejecucion ? b.data.ejecucion.fecha : b.data.fecha;
+            return moment(dateB).diff(dateA);
+        });
     }
 
     public todos: any = [];
@@ -118,6 +123,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService,
+        private formEpidemiologiaService: FormsEpidemiologiaService,
         @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
@@ -217,6 +223,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
                 break;
+            case 'ficha-epidemiologica':
+                gtag('huds-open', tipo, registro.prestacion.term, index);
+                registro = registro.data;
+                registro.tipo = 'ficha-epidemiologica';
+                registro.class = 'plan';
+                break;
         }
 
         this.huds.toogle(registro, tipo);
@@ -241,6 +253,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.organizaciones = this.prestaciones.filter(p => p.data.ejecucion?.organizacion);
             this.organizaciones = this.organizaciones.map(o => o.data.ejecucion.organizacion);
             this.buscarCDAPacientes(this.huds.getHudsToken());
+            this.buscarFichasEpidemiologicas();
 
         });
     }
@@ -326,6 +339,33 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
+    buscarFichasEpidemiologicas() {
+
+        this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe( fichas => {
+            if (fichas.length) {
+                const fichasEpidemiologia = fichas.map(f => {
+                    f.solicitud = { ambitoOrigen: 'ambulatorio' };
+                    return {
+                        data: f,
+                        tipo: 'ficha-epidemiologica',
+                        prestacion: {
+                            term: 'Ficha Epidemiológica'
+                        },
+                        profesional: f.createdBy.nombreCompleto,
+                        fecha:  f.createdAt,
+                        estado: 'validada'
+                    };
+                });
+                this.prestaciones = this.prestacionesCopia;
+                this.prestaciones = [...this.prestaciones, ...fichasEpidemiologia];
+
+                this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+                this.prestacionesCopia = this.prestaciones.slice();
+                this.filtrar();
+            }
+        });
+    }
+
     getCantidadResultados(type: any) {
         switch (type) {
             case 'todos':
@@ -384,7 +424,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
         if (this.ambitoOrigen) {
-            this.prestaciones = this.prestaciones.filter(p => p.data.solicitud.ambitoOrigen === this.ambitoOrigen);
+            this.prestaciones = this.prestaciones.filter(p => p.data.solicitud?.ambitoOrigen === this.ambitoOrigen);
         }
         if (this.organizacionSeleccionada) {
 

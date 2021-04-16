@@ -35,6 +35,7 @@ import { DirectiveLibModule } from '../../directives/directives.module';
     SharedModule,
     DirectiveLibModule
   ],
-  providers: [FormsService, SelectSearchService]
+  providers: [FormsService, SelectSearchService],
+  exports: [FichaEpidemiologicaCrudComponent]
 })
 export class EpidemiologiaModule { }
