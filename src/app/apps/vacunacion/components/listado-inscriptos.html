@@ -6,8 +6,8 @@
         <plex-table [columns]="columns" #table="plTable" [height]="400" (scroll)="onScroll()">
             <plex-table-columns>
             </plex-table-columns>
-            <tr *ngFor="let paciente of listado$ | plSort:table | async" (click)="showInSidebar(paciente)"
-                class='selectable' [class.selected]=" paciente.id===pacienteSelected?.id">
+            <tr *ngFor="let paciente of listado$ | async" (click)="showInSidebar(paciente)" class='selectable'
+                [class.selected]=" paciente.id===pacienteSelected?.id">
                 <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
                 <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
                 <td *plTableCol="'apellido-nombre'"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
