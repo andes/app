@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class ParentescoService {
-    private parentescoUrl = '/core/mpi/parentescos';  // URL to web api
+    private parentescoUrl = '/core-v2/mpi/parentescos';  // URL to web api
 
     constructor(private server: Server) { }
 
