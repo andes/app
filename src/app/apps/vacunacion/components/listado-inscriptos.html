@@ -20,11 +20,15 @@
                                 type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
                         {{ paciente.estado }}
                     </plex-badge>
+                    <span class="pl-1" *ngIf="paciente.nota">
+                        <i title="{{ paciente.nota }}" class="mdi mdi-comment-outline"></i>
+                    </span>
                 </td>
                 <td *plTableCol="'vacunado'">
                     <plex-label type="{{ paciente.fechaVacunacion ? 'success' : 'danger' }}" titulo="" subtitulo=""
                                 icon="{{ paciente.fechaVacunacion ? 'check' : 'close' }}">
                     </plex-label>
+            </tr>
         </plex-table>
     </plex-layout-main>
 
@@ -147,11 +151,25 @@
             <ng-container *ngIf="!editando">
                 <plex-title titulo="Datos de la inscripción" size="sm">
                     <plex-button type="warning" size="sm" (click)="editPaciente()" class='mr-1' icon="pencil"
-                                 *ngIf="pacienteSelected.estado === 'pendiente' && permisosEdicion.length && !editando">
+                                 *ngIf="permisosEdicion.length && !editando">
+                    </plex-button>
+                    <plex-button type="info" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}"
+                                 size="sm" (click)="showAgregarNota = true"
+                                 title="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}">
                     </plex-button>
                 </plex-title>
+
+                <plex-wrapper *ngIf="showAgregarNota">
+                    <plex-text [(ngModel)]="nuevaNota" name="notaText" placeholder="Ingrese una nota ..." grow="full">
+                    </plex-text>
+                    <plex-button class="pr-1" label="Cancelar" size="sm" type="danger" (click)="onCancelarNota()">
+                    </plex-button>
+                    <plex-button label="Guardar" type="success" size="sm" (click)="onGuardarNota()"></plex-button>
+                </plex-wrapper>
+
                 <detalle-inscripcion [inscripcion]="pacienteSelected">
                 </detalle-inscripcion>
+
             </ng-container>
         </ng-container>
     </plex-layout-sidebar>
