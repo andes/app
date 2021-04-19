@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import * as enumerados from '../../../utils/enumerados';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'listado-inscriptos',
@@ -19,7 +21,8 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public mainSize = 12;
     public showSidebar = false;
     public pacienteSelected: any;
-    public listado: any[] = [];
+    public listado$: Observable<any[]>;
+    private listadoActual: any[];
     public gruposPoblacionales: any[];
     public candidatos: any[];
     public candidatosBuscados = false;
@@ -34,6 +37,71 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public sexoCorregido;
     public dniCorregido;
     public fechaNacimientoCorregida;
+    // public selectedColumn = null;
+    public columns = [
+        {
+            key: 'grupo',
+            label: 'Grupo',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return a.grupo.nombre.localeCompare(b.grupo.nombre); }
+        },
+        {
+            key: 'documento',
+            label: 'Documento',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return a.documento.localeCompare(b.documento); }
+        },
+        {
+            key: 'apellido-nombre',
+            label: 'Apellido y nombre',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`); }
+        },
+        {
+            key: 'sexo',
+            label: 'Sexo',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return a.sexo.localeCompare(b.sexo); }
+        },
+        {
+            key: 'edad',
+            label: 'Edad',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return moment(a.fechaNacimiento).diff(moment(b.fechaNacimiento)); }
+        },
+        {
+            key: 'localidad',
+            label: 'Localidad',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return a.localidad?.nombre.localeCompare(b.localidad?.nombre); }
+        },
+        {
+            key: 'fecha-registro',
+            label: 'Fecha de registro',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return moment(a.fechaRegistro).diff(moment(b.fechaRegistro)); }
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return a.estado.localeCompare(b.estado); }
+        },
+        {
+            key: 'vacunado',
+            label: 'Vacunado',
+            sorteable: false,
+            opcional: false
+        }];
+
 
     constructor(
         private inscripcionService: InscripcionService,
@@ -50,7 +118,9 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
         this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
-        this.inscripcionService.inscriptosFiltrados$.subscribe(resp => this.listado = resp);
+        this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
+            map(resp => this.listadoActual = resp)
+        );
         this.gruposService.search().subscribe(resp => {
             this.gruposPoblacionales = resp;
         });
@@ -128,7 +198,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     }
 
     grupoPoblacional(nombre: string) {
-        const maxLength = 35;
+        const maxLength = 30;
         let descripcion;
         if (this.gruposPoblacionales) {
             descripcion = this.gruposPoblacionales.find(item => item.nombre === nombre).descripcion;
@@ -140,7 +210,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     }
 
     onScroll() {
-        this.inscripcionService.lastResults.next(this.listado);
+        this.inscripcionService.lastResults.next(this.listadoActual);
     }
 
     editPaciente() {
