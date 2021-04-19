@@ -80,7 +80,7 @@ export class DatosContactoComponent implements OnInit {
     localidadActual = null;
     organizacionActual = null;
     patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
-    patronContactoAlfabetico = /^[a-z,A-Z]+@[a-z]+(.[a-z]+)+$/;
+    patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
 
 
     constructor(
