@@ -26,6 +26,16 @@ export class PDPMenuComponent {
         path: 'mis-turnos',
         color: '#0070cc',
         outlet: 'listado',
+    },
+    {
+        id: 13,
+        nombre: 'certificados',
+        tipo: 'info',
+        semanticTag: 'elementos de registro',
+        icono: 'documentos',
+        path: 'mis-certificados',
+        color: '#0070cc',
+        outlet: 'listado',
     }];
 
     goTo(path) {

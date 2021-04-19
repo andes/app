@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { LaboratorioService } from '../../services/laboratorio.service';
+import { CertificadoService } from '../../services/certificado.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ export class PDPMisCertificadosComponent implements OnInit {
     public certificados$: Observable<any[]>;
 
     constructor(
-        private laboratorioService: LaboratorioService,
+        private certificadoService: CertificadoService,
         private activeRoute: ActivatedRoute,
         private router: Router,
         private el: ElementRef,
@@ -23,7 +23,7 @@ export class PDPMisCertificadosComponent implements OnInit {
     ngOnInit(): void {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
 
-        this.certificados$ = this.laboratorioService.getLaboratorios(idPaciente);
+        this.certificados$ = this.certificadoService.getCertificados(idPaciente);
 
     }
 
@@ -32,7 +32,7 @@ export class PDPMisCertificadosComponent implements OnInit {
         if (id) {
             this.router.navigate([id], { relativeTo: this.activeRoute });
         } else {
-            this.router.navigate(['mis-laboratorios']);
+            this.router.navigate(['mis-certificados']);
         }
     }
 
@@ -41,8 +41,8 @@ export class PDPMisCertificadosComponent implements OnInit {
         return width >= 980;
     }
 
-    descargar(cda) {
-        this.laboratorioService.descargar(cda);
+    descargar(certificado) {
+        this.certificadoService.descargar(certificado);
     }
 
 }

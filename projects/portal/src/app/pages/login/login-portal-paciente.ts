@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.usuario = this.usuario.toLocaleLowerCase();
         this.auth.mobileLogin(this.usuario, this.password).subscribe(() => {
-            this.router.navigate(['/mis-vacunas']);
+            this.router.navigate(['/mis-certificados']);
         },
             (err) => {
                 this.plex.info('danger', 'Usuario o contraseña incorrectos');

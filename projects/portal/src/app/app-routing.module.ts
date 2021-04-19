@@ -9,6 +9,8 @@ import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis
 import { RoutingGuard } from './app.routings-guard.class';
 import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.component';
 import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
+import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certificados.component';
+import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -36,7 +38,16 @@ const routes: Routes = [
     children: [
       { path: ':id', component: PDPMisLaboratoriosDetalleComponent }
     ]
+  },
+  {
+    path: 'mis-certificados',
+    component: PDPMisCertificadosComponent,
+    canActivate: [RoutingGuard],
+    children: [
+      { path: ':id', component: PDPMisCertificadoDetalleComponent }
+    ]
   }
+
 ];
 
 @NgModule({
