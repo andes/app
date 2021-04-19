@@ -26,7 +26,6 @@ import { EditarInscripcionComponent } from './components/editar-inscripcion.comp
         PlexModule,
         SharedModule,
         RecaptchaModule,
-        SharedModule,
         MPILibModule,
         VacunacionRouting,
         RecaptchaFormsModule

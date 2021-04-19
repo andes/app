@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ListadoPerinatalComponent } from './components/listado-perinatal.component';
 import { PerinatalRouting } from './perinatal.routing';
+import { CarnetPerinatalService } from './services/carnet-perinatal.service';
+import { SharedModule } from '@andes/shared';
 
 @NgModule({
     imports: [
@@ -16,10 +18,14 @@ import { PerinatalRouting } from './perinatal.routing';
         RouterModule,
         HttpClientModule,
         PerinatalRouting,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        SharedModule
     ],
     declarations: [
         ListadoPerinatalComponent
+    ],
+    providers: [
+        CarnetPerinatalService
     ]
 })
 export class PerinatalModule { }
