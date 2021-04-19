@@ -1,4 +1,4 @@
-<plex-layout [main]="12">
+<plex-layout [main]="showSidebar? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="MÓDULO DE CONTROL PERINATAL">
             <plex-button type="link" size="md">
@@ -53,4 +53,12 @@
             </tr>
         </plex-table>
     </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <ng-container>
+            <perinatal-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></perinatal-busqueda-paciente>
+        </ng-container>
+        <div>
+            <historial-perinatal></historial-perinatal>
+        </div>
+    </plex-layout-sidebar>
 </plex-layout>

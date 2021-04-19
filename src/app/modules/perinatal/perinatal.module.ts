@@ -9,6 +9,8 @@ import { ListadoPerinatalComponent } from './components/listado-perinatal.compon
 import { PerinatalRouting } from './perinatal.routing';
 import { CarnetPerinatalService } from './services/carnet-perinatal.service';
 import { SharedModule } from '@andes/shared';
+import { BusquedaPacienteComponent } from './components/busqueda-paciente.component';
+import { HistorialPerinatalComponent } from './components/historial-perinatal.component';
 
 @NgModule({
     imports: [
@@ -25,7 +27,9 @@ import { SharedModule } from '@andes/shared';
         ListadoPerinatalComponent
     ],
     providers: [
-        CarnetPerinatalService
+        CarnetPerinatalService,
+        BusquedaPacienteComponent,
+        HistorialPerinatalComponent
     ]
 })
 export class PerinatalModule { }
