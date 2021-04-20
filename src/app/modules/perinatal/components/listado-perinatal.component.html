@@ -1,12 +1,12 @@
 <plex-layout [main]="showSidebar? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="MÓDULO DE CONTROL PERINATAL">
-            <plex-button type="link" size="md">
+            <plex-button type="link" size="md" (click)="irSipsPlus()" ariaLabel="ir a sips plus">
                 <plex-icon name="documento-corazon" size="md"></plex-icon>IR A SIP-PLUS
             </plex-button>
-            <plex-button type="danger mx-1" size="sm" icon="bell" hintType="warning" hint="notificaciones"
-                         hintIcon="star" detach="top"></plex-button>
-            <plex-button type="info" size="sm" label="IR A INICIO"></plex-button>
+            <plex-button type="info" size="sm" label="PUNTO DE INICIO" (click)="volverInicio()"
+                         ariaLabel="volver al punto de inicio"></plex-button>
+            <alertas-perinatal></alertas-perinatal>
         </plex-title>
         <plex-wrapper>
             <plex-datetime type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" label="Fecha Desde"
@@ -27,7 +27,7 @@
                 <plex-table-columns>
                 </plex-table-columns>
             </plex-title>
-            <tr *ngFor="let carnet of listado$ | async">
+            <tr *ngFor="let carnet of listado$ | async" (click)="showInSidebar(carnet)">
                 <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
                 <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
                 <td *plTableCol="'telefono'">299595355</td>
@@ -54,11 +54,17 @@
         </plex-table>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <ng-container>
-            <perinatal-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></perinatal-busqueda-paciente>
+        <plex-title titulo="DETALLE CONTROL PERINATAL">
+            <plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
+            </plex-button>
+        </plex-title>
+        <ng-container *ngIf="pacienteSelected">
+            <paciente-detalle *ngIf="pacienteSelected" [paciente]="pacienteSelected" reload="true"
+                              orientacion="horizontal">
+            </paciente-detalle>
         </ng-container>
         <div>
-            <historial-perinatal></historial-perinatal>
+            <historial-perinatal *ngIf="pacienteSelected" [controles]="controles"></historial-perinatal>
         </div>
     </plex-layout-sidebar>
 </plex-layout>

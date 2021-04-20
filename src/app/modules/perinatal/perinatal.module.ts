@@ -9,8 +9,9 @@ import { ListadoPerinatalComponent } from './components/listado-perinatal.compon
 import { PerinatalRouting } from './perinatal.routing';
 import { CarnetPerinatalService } from './services/carnet-perinatal.service';
 import { SharedModule } from '@andes/shared';
-import { BusquedaPacienteComponent } from './components/busqueda-paciente.component';
+import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { HistorialPerinatalComponent } from './components/historial-perinatal.component';
+import { AlertasPerinatalComponent } from './components/alertas-perinatal.component';
 
 @NgModule({
     imports: [
@@ -21,15 +22,18 @@ import { HistorialPerinatalComponent } from './components/historial-perinatal.co
         HttpClientModule,
         PerinatalRouting,
         InfiniteScrollModule,
-        SharedModule
+        SharedModule,
+        MPILibModule
     ],
     declarations: [
-        ListadoPerinatalComponent
+        ListadoPerinatalComponent,
+        HistorialPerinatalComponent,
+        AlertasPerinatalComponent
     ],
     providers: [
         CarnetPerinatalService,
-        BusquedaPacienteComponent,
-        HistorialPerinatalComponent
+        HistorialPerinatalComponent,
+        AlertasPerinatalComponent
     ]
 })
 export class PerinatalModule { }

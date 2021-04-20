@@ -1,14 +1,12 @@
 <plex-title main titulo="Historial"></plex-title>
 <plex-list>
-    <ng-container>
-        <plex-item>
-            <plex-icon name="historial" type="info"></plex-icon>
-            <plex-label [tituloBold]="true" titulo="Fecha" subtitulo="">
-            </plex-label>
-            <plex-label [tituloBold]="true" titulo="Profesional" subtitulo="">
-            </plex-label>
-            <plex-label [tituloBold]="true" titulo="Organización" subtitulo="">
-            </plex-label>
-        </plex-item>
-    </ng-container>
+    <plex-item *ngFor="let control of controles">
+        <plex-icon name="historial" type="info"></plex-icon>
+        <plex-label [tituloBold]="true" titulo="Fecha" subtitulo="{{control.fechaControl | fecha}}">
+        </plex-label>
+        <plex-label [tituloBold]="true" titulo="Profesional" subtitulo="">
+        </plex-label>
+        <plex-label [tituloBold]="true" titulo="Organización" subtitulo="">
+        </plex-label>
+    </plex-item>
 </plex-list>

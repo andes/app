@@ -1,6 +1,7 @@
 import { Plex } from '@andes/plex';
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,6 +15,8 @@ export class ListadoPerinatalComponent implements OnInit {
   public fechaDesdeEntrada;
   public fechaHastaEntrada;
   public paciente;
+  public pacienteSelected: any;
+  public controles: [];
   public fechaCita;
   public fechaUltimoControl;
   public listado$: Observable<any[]>;
@@ -74,6 +77,7 @@ export class ListadoPerinatalComponent implements OnInit {
     private auth: Auth,
     private plex: Plex,
     private router: Router,
+    private location: Location,
     private carnetPerinatalService: CarnetPerinatalService) { }
 
   ngOnInit(): void {
@@ -103,16 +107,26 @@ export class ListadoPerinatalComponent implements OnInit {
   onScroll() {
     this.carnetPerinatalService.lastResults.next(this.listadoActual);
   }
-  showInSidebar() {
-    this.showSidebar = true;
+
+  showInSidebar(carnet) {
+    if (carnet.paciente) {
+      this.pacienteSelected = carnet.paciente;
+      this.controles = carnet.controles;
+      this.showSidebar = true;
+    }
   }
 
-  ocultarSidebars() {
+  closeSidebar() {
     this.showSidebar = false;
+    this.pacienteSelected = null;
   }
 
-  returnBusqueda(event) {
-    this.ocultarSidebars();
+  volverInicio() {
+    this.location.back();
+  }
+
+  irSipsPlus() {
+    window.location.href = 'http://www.sips.andes.gob.ar';
   }
 
 }
