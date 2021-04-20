@@ -45,6 +45,10 @@
     </plex-grid>
     <shared-galeria-archivos [files]="adjuntosUrl" [readonly]="true">
     </shared-galeria-archivos>
+    <plex-button *ngIf="derivacion.prestacion && derivacion.organizacionOrigen.id === auth.organizacion.id && derivacion.estado === 'solicitada'" type="success mr-1" (click)='editarPrestacion()'>
+        Editar Prestación
+    </plex-button>
+    <vista-prestacion *ngIf="derivacion.prestacion" size="sm" [idPrestacion]="derivacion.prestacion" ></vista-prestacion>
     <div *ngIf="reglasDerivacionFiltradas.length > 0">
         <form #formEstado="ngForm">
             <plex-title size="sm" titulo="Actualizar estado">

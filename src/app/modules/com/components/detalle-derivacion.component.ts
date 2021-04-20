@@ -1,12 +1,14 @@
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Plex } from '@andes/plex';
 import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
+import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
+import { PrestacionesService } from '../../rup/services/prestaciones.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -77,13 +79,15 @@ export class DetalleDerivacionComponent implements OnInit {
     public esCOM = false;
 
     constructor(
+        private servicioPrestacion: PrestacionesService,
         public sanitazer: DomSanitizer,
         private organizacionService: OrganizacionService,
         private derivacionService: DerivacionesService,
         private auth: Auth,
         public plex: Plex,
         public driveService: DriveService,
-        private adjuntosService: AdjuntosService
+        private adjuntosService: AdjuntosService,
+        public router: Router
     ) { }
 
     ngOnInit() {
@@ -187,6 +191,11 @@ export class DetalleDerivacionComponent implements OnInit {
                 url: this.adjuntosService.createUrl('drive', doc, this.fileToken)
             };
         });
+    }
+
+    editarPrestacion() {
+        this.servicioPrestacion.notificaRuta({ nombre: 'COM', ruta: 'com' });
+        this.router.navigate(['rup/ejecucion', this.derivacion.prestacion]);
     }
 
     cerrar() {
