@@ -1,13 +1,39 @@
-<plex-grid type="full" size="md">
+<plex-detail size="md" direction="row">
+    <div title>
+        Grupo: {{ grupoPoblacional(inscripcion.grupo.nombre) }}
+    </div>
+    <div subtitle>Registrada el {{ inscripcion.fechaRegistro | fecha }}</div>
+    <plex-badge *ngIf="inscripcion.estado === 'pendiente'" type="default">Pendiente</plex-badge>
+    <plex-badge *ngIf="inscripcion.estado === 'habilitado'" type="success">Habilitado
+    </plex-badge>
+    <plex-badge *ngIf="inscripcion.estado === 'inhabilitado'" type="danger">Inhabilitado
+    </plex-badge>
+    <plex-badge *ngIf="inscripcion.grupo.nombre === 'personal-salud' && inscripcion.personal_salud" type="info">Personal
+        de salud verificado
+    </plex-badge>
+    <plex-badge *ngIf="inscripcion.grupo.nombre === 'personal-salud' && !inscripcion.personal_salud" type="warning">
+        Personal
+        de salud sin verificar
+    </plex-badge>
     <plex-label titulo="Email" subtitulo="{{ inscripcion.email? inscripcion.email : 'No indica' }}" case="lowercase">
     </plex-label>
-    <plex-label titulo="Teléfono" subtitulo="{{ inscripcion.telefono? inscripcion.telefono : 'No inidica' }}">
+    <plex-label titulo="Teléfono" subtitulo="{{ inscripcion.telefono? inscripcion.telefono : 'No indica' }}">
     </plex-label>
-    <plex-label titulo="Alergia" subtitulo="{{ inscripcion.alergia ? 'Si' : 'No' }}">
+    <plex-label titulo="Localidad" subtitulo="{{ inscripcion.localidad? inscripcion.localidad.nombre : 'No indica' }}">
     </plex-label>
+    <plex-label titulo="Validado" subtitulo="{{ inscripcion.validado ? 'Si' : 'No' }}">
+    </plex-label>
+    <div *ngIf="inscripcion.validaciones?.length">
+        <label>Validaciones</label>
+        <div *ngFor="let item of inscripcion.validaciones"><small>{{item}}</small></div>
+    </div>
     <plex-label *ngIf="inscripcion.cud" titulo="CUD" subtitulo="{{ inscripcion.cud }}">
     </plex-label>
-
+</plex-detail>
+<plex-title titulo="Condiciones del paciente" size="sm"></plex-title>
+<plex-grid cols="3">
+    <plex-label titulo="Alergia" subtitulo="{{ inscripcion.alergia ? 'Si' : 'No' }}">
+    </plex-label>
     <plex-label titulo="En aislamiento" subtitulo="{{ inscripcion.aislamiento ? 'Si' : 'No' }}"> :
     </plex-label>
     <plex-label *ngIf="inscripcion.sexo === 'femenino'" titulo="Amamantando"
@@ -33,15 +59,5 @@
     </ng-container>
 
     <!-- inscripcion -->
-    <plex-label titulo="Estado" subtitulo="{{ inscripcion.estado }}"></plex-label>
-    <plex-label titulo="Fecha de registro" subtitulo="{{ inscripcion.fechaRegistro | fecha }}">
-    </plex-label>
     <plex-label titulo="Plasma" subtitulo="{{ inscripcion.plasma ? 'Si' : 'No' }}"></plex-label>
-    <plex-label titulo="Validado" subtitulo="{{ inscripcion.validado ? 'Si' : 'No' }}">
-    </plex-label>
-
-    <div *ngIf="inscripcion.validaciones?.length">
-        <label>Validaciones</label>
-        <div *ngFor="let item of inscripcion.validaciones"><small>{{item}}</small></div>
-    </div>
 </plex-grid>
