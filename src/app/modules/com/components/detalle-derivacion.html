@@ -1,4 +1,7 @@
 <plex-title main titulo="Detalle de Derivación">
+    <plex-button size="sm" class="pr-1" type="info" [icon]="'printer'" title="Imprimir histórico de derivación"
+        [disabled]="requestInProgress" (click)="imprimirHistorial()">
+    </plex-button>
     <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
     </plex-button>
 </plex-title>

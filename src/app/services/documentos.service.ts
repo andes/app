@@ -28,8 +28,14 @@ export class DocumentosService {
         );
     }
 
-    descargarComprobanteDerivacion(params, nombreArchivo: string): Observable<any> {
-        return this.download('comprobanteDerivacion', params).pipe(
+    descargarComprobanteDerivacion(derivacionId, nombreArchivo: string): Observable<any> {
+        return this.download('reporteDerivacion', { derivacionId }).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
+    }
+
+    descargarHistorialDerivacion(derivacionId: String, nombreArchivo: string): Observable<any> {
+        return this.download('reporteDerivacion', { derivacionId, historial: true }).pipe(
             saveAs(nombreArchivo, 'pdf')
         );
     }

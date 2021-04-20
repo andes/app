@@ -9,6 +9,7 @@ import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -78,6 +79,7 @@ export class DetalleDerivacionComponent implements OnInit {
         observacion: ''
     };
     public esCOM = false;
+    requestInProgress;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -88,6 +90,7 @@ export class DetalleDerivacionComponent implements OnInit {
         public plex: Plex,
         public driveService: DriveService,
         private adjuntosService: AdjuntosService,
+        private documentosService: DocumentosService,
         public router: Router
     ) { }
 
@@ -222,6 +225,12 @@ export class DetalleDerivacionComponent implements OnInit {
     editarPrestacion() {
         this.servicioPrestacion.notificaRuta({ nombre: 'COM', ruta: 'com' });
         this.router.navigate(['rup/ejecucion', this.derivacion.prestacion]);
+    }
+
+    imprimirHistorial() {
+        this.requestInProgress = true;
+        const foo = () => this.requestInProgress = false;
+        this.documentosService.descargarHistorialDerivacion(this.derivacion._id, this.derivacion.paciente.apellido).subscribe(foo, foo);
     }
 
     cerrar() {

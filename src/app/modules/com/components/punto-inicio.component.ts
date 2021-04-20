@@ -286,7 +286,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     imprimirComprobante(derivacion: any) {
         this.requestInProgress = true;
-        this.documentosService.descargarComprobanteDerivacion(derivacion, derivacion.paciente.apellido).subscribe(
+        this.documentosService.descargarComprobanteDerivacion(derivacion._id, derivacion.paciente.apellido).subscribe(
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
