@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
@@ -18,7 +18,9 @@ export class TurnoService {
 
 
     getTurnos(): Observable<any[]> {
-        return this.server.get(this.agendaUrl + '/turnos');
+        return this.server.get(this.agendaUrl + '/turnos').pipe(
+            cacheStorage({ key: 'turnos', ttl: 60 * 24 })
+        );
     }
 
     getTurno(id: number | string) {

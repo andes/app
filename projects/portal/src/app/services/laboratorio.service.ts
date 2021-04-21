@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -17,7 +17,9 @@ export class LaboratorioService {
     ) { }
 
     getLaboratorios(id): Observable<any[]> {
-        return this.server.get(`${this.mobileUrl}/laboratorios/${id}`);
+        return this.server.get(`${this.mobileUrl}/laboratorios/${id}`).pipe(
+            cacheStorage({ key: 'laboratorios', ttl: 60 * 24 })
+        );
 
     }
 
