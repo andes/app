@@ -3,6 +3,7 @@ import { TurnoService } from '../../services/turno.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -22,7 +23,9 @@ export class PDPMisTurnosComponent implements OnInit {
         private el: ElementRef) { }
 
     ngOnInit(): void {
-        this.turnos$ = this.turnoService.getTurnos();
+        this.turnos$ = this.turnoService.getTurnos().pipe(
+            map(turnos => turnos.reverse())
+        );
     }
 
     goTo(id?) {
