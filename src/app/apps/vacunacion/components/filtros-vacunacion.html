@@ -3,8 +3,8 @@
         <plex-select name="grupo" label="Grupo" [(ngModel)]="filtro.grupo" idField="nombre" labelField="descripcion"
                      [data]="gruposPoblacionales$ | async" (change)="filtrar()">
         </plex-select>
-        <plex-int name="documento" [(ngModel)]="filtro.documento" label="Documento" debounce="400" (change)="filtrar()">
-        </plex-int>
+        <plex-text name="paciente" [(ngModel)]="filtro.paciente" label="Paciente" debounce="400" (change)="filtrar()">
+        </plex-text>
         <plex-select name="localidad" label="Localidad" [(ngModel)]="filtro.localidad" idField="nombre"
                      labelField="nombre" [data]="localidades$ | async" (change)="filtrar()">
         </plex-select>

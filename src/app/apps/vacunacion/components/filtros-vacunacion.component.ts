@@ -50,7 +50,7 @@ export class FiltrosVacunacionComponent implements OnInit {
                     grupos.map(grupo => grupo.nombre));
             });
         }
-        this.inscripcionService.documentoText.next(this.filtro.documento);
+        this.inscripcionService.pacienteText.next(this.filtro.paciente);
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
         if (moment(this.filtro.fechaDesde).isValid()) {
             this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
