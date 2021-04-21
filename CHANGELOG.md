@@ -1,3 +1,30 @@
+# [5.43.0](https://github.com/andes/app/compare/v5.42.0...v5.43.0) (2021-04-21)
+
+
+### Bug Fixes
+
+* **EP:** nombre tipo de ficha en buscador ([0040d54](https://github.com/andes/app/commit/0040d54a31523e3d7ca80a96ba919bec3c7e64a9))
+* **gestor-agendas:** agrega aria-label en botoneras ([#2208](https://github.com/andes/app/issues/2208)) ([1fb92a1](https://github.com/andes/app/commit/1fb92a1797dc28ca6d714388bed21ff92720bcb8))
+* **gestor-usuarios:** ajustes de perfiles ([#2218](https://github.com/andes/app/issues/2218)) ([10a0c35](https://github.com/andes/app/commit/10a0c351d4e8ec8b95479056b46d1ba68758eabe))
+* **inscripcion:** cambia formato de fecha ([#2212](https://github.com/andes/app/issues/2212)) ([01f253d](https://github.com/andes/app/commit/01f253d433bdcc313ddc95824ffb254a5dbe8943))
+* **mpi:**  en formulario contactos cambia patrón email ([#2227](https://github.com/andes/app/issues/2227)) ([c6c6c49](https://github.com/andes/app/commit/c6c6c49a0bab9c1cb4d855531e1b622e365ab30e))
+
+
+### Features
+
+* **BI:** biquery ficha epidemio ([c56c404](https://github.com/andes/app/commit/c56c40489a2bd7e667babfb4389061701f8d6747))
+* **COM:** crea derivación como prestación ([05857da](https://github.com/andes/app/commit/05857da91665432ca23f676d9f80ab5d04b9119c))
+* **epidemiologia:** buscador de ficha epidemiologica ([1974b9c](https://github.com/andes/app/commit/1974b9c604b15437ccb75b2caddb57902abc7330))
+* **ficha-epdemiologica:** actualizacion ([6337034](https://github.com/andes/app/commit/6337034e98f575d633f63919a4a892a2a48e08f8))
+* **ficha-epidemilogica:** Actualizacion nuevos campos ficha covid ([6f331c2](https://github.com/andes/app/commit/6f331c2fed402ad5347c2dbc67e73c892da90be3))
+* **ficha-epidemio:** clear dependencias ([5d962fd](https://github.com/andes/app/commit/5d962fd87ea7c4bd6afa7aaa5cb31b344215c9b0))
+* **ficha-epidemiologica:** buscador de fichas ([099fd26](https://github.com/andes/app/commit/099fd26c1161a2b8f118d61285ca080f37a90d54))
+* **ficha-epidemiologica:** modifica localidades ([843069e](https://github.com/andes/app/commit/843069e39358f4d6ca874c02ac1410e89df3242e))
+* **HUDS:** visualiza fichas epidemiologicas ([f22261f](https://github.com/andes/app/commit/f22261f85582c17112bddaab8b42f37b6f1258a2))
+* **vac:** agregar nota en inscripcion ([#2222](https://github.com/andes/app/issues/2222)) ([237f9ce](https://github.com/andes/app/commit/237f9ce4dbd561f44bb2689582917ed7c690f16c))
+* **vac:** filtro por certificado ([#2213](https://github.com/andes/app/issues/2213)) ([b3575eb](https://github.com/andes/app/commit/b3575eb0862f0eef17e7e82a28b8c88fdccfd483))
+* **vac:** poder editar datos basicos si notiene paciente asociado ([#2216](https://github.com/andes/app/issues/2216)) ([8edd80f](https://github.com/andes/app/commit/8edd80f0dc7ab14246ce489fd69f2fee9e99798a))
+
 # [5.42.0](https://github.com/andes/app/compare/v5.41.0...v5.42.0) (2021-04-14)
 
 
