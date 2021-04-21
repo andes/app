@@ -2,8 +2,8 @@
     <plex-layout-main *ngIf="!showFicha; else elseFicha">
         <plex-title titulo="Fichas epidemiologicas">
         </plex-title>
-        <plex-grid type="full" size="lg">
-            <plex-detail justify="center" *ngIf="pacienteSelected">
+        <plex-grid cols="{{ !pacienteSelected ? '3' : null }}" size="lg" type="full">
+            <plex-detail justify="start" *ngIf="pacienteSelected">
                 <img [mpiFotoPaciente]="pacienteSelected" />
                 <div title>{{ pacienteSelected | nombre }}</div>
                 <div subtitle>{{ (pacienteSelected.documento | number) || 'Sin DNI'}}
@@ -12,7 +12,7 @@
                     </plex-button>
                 </div>
             </plex-detail>
-            <plex-wrapper>
+            <plex-wrapper span="{{ pacienteSelected ? '2' : 'null' }}">
                 <plex-datetime grow="1" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" [max]="fechaHasta">
                 </plex-datetime>
                 <plex-datetime grow="1" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta" [min]="fechaDesde">
@@ -30,7 +30,8 @@
                 </plex-select>
                 <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
                 </plex-text>
-                <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()">
+                <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()"
+                             [disabled]="inProgress">
                 </plex-button>
             </plex-wrapper>
         </plex-grid>
@@ -68,7 +69,7 @@
         <paciente-listado *ngIf="resultadoBusqueda?.length && !pacienteSelected" [pacientes]="resultadoBusqueda"
                           (selected)="onSelect($event)">
         </paciente-listado>
-        <div *ngIf="!pacienteSelected" class="h-75" justify="center">
+        <div *ngIf="!pacienteSelected && !resultadoBusqueda?.length" class="h-75" justify="center">
             <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                         titulo="Buscar por DNI, Nombre o Apellido"
                         subtitulo="Seleccione un paciente y presione en Buscar Fichas">

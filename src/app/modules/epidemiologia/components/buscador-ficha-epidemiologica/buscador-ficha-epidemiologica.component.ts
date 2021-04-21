@@ -69,12 +69,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       key: 'tipo',
       label: 'Tipo de ficha',
       sorteable: true,
-      sort: (a: any, b: any) => a.type.localeCompare(b.type)
+      sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
     },
     {
       key: 'acciones',
       label: 'Acciones',
-      sortable: false
+      sorteable: false
     }
   ];
 
@@ -121,13 +121,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       identificadorPcr: this.idPcr,
       zonaSanitaria: this.zonaSanitaria?._id,
       skip: 0,
-      limit: 10
+      limit: 15
     };
     this.lastResults.next(null);
-    this.fichas$ = combineLatest(
-      this.lastResults
-    ).pipe(
-      switchMap(([lastResults]) => {
+    this.fichas$ = this.lastResults.pipe(
+      switchMap(lastResults => {
         if (!lastResults) {
           this.query.skip = 0;
         }
