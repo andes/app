@@ -30,7 +30,7 @@ export class EditarInscripcionComponent implements OnInit {
 
     @Input('inscripcion')
     set _inscripcion(value) {
-        this.inscripcion = value;
+        this.inscripcion = { ...value };
         const validadoDomicilio = this.inscripcion.validaciones.includes('domicilio');
         if (this.inscripcion.grupo.nombre === 'mayores60' && !this.inscripcion.paciente) {
             this.permiteCambioFechaNacimiento = true;
