@@ -19,7 +19,7 @@ export class TurnoService {
 
     getTurnos(): Observable<any[]> {
         return this.server.get(this.agendaUrl + '/turnos').pipe(
-            cacheStorage({ key: 'turnos', ttl: 60 * 24 })
+            cacheStorage({ key: 'turnos' })
         );
     }
 

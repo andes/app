@@ -18,7 +18,7 @@ export class VacunaService {
 
     getVacunas(idPaciente: String): Observable<any[]> {
         return this.server.get(this.vacunasURL + '/paciente/' + idPaciente, null).pipe(
-            cacheStorage({ key: 'vacunas', ttl: 60 * 24 })
+            cacheStorage({ key: 'vacunas' })
         );
     }
 

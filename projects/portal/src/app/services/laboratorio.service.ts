@@ -18,7 +18,7 @@ export class LaboratorioService {
 
     getLaboratorios(id): Observable<any[]> {
         return this.server.get(`${this.mobileUrl}/laboratorios/${id}`).pipe(
-            cacheStorage({ key: 'laboratorios', ttl: 60 * 24 })
+            cacheStorage({ key: 'laboratorios' })
         );
 
     }
