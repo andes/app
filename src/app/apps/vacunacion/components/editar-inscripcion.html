@@ -23,6 +23,9 @@
         <plex-text grow="full" label="Teléfono" name="telefono" [(ngModel)]="inscripcion.telefono"
                    *ngIf="permiteEditar('contacto')">
         </plex-text>
+        <plex-select name="localidades" [data]="localidades$ | async" label="Localidad"
+                     [(ngModel)]="inscripcion.localidad" [required]="true">
+        </plex-select>
         <plex-select label="Estado" [(ngModel)]="nuevoEstado" name="estado" [data]="estados"
                      *ngIf="permiteEditar('estado')"></plex-select>
     </form>
