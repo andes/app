@@ -18,7 +18,9 @@
                             Agregar contacto</plex-button>
                     </plex-title>
                     <ng-template #notContactos>
-                        <plex-title titulo="{{seccion.name}}" size="sm">
+                        <plex-title titulo="{{seccion.name}} {{seccion.name==='Mpi'? ' ( última actualización: ' + 
+                        (paciente.updatedAt ? (paciente.updatedAt | date: 'dd/MM/yyyy - HH:mm') :
+                         (paciente.createdAt | date: 'dd/MM/yyyy - HH:mm') ) + ')': '' }}" size="sm">
                         </plex-title>
                     </ng-template>
                     <plex-grid>

@@ -328,6 +328,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           };
           seccion.fields['fechaprimerconsulta'] = new Date();
           break;
+        case 'mpi':
+          seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
+          seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
+          seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
+          this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia.id });
+          break;
       }
     });
   }
@@ -423,7 +429,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   setLocalidades(event) {
     if (event.value) {
+      this.clearDependencias({ value: false }, 'mpi', ['localidadresidencia']);
       this.localidades$ = this.localidadService.get({ codigo: event.value.codigo });
+    } else if (event.provincia) {
+      // setea el combo de localidades cuando se cargan los datos de mpi,en este momento no tengo el código de provincia
+      this.localidades$ = this.localidadService.getXProvincia(event.provincia);
     }
   }
 
@@ -453,21 +463,23 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     const dirPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'direccioncaso');
     const provinciaPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'lugarresidencia');
     const localidadPaciente = contactosPaciente.find(elem => (Object.keys(elem))[0] === 'localidadresidencia');
-    const nuevaDireccion = {
-      valor: dirPaciente.direccioncaso,
-      ultimaActualizacion: new Date(),
-      activo: true,
-      ubicacion: {
-        localidad: localidadPaciente.localidadresidencia,
-        provincia: provinciaPaciente.lugarresidencia,
-        barrio: null,
-        pais: null
-      },
-      codigoPostal: '',
-      ranking: 0,
-      geoReferencia: null
-    };
-    this.paciente.direccion[0] = nuevaDireccion;
+    if (this.setDireccion({ dirPaciente, provinciaPaciente, localidadPaciente })) {
+      const nuevaDireccion = {
+        valor: dirPaciente.direccioncaso,
+        ultimaActualizacion: new Date(),
+        activo: true,
+        ubicacion: {
+          localidad: localidadPaciente.localidadresidencia,
+          provincia: provinciaPaciente.lugarresidencia,
+          barrio: null,
+          pais: null
+        },
+        codigoPostal: this.paciente.direccion[0].codigoPostal,
+        ranking: 0,
+        geoReferencia: this.paciente.direccion[0].geoReferencia
+      };
+      this.paciente.direccion[0] = nuevaDireccion;
+    }
     this.servicePaciente.save(this.paciente).subscribe();
   }
 
@@ -485,5 +497,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       };
       this.paciente.contacto.push(nuevo);
     }
+  }
+
+  setDireccion(nuevaDir) {
+    return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0].valor ||
+      nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion.provincia.id ||
+      nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion.localidad.id);
   }
 }
