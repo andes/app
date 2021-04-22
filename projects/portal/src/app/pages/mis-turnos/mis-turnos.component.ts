@@ -3,6 +3,7 @@ import { TurnoService } from '../../services/turno.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -22,7 +23,20 @@ export class PDPMisTurnosComponent implements OnInit {
         private el: ElementRef) { }
 
     ngOnInit(): void {
-        this.turnos$ = this.turnoService.getTurnos();
+        this.turnos$ = this.turnoService.getTurnos().pipe(
+            map(turnos => this.sortTurnos(turnos))
+        );
+    }
+
+    private sortTurnos(turnos) {
+        turnos = turnos.sort((a, b) => {
+            const inia = a.horaInicio ? new Date(a.horaInicio) : null;
+            const inib = b.horaInicio ? new Date(b.horaInicio) : null;
+            {
+                return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
+            }
+        });
+        return turnos;
     }
 
     goTo(id?) {
