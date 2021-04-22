@@ -182,7 +182,12 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
                 if (resultado.length) {
                     this.plex.info('danger', 'Ya existe una inscripción activa para el paciente seleccionado');
                 } else {
-                    this.ciudadano.morbilidades = this.ciudadano.morbilidades ? this.ciudadano.morbilidades.map(c => c.id) : [];
+                    if (this.ciudadano.grupo.nombre === 'factores-riesgo') {
+                        this.ciudadano.morbilidades = this.ciudadano.morbilidades ? this.ciudadano.morbilidades.map(c => c.id) : [];
+                    } else {
+                        this.ciudadano.morbilidades = [];
+                    }
+                    this.ciudadano.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
                     this.inscripcionService.create(this.ciudadano).subscribe(respuesta => {
                         this.router.navigate(['/vacunacion/listado']);
                         this.plex.toast('success', 'Inscripción guardada', 'Éxito', 4000);
