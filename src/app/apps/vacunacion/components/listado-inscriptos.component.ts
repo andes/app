@@ -192,11 +192,8 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     }
 
     asociarCandidato(candidato) {
-        this.pacienteSelected.paciente = {
-            addAt: new Date(),
-            id: candidato.id
-        };
-        this.inscripcionService.save(this.pacienteSelected).subscribe(resp => this.pacienteSelected = resp);
+        this.pacienteSelected.paciente = candidato;
+        this.inscripcionService.patch(this.pacienteSelected).subscribe(resp => this.pacienteSelected = resp);
         this.plex.toast('success', 'El paciente se ha asociado correctamente.');
     }
 
@@ -284,7 +281,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     onGuardarNota() {
         this.showAgregarNota = false;
         this.pacienteSelected.nota = this.nuevaNota;
-        this.listado$ = this.inscripcionService.save(this.pacienteSelected).pipe(
+        this.listado$ = this.inscripcionService.patch(this.pacienteSelected).pipe(
             switchMap(paciente => {
                 this.pacienteSelected = paciente;
                 return this.inscripcionService.inscriptosFiltrados$.pipe(
