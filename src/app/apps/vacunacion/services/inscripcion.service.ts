@@ -57,8 +57,8 @@ export class InscripcionService extends ResourceBaseHttp {
                 if (tieneCertificado) {
                     params.tieneCertificado = true;
                 }
-                const desdeF = moment(fechaDesde).startOf('day').toDate();
-                const hastaF = moment(fechaHasta).endOf('day').toDate();
+                const desdeF = moment(fechaDesde).startOf('day').format();
+                const hastaF = moment(fechaHasta).endOf('day').format();
                 if (fechaDesde) {
                     if (fechaHasta) {
                         params.fechaRegistro = `${desdeF}|${hastaF}`;

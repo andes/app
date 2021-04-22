@@ -176,7 +176,8 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         if ($event.formValid) {
             this.inscripcionService.get({
                 fields: '-nroTramite',
-                documento: this.ciudadano.documento
+                documento: this.ciudadano.documento,
+                sexo: this.ciudadano.sexo
             }).subscribe(resultado => {
                 if (resultado.length) {
                     this.plex.info('danger', 'Ya existe una inscripción activa para el paciente seleccionado');

@@ -52,8 +52,12 @@ export class FiltrosVacunacionComponent implements OnInit {
         }
         this.inscripcionService.documentoText.next(this.filtro.documento);
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
-        this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
-        this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
+        if (moment(this.filtro.fechaDesde).isValid()) {
+            this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
+        }
+        if (moment(this.filtro.fechaHasta).isValid()) {
+            this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
+        }
         this.inscripcionService.tieneCertificado.next(this.filtro.tieneCertificado);
     }
 }
