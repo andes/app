@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { cacheStorage, Server } from '@andes/shared';
 import { Observable } from 'rxjs';
-import { flatMap, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Auth } from '@andes/auth';
 import { CategoriasService } from './categoria.service';
@@ -23,11 +23,13 @@ export class CertificadoService {
 
     getCertificados(id): Observable<any[]> {
         return this.categoriaService.get({}).pipe(
+            cacheStorage({ key: 'categorias' }),
             switchMap((categorias: any) => {
                 const categoria = categorias.find(c => c.titulo === 'Certificados');
-                return this.server.get(this.Url + id + '?expresion=' + categoria.expresionSnomed);
+                return this.server.get(this.Url + id + '?expresion=' + categoria.expresionSnomed).pipe(
+                    cacheStorage({ key: 'Certificados' })
+                );
             }));
-
     }
 
     getCertificado(id: number | string, idPaciente) {
