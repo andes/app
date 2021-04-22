@@ -17,6 +17,8 @@ import { SharedModule } from '@andes/shared';
 import { FiltrosVacunacionComponent } from './components/filtros-vacunacion.component';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { EditarInscripcionComponent } from './components/editar-inscripcion.component';
+import { InscripcionBusquedaPacienteComponent } from './components/nueva-inscripcion/busqueda-paciente.component';
+import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-inscripcion.component';
 
 @NgModule({
     imports: [
@@ -38,7 +40,9 @@ import { EditarInscripcionComponent } from './components/editar-inscripcion.comp
         ListadoInscriptosVacunacionComponent,
         FiltrosVacunacionComponent,
         EditarInscripcionComponent,
-        DetalleInscripcionComponent
+        DetalleInscripcionComponent,
+        InscripcionBusquedaPacienteComponent,
+        NuevaInscripcionComponent
     ],
     providers: [
         {

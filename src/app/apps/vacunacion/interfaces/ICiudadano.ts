@@ -34,4 +34,9 @@ export interface ICiudadano {
     diaseleccionados: string;
     recaptcha: string;
     morbilidades?: any[];
+    validado?: boolean;
+    validaciones?: any[];
+    paciente?: {
+        id: String
+    };
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 import { InscripcionService } from '../services/inscripcion.service';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
@@ -29,10 +29,14 @@ export class FiltrosVacunacionComponent implements OnInit {
     ngOnInit() {
         this.localidades$ = this.localidadService.getXProvincia(this.idNeuquenProv);
         const gruposHabilitados = this.auth.getPermissions('vacunacion:tipoGrupos:?');
-        if (gruposHabilitados.length === 1 && gruposHabilitados[0] === '*') {
-            this.gruposPoblacionales$ = this.gruposService.search({});
+        if (gruposHabilitados.length) {
+            if (gruposHabilitados.length === 1 && gruposHabilitados[0] === '*') {
+                this.gruposPoblacionales$ = this.gruposService.search({});
+            } else {
+                this.gruposPoblacionales$ = this.gruposService.search({ ids: gruposHabilitados });
+            }
         } else {
-            this.gruposPoblacionales$ = this.gruposService.search({ ids: gruposHabilitados });
+            this.gruposPoblacionales$ = empty();
         }
     }
 
@@ -48,8 +52,12 @@ export class FiltrosVacunacionComponent implements OnInit {
         }
         this.inscripcionService.documentoText.next(this.filtro.documento);
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
-        this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
-        this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
+        if (moment(this.filtro.fechaDesde).isValid()) {
+            this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
+        }
+        if (moment(this.filtro.fechaHasta).isValid()) {
+            this.inscripcionService.fechaHasta.next(this.filtro.fechaHasta);
+        }
         this.inscripcionService.tieneCertificado.next(this.filtro.tieneCertificado);
     }
 }
