@@ -28,6 +28,8 @@
         </plex-label>
         <plex-label titulo="Organización destino" subtitulo="{{derivacion.organizacionDestino.nombre}}">
         </plex-label>
+        <plex-label *ngIf='derivacion.unidadDestino' titulo="Unidad destino" subtitulo="{{derivacion.unidadDestino.term}}">
+        </plex-label>
         <plex-label *ngIf='derivacion.organizacionTraslado' titulo="Traslado" subtitulo="{{derivacion.organizacionTraslado.nombre}}">
         </plex-label>
         <plex-label *ngIf='derivacion.tipoTraslado' titulo="Tipo de traslado" subtitulo="{{derivacion.tipoTraslado.nombre}}">
@@ -49,19 +51,25 @@
         Editar Prestación
     </plex-button>
     <vista-prestacion *ngIf="derivacion.prestacion" size="sm" [idPrestacion]="derivacion.prestacion" ></vista-prestacion>
-    <div *ngIf="reglasDerivacionFiltradas.length > 0">
+    <div *ngIf="reglasDerivacionFiltradas.length">
         <form #formEstado="ngForm">
             <plex-title size="sm" titulo="Actualizar estado">
             </plex-title>
             <plex-wrapper>
                 <plex-select [(ngModel)]="reglaSeleccionada" label="Nuevo estado" name="estado"
                              placeholder="Seleccione un nuevo estado" idField="_id" labelField="estadoFinal"
-                             [data]="reglasDerivacionFiltradas" [required]="true" grow="full">
+                             [data]="reglasDerivacionFiltradas" (change)="onReglaChange()" [required]="true" grow="full">
                 </plex-select>
                 <plex-select *ngIf="reglaSeleccionada?.modificaDestino" [(ngModel)]="nuevoEstado.organizacionDestino"
-                             name="organizacionOrigen" [data]="organizacionesDestino" label="Organización destino"
+                             name="organizacionDestino" [data]="organizacionesDestino" label="Organización destino"
                              placeholder="Seleccione la organización destino" labelField="nombre" grow="full"
-                             [required]="true">
+                             (change)="resetUnidadesDestino($event)" [required]="true">
+                </plex-select>
+                <plex-select
+                    *ngIf="reglaSeleccionada.estadoFinal === 'aceptada' || (reglaSeleccionada?.modificaDestino && nuevoEstado.organizacionDestino)"
+                    [(ngModel)]="nuevoEstado.unidadDestino" name="organizacionOrigen" [data]="unidadesDestino" label="Unidad destino"
+                    idField="conceptId" placeholder="Seleccione la unidad destino" labelField="term" grow="full"
+                    [disabled]="!unidadesDestino.length">
                 </plex-select>
                 <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full"></tipo-traslado>
                 <div class="mt-1" *ngIf="reglaSeleccionada?.definePrioridad">
