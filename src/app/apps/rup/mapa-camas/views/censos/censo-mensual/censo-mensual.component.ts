@@ -52,6 +52,7 @@ export class CensosMensualesComponent implements OnInit {
 
     ngOnInit() {
         this.getOrganizacion();
+
     }
 
     getOrganizacion() {
@@ -68,6 +69,28 @@ export class CensosMensualesComponent implements OnInit {
     }
 
     generarCensoMensual() {
+        this.totales = {
+            existencia0: 0,
+            ingresos: 0,
+            pasesDe: 0,
+            egresosAlta: 0,
+            egresosDefuncion: 0,
+            pasesA: 0,
+            existencia24: 0,
+            ingresoEgresoDia: 0,
+            pacientesDia: 0,
+            disponibles24: 0,
+            diasEstada: 0
+        };
+        this.datosCensoTotal = {
+            diasF: '0',
+            promDis: '0',
+            pacDia: '0',
+            mortHosp: '0',
+            promPer: '0',
+            giroCama: '0',
+            promDiasEstada: '0'
+        };
         this.censo = [];
         this.mapaCamasService.censoMensual(moment(this.fechaDesde).toDate(), moment(this.fechaHasta).toDate(), this.selectedUnidadOranizativa.conceptId)
             .subscribe((censoMensual: any) => {
