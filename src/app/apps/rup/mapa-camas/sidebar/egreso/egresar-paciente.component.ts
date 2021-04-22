@@ -149,7 +149,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ).subscribe(([view, capa, cama, prestacion]) => {
             this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
-            if (view === 'listado-internacion') {
+            if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
                 fecha = moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
@@ -194,7 +194,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     });
                 }
             }
-            if (cama.id) {
+            if (cama.id && cama.id !== ' ') {
                 this.cama = cama;
                 this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
                 this.checkHistorial(fecha);

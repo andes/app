@@ -21,6 +21,7 @@ export class ListadoInternacionCapasService {
 
     constructor(
         private resumenHTTP: InternacionResumenHTTP,
+        private auth: Auth
     ) {
         this.listaInternacion$ = combineLatest(
             this.fechaIngresoDesde,
@@ -32,6 +33,7 @@ export class ListadoInternacionCapasService {
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     return this.resumenHTTP.search({
+                        organizacion: this.auth.organizacion.id,
                         ingreso: this.resumenHTTP.queryDateParams(fechaIngresoDesde, fechaIngresoHasta),
                         egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta)
                     });
@@ -45,14 +47,28 @@ export class ListadoInternacionCapasService {
             this.estado
         ).pipe(
             map(([listaInternacion, paciente, estado]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente, estado)
+                this.filtrarListaInternacion(listaInternacion, paciente)
             )
         );
 
     }
 
-    filtrarListaInternacion(listaInternacion: IResumenInternacion[], paciente: string, estado: string) {
-        const listaInternacionFiltrada = listaInternacion;
+    filtrarListaInternacion(listaInternacion: IResumenInternacion[], paciente: string) {
+        let listaInternacionFiltrada = listaInternacion;
+        if (paciente) {
+            const esNumero = Number.isInteger(Number(paciente));
+            if (esNumero) {
+                listaInternacionFiltrada = listaInternacionFiltrada.filter(
+                    (internacion: IResumenInternacion) => internacion.paciente.documento.includes(paciente)
+                );
+            } else {
+                listaInternacionFiltrada = listaInternacionFiltrada.filter(
+                    (internacion: IResumenInternacion) =>
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                );
+            }
+        }
         return listaInternacionFiltrada;
     }
 

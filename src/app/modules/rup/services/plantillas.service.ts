@@ -77,7 +77,6 @@ export class PlantillasService {
     }
 
     handlerDropDown(conceptId, plantilla) {
-        // debugger;
         const ctid = plantilla.target?.conceptId || conceptId;
         return () => {
             this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any);
