@@ -4,9 +4,11 @@
         <plex-icon name="historial" type="info"></plex-icon>
         <plex-label [tituloBold]="true" titulo="Fecha" subtitulo="{{control.fechaControl | fecha}}">
         </plex-label>
-        <plex-label [tituloBold]="true" titulo="Profesional" subtitulo="">
+        <plex-label [tituloBold]="true" titulo="Profesional"
+                    subtitulo="{{control.profesional? (control.profesional | nombre) : 'No indica'}}">
         </plex-label>
-        <plex-label [tituloBold]="true" titulo="Organización" subtitulo="">
+        <plex-label [tituloBold]="true" titulo="Organización"
+                    subtitulo="{{control.organizacion? (control.organizacion.nombre) : 'No indica'}}">
         </plex-label>
     </plex-item>
 </plex-list>

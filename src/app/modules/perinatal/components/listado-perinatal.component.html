@@ -27,7 +27,9 @@
                 <plex-table-columns>
                 </plex-table-columns>
             </plex-title>
-            <tr *ngFor="let carnet of listado$ | async" (click)="showInSidebar(carnet)">
+            <tr *ngFor="let carnet of listado$ | async" (click)="showInSidebar(carnet)"
+                [class.selected]="carnet.id===carnetSelected?.id">
+                <td *plTableCol="'fechaCita'">{{ carnet.fecha | fecha }}</td>
                 <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
                 <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
                 <td *plTableCol="'telefono'">299595355</td>
@@ -58,13 +60,11 @@
             <plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
             </plex-button>
         </plex-title>
-        <ng-container *ngIf="pacienteSelected">
-            <paciente-detalle *ngIf="pacienteSelected" [paciente]="pacienteSelected" reload="true"
+        <ng-container *ngIf="carnetSelected">
+            <paciente-detalle *ngIf="carnetSelected.paciente" [paciente]="carnetSelected.paciente" reload="true"
                               orientacion="horizontal">
             </paciente-detalle>
+            <historial-perinatal [controles]="controles"></historial-perinatal>
         </ng-container>
-        <div>
-            <historial-perinatal *ngIf="pacienteSelected" [controles]="controles"></historial-perinatal>
-        </div>
     </plex-layout-sidebar>
 </plex-layout>
