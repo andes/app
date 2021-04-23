@@ -9,7 +9,7 @@ import { ICiudadano } from '../interfaces/ICiudadano';
 export class InscripcionService extends ResourceBaseHttp {
     // URL to web api
     protected url = '/modules/vacunas/inscripcion-vacunas';
-    public documentoText = new BehaviorSubject<string>(null);
+    public pacienteText = new BehaviorSubject<string>(null);
     public gruposSelected = new BehaviorSubject<any[]>(null);
     public localidadSelected = new BehaviorSubject<ILocalidad>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
@@ -24,7 +24,7 @@ export class InscripcionService extends ResourceBaseHttp {
     constructor(protected server: Server) {
         super(server);
         this.inscriptosFiltrados$ = combineLatest(
-            this.documentoText,
+            this.pacienteText,
             this.gruposSelected,
             this.localidadSelected,
             this.fechaDesde,
@@ -32,7 +32,7 @@ export class InscripcionService extends ResourceBaseHttp {
             this.tieneCertificado,
             this.lastResults
         ).pipe(
-            switchMap(([documento, grupos, localidad, fechaDesde, fechaHasta, tieneCertificado, lastResults]) => {
+            switchMap(([paciente, grupos, localidad, fechaDesde, fechaHasta, tieneCertificado, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -51,8 +51,9 @@ export class InscripcionService extends ResourceBaseHttp {
                 if (localidad) {
                     params.localidad = localidad.id;
                 }
-                if (documento) {
-                    params.documento = documento;
+                if (paciente) {
+                    params.paciente = paciente;
+                    params.sort = 'apellido nombre';
                 }
                 if (tieneCertificado) {
                     params.tieneCertificado = true;
