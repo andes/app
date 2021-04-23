@@ -9,6 +9,7 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { Observable, Subscription } from 'rxjs';
 import { ListadoInternacionService } from './listado-internacion.service';
 import { map } from 'rxjs/operators';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -33,10 +34,12 @@ export class InternacionListadoComponent implements OnInit {
         private location: Location,
         private prestacionService: PrestacionesService,
         private mapaCamasService: MapaCamasService,
-        private listadoInternacionService: ListadoInternacionService
+        private listadoInternacionService: ListadoInternacionService,
+        private permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnInit() {
+        this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setCapa('estadistica');
         this.mapaCamasService.setAmbito('internacion');

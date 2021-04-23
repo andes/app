@@ -21,7 +21,7 @@ export class PermisosMapaCamasService {
 
     constructor(
         private auth: Auth,
-    ) {}
+    ) { }
 
     setAmbito(ambito) {
         this.ambito = ambito;

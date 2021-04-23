@@ -179,7 +179,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (cama.id) {
+            if (cama.id && cama.id !== ' ') {
                 this.cama = cama;
                 if (cama.estado === 'ocupada' && !cama.sala) {
                     this.paciente = cama.paciente;
