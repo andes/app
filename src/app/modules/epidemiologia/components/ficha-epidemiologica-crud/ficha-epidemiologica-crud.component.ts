@@ -102,10 +102,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'instituciones', nombre: 'Instituciones educativas/Instituciones de asistencia infantil (jardín, guarderías, etc)' }
   ];
   public reqCuidado = [
-    { id: 'salaGeneral', nombre: 'Sala General' },
-    { id: 'uce', nombre: 'UCE' },
-    { id: 'ut', nombre: 'UT Intermedia' },
-    { id: 'uti', nombre: 'UTI' },
+    { id: 'ambulatorio', nombre: 'Ambulatorio' },
+    { id: 'salaGeneral', nombre: 'Internación Sala General' },
+    { id: 'uce', nombre: 'Internación UCE' },
+    { id: 'ut', nombre: 'Internación UT Intermedia' },
+    { id: 'uti', nombre: 'Internación UTI' },
   ];
   public selectGral = [
     { id: 'si', nombre: 'SI' },
@@ -165,6 +166,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public zonaSanitaria = null;
   public localidades$: Observable<any>;
   public provincias$: Observable<any>;
+  public estaInternado = false;
 
   constructor(
     private formsService: FormsService,
@@ -215,7 +217,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   registrarFicha() {
     this.getValues();
-    this.setFicha();
+    if (this.checkClasificacionFinal()) {
+      this.setFicha();
+    } else {
+      this.plex.info('danger', 'Si el resultado del antigeno es NO REACTIVO debe completar el campo LAMP o PCR');
+    }
   }
 
   getValues() {
@@ -504,5 +510,19 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0].valor ||
       nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion.provincia.id ||
       nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion.localidad.id);
+  }
+  pacienteInternado(event) {
+    this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
+      event.value.id === 'ut' || event.value.id === 'uti';
+    return this.estaInternado;
+  }
+
+  checkClasificacionFinal() {
+    const seccionClasificacion = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
+    if (seccionClasificacion.fields['antigeno']?.id === 'muestra') {
+      return (seccionClasificacion.fields['lamp']?.id || seccionClasificacion.fields['pcrM'])
+    } else {
+      return true;
+    }
   }
 }

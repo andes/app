@@ -192,22 +192,13 @@
                                           [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
                                           readonly="true">
                                 </plex-int>
-                                <plex-select *ngIf="field.key==='ambulatorio'"
+                                <plex-select *ngIf="field.key==='requerimientocuidado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="selectGral" [readonly]="!editFicha">
+                                             [required]="field.required" [data]="reqCuidado" [readonly]="!editFicha"
+                                             (change)="pacienteInternado($event); clearDependencias({value:false},'informacionClinica',['lugarinternado'])">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='internado'" [label]="field.label?field.label:field.key"
-                                             grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="selectGral" [readonly]="!editFicha"
-                                             (change)="clearDependencias($event,'informacionClinica',['requerimientocuidado','lugarinternado','fechainternacion'])">
-                                </plex-select>
-                                <plex-select *ngIf="field.key==='requerimientocuidado' && seccion.fields['internado']?.id==='si'"
-                                             [label]="field.label?field.label:field.key" grow="auto"
-                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="reqCuidado" [readonly]="!editFicha">
-                                </plex-select>
-                                <plex-select *ngIf="field.key==='lugarinternado' && seccion.fields['internado']?.id==='si'"
+                                <plex-select *ngIf="field.key==='lugarinternado' && estaInternado"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="field.required" [ssSearch]="field.resources"
@@ -227,7 +218,8 @@
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="field.required" [data]="selectGral" [readonly]="!editFicha"
-                                             (change)="clearDependencias($event,'informacionClinica',['fallecimientohospital','fallecimientodomicilio'])">
+                                             (change)="clearDependencias($event,'informacionClinica',['fallecimientohospital','fallecimientodomicilio',
+                                              'fallecimientoinstituciones','fallecimientoviapublica'])">
                                 </plex-select>
                                 <plex-bool *ngIf="field.key==='fallecimientohospital' && seccion.fields['casofallecido']?.id==='si'"
                                            [label]="field.label?field.label:field.key" grow="auto"
@@ -235,6 +227,16 @@
                                            [required]="field.required" [readonly]="!editFicha">
                                 </plex-bool>
                                 <plex-bool *ngIf="field.key==='fallecimientodomicilio' && seccion.fields['casofallecido']?.id==='si'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="field.required" [readonly]="!editFicha">
+                                </plex-bool>
+                                <plex-bool *ngIf="field.key==='fallecimientoinstituciones' && seccion.fields['casofallecido']?.id==='si'"
+                                           [label]="field.label?field.label:field.key" grow="auto"
+                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="field.required" [readonly]="!editFicha">
+                                </plex-bool>
+                                <plex-bool *ngIf="field.key==='fallecimientoviapublica' && seccion.fields['casofallecido']?.id==='si'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [required]="field.required" [readonly]="!editFicha">
@@ -247,7 +249,8 @@
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="field.required" [data]="segundaClasificacion"
-                                             (change)="resultadoFinal(field.key)" [readonly]="!editFicha">
+                                             (change)="resultadoFinal(field.key) ; clearDependencias({value:false},'clasificacionFinal',
+                                             ['tipomuestra','fechamuestra','antigeno','lamp','pcr','identificadorpcr'])" [readonly]="!editFicha">
                                 </plex-select>
                                 <plex-select *ngIf="field.key==='tipomuestra' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
