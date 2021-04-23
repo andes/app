@@ -1,0 +1,23 @@
+<plex-title titulo="Datos del carnet" size="sm"></plex-title>
+<plex-grid cols="3">
+    <plex-label titulo="Talla" subtitulo="{{carnet.talla? carnet.talla : 'No indica'}}">
+    </plex-label>
+    <plex-label titulo="Peso Previo" subtitulo="{{carnet.pesoPrevio? carnet.pesoPrevio : 'No indica'}}"> :
+    </plex-label>
+    <plex-label titulo="Fecha Último Control"
+                subtitulo="{{carnet.fechaUltimoControl? (carnet.fechaUltimoControl | fecha) : 'No indica'}}">
+    </plex-label>
+    <plex-label titulo="Fecha Probable de Parto"
+                subtitulo="{{carnet.fechaProbableDeParto? (carnet.fechaProbableDeParto | fecha) : 'No indica'}}">
+    </plex-label>
+    <plex-label titulo="Fecha Última Menstruación"
+                subtitulo="{{carnet.fechaUltimaMenstruacion? (carnet.fechaUltimaMenstruacion | fecha) : 'No indica'}}">
+    </plex-label>
+    <plex-label titulo="Primeriza" subtitulo="{{carnet.primeriza? 'Si' : 'No'}}">
+    </plex-label>
+    <plex-label titulo="Fecha Próximo Control"
+                subtitulo="{{carnet.fechaProximoControl? (carnet.fechaProximoControl | fecha) : 'No indica'}}">
+    </plex-label>
+    <plex-label titulo="Embarazo" subtitulo="{{carnet.embarazo? carnet.embarazo : 'No indica'}}">
+    </plex-label>
+</plex-grid>

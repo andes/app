@@ -12,6 +12,7 @@ import { SharedModule } from '@andes/shared';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { HistorialPerinatalComponent } from './components/historial-perinatal.component';
 import { AlertasPerinatalComponent } from './components/alertas-perinatal.component';
+import { DetallePerinatalComponent } from './components/detalle-perinatal.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { AlertasPerinatalComponent } from './components/alertas-perinatal.compon
     declarations: [
         ListadoPerinatalComponent,
         HistorialPerinatalComponent,
-        AlertasPerinatalComponent
+        AlertasPerinatalComponent,
+        DetallePerinatalComponent
     ],
     providers: [
         CarnetPerinatalService,
