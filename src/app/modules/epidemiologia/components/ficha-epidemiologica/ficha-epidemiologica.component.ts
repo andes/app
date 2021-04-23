@@ -6,6 +6,7 @@ import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.se
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
@@ -47,7 +48,8 @@ export class FichaEpidemiologicaComponent implements OnInit {
     private formsService: FormsService,
     private formEpidemiologiaService: FormsEpidemiologiaService,
     private router: Router,
-    private auth: Auth
+    private auth: Auth,
+    private snomedService: SnomedService
   ) { }
 
   ngOnInit(): void {
@@ -65,12 +67,24 @@ export class FichaEpidemiologicaComponent implements OnInit {
 
     this.formsService.search().subscribe(fichas => {
       fichas.forEach(element => {
-        this.itemsDropdownFichas.push({
-          'label': element.name, handler: () => {
-            this.selectedForm = element;
-            this.mostrarFicha(element.name);
-          }
-        });
+        if (element.snomedCode) {
+          this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
+            this.itemsDropdownFichas.push({
+              'label': res[0] ? res[0].fsn : element.name, handler: () => {
+                this.selectedForm = element;
+                this.mostrarFicha(element.name);
+              }
+            });
+          });
+        } else {
+          this.itemsDropdownFichas.push({
+            'label': element.name, handler: () => {
+              this.selectedForm = element;
+              this.mostrarFicha(element.name);
+            }
+          });
+        }
+
       });
     });
     this.permisoHuds = this.auth.check('huds:visualizacionHuds');
