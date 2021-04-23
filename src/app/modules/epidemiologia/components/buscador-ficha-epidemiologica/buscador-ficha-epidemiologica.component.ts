@@ -3,7 +3,8 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { cache } from '@andes/shared';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { LocalidadService } from '../../../../services/localidad.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
@@ -14,6 +15,7 @@ import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service
   selector: 'app-buscador-ficha-epidemiologica',
   templateUrl: './buscador-ficha-epidemiologica.component.html'
 })
+
 export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public fechaDesde: Date;
   public fechaHasta: Date;
@@ -36,35 +38,44 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public query = null;
   public localidades$: Observable<any>;
   public zonaSanitaria$: Observable<any>;
-
+  public listado: any[];
+  public lastResults = new BehaviorSubject<any[]>(null);
+  public inProgress = false;
 
   public columns = [
     {
       key: 'fecha',
       label: 'Fecha',
-      sorteable: true
+      sorteable: true,
+      sort: (a: any, b: any) => a.createdAt.getTime() - b.createdAt.getTime()
     },
     {
       key: 'documento',
       label: 'Documento',
-      sorteable: true
+      sorteable: true,
+      sort: (a: any, b: any) => a.paciente.documento.localeCompare(b.paciente.documento)
     },
     {
       key: 'paciente',
       label: 'Paciente',
-      sorteable: true
+      sorteable: true,
+      sort: (a: any, b: any) => {
+        const nameA = `${a.paciente.apellido} ${a.paciente.nombre}`;
+        const nameB = `${b.paciente.apellido} ${b.paciente.nombre}`;
+        return nameA.localeCompare(nameB);
+      }
     },
     {
       key: 'tipo',
       label: 'Tipo de ficha',
-      sorteable: true
+      sorteable: true,
+      sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
     },
     {
       key: 'acciones',
       label: 'Acciones',
       sorteable: false
     }
-
   ];
 
   constructor(
@@ -100,6 +111,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   }
 
   searchFichas() {
+    this.inProgress = true;
     this.query = {
       fechaCondicion: this.formEpidemiologiaService.queryDateParams(this.fechaDesde, this.fechaHasta),
       type: this.typeFicha?.name,
@@ -107,9 +119,30 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       localidad: this.localidad?.nombre,
       organizacion: this.organizacion?.id,
       identificadorPcr: this.idPcr,
-      zonaSanitaria: this.zonaSanitaria?._id
+      zonaSanitaria: this.zonaSanitaria?._id,
+      skip: 0,
+      limit: 15
     };
-    this.fichas$ = this.formEpidemiologiaService.search(this.query);
+    this.lastResults.next(null);
+    this.fichas$ = this.lastResults.pipe(
+      switchMap(lastResults => {
+        if (!lastResults) {
+          this.query.skip = 0;
+        }
+        return this.formEpidemiologiaService.search(this.query).pipe(
+          map(resultados => {
+            if (resultados) {
+              this.listado = lastResults ? lastResults.concat(resultados) : resultados;
+              this.query.skip = this.listado.length;
+            } else {
+              this.listado = [];
+            }
+            this.inProgress = false;
+            return this.listado;
+          })
+        );
+      })
+    );
   }
 
   editarFicha(ficha) {
@@ -149,5 +182,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
 
   resetPacienteSelected() {
     this.pacienteSelected = null;
+    this.listado = [];
+    this.fichas$ = null;
+  }
+
+  onScroll() {
+    if (this.query.skip > 0 && this.query.skip % this.query.limit === 0) {
+      this.lastResults.next(this.listado);
+    }
   }
 }
