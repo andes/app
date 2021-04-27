@@ -30,6 +30,17 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                 }
             };
         } else {
+            let filtroCalendario = 'NO';
+            if (this.registro.valor.vacuna.categoria && this.registro.valor.vacuna.categoria.nombre === 'Vacuna de calendario Nacional') {
+                filtroCalendario = 'SI';
+            }
+            this.vacunas$ = this.vacunasService.getNomivacVacunas({ habilitado: true, calendarioNacional: filtroCalendario, sort: 'nombre' }).pipe(
+                map(vacunas => {
+                    return vacunas.map((v) => {
+                        return { _id: v._id, codigo: v.codigo, nombre: v.nombre, snomed_conceptId: v.snomed_conceptId };
+                    });
+                })
+            );
             this.loadLotes();
             this.getHistorialVacunas();
         }
@@ -53,6 +64,8 @@ export class VacunasComponent extends RUPComponent implements OnInit {
 
 
     loadVacunas() {
+        this.registro.valor.vacuna.vacuna = null;
+        this.registro.valor.vacuna.condicion = null;
         let filtroCalendario = 'NO';
         if (this.registro.valor.vacuna.categoria && this.registro.valor.vacuna.categoria.nombre === 'Vacuna de calendario Nacional') {
             filtroCalendario = 'SI';
@@ -69,6 +82,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
 
 
     loadEsquemas() {
+        this.registro.valor.vacuna.esquema = null;
         if (this.registro.valor.vacuna.vacuna && this.registro.valor.vacuna.condicion) {
             this.esquemas$ = this.vacunasService.getNomivacEsquemas({ habilitado: true, vacuna: this.registro.valor.vacuna.vacuna._id, condicion: this.registro.valor.vacuna.condicion._id, sort: 'nombre' }).pipe(
                 map(esquemas => {
@@ -100,6 +114,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     }
 
     loadLotes() {
+        this.lote = null;
         if (this.registro.valor.vacuna.vacuna) {
             this.lotes$ = this.vacunasService.getNomivacLotes({ habilitado: true, vacuna: this.registro.valor.vacuna.vacuna._id, sort: 'codigo' }).pipe(
                 map(l => {
@@ -115,7 +130,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     }
 
     setLote() {
-        this.registro.valor.vacuna.lote = (this.lote as any).codigo;
+        if (this.lote) {
+            this.registro.valor.vacuna.lote = (this.lote as any).codigo;
+        }
     }
 
     getHistorialVacunas() {
