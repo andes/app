@@ -345,11 +345,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         const clasificaciones = {
           segundaclasificacion: seccion.fields['segundaclasificacion']?.id,
           antigeno: seccion.fields['antigeno']?.id,
-          pcr: seccion.fields['pcr'] ? 'muestra' : '',
+          pcrM: seccion.fields['pcrM'] ? 'muestra' : '',
+          pcr: seccion.fields['pcr']?.id,
           lamp: seccion.fields['lamp']?.id
         };
         if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
-          this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcr', 'identificadorpcr']);
+          this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
         }
         switch (clasificaciones[key]) {
           case 'confirmado':

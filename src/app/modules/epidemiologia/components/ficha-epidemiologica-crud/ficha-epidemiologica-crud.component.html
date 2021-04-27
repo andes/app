@@ -273,12 +273,20 @@
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-bool *ngIf="field.key==='pcr'&& seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-bool *ngIf="field.key==='pcrM'&& seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           (change)="resultadoFinal(field.key)" [readonly]="!editFicha">
+                                           (change)="clearDependencias($event,'clasificacionFinal',['pcr','identificadorpcr']); resultadoFinal(field.key)"
+                                           [readonly]="!editFicha">
                                 </plex-bool>
-                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcr'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-select *ngIf="field.key==='pcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                             [required]="seccion.fields['segundaclasificacion']?.id==='confirmado'"
+                                             [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
+                                             [readonly]="true">
+                                </plex-select>
+                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [required]="field.required" [readonly]="!editFicha"></plex-text>
