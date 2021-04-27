@@ -1,9 +1,6 @@
 <plex-layout [main]="showSidebar? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="MÓDULO DE CONTROL PERINATAL">
-            <plex-button type="link" size="md" (click)="irSipsPlus()" ariaLabel="ir a sips plus">
-                <plex-icon name="documento-corazon" size="md"></plex-icon>IR A SIP-PLUS
-            </plex-button>
             <plex-button type="info" size="sm" label="PUNTO DE INICIO" (click)="volverInicio()"
                          ariaLabel="volver al punto de inicio"></plex-button>
             <alertas-perinatal></alertas-perinatal>
@@ -29,13 +26,12 @@
             </plex-title>
             <tr *ngFor="let carnet of listado$ | async" (click)="showInSidebar(carnet)"
                 [class.selected]="carnet.id===carnetSelected?.id" [class.selectable]="selectable">
-                <td *plTableCol="'fechaCita'">{{ carnet.fecha | fecha }}</td>
+                <td *plTableCol="'fechaInicio'">{{ carnet.fecha | fecha }}</td>
                 <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
                 <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
-                <td *plTableCol="'telefono'">299595355</td>
                 <td *plTableCol="'edad'">{{ carnet.paciente | edad }}</td>
-                <td class="float-right">
-                    <plex-badge *ngIf="carnet.ausente" size="sm" type="danger">AUSENTE
+                <td *plTableCol="'ausente'">
+                    <plex-badge *ngIf="esAusente(carnet.fechaProximoControl)" size="sm" type="danger">AUSENTE
                         <plex-button icon="alert-circle-outline" size="sm"></plex-button>
                     </plex-badge>
                 </td>

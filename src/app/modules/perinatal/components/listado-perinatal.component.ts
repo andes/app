@@ -1,4 +1,3 @@
-import { Plex } from '@andes/plex';
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
@@ -28,7 +27,7 @@ export class ListadoPerinatalComponent implements OnInit {
   public columns = [
 
     {
-      key: 'fecha',
+      key: 'fechaInicio',
       label: 'Fecha inicio',
       sorteable: true,
       opcional: true,
@@ -47,13 +46,6 @@ export class ListadoPerinatalComponent implements OnInit {
       sorteable: true,
       opcional: true,
       sort: (a: any, b: any) => a.documento.localeCompare(b.documento)
-    },
-    {
-      key: 'telefono',
-      label: 'Teléfono',
-      sorteable: true,
-      opcional: true,
-      sort: (a: any, b: any) => a.telefono.localeCompare(b.telefono)
     },
     {
       key: 'edad',
@@ -135,8 +127,8 @@ export class ListadoPerinatalComponent implements OnInit {
     this.location.back();
   }
 
-  irSipsPlus() {
-    window.open('http://www.sips.andes.gob.ar', '_blank');
+  esAusente(fechaProximoControl) {
+    return (moment().diff(moment(fechaProximoControl), 'days') >= 1);
   }
 
 }

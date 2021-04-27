@@ -18,6 +18,6 @@
     <plex-label titulo="Fecha Próximo Control"
                 subtitulo="{{carnet.fechaProximoControl? (carnet.fechaProximoControl | fecha) : 'No indica'}}">
     </plex-label>
-    <plex-label titulo="Embarazo" subtitulo="{{carnet.embarazo? carnet.embarazo : 'No indica'}}">
+    <plex-label titulo="Embarazo" subtitulo="{{ carnet.embarazo?.term? carnet.embarazo.term : 'No indica'}}">
     </plex-label>
 </plex-grid>

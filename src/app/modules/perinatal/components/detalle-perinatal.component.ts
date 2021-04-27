@@ -1,17 +1,13 @@
-import { Plex } from '@andes/plex';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'detalle-perinatal',
   templateUrl: './detalle-perinatal.component.html'
 })
-export class DetallePerinatalComponent implements OnInit {
+export class DetallePerinatalComponent {
   carnet;
   @Input('carnet')
   set _carnet(value) {
     this.carnet = value;
   }
-  ngOnInit(): void {
-  }
-
 }

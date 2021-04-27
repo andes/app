@@ -33,9 +33,7 @@ import { DetallePerinatalComponent } from './components/detalle-perinatal.compon
         DetallePerinatalComponent
     ],
     providers: [
-        CarnetPerinatalService,
-        HistorialPerinatalComponent,
-        AlertasPerinatalComponent
+        CarnetPerinatalService
     ]
 })
 export class PerinatalModule { }
