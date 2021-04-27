@@ -25,6 +25,12 @@
                                        grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                        [required]="argumento.required">
                         </plex-datetime>
+                        <plex-select *ngSwitchCase="'zonaSanitaria'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="nombre" 
+                                     [data]="zonasSanitarias$ | async">
+                        </plex-select>
                         <plex-select *ngSwitchCase="'organizacion'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow="2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"

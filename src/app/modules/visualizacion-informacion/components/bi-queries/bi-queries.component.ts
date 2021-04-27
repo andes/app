@@ -5,6 +5,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { ZonaSanitariaService } from 'src/app/services/zonaSanitaria.service';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class BiQueriesComponent implements OnInit {
     public opciones = [];
     public queries$: Observable<any>;
     public organizaciones$: Observable<any>;
+    public zonasSanitarias$: Observable<any>;
     public argumentos;
     public argumentosSalida = [];
     public resultados;
@@ -29,6 +31,7 @@ export class BiQueriesComponent implements OnInit {
         private queryService: QueriesService,
         private profesionalService: ProfesionalService,
         private formsService: FormsService,
+        private zonaSanitariaService: ZonaSanitariaService,
         private auth: Auth,
         private router: Router
     ) { }
@@ -52,6 +55,7 @@ export class BiQueriesComponent implements OnInit {
         if (this.consultaSeleccionada) {
             this.argumentos = this.consultaSeleccionada.argumentos;
             this.organizaciones$ = this.auth.organizaciones();
+            this.zonasSanitarias$ = this.zonaSanitariaService.getZonasSanitarias();
         }
     }
 
