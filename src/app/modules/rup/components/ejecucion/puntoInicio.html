@@ -67,7 +67,8 @@
                                 </div>
                                 <div>
                                     <span
-                                          *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                          *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda
+                                        | espacioFisico}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
                                           class="text-danger">Espacio físico no
                                         asignado</span>
@@ -128,14 +129,16 @@
         </table>
     </plex-layout-main>
     <plex-layout-sidebar>
-
+        <header *ngIf="!buscandoPaciente">
+            <plex-title titulo="Detalles" size="md">
+                <plex-button *ngIf="agendaSeleccionada && agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)"
+                             label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
+                </plex-button>
+            </plex-title>
+        </header>
         <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
         </dinamica>
-
         <ng-container *ngIf="!buscandoPaciente">
-            <plex-title justify titulo="Detalles" size="md">
-            </plex-title>
-
             <ng-container
                           *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (!paciente || (!agendaSeleccionada.tipoPrestaciones[0].noNominalizada && getCantidadPacientes(agendaSeleccionada)) )">
                 <div class="row">
@@ -166,7 +169,7 @@
                         <tr>
                             <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">
                                 {{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{
-                                    bloque.horaFin | date: 'HH:mm'}} hs
+                                bloque.horaFin | date: 'HH:mm'}} hs
                             </th>
                             <th *ngIf="agendaSeleccionada.nominalizada" colspan="4">
                                 {{bloque.descripcion}}
@@ -347,11 +350,6 @@
 
                     </tbody>
                 </table>
-                <ng-container
-                              *ngIf="agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)">
-                    <plex-button label="AGREGAR PACIENTE" type="primary" class="float-right mr-1"
-                                 (click)="buscarPaciente()"></plex-button>
-                </ng-container>
                 <ng-container>
                     <table *ngIf="agendaSeleccionada.sobreturnos" class="table table-striped">
                         <thead>
@@ -424,7 +422,7 @@
                                                       *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
                                             <br>
                                             <small> Prof.: {{sobreturno.prestacion.solicitud.profesional |
-                                                    nombre}}
+                                                nombre}}
                                             </small>
                                         </ng-container>
 
@@ -513,7 +511,7 @@
                             </td>
                             <td>
                                 <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | nombre
-                                        }} </span>
+                                    }} </span>
                                 <span
                                       *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
                                 <small>
@@ -570,7 +568,6 @@
             </ng-container>
 
         </ng-container>
-
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
         <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary"
