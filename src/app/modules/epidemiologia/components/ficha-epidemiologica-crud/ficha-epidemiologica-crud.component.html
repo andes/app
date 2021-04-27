@@ -72,15 +72,22 @@
                                          [(ngModel)]="seccion.fields[field.key]" [data]="localidades$ | async"
                                          [readonly]="!editFicha" required="true">
                             </plex-select>
+                            <plex-bool *ngIf="field.key==='resideinstitucion' "
+                                       [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                       [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                       [readonly]="!editFicha"
+                                       (change)="getInstituciones(); clearDependencias($event,'mpi', ['tipoinstitucion','lugarinstitucion'])">
+                            </plex-bool>
                             <plex-select *ngIf="field.key==='tipoinstitucion' && seccion.fields['resideinstitucion']"
                                          [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
                                          [(ngModel)]="seccion.fields[field.key]" [data]="tipoInstitucion"
                                          [readonly]="!editFicha">
                             </plex-select>
-                            <plex-text *ngIf="field.key==='lugarinstitucion' && seccion.fields['resideinstitucion']"
-                                       [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
-                                       [(ngModel)]="seccion.fields[field.key]" [readonly]="!editFicha">
-                            </plex-text>
+                            <plex-select *ngIf="field.key==='lugarinstitucion' && seccion.fields['resideinstitucion']"
+                                         [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                         [(ngModel)]="seccion.fields[field.key]" [readonly]="!editFicha"
+                                         [data]="instituciones$ | async">
+                            </plex-select>
 
                             <!--Clasificación-->
                             <ng-container *ngIf="seccion.id==='clasificacion'">
@@ -179,14 +186,6 @@
 
                             <!--Información clínica-->
                             <ng-container *ngIf="seccion.id==='informacionClinica'">
-
-                                <plex-datetime *ngIf="field.key==='fechasintomas'"
-                                               [label]="field.label?field.label:field.key" grow="auto"
-                                               name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                               [required]="field.required" (change)="setSemanaEpidemiologica()"
-                                               [readonly]="!editFicha">
-                                </plex-datetime>
-
                                 <plex-int *ngIf="field.key==='semanaepidemiologica'"
                                           [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
                                           [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
