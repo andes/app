@@ -43,9 +43,11 @@ export class UploadFileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.extensionesAceptadas = this.extensiones.map(ext => '.' + ext);
-    }
+        if (this.extensiones) {
+            this.extensionesAceptadas = this.extensiones.map(ext => '.' + ext);
+        }
 
+    }
     public get btnLabel() {
         if (this.disabled) {
             return this.progress + '%';
