@@ -247,9 +247,9 @@
                                 <plex-select *ngIf="field.key==='segundaclasificacion'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="segundaClasificacion"
-                                             (change)="resultadoFinal(field.key) ; clearDependencias({value:false},'clasificacionFinal',
-                                             ['tipomuestra','fechamuestra','antigeno','lamp','pcr','identificadorpcr'])" [readonly]="!editFicha">
+                                             [required]="field.required" [data]="segundaClasificacion" (change)="resultadoFinal(field.key) ; clearDependencias({value:false},'clasificacionFinal',
+                                             ['tipomuestra','antigeno','lamp','pcr','identificadorpcr'])"
+                                             [readonly]="!editFicha">
                                 </plex-select>
                                 <plex-select *ngIf="field.key==='tipomuestra' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
