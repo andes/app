@@ -448,7 +448,7 @@ export class MapaCamasService {
         return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado) as any;
     }
 
-    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date = null): Observable<ISnapshot[]> {
+    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date = null, cama: ISnapshot = null): Observable<ISnapshot[]> {
         return combineLatest(
             this.ambito2,
             this.capa2,
@@ -461,7 +461,7 @@ export class MapaCamasService {
             switchMap(([ambito, capa, selectedCama, selectedPrestacion, view]) => {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
-                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
+                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
