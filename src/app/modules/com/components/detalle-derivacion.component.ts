@@ -69,10 +69,11 @@ export class DetalleDerivacionComponent implements OnInit {
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
     public tabIndex = 0;
     organizacionesDestino = [];
+    unidadesDestino = [];
     reglasDerivacion = [];
     reglasDerivacionFiltradas = [];
     public nuevoEstado: any = {
-        organizacionDestino: '',
+        organizacionDestino: null,
         estado: null,
         observacion: ''
     };
@@ -106,9 +107,11 @@ export class DetalleDerivacionComponent implements OnInit {
     cargarEstado() {
         this.nuevoEstado = {
             organizacionDestino: this.derivacion.organizacionDestino,
+            unidadDestino: this.derivacion.unidadDestino,
             estado: this.derivacion.estado,
             observacion: ''
         };
+
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             if (org.esCOM) {
                 this.esCOM = true;
@@ -123,11 +126,22 @@ export class DetalleDerivacionComponent implements OnInit {
         };
         this.organizacionService.get(query).subscribe(resultado => {
             this.organizacionesDestino = resultado.map(organizacion => {
-                if (organizacion.id !== this.auth.organizacion.id) {
-                    return { id: organizacion.id, nombre: organizacion.nombre, direccion: organizacion.direccion };
-                }
+                return { id: organizacion.id, nombre: organizacion.nombre, direccion: organizacion.direccion };
             });
         });
+    }
+
+    resetUnidadesDestino() {
+        this.nuevoEstado.unidadDestino = null;
+        this.loadUnidadesDestino();
+    }
+
+    loadUnidadesDestino() {
+        if (this.nuevoEstado.organizacionDestino) {
+            this.organizacionService.unidadesOrganizativas(this.nuevoEstado.organizacionDestino.id).subscribe(resultado => this.unidadesDestino = resultado);
+        } else {
+            this.unidadesDestino = [];
+        }
     }
 
     filterReglasDerivaciones() {
@@ -141,9 +155,21 @@ export class DetalleDerivacionComponent implements OnInit {
         this.prioridad = prioridad;
     }
 
+    onReglaChange() {
+        if (this.reglaSeleccionada.estadoFinal === 'asignada') {
+            this.nuevoEstado.organizacionDestino = null;
+            this.nuevoEstado.unidadDestino = null;
+        } else {
+            this.nuevoEstado.organizacionDestino = this.derivacion.organizacionDestino;
+            this.nuevoEstado.unidadDestino = this.derivacion.unidadDestino;
+        }
+        this.loadUnidadesDestino();
+    }
+
     actualizarEstado($event) {
         if ($event.formValid) {
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
+
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
             if (this.reglaSeleccionada.definePrioridad) {
                 this.nuevoEstado.prioridad = this.prioridad;

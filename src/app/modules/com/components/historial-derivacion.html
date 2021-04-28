@@ -21,6 +21,9 @@
                 <plex-label *ngIf="item.organizacionDestino" titulo="Destino"
                             subtitulo="{{ item.organizacionDestino.nombre }}">
                 </plex-label>
+                <plex-label *ngIf="item.unidadDestino" titulo="Unidad Destino"
+                            subtitulo="{{ item.unidadDestino.term }}">
+                </plex-label>
             </section>
             <section *ngIf="item.createdBy">
                 <plex-badge type="info" *ngIf="item.adjuntos?.length > 0" title="Tiene adjuntos">
