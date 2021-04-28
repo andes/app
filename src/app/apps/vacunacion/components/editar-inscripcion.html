@@ -18,10 +18,10 @@
                        [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
         </plex-datetime>
         <plex-text grow="full" label="Email" name="email" [(ngModel)]="inscripcion.email"
-                   *ngIf="permiteEditar('contacto')">
+                   *ngIf="permiteEditar('contacto')" [pattern]="patronEmail">
         </plex-text>
         <plex-text grow="full" label="Teléfono" name="telefono" [(ngModel)]="inscripcion.telefono"
-                   *ngIf="permiteEditar('contacto')">
+                   *ngIf="permiteEditar('contacto')" [pattern]="patronContactoNumerico">
         </plex-text>
         <plex-select name="localidades" [data]="localidades$ | async" label="Localidad"
                      [(ngModel)]="inscripcion.localidad" [required]="true">

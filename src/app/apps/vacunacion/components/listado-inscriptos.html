@@ -108,7 +108,7 @@
                                    [(ngModel)]="nombreCorregido">
                         </plex-text>
                         <plex-text grow="full" label="Documento" name="documento" [(ngModel)]="dniCorregido"
-                                   [required]="true">
+                                   [required]="true" [pattern]="patronDocumento">
                         </plex-text>
                         <plex-select [(ngModel)]="sexoCorregido" [required]="true" label="Seleccione sexo"
                                      [data]="sexos" name="sexo" required="true" placeholder="Seleccione..">
