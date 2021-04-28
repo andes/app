@@ -1,3 +1,30 @@
+# [5.44.0](https://github.com/andes/app/compare/v5.43.0...v5.44.0) (2021-04-28)
+
+
+### Bug Fixes
+
+* **ficha-epidemio:** control codigo snomed ([9ff205c](https://github.com/andes/app/commit/9ff205cfa2dd4bb38156800c012962a06cc4bf25))
+* **ficha-epidemio:** fechaMuestra ([69ce71e](https://github.com/andes/app/commit/69ce71e006b543dfd19cd3afe48384eb0601aa18))
+* **ficha-epidemio:** no readonly PCR ([ce145fa](https://github.com/andes/app/commit/ce145fa1bdb4664081da855360649ac488f66c61))
+* **mapa-camas:** varios fix internacion ([#2236](https://github.com/andes/app/issues/2236)) ([0b30611](https://github.com/andes/app/commit/0b30611e352f00142fed3c2d3b8b67b32e6d8c48))
+* **pdp:** ordenar turnos de mas reciente a los mas viejos ultimos ([#2234](https://github.com/andes/app/issues/2234)) ([2df0a6c](https://github.com/andes/app/commit/2df0a6cf3b805c4f8d411a50e687ad117dadde33))
+
+
+### Features
+
+* **accesibilidad:** idioma global español ([#2214](https://github.com/andes/app/issues/2214)) ([c52b377](https://github.com/andes/app/commit/c52b377253aa507c5043ab3009789d4df36cbb21))
+* **buscador-ficha:** scroll y sort ([9e37f33](https://github.com/andes/app/commit/9e37f33e0c5a0bc067909280876952d0596f1946))
+* **EP:** labels en form builder ([2cdc01f](https://github.com/andes/app/commit/2cdc01f17e4ac610aec8839f4d6680eeed671945))
+* **epidemio:** Se agregan select para actualización automática de resultados pcr ([b512daa](https://github.com/andes/app/commit/b512daa554e687be40102ac8398d1af9fdb4e8fe))
+* **ficha-epidemio:** nuevos requerimientos ([97a9990](https://github.com/andes/app/commit/97a999028cdc267f05e4952efbb3f1900597ea83))
+* **ficha-epidemio:** nuevos requermientos mpi ([ee5a055](https://github.com/andes/app/commit/ee5a05596ef30fd4815b06629c10cb7c27a171fa))
+* **ficha-epidemio:** semana epidemiologica e instituciones ([04b114a](https://github.com/andes/app/commit/04b114a74066ef1e51583e3eab20c9079cf19fed))
+* **ficha-epidemiologica:** set mpi y snomed ([214f74b](https://github.com/andes/app/commit/214f74b0fcc597b89d3682a450c269610c890e48))
+* **fichaEpidemiologia:** pequeños cambios en la clasificación y el seteo de lo que se envía desde el laboratorio ([bda575f](https://github.com/andes/app/commit/bda575f34e545c91b1ae032db30e840e19c28a73))
+* **inscripcion:** permite modificar localidad ([#2231](https://github.com/andes/app/issues/2231)) ([b71d51e](https://github.com/andes/app/commit/b71d51eab97b340dacee72b1563b41ca0cb72ada))
+* **pdp:** cache de la consulta de turnos, laboratorios y vacunas ([#2233](https://github.com/andes/app/issues/2233)) ([cc0a91f](https://github.com/andes/app/commit/cc0a91f3bad47248b18f7408e366b07103bd3cfc))
+* **vac:** filtro pro nombre y apellido ([#2232](https://github.com/andes/app/issues/2232)) ([fdf70c2](https://github.com/andes/app/commit/fdf70c2093c5f89ac41c461ae84c8fce41242f33))
+
 # [5.43.0](https://github.com/andes/app/compare/v5.42.0...v5.43.0) (2021-04-21)
 
 
