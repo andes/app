@@ -349,7 +349,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
           seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
           seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
-          this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia.id });
+          this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
           break;
       }
     });
