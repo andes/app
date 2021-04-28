@@ -572,7 +572,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.subscription4) {
             this.subscription4.unsubscribe();
         }
-        this.subscription4 = this.mapaCamasService.historial('cama', this.cama.fecha, moment().toDate()).subscribe(
+        this.subscription4 = this.mapaCamasService.historial('cama', this.cama.fecha, moment().toDate(), this.cama).subscribe(
             (historialCama) => {
                 this.fechaMax = null;
                 for (const historial of historialCama) {
