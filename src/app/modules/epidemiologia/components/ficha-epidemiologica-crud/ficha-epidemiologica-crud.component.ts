@@ -12,6 +12,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { InstitucionService } from 'src/app/services/turnos/institucion.service';
 
 
 @Component({
@@ -31,10 +32,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'asistencial', nombre: 'Asistencial' },
     { id: 'administrativa', nombre: 'Administrativa' }
   ];
-  // Ver cuales son las funciones (no figuran en la planilla)
   public funcionPersonalSalud = [
-    { id: 'func1', nombre: 'Funcion 1' },
-    { id: 'func2', nombre: 'Funcion 2' }
+    { id: 'tecnico', nombre: 'Técnico/Auxiliar con función asistencial' },
+    { id: 'profesional', nombre: 'Profesional con función asistencial' },
+    { id: 'admin', nombre: 'Trabajador de la salud con función administrativa' }
   ];
   public funcionSeguridad = [
     { id: 'policia', nombre: 'Policia' },
@@ -102,10 +103,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'instituciones', nombre: 'Instituciones educativas/Instituciones de asistencia infantil (jardín, guarderías, etc)' }
   ];
   public reqCuidado = [
-    { id: 'salaGeneral', nombre: 'Sala General' },
-    { id: 'uce', nombre: 'UCE' },
-    { id: 'ut', nombre: 'UT Intermedia' },
-    { id: 'uti', nombre: 'UTI' },
+    { id: 'ambulatorio', nombre: 'Ambulatorio' },
+    { id: 'salaGeneral', nombre: 'Internación Sala General' },
+    { id: 'uce', nombre: 'Internación UCE' },
+    { id: 'ut', nombre: 'Internación UT Intermedia' },
+    { id: 'uti', nombre: 'Internación UTI' },
   ];
   public selectGral = [
     { id: 'si', nombre: 'SI' },
@@ -165,6 +167,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public zonaSanitaria = null;
   public localidades$: Observable<any>;
   public provincias$: Observable<any>;
+  public instituciones$: Observable<any>;
+  public estaInternado = false;
 
   constructor(
     private formsService: FormsService,
@@ -176,7 +180,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     private organizacionService: OrganizacionService,
     private router: Router,
     private snomedService: SnomedService,
-    public servicePaciente: PacienteService
+    public servicePaciente: PacienteService,
+    public serviceInstitucion: InstitucionService
   ) { }
 
   ngOnChanges(): void {
@@ -215,7 +220,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   registrarFicha() {
     this.getValues();
-    this.setFicha();
+    if (this.checkClasificacionFinal()) {
+      this.setFicha();
+    } else {
+      this.plex.info('warning', 'Si el resultado del antigeno es NO REACTIVO debe completar el campo LAMP o PCR', 'Atención');
+    }
   }
 
   getValues() {
@@ -327,6 +336,14 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             nombre: this.auth.organizacion.nombre
           };
           seccion.fields['fechaprimerconsulta'] = new Date();
+          const primerDomingo = moment().startOf('year').startOf('week').weekday(-1);
+          if (primerDomingo.format('YYYY') === moment().format('YYYY')) {
+            primerDomingo.add(7, 'days');
+          }
+          if (seccion.id === 'informacionClinica') {
+            const hoy = moment(new Date());
+            seccion.fields['semanaepidemiologica'] = Math.trunc((hoy.diff(primerDomingo, 'days') / 7)) + 1;
+          }
           break;
         case 'mpi':
           seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
@@ -368,17 +385,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             }
             break;
         }
-      }
-    });
-  }
-
-  // Función para calcular automaticamente la semana epidemiológica segun la fecha de inicio de primer sintoma
-  setSemanaEpidemiologica() {
-    this.secciones.map(seccion => {
-      if (seccion.id === 'informacionClinica') {
-        const fechaSintoma = moment(seccion.fields['fechasintomas']);
-        const hoy = moment(new Date());
-        seccion.fields['semanaepidemiologica'] = Math.round(hoy.diff(fechaSintoma, 'days') / 7);
       }
     });
   }
@@ -504,5 +510,25 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0].valor ||
       nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion.provincia.id ||
       nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion.localidad.id);
+  }
+  pacienteInternado(event) {
+    this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
+      event.value.id === 'ut' || event.value.id === 'uti';
+    return this.estaInternado;
+  }
+
+  checkClasificacionFinal() {
+    const seccionClasificacion = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
+    if (seccionClasificacion.fields['antigeno']?.id === 'muestra') {
+      return (seccionClasificacion.fields['lamp']?.id || seccionClasificacion.fields['pcrM']);
+    } else {
+      return true;
+    }
+  }
+
+  getInstituciones() {
+    this.instituciones$ = this.serviceInstitucion.get({}).pipe(
+      cache()
+    );
   }
 }
