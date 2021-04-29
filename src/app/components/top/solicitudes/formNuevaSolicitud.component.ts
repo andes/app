@@ -215,18 +215,41 @@ export class FormNuevaSolicitudComponent implements OnInit {
             if (this.tipoSolicitud === 'entrada' && !this.modelo.solicitud.profesionalOrigen) {
                 this.plex.confirm('Está a punto de guardar una solicitud de entrada sin indicar profesional de origen', '¿Desea continuar?').then((resultado) => {
                     if (resultado) {
-                        this.guardarSolicitud($event);
+                        this.guardarSolicitud();
                     }
                 });
             } else {
-                this.guardarSolicitud($event);
+                this.guardarSolicitud();
             }
         } else {
             this.plex.info('danger', 'Debe completar los datos requeridos');
         }
     }
 
-    guardarSolicitud($event) {
+    guardarSolicitud() {
+        const params: any = {
+            estados: [
+                'auditoria',
+                'pendiente',
+                'ejecucion'
+            ],
+            idPaciente: this.paciente.id,
+            prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId
+        };
+        this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            if (resultado.length) {
+                this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${this.modelo.solicitud.tipoPrestacion.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                    if (confirmar) {
+                        this.postSolicitud();
+                    }
+                });
+            } else {
+                this.postSolicitud();
+            }
+        });
+    }
+
+    private postSolicitud() {
         if (this.tipoSolicitud === 'entrada') {
             this.modelo.solicitud.organizacion = this.auth.organizacion;
             // ------- solo solicitudes de entrada pueden ser autocitadas  ------
@@ -239,9 +262,9 @@ export class FormNuevaSolicitudComponent implements OnInit {
             }
         } else {
             this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-            let reglaAplicada = this.arrayReglasDestino.find(r => r.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
-                r.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
-            let reglaOrigen = reglaAplicada.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
+            const reglaAplicada = this.arrayReglasDestino.find(regla => regla.destino.prestacion.conceptId === this.modelo.solicitud.tipoPrestacion.conceptId &&
+                regla.destino.organizacion.id === this.modelo.solicitud.organizacion.id);
+            const reglaOrigen = reglaAplicada.origen.prestaciones.find(regla => { return regla.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
             if (reglaOrigen.auditable) {
                 this.modelo.estados = [{ tipo: 'auditoria' }];
             } else {

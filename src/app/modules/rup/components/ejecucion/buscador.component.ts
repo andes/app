@@ -10,6 +10,7 @@ import { forkJoin } from 'rxjs';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
 import { map } from 'rxjs/operators';
+import { Plex } from '@andes/plex';
 
 
 @Component({
@@ -66,7 +67,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         public servicioPrestacion: PrestacionesService,
         private buscadorService: SnomedBuscarService,
         public renderer: Renderer2,
-        private ejecucionService: RupEjecucionService
+        private ejecucionService: RupEjecucionService,
+        private plex: Plex
     ) {
     }
 
@@ -377,7 +379,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public filtroBuscadorSnomed(key) {
         this.filtroActual = key;
-
     }
 
     /**
@@ -385,18 +386,44 @@ export class BuscadorComponent implements OnInit, OnChanges {
      *
      * @param {any} concepto Concepto SNOMED
      */
+
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
         concepto.esSolicitud = concepto.esSolicitud || this.filtroActual === 'planes';
-        this.ejecucionService.agregarConcepto(
-            {
-                term: concepto.term,
-                fsn: concepto.fsn,
-                conceptId: concepto.conceptId,
-                semanticTag: concepto.semanticTag
-            },
-            concepto.esSolicitud
-        );
+        if (concepto.esSolicitud) {
+            const params: any = {
+                estados: [
+                    'auditoria',
+                    'pendiente',
+                    'ejecucion'
+                ],
+                idPaciente: this.ejecucionService.paciente.id,
+                prestacionDestino: concepto.conceptId
+            };
+            this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+                if (resultado.length) {
+                    this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                        if (confirmar) {
+                            this.agregarConcepto(concepto);
+                        }
+                    });
+                    this.plex.toast('danger', `El paciente ya tiene una solicitud en curso para ${concepto.term}`);
+                } else {
+                    this.agregarConcepto(concepto);
+                }
+            });
+        } else {
+            this.agregarConcepto(concepto);
+        }
+    }
+
+    private agregarConcepto(concepto) {
+        this.ejecucionService.agregarConcepto({
+            term: concepto.term,
+            fsn: concepto.fsn,
+            conceptId: concepto.conceptId,
+            semanticTag: concepto.semanticTag
+        }, concepto.esSolicitud);
     }
 
     public esSolicitud(concepto: any) {
