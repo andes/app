@@ -14,6 +14,7 @@ import { SelectSearchService } from '../../services/select-search.service';
 import { SharedModule } from '@andes/shared';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
 
 
 
@@ -22,7 +23,8 @@ import { DirectiveLibModule } from '../../directives/directives.module';
     FichaEpidemiologicaComponent,
     FichaEpidemiologicaCrudComponent,
     SelectSearchDirective,
-    BuscadorFichaEpidemiologicaComponent
+    BuscadorFichaEpidemiologicaComponent,
+    HistorialFichaComponent
   ],
   imports: [
     CommonModule,

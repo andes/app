@@ -34,6 +34,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public editFicha = false;
   public puedeEditar: boolean;
   public puedeVer: boolean;
+  public puedeVerHistorial: boolean;
   public pacienteSelected: IPaciente;
   public query = null;
   public localidades$: Observable<any>;
@@ -41,6 +42,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public listado: any[];
   public lastResults = new BehaviorSubject<any[]>(null);
   public inProgress = false;
+  public fichaHistorial;
 
   public columns = [
     {
@@ -85,8 +87,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private auth: Auth,
     private router: Router,
     private localidadService: LocalidadService,
-    private zonaSanitariaService: ZonaSanitariaService,
-
+    private zonaSanitariaService: ZonaSanitariaService
   ) { }
 
   ngOnInit(): void {
@@ -95,6 +96,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     }
     this.puedeEditar = this.auth.check('epidemiologia:update');
     this.puedeVer = this.auth.check('epidemiologia:read');
+    this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
     this.plex.updateTitle([
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Buscador Fichas epidemiologicas' }
@@ -153,9 +155,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   }
 
   verFicha(ficha) {
-    this.paciente = ficha.paciente;
-    this.fichaPaciente = ficha;
-    this.showFicha = ficha.type.name;
+    const fichaHistorial = ficha.ficha;
+    this.paciente = fichaHistorial ? fichaHistorial.paciente : ficha.paciente;
+    this.fichaPaciente = fichaHistorial ? fichaHistorial : ficha;
+    this.showFicha = fichaHistorial ? fichaHistorial.type.name : ficha.type.name;
     this.editFicha = false;
   }
 
@@ -190,5 +193,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     if (this.query.skip > 0 && this.query.skip % this.query.limit === 0) {
       this.lastResults.next(this.listado);
     }
+  }
+
+  verHistorial(ficha) {
+    this.fichaHistorial = ficha;
+  }
+
+  clearHistorial() {
+    this.fichaHistorial = null;
   }
 }

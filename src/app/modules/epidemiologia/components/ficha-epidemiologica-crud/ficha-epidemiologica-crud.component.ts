@@ -13,6 +13,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { InstitucionService } from 'src/app/services/turnos/institucion.service';
+import { FormsHistoryService } from '../../services/forms-history.service';
 
 
 @Component({
@@ -181,7 +182,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     private router: Router,
     private snomedService: SnomedService,
     public servicePaciente: PacienteService,
-    public serviceInstitucion: InstitucionService
+    public serviceInstitucion: InstitucionService,
+    public serviceHistory: FormsHistoryService
   ) { }
 
   ngOnChanges(): void {
@@ -316,6 +318,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     if (this.fichaPaciente) {
       this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
         res => {
+          this.serviceHistory.save({ ficha: res }).subscribe();
           this.plex.toast('success', 'Su ficha fue actualizada correctamente');
           this.toBack();
         },
@@ -325,6 +328,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     } else {
       this.formEpidemiologiaService.save(fichaFinal).subscribe(
         res => {
+          this.serviceHistory.save({ ficha: res }).subscribe();
           this.plex.toast('success', 'Su ficha fue registrada correctamente');
           this.toBack();
         },

@@ -1,0 +1,15 @@
+<plex-title titulo="Historial ficha">
+    <ng-content></ng-content>
+</plex-title>
+<plex-table [columns]="columns" #table="plTable">
+    <plex-table-columns>
+    </plex-table-columns>
+    <tr *ngFor="let ficha of (historial$ | plSort:table | async)">
+        <td *plTableCol="'fecha'">{{ficha.createdAt | date:'dd/MM/yyyy - HH:mm'}}</td>
+        <td *plTableCol="'usuario'">{{ficha.createdBy.nombreCompleto}}</td>
+        <td *plTableCol="'acciones'">
+            <plex-button type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
+            </plex-button>
+        </td>
+    </tr>
+</plex-table>
