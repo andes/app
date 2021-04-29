@@ -1,7 +1,7 @@
 <plex-layout main="{{mainSize}}">
     <plex-layout-main>
         <header>
-            <plex-title titulo="Listado de inscriptos para vacunación" size="lg">
+            <plex-title titulo="Monitoreo de inscriptos para vacunación" size="lg">
                 <plex-button type="success" size="md" (click)="nuevaInscripcion()" *ngIf="permisosAlta.length">
                     NUEVA INSCRIPCIÓN
                 </plex-button>
@@ -29,6 +29,11 @@
                     <span class="pl-1" *ngIf="paciente.nota">
                         <i title="{{ paciente.nota }}" class="mdi mdi-comment-outline"></i>
                     </span>
+                </td>
+                <td *plTableCol="'turno'">
+                    <plex-label type="{{ paciente.turno ? 'success' : 'danger' }}" titulo="" subtitulo=""
+                                icon="{{ paciente.turno ? 'check' : 'close' }}">
+                    </plex-label>
                 </td>
                 <td *plTableCol="'vacunado'">
                     <plex-label type="{{ paciente.fechaVacunacion ? 'success' : 'danger' }}" titulo="" subtitulo=""
@@ -158,9 +163,10 @@
             <!-- formulario para editar inscripción -->
             <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected"
                                 (returnEdicion)="returnEdicion($event)"></editar-inscripcion>
-
+            <notas *ngIf="showAgregarNota" [inscripcion]="pacienteSelected" (returnNotas)="returnEdicion($event)">
+            </notas>
             <!-- datos de inscripción -->
-            <ng-container *ngIf="!editando">
+            <ng-container *ngIf="!editando && !showAgregarNota">
                 <plex-title titulo="Datos de la inscripción" size="sm">
                     <plex-button type="warning" size="sm" (click)="editPaciente()" class='mr-1' icon="pencil"
                                  *ngIf="permisosEdicion.length && !editando && !pacienteSelected?.fechaVacunacion">
@@ -170,28 +176,7 @@
                                  title="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}">
                     </plex-button>
                 </plex-title>
-                <plex-wrapper *ngIf="showAgregarNota">
-                    <form #formularioNota="ngForm" grow="full" class="mr-1">
-                        <plex-label *ngIf="pacienteSelected.nota" titulo="Nota actual"
-                                    subtitulo="{{pacienteSelected.nota}}">
-                        </plex-label>
-                        <plex-select name="nota" [data]="notasPredefinidas"
-                                     label="{{ pacienteSelected.nota ? 'Seleccione una nueva opción' : 'Seleccione una opción' }}"
-                                     [(ngModel)]="notaPredefinida" grow="full" [required]="true">
-                        </plex-select>
-                        <plex-text label="Ingrese nota" *ngIf="notaPredefinida?.id==='otra'"
-                                   [(ngModel)]="notaPersonalizada" name="notaText" grow="full" [required]="true"
-                                   multiline="true">
-                        </plex-text>
-                        <div class="mt-1" justify>
-                            <plex-button label="Cancelar" size="sm" type="danger" (click)="onCancelarNota()">
-                            </plex-button>
-                            <plex-button label="Guardar" type="success" size="sm" (click)="onGuardarNota()"
-                                         [disabled]="!formularioNota?.valid"></plex-button>
-                        </div>
-                    </form>
-                </plex-wrapper>
-                <detalle-inscripcion [inscripcion]="pacienteSelected">
+                <detalle-inscripcion [inscripcion]=" pacienteSelected">
                 </detalle-inscripcion>
             </ng-container>
         </ng-container>

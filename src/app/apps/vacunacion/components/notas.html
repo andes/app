@@ -1,0 +1,15 @@
+<plex-title titulo="Agregar nota" size="sm">
+    <plex-button label="Cancelar" size="sm mr-1" type="danger" (click)="cerrar()">
+    </plex-button>
+    <plex-button label="Guardar" type="success" size="sm" (click)="guardar()" [disabled]="!formularioNota?.valid">
+    </plex-button>
+</plex-title>
+<form #formularioNota="ngForm" class="mr-1">
+    <plex-select name="nota" [data]="notasPredefinidas"
+                 label="{{ inscripcion.nota ? 'Seleccione una nueva opción' : 'Seleccione una opción' }}"
+                 [(ngModel)]="notaPredefinida" grow="full" [required]="true">
+    </plex-select>
+    <plex-text label="Ingrese nota" *ngIf="notaPredefinida?.id==='otra'" [(ngModel)]="notaPersonalizada" name="notaText"
+               grow="full" [required]="true" multiline="true">
+    </plex-text>
+</form>

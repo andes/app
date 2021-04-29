@@ -1,0 +1,194 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ILocalidad } from 'src/app/interfaces/ILocalidad';
+import { LocalidadService } from 'src/app/services/localidad.service';
+import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
+import { Auth } from '@andes/auth';
+import { InscripcionService } from '../../services/inscripcion.service';
+import { Plex } from '@andes/plex';
+import { Router } from '@angular/router';
+
+@Component({
+    selector: 'monitoreo-inscriptos',
+    templateUrl: 'monitoreo-inscriptos.html',
+    styleUrls: ['../listado-inscriptos.scss']
+})
+
+export class MonitoreoInscriptosComponent implements OnInit {
+    @ViewChild('formulario', { static: false }) formulario;
+
+    public mainSize = 12;
+    public showSidebar = false;
+    public pacienteSelected;
+    public paciente;
+    public pacienteProcesado = true;
+    public localidades$: Observable<ILocalidad[]>;
+    public gruposPoblacionales = [];
+    public localidadSelected;
+    public grupoSelected;
+    private idNeuquenProv = '57f3f3aacebd681cc2014c53';
+    public showAgregarNota = false;
+    public permisosEdicion;
+    public editando = false;
+    public dacionTurno = false;
+    public columns = [
+        {
+            key: 'grupo',
+            label: 'Grupo',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'documento',
+            label: 'Documento',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'apellido-nombre',
+            label: 'Apellido y nombre',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'sexo',
+            label: 'Sexo',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'edad',
+            label: 'Edad',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'localidad',
+            label: 'Localidad',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'fecha-registro',
+            label: 'Fecha de registro',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'certificado',
+            label: 'Certificado',
+            sorteable: false,
+            opcional: false
+        }];
+
+    constructor(
+        private localidadService: LocalidadService,
+        private gruposService: GrupoPoblacionalService,
+        private auth: Auth,
+        private inscripcionService: InscripcionService,
+        private plex: Plex,
+        private router: Router
+    ) { }
+
+    ngOnInit() {
+        if (!this.auth.getPermissions('vacunacion:dacion-turnos').length) {
+            this.router.navigate(['inicio']);
+        }
+        this.localidades$ = this.localidadService.getXProvincia(this.idNeuquenProv);
+        const gruposHabilitados = this.auth.getPermissions('vacunacion:tipoGrupos:?');
+        this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
+        let query = {};
+        if (gruposHabilitados.length) {
+            if (!(gruposHabilitados.length === 1 && gruposHabilitados[0] === '*')) {
+                query = { ids: gruposHabilitados };
+            }
+            this.gruposService.search(query).subscribe(resp => {
+                this.gruposPoblacionales = resp;
+            });
+        } else {
+            this.gruposPoblacionales = [];
+        }
+    }
+
+    showInSidebar(paciente) {
+        if (paciente) {
+            this.pacienteSelected = paciente;
+            this.mainSize = 8;
+            this.showSidebar = true;
+        }
+    }
+
+    closeSidebar() {
+        this.pacienteSelected = null;
+        this.showSidebar = false;
+        this.mainSize = 12;
+    }
+
+    asignarInscripcion() {
+        let params: any = {};
+        if (this.grupoSelected) {
+            params.grupos = [this.grupoSelected.nombre];
+        }
+        if (this.localidadSelected) {
+            params.localidad = this.localidadSelected.id;
+        }
+        return this.inscripcionService.asignar(params).subscribe(resultado => {
+            this.pacienteProcesado = false;
+            this.paciente = resultado;
+        });
+    }
+
+    grupoPoblacional(nombre: string) {
+        const maxLength = 30;
+        let descripcion;
+        if (this.gruposPoblacionales) {
+            descripcion = this.gruposPoblacionales.find(item => item.nombre === nombre).descripcion;
+        }
+        if (descripcion && descripcion.length > maxLength) {
+            return `${descripcion.substring(0, maxLength)} ..`;
+        }
+        return descripcion;
+    }
+
+    editPaciente() {
+        this.editando = true;
+    }
+
+    darTurno() {
+        this.dacionTurno = true;
+    }
+
+    returnEdicion(inscripcionActualizada) {
+        if (inscripcionActualizada) {
+            this.pacienteSelected = inscripcionActualizada;
+            this.paciente = inscripcionActualizada;
+        }
+        this.editando = false;
+    }
+
+
+    returnNotas(inscripcionActualizada) {
+        if (inscripcionActualizada) {
+            this.pacienteSelected = inscripcionActualizada;
+            this.paciente = inscripcionActualizada;
+            this.pacienteProcesado = true;
+        }
+        this.showAgregarNota = false;
+    }
+
+
+    returnDacionTurno(inscripcionActualizada) {
+        if (inscripcionActualizada) {
+            this.pacienteSelected = inscripcionActualizada;
+            this.paciente = inscripcionActualizada;
+            this.pacienteProcesado = true;
+        }
+        this.dacionTurno = false;
+    }
+}

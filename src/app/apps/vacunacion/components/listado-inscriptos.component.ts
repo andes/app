@@ -41,15 +41,6 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public dniCorregido;
     public fechaNacimientoCorregida;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
-    public notasPredefinidas = [
-        { id: 'turno-asignado', nombre: 'Turno asignado' },
-        { id: 'no-quiere', nombre: 'No quiere vacunarse' },
-        { id: 'vacunado', nombre: 'Ya se vacunó' },
-        { id: 'no-contesta', nombre: 'No contesta' },
-        { id: 'otra', nombre: 'Otra' }
-    ];
-    public notaPredefinida;
-    public notaPersonalizada = '';
     public columns = [
         {
             key: 'grupo',
@@ -108,6 +99,12 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             sort: (a, b) => { return a.estado.localeCompare(b.estado); }
         },
         {
+            key: 'turno',
+            label: 'Tiene turno',
+            sorteable: false,
+            opcional: false
+        },
+        {
             key: 'vacunado',
             label: 'Vacunado',
             sorteable: false,
@@ -156,8 +153,6 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.candidatosBuscados = false;
             this.editando = false;
             this.showAgregarNota = false;
-            this.notaPredefinida = null;
-            this.notaPersonalizada = '';
             this.editInscripcion = false;
         }
     }
@@ -256,11 +251,12 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     returnEdicion(inscripcionActualizada) {
         if (inscripcionActualizada) {
             this.pacienteSelected = inscripcionActualizada;
+            this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
+                map(resp => this.listadoActual = resp)
+            );
         }
         this.editando = false;
-        this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
-            map(resp => this.listadoActual = resp)
-        );
+        this.showAgregarNota = false;
     }
 
     validarDomicilio(inscripcion) {
@@ -290,31 +286,6 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     cancelarGuardarPaciente() {
         this.editInscripcion = false;
-    }
-
-    onGuardarNota() {
-        this.showAgregarNota = false;
-        if (this.notaPredefinida.id === 'otra') {
-            this.pacienteSelected.nota = this.notaPersonalizada;
-        } else {
-            this.pacienteSelected.nota = this.notaPredefinida.nombre;
-        }
-        this.listado$ = this.inscripcionService.patch(this.pacienteSelected).pipe(
-            switchMap(paciente => {
-                this.pacienteSelected = paciente;
-                return this.inscripcionService.inscriptosFiltrados$.pipe(
-                    map(resp => this.listadoActual = resp)
-                );
-            })
-        );
-        this.notaPersonalizada = '';
-        this.notaPredefinida = null;
-        this.plex.toast('info', 'La nota ha sido guardada correctamente.');
-    }
-
-    onCancelarNota() {
-        this.showAgregarNota = false;
-        this.notaPersonalizada = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
     }
 
     returnBusqueda(event) {
