@@ -1,7 +1,7 @@
 <form autosave="vacunacion-filtros" (restore)="filtrar()">
     <plex-wrapper>
         <plex-select name="grupo" label="Grupo" [(ngModel)]="filtro.grupo" idField="nombre" labelField="descripcion"
-                     [data]="gruposPoblacionales$ | async" (change)="filtrar()" grow="4">
+                     [data]="gruposPoblacionales$ | async" (change)="filtrar()" grow="auto">
         </plex-select>
         <plex-text name="paciente" [(ngModel)]="filtro.paciente" label="Paciente" debounce="400" (change)="filtrar()"
                    grow="4">
