@@ -1,13 +1,15 @@
 <plex-layout main="{{mainSize}}">
     <plex-layout-main>
-        <plex-title titulo="Listado de inscriptos para vacunación" size="lg">
-            <plex-button type="success" size="md" (click)="nuevaInscripcion()" *ngIf="permisosAlta.length">
-                NUEVA INSCRIPCIÓN
-            </plex-button>
-        </plex-title>
-        <filtros-vacunacion></filtros-vacunacion>
+        <header>
+            <plex-title titulo="Listado de inscriptos para vacunación" size="lg">
+                <plex-button type="success" size="md" (click)="nuevaInscripcion()" *ngIf="permisosAlta.length">
+                    NUEVA INSCRIPCIÓN
+                </plex-button>
+            </plex-title>
+            <filtros-vacunacion></filtros-vacunacion>
+        </header>
 
-        <plex-table [columns]="columns" #table="plTable" [offset]="170" (scroll)="onScroll()">
+        <plex-table [columns]="columns" #table="plTable" [offset]="0" (scroll)="onScroll()">
             <plex-table-columns>
             </plex-table-columns>
             <tr *ngFor="let paciente of listado$ | async" (click)="showInSidebar(paciente)" class='selectable'
