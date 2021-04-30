@@ -24,17 +24,16 @@
             </div>
             <div class="row" *ngIf="procedimiento?.term">
                 <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h4 class="text-capitalize">Plantilla: {{ procedimiento.term }}</h4>
+                    <h4 class="text-capitalize">
+                        Plantilla: {{ procedimiento.term }}
+                    </h4>
                     <div class="d-flex justify-content-end" *ngIf="plantillas$">
                         <plex-button *ngIf="procedimiento" type="warning" label="Cerrar"
                                      (click)="cerrarProcedimiento()">
                         </plex-button>
-                        <plex-button *ngIf="procedimiento" type="info" label="Agregar plantilla"
-                                     (click)="agregarPlantilla(procedimiento,false)" class="ml-2">
-                        </plex-button>
-                        <plex-button *ngIf="procedimiento" type="info" label="Agregar archivo"
-                                     (click)="agregarPlantilla(procedimiento,true)" class="ml-2">
-                        </plex-button>
+
+                        <plex-dropdown type="info" right="true" [items]="addItems" label="Agregar">
+                        </plex-dropdown>
                     </div>
                 </div>
             </div>
