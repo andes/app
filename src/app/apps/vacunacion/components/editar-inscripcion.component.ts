@@ -27,6 +27,8 @@ export class EditarInscripcionComponent implements OnInit {
     public opcionesGrupos$: Observable<any>;
     public permisosEdicion;
     public localidades$: Observable<any>;
+    public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    public patronEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
     @Input('inscripcion')
     set _inscripcion(value) {

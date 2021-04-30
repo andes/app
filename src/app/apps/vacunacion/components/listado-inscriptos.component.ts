@@ -41,6 +41,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public sexoCorregido;
     public dniCorregido;
     public fechaNacimientoCorregida;
+    public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public columns = [
         {
             key: 'grupo',
@@ -82,7 +83,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             label: 'Localidad',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.localidad?.nombre.localeCompare(b.localidad?.nombre); }
+            sort: (a, b) => { return a.localidad ?.nombre.localeCompare(b.localidad ?.nombre); }
         },
         {
             key: 'fecha-registro',
