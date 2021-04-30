@@ -60,7 +60,7 @@
                                    name="nombre" label="Nombre" [required]="true" grow="4">
                         </plex-text>
 
-                        <plex-select name="localidades" [data]="localidades$ | async" label="Localidad de Residencia"
+                        <plex-select name="localidad" [data]="localidades$ | async" label="Localidad de Residencia"
                                      [(ngModel)]="ciudadano.localidad" [required]="true">
                         </plex-select>
                         <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
@@ -114,7 +114,7 @@
                                    name="establecimiento" label="Establecimiento donde cumple la mayor carga horaria"
                                    [required]="true">
                         </plex-text>
-                        <plex-select name="localidades" [data]="localidades$ | async"
+                        <plex-select name="localidadEstablecimiento" [data]="localidades$ | async"
                                      label="Localidad del establecimiento"
                                      [(ngModel)]="ciudadano.localidadEstablecimiento" [required]="true">
                         </plex-select>

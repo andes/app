@@ -248,6 +248,9 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.pacienteSelected = inscripcionActualizada;
         }
         this.editando = false;
+        this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
+            map(resp => this.listadoActual = resp)
+        );
     }
 
     validarDomicilio(inscripcion) {
