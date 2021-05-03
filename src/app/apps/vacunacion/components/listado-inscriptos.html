@@ -123,30 +123,23 @@
                     <plex-item *ngFor="let candidato of candidatos">
                         <img [ngClass]="{'img-fallecido' : candidato.fechaFallecimiento}"
                              [mpiFotoPaciente]="candidato" />
-
                         <plex-label *ngIf="!candidato.numeroIdentificacion" titulo="{{ candidato | nombre }}"
                                     subtitulo="{{ (candidato.documento | number) || 'Sin DNI' }}">
                         </plex-label>
-
                         <plex-label *ngIf="candidato.numeroIdentificacion" titulo="{{ candidato | nombre }}"
                                     subtitulo="{{ candidato.numeroIdentificacion }}"></plex-label>
-
                         <plex-label titulo="{{ candidato | edad }}"
                                     subtitulo="{{ candidato.fechaNacimiento | fecha:'utc' }}">
                         </plex-label>
-
                         <plex-badge *ngIf="candidato.fechaFallecimiento" type="danger">Fallecido:
                             {{ candidato.fechaFallecimiento | fecha:'utc'}}
                         </plex-badge>
-
                         <plex-badge type="info">{{ candidato | sexo }}
                         </plex-badge>
-
                         <plex-badge type="" class=""
                                     [ngClass]="{'text-success' : candidato.estado === 'validado' , 'text-warning' : candidato.estado === 'temporal'} ">
                             {{ candidato.estado }}
                         </plex-badge>
-
                         <plex-button type="info" size="sm" label="Seleccionar" (click)="asociarCandidato(candidato)">
                         </plex-button>
                     </plex-item>
@@ -177,18 +170,29 @@
                                  title="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}">
                     </plex-button>
                 </plex-title>
-
                 <plex-wrapper *ngIf="showAgregarNota">
-                    <plex-text [(ngModel)]="nuevaNota" name="notaText" placeholder="Ingrese una nota ..." grow="full">
-                    </plex-text>
-                    <plex-button class="pr-1" label="Cancelar" size="sm" type="danger" (click)="onCancelarNota()">
-                    </plex-button>
-                    <plex-button label="Guardar" type="success" size="sm" (click)="onGuardarNota()"></plex-button>
+                    <form #formularioNota="ngForm" grow="full" class="mr-1">
+                        <plex-label *ngIf="pacienteSelected.nota" titulo="Nota actual"
+                                    subtitulo="{{pacienteSelected.nota}}">
+                        </plex-label>
+                        <plex-select name="nota" [data]="notasPredefinidas"
+                                     label="{{ pacienteSelected.nota ? 'Seleccione una nueva opción' : 'Seleccione una opción' }}"
+                                     [(ngModel)]="notaPredefinida" grow="full" [required]="true">
+                        </plex-select>
+                        <plex-text label="Ingrese nota" *ngIf="notaPredefinida?.id==='otra'"
+                                   [(ngModel)]="notaPersonalizada" name="notaText" grow="full" [required]="true"
+                                   multiline="true">
+                        </plex-text>
+                        <div class="mt-1" justify>
+                            <plex-button label="Cancelar" size="sm" type="danger" (click)="onCancelarNota()">
+                            </plex-button>
+                            <plex-button label="Guardar" type="success" size="sm" (click)="onGuardarNota()"
+                                         [disabled]="!formularioNota?.valid"></plex-button>
+                        </div>
+                    </form>
                 </plex-wrapper>
-
                 <detalle-inscripcion [inscripcion]="pacienteSelected">
                 </detalle-inscripcion>
-
             </ng-container>
         </ng-container>
     </plex-layout-sidebar>

@@ -21,7 +21,6 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public mainSize = 12;
     public showSidebar = false;
     public showAgregarNota = false;
-    public nuevaNota = '';
     public showDetalle = false;
     public showNueva = false;
     public pacienteSelected: any;
@@ -42,6 +41,15 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public dniCorregido;
     public fechaNacimientoCorregida;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
+    public notasPredefinidas = [
+        { id: 'turno-asignado', nombre: 'Turno asignado' },
+        { id: 'no-quiere', nombre: 'No quiere vacunarse' },
+        { id: 'vacunado', nombre: 'Ya se vacunó' },
+        { id: 'no-contesta', nombre: 'No contesta' },
+        { id: 'otra', nombre: 'Otra' }
+    ];
+    public notaPredefinida;
+    public notaPersonalizada = '';
     public columns = [
         {
             key: 'grupo',
@@ -147,7 +155,9 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.mainSize = 8;
             this.candidatosBuscados = false;
             this.editando = false;
-            this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
+            this.showAgregarNota = false;
+            this.notaPredefinida = null;
+            this.notaPersonalizada = '';
             this.editInscripcion = false;
         }
     }
@@ -284,7 +294,11 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     onGuardarNota() {
         this.showAgregarNota = false;
-        this.pacienteSelected.nota = this.nuevaNota;
+        if (this.notaPredefinida.id === 'otra') {
+            this.pacienteSelected.nota = this.notaPersonalizada;
+        } else {
+            this.pacienteSelected.nota = this.notaPredefinida.nombre;
+        }
         this.listado$ = this.inscripcionService.patch(this.pacienteSelected).pipe(
             switchMap(paciente => {
                 this.pacienteSelected = paciente;
@@ -293,12 +307,14 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
                 );
             })
         );
+        this.notaPersonalizada = '';
+        this.notaPredefinida = null;
         this.plex.toast('info', 'La nota ha sido guardada correctamente.');
     }
 
     onCancelarNota() {
         this.showAgregarNota = false;
-        this.nuevaNota = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
+        this.notaPersonalizada = this.pacienteSelected.nota ? this.pacienteSelected.nota : '';
     }
 
     returnBusqueda(event) {
