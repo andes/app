@@ -163,7 +163,7 @@
             <ng-container *ngIf="!editando">
                 <plex-title titulo="Datos de la inscripción" size="sm">
                     <plex-button type="warning" size="sm" (click)="editPaciente()" class='mr-1' icon="pencil"
-                                 *ngIf="permisosEdicion.length && !editando">
+                                 *ngIf="permisosEdicion.length && !editando && !pacienteSelected?.fechaVacunacion">
                     </plex-button>
                     <plex-button type="info" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}"
                                  size="sm" (click)="showAgregarNota = true"
