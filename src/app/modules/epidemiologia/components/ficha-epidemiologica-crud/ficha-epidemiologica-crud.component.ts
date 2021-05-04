@@ -193,10 +193,27 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           if (sec.name !== 'Contactos Estrechos') {
             const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
             if (buscado !== -1) {
-              sec.fields.map(field => {
-                let key = Object.keys(field);
-                this.secciones[buscado].fields[key[0]] = field[key[0]];
-              });
+              if (sec.name === 'Usuario' && this.editFicha) {
+                sec.fields.map(field => {
+                  switch (Object.keys(field)[0]) {
+                    case 'responsable':
+                      this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
+                      break;
+                    case 'organizacion':
+                      this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.organizacion.id;
+                      this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
+                      break;
+                    case 'fechanotificacion':
+                      this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
+                      break;
+                  }
+                });
+              } else {
+                sec.fields.map(field => {
+                  let key = Object.keys(field);
+                  this.secciones[buscado].fields[key[0]] = field[key[0]];
+                });
+              }
             }
           } else {
             this.contactosEstrechos = sec.fields;
