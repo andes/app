@@ -1,10 +1,10 @@
-import { Observable, combineLatest } from 'rxjs';
-import { IPaciente } from '../interfaces/IPaciente';
-import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { map } from 'rxjs/operators';
 import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { IPaciente } from '../interfaces/IPaciente';
 
 @Injectable()
 export class PacienteService {
@@ -99,17 +99,7 @@ export class PacienteService {
      */
     linkPatient(pacienteBase: IPaciente, pacienteLink: IPaciente): Observable<IPaciente[]> {
         if (pacienteBase && pacienteBase.id && pacienteLink && pacienteLink.id) {
-            const dataLink = {
-                entidad: 'ANDES',
-                valor: pacienteLink.id
-            };
-            if (pacienteBase.identificadores) {
-                pacienteBase.identificadores.push(dataLink);
-            } else {
-                pacienteBase.identificadores = [dataLink];
-            }
-            pacienteLink.activo = false;
-            return combineLatest([this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, false)]);
+            return this.server.patch(`${this.pacienteV2}/link/${pacienteBase.id}`, { pacienteLink, op: 'link' });
         }
         return;
     }
@@ -124,8 +114,9 @@ export class PacienteService {
             if (pacienteBase.identificadores) {
                 pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
             }
-            return combineLatest(this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, true));
+            return this.server.patch(`${this.pacienteV2}/link/${pacienteBase.id}`, { pacienteLink, op: 'unlink' });
         }
         return;
     }
+
 }
