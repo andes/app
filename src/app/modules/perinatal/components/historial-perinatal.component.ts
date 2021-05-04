@@ -5,9 +5,5 @@ import { Component, Input } from '@angular/core';
   templateUrl: './historial-perinatal.component.html'
 })
 export class HistorialPerinatalComponent {
-  controles;
-  @Input('controles')
-  set _carnet(value) {
-    this.controles = value;
-  }
+  @Input() controles: any;
 }

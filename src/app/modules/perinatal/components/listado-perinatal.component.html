@@ -19,12 +19,12 @@
                            class="fechas" (change)="filtrar()">
             </plex-datetime>
         </plex-wrapper>
-        <plex-table [columns]="columns" #table="plTable" [offset]="170" (scroll)="onScroll()">
+        <plex-table [columns]="columns" #table="plTable" [offset]="showSidebar ? 203 : 131" (scroll)="onScroll()">
             <plex-title titulo="Listado de pacientes" size="sm">
                 <plex-table-columns>
                 </plex-table-columns>
             </plex-title>
-            <tr *ngFor="let carnet of listado$ | async" (click)="showInSidebar(carnet)"
+            <tr *ngFor="let carnet of (listado$| plSort:table| async)" (click)="showInSidebar(carnet)"
                 [class.selected]="carnet.id===carnetSelected?.id" [class.selectable]="selectable">
                 <td *plTableCol="'fechaInicio'">{{ carnet.fecha | fecha }}</td>
                 <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>

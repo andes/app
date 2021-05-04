@@ -5,9 +5,5 @@ import { Component, Input } from '@angular/core';
   templateUrl: './detalle-perinatal.component.html'
 })
 export class DetallePerinatalComponent {
-  carnet;
-  @Input('carnet')
-  set _carnet(value) {
-    this.carnet = value;
-  }
+  @Input() carnet: any;
 }

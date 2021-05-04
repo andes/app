@@ -1,6 +1,6 @@
 <div *ngIf="listado$ | async as listado">
     <plex-help class="ml-2" type="info" titulo="Alertas" icon="bell" size="sm" cardSize="half" hintType="danger"
-               [hint]="listado.length >= 1" hintIcon="star" detach="top">
+               [hint]="listado.length" hintIcon="star" detach="top">
         <plex-list>
             <plex-item *ngFor="let carnet of listado">
                 <plex-badge size="sm" type="info">{{ carnet.fechaProximoControl | fecha }}</plex-badge>

@@ -49,19 +49,8 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                 if (fechaUltimoControl) {
                     params.fechaUltimoControl = fechaUltimoControl;
                 }
-                const desdeF = moment(fechaDesde).startOf('day').toDate();
-                const hastaF = moment(fechaHasta).endOf('day').toDate();
-                if (fechaDesde) {
-                    if (fechaHasta) {
-                        params.fecha = `${desdeF}|${hastaF}`;
-                    } else {
-                        params.fecha = `>${desdeF}`;
-                    }
-                } else {
-                    if (fechaHasta) {
-                        params.fecha = `<${hastaF}`;
-                    }
-                }
+
+                params.fecha = this.queryDateParams(fechaDesde, fechaHasta);
 
                 return this.search(params).pipe(
                     map(resultados => {
