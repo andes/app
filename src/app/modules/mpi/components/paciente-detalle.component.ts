@@ -81,6 +81,11 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
                     texto += ', ';
                 }
                 texto = texto + dir.ubicacion.localidad.nombre;
+            } else if (dir.ubicacion.provincia) {
+                if (texto.length > 0) {
+                    texto += ', ';
+                }
+                texto = texto + dir.ubicacion.provincia.nombre;
             }
             return texto;
         }
