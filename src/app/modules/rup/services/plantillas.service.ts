@@ -77,10 +77,16 @@ export class PlantillasService {
     }
 
     handlerDropDown(conceptId, plantilla) {
+
         const ctid = plantilla.target?.conceptId || conceptId;
-        return () => {
-            this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any);
-        };
+
+        if (plantilla.link) {
+            return () => { window.open(plantilla.link); };
+
+        } else {
+            return () => { this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any); };
+        }
+
     }
 
 

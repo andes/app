@@ -7,6 +7,7 @@ import { Unsubscribe } from '@andes/shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
+import { Auth } from '@andes/auth';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
@@ -32,11 +33,30 @@ export class PlantillasRUPComponent implements OnInit {
     plantillas$: Observable<any> = this.subject.asObservable();
     mostrarDescendientes = false;
 
+    addItems = [
+        {
+            label: 'Plantilla',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.agregarPlantilla(this.procedimiento, false);
+            }
+        },
+        {
+            label: 'Enlace externo',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.agregarPlantilla(this.procedimiento, true);
+            }
+        }
+    ];
+
     constructor(
         public plex: Plex,
         private sp: PlantillasService,
         private snomedService: SnomedService,
-        public servicioPrestacion: PrestacionesService) { }
+        public servicioPrestacion: PrestacionesService,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
         this.plex.updateTitle([{
@@ -62,6 +82,8 @@ export class PlantillasRUPComponent implements OnInit {
                     title: '',
                     esSolicitud: false,
                     expression: `${this.procedimiento.conceptId}`,
+                    esArchivoLink: item.esArchivoLink,
+                    organizacion: item.organizacion
                 };
             } else {
                 plantilla = item;
@@ -123,13 +145,12 @@ export class PlantillasRUPComponent implements OnInit {
                     }
                 });
             } else {
-                this.addElementToObservableArray({});
+                // this.addElementToObservableArray({});
             }
         });
     }
 
     guardarPlantilla(plantilla, conceptId) {
-
         let body;
         const expression = this.generarExpression(conceptId, this.incluyeDescendientes);
         if (typeof plantilla.id !== 'undefined') {
@@ -199,13 +220,17 @@ export class PlantillasRUPComponent implements OnInit {
         }
     }
 
-    agregarPlantilla(procedimiento) {
+    agregarPlantilla(procedimiento, esLink) {
+        const miOrganizacion = this.auth.organizacion;
         const plantilla = {
             conceptos: [procedimiento],
             descripcion: '',
             title: '',
+            link: '',
             esSolicitud: false,
-            expression: `${procedimiento.conceptId}`
+            expression: `${procedimiento.conceptId}`,
+            esArchivoLink: esLink,
+            organizacion: esLink ? miOrganizacion : undefined
         };
 
         this.addElementToObservableArray(plantilla);

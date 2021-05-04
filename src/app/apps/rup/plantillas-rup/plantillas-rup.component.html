@@ -24,14 +24,16 @@
             </div>
             <div class="row" *ngIf="procedimiento?.term">
                 <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h4 class="text-capitalize">Plantilla: {{ procedimiento.term }}</h4>
+                    <h4 class="text-capitalize">
+                        Plantilla: {{ procedimiento.term }}
+                    </h4>
                     <div class="d-flex justify-content-end" *ngIf="plantillas$">
                         <plex-button *ngIf="procedimiento" type="warning" label="Cerrar"
                                      (click)="cerrarProcedimiento()">
                         </plex-button>
-                        <plex-button *ngIf="procedimiento" type="info" label="Agregar plantilla"
-                                     (click)="agregarPlantilla(procedimiento)" class="ml-2">
-                        </plex-button>
+
+                        <plex-dropdown type="info" right="true" [items]="addItems" label="Agregar">
+                        </plex-dropdown>
                     </div>
                 </div>
             </div>
@@ -84,9 +86,12 @@
                                     <plex-text label="Título" [(ngModel)]="plantilla.title" name="title"
                                                [required]="true">
                                     </plex-text>
-                                    <plex-text label="Texto de plantilla" [(ngModel)]="plantilla.descripcion"
-                                               name="contenido" [html]="true" [readonly]="false" class="w-100"
-                                               [required]="true">
+                                    <plex-text *ngIf="plantilla.esArchivoLink" label="Link" [(ngModel)]="plantilla.link"
+                                               name="title" [required]="true">
+                                    </plex-text>
+                                    <plex-text *ngIf="!plantilla.esArchivoLink" label="Texto de plantilla"
+                                               [(ngModel)]="plantilla.descripcion" name="contenido" [html]="true"
+                                               [readonly]="false" class="w-100" [required]="true">
                                     </plex-text>
                                 </div>
                             </div>
