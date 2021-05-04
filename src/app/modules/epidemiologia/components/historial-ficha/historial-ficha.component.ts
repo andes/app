@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormsHistoryService } from '../../services/forms-history.service';
 
@@ -6,7 +6,7 @@ import { FormsHistoryService } from '../../services/forms-history.service';
   selector: 'app-historial-ficha',
   templateUrl: './historial-ficha.component.html'
 })
-export class HistorialFichaComponent implements OnInit, OnChanges {
+export class HistorialFichaComponent implements OnChanges {
   @Input() ficha: any;
   @Output() fichaHistorial = new EventEmitter<any>();
 
@@ -38,8 +38,6 @@ export class HistorialFichaComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.historial$ = this.historyService.search({ idFicha: this.ficha.id });
   }
-
-  ngOnInit(): void { }
 
   verFicha(ficha) {
     this.fichaHistorial.emit(ficha);

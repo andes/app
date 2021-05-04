@@ -45,12 +45,13 @@
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
                 <td *plTableCol="'acciones'">
-                    <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm"
-                                 (click)="editarFicha(ficha)">
+                    <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm" tooltip="Editar"
+                                 (click)="editarVerFicha(ficha,true)">
                     </plex-button>
-                    <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
+                    <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" tooltip="Ver"
+                                 (click)="editarVerFicha(ficha,fale)">
                     </plex-button>
-                    <plex-button *ngIf="puedeVerHistorial" type="info" icon="history" size="sm"
+                    <plex-button *ngIf="puedeVerHistorial" type="info" icon="history" size="sm" tooltip="Ver Historial"
                                  (click)="verHistorial(ficha)">
                     </plex-button>
                 </td>
@@ -81,17 +82,26 @@
             </div>
         </ng-container>
         <ng-container *ngIf="fichaHistorial">
-            <app-historial-ficha [ficha]="fichaHistorial" (fichaHistorial)="verFicha($event)">
+            <app-historial-ficha [ficha]="fichaHistorial" (fichaHistorial)="editarVerFicha($event,false)">
                 <plex-button *ngIf="!showFicha" type="danger" (click)="clearHistorial()">Volver
                 </plex-button>
             </app-historial-ficha>
         </ng-container>
     </plex-layout-sidebar>
-    <ng-template #elseFicha>
+</plex-layout>
+<ng-template #elseFicha>
+    <plex-layout [main]="fichaHistorial ? 12 : 8">
         <plex-layout-main>
             <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
                                            (volver)="volver()" [fichaName]="showFicha">
             </app-ficha-epidemiologica-crud>
         </plex-layout-main>
-    </ng-template>
-</plex-layout>
+        <plex-layout-sidebar type="invert">
+            <ng-container *ngIf="paciente">
+                <plex-title size="sm" titulo="Datos del paciente">
+                </plex-title>
+                <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
+            </ng-container>
+        </plex-layout-sidebar>
+    </plex-layout>
+</ng-template>

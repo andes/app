@@ -3,13 +3,14 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { cache } from '@andes/shared';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { LocalidadService } from '../../../../services/localidad.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',
@@ -87,7 +88,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private auth: Auth,
     private router: Router,
     private localidadService: LocalidadService,
-    private zonaSanitariaService: ZonaSanitariaService
+    private zonaSanitariaService: ZonaSanitariaService,
+    private pacienteService: PacienteService
   ) { }
 
   ngOnInit(): void {
@@ -147,19 +149,17 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     );
   }
 
-  editarFicha(ficha) {
-    this.paciente = ficha.paciente;
-    this.fichaPaciente = ficha;
-    this.showFicha = ficha.type.name;
-    this.editFicha = true;
-  }
-
-  verFicha(ficha) {
-    const fichaHistorial = ficha.ficha;
-    this.paciente = fichaHistorial ? fichaHistorial.paciente : ficha.paciente;
-    this.fichaPaciente = fichaHistorial ? fichaHistorial : ficha;
-    this.showFicha = fichaHistorial ? fichaHistorial.type.name : ficha.type.name;
-    this.editFicha = false;
+  editarVerFicha(ficha, edit) {
+    if (!ficha.ficha && this.fichaHistorial) {
+      this.fichaHistorial = null;
+    }
+    const fichaView = ficha.ficha ? ficha.ficha : ficha;
+    this.pacienteService.getById(fichaView.paciente.id).subscribe(pac => {
+      this.paciente = pac;
+      this.fichaPaciente = fichaView;
+      this.showFicha = fichaView.type.name;
+      this.editFicha = edit;
+    });
   }
 
   volver() {
