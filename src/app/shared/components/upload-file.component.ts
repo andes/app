@@ -1,5 +1,5 @@
 import { environment } from '../../../environments/environment';
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest, HttpEventType } from '@angular/common/http';
 import { Plex } from '@andes/plex';
 
@@ -17,12 +17,12 @@ export interface ICompleted {
 @Component({
     selector: 'upload-file',
     template: `
-        <input style="visibility: hidden; position: absolute;" type="file" (change)="onChange($event)" #upload>
+        <input style="visibility: hidden; position: absolute;" type="file" (change)="onChange($event)" accept="{{extensionesAceptadas}}" #upload>
         <plex-button type="info" [label]="btnLabel" (click)="upload.click()" [disabled]="disabled"></plex-button>
     `,
 })
 
-export class UploadFileComponent {
+export class UploadFileComponent implements OnInit {
     @Input() label = 'SUBIR';
     @Input() extensiones: string[] = null;
     @Input() modulo: string = null;
@@ -34,6 +34,7 @@ export class UploadFileComponent {
     public disabled = false;
     public currentFileUpload: File;
     public progress = 0;
+    public extensionesAceptadas;
     constructor(
         private http: HttpClient,
         private plex: Plex
@@ -41,6 +42,12 @@ export class UploadFileComponent {
 
     }
 
+    ngOnInit() {
+        if (this.extensiones) {
+            this.extensionesAceptadas = this.extensiones.map(ext => '.' + ext);
+        }
+
+    }
     public get btnLabel() {
         if (this.disabled) {
             return this.progress + '%';
