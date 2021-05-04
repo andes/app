@@ -17,7 +17,8 @@ export class EditarInscripcionComponent implements OnInit {
     public inscripcion: any;
     public estados = [
         { id: 'pendiente', nombre: 'pendiente' },
-        { id: 'inhabilitado', nombre: 'inhabilitado' }
+        { id: 'inhabilitado', nombre: 'inhabilitado' },
+        { id: 'fallecido', nombre: 'fallecido' }
     ];
     public fechaMinimaNacimiento = moment('1900-01-01').toDate();
     public fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
