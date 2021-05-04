@@ -9,13 +9,15 @@
     <plex-badge *ngIf="inscripcion.estado === 'inhabilitado'" type="danger">Inhabilitado
     </plex-badge>
     <plex-badge *ngIf="inscripcion.grupo.nombre === 'personal-salud' && inscripcion.personal_salud" type="info">Personal
-        de salud verificado
+        verificado
     </plex-badge>
     <plex-badge *ngIf="inscripcion.grupo.nombre === 'personal-salud' && !inscripcion.personal_salud" type="warning">
-        Personal
-        de salud sin verificar
+        Personal sin verificar
     </plex-badge>
-    <plex-label titulo="Email" subtitulo="{{ inscripcion.email? inscripcion.email : 'No indica' }}" case="lowercase">
+    <plex-badge type="{{ inscripcion.validaciones[0] === 'domicilio' ? 'success' : 'danger' }}">
+        {{ inscripcion.validaciones[0] === 'domicilio' ? 'Domicilio verificado' : 'Domicilio sin verificar' }}
+    </plex-badge>
+    <plex-label titulo=" Email" subtitulo="{{ inscripcion.email? inscripcion.email : 'No indica' }}" case="lowercase">
     </plex-label>
     <plex-label titulo="Teléfono" subtitulo="{{ inscripcion.telefono? inscripcion.telefono : 'No indica' }}">
     </plex-label>
@@ -23,10 +25,6 @@
     </plex-label>
     <plex-label titulo="Validado" subtitulo="{{ inscripcion.validado ? 'Si' : 'No' }}">
     </plex-label>
-    <div *ngIf="inscripcion.validaciones?.length">
-        <label>Validaciones</label>
-        <div *ngFor="let item of inscripcion.validaciones"><small>{{item}}</small></div>
-    </div>
     <plex-label *ngIf="inscripcion.cud" titulo="CUD" subtitulo="{{ inscripcion.cud }}">
     </plex-label>
 </plex-detail>
