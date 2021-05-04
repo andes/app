@@ -9,29 +9,32 @@
 </plex-title>
 <form #formulario="ngForm">
     <plex-select [(ngModel)]="inscripcion.grupo" label="Grupo" [data]="opcionesGrupos" name="grupo" idField="nombre"
-                 labelField="descripcion" [required]="true"
+                 labelField="descripcion" [required]="true" [readonly]="inscripcion.estado === 'fallecido'"
                  *ngIf="permiteEditar('grupoPoblacional') && opcionesGrupos.length>0">
     </plex-select>
     <plex-datetime *ngIf="permiteCambioFechaNacimiento" label="Fecha de Nacimiento" type="date"
                    [(ngModel)]="inscripcion.fechaNacimiento" class="fechas" name="fechaNacimiento"
                    placeholder="dd/mm/yyyy" [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento"
-                   [required]="true">
+                   [required]="true" [readonly]="inscripcion.estado === 'fallecido'">
     </plex-datetime>
     <plex-text grow="full" label="Email" name="email" [(ngModel)]="inscripcion.email" *ngIf="permiteEditar('contacto')"
-               [pattern]="patronEmail">
+               [pattern]="patronEmail" [readonly]="inscripcion.estado === 'fallecido'">
     </plex-text>
     <plex-text grow="full" label="Teléfono" name="telefono" [(ngModel)]="inscripcion.telefono"
-               [pattern]="patronContactoNumerico" *ngIf="permiteEditar('contacto')">
+               [pattern]="patronContactoNumerico" *ngIf="permiteEditar('contacto')"
+               [readonly]="inscripcion.estado === 'fallecido'">
     </plex-text>
     <plex-select name="localidad" [data]="localidades$ | async" label="Localidad" [(ngModel)]="inscripcion.localidad"
-                 [required]="true">
+                 [required]="true" [readonly]="inscripcion.estado === 'fallecido'">
     </plex-select>
     <plex-select label="Estado" [(ngModel)]="inscripcion.estado" name="estado" [data]="estados"
-                 *ngIf="permiteEditar('estado')"></plex-select>
+                 *ngIf="permiteEditar('estado')">
+    </plex-select>
     <div *ngIf="inscripcion.grupo?.nombre === 'factores-riesgo' && permiteEditar('grupoPoblacional')">
         <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
                     name="plex-morbilidades" [data]="morbilidades" [(ngModel)]="inscripcion.morbilidades"
-                    [multiple]="true"></plex-radio>
+                    [multiple]="true" [readonly]="inscripcion.estado === 'fallecido'">
+        </plex-radio>
         <plex-label
                     titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
         </plex-label>
@@ -41,54 +44,68 @@
         <plex-label titulo="Precauciones relacionadas con la seguridad de la inmunización" size="lg">
         </plex-label>
         <plex-bool class="d-block" type="checkbox" name="alergia" [(ngModel)]="inscripcion.alergia"
-                   label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento">
+                   label="Alguna vez he tenido una reacción alérgica GRAVE (que requirió internación o puso mi vida en peligro) con una vacuna o medicamento"
+                   [readonly]="inscripcion.estado === 'fallecido'">
         </plex-bool>
         <plex-bool class="d-block" type="checkbox" name="condicion" [(ngModel)]="inscripcion.condicion"
-                   label="Tengo una enfermedad / condición que compromete GRAVEMENTE mis defensas">
+                   label="Tengo una enfermedad / condición que compromete GRAVEMENTE mis defensas"
+                   [readonly]="inscripcion.estado === 'fallecido'">
         </plex-bool>
         <plex-bool class="d-block" type="checkbox" name="convaleciente" [(ngModel)]="inscripcion.convaleciente"
-                   label="Estoy todavía debilitado y recuperándome de una enfermedad / complicación aguda (convaleciente)">
+                   label="Estoy todavía debilitado y recuperándome de una enfermedad / complicación aguda (convaleciente)"
+                   [readonly]="inscripcion.estado === 'fallecido'">
         </plex-bool>
         <plex-bool class="d-block" type="checkbox" name="vacuna" [(ngModel)]="inscripcion.vacuna"
-                   label="He recibido otra vacuna hace MENOS de 4 semanas"></plex-bool>
+                   label="He recibido otra vacuna hace MENOS de 4 semanas"
+                   [readonly]="inscripcion.estado === 'fallecido'">
+        </plex-bool>
         <plex-bool class="d-block" type="checkbox" name="plasma" [(ngModel)]="inscripcion.plasma"
-                   label="He recibido plasma / suero hiperinmune / inmunoglobulinas / anticuerpos monoclonales hace menos de 3 meses">
+                   label="He recibido plasma / suero hiperinmune / inmunoglobulinas / anticuerpos monoclonales hace menos de 3 meses"
+                   [readonly]="inscripcion.estado === 'fallecido'">
         </plex-bool>
         <plex-bool class="d-block" justify="left" type="checkbox" name="embarazada" [(ngModel)]="inscripcion.embarazada"
-                   label="Estoy embarazada / Sospecho que podría estar embarazada"></plex-bool>
+                   label="Estoy embarazada / Sospecho que podría estar embarazada"
+                   [readonly]="inscripcion.estado === 'fallecido'">
+        </plex-bool>
         <plex-bool class="d-block" type="checkbox" name="amamantando" [(ngModel)]="inscripcion.amamantando"
-                   label="Me encuentro amamantando"></plex-bool>
+                   label="Me encuentro amamantando" [readonly]="inscripcion.estado === 'fallecido'">
+        </plex-bool>
     </div>
     <div *ngIf="inscripcion.grupo?.nombre === 'personal-salud' && permiteEditar('grupoPoblacional')">
         <hr>
         <plex-label titulo="Datos Laborales" size="lg"></plex-label>
         <plex-text [(ngModel)]="inscripcion.establecimiento" name="establecimiento"
-                   label="Establecimiento donde cumple la mayor carga horaria" [required]="true">
+                   label="Establecimiento donde cumple la mayor carga horaria" [required]="true"
+                   [readonly]="inscripcion.estado === 'fallecido'">
         </plex-text>
         <plex-select name="localidadEstablecimiento" [data]="localidades$ | async" label="Localidad del establecimiento"
-                     [(ngModel)]="inscripcion.localidadEstablecimiento" [required]="true">
+                     [(ngModel)]="inscripcion.localidadEstablecimiento" [required]="true"
+                     [readonly]="inscripcion.estado === 'fallecido'">
         </plex-select>
         <hr>
         <plex-label titulo="Relación laboral" size="lg"></plex-label>
-        <plex-radio [(ngModel)]="inscripcion.relacion" [data]="relacionLaboral" name="relacion">
+        <plex-radio [(ngModel)]="inscripcion.relacion" [data]="relacionLaboral" name="relacion"
+                    [readonly]="inscripcion.estado === 'fallecido'">
         </plex-radio>
         <hr>
         <plex-label titulo="Solo para matriculados" size="lg"></plex-label>
-        <plex-select name="profesiones" [data]="profesiones$ | async" label="Tipo de matrícula" [(ngModel)]="profesion">
+        <plex-select name="profesiones" [data]="profesiones$ | async" label="Tipo de matrícula" [(ngModel)]="profesion"
+                     [readonly]="inscripcion.estado === 'fallecido'">
         </plex-select>
-        <plex-int name="matricula" [(ngModel)]="inscripcion.matricula" label="Número de Matricula">
+        <plex-int name="matricula" [(ngModel)]="inscripcion.matricula" label="Número de Matricula"
+                  [readonly]="inscripcion.estado === 'fallecido'">
         </plex-int>
     </div>
     <div *ngIf="inscripcion.grupo?.nombre === 'discapacidad' && permiteEditar('grupoPoblacional')">
         <hr>
         <plex-text type="number" [(ngModel)]="inscripcion.cud" name="cud" label="Certificado Único de Discapacidad"
-                   [required]="true" grow="4">
+                   [required]="true" grow="4" [readonly]="inscripcion.estado === 'fallecido'">
         </plex-text>
         <plex-label titulo="Solo si usted es un paciente en hemodiálisis crónica, seleccione una opción a continuación"
                     size="lg"></plex-label>
 
         <plex-select name="diaseleccionados" [data]="dias" label="Días en los que asiste al centro habitualmente"
-                     [(ngModel)]="diaSeleccion">
+                     [(ngModel)]="diaSeleccion" [readonly]="inscripcion.estado === 'fallecido'">
         </plex-select>
     </div>
 </form>
