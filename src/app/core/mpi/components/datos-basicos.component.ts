@@ -107,6 +107,11 @@ export class DatosBasicosComponent implements OnInit {
         this.paciente.genero = ((typeof this.paciente.sexo === 'string')) ? this.paciente.sexo : (Object(this.paciente.sexo).id);
     }
 
+    eliminarEspacios() {
+        if (this.paciente.alias?.length && this.paciente.alias[0] === ' ') {
+            this.paciente.alias = this.paciente.alias.slice(1);
+        }
+    }
 
     // --------------  PARA REGISTRO DE BEBES -----------------
 

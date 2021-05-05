@@ -163,7 +163,8 @@
         <ng-container *ngIf="tipoPaciente !== 'bebe'">
             <plex-title titulo="identidad autopercibida" size="sm" class="mt-2"></plex-title>
             <plex-wrapper>
-                <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"></plex-text>
+                <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
+                           [pattern]="nombrePattern" (change)="eliminarEspacios()"></plex-text>
 
                 <plex-select label="Seleccione género" [(ngModel)]="paciente.genero" [data]="generos" name="genero">
                 </plex-select>
