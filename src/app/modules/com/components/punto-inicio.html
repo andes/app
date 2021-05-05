@@ -1,4 +1,4 @@
-<plex-layout [main]="showSidebar? 7 : 12">
+<plex-layout [main]="showSidebar? 8 : 12">
     <plex-layout-main>
         <plex-title main titulo="CENTRO OPERATIVO MÉDICO">
             <plex-button position="left" type="success" class="mr-1" label="Nueva derivación"
@@ -95,7 +95,8 @@
                                         <plex-badge
                                                     type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}</plex-badge>
-                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning" title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
+                                                    title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
                                     </plex-item>
@@ -198,7 +199,8 @@
                                         <plex-badge
                                                     type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
                                             {{ derivacion.estado }}</plex-badge>
-                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning" title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
+                                        <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
+                                                    title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
 

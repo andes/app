@@ -28,7 +28,6 @@ import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-
         PlexModule,
         SharedModule,
         RecaptchaModule,
-        SharedModule,
         MPILibModule,
         VacunacionRouting,
         RecaptchaFormsModule
