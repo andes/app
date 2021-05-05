@@ -1,3 +1,24 @@
+# [5.45.0](https://github.com/andes/app/compare/v5.44.0...v5.45.0) (2021-05-05)
+
+
+### Bug Fixes
+
+* **EP:** fix provincia id en ficha ([b050657](https://github.com/andes/app/commit/b0506579ab163f09aa0120274eb43b56794d2bb4))
+* **mapa-camas:** ajuste control fecha maximo de egreso ([#2247](https://github.com/andes/app/issues/2247)) ([f96b594](https://github.com/andes/app/commit/f96b594e73db33f222b81ab061fb9072a1150f66))
+* **mpi:** muestra detalle de provincia ([#2254](https://github.com/andes/app/issues/2254)) ([13c1f95](https://github.com/andes/app/commit/13c1f954b1511e84a0e9443a64833fb4f3555ec1))
+* **rup:** limpieza de campos al cambiar vacuna/categoría ([#2241](https://github.com/andes/app/issues/2241)) ([ef00a3d](https://github.com/andes/app/commit/ef00a3dfe74ac8f39df1624aa8fa4ba8de7b9f32))
+
+
+### Features
+
+* **com:** unidad destino derivacion ([0610a85](https://github.com/andes/app/commit/0610a85266618bb733e4aca1b7e1c1e367b89a54))
+* **plex:** v7.16.0 ([#2248](https://github.com/andes/app/issues/2248)) ([7cf802e](https://github.com/andes/app/commit/7cf802eb4290f99e674b8bdd9f884a831ed080bb))
+* **rup:**  links a informacion en plantillas ([#2217](https://github.com/andes/app/issues/2217)) ([8383bf1](https://github.com/andes/app/commit/8383bf18923c2d4ac067040d0c2de6611895a1c3))
+* **shared:** restringe extensiones en archivos adjuntos ([#2237](https://github.com/andes/app/issues/2237)) ([e9d3d9c](https://github.com/andes/app/commit/e9d3d9c9e82486b586c0beb356fd5e85baa66425))
+* **vac:** no permitir editar inscripciones de pacientes ya vacunados ([#2253](https://github.com/andes/app/issues/2253)) ([3d7b7e8](https://github.com/andes/app/commit/3d7b7e8a4882e59b023fa5ca5c19606486f8ef24))
+* **vac:** permitir cambiar el grupo de inscripciones ([#2249](https://github.com/andes/app/issues/2249)) ([20e06b7](https://github.com/andes/app/commit/20e06b70a49817a9351750828e5c64a774f69d69))
+* **vac:** poder elegir notas predefinidas o escribir una ([#2250](https://github.com/andes/app/issues/2250)) ([cdf9e36](https://github.com/andes/app/commit/cdf9e36562ab3eee3ca3e7412c1ad10b81635dbe))
+
 # [5.44.0](https://github.com/andes/app/compare/v5.43.0...v5.44.0) (2021-04-28)
 
 
