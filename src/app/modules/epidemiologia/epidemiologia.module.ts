@@ -15,6 +15,7 @@ import { SharedModule } from '@andes/shared';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
+import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
 
 
 
@@ -24,7 +25,8 @@ import { HistorialFichaComponent } from './components/historial-ficha/historial-
     FichaEpidemiologicaCrudComponent,
     SelectSearchDirective,
     BuscadorFichaEpidemiologicaComponent,
-    HistorialFichaComponent
+    HistorialFichaComponent,
+    CodigSisaPipe
   ],
   imports: [
     CommonModule,
