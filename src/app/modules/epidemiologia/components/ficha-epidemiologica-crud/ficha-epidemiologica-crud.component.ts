@@ -18,6 +18,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { PaisService } from 'src/app/services/pais.service';
 import { map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+import { VacunasService } from 'src/app/services/vacunas.service';
 
 
 @Component({
@@ -58,7 +59,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   ];
   public tipoInstitucion = [
     { id: 'residencia', nombre: 'Residencia de larga estadía' },
-    { id: 'hogarMenores', nombre: 'Hogar de menores' },
+    { id: 'hogarMenores', nombre: 'Hogar de niños, niñas y adolescentes' },
     { id: 'carcel', nombre: 'Carcel' }
   ];
   public clasificacion = [
@@ -178,6 +179,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public residencias$: Observable<any>;
   public paises$: Observable<any>;
   public organizacionesInternacion$: Observable<any>;
+  public vacunas$: Observable<any>;
   public estaInternado = false;
 
   constructor(
@@ -194,6 +196,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     public serviceInstitucion: InstitucionService,
     public serviceHistory: FormsHistoryService,
     private paisService: PaisService,
+    private vacunasService: VacunasService
 
   ) { }
 
@@ -325,7 +328,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         apellido: this.paciente.apellido,
         fechaNacimiento: this.paciente.fechaNacimiento,
         sexo: this.paciente.sexo,
-        genero: this.paciente.sexo,
         estado: this.paciente.estado
       },
       zonaSanitaria: this.zonaSanitaria
@@ -588,5 +590,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     } else {
       this.residencias$ = this.serviceInstitucion.get({ tipo: 'Residencia' });
     }
+  }
+
+  getVacunas() {
+    this.vacunas$ = this.vacunasService.getNomivacVacunas({});
   }
 }

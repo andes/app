@@ -395,7 +395,7 @@
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [readonly]="!editFicha"
-                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
+                                           (change)="getVacunas(); clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
                                 </plex-bool>
                                 <plex-select *ngIf="field.key==='vacunacionestado' && seccion.fields['vacunacioncovid']"
                                              [label]="field.label?field.label:field.key" grow="auto"
@@ -407,11 +407,12 @@
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>
-                                <plex-text *ngIf="field.key==='nombrevacunacovid' && seccion.fields['vacunacioncovid']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
+                                <plex-select *ngIf="field.key==='nombrevacunacovid' && seccion.fields['vacunacioncovid']"
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                             [required]="field.required" labelField="nombre" idField="_id"
+                                             [data]="vacunas$ | async" [readonly]="!editFicha">
+                                </plex-select>
                                 <plex-bool *ngIf="field.key==='sospechosoconantecedente'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
