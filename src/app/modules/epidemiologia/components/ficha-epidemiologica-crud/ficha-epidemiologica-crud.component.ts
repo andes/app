@@ -13,6 +13,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { InstitucionService } from 'src/app/services/turnos/institucion.service';
+import { FormsHistoryService } from '../../services/forms-history.service';
+import { catchError, switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -181,7 +183,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     private router: Router,
     private snomedService: SnomedService,
     public servicePaciente: PacienteService,
-    public serviceInstitucion: InstitucionService
+    public serviceInstitucion: InstitucionService,
+    public serviceHistory: FormsHistoryService
   ) { }
 
   ngOnChanges(): void {
@@ -314,24 +317,31 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       this.setMpiPaciente(contactosPaciente.fields);
     }
     if (this.fichaPaciente) {
-      this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
-        res => {
-          this.plex.toast('success', 'Su ficha fue actualizada correctamente');
-          this.toBack();
-        },
-        error => {
+      this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).pipe(
+        switchMap((res) => {
+          return this.serviceHistory.save({ ficha: res });
+        }),
+        catchError(() => {
           this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada');
-        });
+          return null;
+        }),
+      ).subscribe(() => {
+        this.plex.toast('success', 'Su ficha fue actualizada correctamente');
+        this.toBack();
+      });
     } else {
-      this.formEpidemiologiaService.save(fichaFinal).subscribe(
-        res => {
-          this.plex.toast('success', 'Su ficha fue registrada correctamente');
-          this.toBack();
-        },
-        error => {
+      this.formEpidemiologiaService.save(fichaFinal).pipe(
+        switchMap((res) => {
+          return this.serviceHistory.save({ ficha: res });
+        }),
+        catchError(() => {
           this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada');
-
-        });
+          return null;
+        }),
+      ).subscribe(() => {
+        this.plex.toast('success', 'Su ficha fue registrada correctamente');
+        this.toBack();
+      });
     }
   }
 

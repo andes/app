@@ -3,13 +3,14 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { cache } from '@andes/shared';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { LocalidadService } from '../../../../services/localidad.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',
@@ -34,6 +35,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public editFicha = false;
   public puedeEditar: boolean;
   public puedeVer: boolean;
+  public puedeVerHistorial: boolean;
   public pacienteSelected: IPaciente;
   public query = null;
   public localidades$: Observable<any>;
@@ -41,6 +43,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public listado: any[];
   public lastResults = new BehaviorSubject<any[]>(null);
   public inProgress = false;
+  public fichaHistorial;
 
   public columns = [
     {
@@ -86,7 +89,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private router: Router,
     private localidadService: LocalidadService,
     private zonaSanitariaService: ZonaSanitariaService,
-
+    private pacienteService: PacienteService
   ) { }
 
   ngOnInit(): void {
@@ -95,6 +98,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     }
     this.puedeEditar = this.auth.check('epidemiologia:update');
     this.puedeVer = this.auth.check('epidemiologia:read');
+    this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
     this.plex.updateTitle([
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Buscador Fichas epidemiologicas' }
@@ -145,18 +149,17 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     );
   }
 
-  editarFicha(ficha) {
-    this.paciente = ficha.paciente;
-    this.fichaPaciente = ficha;
-    this.showFicha = ficha.type.name;
-    this.editFicha = true;
-  }
-
-  verFicha(ficha) {
-    this.paciente = ficha.paciente;
-    this.fichaPaciente = ficha;
-    this.showFicha = ficha.type.name;
-    this.editFicha = false;
+  editarVerFicha(ficha, edit) {
+    if (!ficha.ficha && this.fichaHistorial) {
+      this.fichaHistorial = null;
+    }
+    const fichaView = ficha.ficha ? ficha.ficha : ficha;
+    this.pacienteService.getById(fichaView.paciente.id).subscribe(pac => {
+      this.paciente = pac;
+      this.fichaPaciente = fichaView;
+      this.showFicha = fichaView.type.name;
+      this.editFicha = edit;
+    });
   }
 
   volver() {
@@ -190,5 +193,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     if (this.query.skip > 0 && this.query.skip % this.query.limit === 0) {
       this.lastResults.next(this.listado);
     }
+  }
+
+  verHistorial(ficha) {
+    this.fichaHistorial = ficha;
+  }
+
+  clearHistorial() {
+    this.fichaHistorial = null;
   }
 }
