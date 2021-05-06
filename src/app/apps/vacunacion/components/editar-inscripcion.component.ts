@@ -82,6 +82,9 @@ export class EditarInscripcionComponent implements OnInit {
 
     ngOnInit() {
         this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
+        if (this.inscripcion.email) {
+            this.inscripcion.email = this.inscripcion.email.toLowerCase().trim();
+        }
     }
 
     permiteEditar(campo: string) {
