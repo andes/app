@@ -51,7 +51,8 @@
                         </plex-select>
                         <plex-datetime label="Fecha de Nacimiento" type="date" [(ngModel)]="ciudadano.fechaNacimiento"
                                        class="fechas" name="fechaNacimiento" placeholder="dd/mm/yyyy"
-                                       [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true">
+                                       [min]="fechaMinimaNacimiento" [max]="fechaMaximaNacimiento" [required]="true"
+                                       (change)="setFactorRiesgoEdad()">
                         </plex-datetime>
                         <plex-text type="text" [(ngModel)]="ciudadano.apellido" (change)="limpiarRespuesta()"
                                    name="apellido" label="Apellido" [required]="true">
@@ -73,10 +74,11 @@
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre == 'factores-riesgo'">
                         <hr>
                         <div>
-                            <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
-                                        name="plex-morbilidades" [data]="morbilidades"
-                                        [(ngModel)]="ciudadano.morbilidades" [multiple]="true"></plex-radio>
-                            <plex-label
+                            <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19"
+                                        [required]="!ciudadano.factorRiesgoEdad" name="plex-morbilidades"
+                                        [data]="morbilidades" [(ngModel)]="ciudadano.morbilidades" [multiple]="true">
+                            </plex-radio>
+                            <plex-label *ngIf="!ciudadano.factorRiesgoEdad"
                                         titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
                             </plex-label>
                         </div>

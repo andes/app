@@ -39,4 +39,5 @@ export interface ICiudadano {
     paciente?: {
         id: String
     };
+    factorRiesgoEdad: boolean;
 }

@@ -12,7 +12,8 @@
             <plex-label titulo="Datos Personales" size="lg"></plex-label>
             <plex-grid type="full" cols="1">
                 <plex-select [(ngModel)]="ciudadano.grupo" label="Seleccione grupo" [data]="opcionesGrupos" name="grupo"
-                             idField="nombre" labelField="descripcion" [required]="true" [readonly]="grupoSelected">
+                             idField="nombre" labelField="descripcion" [required]="true" [readonly]="grupoSelected"
+                             (change)="setFactorRiesgoEdad()">
                 </plex-select>
                 <plex-phone label="Teléfono" [(ngModel)]="ciudadano.telefono" name="telefono" [required]="true"
                             placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
@@ -24,10 +25,10 @@
             <ng-container *ngIf="ciudadano.grupo?.nombre === 'factores-riesgo'">
                 <hr>
                 <div>
-                    <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
-                                name="plex-morbilidades" [data]="morbilidades" [(ngModel)]="ciudadano.morbilidades"
-                                [multiple]="true"></plex-radio>
-                    <plex-label
+                    <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19"
+                                [required]="!ciudadano.factorRiesgoEdad" name="plex-morbilidades" [data]="morbilidades"
+                                [(ngModel)]="ciudadano.morbilidades" [multiple]="true"></plex-radio>
+                    <plex-label *ngIf="!ciudadano.factorRiesgoEdad"
                                 titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
                     </plex-label>
                 </div>

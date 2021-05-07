@@ -1,6 +1,6 @@
 import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Server, ResourceBaseHttp } from '@andes/shared';
+import { Server, ResourceBaseHttp, calcularEdad } from '@andes/shared';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { map, switchMap } from 'rxjs/operators';
 import { ICiudadano } from '../interfaces/ICiudadano';
@@ -101,5 +101,15 @@ export class InscripcionService extends ResourceBaseHttp {
 
     asignar(params: any): Observable<any> {
         return this.server.post(`${this.url}/asignacion`, { params: params, showError: true });
+    }
+
+    // NO HTTP -------------------------
+
+    getFactorRiesgoEdad(ciudadano: ICiudadano) {
+        if (ciudadano.grupo?.nombre === 'factores-riesgo') {
+            const edad = calcularEdad(ciudadano.fechaNacimiento);
+            return ciudadano.factorRiesgoEdad = 57 <= edad && edad < 60;
+        }
+        return false;
     }
 }

@@ -71,7 +71,8 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         diaseleccionados: '',
         recaptcha: '',
         morbilidades: undefined,
-        paciente: undefined
+        paciente: undefined,
+        factorRiesgoEdad: false
     };
 
     public relacion = null;
@@ -170,6 +171,10 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/vacunacion/listado']);
             }
         );
+    }
+
+    setFactorRiesgoEdad() {
+        this.ciudadano.factorRiesgoEdad = this.inscripcionService.getFactorRiesgoEdad(this.ciudadano);
     }
 
     guardarInscripcion($event) {

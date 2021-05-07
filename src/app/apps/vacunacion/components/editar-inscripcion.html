@@ -29,15 +29,13 @@
                  [required]="true" *ngIf="inscripcion.estado !== 'fallecido' && inscripcion.estado.id !== 'fallecido'">
     </plex-select>
     <plex-select label="Estado" [(ngModel)]="inscripcion.estado" name="estado" [data]="estados"
-                 *ngIf="permiteEditar('estado')">
-    </plex-select>
+                 *ngIf="permiteEditar('estado')"></plex-select>
     <div
          *ngIf="inscripcion.grupo?.nombre === 'factores-riesgo' && permiteEditar('grupoPoblacional') && inscripcion.estado !== 'fallecido' && inscripcion.estado.id !== 'fallecido'">
-        <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19" required="true"
-                    name="plex-morbilidades" [data]="morbilidades" [(ngModel)]="inscripcion.morbilidades"
-                    [multiple]="true">
-        </plex-radio>
-        <plex-label
+        <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19"
+                    [required]="!inscripcion.factorRiesgoEdad" name="plex-morbilidades" [data]="morbilidades"
+                    [(ngModel)]="inscripcion.morbilidades" [multiple]="true"></plex-radio>
+        <plex-label *ngIf="!inscripcion.factorRiesgoEdad"
                     titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
         </plex-label>
     </div>

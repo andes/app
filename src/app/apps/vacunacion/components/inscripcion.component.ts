@@ -73,7 +73,8 @@ export class InscripcionComponent implements OnInit {
         estado: 'pendiente',
         diaseleccionados: '',
         recaptcha: '',
-        morbilidades: undefined
+        morbilidades: undefined,
+        factorRiesgoEdad: false
     };
 
     public relacion = null;
@@ -205,6 +206,10 @@ export class InscripcionComponent implements OnInit {
         });
     }
 
+    setFactorRiesgoEdad() {
+        this.ciudadano.factorRiesgoEdad = this.inscripcionService.getFactorRiesgoEdad(this.ciudadano);
+    }
+
     limpiarForm() {
         this.modal.showed = false;
         this.formulario.form.reset();
@@ -239,6 +244,7 @@ export class InscripcionComponent implements OnInit {
             diaseleccionados: '',
             recaptcha: '',
             morbilidades: undefined,
+            factorRiesgoEdad: false
         };
         this.formulario.form.markAsPristine();
     }
