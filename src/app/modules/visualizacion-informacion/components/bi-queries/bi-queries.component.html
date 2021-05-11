@@ -64,6 +64,12 @@
                                      [required]="argumento.required" labelField="type" 
                                      (getData)="loadFomTypes($event)">
                         </plex-select>
+                        <plex-select *ngSwitchCase="'sexo'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                     [required]="argumento.required" labelField="nombre" 
+                                     [data]="opcionesSexo">
+                        </plex-select>
                     </ng-container>
                 </plex-wrapper>
             </ng-container>

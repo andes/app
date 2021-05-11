@@ -24,6 +24,10 @@ export class BiQueriesComponent implements OnInit {
     public mostrarSalida = false;
     public tipoPrestaciones;
     public totalOrganizaciones = false;
+    public opcionesSexo = [
+        { id: 'femenino', nombre: 'Femenino' },
+        { id: 'masculino', nombre: 'Masculino' }
+    ];
 
     constructor(
         private queryService: QueriesService,
