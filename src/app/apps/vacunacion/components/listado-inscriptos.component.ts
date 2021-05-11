@@ -149,7 +149,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             this.pacienteSelected = paciente;
             this.showSidebar = true;
             this.showDetalle = true;
-            this.mainSize = 8;
+            this.mainSize = 9;
             this.candidatosBuscados = false;
             this.editando = false;
             this.showAgregarNota = false;
