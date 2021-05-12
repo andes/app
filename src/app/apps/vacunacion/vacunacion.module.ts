@@ -1,3 +1,4 @@
+import { MonitoreoInscriptosComponent } from './components/gestion-turnos/monitoreo-inscriptos';
 import { DetalleInscripcionComponent } from './components/detalle-inscripcion.component';
 import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
@@ -19,6 +20,9 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { EditarInscripcionComponent } from './components/editar-inscripcion.component';
 import { InscripcionBusquedaPacienteComponent } from './components/nueva-inscripcion/busqueda-paciente.component';
 import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-inscripcion.component';
+import { DacionTurnoComponent } from './components/gestion-turnos/dacion-turno.component';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { NotasComponent } from './components/notas.component';
 
 @NgModule({
     imports: [
@@ -30,7 +34,8 @@ import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-
         RecaptchaModule,
         MPILibModule,
         VacunacionRouting,
-        RecaptchaFormsModule
+        RecaptchaFormsModule,
+        DirectiveLibModule
     ],
     declarations: [
         InscripcionComponent,
@@ -41,7 +46,10 @@ import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-
         EditarInscripcionComponent,
         DetalleInscripcionComponent,
         InscripcionBusquedaPacienteComponent,
-        NuevaInscripcionComponent
+        NuevaInscripcionComponent,
+        MonitoreoInscriptosComponent,
+        DacionTurnoComponent,
+        NotasComponent
     ],
     providers: [
         {

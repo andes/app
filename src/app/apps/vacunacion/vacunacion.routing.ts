@@ -1,3 +1,4 @@
+import { MonitoreoInscriptosComponent } from './components/gestion-turnos/monitoreo-inscriptos';
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { InscripcionComponent } from './components/inscripcion.component';
@@ -10,6 +11,7 @@ const routes: Routes = [
     { path: 'inscripcion', component: InscripcionComponent },
     { path: 'inscripcion/:grupo', component: InscripcionComponent },
     { path: 'consulta-inscripcion', component: ConsultaComponent },
+    { path: 'monitoreo', component: MonitoreoInscriptosComponent },
     { path: 'listado', component: ListadoInscriptosVacunacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'nueva/:paciente', component: NuevaInscripcionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: '', redirectTo: 'inscripcion' }

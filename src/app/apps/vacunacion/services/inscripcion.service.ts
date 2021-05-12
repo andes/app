@@ -98,4 +98,8 @@ export class InscripcionService extends ResourceBaseHttp {
     patch(inscripcion): Observable<any> {
         return this.server.patch(`${this.url}/${inscripcion.id}`, inscripcion);
     }
+
+    asignar(params: any): Observable<any> {
+        return this.server.post(`${this.url}/asignacion`, { params: params, showError: true });
+    }
 }
