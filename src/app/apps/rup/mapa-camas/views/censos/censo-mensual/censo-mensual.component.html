@@ -1,6 +1,8 @@
 <plex-layout main="12">
     <plex-layout-main>
-        <plex-title titulo="Censo Mensual"></plex-title>
+        <plex-title titulo="Censo Mensual">
+            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+        </plex-title>
         <fieldset>
             <div class="row">
                 <div class="col-md-3">
@@ -18,8 +20,8 @@
                                  [data]="unidadesOranizativas" [required]="true" idField="conceptId" labelField="term">
                     </plex-select>
                 </div>
-                <div class="col-md-2">
-                    <br>
+                <div class="d-flex align-items-end col-md-2">
+                    <!-- <br> -->
                     <plex-button [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
                                  label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
                     </plex-button>

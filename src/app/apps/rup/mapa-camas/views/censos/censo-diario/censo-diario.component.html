@@ -1,6 +1,8 @@
 <plex-layout main="12">
     <plex-layout-main>
-        <plex-title titulo="Censo Diario"></plex-title>
+        <plex-title titulo="Censo Diario">
+            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+        </plex-title>
         <fieldset>
             <div class="row">
                 <div class="col-md-3">
@@ -17,8 +19,9 @@
                     <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
                                  (click)="generarCensoDiario()">
                     </plex-button>
-                    <plex-button [disabled]="!censo || requestInProgress" [title]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'" type="warning"
-                                 (click)="descargarCenso()">
+                    <plex-button [disabled]="!censo || requestInProgress"
+                                 [title]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
+                                 type="warning" (click)="descargarCenso()">
                         <plex-icon name="download"></plex-icon>
                     </plex-button>
                 </div>
