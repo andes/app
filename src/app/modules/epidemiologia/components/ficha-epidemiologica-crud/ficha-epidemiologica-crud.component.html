@@ -41,10 +41,13 @@
                                        name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                        [required]="field.required" [readonly]="!editFicha">
                             </plex-text>
-                            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key"
-                                           type="date" grow="auto" name="{{ field.key }}"
-                                           [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
-                                           [readonly]="!editFicha">
+                            <plex-int *ngSwitchCase="'int'" [label]="field.label?field.label:field.key" grow="auto"
+                                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                       [required]="field.required" [readonly]="!editFicha">
+                            </plex-int>
+                            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key" type="date"
+                                           grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                           [required]="field.required" [readonly]="!editFicha">
                             </plex-datetime>
                             <plex-phone *ngSwitchCase="'phone'" [label]="field.label?field.label:field.key"
                                         [(ngModel)]="seccion.fields[field.key]" [required]="field.required"

@@ -577,7 +577,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   checkClasificacionFinal() {
     const seccionClasificacion = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
-    if (seccionClasificacion.fields['antigeno']?.id === 'muestra') {
+    if (seccionClasificacion?.fields['antigeno']?.id === 'muestra') {
       return (seccionClasificacion.fields['lamp']?.id || seccionClasificacion.fields['pcrM']);
     } else {
       return true;

@@ -44,6 +44,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public lastResults = new BehaviorSubject<any[]>(null);
   public inProgress = false;
   public fichaHistorial;
+  public codigoSISAEdit;
+  public codigoSisa;
+  public registroSisaOpts = [
+    { id: 'noSISA', nombre: 'Sin registro SISA'},
+    { id: 'SISA', nombre: 'Con registro SISA'},
+  ];
+  public filtrarSISA;
 
   public columns = [
     {
@@ -77,6 +84,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     {
       key: 'acciones',
       label: 'Acciones',
+      sorteable: false
+    },
+    {
+      key: 'sisa',
+      label: 'Registro SISA',
       sorteable: false
     }
   ];
@@ -127,6 +139,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       skip: 0,
       limit: 15
     };
+
+    if (this.filtrarSISA) {
+      this.query.codigoSisa = this.filtrarSISA.id === 'SISA';
+    }
+
     this.lastResults.next(null);
     this.fichas$ = this.lastResults.pipe(
       switchMap(lastResults => {
@@ -197,9 +214,62 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
 
   verHistorial(ficha) {
     this.fichaHistorial = ficha;
+    this.codigoSISAEdit = false;
+    this.codigoSisa = null;
   }
 
   clearHistorial() {
     this.fichaHistorial = null;
+  }
+
+  editarCodigoSISA(ficha, _codigoSisa) {
+    this.fichaPaciente = ficha;
+    this.codigoSISAEdit = true;
+    this.codigoSisa = _codigoSisa;
+    this.fichaHistorial = null;
+  }
+
+  confirmSisa() {
+    return this.codigoSisa ?
+      this.guardarSisa() :
+      this.plex.confirm('¿Desea continuar?', 'Está a punto de blanquear el código SISA de la ficha.').then(
+        r => r ? this.guardarSisa() : null
+      );
+  }
+
+  private guardarSisa() {
+    const secciones = this.fichaPaciente.secciones;
+    let seccionOperaciones = secciones.find(s => s.name === 'Operaciones');
+
+    if (!seccionOperaciones) {
+      seccionOperaciones = {
+        name : 'Operaciones',
+        fields : []
+      };
+      secciones.push(seccionOperaciones);
+    }
+
+    let fieldSisa = seccionOperaciones.fields.find(f => (f.codigoSisa ? true : false));
+    if (!fieldSisa) {
+      fieldSisa = {
+        codigoSisa: null
+      };
+      seccionOperaciones.fields.push(fieldSisa);
+    }
+
+    fieldSisa.codigoSisa = this.codigoSisa;
+
+    this.codigoSISAEdit = false;
+
+    this.formEpidemiologiaService.update(this.fichaPaciente.id, { secciones }).subscribe(() => {
+      this.fichaPaciente.codigoSisa = this.codigoSisa;
+      this.fichaPaciente = null;
+      this.plex.toast('success', 'Código SISA registrado correctamente', 'Ficha actualizada', 300);
+      this.searchFichas();
+    });
+  }
+
+  cancelarSisa() {
+    this.codigoSISAEdit = false;
   }
 }

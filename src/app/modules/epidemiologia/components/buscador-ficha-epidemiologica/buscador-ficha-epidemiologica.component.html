@@ -1,6 +1,8 @@
-<plex-layout [main]="(showFicha || pacienteSelected) && (!fichaHistorial) ? 12 : 8">
+<plex-layout [main]="(showFicha || pacienteSelected) && (!fichaHistorial) && (!codigoSISAEdit) ? 12 : 8">
     <plex-layout-main *ngIf="!showFicha; else elseFicha">
         <plex-title titulo="Fichas epidemiologicas">
+            <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()" [disabled]="inProgress">
+            </plex-button>
         </plex-title>
         <plex-grid cols="{{ !pacienteSelected ? '3' : null }}" size="lg" type="full">
             <plex-detail justify="start" *ngIf="pacienteSelected">
@@ -30,13 +32,13 @@
                 </plex-select>
                 <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
                 </plex-text>
-                <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()"
-                             [disabled]="inProgress">
-                </plex-button>
+                <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts"
+                             label="Regitrado en SISA" [(ngModel)]="filtrarSISA" labelField="nombre">
+                </plex-select>
             </plex-wrapper>
         </plex-grid>
         <plex-table *ngIf="listado?.length && !inProgress" [columns]="columns" #table="plTable" (scroll)="onScroll()"
-                    [offset]="221">
+                    [offset]="pacienteSelected ? 291: 221">
             <plex-table-columns>
             </plex-table-columns>
             <tr *ngFor="let ficha of (fichas$| plSort:table| async )">
@@ -55,6 +57,16 @@
                                  (click)="verHistorial(ficha)">
                     </plex-button>
                 </td>
+                <td *plTableCol="'sisa'">
+                    <ng-container *ngIf="ficha | codigoSisaField as sisaField">
+                        <plex-badge type="{{ sisaField.codigoSisa ? 'success' : 'danger' }}">
+                            {{ sisaField.codigoSisa ? 'SISA ' + sisaField.codigoSisa : 'SIN REGISTRO' }}
+                            <plex-button icon="pencil" type="success" size="sm" title="Editar código SISA"
+                                (click)="editarCodigoSISA(ficha, sisaField.codigoSisa)">
+                            </plex-button>
+                        </plex-badge>
+                    </ng-container>
+                </td>
             </tr>
         </plex-table>
         <div *ngIf="!(fichas$ | async)?.length && !inProgress" class="h-50" justify="center">
@@ -65,14 +77,14 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <ng-container *ngIf="!fichaHistorial">
+        <ng-container *ngIf="!fichaHistorial && !codigoSISAEdit">
             <plex-title titulo="Búsqueda de fichas por paciente">
             </plex-title>
             <plex-label titulo="Buscar Paciente"></plex-label>
             <paciente-buscar (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
             </paciente-buscar>
             <paciente-listado *ngIf="resultadoBusqueda?.length && !pacienteSelected" [pacientes]="resultadoBusqueda"
-                              (selected)="onSelect($event)">
+                            (selected)="onSelect($event)">
             </paciente-listado>
             <div *ngIf="!pacienteSelected && !resultadoBusqueda?.length" class="h-75" justify="center">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
@@ -86,6 +98,23 @@
                 <plex-button *ngIf="!showFicha" type="danger" (click)="clearHistorial()">Volver
                 </plex-button>
             </app-historial-ficha>
+        </ng-container>
+        <ng-container *ngIf=codigoSISAEdit>
+            <plex-title titulo="Editar Código SISA">
+                <plex-button label="Cancelar" type="danger" (click)="cancelarSisa()" size="sm"></plex-button>
+                <plex-button label="Guardar" type="success" (click)="confirmSisa()" size="sm"></plex-button>
+            </plex-title>
+            <plex-grid cols="3" size="md" direction="row">
+                <plex-label titulo="Paciente" subtitulo="{{fichaPaciente.paciente | nombre}}">
+                </plex-label>
+                <plex-label titulo="Tipo Ficha" subtitulo="{{fichaPaciente.type.name}}">
+                </plex-label>
+                <plex-label titulo="Fecha" subtitulo="{{fichaPaciente.createdAt | fecha}}">
+                </plex-label>
+            </plex-grid>
+            <plex-int label="Código SISA" [autoFocus]="true" [(ngModel)]="codigoSisa"
+                name="codigoSISA">
+            </plex-int>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
