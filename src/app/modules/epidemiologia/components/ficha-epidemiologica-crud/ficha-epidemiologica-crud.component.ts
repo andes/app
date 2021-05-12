@@ -105,14 +105,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'completa', nombre: 'Completa' },
     { id: 'incompleta', nombre: 'Incompleta' }
   ];
-  public tipoConglomerado = [
-    { id: 'hospital', nombre: 'Hospital/Clínica/Centro asistencial' },
-    { id: 'penitenciaria', nombre: 'Institución penitenciaria' },
-    { id: 'saludMental', nombre: 'Institución de Salud Mental' },
-    { id: 'residenciaMayores', nombre: 'Residencia para adultos mayores' },
-    { id: 'empresas', nombre: 'Empresas' },
-    { id: 'instituciones', nombre: 'Instituciones educativas/Instituciones de asistencia infantil (jardín, guarderías, etc)' }
-  ];
   public reqCuidado = [
     { id: 'ambulatorio', nombre: 'Ambulatorio' },
     { id: 'salaGeneral', nombre: 'Internación Sala General' },

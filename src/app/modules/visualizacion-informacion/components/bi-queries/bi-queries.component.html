@@ -46,23 +46,15 @@
                                      [required]="argumento.required" labelField="nombreCompleto"
                                      (getData)="loadProfesionales($event)">
                         </plex-select>
-                        <plex-select *ngSwitchCase="'estadoAgenda'"
-                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                        <plex-select *ngSwitchCase="'select-static'"
+                                     [label]="argumento.label?argumento.label:argumento.key" grow="auto"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                     [required]="argumento.required" labelField="nombre"
-                                     (getData)="loadEstadosAgenda($event)">
-                        </plex-select>
-                        <plex-select *ngSwitchCase="'estadoTurno'"
-                                     [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
-                                     name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                     [required]="argumento.required" labelField="nombre"
-                                     (getData)="loadEstadosTurno($event)">
+                                     [required]="argumento.required" [data]="argumento.items">
                         </plex-select>
                         <plex-select *ngSwitchCase="'formsEpidemiologia'"
                                      [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
                                      name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                     [required]="argumento.required" labelField="type" 
-                                     (getData)="loadFomTypes($event)">
+                                     [required]="argumento.required" labelField="type" (getData)="loadFomTypes($event)">
                         </plex-select>
                     </ng-container>
                 </plex-wrapper>

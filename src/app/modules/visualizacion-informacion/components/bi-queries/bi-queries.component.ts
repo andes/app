@@ -70,31 +70,6 @@ export class BiQueriesComponent implements OnInit {
         }
     }
 
-    loadEstadosAgenda(event) {
-        const estadosAgendas = [
-            { id: 'planificacion', nombre: 'Planificación' },
-            { id: 'disponible', nombre: 'Disponible' },
-            { id: 'publicada', nombre: 'Publicada' },
-            { id: 'suspendida', nombre: 'Suspendida' },
-            { id: 'pausada', nombre: 'Pausada' },
-            { id: 'pendienteAsistencia', nombre: 'Pendiente Asistencia' },
-            { id: 'pendienteAuditoria', nombre: 'Pendiente Auditoría' },
-            { id: 'auditada', nombre: 'Auditada' },
-            { id: 'borrada', nombre: 'Borrada' }
-        ];
-        event.callback(estadosAgendas);
-    }
-
-    loadEstadosTurno(event) {
-        const estadosTurnos = [
-            { id: 'disponible', nombre: 'Disponible' },
-            { id: 'asignado', nombre: 'Asignado' },
-            { id: 'suspendido', nombre: 'Suspendido' },
-            { id: 'turnoDoble', nombre: 'Turno Doble' }
-        ];
-        event.callback(estadosTurnos);
-    }
-
     loadFomTypes(event) {
         this.formsService.search().subscribe(res => event.callback(res));
     }
