@@ -1,52 +1,121 @@
 <plex-layout main="{{mainSize}}">
     <plex-layout-main>
-        <plex-title titulo="Llamador de inscriptos para vacunación" size="lg">
+        <plex-title titulo="Gestión de turnos" size="lg">
         </plex-title>
-        <form #formulario="ngForm">
-            <plex-wrapper>
-                <plex-select name="grupo" label="Grupo" [(ngModel)]="grupoSelected" idField="nombre"
-                             labelField="descripcion" [data]="gruposPoblacionales" [required]="true">
-                </plex-select>
-                <plex-select name="localidad" label="Localidad" [(ngModel)]="localidadSelected" idField="nombre"
-                             labelField="nombre" [data]="localidades$ | async" [required]="true">
-                </plex-select>
-                <plex-button size="md" type="success" label="Próximo llamado" (click)="asignarInscripcion()"
-                             [disabled]="!formulario.valid || !pacienteProcesado" [validateForm]="formulario">
-                </plex-button>
-            </plex-wrapper>
-        </form>
-
-        <plex-table [columns]="columns" #table="plTable" [offset]="170">
-            <plex-table-columns>
-            </plex-table-columns>
-            <tr *ngIf="paciente" (click)="showInSidebar(paciente)" class='selectable'
-                [class.selected]="paciente.id===pacienteSelected?.id">
-                <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
-                <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
-                <td *plTableCol="'apellido-nombre'"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
-                <td *plTableCol="'sexo'"> {{ paciente.sexo === 'femenino' ? 'F' : 'M' }} </td>
-                <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
-                <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
-                <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
-                <td *plTableCol="'estado'">
-                    <plex-badge
-                                type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
-                        {{ paciente.estado }}
-                    </plex-badge>
-                    <span class="pl-1" *ngIf="paciente.nota">
-                        <i title="{{ paciente.nota }}" class="mdi mdi-comment-outline"></i>
-                    </span>
-                </td>
-                <td *plTableCol="'certificado'">
-                    <plex-label *ngIf="paciente.grupo.nombre === 'factores-riesgo'"
-                                type="{{ paciente.idPrestacionCertificado ? 'success' : 'danger' }}" titulo=""
-                                subtitulo="" icon="{{ paciente.idPrestacionCertificado ? 'check' : 'close' }}">
-                    </plex-label>
-                    <plex-label *ngIf="paciente.grupo.nombre !== 'factores-riesgo'">No corresponde
-                    </plex-label>
-                </td>
-            </tr>
-        </plex-table>
+        <plex-tabs (change)="cambio($event);" [activeIndex]="panelIndex">
+            <plex-tab label="Llamador de inscriptos" (click)="panelIndex = 0">
+                <form #formulario="ngForm">
+                    <plex-wrapper>
+                        <plex-select name="grupo" label="Grupo" [(ngModel)]="grupoSelected" idField="nombre"
+                                     labelField="descripcion" [data]="gruposPoblacionales" [required]="true"
+                                     [disabled]="!pacienteProcesado">
+                        </plex-select>
+                        <plex-select name="localidad" label="Localidad" [(ngModel)]="localidadSelected" idField="nombre"
+                                     labelField="nombre" [data]="localidades$ | async" [required]="true"
+                                     [disabled]="!pacienteProcesado">
+                        </plex-select>
+                        <plex-button size="md" type="success" label="Próximo llamado" class="mr-1"
+                                     (click)="asignarInscripcion()" [disabled]="!formulario.valid || !pacienteProcesado"
+                                     [validateForm]="formulario">
+                        </plex-button>
+                    </plex-wrapper>
+                </form>
+                <plex-table [columns]="columns" #table="plTable" [offset]="170">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngIf="pacienteLlamado" class='selectable' (click)="showInSidebar(pacienteLlamado)"
+                        [class.selected]="pacienteLlamado.id===pacienteSelected?.id">
+                        <td *plTableCol="'grupo'"> {{ grupoPoblacional(pacienteLlamado.grupo.nombre) }} </td>
+                        <td *plTableCol="'documento'"> {{ pacienteLlamado.documento }} </td>
+                        <td *plTableCol="'apellido-nombre'">
+                            {{ pacienteLlamado.apellido + ', ' + pacienteLlamado.nombre }} </td>
+                        <td *plTableCol="'sexo'"> {{ pacienteLlamado.sexo === 'femenino' ? 'F' : 'M' }} </td>
+                        <td *plTableCol="'edad'"> {{ pacienteLlamado | edad }} </td>
+                        <td *plTableCol="'localidad'"> {{ pacienteLlamado.localidad?.nombre || 'Sin datos' }} </td>
+                        <td *plTableCol="'fecha-registro'"> {{ pacienteLlamado.fechaRegistro | fecha }} </td>
+                        <td *plTableCol="'estado'">
+                            <plex-badge
+                                        type="{{pacienteLlamado.estado === 'habilitado' ? 'success' : (pacienteLlamado.estado === 'pendiente' ? 'warning' : 'danger')}}">
+                                {{ pacienteLlamado.estado }}
+                            </plex-badge>
+                            <span class="pl-1" *ngIf="pacienteLlamado.nota">
+                                <i title="{{ pacienteLlamado.nota }}" class="mdi mdi-comment-outline"></i>
+                            </span>
+                        </td>
+                        <td *plTableCol="'certificado'">
+                            <plex-label *ngIf="pacienteLlamado.grupo.nombre === 'factores-riesgo'"
+                                        type="{{ pacienteLlamado.idPrestacionCertificado ? 'success' : 'danger' }}"
+                                        titulo="" subtitulo=""
+                                        icon="{{ pacienteLlamado.idPrestacionCertificado ? 'check' : 'close' }}">
+                            </plex-label>
+                            <plex-label *ngIf="pacienteLlamado.grupo.nombre !== 'factores-riesgo'">No corresponde
+                            </plex-label>
+                        </td>
+                        <td *plTableCol="'turno'">
+                            <plex-label *ngIf="!pacienteLlamado.turno?.fechaYHora">No tiene turno asignado
+                            </plex-label>
+                            <plex-label *ngIf="pacienteLlamado.turno?.fechaYHora">
+                                {{pacienteLlamado.turno.fechaYHora | fecha }}
+                                {{ pacienteLlamado.turno.fechaYHora | hora }}
+                            </plex-label>
+                        </td>
+                    </tr>
+                </plex-table>
+            </plex-tab>
+            <plex-tab label="Mis Asignadas" (click)="panelIndex = 1">
+                <form #formulario="ngForm">
+                    <plex-wrapper>
+                        <plex-select name="grupo" label="Grupo" [(ngModel)]="grupoAsignadasSelected" idField="nombre"
+                                     labelField="descripcion" [data]="gruposPoblacionales">
+                        </plex-select>
+                        <plex-select name="localidad" label="Localidad" [(ngModel)]="localidadAsignadasSelected"
+                                     idField="nombre" labelField="nombre" [data]="localidades$ | async">
+                        </plex-select>
+                        <plex-button size="md" type="success" label="Filtrar" class="mr-1" (click)="cargarAsignadas()">
+                        </plex-button>
+                    </plex-wrapper>
+                </form>
+                <plex-table [columns]="columns" #table="plTable" [offset]="170">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let paciente of pacientes" class='selectable' (click)="showInSidebar(paciente)"
+                        [class.selected]="paciente.id===pacienteSelected?.id">
+                        <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
+                        <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
+                        <td *plTableCol="'apellido-nombre'">
+                            {{ paciente.apellido + ', ' + paciente.nombre }} </td>
+                        <td *plTableCol="'sexo'"> {{ paciente.sexo === 'femenino' ? 'F' : 'M' }} </td>
+                        <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
+                        <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
+                        <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
+                        <td *plTableCol="'estado'">
+                            <plex-badge
+                                        type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
+                                {{ paciente.estado }}
+                            </plex-badge>
+                            <span class="pl-1" *ngIf="paciente.nota">
+                                <i title="{{ paciente.nota }}" class="mdi mdi-comment-outline"></i>
+                            </span>
+                        </td>
+                        <td *plTableCol="'certificado'">
+                            <plex-label *ngIf="paciente.grupo.nombre === 'factores-riesgo'"
+                                        type="{{ paciente.idPrestacionCertificado ? 'success' : 'danger' }}" titulo=""
+                                        subtitulo="" icon="{{ paciente.idPrestacionCertificado ? 'check' : 'close' }}">
+                            </plex-label>
+                            <plex-label *ngIf="paciente.grupo.nombre !== 'factores-riesgo'">No corresponde
+                            </plex-label>
+                        </td>
+                        <td *plTableCol="'turno'">
+                            <plex-label *ngIf="!paciente.turno?.fechaYHora">No tiene turno asignado
+                            </plex-label>
+                            <plex-label *ngIf="paciente.turno?.fechaYHora">{{paciente.turno.fechaYHora | fecha }}
+                                {{ paciente.turno.fechaYHora | hora }}
+                            </plex-label>
+                        </td>
+                    </tr>
+                </plex-table>
+            </plex-tab>
+        </plex-tabs>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="showSidebar" type="invert">
         <plex-title titulo="Detalle paciente" size="md">
