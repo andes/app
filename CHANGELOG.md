@@ -1,3 +1,20 @@
+# [5.46.0](https://github.com/andes/app/compare/v5.45.0...v5.46.0) (2021-05-12)
+
+
+### Bug Fixes
+
+* **buscador-epidemio:** subscribe anidados y vista ([0cb9694](https://github.com/andes/app/commit/0cb969478de13d395b6c5d161867b389d1450be0))
+
+
+### Features
+
+* **buscador-epidemio:** historial de fichas ([151788d](https://github.com/andes/app/commit/151788d85d366d736bb300f62be997bc6222ada4))
+* **COM:** descargar historial derivacion ([79ea366](https://github.com/andes/app/commit/79ea3661983c6ce326ffbf8840ac13ac6826fefe))
+* **EP:** muestra y edita codigo SISA en buscador ([b13e8a4](https://github.com/andes/app/commit/b13e8a499ba7e71c85b837f95639d9e5324e6dd4))
+* **ficha-epidemio:** actualizaciones ([6685836](https://github.com/andes/app/commit/6685836270028c60435958ed3083df4472671bd2))
+* **ficha-epidemio:** vacunas ([c0e549a](https://github.com/andes/app/commit/c0e549a7a17a0ad94870e9db329b551c8bfdd735))
+* **ficha.epidemiologica:** setea datos de usuario al editar una ficha ([7f33d9c](https://github.com/andes/app/commit/7f33d9c1bc882f9f6112a1ac410ce12ef66de9a9))
+
 # [5.45.0](https://github.com/andes/app/compare/v5.44.0...v5.45.0) (2021-05-05)
 
 
