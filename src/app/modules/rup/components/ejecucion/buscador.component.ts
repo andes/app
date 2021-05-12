@@ -20,7 +20,6 @@ import { Plex } from '@andes/plex';
 })
 
 export class BuscadorComponent implements OnInit, OnChanges {
-    @Input() frecuentesTipoPrestacion;
     @Input() conceptoFrecuente;
     @Input() prestacion: IPrestacion;
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
@@ -76,23 +75,23 @@ export class BuscadorComponent implements OnInit, OnChanges {
     async ngOnInit() {
         this.resultsAux = { ...this.results };
         this.inicializarBuscadorBasico();
+        this.results.sugeridos['todos'] = [];
 
+        this.ejecucionService.getSugeridos().subscribe(conceptos => {
+            conceptos.forEach(element => {
+                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
+                    this.results.sugeridos['todos'] = [
+                        element,
+                        ...this.results.sugeridos['todos']
+                    ];
+                }
+            });
+            this.filtrarResultados('sugeridos');
+            this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
+        });
     }
 
     inicializarBuscadorBasico() {
-
-        if (this.frecuentesTipoPrestacion.length > 0) {
-            this.results.sugeridos['todos'] = [];
-            this.frecuentesTipoPrestacion.forEach(element => {
-                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
-                    this.results.sugeridos['todos'].push(element);
-                }
-            });
-            // filtramos los resultados
-            this.filtrarResultados('sugeridos');
-            this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
-        }
-
         forkJoin(
             this.inicializarFrecuentesProfesional(),
             this.inicializarFrecuentesTP()

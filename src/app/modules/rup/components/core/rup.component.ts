@@ -333,7 +333,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     createEngine() {
-        if (this.elementoRUP.rules && this.paciente && !this.soloValores) {
+        if (this.elementoRUP.rules && this.paciente) {
             this.rulesEngine = new Engine([], { allowUndefinedFacts: true });
 
             this.rulesEngine.addFact('edad', calcularEdad(this.paciente.fechaNacimiento, 'y'));
@@ -352,7 +352,9 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.rulesEvent.next(event);
             });
 
-            this.runRules();
+            if (this.registro?.valor) {
+                this.addFact('value', this.registro.valor);
+            }
         }
     }
 

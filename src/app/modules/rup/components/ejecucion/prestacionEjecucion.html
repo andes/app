@@ -325,9 +325,8 @@
             <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
-                    <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes"
-                                  [conceptoFrecuente]="conceptoFrecuente" (_onDragStart)="arrastrandoConcepto(true)"
-                                  (_onDragEnd)="arrastrandoConcepto(false)">
+                    <rup-buscador [prestacion]="prestacion" [conceptoFrecuente]="conceptoFrecuente"
+                                  (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                     </rup-buscador>
                 </plex-tab>
                 <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
