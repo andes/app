@@ -37,7 +37,8 @@
                              size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
-            <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !existeEgreso)">
+            <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !existeEgreso)"
+                                  (onSave)="toggleEdit()">
                 <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
                              (click)="toggleEdit();" [autodisabled]="true">
                 </plex-button>

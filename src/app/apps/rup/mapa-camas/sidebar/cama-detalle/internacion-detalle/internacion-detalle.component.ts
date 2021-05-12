@@ -6,6 +6,7 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Auth } from '@andes/auth';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { map, tap } from 'rxjs/operators';
+import { InternacionListadoComponent } from '../../../views/listado-internacion/listado-internacion.component';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -18,8 +19,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     prestacion$: Observable<IPrestacion>;
 
-
-    prestacion: IPrestacion;
     view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
@@ -29,7 +28,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     public editar = false;
     public existeEgreso = false;
-
     public mostrar;
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
@@ -50,7 +48,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         }
     }
 
-
     ngOnInit() {
         this.mostrar = 'ingreso';
 
@@ -60,7 +57,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
-            this.mapaCamasService.resumenInternacion$,
+            this.mapaCamasService.resumenInternacion$
         ).subscribe(([capa, resumen]) => {
             if (capa !== 'estadistica') {
                 if (resumen.ingreso) {
@@ -85,10 +82,16 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     { key: 'egreso', label: 'EGRESO' }
                 ];
             }
-
         });
 
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
+        this.mapaCamasService.selectedPrestacion.subscribe(prestacion => {
+            this.existeEgreso = prestacion?.ejecucion?.registros?.length > 1;
+            if (this.editar) {
+                this.editar = false;
+                this.accion.emit(null);
+            }
+        });
     }
 
     onActiveOption(opcion) {
@@ -115,5 +118,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     toggleEdit() {
         this.editar = !this.editar;
+        this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
     }
 }
