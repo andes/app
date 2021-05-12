@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cache, notNull } from '@andes/shared';
-import { Observable, BehaviorSubject, Subject, combineLatest, of, timer } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, of, timer } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
-import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
 import { switchMap, map, pluck, catchError, startWith, multicast, filter, tap } from 'rxjs/operators';
@@ -335,8 +334,8 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
