@@ -1,12 +1,11 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ListadoInternacionService } from './listado-internacion.service';
 import { map } from 'rxjs/operators';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';

@@ -1,11 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, combineLatest, throwError, BehaviorSubject } from 'rxjs';
-import { map, switchMap, take, tap, pluck, catchError, filter } from 'rxjs/operators';
+import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
+import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
-import { cache, Observe, notNull } from '@andes/shared';
+import { cache, notNull } from '@andes/shared';
 import { Router } from '@angular/router';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
@@ -68,7 +67,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
         private auth: Auth,
-        private hudsService: HUDSService,
         private router: Router,
         private motivoAccesoService: ModalMotivoAccesoHudsService
     ) { }
@@ -82,10 +80,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
-        this.historial$ = this.cama$.pipe(
-            filter((cama) => cama.estado === 'ocupada'),
-            switchMap(cama => {
-                return this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente);
+        this.historial$ = combineLatest(
+            this.cama$,
+            this.mapaCamasService.selectedPrestacion
+        ).pipe(
+            switchMap(([cama, prestacion]) => {
+                const paciente = cama?.paciente || prestacion?.paciente;
+                return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
             }),
             switchMap(({ paciente }) => {
                 return this.getHUDS(paciente);

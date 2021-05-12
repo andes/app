@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-censo-diario',
@@ -24,7 +25,8 @@ export class CensosDiariosComponent implements OnInit {
         public auth: Auth,
         private mapaCamasService: MapaCamasService,
         private servicioDocumentos: DocumentosService,
-        private organizacionService: OrganizacionService
+        private organizacionService: OrganizacionService,
+        private location: Location
     ) { }
 
     ngOnInit() {
@@ -128,5 +130,9 @@ export class CensosDiariosComponent implements OnInit {
     resetCenso() {
         this.censo = null;
         this.censoPacientes = [];
+    }
+
+    volver() {
+        this.location.back();
     }
 }

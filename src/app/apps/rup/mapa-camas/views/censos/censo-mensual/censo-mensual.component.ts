@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-censo-mensual',
@@ -48,6 +49,7 @@ export class CensosMensualesComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private organizacionService: OrganizacionService,
         private servicioDocumentos: DocumentosService,
+        private location: Location
     ) { }
 
     ngOnInit() {
@@ -172,7 +174,9 @@ export class CensosMensualesComponent implements OnInit {
 
         let totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
         this.datosCensoTotal['promDiasEstada'] = (totalEgreso === 0) ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
-
     }
 
+    volver() {
+        this.location.back();
+    }
 }
