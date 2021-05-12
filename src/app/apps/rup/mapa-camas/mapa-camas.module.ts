@@ -61,6 +61,8 @@ import { PermisosMapaCamasService } from './services/permisos-mapa-camas.service
 import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
 import { FiltrosListadoCapasComponent } from './views/listado-internacion-capas/filtros-listado/filtros-listado-capas.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -100,7 +102,8 @@ export const INTERNACION_COMPONENTS = [
     PrestarDevolverRecursoComponent,
     ListadoInternacionCapasComponent,
     FiltrosListadoCapasComponent,
-    RecursosListadoComponent
+    RecursosListadoComponent,
+    ResumenInternacionComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -131,6 +134,7 @@ export const INTERNACION_PROVIDERS = [
         ScrollingModule,
         CdkTableModule,
         HammerModule,
+        DirectiveLibModule
     ],
     declarations: [
         ...INTERNACION_COMPONENTS

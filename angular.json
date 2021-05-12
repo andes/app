@@ -37,7 +37,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "./node_modules/ol/ol.css"
+              "./node_modules/ol/ol.css",
+              "./node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css"
             ],
             "scripts": [
               "node_modules/intro.js/intro.js"

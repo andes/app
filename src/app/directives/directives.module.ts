@@ -12,6 +12,7 @@ import { SelectPrestacionesDirective } from './prestaciones-select.directive';
 import { SelectProfesionalesDirective } from './profesionales-select.directive';
 
 import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
+import { FeatureFlagDirective } from './feature-flag.directive';
 @NgModule({
     imports: [
         CommonModule,
@@ -27,8 +28,8 @@ import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
         SelectOrganizacionDirective,
         SelectPrestacionesDirective,
         SelectProfesionalesDirective,
-        GaleriaPipe
-
+        GaleriaPipe,
+        FeatureFlagDirective
     ],
     exports: [
         SelectFinanciadorDirective,
@@ -36,7 +37,8 @@ import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
         SelectOrganizacionDirective,
         SelectPrestacionesDirective,
         SelectProfesionalesDirective,
-        GaleriaPipe
+        GaleriaPipe,
+        FeatureFlagDirective
     ],
 })
 export class DirectiveLibModule {

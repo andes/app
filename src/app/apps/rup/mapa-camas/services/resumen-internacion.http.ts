@@ -23,8 +23,8 @@ export interface IResumenInternacion {
         sexo: string;
         fechaNacimiento: string;
     };
-    fechaIngreso: string;
-    fechaEgreso: string;
+    fechaIngreso: Date;
+    fechaEgreso: Date;
     ingreso: {
         registros: any[];
         elementoRUP: any;

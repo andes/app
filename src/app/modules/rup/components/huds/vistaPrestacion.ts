@@ -18,8 +18,6 @@ import { populateRelaciones } from '../../operators/populate-relaciones';
 })
 
 export class VistaPrestacionComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;
-
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;

@@ -10,6 +10,7 @@ import { IZonaSanitaria } from './IZonaSanitaria';
 
 export interface ISectores {
     id?: string;
+    _id?: string;
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
     nombre: String;

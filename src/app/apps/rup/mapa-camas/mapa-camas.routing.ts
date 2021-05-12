@@ -9,8 +9,10 @@ import { InternacionListadoComponent } from './views/listado-internacion/listado
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 
 export const INTERNACION_ROUTES = [
+
 
     { path: ':ambito/cama/:id', component: CamaMainComponent },
 
@@ -26,11 +28,15 @@ export const INTERNACION_ROUTES = [
 
     { path: ':ambito/sala-comun/:id', component: SalaComunComponent },
 
+    // { path: 'mapa-visual', component: TimelineMapaCamasComponent },
+
     { path: 'listado-internacion', component: InternacionListadoComponent },
 
     { path: 'listado-internacion-medico', component: ListadoInternacionCapasComponent },
 
     { path: ':ambito', component: MapaCamasMainComponent },
+
+    { path: ':ambito/:capa/resumen/:idInternacion', component: ResumenInternacionComponent },
 
     { path: ':ambito/:capa', component: MapaCamasCapaComponent },
 
