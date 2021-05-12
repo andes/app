@@ -30,6 +30,10 @@ export class InicioComponent implements AfterViewInit {
         private router: Router
     ) { }
 
+    ngOnInit() {
+        this.plex.navVisible(true);
+    }
+
     ngAfterViewInit() {
         if (this.auth.profesional) {
             // Google Analytics
