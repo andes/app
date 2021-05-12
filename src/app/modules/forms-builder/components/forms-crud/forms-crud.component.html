@@ -32,81 +32,94 @@
 
             <cdk-virtual-scroll-viewport class="form-items" itemSize="80">
                 <div *cdkVirtualFor="let field of form.fields; let i = index" class="form-item border-blue">
-                <div class="row mb-4 mb-2-md" id="wrapper-{{ i }}">
+                    <div class="row mb-4 mb-2-md" id="wrapper-{{ i }}">
 
-                    <div class="col-md col-sm-12">
-                        <plex-text name="key-{{ i }}" label="Clave" [(ngModel)]="field.key" [required]="true"></plex-text>
-                    </div>
-                    <div class="col-md col-sm-12">
-                        <plex-text name="label-{{ i }}" label="Nombre" [(ngModel)]="field.label" [required]="true"></plex-text>
-                    </div>
-                    <div class="col-md col-sm-12">
-                        <plex-select name="select-{{ i }}" label="Tipo de campo" required [(ngModel)]="field.type" [data]="tiposList">
-                        </plex-select>
-                    </div>
-                    <div class="col-md col-sm-4 d-flex justify-content-between"
-                         *ngIf="field.type && field.type.id === 'snomed'">
-                        <div>
-                            <plex-text name="Snomed-{{ i }}" label="Snomed Code / Query" [(ngModel)]="field.snomedCodeOrQuery">
+                        <div class="col-md col-sm-12">
+                            <plex-text name="key-{{ i }}" label="Clave" [(ngModel)]="field.key" [required]="true">
                             </plex-text>
                         </div>
-                        <!-- <div class="precargado">
-                            <b>Precargado</b>
-                            <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
-                            </plex-bool>
-                        </div> -->
-                    </div>
-                    <div class="col-md col-sm-4 d-flex justify-content-between"
-                         *ngIf="field.type && field.type.id === 'int'">
-                        <div class="minmax">
-                            <div class="mr-4">
-                                <plex-int class="sm" label="Mínimo" name="minimo-{{ field.key }}"
-                                          [(ngModel)]="field.min">
-                                </plex-int>
-                            </div>
-                            <div>
-                                <plex-int class="sm" label="Máximo" name="maximo-{{ field.key }}"
-                                          [(ngModel)]="field.max">
-                                </plex-int>
-                            </div>
+                        <div class="col-md col-sm-12">
+                            <plex-text name="label-{{ i }}" label="Nombre" [(ngModel)]="field.label" [required]="true">
+                            </plex-text>
                         </div>
-                    </div>
-                    <div class="col-md col-sm-12">
-                        <plex-select [multiple]="true" [(ngModel)]="field.sections" name="seccion-{{ i }}"
-                                     [data]="secciones" placeholder="Seleccione a que secciones pertenece" idField="id"
-                                     labelField="name" label="Sección" required></plex-select>
-
-                    </div>
-                    <div class="col-md col-sm-12">
-                        <plex-text name="descripcion-{{ i }}" label="Descripción" [(ngModel)]="field.description"></plex-text>
-                    </div>
-                    <div class="col-md col-sm-4 d-flex justify-content-between"
-                         *ngIf="field.type && field.type.id === 'select'">
-                        <div>
-                            <plex-select name="select-recurso-{{ i }}" [(ngModel)]="field.resources" [data]="recursos"
-                                         labelField="name" label="Tipo de recurso" idField="id" required>
+                        <div class="col-md col-sm-12">
+                            <plex-select name="select-{{ i }}" label="Tipo de campo" required [(ngModel)]="field.type"
+                                         [data]="tiposList">
                             </plex-select>
                         </div>
-                        <!-- <div class="precargado">
+                        <div class="col-md col-sm-4 d-flex justify-content-between"
+                             *ngIf="field.type && field.type.id === 'snomed'">
+                            <div>
+                                <plex-text name="Snomed-{{ i }}" label="Snomed Code / Query"
+                                           [(ngModel)]="field.snomedCodeOrQuery">
+                                </plex-text>
+                            </div>
+                            <!-- <div class="precargado">
                             <b>Precargado</b>
                             <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
                             </plex-bool>
                         </div> -->
-                    </div>
-                    <div class="col-md col-sm-4 d-flex justify-content-between">
-                        <div>
-                            <plex-bool type="slide" name="active-{{ i }}" label="Requerido" [(ngModel)]="field.required" required>
+                        </div>
+                        <div class="col-md col-sm-4 d-flex justify-content-between"
+                             *ngIf="field.type && field.type.id === 'int'">
+                            <div class="minmax">
+                                <div class="mr-4">
+                                    <plex-int class="sm" label="Mínimo" name="minimo-{{ field.key }}"
+                                              [(ngModel)]="field.min">
+                                    </plex-int>
+                                </div>
+                                <div>
+                                    <plex-int class="sm" label="Máximo" name="maximo-{{ field.key }}"
+                                              [(ngModel)]="field.max">
+                                    </plex-int>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md col-sm-4 d-flex justify-content-between"
+                             *ngIf="field.type?.id === 'select-static'">
+                            <plex-text label="Items (entre comas)" [required]="true" name="static"
+                                       [(ngModel)]="field.items">
+                            </plex-text>
+                        </div>
+                        <div class="col-md col-sm-12">
+                            <plex-select [multiple]="true" [(ngModel)]="field.sections" name="seccion-{{ i }}"
+                                         [data]="secciones" placeholder="Seleccione a que secciones pertenece"
+                                         idField="id" labelField="name" label="Sección" required></plex-select>
+
+                        </div>
+                        <div class="col-md col-sm-12" *ngIf="!field.type?.id === 'select-static'">
+                            <plex-text name=" descripcion-{{ i }}" label="Descripción" [(ngModel)]="field.description">
+                            </plex-text>
+                        </div>
+                        <div class="col-md col-sm-4 d-flex justify-content-between"
+                             *ngIf="field.type && field.type.id === 'select'">
+                            <div>
+                                <plex-select name="select-recurso-{{ i }}" [(ngModel)]="field.resources"
+                                             [data]="recursos" labelField="name" label="Tipo de recurso" idField="id"
+                                             required>
+                                </plex-select>
+                            </div>
+                            <!-- <div class="precargado">
+                            <b>Precargado</b>
+                            <plex-bool class="sm" type="slide" name="preload-{{ i }}" [(ngModel)]="field.preload">
                             </plex-bool>
+                        </div> -->
+                        </div>
+                        <div class="col-md col-sm-4 d-flex justify-content-between">
+                            <div>
+                                <plex-bool type="slide" name="active-{{ i }}" label="Requerido"
+                                           [(ngModel)]="field.required" required>
+                                </plex-bool>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1 col-sm-4" justify="center justify-content-sm-start">
+                            <plex-button size="sm" class="mt-2 mt-0-md" title="Borrar" type="danger" label="Eliminar"
+                                         (click)="onRemove(i)">
+                            </plex-button>
                         </div>
                     </div>
-
-                    <div class="col-md-1 col-sm-4" justify="center justify-content-sm-start">
-                        <plex-button size="sm" class="mt-2 mt-0-md" title="Borrar" type="danger" label="Eliminar"
-                                     (click)="onRemove(i)">
-                        </plex-button>
-                    </div>
                 </div>
-            </div>
             </cdk-virtual-scroll-viewport>
         </form>
     </plex-layout-main>

@@ -41,13 +41,10 @@
                                        name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                        [required]="field.required" [readonly]="!editFicha">
                             </plex-text>
-                            <plex-int *ngSwitchCase="'int'" [label]="field.label?field.label:field.key" grow="auto"
-                                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                       [required]="field.required" [readonly]="!editFicha">
-                            </plex-int>
-                            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key" type="date"
-                                           grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
+                            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key"
+                                           type="date" grow="auto" name="{{ field.key }}"
+                                           [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                           [readonly]="!editFicha">
                             </plex-datetime>
                             <plex-phone *ngSwitchCase="'phone'" [label]="field.label?field.label:field.key"
                                         [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
@@ -62,13 +59,17 @@
                                          placeholder="Ingrese concepto..."
                                          (getData)="getSnomed(field.snomedCodeOrQuery,$event)" [readonly]="!editFicha">
                             </plex-select>
+                            <plex-select *ngSwitchCase="'select-static'" [label]="field.label?field.label:field.key"
+                                         grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                         [required]="field.required" [data]="field.items" [readonly]="!editFicha">
+                            </plex-select>
                             <!--Campos opcionales exclusivos de la ficha covid-->
                             <!--Usuario-->
-                            <plex-select *ngIf="field.key==='funcionusuario'"
+                            <!-- <plex-select *ngIf="field.key==='funcionusuario'"
                                          [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
                                          [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
                                          [data]="funcionPersonalSalud" [readonly]="!editFicha">
-                            </plex-select>
+                            </plex-select> -->
                             <!--MPI-->
                             <plex-select *ngIf="field.key==='nacionalidad'" [label]="field.label?field.label:field.key"
                                          grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -102,7 +103,7 @@
                             </plex-select>
 
                             <!--Clasificación-->
-                            <ng-container *ngIf="seccion.id==='clasificacion'">
+                            <!-- <ng-container *ngIf="seccion.id==='clasificacion'">
                                 <plex-select *ngIf="field.key==='clasificacion' "
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -113,7 +114,7 @@
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [data]="tipoBusqueda" [required]="field.required" [readonly]="!editFicha">
                                 </plex-select>
-                            </ng-container>
+                            </ng-container> -->
                             <!--Enfermedades previas-->
 
                             <ng-container *ngIf="seccion.id==='enfermedadesPrevias'">

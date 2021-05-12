@@ -21,7 +21,8 @@ export class AppFormsCrudComponent implements OnInit {
         { id: 'phone', nombre: 'Teléfono' },
         { id: 'dependencia', nombre: 'Dependencia' },
         { id: 'snomed', nombre: 'Snomed' },
-        { id: 'table', nombre: 'Tabla' }
+        { id: 'table', nombre: 'Tabla' },
+        { id: 'select-static', nombre: 'Select Estatico' }
     ];
     public disable = false;
     public recursos = [];
@@ -67,6 +68,13 @@ export class AppFormsCrudComponent implements OnInit {
                         f.type = this.tiposList.find(t => t.id === f.type) as any;
                         if ((f.type as any).id === 'select') {
                             f.resources = this.recursos.find(t => t.id === f.resources) as any;
+                        }
+                        if ((f.type as any).id === 'select-static') {
+                            const itemsAux = f.items;
+                            f.items = '';
+                            itemsAux.forEach(element => {
+                                f.items = f.items.length ? f.items + ', ' + element.nombre : element.nombre;
+                            });
                         }
                         if (!this.fieldAssigned(fieldsAssigns, f, s)) {
                             f.sections = [];
@@ -130,7 +138,6 @@ export class AppFormsCrudComponent implements OnInit {
     }
 
     save($event) {
-
         if (!this.form.fields.length) {
             return this.plex.toast('danger', 'Al menos debes agregar un campo');
         }
@@ -143,6 +150,16 @@ export class AppFormsCrudComponent implements OnInit {
                 cloneField.type = field.type.id;
                 if (cloneField.type === 'select') {
                     cloneField.resources = field.resources.id;
+                }
+                if (cloneField.type === 'select-static') {
+                    const array = cloneField.items.split(',');
+                    const arrayItems = [];
+                    array.forEach(element => {
+                        const itemId = element.replace(/ /g, '').toLowerCase();
+                        const itemNombre = element.trim();
+                        arrayItems.push({ id: itemId, nombre: itemNombre });
+                    });
+                    cloneField.items = arrayItems;
                 }
                 if (f.sections && f.sections.length > 0) {
                     f.sections.forEach(s => {
