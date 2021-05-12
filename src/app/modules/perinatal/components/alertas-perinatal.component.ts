@@ -16,7 +16,7 @@ export class AlertasPerinatalComponent implements OnInit {
   ngOnInit(): void {
     this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
       map(resp => {
-        return resp.filter(item => moment().diff(moment(item.fechaProximoControl), 'days') >= 1);
+        return resp.filter(item => (moment().diff(moment(item.fechaProximoControl), 'days') >= 1) && !item.fechaFinEmbarazo);
       })
     );
   }
