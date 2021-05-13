@@ -86,7 +86,7 @@ export class ResumenInternacionComponent implements OnInit {
             sorteable: true,
             opcional: false,
             sort: (a: any, b: any) => a.term.localeCompare(b.term),
-            // filterBy: (a: any) => a.term
+            filterBy: (a: any) => a.term
         },
         {
             key: 'organizacion',
@@ -94,14 +94,16 @@ export class ResumenInternacionComponent implements OnInit {
             sorteable: true,
             opcional: false,
             sort: (a: any, b: any) => a.organizacion.nombre.localeCompare(b.organizacion.nombre),
-            // filterBy: (a: any) => a.organizacion.nombre
+            filterBy: (a: any) => a.organizacion.nombre
         },
         {
             key: 'profesional',
             label: 'Profesional',
             sorteable: true,
             opcional: false,
-            sort: (a: any, b: any) => a.profesional.nombre.localeCompare(b.profesional.nombre)
+            sort: (a: any, b: any) => a.profesional.nombre.localeCompare(b.profesional.nombre),
+            filterBy: (a: any) => a.profesional.nombre
+
         },
         {
             key: 'fecha',
@@ -144,10 +146,10 @@ export class ResumenInternacionComponent implements OnInit {
                 this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
             });
 
-            combineLatest(
+            combineLatest([
                 this.procesarHUDS(),
                 this.getMovimientosInternacion()
-            ).subscribe(([huds, movimientos]) => {
+            ]).subscribe(([huds, movimientos]) => {
                 this.craearTimelinea(huds, movimientos);
             });
 
@@ -320,7 +322,8 @@ export class ResumenInternacionComponent implements OnInit {
                 id: i.id,
                 content: ' ',
                 start: i.fecha,
-                term: i.term
+                term: i.term,
+                idPrestacion: i.idPrestacion
             });
         });
 
@@ -426,38 +429,15 @@ export class ResumenInternacionComponent implements OnInit {
         });
 
         timeline.on('click', (properties) => {
-            const { group, what } = properties;
+            const { group, what, item } = properties;
             if (what === 'group-label') {
-                const groupInfo = this.groups.find(p => p.id === group);
+                this.selectTrack(timeline, group);
+            }
+            if (what === 'item') {
+                this.selectTrack(timeline, group);
+                const ii = (timeline as any).itemsData.get(item);
+                this.onItemSelect(ii);
 
-                if (!groupInfo.selectable) {
-                    return;
-                }
-
-                this.groups.forEach((groupItem) => {
-                    const _className: string = groupItem.className;
-                    const _isSelected = _className.endsWith('selected');
-                    if (_isSelected) {
-                        groupItem.className = groupItem.className.substring(0, groupItem.className.length - 9);
-                    }
-                });
-
-
-                const className: string = groupInfo.className;
-                const isSelected = className.endsWith('selected');
-
-                if (!isSelected) {
-                    this.groupSelected = groupInfo.id;
-                    groupInfo.className = groupInfo.className + ' selected';
-                }
-
-                const _groups = new DataSet(this.groups);
-
-                timeline.setGroups(
-                    _groups as any
-                );
-
-                this.zoomChange(null, null);
             }
 
         });
@@ -466,6 +446,39 @@ export class ResumenInternacionComponent implements OnInit {
             this.zoomChange(properties.start, properties.end);
         });
 
+    }
+
+    selectTrack(timeline, track) {
+        const groupInfo = this.groups.find(p => p.id === track);
+
+        if (!groupInfo.selectable) {
+            return;
+        }
+
+        this.groups.forEach((groupItem) => {
+            const _className: string = groupItem.className;
+            const _isSelected = _className.endsWith('selected');
+            if (_isSelected) {
+                groupItem.className = groupItem.className.substring(0, groupItem.className.length - 9);
+            }
+        });
+
+
+        const className: string = groupInfo.className;
+        const isSelected = className.endsWith('selected');
+
+        if (!isSelected) {
+            this.groupSelected = groupInfo.id;
+            groupInfo.className = groupInfo.className + ' selected';
+        }
+
+        const _groups = new DataSet(this.groups);
+
+        timeline.setGroups(
+            _groups as any
+        );
+
+        this.zoomChange(null, null);
     }
 
     getHUDS(paciente) {

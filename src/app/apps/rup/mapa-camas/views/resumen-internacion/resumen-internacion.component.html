@@ -15,7 +15,7 @@
             <div #prueba></div>
         </header>
 
-        <plex-list size="sm" [columns]="columns" #table2="plTable" height="100%">
+        <!-- <plex-list size="sm" [columns]="columns" #table2="plTable" height="100%">
 
             <plex-item *ngFor="let data of dataSetVisible$ | plSort:table2 | async" (click)="onItemSelect(data)"
                        [selected]="datoIdSelected === data.id">
@@ -30,7 +30,31 @@
                 <plex-badge> {{ data.fecha | fecha }} {{ data.fecha | hora }} </plex-badge>
             </plex-item>
 
-        </plex-list>
+        </plex-list> -->
+
+        <plex-table [columns]="columns" #table="plTable">
+
+            <tr *ngFor="let data of dataSetVisible$ | plSort:table | async" class="selectable"
+                [class.selected]="datoIdSelected === data.id" (click)="onItemSelect(data)">
+
+                <td>
+                    {{data.term}}
+                </td>
+
+                <td>
+                    {{ data.organizacion.nombre }}
+                </td>
+
+                <td>
+                    {{ data.profesional.nombre }}
+                </td>
+                <td class="d-flex align-items-end">
+                    <plex-badge> {{ data.fecha | fecha }} {{ data.fecha | hora }} </plex-badge>
+                </td>
+
+            </tr>
+
+        </plex-table>
 
     </plex-layout-main>
 
