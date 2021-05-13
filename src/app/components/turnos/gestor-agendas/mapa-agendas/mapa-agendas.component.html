@@ -1,0 +1,35 @@
+<fieldset>
+    <table class="mapa-espacios table table-striped table-hover">
+        <tr class="header">
+            <td>Horario</td>
+            <td *ngFor="let dia of semana" [colSpan]="1" class="text-center">
+                <small>{{dia.fecha | date:"dd/MM"}}</small>
+                <br>
+                <small>{{dia.nombre}}</small>
+            </td>
+        </tr>
+
+        <ng-container *ngFor="let hora of horarios;let i=index">
+            <tr>
+                <td [attr.rowspan]="filasPorHorario.length">{{hora.hora}}</td>
+                <td *ngFor="let dia of semana">
+
+                    <small *ngIf="dia.horarios[i].intervalo.length>0 && dia.horarios[i].intervalo[0]"
+                           [style.background]="colorPrestacion">{{dia.horarios[i].intervalo[0].tipoPrestacion.term}}</small>
+                </td>
+            </tr>
+            <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
+                <tr *ngIf="aux!=0">
+                    <td *ngFor="let dia  of semana" class="">
+                        <small *ngIf="dia.horarios[i].intervalo.length>1 && dia.horarios[i].intervalo[aux]"
+                               [style.background]="colorPrestacion">{{dia.horarios[i].intervalo[aux].tipoPrestacion.term}}</small>
+                    </td>
+                </tr>
+            </ng-container>
+        </ng-container>
+
+
+
+
+    </table>
+</fieldset>

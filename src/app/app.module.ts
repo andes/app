@@ -143,6 +143,7 @@ import { FiltrosMapaEspacioFisicoComponent } from './components/turnos/configura
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
 import { DetalleAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/detalle-agenda.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
@@ -321,6 +322,7 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
+        MapaAgendasComponent,
 
         // Solicitudes
         PrestamosHcComponent,

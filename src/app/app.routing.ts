@@ -21,7 +21,7 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
-
+import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 // ... MPI
 // import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
@@ -79,6 +79,7 @@ const appRoutes: Routes = [
     { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'citas/mapa_agendas', component: MapaAgendasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/agendas', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
