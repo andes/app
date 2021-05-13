@@ -31,6 +31,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
 import { ChartsModule } from 'ng2-charts';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -72,14 +73,11 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
+import { FirmaProfesionalComponent } from './components/profesional/firma/firma-profesional.component';
 import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
-
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
-import { FirmaProfesionalComponent } from './components/profesional/firma/firma-profesional.component';
-import { Ng2ImgMaxModule } from 'ng2-img-max';
-
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -99,6 +97,7 @@ import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/ma
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
@@ -214,37 +213,6 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-import { Ng2ImgMaxService } from 'ng2-img-max';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -314,6 +282,7 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
+        MapaAgendasComponent,
 
         // Solicitudes
         PrestamosHcComponent,
