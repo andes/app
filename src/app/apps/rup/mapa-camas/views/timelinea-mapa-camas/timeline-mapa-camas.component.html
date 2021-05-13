@@ -1,12 +1,13 @@
-<!-- <plex-layout>
+<plex-layout>
     <plex-layout-main>
         <header>
-            <plex-title titulo="Resumen Internación">
+            <plex-title titulo="Mapa Visual de Camas">
             </plex-title>
             <plex-wrapper>
                 <plex-datetime [(ngModel)]="desde" class="mr-1"></plex-datetime>
                 <plex-datetime [(ngModel)]="hasta" class="mr-1"></plex-datetime>
-                <plex-select [data]="sectores$ | async" name="sectores" [(ngModel)]="sectorSelected"></plex-select>
+                <plex-select [data]="sectores$ | async" name="sectores" [(ngModel)]="sectorSelected"
+                             placeholder="Sector"></plex-select>
 
                 <plex-button label="Visualizar" type="success" (click)="onVisualizar()"></plex-button>
             </plex-wrapper>
@@ -14,8 +15,8 @@
 
 
 
-        <div #prueba></div>
+        <div #prueba style="height: 100%"></div>
 
 
     </plex-layout-main>
-</plex-layout> -->
+</plex-layout>

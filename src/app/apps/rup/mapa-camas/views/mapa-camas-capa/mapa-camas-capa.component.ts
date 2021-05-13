@@ -278,4 +278,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     toggleColumns() {
         this.mapaCamasService.columnsMapa.next(this.columns);
     }
+
+    onVisualizar() {
+        this.router.navigate(['visualizacion'], { relativeTo: this.route });
+    }
 }

@@ -35,7 +35,6 @@ export class FeatureFlagDirective<T> implements OnDestroy, OnInit {
                 if (!this.viewRef) {
                     this.viewRef = this.view.createEmbeddedView(this.nextRef);
                     this.changes.markForCheck();
-                    this.openSubscription.unsubscribe();
                 }
             }
         });

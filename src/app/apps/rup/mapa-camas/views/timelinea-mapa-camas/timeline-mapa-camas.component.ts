@@ -17,7 +17,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { ISectores } from 'src/app/interfaces/IOrganizacion';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -28,6 +28,11 @@ import { map } from 'rxjs/operators';
         .vis-dot {
             border-color: var(--color);
         }
+
+        .vis-item {
+            background-color: var(--color);;
+        }
+
 
         .vis-group.selected {
             background-color: var(--bg-color);
@@ -45,6 +50,9 @@ import { map } from 'rxjs/operators';
 })
 export class TimelineMapaCamasComponent implements OnInit {
 
+    private capa: string;
+    private ambito: string;
+
     @ViewChild('prueba') timelineDiv;
 
     private idInternacion: string;
@@ -56,7 +64,7 @@ export class TimelineMapaCamasComponent implements OnInit {
 
     groups = [];
 
-    desde: Date = moment().add(-3, 'M').startOf('M').toDate();
+    desde: Date = moment().add(-2, 'M').startOf('M').toDate();
     hasta: Date = new Date();
 
 
@@ -88,6 +96,8 @@ export class TimelineMapaCamasComponent implements OnInit {
     sectorSelected;
 
     ngOnInit() {
+        this.capa = this.activatedRoute.snapshot.paramMap.get('capa');
+        this.ambito = this.activatedRoute.snapshot.paramMap.get('ambito');
 
         this.sectores$ = this.organizacionesService.getById(this.auth.organizacion.id).pipe(
             map((organizacion) => {
@@ -116,14 +126,24 @@ export class TimelineMapaCamasComponent implements OnInit {
 
 
     onVisualizar() {
-        this.mapaCamasService.historial(
-            'internacion',
-            'medica',
-            this.desde,
-            this.hasta,
-            {}
-        ).subscribe((movimientos) => {
+        forkJoin([
+            this.mapaCamasService.snapshot(
+                this.ambito,
+                this.capa,
+                this.desde
+            ),
+            this.mapaCamasService.historial(
+                this.ambito,
+                this.capa,
+                this.desde,
+                this.hasta,
+                {}
+            )
+        ]).subscribe(([estados, movimientos]) => {
 
+            this.timelineDiv.nativeElement.innerHTML = '';
+
+            movimientos = [...estados, ...movimientos];
 
             movimientos = movimientos.filter(
                 m => m.sectores.some(s => s._id === this.sectorSelected.id)
@@ -162,8 +182,6 @@ export class TimelineMapaCamasComponent implements OnInit {
                                 fechaFin = mov[j].fecha;
                                 break;
                             }
-
-
                         }
                         fechaFin = fechaFin || new Date();
 
@@ -173,7 +191,30 @@ export class TimelineMapaCamasComponent implements OnInit {
                             desde: movimiento.fecha,
                             hasta: fechaFin,
                             paciente: movimiento.paciente,
-                            idInternacion: movimiento.idInternacion
+                            idInternacion: movimiento.idInternacion,
+                            unidadOrganizativa: movimiento.unidadOrganizativa.term
+                        });
+
+                        camasUnicas[k] = {
+                            id: k,
+                            title: movimiento.sectorName + ', ' + movimiento.nombre
+                        };
+
+                    } else if (movimiento.estado === 'bloqueada') {
+                        let fechaFin = null;
+                        if (mov[i + 1]) {
+                            fechaFin = mov[i + 1].fecha;
+                        }
+                        fechaFin = fechaFin || new Date();
+
+                        datos.push({
+                            cama: k,
+                            title: movimiento.sectorName + ', ' + movimiento.nombre,
+                            desde: movimiento.fecha,
+                            hasta: fechaFin,
+                            paciente: movimiento.paciente,
+                            idInternacion: movimiento.idInternacion,
+                            className: 'bloqueada',
                         });
 
                         camasUnicas[k] = {
@@ -182,7 +223,6 @@ export class TimelineMapaCamasComponent implements OnInit {
                         };
 
                     }
-
 
                 }
 
@@ -201,9 +241,12 @@ export class TimelineMapaCamasComponent implements OnInit {
                 return {
                     group: d.cama,
                     id: c++,
-                    content: d.paciente.apellido,
+                    content: d.paciente ? `${d.paciente.documento} | ${d.paciente.apellido} ${d.paciente.nombre}` : 'BLOQUEADA',
                     start: d.desde,
-                    end: d.hasta
+                    end: d.hasta,
+                    className: d.className,
+                    color: d.idInternacion?.slice(-6),
+                    unidadOrganizativa: d.unidadOrganizativa
                 };
             }));
 
@@ -214,12 +257,28 @@ export class TimelineMapaCamasComponent implements OnInit {
             // Configuration for the Timeline
             const options = {
                 width: '100%',
-                height: '700px',
+                height: '100%',
                 margin: {
                     item: 20
                 },
                 stack: false,
-
+                template: (item, element: HTMLElement, data) => {
+                    if (data.color) {
+                        element.parentElement.parentElement.style.setProperty(`--color`, '#' + data.color);
+                    } else if (data.className) {
+                        element.parentElement.parentElement.style.setProperty(`--color`, 'red');
+                    }
+                    if (data.content) {
+                        return data.content;
+                    }
+                    return '';
+                },
+                tooltip: {
+                    delay: 100,
+                    template: function (originalItemData, parsedItemData) {
+                        return `<span>${originalItemData.unidadOrganizativa}</span>`;
+                    }
+                }
             };
 
             // Create a Timeline
