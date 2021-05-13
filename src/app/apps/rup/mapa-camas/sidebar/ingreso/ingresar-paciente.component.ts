@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Optional, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Optional, QueryList, ViewChildren } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -11,7 +11,7 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable, of } from 'rxjs';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap, filter, tap } from 'rxjs/operators';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
@@ -19,6 +19,7 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
 import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -27,7 +28,6 @@ import { RUPComponent } from '../../../../../modules/rup/components/core/rup.com
 
 export class IngresarPacienteComponent implements OnInit, OnDestroy {
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
-
 
     camas$: Observable<ISnapshot[]>;
 
@@ -113,7 +113,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             this.check = false;
         }
-
     }
 
     private handlerPacienteID(): Observable<string> {
@@ -135,6 +134,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
 
         const pacienteID$ = this.handlerPacienteID();
+
         this.inProgress = true;
         this.subscription = combineLatest(
             this.mapaCamasService.maquinaDeEstado$,
@@ -179,6 +179,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             }
 
+            // Pre-carga datos de una internación anterior si existe
+            this.cargarUltimaInternacion(paciente);
+
             if (cama.id && cama.id !== ' ') {
                 this.cama = cama;
                 if (cama.estado === 'ocupada' && !cama.sala) {
@@ -199,7 +202,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 this.cama = null;
             }
-
         });
 
         this.camas$ = this.mapaCamasService.snapshot$.pipe(
@@ -231,6 +233,16 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 return camasDisponibles;
             })
         );
+    }
+
+    cargarUltimaInternacion(paciente: IPaciente) {
+        const conceptIdIngresoInternacion = '721915006';
+        this.servicioPrestacion.getRegistrosHuds(paciente.id, conceptIdIngresoInternacion).subscribe(ingreso => {
+            const ultimoIngreso = ingreso[0].registro.valor.informeIngreso;
+            this.informeIngreso.situacionLaboral = this.situacionesLaborales?.find(item => item.nombre === ultimoIngreso.situacionLaboral) || null;
+            this.informeIngreso.nivelInstruccion = this.nivelesInstruccion?.find(item => item.nombre === ultimoIngreso.nivelInstruccion) || null;
+            this.informeIngreso.ocupacionHabitual = ultimoIngreso.ocupacionHabitual;
+        });
     }
 
     selectCama(cama) {
@@ -526,7 +538,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             }
         });
-
     }
 
     public prestacionFake;
@@ -554,17 +565,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             ejecucion: {
                 organizacion: { ...this.auth.organizacion },
                 registros: [],
-
             }
         };
-
 
         for (const elementoRequerido of elementoRUP.requeridos) {
             const elementoRUP_ = this.elementosRUPService.buscarElemento(elementoRequerido.concepto, false);
             const nuevoRegistro = new IPrestacionRegistro(elementoRUP_, elementoRequerido.concepto, this.prestacionFake);
             this.prestacionFake.ejecucion.registros.push(nuevoRegistro);
         }
-
-
     }
 }
