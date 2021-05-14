@@ -81,20 +81,19 @@ export class ResumenInternacionComponent implements OnInit {
 
     public columns: IPlexTableColumns[] = [
         {
+            key: 'fecha',
+            label: 'Fecha Registro',
+            sorteable: true,
+            opcional: false,
+            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime()
+        },
+        {
             key: 'term',
-            label: 'Nombre',
+            label: 'Registro',
             sorteable: true,
             opcional: false,
             sort: (a: any, b: any) => a.term.localeCompare(b.term),
             filterBy: (a: any) => a.term
-        },
-        {
-            key: 'organizacion',
-            label: 'Organizacion',
-            sorteable: true,
-            opcional: false,
-            sort: (a: any, b: any) => a.organizacion.nombre.localeCompare(b.organizacion.nombre),
-            filterBy: (a: any) => a.organizacion.nombre
         },
         {
             key: 'profesional',
@@ -103,16 +102,22 @@ export class ResumenInternacionComponent implements OnInit {
             opcional: false,
             sort: (a: any, b: any) => a.profesional.nombre.localeCompare(b.profesional.nombre),
             filterBy: (a: any) => a.profesional.nombre
-
         },
         {
-            key: 'fecha',
-            label: 'Fecha Registro',
+            key: 'unidad-organizativa',
+            label: 'Unidad Organizativa',
             sorteable: true,
             opcional: false,
-            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime(),
-            right: true
-
+            sort: (a: any, b: any) => a.unidadOrganizativa.localeCompare(b.unidadOrganizativa),
+            filterBy: (a: any) => a.unidadOrganizativa
+        },
+        {
+            key: 'cama',
+            label: 'Cama',
+            sorteable: true,
+            opcional: false,
+            sort: (a: any, b: any) => a.cama.localeCompare(b.cama),
+            filterBy: (a: any) => a.cama
         }
     ];
 
@@ -150,6 +155,24 @@ export class ResumenInternacionComponent implements OnInit {
                 this.procesarHUDS(),
                 this.getMovimientosInternacion()
             ]).subscribe(([huds, movimientos]) => {
+
+                this.dataSet.forEach(data => {
+                    const fecha = data.fecha;
+                    const mov = movimientos.find(
+                        m => moment(fecha).isBetween(m.start, m.end)
+                    );
+
+                    if (mov) {
+                        data.unidadOrganizativa = mov.content;
+                        data.cama = mov.term;
+                    } else {
+                        data.unidadOrganizativa = '';
+                        data.cama = '';
+                    }
+
+
+                });
+
                 this.craearTimelinea(huds, movimientos);
             });
 
@@ -540,7 +563,8 @@ interface IDataSet {
     profesional: { id: string, nombre: string };
     fecha: Date;
     term: string;
-
+    cama?: string;
+    unidadOrganizativa?: string;
 }
 
 const filtrarPorRegistros = (prestaciones: IPrestacion[], callback) => {
