@@ -238,10 +238,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     cargarUltimaInternacion(paciente: IPaciente) {
         const conceptIdIngresoInternacion = '721915006';
         this.servicioPrestacion.getRegistrosHuds(paciente.id, conceptIdIngresoInternacion).subscribe(ingreso => {
-            const ultimoIngreso = ingreso[0].registro.valor.informeIngreso;
-            this.informeIngreso.situacionLaboral = this.situacionesLaborales?.find(item => item.nombre === ultimoIngreso.situacionLaboral) || null;
-            this.informeIngreso.nivelInstruccion = this.nivelesInstruccion?.find(item => item.nombre === ultimoIngreso.nivelInstruccion) || null;
-            this.informeIngreso.ocupacionHabitual = ultimoIngreso.ocupacionHabitual;
+            if (ingreso.length > 0) {
+                ingreso = ingreso.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+                const ultimoIngreso = ingreso[0].registro.valor.informeIngreso;
+                this.informeIngreso.situacionLaboral = this.situacionesLaborales?.find(item => item.nombre === ultimoIngreso.situacionLaboral) || null;
+                this.informeIngreso.nivelInstruccion = this.nivelesInstruccion?.find(item => item.nombre === ultimoIngreso.nivelInstruccion) || null;
+                this.informeIngreso.ocupacionHabitual = ultimoIngreso.ocupacionHabitual;
+            }
         });
     }
 
