@@ -179,8 +179,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             }
 
-            // Pre-carga datos de una internación anterior si existe
-            this.cargarUltimaInternacion(paciente);
+            if (capa === 'estadistica') {
+                this.cargarUltimaInternacion(paciente);
+            }
 
             if (cama.id && cama.id !== ' ') {
                 this.cama = cama;
