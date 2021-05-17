@@ -59,6 +59,9 @@
                          size="sm" label="Asociar paciente" [disabled]="candidatosBuscados"
                          (click)="buscarCandidatos()">
             </plex-button>
+            <plex-button *ngIf="pacienteSelected.paciente && !editInscripcion" type="warning" size="sm"
+                         label="Desvincular paciente" (click)="desasociarPaciente()">
+            </plex-button>
             <plex-button *ngIf="!pacienteSelected.paciente && !editInscripcion && candidatosBuscados" type="warning"
                          size="sm" label="Cancelar asociación" (click)="cancelarBusqueda()">
             </plex-button>

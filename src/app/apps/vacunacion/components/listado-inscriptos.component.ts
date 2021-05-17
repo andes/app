@@ -82,7 +82,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             label: 'Localidad',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.localidad ?.nombre.localeCompare(b.localidad ?.nombre); }
+            sort: (a, b) => { return a.localidad?.nombre.localeCompare(b.localidad?.nombre); }
         },
         {
             key: 'fecha-registro',
@@ -199,8 +199,28 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
 
     asociarCandidato(candidato) {
         this.pacienteSelected.paciente = candidato;
-        this.inscripcionService.patch(this.pacienteSelected).subscribe(resp => this.pacienteSelected = resp);
-        this.plex.toast('success', 'El paciente se ha asociado correctamente.');
+        this.inscripcionService.patch(this.pacienteSelected).subscribe(resp => {
+            this.pacienteSelected = resp;
+            this.candidatos = [];
+            this.candidatosBuscados = false;
+            this.plex.toast('success', 'El paciente se ha asociado correctamente.');
+        }, error => {
+            this.plex.toast('danger', 'Hubo un error asociando el paciente');
+        });
+    }
+
+    desasociarPaciente() {
+        this.plex.confirm('¿Está seguro que desea desasociar al paciente de la inscripción?').then((respuesta) => {
+            if (respuesta) {
+                this.pacienteSelected.paciente = null;
+                this.inscripcionService.patch(this.pacienteSelected).subscribe(resultado => {
+                    this.pacienteSelected = resultado;
+                    this.plex.toast('success', 'El paciente se ha desvinculado correctamente');
+                }, error => {
+                    this.plex.toast('danger', 'No se pudo desvincular el paciente de la inscripción');
+                });
+            }
+        });
     }
 
     cancelarBusqueda() {
