@@ -26,13 +26,17 @@ export class MapaAgendasComponent implements OnInit {
 
         private agendaService: AgendaService,
         private auth: Auth,
-        private conceptoTurneablesService: ConceptosTurneablesService
+        private conceptoTurneablesService: ConceptosTurneablesService,
+        private router: Router
 
     ) { }
 
     ngOnInit() {
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
 
+        if (!this.prestacionesPermisos.length) {
+            this.router.navigate(['inicio']);
+        }
         this.turnosPorHora();
         this.cargarSemana();
 
