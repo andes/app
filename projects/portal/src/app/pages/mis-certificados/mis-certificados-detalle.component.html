@@ -1,0 +1,14 @@
+<ng-container *ngIf="certificado$ | async as certificado">
+    <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle certificado">
+        <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
+    </plex-title>
+    <plex-detail>
+        <plex-icon name="documentos" type="danger"></plex-icon>
+        <plex-badge type="info">{{ certificado.fecha | date:'dd/MM/yyyy HH:mm' }}</plex-badge>
+
+        <div title case="capitalize">{{ certificado.registro.concepto.term}} </div>
+        <div subtitle>{{ certificado.profesional.organizacion.nombre }}</div>
+    </plex-detail>
+    <plex-button type="info" size="block" label="descargar" (click)="descargar(certificado)">
+    </plex-button>
+</ng-container>

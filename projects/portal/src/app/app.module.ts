@@ -25,7 +25,10 @@ import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis
 import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.component';
 import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certificados.component';
+import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
+import { CertificadoService } from './services/certificado.service';
+import { CategoriasService } from './services/categoria.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +44,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     PDPTituloComponent,
     PDPMenuComponent,
     PDPMisVacunasComponent,
-    PDPDetalleVacunaComponent
+    PDPDetalleVacunaComponent,
+    PDPMisCertificadosComponent,
+    PDPMisCertificadoDetalleComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +66,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormGroupDirective,
     RoutingGuard,
     AdjuntosService,
+    CertificadoService,
+    CategoriasService
   ],
   bootstrap: [AppComponent]
 })
