@@ -1,5 +1,6 @@
 <plex-layout>
     <plex-layout-main>
+
         <plex-datetime type="date" label="" [skipBy]="'week'" [(ngModel)]="diaInicio" name="fechaSkip"
                        (change)="cargarSemana()" required>
         </plex-datetime>
@@ -22,7 +23,7 @@
                             <ng-container *ngIf="dia.horarios[i].intervalos[0].turnos.length>0">
 
                                 <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                      [style.background]="turno.tipoPrestacion.color" class="d-block">
+                                      [style.background]="turno.tipoPrestacion.color">
                                     <plex-icon name="account-circle"></plex-icon>
                                 </span>
                             </ng-container>
@@ -33,7 +34,7 @@
                             <td *ngFor="let dia  of semana" class="">
                                 <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
                                     <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                          [style.background]="turno.tipoPrestacion.color" class="d-block">
+                                          [style.background]="turno.tipoPrestacion.color">
                                         <plex-icon name="account-circle"></plex-icon>
                                     </span>
                                 </ng-container>
