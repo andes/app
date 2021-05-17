@@ -15,22 +15,34 @@
             <div #prueba></div>
         </header>
 
-        <plex-list size="sm" [columns]="columns" #table2="plTable" height="100%">
+        <plex-table [columns]="columns" #table="plTable">
 
-            <plex-item *ngFor="let data of dataSetVisible$ | plSort:table2 | async" (click)="onItemSelect(data)"
-                       [selected]="datoIdSelected === data.id">
+            <tr *ngFor="let data of dataSetVisible$ | plSort:table | async" class="selectable"
+                [class.selected]="datoIdSelected === data.id" (click)="onItemSelect(data)">
 
-                <plex-label [titulo]="data.term" size="sm"></plex-label>
+                <td>
+                    {{ data.fecha | fecha }} {{ data.fecha | hora }}
+                </td>
 
-                <plex-label [titulo]="data.organizacion.nombre" size="sm"></plex-label>
+                <td>
+                    {{data.term}}
+                </td>
 
-                <plex-label [titulo]="data.profesional.nombre" size="sm"></plex-label>
+                <td>
+                    {{ data.profesional.nombre }}
+                </td>
 
+                <td>
+                    {{ data.unidadOrganizativa }}
+                </td>
 
-                <plex-badge> {{ data.fecha | fecha }} {{ data.fecha | hora }} </plex-badge>
-            </plex-item>
+                <td>
+                    {{ data.cama }}
+                </td>
 
-        </plex-list>
+            </tr>
+
+        </plex-table>
 
     </plex-layout-main>
 
