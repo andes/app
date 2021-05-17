@@ -11,16 +11,16 @@
             <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
 
                 <plex-card *ngFor="let cama of sector.camasSector" [selected]="cama.selected"
-                           (click)=" cama.selected = !cama.selected ; verDetalle(cama, selectedCama)" align="center">
+                           (click)=" cama.selected = !cama.selected ; verDetalle(cama, selectedCama)">
                     <plex-badge [type]="(mapaCamasService.getEstadoCama(cama) | async).color">
                         {{ cama.estado}}
                     </plex-badge>
-                    <plex-icon size="xl" [type]="(mapaCamasService.getEstadoCama(cama) | async).color"
+                    <plex-icon size="xl" [type]="(mapaCamasService.getEstadoCama(cama) | async).color" justify="center"
                                name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}">
                     </plex-icon>
                     <plex-label size="lg" titulo="{{ cama.nombre }}" subtitulo="{{ sector.nombre }}"></plex-label>
                     <ng-container *ngIf="cama.paciente">
-                        <plex-label align="center" icon="paciente" size="sm" direction="column"
+                        <plex-label aligned="center" icon="paciente" size="sm" direction="column"
                                     titulo="{{ cama.paciente?.nombre }} {{ cama.paciente?.apellido }}"
                                     subtitulo="{{ cama.paciente?.documento }}"></plex-label>
                     </ng-container>

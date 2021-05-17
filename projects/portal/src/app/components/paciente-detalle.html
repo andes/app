@@ -20,7 +20,7 @@
     </plex-detail>
     <!-- Alertas -->
     <plex-grid size="sm" type="full" *mobile="false">
-        <plex-card class="border-{{ alerta.semanticTag }}" size="md" *ngFor="let alerta of alertas" align="center"
+        <plex-card class="border-{{ alerta.semanticTag }}" size="md" *ngFor="let alerta of alertas" aligned="center"
                    type="default" color="{{ alerta.color }}" (click)="alerta.selected = !alerta.selected"
                    [selected]="alerta.selected" (click)="goTo(alerta.path)">
             <plex-label direction="column" titulo="{{ alerta.dato }}" class="color-{{ alerta.semanticTag }}"
