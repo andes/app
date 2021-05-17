@@ -1,13 +1,10 @@
 .boton {
-    padding: .5em;
+    padding: 0.5em;
     color: white;
     cursor: pointer;
-    transition: all .5s;
-    background: #002B3A;
+    transition: all 0.5s;
+    background: #002b3a;
     &:hover {
-        background: darken(#002B3A, 10%);
+        background: darken(#002b3a, 10%);
     }
-}
-.label {
-    padding:14em;
 }

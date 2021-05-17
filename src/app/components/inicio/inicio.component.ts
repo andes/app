@@ -28,7 +28,9 @@ export class InicioComponent implements AfterViewInit {
         private commonNovedadesService: CommonNovedadesService,
         private route: ActivatedRoute,
         private router: Router
-    ) { }
+    ) {
+        this.plex.navVisible(true);
+    }
 
     ngAfterViewInit() {
         if (this.auth.profesional) {

@@ -4,10 +4,9 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { AppComponent } from '../../../../app.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { HotjarService } from '../../../../shared/services/hotJar.service';
 import { UsuarioService } from '../../../../services/usuarios/usuario.service';
 import { DisclaimerService } from '../../../../services/disclaimer.service';
-import { filter, skip, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'select-organizacion.html',
@@ -24,10 +23,11 @@ export class SelectOrganizacionComponent implements OnInit {
         private router: Router,
         public appComponent: AppComponent,
         public organizacionService: OrganizacionService,
-        private hotjar: HotjarService,
         public us: UsuarioService,
         public ds: DisclaimerService
-    ) { }
+    ) {
+        this.plex.navVisible(false);
+    }
 
     ngOnInit() {
         this.plex.updateTitle('Seleccione una organización');

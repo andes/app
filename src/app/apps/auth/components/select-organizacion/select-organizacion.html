@@ -1,7 +1,9 @@
 <plex-layout>
     <plex-layout-main>
+        <plex-title size="md" titulo="Seleccione una organización"></plex-title>
+
         <ul class="list-group">
-            <li class="list-group-item boton color-rosa" *ngFor="let org of organizaciones" (click)=seleccionar(org)>
+            <li class="list-group-item boton color-rosa" *ngFor="let org of organizaciones" (click)="seleccionar(org)">
                 {{org.nombre}}
             </li>
         </ul>

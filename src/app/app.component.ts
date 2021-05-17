@@ -55,6 +55,7 @@ export class AppComponent {
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps de Salud');
 
+
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
 
