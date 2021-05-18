@@ -63,6 +63,7 @@ import { FiltrosListadoCapasComponent } from './views/listado-internacion-capas/
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
+import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -103,7 +104,8 @@ export const INTERNACION_COMPONENTS = [
     ListadoInternacionCapasComponent,
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
-    ResumenInternacionComponent
+    ResumenInternacionComponent,
+    TimelineMapaCamasComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
