@@ -1,0 +1,28 @@
+<ng-container>
+    <plex-title titulo="Contactos estrechos" size="sm"></plex-title>
+    <plex-list>
+        <plex-label *ngIf="!contactos?.length" titulo="No hay datos de contactos registrados" subtitulo=""></plex-label>
+
+        <plex-item *ngFor="let _unContacto of contactos" class="">
+            <plex-label titulo="{{ _unContacto.apellidoNombre }}"
+                        subtitulo="{{ (_unContacto.dni | number) || 'Sin DNI' }}">
+            </plex-label>
+            <plex-label titulo="Teléfono" subtitulo="{{ _unContacto.telefono}}">
+            </plex-label>
+            <plex-label titulo="Último contacto" subtitulo="{{ _unContacto.fechaUltimoContacto | fecha}}">
+            </plex-label>
+            <plex-badge *ngIf="_unContacto.tipoContacto.nombre; else elseBlock" type="info">
+                {{_unContacto.tipoContacto.nombre}}
+            </plex-badge>
+            <ng-template #elseBlock>
+                <plex-badge type="info">
+                    No especificado
+                </plex-badge>
+            </ng-template>
+            <plex-button label="" type="warning" size="sm" icon="pencil" (click)="edit(_unContacto)">
+            </plex-button>
+
+        </plex-item>
+
+    </plex-list>
+</ng-container>
