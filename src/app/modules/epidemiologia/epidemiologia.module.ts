@@ -22,6 +22,8 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 
 
 
+
+
 @NgModule({
   declarations: [
     FichaEpidemiologicaComponent,
