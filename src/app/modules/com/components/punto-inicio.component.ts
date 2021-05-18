@@ -31,7 +31,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public esTrasladoEspecial;
     private scrollEnd = false;
     private skip = 0;
-    private limit = 15;
+    private limit = 30;
     public reglasDerivacion = [];
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
