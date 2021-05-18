@@ -23,7 +23,7 @@
     <div class="col-6">
         <plex-select *ngIf="espacioFisicoPropio" [(ngModel)]="agenda.espacioFisico" name="espacioFisico"
                      (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
-                     labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion' : 'a' + ')'"
+                     labelField="nombre + ' - ' + servicio.nombre + (edificio ? edificio.descripcion' : 'a')"
                      (change)="validarSolapamientos('espacioFisico')">
         </plex-select>
         <plex-select *ngIf="!espacioFisicoPropio" [(ngModel)]="agenda.otroEspacioFisico" name="otroEspacio"
