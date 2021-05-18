@@ -1,5 +1,5 @@
 import { InscripcionService } from './../../services/inscripcion.service';
-import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -11,7 +11,6 @@ import { cache } from '@andes/shared';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ProfesionService } from 'src/app/services/profesion.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'nueva-inscripcion',
@@ -174,7 +173,9 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
     }
 
     setFactorRiesgoEdad() {
-        this.ciudadano.factorRiesgoEdad = this.inscripcionService.getFactorRiesgoEdad(this.ciudadano);
+        this.grupoPoblacionalService.cumpleExcepciones(this.ciudadano.grupo.nombre, { paciente: JSON.stringify({ id: this.paciente.id }) }).subscribe(resultado => {
+            this.ciudadano.factorRiesgoEdad = resultado;
+        });
     }
 
     guardarInscripcion($event) {

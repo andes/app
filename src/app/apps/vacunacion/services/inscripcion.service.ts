@@ -103,13 +103,4 @@ export class InscripcionService extends ResourceBaseHttp {
         return this.server.post(`${this.url}/asignacion`, { params: params, showError: true });
     }
 
-    // NO HTTP -------------------------
-
-    getFactorRiesgoEdad(ciudadano: ICiudadano) {
-        if (ciudadano.grupo?.nombre === 'factores-riesgo') {
-            const edad = calcularEdad(ciudadano.fechaNacimiento);
-            return ciudadano.factorRiesgoEdad = 57 <= edad && edad < 60;
-        }
-        return false;
-    }
 }

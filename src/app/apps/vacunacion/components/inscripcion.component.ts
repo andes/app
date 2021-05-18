@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-import { cache } from '@andes/shared';
+import { cache, calcularEdad } from '@andes/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
@@ -207,7 +207,10 @@ export class InscripcionComponent implements OnInit {
     }
 
     setFactorRiesgoEdad() {
-        this.ciudadano.factorRiesgoEdad = this.inscripcionService.getFactorRiesgoEdad(this.ciudadano);
+        const edad = calcularEdad(this.ciudadano.fechaNacimiento);
+        this.grupoPoblacionalService.cumpleExcepciones(this.ciudadano.grupo.nombre, { paciente: JSON.stringify({ edad }) }).subscribe(resultado => {
+            this.ciudadano.factorRiesgoEdad = resultado;
+        });
     }
 
     limpiarForm() {
