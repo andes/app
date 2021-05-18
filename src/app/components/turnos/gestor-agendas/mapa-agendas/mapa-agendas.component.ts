@@ -12,7 +12,7 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 export class MapaAgendasComponent implements OnInit {
 
     public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-    public semana;
+    public semana = [];
     public horaInicio = 6;
     public horaFin = 20;
     public horarios = [];
@@ -22,6 +22,9 @@ export class MapaAgendasComponent implements OnInit {
     public diaInicio;
     public agendasDeLaSemana = [];
     public prestacionesPermisos;
+    public verDia = false;
+    public fecha;
+    public verSemana = true;
     constructor(
 
         private agendaService: AgendaService,
@@ -58,12 +61,30 @@ export class MapaAgendasComponent implements OnInit {
         });
         this.cargarTabla();
     }
+    private cargarDia() {
+        this.semana = [];
+        let diaSeleccionado = moment(this.diaInicio).isoWeekday();
+
+        let nombreDia = this.headers.find((dia, index) => (index + 1) === diaSeleccionado);
+        this.semana.push({
+            nombre: nombreDia,
+            fecha: this.diaInicio,
+            horarios: this.generarArregloHorarios()
+        });
+        this.cargarTabla();
+    }
 
     private cargarTabla() {
+        let fechaDesde = moment(this.diaInicio).startOf('week').toDate();
+        let fechaHasta = moment(this.diaInicio).endOf('week').toDate();
+        if (this.verDia) {
+            fechaDesde = moment(this.diaInicio).startOf('day').toDate();
+            fechaHasta = moment(this.diaInicio).endOf('day').toDate();
+        }
 
         this.parametros = {
-            fechaDesde: moment(this.diaInicio).startOf('week').toDate(),
-            fechaHasta: moment(this.diaInicio).endOf('week').toDate(),
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
             organizacion: '',
             idTipoPrestacion: '',
             idProfesional: '',
@@ -153,5 +174,17 @@ export class MapaAgendasComponent implements OnInit {
 
         }
         return horarioTurnos;
+    }
+
+    private visualizarDia() {
+        this.verDia = true;
+        this.verSemana = false;
+        this.cargarDia();
+    }
+
+    private visualizarSemana() {
+        this.verSemana = true;
+        this.verDia = false;
+        this.cargarSemana();
     }
 }
