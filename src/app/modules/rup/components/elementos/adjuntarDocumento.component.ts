@@ -52,6 +52,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
         this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
+            this.descendientesInformeClinico.sort((a, b) => {
+                if (a.term < b.term) { return -1; }
+                if (a.term > b.term) { return 1; }
+                return 0;
+            });
         });
     }
 
