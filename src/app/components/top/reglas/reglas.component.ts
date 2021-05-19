@@ -23,6 +23,7 @@ export class ReglasComponent {
     prestacionActiva = -1;
     prestacion = {};
     organizacion;
+    reglaCorrecta = false;
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -93,6 +94,7 @@ export class ReglasComponent {
     deleteOrganizacion(indice) {
         this.reglas.splice(indice, 1);
         this.reglaActiva = -1;
+        this.verificarRegla();
     }
 
     addPrestacion() {
@@ -110,6 +112,7 @@ export class ReglasComponent {
                 this.prestaciones.push({ prestacion: this.prestacionOrigen, auditable: this.auditable });
                 this.regla.origen.prestaciones = this.prestaciones;
                 this.prestacionOrigen = null;
+                this.verificarRegla();
             }
         } else {
             this.plex.info('info', 'Debe seleccionar la prestación origen');
@@ -118,12 +121,13 @@ export class ReglasComponent {
 
     deletePrestacion(indice) {
         this.regla.origen.prestaciones.splice(indice, 1);
+        this.verificarRegla();
     }
-
 
     activarRegla(indice) {
         this.reglaActiva = indice;
         this.regla = this.reglas[indice];
+        this.verificarRegla();
     }
 
     activarPrestacion(indice) {
@@ -135,18 +139,24 @@ export class ReglasComponent {
         this.reglas = [];
         this.reglaActiva = -1;
         this.regla = {};
+        this.reglaCorrecta = false;
     }
 
     cancelar() {
         this.cancel.emit();
     }
 
+    verificarRegla() {
+        if (this.reglas?.length) {
+            this.reglaCorrecta = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion && regla.origen.organizacion && regla.origen.prestaciones?.length);
+        } else {
+            this.reglaCorrecta = false;
+        }
+    }
+
     onSave($event) {
-        let condiciones = false;
-        if (this.reglas && this.reglas.length > 0) {
-            condiciones = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion
-                && regla.destino && regla.origen.organizacion && regla.origen.prestaciones && regla.origen.prestaciones.length > 0);
-            if (condiciones) {
+        if (this.reglas?.length) {
+            if (this.reglaCorrecta) {
                 let data = {
                     reglas: this.reglas
                 };
@@ -158,7 +168,6 @@ export class ReglasComponent {
                 });
             } else {
                 this.plex.info('info', 'Debe completar los datos de las reglas');
-
             }
         } else {
             this.servicioReglas.delete({ prestacionDestino: this.prestacionDestino.conceptId, organizacionDestino: this.organizacionDestino.id }).subscribe((resu) => {

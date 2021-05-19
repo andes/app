@@ -133,7 +133,8 @@
                 </plex-button>
             </div>
             <div class="col text-right">
-                <plex-button type="success" label="Guardar" (click)="onSave($event)" title="Guardar">
+                <plex-button type="success" label="Guardar" (click)="onSave($event)" title="Guardar"
+                             [disabled]="form.invalid || !reglaCorrecta">
                 </plex-button>
             </div>
         </div>
