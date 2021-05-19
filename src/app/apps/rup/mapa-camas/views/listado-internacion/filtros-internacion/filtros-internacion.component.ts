@@ -7,6 +7,8 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 import { Observable } from 'rxjs/internal/Observable';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { map } from 'rxjs/operators';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { IObraSocial } from 'src/app/interfaces/IObraSocial';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -23,13 +25,15 @@ export class FiltrosInternacionComponent implements OnInit {
     estadosInternacion;
     requestInProgress: boolean;
     unidadesOrganizativas$: Observable<any[]>;
+    obrasSociales$: Observable<IObraSocial[]>;
 
     constructor(
         private auth: Auth,
         private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService,
         public permisosMapaCamasService: PermisosMapaCamasService,
-        private camasHttp: MapaCamasHTTP
+        private camasHttp: MapaCamasHTTP,
+        private obraSocialService: ObraSocialService
     ) { }
 
     ngOnInit() {
@@ -51,6 +55,7 @@ export class FiltrosInternacionComponent implements OnInit {
         this.listadoInternacionService.pacienteText.next(this.filtros.paciente);
         this.listadoInternacionService.estado.next(this.filtros.estado?.id);
         this.listadoInternacionService.unidadOrganizativa.next(this.filtros.unidadOrganizativa);
+        this.listadoInternacionService.obraSocial.next(this.filtros.obraSocial);
     }
 
     filtrarFecha() {
@@ -77,5 +82,15 @@ export class FiltrosInternacionComponent implements OnInit {
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
+    }
+
+    loadObrasSociales(event) {
+        if (event.query) {
+            this.obraSocialService.getListado({ nombre: event.query }).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        } else {
+            event.callback(null);
+        }
     }
 }

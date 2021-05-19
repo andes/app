@@ -20,6 +20,9 @@
         </plex-select>
         <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
         </plex-select>
+        <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial" (change)="filtrar()"
+                     (getData)="loadObrasSociales($event)">
+        </plex-select>
     </div>
     <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px"
                  title="Descargar Csv" titlePosition="top" (click)="reporteInternaciones()"

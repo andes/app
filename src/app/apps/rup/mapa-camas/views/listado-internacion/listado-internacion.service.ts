@@ -16,6 +16,7 @@ export class ListadoInternacionService {
     public fechaEgresoDesde = new BehaviorSubject<Date>(null);
     public fechaEgresoHasta = new BehaviorSubject<Date>(null);
     public unidadOrganizativa = new BehaviorSubject<any>(null);
+    public obraSocial = new BehaviorSubject<any[]>(null);
 
     public estado = new BehaviorSubject<any>(null);
 
@@ -45,15 +46,16 @@ export class ListadoInternacionService {
             this.listaInternacion$,
             this.pacienteText,
             this.estado,
-            this.unidadOrganizativa
+            this.unidadOrganizativa,
+            this.obraSocial
         ).pipe(
-            map(([listaInternacion, paciente, estado, unidad]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente, estado, unidad)
+            map(([listaInternacion, paciente, estado, unidad, obraSocial]) =>
+                this.filtrarListaInternacion(listaInternacion, paciente, estado, unidad, obraSocial),
             )
         );
     }
 
-    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, unidad: any) {
+    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, unidad: any, obraSocial: any) {
         let listaInternacionFiltrada = listaInternacion;
 
         if (paciente) {
@@ -75,6 +77,11 @@ export class ListadoInternacionService {
         if (unidad) {
             listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
                 internacion.ejecucion.unidadOrganizativa?.id === unidad.id
+            );
+        }
+        if (obraSocial) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                internacion.paciente.obraSocial?.nombre === obraSocial.nombre
             );
         }
         return listaInternacionFiltrada;
