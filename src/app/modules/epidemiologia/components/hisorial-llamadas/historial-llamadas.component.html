@@ -1,0 +1,23 @@
+<!-- <plex-layout main='8'>
+    <plex-layout-main>
+        <div *ngIf="idPrestacion">
+            <vista-prestacion [idPrestacion]="idPrestacion"></vista-prestacion>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert"> -->
+        <plex-title size="sm" titulo="Llamados realizados"> 
+        </plex-title>
+        <plex-table [columns]="columns" #table="plTable">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let llamado of showLlamados">
+                <td *plTableCol="'fecha'">{{llamado.fecha | date:"dd/MM/yyy HH:mm"}}</td>
+                <td *plTableCol="'registro'">{{llamado.tipoPrestacion}}</td>
+                <td *plTableCol="'acciones'">
+                    <plex-button size="sm" type="info" icon="eye" (click)="verLlamado.emit(llamado.idPrestacion)">
+                    </plex-button>
+                </td>
+            </tr>
+        </plex-table>
+    <!-- </plex-layout-sidebar>
+</plex-layout> -->

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidemiologica-contactos/ficha-epidemiologica-contactos.component';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
+import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,11 @@ const routes: Routes = [
   {
     path: 'ficha-epidemiologica-contactos',
     component: FichaEpidemiologicaContactosComponent
-  }
+  },
+  {
+    path: 'seguimiento',
+    component: SeguimientoEpidemiologiaComponent
+  },
 ];
 
 @NgModule({

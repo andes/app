@@ -14,8 +14,9 @@ import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiolog
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
-import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
-
+import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
+import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
+import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
 
 
 
@@ -28,7 +29,9 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
     SelectSearchDirective,
     BuscadorFichaEpidemiologicaComponent,
     HistorialFichaComponent,
-    CodigSisaPipe
+    SeguimientoEpidemiologiaComponent,
+    DetalleSeguimientoComponent,
+    FichaFieldsPipe
   ],
   imports: [
     CommonModule,

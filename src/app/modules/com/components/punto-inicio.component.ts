@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
+import { ColoresPrioridades as colores } from 'src/app/utils/enumerados';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
@@ -62,40 +63,6 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortBy = 'fecha';
     public sortOrder = 'asc';
     public ordenarPorPrioridad = false;
-
-    // Códigos de color de prioridades
-    colores = [
-        {
-            border: '#b0cfa0',
-            hover: '#80b266',
-            background: '#e9f2e5',
-            name: 'baja'
-        },
-        {
-            border: '#d5c743',
-            hover: '#C6B300',
-            background: '#f8f5de',
-            name: 'media'
-        },
-        {
-            border: '#d1a67e',
-            hover: '#e97204',
-            background: '#f7e5ca',
-            name: 'intermedia'
-        },
-        {
-            border: '#e4a4a4',
-            hover: '#B70B0B',
-            background: '#f8e6e6',
-            name: 'alta'
-        },
-        {
-            border: '#7a6f93',
-            hover: '#02111C',
-            background: '#dddae3',
-            name: 'especial'
-        }
-    ];
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -300,7 +267,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     getColorPrioridad(prioridad) {
         if (prioridad && this.esCOM) {
-            return this.colores.find(x => x.name === prioridad);
+            return colores.find(x => x.name === prioridad);
         } else {
             return false;
         }
