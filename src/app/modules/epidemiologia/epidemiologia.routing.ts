@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'seguimiento',
     component: SeguimientoEpidemiologiaComponent
-  }
+  },
 ];
 
 @NgModule({
