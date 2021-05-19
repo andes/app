@@ -11,6 +11,7 @@ import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
 import { Observable } from 'rxjs';
+import { ColoresPrioridades as colores } from 'src/app/utils/enumerados';
 
 @Component({
     selector: 'com-punto-inicio',
@@ -61,34 +62,6 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortBy = 'fecha';
     public sortOrder = 'asc';
     public ordenarPorPrioridad = false;
-
-    // Códigos de color de prioridades
-    colores = [
-        {
-            border: '#b0cfa0',
-            hover: '#80b266',
-            background: '#e9f2e5',
-            name: 'baja'
-        },
-        {
-            border: '#d5c743',
-            hover: '#C6B300',
-            background: '#f8f5de',
-            name: 'media'
-        },
-        {
-            border: '#e4a4a4',
-            hover: '#B70B0B',
-            background: '#f8e6e6',
-            name: 'alta'
-        },
-        {
-            border: '#7a6f93',
-            hover: '#02111C',
-            background: '#dddae3',
-            name: 'especial'
-        }
-    ];
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -294,7 +267,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     getColorPrioridad(prioridad) {
         if (prioridad && this.esCOM) {
-            return this.colores.find(x => x.name === prioridad);
+            return colores.find(x => x.name === prioridad);
         } else {
             return false;
         }

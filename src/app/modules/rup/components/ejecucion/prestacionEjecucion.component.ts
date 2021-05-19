@@ -582,22 +582,18 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     volver(ambito = 'ambulatorio', ruta = null) {
         let mensaje;
         let ruteo;
-        switch (ambito) {
-            case 'ambulatorio':
+
+        if (ruta) {
+            mensaje = this.btnVolver;
+            ruteo = ruta;
+        } else {
+            if (ambito === 'ambulatorio') {
                 mensaje = 'Punto de Inicio';
                 ruteo = 'rup';
-                break;
-            case 'internacion':
-                if (ruta) {
-                    mensaje = this.btnVolver;
-                    ruteo = ruta;
-                } else {
-                    mensaje = 'Mapa de Camas';
-                    ruteo = '/mapa-camas';
-                }
-                break;
-            default:
-                break;
+            } else if (ambito === 'internacion') {
+                mensaje = 'Mapa de Camas';
+                ruteo = '/mapa-camas';
+            }
         }
         // let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {

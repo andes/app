@@ -1,0 +1,45 @@
+<plex-title main titulo="Detalle de Seguimiento">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<div>
+    <ng-container *ngIf="seguimiento | fichaFields as fields">
+
+        <paciente-detalle [paciente]="seguimiento.paciente" reload="true" orientacion="horizontal"
+            [fields]="pacienteFields">
+        </paciente-detalle>
+        <plex-title size="sm" titulo="Llamados realizados">
+            <plex-button label="Ver todos" size="sm" type="info" tooltip="ver datos los Llamados" (click)="verTodos()">
+            </plex-button>
+        </plex-title>
+        <plex-table [columns]="columns" #table="plTable">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let llamado of fields.llamados">
+                <td>
+                    <plex-label class="text-capitalize" titulo="{{ llamado.fecha | fecha }}"
+                        subtitulo="{{ seguimiento.fecha | hora }}"></plex-label>
+                </td>
+                <td class="text-right">
+                    <plex-button size="sm" type="info" icon="eye" (click)="verPrestacion(llamado.idPrestacion)">
+                    </plex-button>
+                </td>
+            </tr>
+        </plex-table>
+
+        <plex-title size="sm" titulo="Contactos Estrechos">
+            <plex-button label="Ver todos" size="sm" type="info" tooltip="ver datos los Llamados" (click)="verTodos()">
+            </plex-button>
+        </plex-title>
+        <plex-list>
+            <plex-item *ngFor="let contacto of fields.contactosEstrechos">
+                <plex-label class="text-capitalize" titulo="{{ contacto.apellidoNombre }}"
+                    subtitulo="{{ contacto.dni }}"></plex-label>
+                <plex-label titulo="Teléfono" subtitulo="{{ contacto.telefono }}"></plex-label>
+                <plex-label titulo="Último Contacto" subtitulo="{{ contacto.fechaUltimoContacto | fecha }}">
+                </plex-label>
+                <plex-badge type="success">{{ tipoContacto }}</plex-badge>
+            </plex-item>
+        </plex-list>
+    </ng-container>
+</div>

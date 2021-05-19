@@ -15,8 +15,9 @@ import { SharedModule } from '@andes/shared';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
-import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
-
+import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
+import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
+import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
 
 
 @NgModule({
@@ -26,7 +27,9 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
     SelectSearchDirective,
     BuscadorFichaEpidemiologicaComponent,
     HistorialFichaComponent,
-    CodigSisaPipe
+    SeguimientoEpidemiologiaComponent,
+    DetalleSeguimientoComponent,
+    FichaFieldsPipe
   ],
   imports: [
     CommonModule,

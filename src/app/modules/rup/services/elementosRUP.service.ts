@@ -215,4 +215,13 @@ export class ElementosRUPService {
         };
     }
 
+    getConceptoSeguimientoCOVID() {
+        return {
+            conceptId: '5891000013104',
+            term: 'consulta de seguimiento de paciente asociado a infección por COVID-19',
+            fsn: 'consulta de seguimiento de paciente asociado a infección por COVID-19 (procedimiento)',
+            semanticTag: 'procedimiento'
+        };
+    }
+
 }
