@@ -10,6 +10,8 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
+import { ZonaSanitariaService} from './../../services/zonaSanitaria.service';
+
 // Interfaces
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IUbicacion } from './../../interfaces/IUbicacion';
@@ -24,6 +26,8 @@ import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
 import { Observable, Subject, of } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { cache } from '@andes/shared';
+import { IZonaSanitaria} from './../../interfaces/IZonaSanitaria';
+
 
 @Component({
     selector: 'organizacion-create-update',
@@ -38,6 +42,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     // definición de arreglos
     tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
+    zonasSanitarias$: Observable<IZonaSanitaria[]>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     provincias$: Observable<any[]>;
@@ -105,7 +110,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         fechaBaja: new Date(),
         unidadesOrganizativas: [],
         ofertaPrestacional: { idSisa: Number, nombre: String },
-        showMapa: false
+        showMapa: false,
+        zonaSanitaria: null
     };
 
     public listadoUO = [];
@@ -134,7 +140,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     public botonGuardarDisabled = false;
 
     public camas: ISnapshot[];
-
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -145,6 +150,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         public snomed: SnomedService,
         private auth: Auth,
         private router: Router,
+        private zonasSanitariasService: ZonaSanitariaService,
         public mapaCamasService: MapaCamasHTTP,
     ) { }
 
@@ -163,6 +169,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tiposEstablecimiento$ = this.tipoEstablecimientoService.get();
+        this.zonasSanitarias$ = this.zonasSanitariasService.search().pipe(cache());
 
         this.cargarOrganizacionModel(this.seleccion);
 

@@ -259,6 +259,15 @@
                         </div>
                     </fieldset>
                     <fieldset>
+                        <ng-container *ngIf="zonasSanitarias$ | async as zonas">
+                            <legend>Zona Sanitaria</legend>
+                            <plex-wrapper>
+                                <plex-select name="zonasSanitarias" labelField="nombre" [data]="zonas"
+                                             [(ngModel)]="organizacionModel.zonaSanitaria" placeholder="Seleccione...">
+                                </plex-select>
+                            </plex-wrapper>
+                        </ng-container>
+                        <br>
                         <legend>Unidades Organizativas
                             <plex-button icon="plus" type="primary btn-sm" title="Agregar unidades organizativas"
                                          (click)="addU0()" class="float-right">
