@@ -1,3 +1,23 @@
+# [5.47.0](https://github.com/andes/app/compare/v5.46.0...v5.47.0) (2021-05-19)
+
+
+### Bug Fixes
+
+* **mapa-camas:** ver registros en listado de internacion ([#2268](https://github.com/andes/app/issues/2268)) ([0cd9467](https://github.com/andes/app/commit/0cd9467d700839701d944fdd9be66fa4186fd8b2))
+
+
+### Features
+
+* **auth:** oculta navbar en select organizacion ([#2271](https://github.com/andes/app/issues/2271)) ([5794649](https://github.com/andes/app/commit/57946494c66628440f06c8fc4753c7b445046e96))
+* **mapa-camas:** carga datos de internacion anterior en nuevo ingreso ([#2272](https://github.com/andes/app/issues/2272)) ([3a49184](https://github.com/andes/app/commit/3a49184bb98fd17d1bb67d63ff0be0d358e69df4))
+* **mapa-camas:** filtros e interaccion en resumen internación ([#2273](https://github.com/andes/app/issues/2273)) ([1fdcc9a](https://github.com/andes/app/commit/1fdcc9a084b2499ae66f4772b9765c1b4a3ba3ac))
+* **mapa-camas:** resumen internacion ([#2263](https://github.com/andes/app/issues/2263)) ([3609ac4](https://github.com/andes/app/commit/3609ac497fe9b7ca1d788b74948c6c3d30197f35))
+* **mapa-camsa:** visualizacion tipo timeline ([#2274](https://github.com/andes/app/issues/2274)) ([5907cef](https://github.com/andes/app/commit/5907cef05acc12067a99f5af91cb76b14be0cd1e))
+* **pdp:** visualizar mis certificados ([#2226](https://github.com/andes/app/issues/2226)) ([3b073bd](https://github.com/andes/app/commit/3b073bd52173b638dd3342e17de63944e68311f5))
+* **plex:** actualiza a v7.18.0 ([#2276](https://github.com/andes/app/issues/2276)) ([6ada068](https://github.com/andes/app/commit/6ada0689ab52f0dfa722b3c374bdfb0096286dd3))
+* **rup:** rules to formulaBase([#2210](https://github.com/andes/app/issues/2210)) ([ea49192](https://github.com/andes/app/commit/ea491921d2076a5fb67197964bf2bec29ba6f1d1))
+* **vac:** monitoreo de inscriptos para gestión de turnos ([#2252](https://github.com/andes/app/issues/2252)) ([27feeb2](https://github.com/andes/app/commit/27feeb28d8b71172047b4e8b8c39b1176be8537a))
+
 # [5.46.0](https://github.com/andes/app/compare/v5.45.0...v5.46.0) (2021-05-12)
 
 
