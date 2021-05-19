@@ -50,7 +50,7 @@
                         Fecha de nacimiento: {{ resultado.inscripto.fechaNacimiento | fecha }}<br>
                         Localidad:
                         {{ resultado.inscripto.localidad? resultado.inscripto.localidad.nombre : 'Sin datos' }}<br></p>
-                    <p [innerHTML]="resultado.body"></p>
+                    <p *ngIf="!resultado.inscripto.factorRiesgoEdad" [innerHTML]="resultado.body"></p>
                     <plex-button type="info" label="Nueva búsqueda" (click)="nuevaBusqueda()">
                     </plex-button>
                 </plex-card>
