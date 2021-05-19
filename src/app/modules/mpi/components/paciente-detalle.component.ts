@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
@@ -17,6 +17,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
+    @Input() showLugarNacimiento = false;
     @Input() showDocumentos = false;
 
     obraSocial: IObraSocial;
@@ -90,6 +91,23 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             return texto;
         }
         return 'Sin dirección';
+    }
+
+    get lugarNacimiento() {
+        if (this.paciente.lugarNacimiento) {
+            let texto = '';
+            if (this.paciente.lugarNacimiento.localidad) {
+                texto = texto + this.paciente.lugarNacimiento.localidad.nombre;
+            }
+            if (this.paciente.lugarNacimiento.provincia) {
+                if (texto.length > 0) {
+                    texto += ', ';
+                }
+                texto = texto + this.paciente.lugarNacimiento.provincia.nombre;
+            }
+            return texto;
+        }
+        return 'Desconocido';
     }
 
     get contacto() {

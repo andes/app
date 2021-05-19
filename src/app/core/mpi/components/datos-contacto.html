@@ -42,6 +42,35 @@
             </div>
         </plex-grid>
 
+        <!-- DATOS DE NACIMIENTO -->
+
+        <plex-title titulo="Lugar de nacimiento" size="sm">
+            <plex-bool class="mr-3" *ngIf="provinciaActual" [(ngModel)]="nacioProvActual"
+                       label="¿Provincia de {{provinciaActual.nombre}}?" name="nacioProvActual"
+                       (change)="changeProvActualNacimiento()">
+            </plex-bool>
+            <plex-bool *ngIf="nacioProvActual && localidadActual" [(ngModel)]="nacioLocActual"
+                       label="¿Localidad {{localidadActual.nombre}}?" name="nacioLocActual"
+                       (change)="changeLocalidadActualNacimiento()">
+            </plex-bool>
+        </plex-title>
+
+        <plex-grid type="full" size="lg" responsive>
+            <ng-container *ngIf="paciente?.lugarNacimiento">
+                <plex-wrapper>
+                    <plex-select [disabled]="nacioProvActual" [(ngModel)]="paciente.lugarNacimiento.provincia"
+                                 name="provinciaNacimiento" [data]="provincias$ | async" idField="nombre"
+                                 labelField="nombre" label="Provincia"
+                                 (change)="loadLocalidadesNacimiento(paciente.lugarNacimiento.provincia)" grow="2">
+                    </plex-select>
+                    <plex-select [disabled]="nacioLocActual" label="Localidad" [required]="nacioProvActual"
+                                 [(ngModel)]="paciente.lugarNacimiento.localidad" name="localidadNacimiento"
+                                 [data]="localidadesNacimiento$ | async" labelField="nombre" grow="2">
+                    </plex-select>
+                </plex-wrapper>
+            </ng-container>
+        </plex-grid>
+
         <!-- DATOS DE DOMICILIO -->
 
         <plex-title titulo="Datos del domicilio" size="sm">

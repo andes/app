@@ -55,6 +55,10 @@
         <plex-label *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}"
                     justify="{{ justificado }}"></plex-label>
 
+        <plex-label *ngIf="showLugarNacimiento" titulo="Lugar de Nacimiento"
+                    [subtitulo]="lugarNacimiento || 'No indica'" justify="{{ justificado }}">
+        </plex-label>
+
         <plex-label *ngIf="showFinanciador && obraSocial" [titulo]="financiadorLabel"
                     subtitulo="{{ obraSocial.financiador}}"></plex-label>
         <plex-label *ngIf="!obraSocial" [titulo]="financiadorLabel" subtitulo="{{'Sin obra social' }}">
