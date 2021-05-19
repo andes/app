@@ -2,17 +2,16 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { Observable, combineLatest, Subscription, forkJoin, of } from 'rxjs';
+import { Observable, combineLatest, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { filter, map, switchMap, take } from 'rxjs/operators';
-import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { map, switchMap, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-cambiar-cama',
     templateUrl: './cambiar-cama.component.html',
 })
 
-export class CambiarCamaComponent implements OnInit, OnDestroy {
+export class CambiarCamaComponent implements OnInit {
     camasDisponibles$: Observable<{ camasMismaUO, camasDistintaUO }>;
     selectedCama$: Observable<ISnapshot>;
 
@@ -39,9 +38,6 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
         private plex: Plex,
         private mapaCamasService: MapaCamasService,
     ) { }
-
-    ngOnDestroy() {
-    }
 
     ngOnInit() {
         combineLatest([
