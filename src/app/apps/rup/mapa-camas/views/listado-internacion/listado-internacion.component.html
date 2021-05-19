@@ -19,11 +19,12 @@
                                     <th rowspan="2">Dni</th>
                                     <th rowspan="2">Fecha de ingreso</th>
                                     <th rowspan="2">Fecha de egreso</th>
+                                    <th rowspan="2">Unidad Organizativa</th>
                                     <th rowspan="2">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let internacion of listaInternacion$ | async"
+                                <tr *ngFor="let internacion of listaInternacion"
                                     [class.bg-inverse]="selectedPrestacion._id === internacion._id"
                                     [class.text-white]="selectedPrestacion._id === internacion._id"
                                     (click)="seleccionarPrestacion(internacion, selectedPrestacion)">
@@ -42,6 +43,9 @@
                                         <span *ngIf='devuelveFecha(internacion,"egreso")'>
                                             {{devuelveFecha(internacion,"egreso") | fecha}}
                                             {{devuelveFecha(internacion,"egreso") | hora}}</span>
+                                    </td>
+                                    <td>
+                                        {{ internacion.ejecucion.unidadOrganizativa?.term }}
                                     </td>
                                     <td>
                                         <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
@@ -70,7 +74,7 @@
                     <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
                     </plex-button>
                 </app-desocupar-cama>
-                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}"
+                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
                                   (cancel)="volverADetalle()">
                 </app-cambiar-cama>
             </plex-layout-sidebar>

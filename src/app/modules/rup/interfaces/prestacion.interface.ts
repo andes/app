@@ -63,6 +63,7 @@ export class IPrestacion {
             id: string,
             nombre: string
         },
+        unidadOrganizativa: ISnomedConcept,
         // Registros de la ejecución
         registros: IPrestacionRegistro[],
     };

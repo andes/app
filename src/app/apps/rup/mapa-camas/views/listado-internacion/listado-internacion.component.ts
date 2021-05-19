@@ -16,17 +16,16 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 })
 
 export class InternacionListadoComponent implements OnInit {
-    listaInternacion$: Observable<IPrestacion[]>;
     selectedPrestacion$: Observable<IPrestacion>;
     fechaIngresoHasta$ = this.listadoInternacionService.fechaIngresoHasta;
 
     // VARIABLES
     public mostrar = 'datosInternacion';
-    public listaInternacion;
     public listaInternacionAux;
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
+    public listaInternacion: IPrestacion[] = [];
 
     constructor(
         private plex: Plex,
@@ -63,7 +62,9 @@ export class InternacionListadoComponent implements OnInit {
                 return prestacion;
             })
         );
-        this.listaInternacion$ = this.listadoInternacionService.listaInternacionFiltrada$;
+        this.listadoInternacionService.listaInternacionFiltrada$.pipe(
+            map(lista => this.listaInternacion = lista)
+        ).subscribe();
     }
 
     devuelveFecha(internacion, tipo) {
@@ -115,6 +116,13 @@ export class InternacionListadoComponent implements OnInit {
 
     cambiarCama() {
         this.mostrar = 'desocuparCama';
+    }
+
+    refresh() {
+        this.listadoInternacionService.listaInternacionFiltrada$.subscribe(lista => {
+            this.listaInternacion = lista;
+            this.volverADetalle();
+        });
     }
 
     volverADetalle() {
