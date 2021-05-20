@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './pages/login/login-portal-paciente';
 import { PDPMisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
-
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
@@ -11,6 +10,8 @@ import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.componen
 import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
 import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certificados.component';
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
+import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
+import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -45,6 +46,14 @@ const routes: Routes = [
     canActivate: [RoutingGuard],
     children: [
       { path: ':id', component: PDPMisCertificadoDetalleComponent }
+    ]
+  },
+  {
+    path: 'mis-familiares',
+    component: PDPMisFamiliaresComponent,
+    canActivate: [RoutingGuard],
+    children: [
+      { path: ':id', component: PDPMisFamiliaresDetalleComponent }
     ]
   }
 

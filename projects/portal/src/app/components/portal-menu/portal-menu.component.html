@@ -6,7 +6,7 @@
         <ng-container *ngFor="let card of cards">
             <plex-label icon="{{ card.icono }}" size="md" direction="column" class="mb-2 color-{{ card.semanticTag}}"
                         titulo="" subtitulo="" (click)="goTo(card.path)" tooltip="{{ card.path }}"
-                        tooltip="{{ card.path }}" tooltipPosition="right">
+                        tooltipPosition="right">
             </plex-label>
         </ng-container>
     </plex-grid>

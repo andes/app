@@ -1,19 +1,19 @@
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { Auth } from '@andes/auth';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { PlexModule } from '@andes/plex';
 import { Server, SharedModule } from '@andes/shared';
-import { Auth } from '@andes/auth';
+import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 
 // Declarations
 import { LoginComponent } from './pages/login/login-portal-paciente';
 import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 import { RoutingGuard } from './app.routings-guard.class';
-import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { environment } from '../environments/environment';
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
@@ -29,6 +29,10 @@ import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certif
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
 import { CertificadoService } from './services/certificado.service';
 import { CategoriasService } from './services/categoria.service';
+import { PrestacionService } from './services/prestacion.service';
+import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
+import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +45,8 @@ import { CategoriasService } from './services/categoria.service';
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
+    PDPMisFamiliaresComponent,
+    PDPMisFamiliaresDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
     PDPMisVacunasComponent,
@@ -67,7 +73,8 @@ import { CategoriasService } from './services/categoria.service';
     RoutingGuard,
     AdjuntosService,
     CertificadoService,
-    CategoriasService
+    CategoriasService,
+    PrestacionService
   ],
   bootstrap: [AppComponent]
 })

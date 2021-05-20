@@ -1,11 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PacientePortalService } from '../services/paciente-portal.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
 import { LaboratorioService } from '../services/laboratorio.service';
 import { VacunaService } from '../services/vacuna.service';
 import { Router } from '@angular/router';
+import { PacientePortalService } from '../services/paciente-portal.service';
+
 @Component({
     selector: 'pdp-paciente-detalle',
     templateUrl: './paciente-detalle.html'
@@ -46,17 +47,14 @@ export class PacienteDetalleComponent implements OnInit {
 
     ngOnInit() {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
-        this.pacienteService.getById(idPaciente).subscribe(data => this.paciente = data);
+        this.pacienteService.me().subscribe(resp => this.paciente = resp);
         this.laboratorioService.getLaboratorios(idPaciente).subscribe(laboratorios => {
             this.alertas.map(a => {
                 if (a.dato === 'laboratorios') {
                     a.valor = laboratorios.length.toString();
                 }
-
-
             });
         });
-
         this.vacunaService.getVacunas(idPaciente).subscribe(vacunas => {
             this.alertas.map(a => {
                 if (a.dato === 'vacunas') {

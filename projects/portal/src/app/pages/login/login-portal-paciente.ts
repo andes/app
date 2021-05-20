@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { map, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'pdp-login-portal',
@@ -16,8 +17,7 @@ export class LoginComponent implements OnInit {
     constructor(
         private plex: Plex,
         private router: Router,
-        private auth: Auth
-    ) { }
+        private auth: Auth) { }
 
     ngOnInit() {
         this.auth.logout();
@@ -30,12 +30,13 @@ export class LoginComponent implements OnInit {
         }
         this.loading = true;
         this.usuario = this.usuario.toLocaleLowerCase();
-        this.auth.mobileLogin(this.usuario, this.password).subscribe(() => {
-            this.router.navigate(['/mis-certificados']);
-        },
-            (err) => {
+        this.auth.mobileLogin(this.usuario, this.password).pipe(
+            catchError(err => {
                 this.plex.info('danger', 'Usuario o contraseña incorrectos');
                 this.loading = false;
-            });
+                return null;
+            }),
+            map(() => this.router.navigate(['/mis-familiares']))
+        ).subscribe();
     }
 }
