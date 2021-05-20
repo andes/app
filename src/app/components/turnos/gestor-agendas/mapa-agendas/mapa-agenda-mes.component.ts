@@ -1,8 +1,6 @@
-import { Router } from '@angular/router';
-import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
-import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+
 
 @Component({
     selector: 'mapa-agenda-mes',
@@ -12,59 +10,60 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 export class MapaAgendasMesComponent implements OnInit {
 
     public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-
-
     public parametros;
     public _fecha;
-    public semana = [];
-    public prestacionesPermisos;
-    public verDia = false;
+    public calendario;
+    @Input() dataF: any;
     @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
         this.cargarMes();
     }
-    public verSemana = true;
+
     constructor(
-
-        private agendaService: AgendaService,
-        private auth: Auth,
-        private conceptoTurneablesService: ConceptosTurneablesService,
-        private router: Router
-
+        private agendaService: AgendaService
     ) { }
 
     ngOnInit() {
-        this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
-
-        if (!this.prestacionesPermisos.length) {
-            this.router.navigate(['inicio']);
-        }
-        this.cargarMes();
 
     }
 
     private cargarMes() {
+        this.calendario = [];
+        let inicio = moment(this._fecha).startOf('month').startOf('week');
+        let ultimoDiaMes = moment(this._fecha).endOf('month');
+        let primerDiaMes = moment(this._fecha).startOf('month');
+        let cantidadSemanas = Math.ceil(moment(this._fecha).endOf('month').endOf('week').diff(moment(this._fecha).startOf('month').startOf('week'), 'weeks', true));
 
-        this.semana = this.headers.map((dia, index) => {
-            return {
-                nombre: dia,
-                fecha: this._fecha.weekday(index).toDate(),
-                turnos: []
-            };
+        for (let r = 1; r <= cantidadSemanas; r++) {
+            let week = [];
+            this.calendario.push(week);
 
-        });
+            for (let c = 1; c <= 7; c++) {
+                let dia = inicio.toDate();
+                let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
+                if (isThisMonth) {
+                    week.push({
+                        fecha: dia,
+                        turnos: []
+                    });
+                } else {
+                    week.push({ estado: 'vacio' });
+                }
+                inicio.add(1, 'day');
+            }
+
+        }
+
         this.cargarTabla();
     }
 
 
     private cargarTabla() {
-        let fechaDesde = moment(this._fecha).startOf('month').toDate();
-        let fechaHasta = moment(this._fecha).endOf('month').toDate();
 
         this.parametros = {
-            fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta,
+            fechaDesde: moment(this._fecha).startOf('month').toDate(),
+            fechaHasta: moment(this._fecha).endOf('month').toDate(),
             organizacion: '',
             idTipoPrestacion: '',
             idProfesional: '',
@@ -72,26 +71,18 @@ export class MapaAgendasMesComponent implements OnInit {
             otroEspacioFisico: '',
             estado: ''
         };
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
-        }
-        this.conceptoTurneablesService.getAll().subscribe((data) => {
-            let dataF;
-            if (this.prestacionesPermisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
-            }
 
-            this.agendaService.get(this.parametros).subscribe((agendas: any) => {
-                agendas.forEach(agenda => {
+        this.agendaService.get(this.parametros).subscribe((agendas: any) => {
+            agendas.forEach(agenda => {
+                this.calendario.forEach(semana => {
 
-                    this.semana.forEach(dia => {
+                    semana.forEach(dia => {
 
-                        if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
+                        if (dia.estado !== 'vacio' && moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
+                            let turnos = [];
+                            turnos = agenda.bloques[0].turnos.filter(turno => turno.estado === 'asignado');
 
-                            let turnos = agenda.bloques[0].turnos.filter(turno => turno.estado === 'asignado');
-                            turnos.forEach(t => dataF.forEach(tipoPrestacion => {
+                            turnos.forEach(t => this.dataF.forEach(tipoPrestacion => {
 
                                 if (tipoPrestacion.color && t.tipoPrestacion.conceptId === tipoPrestacion.conceptId) {
 
@@ -99,27 +90,28 @@ export class MapaAgendasMesComponent implements OnInit {
 
                                 }
                             }));
-
-                            turnos.forEach(turno => dia.horarios.forEach(hora => {
-
-
-                            }));
-
-
+                            turnos.forEach(turno => dia.turnos.push(turno));
+                            this.ordenar(dia.turnos);
                         }
 
                     });
                 });
-
-            }, err => {
-                if (err) {
-                }
             });
+
+        }, err => {
+            if (err) {
+            }
         });
 
     }
 
 
+    private ordenar(turnos) {
+        turnos.sort((a, b) =>
+            a.tipoPrestacion.conceptId > b.tipoPrestacion.conceptId ? 1 :
+                a.tipoPrestacion.conceptId < b.tipoPrestacion.conceptId ? -1 :
+                    0);
+    }
 
 
 

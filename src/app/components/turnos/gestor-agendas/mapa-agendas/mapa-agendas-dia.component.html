@@ -1,37 +1,6 @@
 <plex-layout>
     <plex-layout-main>
-        <plex-title titulo="Mapa Agendas">
-            <plex-datetime *ngIf="verSemana" type="date" label="" [skipBy]="'week'" [(ngModel)]="diaInicio"
-                           name="fechaSkip" (change)="cargarSemana()" required>
-            </plex-datetime>
-
-            <plex-datetime *ngIf="verDia" type="date" label="" [skipBy]="'days'" [(ngModel)]="diaInicio"
-                           name="fechaSkip" required>
-            </plex-datetime>
-
-            <plex-datetime *ngIf="verMes" type="date" label="" [skipBy]="'month'" [(ngModel)]="diaInicio"
-                           name="fechaSkip" required>
-            </plex-datetime>
-
-            <plex-button class="ml-2" type="info" label="Dia" (click)="visualizarDia()" tooltip="ver agendas del dia">
-            </plex-button>
-
-            <plex-button class="ml-2" type="info" disable="false" label="Semana" (click)="visualizarSemana()"
-                         tooltip="ver agendas de la semana">
-            </plex-button>
-
-            <plex-button class="ml-2 mr-2" type="info" label="Mes" (click)="visualizarMes()"
-                         tooltip="ver agendas del mes">
-            </plex-button>
-        </plex-title>
-
-        <mapa-agenda-mes *ngIf="verMes" [fecha]="diaInicio" [dataF]="dataF">
-        </mapa-agenda-mes>
-
-        <mapa-agenda-dia *ngIf="verDia" [fecha]="diaInicio" [dataF]="dataF">
-        </mapa-agenda-dia>
-
-        <fieldset *ngIf="!verMes && !verDia">
+        <fieldset>
             <table class=" mapa-turnos table table-striped table-hover">
                 <tr class="header">
                     <td width="50%">Horarios</td>

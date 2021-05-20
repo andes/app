@@ -98,6 +98,7 @@ import { EstadisticasAgendasComponent } from './components/turnos/dashboard/esta
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { MapaAgendasMesComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agenda-mes.component';
+import { MapaAgendasDiaComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas-dia.component';
 import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
@@ -285,6 +286,7 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioInternacionComponent,
         MapaAgendasComponent,
         MapaAgendasMesComponent,
+        MapaAgendasDiaComponent,
 
         // Solicitudes
         PrestamosHcComponent,
