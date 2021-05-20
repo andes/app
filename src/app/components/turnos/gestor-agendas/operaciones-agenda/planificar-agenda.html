@@ -84,7 +84,7 @@
                                                  (getData)="loadEspaciosFisicos($event)"
                                                  label="Seleccione un espacio físico del efector"
                                                  placeholder="Seleccione un espacio físico"
-                                                 labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.descripcion ? edificio.descripcion : '')"
+                                                 labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
                                                  (change)="validarTodo(); verificarEspacioFisico()">
                                     </plex-select>
                                 </div>
