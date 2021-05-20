@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { InscripcionService } from '../services/inscripcion.service';
@@ -7,13 +7,14 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ProfesionService } from 'src/app/services/profesion.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'editar-inscripcion',
     templateUrl: 'editar-inscripcion.html'
 })
 
-export class EditarInscripcionComponent implements OnInit {
+export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
     public inscripcion: any;
     public estados = [
         { id: 'pendiente', nombre: 'pendiente' },
@@ -45,6 +46,7 @@ export class EditarInscripcionComponent implements OnInit {
     ];
     public diaSeleccion = null;
     public profesion;
+    @ViewChild('formulario', { static: false }) form: NgForm;
 
     @Input('inscripcion')
     set _inscripcion(value) {
@@ -62,6 +64,7 @@ export class EditarInscripcionComponent implements OnInit {
         });
         this.setGruposPosibles(this.inscripcion.fechaNacimiento);
     }
+
     @Output() returnEdicion: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
@@ -70,7 +73,8 @@ export class EditarInscripcionComponent implements OnInit {
         private localidadService: LocalidadService,
         private plex: Plex,
         private auth: Auth,
-        private profesionesService: ProfesionService
+        private profesionesService: ProfesionService,
+        private cdr: ChangeDetectorRef
     ) {
         this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
             cache()
@@ -85,6 +89,11 @@ export class EditarInscripcionComponent implements OnInit {
         if (this.inscripcion.email) {
             this.inscripcion.email = this.inscripcion.email.toLowerCase().trim();
         }
+    }
+
+    ngAfterViewChecked() {
+        this.form.control.markAllAsTouched();
+        this.cdr.detectChanges();
     }
 
     permiteEditar(campo: string) {
