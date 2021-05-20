@@ -32,6 +32,7 @@ import { CategoriasService } from './services/categoria.service';
 import { PrestacionService } from './services/prestacion.service';
 import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
+import { LogoPortalPacienteComponent } from './logo-portal-paciente/logo-portal-paciente.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-fam
     PDPMisVacunasComponent,
     PDPDetalleVacunaComponent,
     PDPMisCertificadosComponent,
-    PDPMisCertificadoDetalleComponent
+    PDPMisCertificadoDetalleComponent,
+    LogoPortalPacienteComponent
   ],
   imports: [
     BrowserModule,
