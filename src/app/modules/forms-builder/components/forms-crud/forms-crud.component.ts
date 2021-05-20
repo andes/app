@@ -1,9 +1,10 @@
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
+import { Auth } from '@andes/auth';
 
 
 @Component({
@@ -43,7 +44,9 @@ export class AppFormsCrudComponent implements OnInit {
         private formsService: FormsService,
         private location: Location,
         private route: ActivatedRoute,
-        private formResourceService: FormResourcesService
+        private formResourceService: FormResourcesService,
+        private auth: Auth,
+        private router: Router
     ) { }
 
     ngOnInit() {
@@ -55,6 +58,9 @@ export class AppFormsCrudComponent implements OnInit {
             const formulario = this.route.snapshot.data.event;
             this.formToUpdate = formulario; // Hacemos esta parte para saber si hacemos update o create.
             if (formulario) {
+                if (!this.auth.check('formBuilder:update')) {
+                    this.router.navigate(['inicio']);
+                }
                 this.desabilitado = true;
                 this.isFormSnomedizable = (formulario.snomedCode) ? true : false;
                 this.form.name = formulario.name;
@@ -77,6 +83,10 @@ export class AppFormsCrudComponent implements OnInit {
                     });
                 });
                 this.form.fields = campos;
+            } else {
+                if (!this.auth.check('formBuilder:create')) {
+                    this.router.navigate(['inicio']);
+                }
             }
         });
     }
