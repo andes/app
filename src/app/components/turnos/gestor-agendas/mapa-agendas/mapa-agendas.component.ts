@@ -65,16 +65,11 @@ export class MapaAgendasComponent implements OnInit {
     }
 
     private cargarTabla() {
-        let fechaDesde = moment(this.diaInicio).startOf('week').toDate();
-        let fechaHasta = moment(this.diaInicio).endOf('week').toDate();
-        if (this.verDia) {
-            fechaDesde = moment(this.diaInicio).startOf('day').toDate();
-            fechaHasta = moment(this.diaInicio).endOf('day').toDate();
-        }
+
 
         this.parametros = {
-            fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta,
+            fechaDesde: moment(this.diaInicio).startOf('week').toDate(),
+            fechaHasta: moment(this.diaInicio).endOf('week').toDate(),
             organizacion: '',
             idTipoPrestacion: '',
             idProfesional: '',
@@ -165,7 +160,13 @@ export class MapaAgendasComponent implements OnInit {
         return horarioTurnos;
     }
 
-    private visualizarDia() {
+    private visualizarDia(event?) {
+        if (event) {
+            this.verDia = true;
+            this.verSemana = false;
+            this.verMes = false;
+            this.diaInicio = moment(event);
+        }
         this.verDia = true;
         this.verSemana = false;
         this.verMes = false;

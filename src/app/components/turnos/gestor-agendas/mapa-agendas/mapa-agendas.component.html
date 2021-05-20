@@ -25,7 +25,7 @@
             </plex-button>
         </plex-title>
 
-        <mapa-agenda-mes *ngIf="verMes" [fecha]="diaInicio" [dataF]="dataF">
+        <mapa-agenda-mes *ngIf="verMes" [fecha]="diaInicio" [dataF]="dataF" (diaDetalle)="visualizarDia($event)">
         </mapa-agenda-mes>
 
         <mapa-agenda-dia *ngIf="verDia" [fecha]="diaInicio" [dataF]="dataF">
@@ -50,18 +50,20 @@
                             <ng-container *ngIf="dia.horarios[i].intervalos[0].turnos.length>0">
 
                                 <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                      [style.background]="turno.tipoPrestacion.color">
+                                      [style.background]="turno.tipoPrestacion.color"
+                                      tooltip="{{turno.tipoPrestacion.term}}">
                                     <plex-icon name="account-circle"></plex-icon>
                                 </span>
                             </ng-container>
                         </td>
                     </tr>
                     <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
-                        <tr *ngIf="aux!=0">
+                        <tr *ngIf="aux>0">
                             <td *ngFor="let dia  of semana" class="">
                                 <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
-                                    <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                          [style.background]="turno.tipoPrestacion.color">
+                                    <span *ngFor="let turno of dia.horarios[i].intervalos[aux].turnos"
+                                          [style.background]="turno.tipoPrestacion.color"
+                                          tooltip="{{turno.tipoPrestacion.term}}">
                                         <plex-icon name="account-circle"></plex-icon>
                                     </span>
                                 </ng-container>

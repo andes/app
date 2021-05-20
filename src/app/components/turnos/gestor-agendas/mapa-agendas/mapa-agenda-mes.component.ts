@@ -1,3 +1,5 @@
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 
@@ -13,6 +15,7 @@ export class MapaAgendasMesComponent implements OnInit {
     public parametros;
     public _fecha;
     public calendario;
+    @Output() diaDetalle = new EventEmitter<any>();
     @Input() dataF: any;
     @Input('fecha')
     set fecha(value: any) {
@@ -91,7 +94,8 @@ export class MapaAgendasMesComponent implements OnInit {
                                 }
                             }));
                             turnos.forEach(turno => dia.turnos.push(turno));
-                            this.ordenar(dia.turnos);
+                            dia.turnos.sort((a, b) =>
+                                a.tipoPrestacion.conceptId.localeCompare(b.tipoPrestacion.conceptId));
                         }
 
                     });
@@ -105,16 +109,10 @@ export class MapaAgendasMesComponent implements OnInit {
 
     }
 
+    detalleDia(dia) {
 
-    private ordenar(turnos) {
-        turnos.sort((a, b) =>
-            a.tipoPrestacion.conceptId > b.tipoPrestacion.conceptId ? 1 :
-                a.tipoPrestacion.conceptId < b.tipoPrestacion.conceptId ? -1 :
-                    0);
+        this.diaDetalle.emit(dia);
     }
-
-
-
 
 
 }
