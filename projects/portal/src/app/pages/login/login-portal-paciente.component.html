@@ -1,72 +1,72 @@
-        <main justify="center">
+<main justify="center">
 
-            <div class="logo-pdp">
-                <app-logo-portal-paciente></app-logo-portal-paciente>
+    <div class="logo-pdp">
+        <pdp-logo></pdp-logo>
+    </div>
+
+    <div class="social-pdp">
+        <plex-grid cols="4">
+            <plex-icon size="xl" type="info" name="andes"></plex-icon>
+            <plex-icon size="lg" type="info" name="email"></plex-icon>
+            <plex-icon size="lg" type="info" name="youtube"></plex-icon>
+            <plex-icon size="lg" type="info" name="logo-whatsapp"></plex-icon>
+        </plex-grid>
+    </div>
+
+    <form #formulario="ngForm" justify="center">
+        <div class="m-4">
+            <div justify="center" class="mb-3">
+                <div class="andes"></div>
+                <h1>Ingreso a Mi Portal</h1>
             </div>
-
-            <div class="social-pdp">
-                <plex-grid cols="4">
-                    <plex-icon size="xl" type="info" name="andes"></plex-icon>
-                    <plex-icon size="lg" type="info" name="email"></plex-icon>
-                    <plex-icon size="lg" type="info" name="youtube"></plex-icon>
-                    <plex-icon size="lg" type="info" name="logo-whatsapp"></plex-icon>
-                </plex-grid>
-            </div>
-
-            <form #formulario="ngForm" justify="center">
-                <div class="m-4">
-                    <div justify="center" class="mb-3">
-                        <div class="andes"></div>
-                        <h1>Ingreso a Mi Portal</h1>
+            <div justify="center">
+                <div justify="center" class="mb-3">
+                    <div justify="end" class="label-container">
+                        <plex-label titulo="E-MAIL" [tituloBold]="false" subtitulo="" class="mr-3"></plex-label>
                     </div>
-                    <div justify="center">
-                        <div justify="center" class="mb-3">
-                            <div justify="end" class="label-container">
-                                <plex-label titulo="E-MAIL" [tituloBold]="false" subtitulo="" class="mr-3"></plex-label>
-                            </div>
-                            <div justify="left">
-                                <plex-text email [autoFocus]="true" [(ngModel)]="usuario" name="usuario"
-                                           [required]="true" placeholder="usuario (e-mail)">
-                                </plex-text>
-                            </div>
-                        </div>
-                    </div>
-                    <div justify="center">
-                        <div justify="center" class="mb-4">
-                            <div justify="end" class="label-container">
-                                <plex-label titulo="CONTRASEÑA" [tituloBold]="false" subtitulo="" class="mr-3">
-                                </plex-label>
-                            </div>
-                            <div justify="left">
-                                <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
-                                           placeholder="contraseña">
-                                </plex-text>
-                            </div>
-                        </div>
-                    </div>
-                    <div justify="end">
-                        <div justify="center" class="forgot-pass-container mb-3">
-                            <div class="label-container">
-                            </div>
-                            <div class="forgot-pass">
-                                <a href="#" class="hover">
-                                    OLVIDÉ MI CONTRASEÑA
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                    <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar"
-                                 [disabled]="formInvalid" (click)="login()" size="sm" class="mb-3">
-                        Ingresar
-                    </plex-button>
-                    <div justify="center">
-                        ¿No tenés usuario?
-                        <plex-button type="link" size="sm">
-                            Solicitá una Cuenta
-                        </plex-button>
+                    <div justify="left">
+                        <plex-text email [autoFocus]="true" [(ngModel)]="usuario" name="usuario" [required]="true"
+                                   placeholder="usuario (e-mail)">
+                        </plex-text>
                     </div>
                 </div>
-                <plex-loader *ngIf="!loading" type="linear"></plex-loader>
-            </form>
-        </main>
+            </div>
+            <div justify="center">
+                <div justify="center" class="mb-4">
+                    <div justify="end" class="label-container">
+                        <plex-label titulo="CONTRASEÑA" [tituloBold]="false" subtitulo="" class="mr-3">
+                        </plex-label>
+                    </div>
+                    <div justify="left">
+                        <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
+                                   placeholder="contraseña">
+                        </plex-text>
+                    </div>
+                </div>
+            </div>
+            <div justify="end">
+                <div justify="center" class="forgot-pass-container mb-3">
+                    <div class="label-container">
+                    </div>
+                    <div class="forgot-pass">
+                        <a href="#" class="hover">
+                            OLVIDÉ MI CONTRASEÑA
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar" [disabled]="formInvalid"
+                         (click)="login()" size="sm" class="mb-3">
+                Ingresar
+            </plex-button>
+            <div justify="center">
+                ¿No tenés usuario?
+                <plex-button type="link" size="sm">
+                    Solicitá una Cuenta
+                </plex-button>
+            </div>
+        </div>
+        <plex-loader *ngIf="!loading" type="linear"></plex-loader>
+    </form>
+</main>
