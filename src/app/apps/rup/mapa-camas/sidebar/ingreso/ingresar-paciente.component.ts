@@ -20,6 +20,7 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
 import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -56,6 +57,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public fechaHasta = moment().toDate();
     private fechaIngresoOriginal: Date;
     public inProgress = false;
+    public prepagas$: Observable<any[]>;
+    private backupObraSocial;
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -94,7 +97,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         @Optional() private ingresoPacienteService: IngresoPacienteService,
         public elementosRUPService: ElementosRUPService,
         public internacionResumenService: InternacionResumenHTTP,
-        private conceptObserverService: ConceptObserverService
+        private conceptObserverService: ConceptObserverService,
+        private obraSocialService: ObraSocialService
     ) {
     }
 
@@ -132,6 +136,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
+        this.prepagas$ = this.obraSocialService.getPrepagas();
 
         const pacienteID$ = this.handlerPacienteID();
 
@@ -164,6 +169,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (paciente.id) {
                 if (paciente.financiador && paciente.financiador.length > 0) {
                     const os = paciente.financiador[0];
+                    this.backupObraSocial = os;
                     this.paciente.obraSocial = {
                         nombre: os.financiador,
                         financiador: os.financiador,
@@ -247,6 +253,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.informeIngreso.ocupacionHabitual = ultimoIngreso.ocupacionHabitual;
             }
         });
+    }
+
+    get esPrepaga() {
+        return this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
+    }
+
+    changeTipoObraSocial() {
+        if (this.esPrepaga || this.informeIngreso.asociado?.id === 'Ninguno') {
+            this.paciente.obraSocial = null;
+        } else if (this.backupObraSocial) {
+            this.paciente.obraSocial = this.backupObraSocial;
+        }
     }
 
     selectCama(cama) {
