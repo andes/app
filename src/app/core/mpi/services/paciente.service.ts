@@ -12,7 +12,7 @@ export class PacienteService {
     /**
      * RegEx para validar nombres y apellidos.
      */
-    public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
+    public nombreRegEx = /^[a-zA-ZàáèéìíòóùúüñÀÁÈÉÌÍÒÓÙÚÑ']+( [a-zA-ZZàáèéìíòóùúüñÀÁÈÉÌÍÒÓÙÚÑ']+)*$/;
 
     constructor(
         private server: Server,
