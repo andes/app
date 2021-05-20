@@ -16,6 +16,8 @@ import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-fich
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
 import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
+import { HisorialLlamadasComponent } from './components/hisorial-llamadas/hisorial-llamadas.component';
+import { ElementosRUPModule } from '../rup/elementos-rup.module';
 
 
 
@@ -26,7 +28,8 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
     SelectSearchDirective,
     BuscadorFichaEpidemiologicaComponent,
     HistorialFichaComponent,
-    CodigSisaPipe
+    CodigSisaPipe,
+    HisorialLlamadasComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,8 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
     ReactiveFormsModule,
     MPILibModule,
     SharedModule,
-    DirectiveLibModule
+    DirectiveLibModule,
+    ElementosRUPModule
   ],
   providers: [FormsService, SelectSearchService],
   exports: [FichaEpidemiologicaCrudComponent]
