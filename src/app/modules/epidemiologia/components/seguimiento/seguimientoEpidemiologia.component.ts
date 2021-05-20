@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'seguimiento-epidemiologia',
@@ -22,10 +23,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     estadosSeguimiento;
     inProgress;
     documento;
-    query: any = {};
+    query;
     lastResults = new BehaviorSubject<any[]>(null);
-
-
+    selectedLlamado;
 
     constructor(
         private formsEpidemiologiaService: FormsEpidemiologiaService,
@@ -53,10 +53,14 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             type: 'covid19',
             fechaEstadoActual: this.formsEpidemiologiaService.queryDateParams(this.fechaDesde, this.fechaHasta),
             estado: this.estado ? this.estado.id : 'activo',
+            documento: this.documento,
+            confirmacionFinal: 'Confirmado',
             sort: '-score.value score.fecha',
-            documento: this.documento
-        };
+            limit: 15
+          };
 
+        this.inProgress = true;
+        this.lastResults.next(null);
         this.seguimientos$ = this.lastResults.pipe(
             switchMap(lastResults => {
               if (!lastResults) {
@@ -64,17 +68,14 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
               }
               return this.formsEpidemiologiaService.search(this.query).pipe(
                 map(resultados => {
-                  if (resultados) {
-                    this.listado = lastResults ? lastResults.concat(resultados) : resultados;
-                    this.query.skip = this.listado.length;
-                  } else {
-                    this.listado = [];
-                  }
+                  this.listado = lastResults ? lastResults.concat(resultados) : resultados;
+                  this.query.skip = this.listado.length;
                   this.inProgress = false;
                   return this.listado;
                 })
               );
-            })
+            }),
+            cache()
           );
     }
 
@@ -101,4 +102,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         });
     }
 
+    verLlamado($event) {
+      this.selectedLlamado = $event;
+    }
 }

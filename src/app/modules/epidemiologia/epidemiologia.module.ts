@@ -13,11 +13,11 @@ import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidem
 import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
-import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
 import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
-
+import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
+import { ElementosRUPModule } from '../rup/elementos-rup.module';
 
 
 
@@ -42,7 +42,8 @@ import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-se
     ReactiveFormsModule,
     MPILibModule,
     SharedModule,
-    DirectiveLibModule
+    DirectiveLibModule,
+    ElementosRUPModule
   ],
   providers: [FormsService, SelectSearchService],
   exports: [FichaEpidemiologicaCrudComponent]

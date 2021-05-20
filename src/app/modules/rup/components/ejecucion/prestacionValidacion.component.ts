@@ -406,13 +406,16 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     volverInicio(ambito = 'ambulatorio', ruta = null) {
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         let ruteo;
-        if (ambito === 'ambulatorio') {
-            ruteo = 'rup';
-            this.btnVolver = mensaje;
+
+        if (ruta) {
+            mensaje = this.btnVolver;
+            ruteo = ruta;
         } else {
-            if (ruta) {
-                ruteo = ruta;
-            } else {
+            if (ambito === 'ambulatorio') {
+                mensaje = 'Punto de Inicio';
+                ruteo = 'rup';
+            } else if (ambito === 'internacion') {
+                mensaje = 'Mapa de Camas';
                 ruteo = '/mapa-camas';
             }
         }
