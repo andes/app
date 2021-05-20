@@ -2,41 +2,23 @@
     <plex-layout-main>
         <fieldset>
             <table class="mapa-turnos table table-striped table-hover">
-                <tr class="header">
-                    <td width="50%">Horarios</td>
-                    <td *ngFor="let dia of semana" class="text-center">
-                        <small class="text-capitalize font-weight-bold">{{dia.nombre}}</small>
-                        <br>
-                        <small>{{dia.fecha | date:"dd/MM"}}</small>
+                <tr>
+                    <td *ngFor="let dia of headers" class="text-center">
+                        <small class="text-capitalize font-weight-bold">{{dia}}</small>
 
                     </td>
                 </tr>
 
-                <ng-container *ngFor="let hora of horarios;let i=index">
+                <ng-container *ngFor="let semana of calendario;let i=index">
                     <tr>
-                        <td width="50" [attr.rowspan]="filasPorHorario.length">{{hora.hora}}:00</td>
                         <td *ngFor="let dia of semana">
-                            <ng-container *ngIf="dia.horarios[i].intervalos[0].turnos.length>0">
-
-                                <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                      [style.background]="turno.tipoPrestacion.color">
-                                    <plex-icon name="account-circle"></plex-icon>
-                                </span>
-                            </ng-container>
+                            <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
+                            <span *ngFor="let turno of dia.turnos" [style.background]="turno.tipoPrestacion.color">
+                                <plex-icon name="account-circle"></plex-icon>
+                            </span>
                         </td>
                     </tr>
-                    <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
-                        <tr *ngIf="aux!=0">
-                            <td *ngFor="let dia  of semana" class="">
-                                <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
-                                    <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                                          [style.background]="turno.tipoPrestacion.color">
-                                        <plex-icon name="account-circle"></plex-icon>
-                                    </span>
-                                </ng-container>
-                            </td>
-                        </tr>
-                    </ng-container>
+
                 </ng-container>
             </table>
         </fieldset>

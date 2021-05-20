@@ -23,7 +23,9 @@ export class MapaAgendasComponent implements OnInit {
     public agendasDeLaSemana = [];
     public prestacionesPermisos;
     public verDia = false;
+    public verMes = false;
     public fecha;
+    public dataF;
     public verSemana = true;
     constructor(
 
@@ -61,18 +63,6 @@ export class MapaAgendasComponent implements OnInit {
         });
         this.cargarTabla();
     }
-    private cargarDia() {
-        this.semana = [];
-        let diaSeleccionado = moment(this.diaInicio).isoWeekday();
-
-        let nombreDia = this.headers.find((dia, index) => (index + 1) === diaSeleccionado);
-        this.semana.push({
-            nombre: nombreDia,
-            fecha: this.diaInicio,
-            horarios: this.generarArregloHorarios()
-        });
-        this.cargarTabla();
-    }
 
     private cargarTabla() {
         let fechaDesde = moment(this.diaInicio).startOf('week').toDate();
@@ -96,11 +86,10 @@ export class MapaAgendasComponent implements OnInit {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         this.conceptoTurneablesService.getAll().subscribe((data) => {
-            let dataF;
             if (this.prestacionesPermisos[0] === '*') {
-                dataF = data;
+                this.dataF = data;
             } else {
-                dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+                this.dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
             }
 
             this.agendaService.get(this.parametros).subscribe((agendas: any) => {
@@ -111,7 +100,7 @@ export class MapaAgendasComponent implements OnInit {
                         if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
 
                             let turnos = agenda.bloques[0].turnos.filter(turno => turno.estado === 'asignado');
-                            turnos.forEach(t => dataF.forEach(tipoPrestacion => {
+                            turnos.forEach(t => this.dataF.forEach(tipoPrestacion => {
 
                                 if (tipoPrestacion.color && t.tipoPrestacion.conceptId === tipoPrestacion.conceptId) {
 
@@ -179,12 +168,21 @@ export class MapaAgendasComponent implements OnInit {
     private visualizarDia() {
         this.verDia = true;
         this.verSemana = false;
-        this.cargarDia();
+        this.verMes = false;
+        this.diaInicio = moment(this.diaInicio);
     }
 
     private visualizarSemana() {
         this.verSemana = true;
         this.verDia = false;
+        this.verMes = false;
         this.cargarSemana();
+    }
+
+    private visualizarMes() {
+        this.verDia = false;
+        this.verSemana = false;
+        this.diaInicio = moment(this.diaInicio);
+        this.verMes = true;
     }
 }
