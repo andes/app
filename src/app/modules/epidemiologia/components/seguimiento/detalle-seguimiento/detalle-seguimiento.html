@@ -3,30 +3,36 @@
     </plex-button>
 </plex-title>
 <div>
-
     <paciente-detalle [paciente]="seguimiento.paciente" reload="true" orientacion="horizontal"
                       [fields]="pacienteFields">
     </paciente-detalle>
     <ng-container *ngIf="seguimiento as fields">
-        <plex-title titulo="Llamados realizados">
-        </plex-title>
-        <plex-label *ngIf="!fields.llamados?.length" titulo="No hay llamados registrados" subtitulo=""></plex-label>
-        <ng-container *ngIf="fields.llamados?.length">
-            <plex-table [columns]="columns" #table="plTable">
-                <plex-table-columns>
-                </plex-table-columns>
-                <tr *ngFor="let llamado of fields.llamados">
-                    <td *plTableCol="'fecha'">{{llamado.fecha | date:"dd/MM/yyy HH:mm"}}</td>
-                    <td *plTableCol="'registro'">{{llamado.tipoPrestacion}}</td>
-                    <td *plTableCol="'acciones'">
-                        <plex-button size="sm" type="info" icon="eye" (click)="verLlamado.emit(llamado.idPrestacion)">
-                        </plex-button>
-                    </td>
-                </tr>
-            </plex-table>
-        </ng-container>
 
-        <app-ficha-epidemiologica-contactos [contactos]="fields.contactosEstrechos">
-        </app-ficha-epidemiologica-contactos>
-    </ng-container>
+        <paciente-detalle [paciente]="seguimiento.paciente" reload="true" orientacion="horizontal"
+                          [fields]="pacienteFields">
+        </paciente-detalle>
+        <ng-container *ngIf="seguimiento | fichaFields as fields">
+            <plex-title titulo="Llamados realizados">
+            </plex-title>
+            <plex-label *ngIf="!fields.llamados?.length" titulo="No hay llamados registrados" subtitulo=""></plex-label>
+            <ng-container *ngIf="fields.llamados?.length">
+                <plex-table [columns]="columns" #table="plTable">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let llamado of fields.llamados">
+                        <td *plTableCol="'fecha'">{{llamado.fecha | date:"dd/MM/yyy HH:mm"}}</td>
+                        <td *plTableCol="'registro'">{{llamado.tipoPrestacion}}</td>
+                        <td *plTableCol="'acciones'">
+                            <plex-button size="sm" type="info" icon="eye"
+                                         (click)="verLlamado.emit(llamado.idPrestacion)">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </plex-table>
+            </ng-container>
+            <app-ficha-epidemiologica-contactos [contactos]="fields.contactosEstrechos">
+            </app-ficha-epidemiologica-contactos>
+            <app-ficha-epidemiologica-contactos [contactos]="fields.contactosEstrechos">
+            </app-ficha-epidemiologica-contactos>
+        </ng-container>
 </div>

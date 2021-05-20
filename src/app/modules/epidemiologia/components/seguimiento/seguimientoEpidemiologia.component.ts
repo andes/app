@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { SeguimientoPacientes } from '../../services/seguimiento-pacientes.service';
+import { SeguimientoPacientesService } from '../../services/seguimiento-pacientes.service';
 
 @Component({
   selector: 'seguimiento-epidemiologia',
@@ -26,9 +26,11 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
   query;
   lastResults = new BehaviorSubject<any[]>(null);
   selectedLlamado;
+  actualizacionSeguimiento;
+  organizacion;
 
   constructor(
-    private seguimientoPacientesService: SeguimientoPacientes,
+    private seguimientoPacientesService: SeguimientoPacientesService,
     private route: ActivatedRoute,
     private elementosRUPService: ElementosRUPService,
     private prestacionesService: PrestacionesService,
@@ -52,6 +54,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     this.query = {
       fechaInicio: this.seguimientoPacientesService.queryDateParams(this.fechaDesde, this.fechaHasta),
       estado: this.estado?.id,
+      organizacionSeguimiento: this.organizacion?.id,
       paciente: this.documento,
       sort: '-score.value score.fecha',
       limit: 20
@@ -69,6 +72,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             this.listado = lastResults ? lastResults.concat(resultados) : resultados;
             this.query.skip = this.listado.length;
             this.inProgress = false;
+            this.closeSideBar();
             return this.listado;
           })
         );
@@ -84,11 +88,18 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
   }
 
   selectSeguimiento(_seguimiento) {
+    this.actualizacionSeguimiento = false;
     this.seguimiento = _seguimiento;
   }
 
-  returnDetalle() {
+  actualizarSeguimiento(_seguimiento) {
+    this.selectSeguimiento(_seguimiento);
+    this.actualizacionSeguimiento = true;
+  }
+
+  closeSideBar() {
     this.seguimiento = null;
+    this.actualizacionSeguimiento = false;
   }
 
   iniciarSeguimiento(seguimiento) {

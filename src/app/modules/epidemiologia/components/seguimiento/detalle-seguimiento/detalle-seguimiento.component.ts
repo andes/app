@@ -34,7 +34,9 @@ export class DetalleSeguimientoComponent {
     cerrar() {
         this.returnDetalle.emit(false);
     }
+
     verPrestacion(prestacionId) {
         this.router.navigate(['/rup/validacion', prestacionId]);
     }
+
 }

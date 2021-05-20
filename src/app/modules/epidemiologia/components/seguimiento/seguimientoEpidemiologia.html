@@ -13,6 +13,9 @@
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
                                    [min]="fechaDesde">
                     </plex-datetime>
+                    <plex-select grow="1" tmOrganizaciones name="organizacion" [data]="organizacion"
+                                 label="Organización" [(ngModel)]="organizacion">
+                    </plex-select>
                     <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
                                  labelField="nombre">
                     </plex-select>
@@ -67,16 +70,22 @@
                                         </plex-badge>
                                     </div>
                                     <div>
-                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
-                                                     type="success" size="sm" tooltip="Iniciar Seguimiento"
-                                                     label="Iniciar Seguimiento"
-                                                     (click)="iniciarSeguimiento(seguimiento)">
-                                        </plex-button>
-                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
-                                                     type="success" size="sm" tooltip="Continuar Seguimiento"
-                                                     label="Continuar Seguimiento"
-                                                     (click)="iniciarSeguimiento(seguimiento)">
-                                        </plex-button>
+                                        <div>
+                                            <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
+                                                         type="success" size="sm" tooltip="Iniciar Seguimiento"
+                                                         label="Iniciar Seguimiento"
+                                                         (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                            </plex-button>
+                                            <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
+                                                         type="success" size="sm" tooltip="Continuar Seguimiento"
+                                                         label="Continuar Seguimiento"
+                                                         (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                            </plex-button>
+                                            <plex-button type="info" size="sm" class="ml-2" tooltip="Actualizar Datos"
+                                                         label="Actualizar Datos"
+                                                         (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
+                                            </plex-button>
+                                        </div>
                                     </div>
                                 </plex-item>
                             </ng-container>
@@ -96,8 +105,9 @@
                           (onClose)="verLlamado(null)"></vista-prestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
-        <detalle-seguimiento [seguimiento]="seguimiento" (returnDetalle)="returnDetalle()"
-                             (verLlamado)=verLlamado($event)></detalle-seguimiento>
-
+        <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento"
+                             (returnDetalle)="closeSideBar()" (verLlamado)=verLlamado($event)></detalle-seguimiento>
+        <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento"
+                                (returnDetalle)="closeSideBar()"></actualizar-seguimiento>
     </plex-layout-sidebar>
 </plex-layout>
