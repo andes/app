@@ -4,6 +4,7 @@ import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -25,6 +26,7 @@ export class FiltrosInternacionComponent implements OnInit {
         private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService,
         public permisosMapaCamasService: PermisosMapaCamasService,
+        private obraSocialService: ObraSocialService
     ) { }
 
     ngOnInit() {
@@ -33,11 +35,8 @@ export class FiltrosInternacionComponent implements OnInit {
 
     filtrar() {
         this.listadoInternacionService.pacienteText.next(this.filtros.paciente);
-        if (this.filtros.estado) {
-            this.listadoInternacionService.estado.next(this.filtros.estado.id);
-        } else {
-            this.listadoInternacionService.estado.next(null);
-        }
+        this.listadoInternacionService.estado.next(this.filtros.estado?.id);
+        this.listadoInternacionService.obraSocial.next(this.filtros.obraSocial);
     }
 
     filtrarFecha() {
@@ -57,8 +56,6 @@ export class FiltrosInternacionComponent implements OnInit {
         const params = {
             desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
             hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
-            // egresoDesde: moment(this.filtros.fechaEgresoDesde).startOf('d').format(),
-            // egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
             organizacion: this.auth.organizacion.id
         };
         this.requestInProgress = true;
@@ -66,5 +63,15 @@ export class FiltrosInternacionComponent implements OnInit {
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
+    }
+
+    loadObrasSociales(event) {
+        if (event.query) {
+            this.obraSocialService.getListado({ nombre: event.query }).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        } else {
+            event.callback(null);
+        }
     }
 }

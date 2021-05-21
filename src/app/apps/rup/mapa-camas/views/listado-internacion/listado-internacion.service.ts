@@ -16,8 +16,8 @@ export class ListadoInternacionService {
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
     public fechaEgresoDesde = new BehaviorSubject<Date>(null);
     public fechaEgresoHasta = new BehaviorSubject<Date>(null);
-
     public estado = new BehaviorSubject<any>(null);
+    public obraSocial = new BehaviorSubject<any[]>(null);
 
     constructor(
         private auth: Auth,
@@ -45,16 +45,16 @@ export class ListadoInternacionService {
         this.listaInternacionFiltrada$ = combineLatest(
             this.listaInternacion$,
             this.pacienteText,
-            this.estado
+            this.estado,
+            this.obraSocial
         ).pipe(
-            map(([listaInternacion, paciente, estado]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente, estado)
+            map(([listaInternacion, paciente, estado, obraSocial]) =>
+                this.filtrarListaInternacion(listaInternacion, paciente, estado, obraSocial)
             )
         );
-
     }
 
-    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string) {
+    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any) {
         let listaInternacionFiltrada = listaInternacion;
 
         if (paciente) {
@@ -63,18 +63,21 @@ export class ListadoInternacionService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.includes(paciente));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
-
         if (estado) {
             listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
                 internacion.estados[internacion.estados.length - 1].tipo === estado
             );
         }
-
+        if (obraSocial) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                internacion.paciente.obraSocial?.nombre === obraSocial.nombre
+            );
+        }
         return listaInternacionFiltrada;
     }
 
