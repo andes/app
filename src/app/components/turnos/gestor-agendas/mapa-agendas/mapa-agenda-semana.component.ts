@@ -1,14 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 
 
-
 @Component({
-    selector: 'mapa-agenda-dia',
-    templateUrl: 'mapa-agendas-dia.component.html',
+    selector: 'mapa-agenda-semana',
+    templateUrl: 'mapa-agenda-semana.component.html',
     styleUrls: ['mapa-agendas.scss']
 })
-export class MapaAgendasDiaComponent implements OnInit {
+export class MapaAgendasSemanaComponent implements OnInit {
 
     public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
     public semana = [];
@@ -18,50 +17,47 @@ export class MapaAgendasDiaComponent implements OnInit {
     public filasPorHorario;
     public parametros;
     public intervalo = 30;
-    public diaInicio;
     public agendasDeLaSemana = [];
-    public prestacionesPermisos;
-    public verDia = false;
-    public verMes = false;
     public _fecha;
+    @Output() diaDetalle = new EventEmitter<any>();
     @Input() dataF: any;
     @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
-        this.cargarDia();
+        this.cargarSemana();
     }
-    public verSemana = true;
+
     constructor(
-
-        private agendaService: AgendaService,
-
+        private agendaService: AgendaService
     ) { }
 
     ngOnInit() {
 
-
     }
 
-    private cargarDia() {
-        this.semana = [];
-        this.horarios = this.generarArregloHorarios();
-        this.filasPorHorario = this.turnosPorHora();
-        let diaSeleccionado = moment(this._fecha).isoWeekday();
+    private cargarSemana() {
 
-        let nombreDia = this.headers.find((dia, index) => (index + 1) === diaSeleccionado);
-        this.semana.push({
-            nombre: nombreDia,
-            fecha: this._fecha,
-            horarios: this.generarArregloHorarios()
+        this.horarios = this.generarArregloHorarios();
+        this._fecha = moment(this._fecha).startOf('week');
+        this.filasPorHorario = this.turnosPorHora();
+        this.semana = this.headers.map((dia, index) => {
+            return {
+                nombre: dia,
+                fecha: this._fecha.weekday(index).toDate(),
+                horarios: this.generarArregloHorarios()
+
+            };
+
         });
         this.cargarTabla();
     }
 
     private cargarTabla() {
 
+
         this.parametros = {
-            fechaDesde: moment(this._fecha).startOf('day').toDate(),
-            fechaHasta: moment(this._fecha).endOf('day').toDate(),
+            fechaDesde: moment(this._fecha).startOf('week').toDate(),
+            fechaHasta: moment(this._fecha).endOf('week').toDate(),
             organizacion: '',
             idTipoPrestacion: '',
             idProfesional: '',
@@ -142,4 +138,11 @@ export class MapaAgendasDiaComponent implements OnInit {
         }
         return horarioTurnos;
     }
+
+
+    detalleDia(dia) {
+
+        this.diaDetalle.emit(dia);
+    }
+
 }

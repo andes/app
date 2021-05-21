@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <fieldset>
-            <table class="table-mes table table-striped table-hover">
+            <table class="mes table table-striped table-hover">
                 <tr>
                     <td *ngFor="let dia of headers" class="text-center">
                         <small class="text-capitalize font-weight-bold">{{dia}}</small>
@@ -11,17 +11,14 @@
 
                 <ng-container *ngFor="let semana of calendario;let i=index">
                     <tr>
-                        <td *ngFor="let dia of semana">
+                        <td *ngFor="let dia of semana" (click)="detalleDia(dia.fecha)" class="selectable">
                             <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
                             <ng-container *ngIf="dia.turnos?.length>0">
                                 <span *ngFor="let turno of dia.turnos" [style.background]="turno.tipoPrestacion.color"
                                       tooltip="{{turno.tipoPrestacion.term}}">
                                     <plex-icon name="account-circle"></plex-icon>
                                 </span>
-                                <div>
-                                    <plex-button type="info" icon="plus" size="sm" (click)="detalleDia(dia.fecha)">
-                                    </plex-button>
-                                </div>
+
 
                             </ng-container>
 
