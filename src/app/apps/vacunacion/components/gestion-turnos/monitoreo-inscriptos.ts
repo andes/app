@@ -5,7 +5,6 @@ import { LocalidadService } from 'src/app/services/localidad.service';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { Auth } from '@andes/auth';
 import { InscripcionService } from '../../services/inscripcion.service';
-import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,15 +16,20 @@ import { Router } from '@angular/router';
 export class MonitoreoInscriptosComponent implements OnInit {
     @ViewChild('formulario', { static: false }) formulario;
 
+    public panelIndex = 0;
+    public activeTab = 0;
+    public pacienteLlamado;
     public mainSize = 12;
     public showSidebar = false;
     public pacienteSelected;
-    public paciente;
+    public pacientes = [];
     public pacienteProcesado = true;
     public localidades$: Observable<ILocalidad[]>;
     public gruposPoblacionales = [];
     public localidadSelected;
     public grupoSelected;
+    public localidadAsignadasSelected;
+    public grupoAsignadasSelected;
     private idNeuquenProv = '57f3f3aacebd681cc2014c53';
     public showAgregarNota = false;
     public permisosEdicion;
@@ -85,6 +89,12 @@ export class MonitoreoInscriptosComponent implements OnInit {
             label: 'Certificado',
             sorteable: false,
             opcional: false
+        },
+        {
+            key: 'turno',
+            label: 'Turno asignado',
+            sorteable: false,
+            opcional: false
         }];
 
     constructor(
@@ -92,12 +102,11 @@ export class MonitoreoInscriptosComponent implements OnInit {
         private gruposService: GrupoPoblacionalService,
         private auth: Auth,
         private inscripcionService: InscripcionService,
-        private plex: Plex,
         private router: Router
     ) { }
 
     ngOnInit() {
-        if (!this.auth.getPermissions('vacunacion:dacion-turnos').length) {
+        if (!this.auth.getPermissions('vacunacion:dacion-turnos:?').length || !this.auth.getPermissions('vacunacion:tipoGrupos:?').length) {
             this.router.navigate(['inicio']);
         }
         this.localidades$ = this.localidadService.getXProvincia(this.idNeuquenProv);
@@ -119,7 +128,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     showInSidebar(paciente) {
         if (paciente) {
             this.pacienteSelected = paciente;
-            this.mainSize = 8;
+            this.mainSize = 9;
             this.showSidebar = true;
         }
     }
@@ -140,7 +149,8 @@ export class MonitoreoInscriptosComponent implements OnInit {
         }
         return this.inscripcionService.asignar(params).subscribe(resultado => {
             this.pacienteProcesado = false;
-            this.paciente = resultado;
+            this.pacienteLlamado = resultado;
+            this.showInSidebar(this.pacienteLlamado);
         });
     }
 
@@ -167,7 +177,12 @@ export class MonitoreoInscriptosComponent implements OnInit {
     returnEdicion(inscripcionActualizada) {
         if (inscripcionActualizada) {
             this.pacienteSelected = inscripcionActualizada;
-            this.paciente = inscripcionActualizada;
+            if (this.activeTab === 1) {
+                this.pacienteSelected = inscripcionActualizada;
+                this.cargarAsignadas();
+            } else {
+                this.pacienteLlamado = inscripcionActualizada;
+            }
         }
         this.editando = false;
     }
@@ -176,19 +191,57 @@ export class MonitoreoInscriptosComponent implements OnInit {
     returnNotas(inscripcionActualizada) {
         if (inscripcionActualizada) {
             this.pacienteSelected = inscripcionActualizada;
-            this.paciente = inscripcionActualizada;
-            this.pacienteProcesado = true;
+            if (this.activeTab === 1) {
+                this.pacienteSelected = inscripcionActualizada;
+                this.cargarAsignadas();
+            } else {
+                this.pacienteLlamado = inscripcionActualizada;
+                this.pacienteProcesado = true;
+            }
         }
         this.showAgregarNota = false;
     }
 
+    cargarAsignadas() {
+        let params: any = {};
+        if (this.grupoAsignadasSelected) {
+            params.grupos = [this.grupoAsignadasSelected.nombre];
+        }
+        if (this.localidadAsignadasSelected) {
+            params.localidad = this.localidadAsignadasSelected.id;
+        }
+        params.userAsignado = this.auth.usuario.id;
+        this.inscripcionService.get(params).subscribe(resultado => {
+            this.pacientes = resultado;
+        });
+    }
 
     returnDacionTurno(inscripcionActualizada) {
         if (inscripcionActualizada) {
             this.pacienteSelected = inscripcionActualizada;
-            this.paciente = inscripcionActualizada;
-            this.pacienteProcesado = true;
+            if (this.activeTab === 1) {
+                this.pacienteSelected = inscripcionActualizada;
+                this.cargarAsignadas();
+            } else {
+                this.pacienteLlamado = inscripcionActualizada;
+                this.pacienteProcesado = true;
+            }
         }
         this.dacionTurno = false;
+    }
+
+    cambio(activeTab) {
+        if (activeTab !== this.activeTab) {
+            this.activeTab = activeTab;
+            this.closeSidebar();
+            if (this.activeTab === 1) {
+                this.pacienteSelected = null;
+                this.cargarAsignadas();
+            } else {
+                if (this.pacienteLlamado) {
+                    this.showInSidebar(this.pacienteLlamado);
+                }
+            }
+        }
     }
 }
