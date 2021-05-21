@@ -524,7 +524,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         // creamos la prestacion de internacion y agregamos el registro de ingreso
         const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', this.mapaCamasService.ambito, this.informeIngreso.fechaIngreso, null, dtoProfesional);
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
-        nuevaPrestacion.ejecucion.unidadOrganizativa = this.cama.unidadOrganizativa;
+        nuevaPrestacion.unidadOrganizativa = this.cama.unidadOrganizativa;
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {

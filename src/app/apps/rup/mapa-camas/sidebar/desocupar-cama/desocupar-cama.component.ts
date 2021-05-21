@@ -73,7 +73,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                     return of(fechaMasUnMinuto);
                 } else {
                     return this.camaSelectedSegunView$.pipe(
-                        map(cama => moment(cama.fecha).add(1, 'm'))
+                        map(cama => moment(cama?.fecha).add(1, 'm'))
                     );
                 }
             }),

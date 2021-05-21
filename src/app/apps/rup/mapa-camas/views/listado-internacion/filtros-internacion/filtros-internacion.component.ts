@@ -7,7 +7,6 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { arrayToSet } from '@andes/shared';
-import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -31,8 +30,7 @@ export class FiltrosInternacionComponent implements OnInit {
         private auth: Auth,
         private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService,
-        public permisosMapaCamasService: PermisosMapaCamasService,
-        private camasHttp: MapaCamasHTTP
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnInit() {
@@ -49,12 +47,12 @@ export class FiltrosInternacionComponent implements OnInit {
             })
         );
 
-        this.unidadesOrganizativas$ = this.camasHttp.snapshot('internacion', 'estadistica', new Date()).pipe(
-            map(camas => {
+        this.unidadesOrganizativas$ = this.listadoInternacionService.listaInternacion$.pipe(
+            map(listado => {
                 let unidades = [];
-                camas.forEach(cama => {
-                    if (!unidades.some(u => u.id === cama.unidadOrganizativa.id)) {
-                        unidades.push(cama.unidadOrganizativa);
+                listado.forEach(int => {
+                    if (int.unidadOrganizativa && !unidades.some(u => u?.term === int.unidadOrganizativa.term)) {
+                        unidades.push(int.unidadOrganizativa);
                     }
                 });
                 return unidades;

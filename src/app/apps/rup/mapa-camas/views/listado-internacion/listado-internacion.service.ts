@@ -3,6 +3,7 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { cache } from '@andes/shared';
 
 @Injectable()
 export class ListadoInternacionService {
@@ -18,6 +19,7 @@ export class ListadoInternacionService {
     public unidadOrganizativa = new BehaviorSubject<any>(null);
     public estado = new BehaviorSubject<any>(null);
     public obraSocial = new BehaviorSubject<any[]>(null);
+    public refresh = new BehaviorSubject<any>(null);
 
     constructor(
         private mapaHTTP: MapaCamasHTTP,
@@ -27,9 +29,10 @@ export class ListadoInternacionService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
+            this.refresh
         ).pipe(
             auditTime(1),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     const filtros = {
                         fechaIngresoDesde, fechaIngresoHasta,
@@ -38,7 +41,8 @@ export class ListadoInternacionService {
 
                     return this.mapaHTTP.getPrestacionesInternacion(filtros);
                 }
-            })
+            }),
+            cache()
         );
 
         this.listaInternacionFiltrada$ = combineLatest(
@@ -86,7 +90,7 @@ export class ListadoInternacionService {
 
         if (unidad) {
             listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                internacion.ejecucion.unidadOrganizativa?.id === unidad.id
+                internacion.unidadOrganizativa?.term === unidad.term
             );
         }
 
