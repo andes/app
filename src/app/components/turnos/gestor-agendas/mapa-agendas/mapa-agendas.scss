@@ -1,41 +1,39 @@
+@import '~@andes/plex/src/lib/css/variables';
+
 .mapa-turnos {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+  
     tr td:first-child {
-        width: 100px;
-    }
+        width: 80px;
+        }
+
     tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
     td {
         border: 1px solid #d0d0d0;
         position: relative;
+        &.selectable {
+            cursor: pointer!important;
+            &:hover {
+                box-sizing: border-box;
+                box-shadow: inset 0 0 0 2px transparentize($color: $light-blue, $amount: 0.4);
+                background-color: $light-blue !important;
+                color: black;
+            }
+        }
     }
     
-    tr:hover {
-        cursor: pointer; // background-color: #C7BEBE;
-    }
-    
-    .tip-border {
-        background-color: transparent;
-        border-top: 18px solid transparent;
-        border-left: 18px solid #999;
-        border-bottom: 18px solid transparent;
-        border-right: 18px solid transparent;
-        width: 0;
-        height: 0;
-        position: absolute;
-        top: -28px;
-        left: 34px;
-        z-index: 1;
-    }
+  
+
 }
-.table-mes {
+.mes {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-
+    text-align: center;
     // Rows
     tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
@@ -45,7 +43,17 @@
     td {
         border: 1px solid #d0d0d0;
         position: relative;
+        &.selectable {
+            cursor: pointer!important;
+            &:hover {
+                box-sizing: border-box;
+                box-shadow: inset 0 0 0 2px transparentize($color: $light-blue, $amount: 0.4);
+                background-color: $light-blue !important;
+                color: black;
+            }
+        }
     }
+    
 
     // Día
     .dia {

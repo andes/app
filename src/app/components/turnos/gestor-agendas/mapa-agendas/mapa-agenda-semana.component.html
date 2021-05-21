@@ -1,0 +1,41 @@
+<fieldset>
+    <table class="mapa-turnos hora table table-striped table-hover">
+        <tr>
+            <td>Horarios</td>
+            <td *ngFor="let dia of semana" class="text-center">
+                <small class="text-capitalize font-weight-bold">{{dia.nombre}}</small>
+                <br>
+                <small>{{dia.fecha | date:"dd/MM"}}</small>
+
+            </td>
+        </tr>
+
+        <ng-container *ngFor="let hora of horarios;let i=index">
+            <tr>
+                <td [attr.rowspan]="filasPorHorario.length">{{hora.hora}}:00</td>
+                <td *ngFor="let dia of semana" (click)="detalleDia(dia.fecha)" class="selectable">
+                    <ng-container *ngIf=" dia.horarios[i].intervalos[0].turnos.length>0">
+
+                        <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
+                              [style.background]="turno.tipoPrestacion.color" tooltip="{{turno.tipoPrestacion.term}}">
+                            <plex-icon name="account-circle"></plex-icon>
+                        </span>
+                    </ng-container>
+                </td>
+            </tr>
+            <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
+                <tr *ngIf="aux>0">
+                    <td *ngFor="let dia  of semana" (click)="detalleDia(dia.fecha)" class="selectable">
+                        <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
+                            <span *ngFor="let turno of dia.horarios[i].intervalos[aux].turnos"
+                                  [style.background]="turno.tipoPrestacion.color"
+                                  tooltip="{{turno.tipoPrestacion.term}}">
+                                <plex-icon name="account-circle"></plex-icon>
+                            </span>
+                        </ng-container>
+                    </td>
+                </tr>
+            </ng-container>
+        </ng-container>
+    </table>
+</fieldset>
