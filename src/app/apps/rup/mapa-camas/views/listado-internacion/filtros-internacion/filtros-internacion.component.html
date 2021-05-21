@@ -16,7 +16,7 @@
     </plex-datetime>
     <div collapse>
         <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial" (change)="filtrar()"
-                     (getData)="loadObrasSociales($event)">
+                     [data]="obraSociales$ | async" idField="_id">
         </plex-select>
         <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
         </plex-select>

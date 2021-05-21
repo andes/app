@@ -5,6 +5,9 @@ import { DocumentosService } from '../../../../../../services/documentos.service
 import { ListadoInternacionService } from '../listado-internacion.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { arrayToSet } from '@andes/shared';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -21,16 +24,28 @@ export class FiltrosInternacionComponent implements OnInit {
     estadosInternacion;
     requestInProgress: boolean;
 
+    obraSociales$: Observable<any[]>;
+
     constructor(
         private auth: Auth,
         private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService,
-        public permisosMapaCamasService: PermisosMapaCamasService,
-        private obraSocialService: ObraSocialService
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnInit() {
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
+
+        this.obraSociales$ = this.listadoInternacionService.listaInternacion$.pipe(
+            map((prestaciones) => {
+                const rs = arrayToSet(prestaciones, 'nombre', (item) => item.paciente.obraSocial);
+                rs.push({
+                    _id: 'sin-obra-social',
+                    nombre: 'SIN OBRA SOCIAL'
+                });
+                return rs;
+            })
+        );
     }
 
     filtrar() {
@@ -64,14 +79,5 @@ export class FiltrosInternacionComponent implements OnInit {
             () => this.requestInProgress = false
         );
     }
-
-    loadObrasSociales(event) {
-        if (event.query) {
-            this.obraSocialService.getListado({ nombre: event.query }).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            event.callback(null);
-        }
-    }
 }
+

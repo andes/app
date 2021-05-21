@@ -63,8 +63,8 @@ export class ListadoInternacionService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.includes(paciente));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
@@ -74,8 +74,13 @@ export class ListadoInternacionService {
             );
         }
         if (obraSocial) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                internacion.paciente.obraSocial?.nombre === obraSocial.nombre
+            listaInternacionFiltrada = listaInternacionFiltrada.filter(
+                (internacion: IPrestacion) => {
+                    if (obraSocial._id === 'sin-obra-social') {
+                        return !internacion.paciente.obraSocial;
+                    }
+                    return internacion.paciente.obraSocial?.nombre === obraSocial.nombre;
+                }
             );
         }
         return listaInternacionFiltrada;

@@ -67,3 +67,24 @@ export function saveAs(fileName: string, type: Extensiones, timestamp = true) {
 
 export * from './cache-storage';
 export * from './not-null';
+
+export function arrayToSet(array, key, itemFn) {
+    const listado = [];
+    array.forEach(elem => {
+        const item = itemFn(elem);
+        if (item && Array.isArray(item)) {
+            item.forEach(inside => {
+                const index = listado.findIndex(i => i[key] === inside[key]);
+                if (index < 0) {
+                    listado.push(inside);
+                }
+            });
+        } else if (item) {
+            const index = listado.findIndex(i => i[key] === item[key]);
+            if (index < 0) {
+                listado.push(item);
+            }
+        }
+    });
+    return listado;
+}

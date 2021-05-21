@@ -2,27 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { arrayToSet } from '@andes/shared';
 
-function arrayToSet(array, key, itemFn) {
-    const listado = [];
-    array.forEach(elem => {
-        const item = itemFn(elem);
-        if (Array.isArray(item)) {
-            item.forEach(inside => {
-                const index = listado.findIndex(i => i[key] === inside[key]);
-                if (index < 0) {
-                    listado.push(inside);
-                }
-            });
-        } else {
-            const index = listado.findIndex(i => i[key] === item[key]);
-            if (index < 0) {
-                listado.push(item);
-            }
-        }
-    });
-    return listado;
-}
+
 
 @Component({
     selector: 'app-filtros-camas',
