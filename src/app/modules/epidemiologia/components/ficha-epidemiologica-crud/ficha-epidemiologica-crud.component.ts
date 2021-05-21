@@ -46,10 +46,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'admin', nombre: 'Trabajador de la salud con función administrativa' }
   ];
   public funcionSeguridad = [
-    { id: 'policia', nombre: 'Policia' },
+    { id: 'policia', nombre: 'Policía' },
     { id: 'gendarmeria', nombre: 'Gendarmería' },
     { id: 'penitenciario', nombre: 'Penitenciario' },
-    { id: 'ejercito', nombre: 'Ejercito' }
+    { id: 'ejercito', nombre: 'Ejército' }
   ];
   public tipoContacto = [
     { id: 'conviviente', nombre: 'Conviviente' },
@@ -60,7 +60,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public tipoInstitucion = [
     { id: 'residencia', nombre: 'Residencia de larga estadía' },
     { id: 'hogarMenores', nombre: 'Hogar de niños, niñas y adolescentes' },
-    { id: 'carcel', nombre: 'Carcel' }
+    { id: 'carcel', nombre: 'Penal/Penitenciaría' },
+    { id: 'militar', nombre: 'Instituciones militares/Gendarmería' },
+    { id: 'rehabilitacion', nombre: 'Instituciones de rehabilitación/neurorehabilitación' },
+    { id: 'otros', nombre: 'Otros' }
   ];
   public clasificacion = [
     { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
@@ -171,6 +174,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public ficha = [];
   public telefono = null;
   public contactosEstrechos = [];
+  public operaciones = [];
   public nuevoContacto = false;
   public zonaSanitaria = null;
   public localidades$: Observable<any>;
@@ -202,11 +206,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.contactosEstrechos = [];
+    this.operaciones = [];
     this.formsService.search({ name: this.fichaName }).subscribe((ficha: any) => {
       this.secciones = ficha[0].sections;
       if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
         this.fichaPaciente.secciones.map(sec => {
-          if (sec.name !== 'Contactos Estrechos') {
+          if (sec.name !== 'Contactos Estrechos' && sec.name !== 'Operaciones') {
             const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
             if (buscado !== -1) {
               if (sec.name === 'Usuario' && this.editFicha) {
@@ -222,6 +227,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                     case 'fechanotificacion':
                       this.secciones[buscado].fields['fechanotificacion'] = Object.values(field)[0];
                       break;
+                    case 'funcionusuario':
+                      this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
                   }
                 });
               } else {
@@ -232,7 +239,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
               }
             }
           } else {
-            this.contactosEstrechos = sec.fields;
+            if (sec.name === 'Operaciones') {
+              this.operaciones = sec.fields;
+            } else {
+              this.contactosEstrechos = sec.fields;
+            }
           }
         });
       } else {
@@ -271,7 +282,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   getValues() {
     this.secciones.map(seccion => {
       let campos = [];
-      if (seccion.name !== 'Contactos Estrechos') {
+      if (seccion.name === 'Contactos Estrechos') {
+        campos = this.contactosEstrechos;
+      } else if (seccion.name === 'Operaciones') {
+        campos = this.operaciones;
+      } else {
         seccion.fields.forEach(arg => {
           let params = {};
           const key = arg.key;
@@ -300,10 +315,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             }
           }
         });
-      } else {
-        campos = this.contactosEstrechos;
       }
-
       if (campos.length) {
         const buscado = this.ficha.findIndex(sec => sec.name === seccion.seccion);
         if (buscado !== -1) {
@@ -383,14 +395,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             nombre: this.auth.organizacion.nombre
           };
           seccion.fields['fechaprimerconsulta'] = new Date();
-          const primerDomingo = moment().startOf('year').startOf('week').weekday(-1);
-          if (primerDomingo.format('YYYY') < moment().format('YYYY')) {
-            primerDomingo.add(7, 'days');
-          }
-          if (seccion.id === 'informacionClinica') {
-            const hoy = moment(new Date());
-            seccion.fields['semanaepidemiologica'] = Math.trunc((hoy.diff(primerDomingo, 'days') / 7)) + 1;
-          }
           break;
         case 'mpi':
           this.paises$.pipe(
@@ -419,6 +423,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         };
         if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
           this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
+        } else {
+          if (!seccion.fields['fechamuestra']) {
+            seccion.fields['fechamuestra'] = new Date();
+          }
         }
         if (clasificaciones.antigeno === 'confirmado') {
           seccion.fields['lamp'] = null;
@@ -594,5 +602,29 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
   getVacunas() {
     this.vacunas$ = this.vacunasService.getNomivacVacunas({});
+  }
+
+  setPcr(event) {
+    if (event.value) {
+      this.secciones.map(seccion => {
+        if (seccion.id === 'clasificacionFinal') {
+          seccion.fields['pcr'] = { id: 'muestra', nombre: 'Muestra tomada' };
+        }
+      });
+    }
+  }
+
+  setSemanaEpidemiologica(event) {
+    const primerDomingo = moment().startOf('year').startOf('week').weekday(-1);
+    if (primerDomingo.format('YYYY') < moment().format('YYYY')) {
+      primerDomingo.add(7, 'days');
+    }
+    const primerSintoma = moment(event.value);
+    this.secciones.map(seccion => {
+      if (seccion.id === 'informacionClinica') {
+        const resultado = Math.trunc((primerSintoma.diff(primerDomingo, 'days') / 7)) + 1;
+        seccion.fields['semanaepidemiologica'] = resultado ? resultado : '';
+      }
+    });
   }
 }
