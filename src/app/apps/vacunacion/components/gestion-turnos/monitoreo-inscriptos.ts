@@ -106,7 +106,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.auth.getPermissions('vacunacion:dacion-turnos:?').length) {
+        if (!this.auth.getPermissions('vacunacion:dacion-turnos:?').length || !this.auth.getPermissions('vacunacion:tipoGrupos:?').length) {
             this.router.navigate(['inicio']);
         }
         this.localidades$ = this.localidadService.getXProvincia(this.idNeuquenProv);
