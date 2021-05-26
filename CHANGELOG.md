@@ -1,3 +1,21 @@
+# [5.48.0](https://github.com/andes/app/compare/v5.47.0...v5.48.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **Inscripciones:** mostrar errores al editar inscripcion ([#2287](https://github.com/andes/app/issues/2287)) ([d4f39a8](https://github.com/andes/app/commit/d4f39a886f8cb8a1e9ead8d5d14537fcc7bf5749))
+
+
+### Features
+
+* **bi-queries:** select-static ([6935178](https://github.com/andes/app/commit/6935178d65067b4680bd2cd5159799d5b0e5c44a))
+* **citas:** nombre de los servicios en espacios fisicos ([#2280](https://github.com/andes/app/issues/2280)) ([3435d88](https://github.com/andes/app/commit/3435d880504c0cfc56dc24402fbfaecad8ce7c5a))
+* **COM:** incrementar limit de busqueda ([5e0dddd](https://github.com/andes/app/commit/5e0dddd35fbcc55c741fdd79cc610f7a1a15b430))
+* **ficha-epidemio:** updates ([2b002c3](https://github.com/andes/app/commit/2b002c34e38a05653e396b22b805948305874396))
+* **rup:** orden alfabetico en documentos adjuntos ([#2282](https://github.com/andes/app/issues/2282)) ([e8f1495](https://github.com/andes/app/commit/e8f149598bb7fdaad9f39934d907b39af2157078))
+* **tm:** agrega zonas sanitarias dentro de organizacion ([#2278](https://github.com/andes/app/issues/2278)) ([f8ffef2](https://github.com/andes/app/commit/f8ffef2db836a00c5f452ae68a3b99ac8d1ed658))
+* **vac:** en la columna certificado deberá decir "No corresponde" si esta en factores-riesgo pero tiene entre 57 a 59 ([#2267](https://github.com/andes/app/issues/2267)) ([879ed87](https://github.com/andes/app/commit/879ed87892044cb779cacc9bb703bbcf313d1223))
+
 # [5.47.0](https://github.com/andes/app/compare/v5.46.0...v5.47.0) (2021-05-19)
 
 
