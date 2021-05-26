@@ -1,5 +1,5 @@
-<form #formIngreso="ngForm">
-    <ng-container *ngIf="paciente">
+<ng-container *ngIf="paciente">
+    <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
                          (click)="guardar($event)" [disabled]="disableButton || inProgress">
@@ -81,8 +81,6 @@
                 </plex-text>
             </plex-wrapper>
 
-
-
             <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
             <plex-wrapper>
                 <ng-container *ngIf="situacionesLaborales">
@@ -103,8 +101,8 @@
                 </plex-select>
             </plex-wrapper>
         </ng-container>
-    </ng-container>
-</form>
+    </form>
+</ng-container>
 <ng-container *ngIf="prestacionFake">
     <ng-container *ngFor="let registro of prestacionFake.ejecucion.registros">
 
