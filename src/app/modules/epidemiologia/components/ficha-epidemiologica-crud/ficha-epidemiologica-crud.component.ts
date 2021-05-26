@@ -2,23 +2,22 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { LocalidadService } from 'src/app/services/localidad.service';
-import { ProvinciaService } from 'src/app/services/provincia.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { LocalidadService } from 'src/app/services/localidad.service';
+import { PaisService } from 'src/app/services/pais.service';
+import { ProvinciaService } from 'src/app/services/provincia.service';
+import { InstitucionService } from 'src/app/services/turnos/institucion.service';
+import { VacunasService } from 'src/app/services/vacunas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
-import { InstitucionService } from 'src/app/services/turnos/institucion.service';
 import { FormsHistoryService } from '../../services/forms-history.service';
-import { catchError, switchMap } from 'rxjs/operators';
-import { PaisService } from 'src/app/services/pais.service';
-import { map } from 'rxjs/operators';
-import { NgForm } from '@angular/forms';
-import { VacunasService } from 'src/app/services/vacunas.service';
 
 
 @Component({
@@ -331,8 +330,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         nombre: this.paciente.nombre,
         apellido: this.paciente.apellido,
         fechaNacimiento: this.paciente.fechaNacimiento,
-        sexo: this.paciente.sexo,
-        estado: this.paciente.estado
+        estado: this.paciente.estado,
+        tipoIdentificacion: this.paciente.tipoIdentificacion ? this.paciente.tipoIdentificacion : this.paciente.numeroIdentificacion ? 'Passport' : null,
+        numeroIdentificacion: this.paciente.numeroIdentificacion ? this.paciente.numeroIdentificacion : null,
+        sexo: this.paciente.sexo
       },
       zonaSanitaria: this.zonaSanitaria
     };
