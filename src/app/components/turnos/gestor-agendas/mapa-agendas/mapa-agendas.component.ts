@@ -50,7 +50,7 @@ export class MapaAgendasComponent implements OnInit {
 
 
 
-    private visualizarDia(event?) {
+    visualizarDia(event?) {
         if (event) {
             this.verDia = true;
             this.verSemana = false;
@@ -63,14 +63,14 @@ export class MapaAgendasComponent implements OnInit {
         this.diaInicio = moment(this.diaInicio);
     }
 
-    private visualizarSemana() {
+    visualizarSemana() {
         this.verSemana = true;
         this.verDia = false;
         this.verMes = false;
         this.diaInicio = moment(this.diaInicio);
     }
 
-    private visualizarMes() {
+    visualizarMes() {
         this.verDia = false;
         this.verSemana = false;
         this.diaInicio = moment(this.diaInicio);
