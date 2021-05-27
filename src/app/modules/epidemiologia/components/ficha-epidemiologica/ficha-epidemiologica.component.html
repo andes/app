@@ -8,12 +8,16 @@
                 </paciente-buscar>
             </div>
         </div>
+        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
         <div class=" row">
             <div class="col-12">
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                                   (selected)="onSelect($event)">
                 </paciente-listado>
             </div>
+        </div>
+        <div *ngIf="!resultadoBusqueda?.length && !clearArea && !loading" class="alert alert-danger" grow="full">
+            <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
         </div>
         <div *ngIf="!pacienteSelected" justify="center" class="h-75">
             <plex-label icon="arrow-up" type="default" size="xl" direction="column"
@@ -24,7 +28,8 @@
     <ng-template #elseFicha>
         <plex-layout-main>
             <app-ficha-epidemiologica-crud [paciente]="pacienteSelected" [fichaPaciente]="fichaPaciente$ | async"
-                                           [editFicha]="editFicha" [fichaName]="showFicha" [form]="selectedForm" (volver)="volver()">
+                                           [editFicha]="editFicha" [fichaName]="showFicha" [form]="selectedForm"
+                                           (volver)="volver()">
             </app-ficha-epidemiologica-crud>
         </plex-layout-main>
     </ng-template>
