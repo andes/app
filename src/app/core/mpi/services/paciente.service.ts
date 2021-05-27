@@ -109,7 +109,8 @@ export class PacienteService {
                 pacienteBase.identificadores = [dataLink];
             }
             pacienteLink.activo = false;
-            return combineLatest([this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, false)]);
+            pacienteLink.idPacientePrincipal = pacienteBase.id;
+            return combineLatest([this.patch(pacienteBase.id, pacienteBase), this.patch(pacienteLink.id, pacienteLink)]);
         }
         return;
     }
@@ -124,7 +125,9 @@ export class PacienteService {
             if (pacienteBase.identificadores) {
                 pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
             }
-            return combineLatest(this.patch(pacienteBase.id, pacienteBase), this.setActivo(pacienteLink, true));
+            pacienteLink.idPacientePrincipal = null;
+            pacienteLink.activo = true;
+            return combineLatest([this.patch(pacienteBase.id, pacienteBase), this.patch(pacienteLink.id, pacienteLink)]);
         }
         return;
     }
