@@ -11,7 +11,7 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable, of } from 'rxjs';
-import { map, switchMap, filter, tap } from 'rxjs/operators';
+import { map, switchMap, filter, tap, auditTime } from 'rxjs/operators';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
@@ -20,6 +20,7 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
 import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -56,6 +57,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public fechaHasta = moment().toDate();
     private fechaIngresoOriginal: Date;
     public inProgress = false;
+    public prepagas$: Observable<any[]>;
+    private backupObraSocial;
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -94,7 +97,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         @Optional() private ingresoPacienteService: IngresoPacienteService,
         public elementosRUPService: ElementosRUPService,
         public internacionResumenService: InternacionResumenHTTP,
-        private conceptObserverService: ConceptObserverService
+        private conceptObserverService: ConceptObserverService,
+        private obraSocialService: ObraSocialService
     ) {
     }
 
@@ -132,6 +136,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
+        this.prepagas$ = this.obraSocialService.getPrepagas();
 
         const pacienteID$ = this.handlerPacienteID();
 
@@ -154,33 +159,47 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.prestacion = prestacion;
             this.paciente = paciente;
 
+            if (paciente && paciente.financiador && paciente.financiador.length > 0) {
+                const os = paciente.financiador[0];
+                this.backupObraSocial = os;
+            }
+
             if (this.prestacion) {
-                this.paciente = this.prestacion.paciente;
+                // this.paciente = this.prestacion.paciente;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 this.fechaIngresoOriginal = this.informeIngreso.fechaIngreso;
-            }
+                this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
+            } else {
+                if (paciente.id) {
 
-            // Guarda la obra social en el paciente
-            if (paciente.id) {
-                if (paciente.financiador && paciente.financiador.length > 0) {
-                    const os = paciente.financiador[0];
-                    this.paciente.obraSocial = {
-                        nombre: os.financiador,
-                        financiador: os.financiador,
-                        codigoPuco: os.codigoPuco
-                    };
-                }
-                let indiceCarpeta = -1;
-                if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
-                    indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
-                    if (indiceCarpeta > -1) {
-                        this.informeIngreso.nroCarpeta = paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                    if (this.backupObraSocial) {
+                        this.paciente.obraSocial = {
+                            nombre: this.backupObraSocial.financiador,
+                            financiador: this.backupObraSocial.financiador,
+                            codigoPuco: this.backupObraSocial.codigoPuco
+                        };
+                        this.informeIngreso.asociado = {
+                            id: 'Plan o Seguro público',
+                            nombre: 'Plan o Seguro público'
+                        };
+                        this.esPrepaga = false;
+
                     }
-                }
-            }
 
-            if (capa === 'estadistica') {
-                this.cargarUltimaInternacion(paciente);
+                    let indiceCarpeta = -1;
+                    if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
+                        indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+                        if (indiceCarpeta > -1) {
+                            this.informeIngreso.nroCarpeta = paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                        }
+                    }
+
+                }
+
+                if (capa === 'estadistica') {
+                    this.cargarUltimaInternacion(paciente);
+                }
+
             }
 
             if (cama.id && cama.id !== ' ') {
@@ -198,7 +217,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, prestacion.id).subscribe((snapshot) => {
                     this.cama = snapshot[0];
-                    this.paciente = this.cama.paciente;
+                    // this.paciente = this.cama.paciente;
                 });
             } else {
                 this.cama = null;
@@ -206,6 +225,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
 
         this.camas$ = this.mapaCamasService.snapshot$.pipe(
+            auditTime(1),
             map((snapshot) => {
                 this.inProgress = false;
                 let camasDisponibles = [];
@@ -242,11 +262,30 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (ingreso.length > 0) {
                 ingreso = ingreso.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
                 const ultimoIngreso = ingreso[0].registro.valor.informeIngreso;
+
                 this.informeIngreso.situacionLaboral = this.situacionesLaborales?.find(item => item.nombre === ultimoIngreso.situacionLaboral) || null;
                 this.informeIngreso.nivelInstruccion = this.nivelesInstruccion?.find(item => item.nombre === ultimoIngreso.nivelInstruccion) || null;
                 this.informeIngreso.ocupacionHabitual = ultimoIngreso.ocupacionHabitual;
+
+                this.informeIngreso.asociado = ultimoIngreso.asociado;
+                this.informeIngreso.obraSocial = ultimoIngreso.obraSocial;
+                this.paciente.obraSocial = ultimoIngreso.obraSocial;
+                this.esPrepaga = this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
+
             }
         });
+    }
+
+    esPrepaga = false;
+
+
+    changeTipoObraSocial() {
+        this.esPrepaga = this.informeIngreso.asociado?.id === 'Plan de salud privado o Mutual';
+        if (this.esPrepaga || this.informeIngreso.asociado?.id === 'Ninguno') {
+            this.paciente.obraSocial = null;
+        } else if (this.backupObraSocial) {
+            this.paciente.obraSocial = this.backupObraSocial;
+        }
     }
 
     selectCama(cama) {
@@ -427,12 +466,16 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             };
         }
 
+
         // construimos el informe de ingreso
         this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
         this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
         this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
         this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
         this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+        this.informeIngreso.obraSocial = this.paciente.obraSocial;
+        // this.prestacion.paciente.obraSocial = this.paciente.obraSocial;
+
         if (this.paciente.fechaNacimiento) {
             this.informeIngreso.edadAlIngreso = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
 
@@ -451,7 +494,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
         let cambios = {
             op: 'registros',
-            registros: this.prestacion.ejecucion.registros
+            registros: this.prestacion.ejecucion.registros,
+            paciente: this.paciente
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;

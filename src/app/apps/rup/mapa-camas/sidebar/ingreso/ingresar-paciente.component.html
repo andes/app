@@ -1,5 +1,5 @@
-<form #formIngreso="ngForm">
-    <ng-container *ngIf="paciente">
+<ng-container *ngIf="paciente">
+    <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
                          (click)="guardar($event)" [disabled]="disableButton || inProgress">
@@ -66,13 +66,21 @@
         <ng-container *ngIf="capa === 'estadistica'">
             <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
             <plex-wrapper>
-                <plex-select *ngIf="!informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado" name="asociado"
-                             [data]="pacienteAsociado" placeholder="Seleccione... " label="Cobertura" idField="nombre"
-                             labelField="nombre">
+                <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
+                             placeholder="Seleccione... " label="Cobertura" idField="nombre" labelField="nombre"
+                             (change)="changeTipoObraSocial()">
                 </plex-select>
-                <plex-text *ngIf="informeIngreso.obraSocial" [(ngModel)]="informeIngreso.obraSocial.nombre"
-                           label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
+                <plex-select *ngIf="esPrepaga" [(ngModel)]="paciente.obraSocial" name="prepaga"
+                             placeholder="Seleccione... " label="Seleccione prepaga" idField="nombre"
+                             labelField="nombre" [data]="prepagas$ | async">
+                </plex-select>
+
+                <plex-text *ngIf="paciente.obraSocial && informeIngreso.asociado && !esPrepaga"
+                           [(ngModel)]="paciente.obraSocial.nombre" label="Obra Social" name="obraSocial"
+                           [readonly]="true">
+                </plex-text>
             </plex-wrapper>
+
             <plex-title size="sm" justify titulo="DATOS ESTADISTICOS"></plex-title>
             <plex-wrapper>
                 <ng-container *ngIf="situacionesLaborales">
@@ -93,8 +101,8 @@
                 </plex-select>
             </plex-wrapper>
         </ng-container>
-    </ng-container>
-</form>
+    </form>
+</ng-container>
 <ng-container *ngIf="prestacionFake">
     <ng-container *ngFor="let registro of prestacionFake.ejecucion.registros">
 

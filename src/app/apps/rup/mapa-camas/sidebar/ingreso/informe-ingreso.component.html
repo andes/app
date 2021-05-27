@@ -5,8 +5,7 @@
         </ng-container>
     </plex-title>
     <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal"
-        [fields]="pacienteFields">
+        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
             <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
                         [subtitulo]="informeIngreso.situacionLaboral">
             </plex-label>
@@ -60,7 +59,8 @@
                     </plex-label>
                 </div>
                 <div class="col-6">
-                    <plex-label titulo="Obra social" [subtitulo]="informeIngreso.obraSocial">
+                    <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
+                                [subtitulo]="informeIngreso.obraSocial.nombre">
                     </plex-label>
                 </div>
             </div>
