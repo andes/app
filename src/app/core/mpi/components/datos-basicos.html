@@ -9,8 +9,8 @@
                                grow="4">
                     </plex-text>
 
-                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreBebe" [required]="true"
-                               grow="4">
+                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreBebe" [pattern]="nombrePattern"
+                               [required]="true" grow="4">
                     </plex-text>
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexoBebe"
@@ -94,7 +94,8 @@
                     <plex-text label="Apellido" [(ngModel)]="paciente.apellido" name="apellidoExt" required="true">
                     </plex-text>
 
-                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreExt" required="true">
+                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreExt" [pattern]="nombrePattern"
+                               required="true">
                     </plex-text>
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexoExt"
@@ -147,8 +148,8 @@
                                [readonly]="validado">
                     </plex-text>
 
-                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombre" required="true"
-                               [readonly]="validado">
+                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" [pattern]="nombrePattern" name="nombre"
+                               required="true" [readonly]="validado">
                     </plex-text>
 
                     <plex-select [(ngModel)]="paciente.estadoCivil" name="estadoCivil" [data]="estadosCiviles"
@@ -163,7 +164,8 @@
         <ng-container *ngIf="tipoPaciente !== 'bebe'">
             <plex-title titulo="identidad autopercibida" size="sm" class="mt-2"></plex-title>
             <plex-wrapper>
-                <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"></plex-text>
+                <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"
+                           [pattern]="nombrePattern"></plex-text>
 
                 <plex-select label="Seleccione género" [(ngModel)]="paciente.genero" [data]="generos" name="genero">
                 </plex-select>
