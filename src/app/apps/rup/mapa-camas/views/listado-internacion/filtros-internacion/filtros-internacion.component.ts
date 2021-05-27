@@ -4,6 +4,10 @@ import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { arrayToSet } from '@andes/shared';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -20,24 +24,34 @@ export class FiltrosInternacionComponent implements OnInit {
     estadosInternacion;
     requestInProgress: boolean;
 
+    obraSociales$: Observable<any[]>;
+
     constructor(
         private auth: Auth,
         private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService,
-        public permisosMapaCamasService: PermisosMapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnInit() {
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
+
+        this.obraSociales$ = this.listadoInternacionService.listaInternacion$.pipe(
+            map((prestaciones) => {
+                const rs = arrayToSet(prestaciones, 'nombre', (item) => item.paciente.obraSocial);
+                rs.push({
+                    _id: 'sin-obra-social',
+                    nombre: 'SIN OBRA SOCIAL'
+                });
+                return rs;
+            })
+        );
     }
 
     filtrar() {
         this.listadoInternacionService.pacienteText.next(this.filtros.paciente);
-        if (this.filtros.estado) {
-            this.listadoInternacionService.estado.next(this.filtros.estado.id);
-        } else {
-            this.listadoInternacionService.estado.next(null);
-        }
+        this.listadoInternacionService.estado.next(this.filtros.estado?.id);
+        this.listadoInternacionService.obraSocial.next(this.filtros.obraSocial);
     }
 
     filtrarFecha() {
@@ -57,8 +71,6 @@ export class FiltrosInternacionComponent implements OnInit {
         const params = {
             desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
             hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
-            // egresoDesde: moment(this.filtros.fechaEgresoDesde).startOf('d').format(),
-            // egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
             organizacion: this.auth.organizacion.id
         };
         this.requestInProgress = true;
@@ -68,3 +80,4 @@ export class FiltrosInternacionComponent implements OnInit {
         );
     }
 }
+

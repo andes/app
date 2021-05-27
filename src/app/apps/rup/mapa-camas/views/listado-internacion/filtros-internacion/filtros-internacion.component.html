@@ -14,9 +14,15 @@
     <plex-datetime type="date" [(ngModel)]="filtros.fechaEgresoHasta" name='fechaEgresoHasta' label="Egreso hasta"
                    (change)="filtrarFecha()" [min]="filtros.fechaEgresoDesde" [debounce]="600">
     </plex-datetime>
-    <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
-    </plex-select>
-    <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px" title="Descargar Csv"
-                 titlePosition="top" (click)="reporteInternaciones()" [disabled]="requestInProgress">
+    <div collapse>
+        <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial" (change)="filtrar()"
+                     [data]="obraSociales$ | async" idField="_id">
+        </plex-select>
+        <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
+        </plex-select>
+    </div>
+    <plex-button *ngIf="permisosMapaCamasService.descargarListado" type="warning" icon="download mdi-14px"
+                 title="Descargar Csv" titlePosition="top" (click)="reporteInternaciones()"
+                 [disabled]="requestInProgress">
     </plex-button>
 </plex-wrapper>

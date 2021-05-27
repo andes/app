@@ -4,34 +4,13 @@ import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
-import { cache, notNull } from '@andes/shared';
+import { arrayToSet, cache, notNull } from '@andes/shared';
 import { Router } from '@angular/router';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-
-function arrayToSet(array, key, itemFn) {
-    const listado = [];
-    array.forEach(elem => {
-        const item = itemFn(elem);
-        if (Array.isArray(item)) {
-            item.forEach(inside => {
-                const index = listado.findIndex(i => i[key] === inside[key]);
-                if (index < 0) {
-                    listado.push(inside);
-                }
-            });
-        } else {
-            const index = listado.findIndex(i => i[key] === item[key]);
-            if (index < 0) {
-                listado.push(item);
-            }
-        }
-    });
-    return listado;
-}
 
 @Component({
     selector: 'app-registros-huds-detalle',

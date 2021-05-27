@@ -19,6 +19,7 @@
                                     <th rowspan="2">Dni</th>
                                     <th rowspan="2">Fecha de ingreso</th>
                                     <th rowspan="2">Fecha de egreso</th>
+                                    <th rowspan="2" class="w-25">Obra Social</th>
                                     <th rowspan="2">Estado</th>
                                 </tr>
                             </thead>
@@ -42,6 +43,9 @@
                                         <span *ngIf='devuelveFecha(internacion,"egreso")'>
                                             {{devuelveFecha(internacion,"egreso") | fecha}}
                                             {{devuelveFecha(internacion,"egreso") | hora}}</span>
+                                    </td>
+                                    <td>
+                                        {{ internacion.paciente.obraSocial?.nombre }}
                                     </td>
                                     <td>
                                         <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
