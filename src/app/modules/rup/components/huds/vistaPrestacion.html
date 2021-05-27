@@ -15,7 +15,7 @@
                         *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000"
                         titulo="Fecha de solicitud"
                         subtitulo="{{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}"></plex-label>
-            <plex-label icon="medico" size="md" case="capitalize" titulo="Solicitante"
+            <plex-label icon="medico" size="md" case="capitalize" titulo="Profesional"
                         subtitulo="{{ prestacion.solicitud.profesional | nombre }}"></plex-label>
             <plex-label icon="hospital" size="md" case="capitalize" titulo="Organización origen"
                         subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
