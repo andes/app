@@ -9,10 +9,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
-import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { TipoTrasladoService } from 'src/app/services/com/tipoTraslados.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -58,6 +58,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     organizacionesDestino = [];
     tipoTraslados = [];
     paramsSubscribe: any;
+    esCOM;
 
     constructor(
         private plex: Plex,
@@ -67,7 +68,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         private tipoTrasladoService: TipoTrasladoService,
         private profesionalService: ProfesionalService,
         private pacienteService: PacienteService,
-        private servicioPrestacion: PrestacionesService,
         public sanitazer: DomSanitizer,
         public adjuntosService: AdjuntosService,
         private route: ActivatedRoute,
@@ -87,15 +87,23 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             name: 'Nueva derivación'
         }
         ]);
-        this.paramsSubscribe = this.route.params.subscribe(params => {
-            if (params['paciente']) {
-                this.seleccionarPaciente(params['paciente']);
-                this.modelo.organizacionOrigen = this.auth.organizacion;
-                this.seleccionarProfesional(this.auth.profesional);
-            } else {
 
-            }
-        });
+        this.paramsSubscribe = this.route.params.pipe(
+            map(params => {
+                if (params['paciente']) {
+                    this.seleccionarPaciente(params['paciente']);
+                    this.seleccionarProfesional(this.auth.profesional);
+                }
+            }),
+            switchMap(() => {
+                return this.organizacionService.getById(this.auth.organizacion.id).pipe(
+                    map(org => {
+                        this.esCOM = org.esCOM;
+                        this.modelo.organizacionOrigen = this.esCOM ? null : this.auth.organizacion;
+                    })
+                );
+            })).subscribe();
+
         this.extensions = this.extensions.concat(this.imagenes);
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
@@ -160,7 +168,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     // this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
                         // this.modelo.prestacion = prestacion.id,
-                        this.modelo.organizacionOrigen = this.auth.organizacion;
                         this.modelo.paciente = {
                             id: this.paciente.id,
                             nombre: this.paciente.nombre,
