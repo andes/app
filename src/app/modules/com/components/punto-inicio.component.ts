@@ -158,15 +158,14 @@ export class ComPuntoInicioComponent implements OnInit {
             query.estado = '~finalizada';
         }
         if (this.tabIndex === 0) {
+            if (this.organizacionOrigen) {
+                query.organizacionOrigen = this.organizacionOrigen.id;
+            }
             if (this.esTrasladoEspecial) {
                 query['tipoTraslado'] = true;
-                if (this.organizacionOrigen) {
-                    query.organizacionOrigen = this.organizacionOrigen.id;
-                }
             } else {
                 query.organizacionDestino = this.auth.organizacion.id;
             }
-
         } else {
             if (!this.esCOM) {
                 query.organizacionOrigen = this.auth.organizacion.id;
