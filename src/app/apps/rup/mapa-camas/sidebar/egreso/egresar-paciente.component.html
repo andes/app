@@ -2,15 +2,14 @@
     <plex-title justify titulo="EGRESO">
         <plex-button title="{{ (!prestacionValidada) ? 'guardar' : 'Prestacion validada' }}" icon="check" type="success"
                      size="sm" [validateForm]="formEgreso" (click)="guardar($event)"
-                     [disabled]="prestacionValidada || disableButton || inProgress || (disableButton$ | async)"
-                     [autodisabled]="true">
+                     [disabled]="prestacionValidada || disableButton || inProgress || (disableButton$ | async)">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>
     <plex-wrapper>
         <plex-datetime grow="2" label="Fecha y hora de egreso" [(ngModel)]="fecha" name="fechaEgreso" required
-                       label="Fecha Egreso" [max]="(fechaMax) ? fechaMax : mapaCamasService.fechaActual$ | async"
-                       [min]="fechaMin" (change)="setFecha()" [debounce]="600" grow="full" (typing)="onType()">
+                       [max]="(fechaMax) ? fechaMax : mapaCamasService.fechaActual$ | async" [min]="fechaMin"
+                       (change)="setFecha()" [debounce]="600" grow="full" (typing)="onType()">
         </plex-datetime>
         <plex-select grow="2" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
                      name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "
@@ -89,7 +88,8 @@
 
 
                 <plex-int name="paridad" label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad"
-                          placeholder="" [required]="procedimientosObstetricos"></plex-int>
+                          placeholder="" [required]="procedimientosObstetricos">
+                </plex-int>
 
                 <plex-radio [(ngModel)]="registro.valor.InformeEgreso.tipoParto" label="Tipo de parto" type="horizontal"
                             [data]="opcionesTipoParto" name="opcionTipoParto">
@@ -109,17 +109,19 @@
                     <plex-radio [(ngModel)]="nacimiento.sexo" label="Sexo" type="horizontal" [data]="opcionesSexo"
                                 name="Sexo-{{i}}">
                     </plex-radio>
-                    <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeNacimiento(i)">
+                    <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeNacimiento(i)"
+                                 [disabled]="prestacionValidada">
                     </plex-button>
                 </ng-container>
                 <plex-button *ngIf="registro.valor.InformeEgreso.tipoParto == 'Multiple'" label="Agregar"
-                             type="primary btn-sm" icon="" (click)="addNacimiento()">
+                             type="primary btn-sm" icon="" [disabled]="prestacionValidada" (click)="addNacimiento()">
                 </plex-button>
             </plex-wrapper>
         </ng-container>
         <plex-title justify size="sm" titulo="Procedimientos Quirurgicos">
             <plex-label class="mr-2" titulo="Nuevo Procedimiento"></plex-label>
-            <plex-button type="success" icon="plus" size="sm" (click)="addProcedimientoQuirurgico()">
+            <plex-button type="success" icon="plus" size="sm" [disabled]="prestacionValidada"
+                         (click)="addProcedimientoQuirurgico()">
             </plex-button>
         </plex-title>
         <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
@@ -137,7 +139,8 @@
                                    [max]="registro.valor.InformeEgreso.fechaEgreso" [(ngModel)]="procedimiento.fecha"
                                    [debounce]="600">
                     </plex-datetime>
-                    <plex-button type="danger" size="md" icon="trash-can" (click)="removeProcedimiento(i)">
+                    <plex-button type="danger" size="md" icon="trash-can" [disabled]="prestacionValidada"
+                                 (click)="removeProcedimiento(i)">
                     </plex-button>
                 </div>
             </plex-wrapper>

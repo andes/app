@@ -27,6 +27,7 @@ export class InternacionListadoComponent implements OnInit {
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
+    public editando = false;
 
     constructor(
         private plex: Plex,
@@ -54,12 +55,16 @@ export class InternacionListadoComponent implements OnInit {
         this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
             map((prestacion) => {
-                this.puedeValidar = (prestacion.ejecucion && prestacion.ejecucion.registros[1] &&
-                    prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
-                    prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso &&
-                    prestacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso &&
-                    prestacion.ejecucion.registros[1].valor.InformeEgreso.diagnosticoPrincipal);
-                this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
+                this.puedeValidar = false;
+                this.puedeRomper = false;
+                if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {
+                    const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                    this.puedeValidar = prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
+                        informeEgreso.fechaEgreso &&
+                        informeEgreso.tipoEgreso &&
+                        informeEgreso.diagnosticoPrincipal;
+                    this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
+                }
                 return prestacion;
             })
         );
@@ -143,6 +148,10 @@ export class InternacionListadoComponent implements OnInit {
                 }
             }
         }
+    }
+
+    onAccion($event) {
+        this.editando = $event?.accion === 'editando';
     }
 
     validar(selectedPrestacion: IPrestacion, fechaHasta: Date) {

@@ -12,7 +12,7 @@
                 </header>
                 <div class='row'>
                     <div class='col-12'>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th rowspan="2">Apellido y nombre</th>
@@ -55,7 +55,8 @@
             <plex-layout-sidebar type="invert">
                 <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES">
                     <plex-button *ngIf="!puedeRomper" label="VALIDAR" type="success" size="sm"
-                                 [disabled]="!puedeValidar" (click)="validar(selectedPrestacion, fechaHasta)">
+                                 [disabled]="!puedeValidar || editando"
+                                 (click)="validar(selectedPrestacion, fechaHasta)">
                     </plex-button>
                     <plex-button *ngIf="puedeRomper" label="ROMPER VALIDACION" type="warning" size="sm"
                                  (click)="romperValidacion(selectedPrestacion, fechaHasta)">
@@ -63,7 +64,8 @@
                     <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
                     </plex-button>
                 </plex-title>
-                <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (cambiarCama)="cambiarCama()">
+                <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (accion)="onAccion($event)"
+                                         (cambiarCama)="cambiarCama()">
                 </app-internacion-detalle>
                 <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
                                     (accionDesocupar)="accionDesocupar($event)">

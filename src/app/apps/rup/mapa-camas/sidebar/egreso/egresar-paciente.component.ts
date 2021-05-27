@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Cie10Service } from '../../../../mitos';
@@ -128,11 +128,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => {
                 this.inProgress = false;
-                if (this.cama.sala) {
+                if (this.cama?.sala) {
                     return false;
                 }
-                const camaActual = camas.find(c => c.id === this.cama.id);
-                if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama.idInternacion) || this.prestacion) {
+                const camaActual = camas.find(c => c.id === this.cama?.id);
+                if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion) || this.prestacion) {
                     return false;
                 }
 
@@ -234,6 +234,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 this.egresoSimplificado(this.estadoDestino);
             }
+            this.onSave.emit();
         } else {
             this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
             return;
