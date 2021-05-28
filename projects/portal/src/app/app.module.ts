@@ -38,6 +38,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
     PDPMisCertificadoDetalleComponent,
     LogoPortalPacienteComponent,
     DarTurnoComponent,
-    DarTurnoDetalleComponent
+    DarTurnoDetalleComponent,
+    RegistroCuentaComponent
   ],
   imports: [
     BrowserModule,
