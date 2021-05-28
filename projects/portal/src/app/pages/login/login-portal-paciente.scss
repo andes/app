@@ -39,7 +39,7 @@ main {
 
     form {
         background: #dcd0e6;
-        width: 391px;
+        width: 450px;
         height: auto;
         border-radius: 15px;
 
@@ -56,10 +56,15 @@ main {
             .forgot-pass {
                 width: 150px;
                 position: absolute;
-                top: -25px;
-                left: -60px;
+                top: -20px;
+                left: -15px;
                 font-size: 0.7rem;
             }
+        }
+
+        plex-text,
+        .button-container {
+            width: 250px;
         }
     }
 }

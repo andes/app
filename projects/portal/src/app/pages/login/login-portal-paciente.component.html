@@ -26,7 +26,7 @@
                     </div>
                     <div justify="left">
                         <plex-text email [autoFocus]="true" [(ngModel)]="usuario" name="usuario" [required]="true"
-                                   placeholder="usuario (e-mail)">
+                                   placeholder="usuario (e-mail)" mensaje="Debe ingresar su e-mail de usuario">
                         </plex-text>
                     </div>
                 </div>
@@ -56,10 +56,19 @@
                 </div>
 
             </div>
-            <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar" [disabled]="formInvalid"
-                         (click)="login()" size="sm" class="mb-3">
-                Ingresar
-            </plex-button>
+            <div justify="center">
+                <div justify="center" class="w-100">
+                    <div justify="end" class="label-container">
+                        <plex-label titulo="" [tituloBold]="false" subtitulo="" class="mr-3"></plex-label>
+                    </div>
+                    <div justify="left" class="button-container">
+                        <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar"
+                                     [disabled]="formInvalid" (click)="login()" size="sm" class="mb-3">
+                            Ingresar
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
             <div justify="center">
                 ¿No tenés usuario?
                 <plex-button type="link" size="sm">
