@@ -6,6 +6,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 export class IPrestacion {
     id: string;
     trackId: string;
+    unidadOrganizativa: ISnomedConcept;
     elementoRUP: string;
     // Datos principales del paciente
     paciente: {

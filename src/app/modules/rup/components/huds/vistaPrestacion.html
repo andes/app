@@ -20,6 +20,9 @@
             <plex-label icon="hospital" size="md" case="capitalize" titulo="Organización origen"
                         subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
             </plex-label>
+            <plex-label *ngIf="prestacion.unidadOrganizativa" icon="centro-salud" span="2" size="md" case="capitalize"
+                        titulo="Unidad organizativa" subtitulo="{{ prestacion.unidadOrganizativa.term }}">
+            </plex-label>
             <plex-label icon="estetoscopio" size="md" case="capitalize" titulo="Ámbito"
                         subtitulo="{{ prestacion.solicitud.ambitoOrigen }}"></plex-label>
         </plex-grid>
