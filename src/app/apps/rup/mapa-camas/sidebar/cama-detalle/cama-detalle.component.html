@@ -86,7 +86,7 @@
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
                     <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
-                <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
+                <ng-container *ngIf="!cama.sala">
                     <plex-button title="Deshacer Internacion" icon="account-off" type="danger" size="sm"
                                  (click)="deshacerInternacion(cama)">
                     </plex-button>

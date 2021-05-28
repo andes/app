@@ -5,6 +5,7 @@ import { Plex } from '@andes/plex';
 import { Observable, combineLatest, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { map, switchMap, take } from 'rxjs/operators';
+import { ObjectID } from 'bson';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -108,12 +109,15 @@ export class CambiarCamaComponent implements OnInit {
     }
 
     cambiarCama(camaActual, camaNueva, fecha) {
+        const idMov = new ObjectID().toString();
+
         let camaDesocupada = {
             _id: camaActual.id,
             estado: 'disponible',
             idInternacion: null,
             paciente: null,
             sala: camaActual.sala,
+            idMovimiento: idMov
         };
 
         let camaOcupada = {
@@ -123,6 +127,7 @@ export class CambiarCamaComponent implements OnInit {
             paciente: camaActual.paciente,
             nota: (!camaActual.sala) ? camaActual.nota : null,
             sala: camaNueva.sala,
+            idMovimiento: idMov
         };
 
         if (camaActual.sala) {

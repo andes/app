@@ -1,14 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ElementosRUPService } from '../../../../../modules/rup/services/elementosRUP.service';
+import { Router } from '@angular/router';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { map, switchMap, pluck, filter } from 'rxjs/operators';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
-import { Auth } from '@andes/auth';
-import { cache, notNull } from '@andes/shared';
+import { notNull } from '@andes/shared';
 import { Plex } from '@andes/plex';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -26,7 +24,6 @@ export class CamaDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
-    public puedeDesocupar$: Observable<any>;
 
     public accionesEstado$: Observable<any>;
     public paciente$: Observable<any>;
@@ -62,15 +59,12 @@ export class CamaDetalleComponent implements OnInit {
     public nota: String;
     public editNota = false;
 
-    public historial$: Observable<any[]>;
     public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
     public turnero$: Observable<string>;
 
     constructor(
-        private auth: Auth,
         public plex: Plex,
         private router: Router,
         private mapaCamasService: MapaCamasService,
@@ -114,19 +108,6 @@ export class CamaDetalleComponent implements OnInit {
             notNull(),
             pluck('acciones'),
             map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
-        );
-
-        this.hayMovimientosAt$ = combineLatest(
-            this.camaSelectedSegunView$,
-            this.mapaCamasService.historialInternacion$,
-        ).pipe(
-            map(([cama, historial]) => {
-                if (cama.extras && cama.extras.ingreso) {
-                    return historial.length === 1 && historial[0].extras?.ingreso;
-                } else {
-                    return false;
-                }
-            })
         );
     }
 
