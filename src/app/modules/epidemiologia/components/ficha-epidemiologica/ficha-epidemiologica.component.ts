@@ -27,8 +27,6 @@ export class FichaEpidemiologicaComponent implements OnInit {
   public puedeCrear: boolean;
   public puedeVer: boolean;
   public editFicha = false;
-  public loading = false;
-  public clearArea = true;
 
   public columns = [
     {
@@ -97,13 +95,10 @@ export class FichaEpidemiologicaComponent implements OnInit {
   }
 
   searchStart() {
-    this.clearArea = false;
-    this.loading = true;
     this.showLabel = false;
   }
 
   searchEnd(resultado) {
-    this.loading = false;
     if (resultado.err) {
       this.plex.info('danger', resultado.err);
       return;
@@ -115,7 +110,6 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.resultadoBusqueda = [];
     this.pacienteSelected = '';
     this.showLabel = true;
-    this.clearArea = true;
   }
 
   onSelect(paciente: IPaciente): void {
@@ -144,6 +138,5 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.showFicha = null;
     this.pacienteSelected = null;
     this.resultadoBusqueda = [];
-    this.clearArea = true;
   }
 }
