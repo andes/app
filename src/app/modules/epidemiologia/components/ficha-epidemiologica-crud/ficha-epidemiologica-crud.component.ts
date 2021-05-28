@@ -220,6 +220,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                       break;
                     case 'funcionusuario':
                       this.secciones[buscado].fields['funcionusuario'] = Object.values(field)[0];
+                      break;
+                    case 'email':
+                      this.secciones[buscado].fields['email'] = Object.values(field)[0];
+                      break;
                   }
                 });
               } else {
