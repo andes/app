@@ -190,7 +190,7 @@ export class ResumenInternacionComponent implements OnInit {
             map((prestaciones: IPrestacion[]) => {
 
                 this.prestaciones = prestaciones
-                    .filter(prestacion => prestacion.estadoActual.tipo === 'validada')
+                    .filter(prestacion => prestacion.estadoActual.tipo === 'validada' || prestacion.solicitud.tipoPrestacion.conceptId === '32485007')
                     .filter((prestacion) => {
                         const fechaIni = moment(this.internacion.fechaIngreso);
                         const fechaFin = moment(this.internacion.fechaEgreso);
