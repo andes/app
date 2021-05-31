@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';

@@ -60,6 +60,7 @@ export class CamaDetalleComponent implements OnInit {
     public editNota = false;
 
     public fechaMin$: Observable<Date>;
+    public hayMovimientosAt$: Observable<Boolean>;
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
     public turnero$: Observable<string>;
@@ -108,6 +109,13 @@ export class CamaDetalleComponent implements OnInit {
             notNull(),
             pluck('acciones'),
             map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
+        );
+
+        this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
+            map((historial) => {
+                // true si cada movimiento tiene idMovimiento o es un ingreso
+                return historial.length > 0 && !historial.some((mov: any) => !mov.extras?.ingreso && mov.idMovimiento === undefined);
+            })
         );
     }
 
