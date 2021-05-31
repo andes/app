@@ -56,7 +56,7 @@ export class VistaPrestacionComponent implements OnInit {
         this.servicioPrestacion.getById(this.idPrestacion).pipe(
             map(prestacion => populateRelaciones(prestacion))
         ).subscribe(prestacion => {
-            this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
+            this.hasPacs = prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.prestacion = prestacion;
                 this.paciente = paciente;

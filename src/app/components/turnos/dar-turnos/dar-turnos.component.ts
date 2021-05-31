@@ -82,6 +82,10 @@ export class DarTurnosComponent implements OnInit {
                 if (reglaId) {
                     this.reglasService.getById(reglaId).subscribe((regla) => {
                         this.tipoPrestacionesPermitidas = regla.destino.agendas;
+                        if (this.tipoPrestacionesPermitidas?.length) {
+                            this.opciones.tipoPrestacion = this.tipoPrestacionesPermitidas[0];
+                            this.actualizar();
+                        }
                     });
                 }
 

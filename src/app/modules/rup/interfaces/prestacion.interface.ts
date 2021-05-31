@@ -6,7 +6,6 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 export class IPrestacion {
     id: string;
     trackId: string;
-    unidadOrganizativa: ISnomedConcept;
     groupId: string;
     elementoRUP: string;
     inicio: string;
