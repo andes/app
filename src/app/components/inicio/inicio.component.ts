@@ -56,7 +56,10 @@ export class InicioComponent implements AfterViewInit {
                                             // Es Módulo
                                             modulo.principal = true;
                                             this.modulos.push(modulo);
-                                            (modulo.submodulos as any) = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+
+                                            // Se generan Submódulos
+                                            (modulo.submodulos as any) = modulo.submodulos.filter(x => x.permisos.some(y => this.auth.getPermissions(y).length > 0));
+
                                             if (!modulo.submodulos.length) {
                                                 modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
                                             }
