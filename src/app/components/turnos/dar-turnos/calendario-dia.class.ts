@@ -17,7 +17,7 @@ export class CalendarioDia {
     public profesionalDisponibles = 0;
     public dinamicasIndefinidas = 0;
 
-    constructor(public fecha: Date, agendas: any[], solicitudPrestacion: any, filtroPrestacion?: any, filtroProfesional?: any) {
+    constructor(public fecha: Date, agendas: any[], solicitudPrestacion: any, tipoTurno: string, filtroPrestacion?: any, filtroProfesional?: any) {
         this.agenda = agendas[0];
         this.hoy = new Date();
         if (!this.agenda) {
@@ -91,7 +91,7 @@ export class CalendarioDia {
                         // Seteamos el contador de turnos disponibles para el calendario
                         if (hayTurnosDisponibles) {
                             bloquesPrestacion.forEach(unBloque => {
-                                if (solicitudPrestacion?.inicio !== 'servicio-intermedio') {
+                                if (tipoTurno === 'gestion') {
                                     if (autocitado) {
                                         this.turnosDisponibles += unBloque.restantesProfesional;
                                     } else {
@@ -106,7 +106,7 @@ export class CalendarioDia {
                         }
                         // Para enmarcar los días correspondientes en el calendario
                         if (unaAgenda.estado === 'disponible' || unaAgenda.estado === 'publicada') {
-                            if (solicitudPrestacion?.inicio !== 'servicio-intermedio') {
+                            if (tipoTurno === 'gestion') {
                                 if (this.gestionDisponibles > 0 && !autocitado) {
                                     this.estado = 'disponible';
                                     hayTurnosDisponibles = true;

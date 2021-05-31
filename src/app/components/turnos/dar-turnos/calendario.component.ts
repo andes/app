@@ -14,33 +14,17 @@ export class CalendarioComponent implements OnInit {
     mostrarFinesDeSemana: any;
     private _agenda: any;
     private _agendas: Array<any>;
-    private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
-    public _filtroPrestacion: any;
-    public _filtroProfesional: any;
-    private _opcionesCalendario;
 
-    @Input('opcionesCalendario')
-    set opcionesCalendario(value: any) {
-        this._opcionesCalendario = value;
-    }
-    get opcionesCalendario() {
-        return this._opcionesCalendario;
-    }
-
-    public _mostrarNoDisponibles;
-    @Input('mostrarNoDisponibles')
-    set mostrarNoDisponibles(value: any) {
-        this._mostrarNoDisponibles = value;
-    }
-    get mostrarNoDisponibles() {
-        return this._mostrarNoDisponibles;
-    }
+    @Input() opcionesCalendario: boolean;
+    @Input() mostrarNoDisponibles: boolean;
 
     // Propiedades
     @Input() fecha: Date;
     @Input() _solicitudPrestacion: any;
+    @Input() tipoTurno: string;
+
     @Input('agenda')
     set agenda(value: IAgenda) {
         this._agenda = value;
@@ -61,39 +45,14 @@ export class CalendarioComponent implements OnInit {
         return this._agendas;
     }
 
-    @Input('estado')
-    set estado(value: String) {
-        this._estado = value;
-    }
-    get estado(): String {
-        return this._estado;
-    }
+    @Input() estado: string;
 
-    @Input('filtroPrestacion')
-    set filtroPrestacion(value: any) {
-        this._filtroPrestacion = value;
-    }
-    get filtroPrestacion() {
-        return this._filtroPrestacion;
-    }
+    @Input() filtroPrestacion: any;
 
-    @Input('filtroProfesional')
-    set filtroProfesional(value: any) {
-        this._filtroProfesional = value;
-    }
-    get filtroProfesional() {
-        return this._filtroProfesional;
-    }
+    @Input() filtroProfesional: any;
+
 
     @Output() agendaChanged = new EventEmitter();
-
-    /** Devuelve la primera agenda que encuentra de un día determinado */
-    private agendaPorFecha(fecha: moment.Moment): IAgenda {
-        // TODO: optimizar esta búsqueda
-        return this.agendas.find(i => {
-            return moment(fecha).isSame(i.horaInicio, 'day');
-        });
-    }
 
     ngOnInit() {
         moment.updateLocale('es', {
@@ -133,7 +92,7 @@ export class CalendarioComponent implements OnInit {
 
                     let agendasPorFecha = this.agendasPorFecha(inicio);
                     let ag = null;
-                    let dia = new CalendarioDia(inicio.toDate(), agendasPorFecha, this._solicitudPrestacion, this.filtroPrestacion, this.filtroProfesional);
+                    let dia = new CalendarioDia(inicio.toDate(), agendasPorFecha, this._solicitudPrestacion, this.tipoTurno, this.filtroPrestacion, this.filtroProfesional);
 
                     if (dia.estado === 'vacio') {
                         //   dia.cantidadAgendas = 0;

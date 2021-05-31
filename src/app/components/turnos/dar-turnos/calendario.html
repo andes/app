@@ -3,7 +3,7 @@
         <td *ngFor="let day of week;let i = index;" (click)="seleccionar(day)" [ngClass]="{
                 'hidden-xl-down'  : (opcionesCalendario && i > 4),
                 'weekend'          : day.weekend,
-                'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado && _mostrarNoDisponibles),
+                'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado && mostrarNoDisponibles),
                 'outline-success'  : (day.estado === 'disponible') && !day.seleccionado,
                 'outline-primary'  : day.seleccionado,
                 'hover'            : (day.estado !== 'vacio' && (day.turnosDisponibles > 0 || day.dinamica))
@@ -11,7 +11,7 @@
             <div *ngIf="day.agendasDisponibles && day.agendasDisponibles.length > 0">
                 <div class="dia">{{ day.fecha | date: 'd' }}</div>
                 <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
-                <small *ngIf="day.turnosDisponibles > 0 || _mostrarNoDisponibles"
+                <small *ngIf="day.turnosDisponibles > 0 || mostrarNoDisponibles"
                        title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
                     A:{{day.agendasDisponibles.length}}
                     <i *ngIf="day.turnosDisponibles !== 0" class="mdi mdi-check-circle text-success"></i>

@@ -61,7 +61,7 @@ export class DarTurnosComponent implements OnInit {
         return this._pacienteSeleccionado;
     }
 
-    private tipoTurno: string;
+    private tipoTurno = 'programado';
 
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
@@ -529,7 +529,7 @@ export class DarTurnosComponent implements OnInit {
                     this.indice = idAgendas.indexOf(this.agenda.id);
 
                     // Usamos CalendarioDia para hacer chequeos
-                    let cal = new CalendarioDia(null, this.agendasDelDia, this._solicitudPrestacion);
+                    let cal = new CalendarioDia(null, this.agendasDelDia, this._solicitudPrestacion, this.tipoTurno);
 
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
                     if (cal.estado !== 'ocupado') {
