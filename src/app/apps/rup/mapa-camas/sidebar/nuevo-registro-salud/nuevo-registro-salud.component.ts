@@ -63,6 +63,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
             cama.paciente, concepto, 'ejecucion', this.mapaCamasService.ambito, fecha
         );
         nuevaPrestacion.trackId = cama.idInternacion;
+        nuevaPrestacion.unidadOrganizativa = cama.unidadOrganizativa;
         return this.prestacionService.post(nuevaPrestacion);
     }
 
