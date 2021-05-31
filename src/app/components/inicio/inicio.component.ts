@@ -111,7 +111,6 @@ export class InicioComponent implements AfterViewInit {
                     this.modulos = this.modulos.filter(x => x.principal);
 
                 }, (err) => {
-                    console.error(err);
                 }
             );
         });
