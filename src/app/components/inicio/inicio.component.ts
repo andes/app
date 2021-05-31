@@ -6,6 +6,7 @@ import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
 import { Router, ActivatedRoute } from '@angular/router';
 import { setDimension } from '../../shared/services/analytics.service';
+import { IModulo } from './../../interfaces/novedades/IModulo.interface';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -38,19 +39,30 @@ export class InicioComponent implements AfterViewInit {
             setDimension('profesional', this.auth.profesional);
         }
         window.setTimeout(() => {
+
             this.loading = true;
+
             this.appComponent.getModulos().subscribe(
                 registros => {
-                    registros.forEach((modulo) => {
+                    registros.forEach((modulo: IModulo) => {
                         let tienePermiso = false;
                         if (modulo.activo) {
                             modulo.permisos.forEach((permiso) => {
                                 if (!tienePermiso) {
+                                    // El usuario tiene permiso?
                                     if (this.auth.getPermissions(permiso).length > 0) {
-                                        this.modulos.push(modulo);
                                         tienePermiso = true;
                                         if (modulo.submodulos && modulo.submodulos.length > 0) {
-                                            modulo.submodulos = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                                            // Es Módulo
+                                            modulo.principal = true;
+                                            this.modulos.push(modulo);
+                                            (modulo.submodulos as any) = modulo.submodulos.filter(x => this.auth.getPermissions(x.permisos[0]).length > 0);
+                                            if (!modulo.submodulos.length) {
+                                                modulo.nombreSubmodulo = `Punto Inicio<br><b>${modulo.nombre}</b>`;
+                                            }
+                                        } else {
+                                            // Es Sección
+                                            this.modulos.push(modulo);
                                         }
                                     }
                                 }
@@ -58,17 +70,25 @@ export class InicioComponent implements AfterViewInit {
                         }
                     });
 
+                    // Hay módulos?
                     if (this.modulos.length) {
-                        this.secciones = this.modulos.filter(x => (!x.submodulos || !x.submodulos.length));
 
+                        // Si hay módulos se oculta mensaje "No tenés permisos"
+                        this.denied = false;
+
+                        this.secciones = this.modulos.filter(x => (!x.principal && (!x.submodulos || !x.submodulos.length)));
+
+                        // Se ordenan módulos
                         this.modulos.sort((a, b) => a.orden - b.orden);
+
+                        // Se ordenan submódulos
                         this.modulos.map(x => {
                             if (x.submodulos && x.submodulos.length > 0) {
                                 return x.submodulos.sort((a, b) => a.orden - b.orden);
                             }
                         });
 
-                        this.denied = false;
+                        // Novedades?
                         let modulos = this.modulos.map(p => {
                             return p._id;
                         });
@@ -78,13 +98,17 @@ export class InicioComponent implements AfterViewInit {
                             });
                         });
                     } else {
+                        // Se muestra mensaje "No tenés permisos"
                         this.denied = true;
                     }
+
                     this.loading = false;
 
-                    this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
+                    // Se quitan módulos sin submódulos
+                    this.modulos = this.modulos.filter(x => x.principal);
 
                 }, (err) => {
+                    console.error(err);
                 }
             );
         });
