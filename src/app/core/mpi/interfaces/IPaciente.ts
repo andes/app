@@ -68,4 +68,5 @@ export interface IPaciente {
             ext: string
         }[]
     }[];
+    idPacientePrincipal?: string;
 }
