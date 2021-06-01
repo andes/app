@@ -37,6 +37,7 @@
                         <th>Pase de</th>
                         <th>Egreso</th>
                         <th>Pase a</th>
+                        <th>Fecha de ingreso</th>
                         <th>Dias Estada</th>
                     </tr>
                 </thead>
@@ -51,6 +52,9 @@
                         <td>{{censoP.paseDe}}</td>
                         <td>{{censoP.egreso}}</td>
                         <td>{{censoP.paseA}}</td>
+                        <td>
+                            <span *ngIf="censoP.fechaIngreso">{{ censoP.fechaIngreso | fecha }}</span>
+                        </td>
                         <td>{{censoP.diasEstada}}</td>
                     </tr>
                 </tbody>
