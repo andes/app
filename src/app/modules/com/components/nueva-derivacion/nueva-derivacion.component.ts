@@ -4,7 +4,6 @@ import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { TipoTrasladoService } from 'src/app/services/com/tipoTraslados.service';
@@ -32,7 +31,6 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     adjuntosUrl = [];
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
-
     modelo: any = {
         fecha: new Date(),
         organizacionOrigen: null,
@@ -52,6 +50,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         },
         detalle: '',
         estado: 'solicitada',
+        dispositivo: null,
         obraSocial: null,
         historial: []
     };
@@ -59,6 +58,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     tipoTraslados = [];
     paramsSubscribe: any;
     esCOM;
+    public oxigeno = 'oxigeno';
 
     constructor(
         private plex: Plex,
@@ -153,6 +153,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 if (resultado.length) {
                     this.plex.toast('danger', 'Ya existe una derivación en curso para el paciente seleccionado');
                 } else {
+
                     const concepto = this.elementoRupService.getConceptoDerivacion();
 
                     // TODO descomentar lineas 149, 150, 152 y 177 a la hora de habilitar el registro de prestación en la derivación.
@@ -161,6 +162,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     // this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
                     // this.modelo.prestacion = prestacion.id,
+                    this.modelo.organizacionOrigen = this.auth.organizacion;
                     this.modelo.paciente = {
                         id: this.paciente.id,
                         nombre: this.paciente.nombre,
@@ -177,14 +179,12 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                         nombre: this.organizacionDestino.nombre,
                         direccion: this.organizacionDestino.direccion
                     };
-                    this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
+                    this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, dispositivo: (this.modelo.dispositivo) ? this.modelo.dispositivo : null, observacion: 'Inicio de derivación' });
                     this.modelo.adjuntos = this.adjuntos;
-
                     this.derivacionesService.create(this.modelo).subscribe(respuesta => {
                         this.router.navigate(['/com']);
                         this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
                     });
-                    // });
                 }
             });
         } else {

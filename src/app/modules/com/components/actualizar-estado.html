@@ -6,8 +6,8 @@
     <img [mpiFotoPaciente]="derivacion?.paciente" />
     <plex-badge type="warning">
         {{derivacion.fecha
-                            | fecha}} {{derivacion.fecha
-                            | hora}}
+        | fecha}} {{derivacion.fecha
+        | hora}}
     </plex-badge>
     <plex-badge type="info">
         {{derivacion.estado}}
@@ -17,7 +17,7 @@
     </div>
     <div subtitle>
         <plex-copy *ngIf="derivacion?.paciente?.documento" [value]="derivacion?.paciente?.documento">
-            {{ derivacion?.paciente?.documento | number  }}
+            {{ derivacion?.paciente?.documento | number }}
         </plex-copy>
     </div>
 </plex-detail>
@@ -25,6 +25,7 @@
     <plex-title size="sm" titulo="Actualizar">
     </plex-title>
     <plex-wrapper>
+        <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
         <div class="mt-1" *ngIf="esCOM && derivacion.prioridad">
             <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
             <ng-container *ngFor="let p of opcionesPrioridad">
