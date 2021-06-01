@@ -13,7 +13,6 @@ export class LoteComponent implements OnInit {
   public showSidebar = false;
   public vacunas$: Observable<any[]>;
   public lotes$: Observable<any[]>;
-  public lotes2$: Observable<any[]>;
   public lote;
   public lote2;
   public vacunasEncontradas;
