@@ -61,7 +61,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.puedeCrear = this.auth.check('epidemiologia:create');
 
     this.plex.updateTitle([
-      { route: '/', name: 'EPIDEMIOLOGIA' },
+      { route: '/', name: 'EPIDEMIOLOGÍA' },
       { name: 'Ficha epidemiológica' }
     ]);
 
