@@ -39,7 +39,8 @@
                 </plex-select>
 
                 <ng-container *ngIf="origenExterno">
-                    <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="check" (change)="onchange($event)">
+                    <plex-bool class="pb-1" [(ngModel)]="check" type="slide" label="Otro" name="check"
+                               (change)="onchange($event)">
                     </plex-bool>
                     <ng-container *ngIf="!check">
                         <plex-select grow="full" [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
@@ -48,7 +49,7 @@
                         </plex-select>
                     </ng-container>
                     <ng-container *ngIf="check">
-                        <plex-text grow="full" label="Otro" name="otraOrganizacion"
+                        <plex-text grow="full" label="Otra" name="otraOrganizacion"
                                    [(ngModel)]="informeIngreso.organizacionOrigen" [required]="true">
                         </plex-text>
                     </ng-container>

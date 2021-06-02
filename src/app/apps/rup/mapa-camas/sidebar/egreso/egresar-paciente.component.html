@@ -15,11 +15,23 @@
                      name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "
                      [required]="true" grow="full">
         </plex-select>
-        <plex-select grow="full" *ngIf="registro.valor.InformeEgreso.tipoEgreso?.nombre === 'Traslado'"
-                     label="Organización destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
-                     name="InformeEgreso.UnidadOrganizativaDestino" (getData)="loadOrganizacion($event)"
-                     placeholder="Seleccione..." [required]="true">
-        </plex-select>
+        <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.nombre === 'Traslado'">
+            <plex-bool class="pb-1" [(ngModel)]="checkTraslado" type="slide" label="Otra organización"
+                       name="checkTraslado" (change)="onchange($event)">
+            </plex-bool>
+            <ng-container *ngIf="!checkTraslado">
+                <plex-select grow="full" label="Organización destino"
+                             [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
+                             name="InformeEgreso.UnidadOrganizativaDestino" (getData)="loadOrganizacion($event)"
+                             placeholder="Seleccione..." [required]="true">
+                </plex-select>
+            </ng-container>
+            <ng-container *ngIf="checkTraslado">
+                <plex-text grow="full" label="Otra" name="otraOrganizacion"
+                           [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino" [required]="true">
+                </plex-text>
+            </ng-container>
+        </ng-container>
     </plex-wrapper>
     <ng-container *ngIf="capa === 'estadistica'">
         <plex-title justify size="sm" titulo="Datos Estadisticos"></plex-title>

@@ -43,7 +43,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public prestacion: IPrestacion;
     public maquinaEstados: IMaquinaEstados;
     public estadoDestino;
-    public esTraslado = false;
+    public checkTraslado = false;
     private informeIngreso;
     public registro: any = {
         destacado: false,
@@ -74,7 +74,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     producidaPor: null,
                     lugar: null,
                     comoSeProdujo: null
-                },
+                }
             }
         }
     };
@@ -383,6 +383,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
             event.callback(organizacionSalida);
         }
+    }
+
+    onchange(event) {
+        this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = null;
     }
 
     codigoCIE10(event) {
