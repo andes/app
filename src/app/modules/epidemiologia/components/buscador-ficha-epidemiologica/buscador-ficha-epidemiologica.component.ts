@@ -126,7 +126,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       fechaCondicion: this.formEpidemiologiaService.queryDateParams(this.fechaDesde, this.fechaHasta),
       type: this.typeFicha?.name,
       paciente: this.pacienteSelected?.id,
-      localidad: this.localidad?.nombre,
+      localidad: this.localidad?.id,
       organizacion: this.organizacion?.id,
       identificadorPcr: this.idPcr,
       zonaSanitaria: this.zonaSanitaria?._id,

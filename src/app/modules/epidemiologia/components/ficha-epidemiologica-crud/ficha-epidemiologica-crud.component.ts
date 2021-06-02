@@ -490,7 +490,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   setLocalidades(event) {
     if (event.value) {
       this.clearDependencias({ value: false }, 'mpi', ['localidadresidencia']);
-      this.localidades$ = this.localidadService.get({ codigo: event.value.codigo, activo: true });
+      this.localidades$ = this.localidadService.get({ codigo: event.value.codigo });
     } else if (event.provincia) {
       // setea el combo de localidades cuando se cargan los datos de mpi,en este momento no tengo el código de provincia
       this.localidades$ = this.localidadService.getXProvincia(event.provincia);

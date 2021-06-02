@@ -517,7 +517,8 @@
                                         <td *plTableCol="'dni'">{{contacto.dni}}</td>
                                         <td *plTableCol="'telefono'">{{contacto.telefono}}</td>
                                         <td *plTableCol="'domicilio'">{{contacto.domicilio}}</td>
-                                        <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto | fecha}}</td>
+                                        <td *plTableCol="'fechaContacto'">{{contacto.fechaUltimoContacto ?
+                                            (contacto.fechaUltimoContacto | fecha) : ''}}</td>
                                         <td *plTableCol="'tipoContacto'">{{contacto.tipoContacto.nombre}}</td>
                                         <td *plTableCol="'acciones'">
                                             <plex-icon *ngIf="editFicha" size="xl" type="danger" name="delete"
