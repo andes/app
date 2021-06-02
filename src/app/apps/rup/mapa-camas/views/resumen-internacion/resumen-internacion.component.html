@@ -2,8 +2,10 @@
     <plex-layout-main>
         <header>
             <plex-title titulo="Exploración Visual">
-                <plex-datetime [(ngModel)]="desde" size="sm" class="mr-1"></plex-datetime>
-                <plex-datetime [(ngModel)]="hasta" size="sm" class="mr-1"></plex-datetime>
+                <plex-datetime [(ngModel)]="desde" size="sm" class="mr-1" (change)="setView(desde,hasta)">
+                </plex-datetime>
+                <plex-datetime [(ngModel)]="hasta" size="sm" class="mr-1" (change)="setView(desde,hasta)">
+                </plex-datetime>
 
                 <plex-text *ngIf="textoFiltroVisivility" size="sm" [(ngModel)]="textoFiltro" [debounce]="400"
                            (change)="zoomChange()">

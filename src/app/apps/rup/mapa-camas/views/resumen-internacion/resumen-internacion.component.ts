@@ -52,13 +52,13 @@ export class ResumenInternacionComponent implements OnInit {
     public internacion: IResumenInternacion;
 
     public prestaciones: IPrestacion[];
-
+    public timeline;
     groups = [];
 
     desde: Date;
     hasta: Date;
 
-
+    public fechaActual = moment().toDate();
     groupSelected = 'prestaciones';
     dataSet: IDataSet[] = [];
 
@@ -431,15 +431,16 @@ export class ResumenInternacionComponent implements OnInit {
         };
 
         // Create a Timeline
-        const timeline = new Timeline(this.timelineDiv.nativeElement, null, options as any);
-        timeline.setGroups(groups);
-        timeline.setItems(items);
+        this.timeline = new Timeline(this.timelineDiv.nativeElement, null, options as any);
+        this.timeline.setGroups(groups);
+        this.timeline.setItems(items);
 
-        timeline.on('select', function (properties) {
-            const ii = (timeline as any).itemsData.get(properties.items[0]);
+
+        this.timeline.on('select', function (properties) {
+            const ii = (this.timeline as any).itemsData.get(properties.items[0]);
         });
 
-        timeline.on('changed', () => {
+        this.timeline.on('changed', () => {
             const element: HTMLElement = this.timelineDiv.nativeElement;
 
             this.groups.forEach((g) => {
@@ -451,23 +452,29 @@ export class ResumenInternacionComponent implements OnInit {
             });
         });
 
-        timeline.on('click', (properties) => {
+        this.timeline.on('click', (properties) => {
             const { group, what, item } = properties;
             if (what === 'group-label') {
-                this.selectTrack(timeline, group);
+                this.selectTrack(this.timeline, group);
             }
             if (what === 'item') {
-                this.selectTrack(timeline, group);
-                const ii = (timeline as any).itemsData.get(item);
+                this.selectTrack(this.timeline, group);
+                const ii = (this.timeline as any).itemsData.get(item);
                 this.onItemSelect(ii);
 
             }
 
         });
 
-        timeline.on('rangechanged', (properties) => {
+        this.timeline.on('rangechanged', (properties) => {
             this.zoomChange(properties.start, properties.end);
         });
+
+    }
+
+    setView(inicio, fin) {
+
+        this.timeline.setWindow(inicio, fin);
 
     }
 
@@ -512,6 +519,7 @@ export class ResumenInternacionComponent implements OnInit {
     textoFiltroVisivility = false;
 
     zoomChange(start: Date, end: Date) {
+
         if (start) {
             this.desde = start;
         }
