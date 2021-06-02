@@ -21,6 +21,7 @@ export class DetalleDerivacionComponent implements OnInit {
     public derivacion;
     public reglaSeleccionada;
     public prioridad = 'baja';
+    public dispositivo = null;
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
         { id: 'media', label: 'Media' },
@@ -47,6 +48,7 @@ export class DetalleDerivacionComponent implements OnInit {
     @Input('derivacion')
     set _derivacion(value) {
         this.derivacion = value;
+        this.dispositivo = value.dispositivo;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -177,6 +179,8 @@ export class DetalleDerivacionComponent implements OnInit {
             if (this.reglaSeleccionada.definePrioridad) {
                 this.nuevoEstado.prioridad = this.prioridad;
             }
+
+            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             let body: any = {
                 estado: this.nuevoEstado,

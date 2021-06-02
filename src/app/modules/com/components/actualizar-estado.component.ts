@@ -69,9 +69,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
                 this.nuevoEstado.prioridad = this.prioridad;
             }
 
-            if (this.derivacion.dispositivo !== this.dispositivo) {
-                this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
-            }
+            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+
             const body = { estado: this.nuevoEstado };
 
             this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {

@@ -81,6 +81,7 @@
                              label="Unidad destino" idField="conceptId" placeholder="Seleccione la unidad destino"
                              labelField="term" grow="full" [disabled]="!unidadesDestino.length">
                 </plex-select>
+                <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full">
                 </tipo-traslado>
                 <div class="mt-1" *ngIf="reglaSeleccionada?.definePrioridad">
