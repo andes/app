@@ -47,8 +47,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public codigoSISAEdit;
   public codigoSisa;
   public registroSisaOpts = [
-    { id: 'noSISA', nombre: 'Sin registro SISA'},
-    { id: 'SISA', nombre: 'Con registro SISA'},
+    { id: 'noSISA', nombre: 'Sin registro SISA' },
+    { id: 'SISA', nombre: 'Con registro SISA' },
   ];
   public filtrarSISA;
 
@@ -115,15 +115,9 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       { route: '/', name: 'EPIDEMIOLOGIA' },
       { name: 'Buscador Fichas epidemiologicas' }
     ]);
-    this.dataType$ = this.formsService.search().pipe(
-      cache()
-    );
-    this.localidades$ = this.localidadService.get({ codigo: 15 }).pipe(
-      cache()
-    );
-    this.zonaSanitaria$ = this.zonaSanitariaService.search().pipe(
-      cache()
-    );
+    this.dataType$ = this.formsService.search();
+    this.localidades$ = this.localidadService.get({ codigo: 15 });
+    this.zonaSanitaria$ = this.zonaSanitariaService.search();
   }
 
   searchFichas() {
@@ -162,7 +156,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             return this.listado;
           })
         );
-      })
+      }),
+      cache()
     );
   }
 
@@ -243,8 +238,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
 
     if (!seccionOperaciones) {
       seccionOperaciones = {
-        name : 'Operaciones',
-        fields : []
+        name: 'Operaciones',
+        fields: []
       };
       secciones.push(seccionOperaciones);
     }
