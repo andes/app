@@ -79,6 +79,7 @@ export class CensosDiariosComponent implements OnInit {
                         let movimiento = {
                             datos: censoPaciente.datos,
                             ingreso: actividad.ingreso,
+                            fechaIngreso: actividad.fechaIngreso,
                             paseDe: actividad.paseDe,
                             egreso: actividad.egreso,
                             paseA: actividad.paseA,
