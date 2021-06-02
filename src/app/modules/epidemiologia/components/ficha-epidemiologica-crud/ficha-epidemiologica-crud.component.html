@@ -388,7 +388,7 @@
                                 <plex-select *ngIf="field.key==='trabajainstituciontipo' && seccion.fields['trabajainstitucion']?.id==='si'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [required]="field.required" [data]="trabajaInstitucion"
+                                             [required]="field.required" [data]="tipoInstitucion"
                                              [readonly]="!editFicha">
                                 </plex-select>
                                 <plex-select *ngIf="field.key==='asisteestablecimiento'"

@@ -94,12 +94,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     { id: 'descartado', nombre: 'No se detecta genoma de SARS-CoV-2' },
     { id: 'muestra', nombre: 'Muestra tomada' }
   ];
-  public trabajaInstitucion = [
-    { id: 'residenciaAdultos', nombre: 'Residencia adultos mayores' },
-    { id: 'comisaria', nombre: 'Comisarias' },
-    { id: 'penales', nombre: 'Penales' },
-    { id: 'monovalentes', nombre: 'Monovalentes' }
-  ];
   public estadoCovid = [
     { id: 'completa', nombre: 'Completa' },
     { id: 'incompleta', nombre: 'Incompleta' }
@@ -496,7 +490,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   setLocalidades(event) {
     if (event.value) {
       this.clearDependencias({ value: false }, 'mpi', ['localidadresidencia']);
-      this.localidades$ = this.localidadService.get({ codigo: event.value.codigo });
+      this.localidades$ = this.localidadService.get({ codigo: event.value.codigo, activo: true });
     } else if (event.provincia) {
       // setea el combo de localidades cuando se cargan los datos de mpi,en este momento no tengo el código de provincia
       this.localidades$ = this.localidadService.getXProvincia(event.provincia);
