@@ -144,7 +144,7 @@ export class InscripcionComponent implements OnInit {
     }
 
     seleccionaGrupo() {
-        const grupo = this.ciudadano.grupo;
+        const grupo: any = this.ciudadano.grupo;
         this.ciudadano.fechaNacimiento = null;
         this.infoCud = false;
         this.infoNrotramite = false;
@@ -163,11 +163,17 @@ export class InscripcionComponent implements OnInit {
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
                     break;
-                case 'factores-riesgo': {
+                case 'factores-riesgo':
                     this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
                     this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
                     break;
-                }
+                default:
+                    const excepciones = grupo.excepciones.any[0].all;
+                    if (excepciones) {
+                        this.fechaMinimaNacimiento = moment().subtract(excepciones[1].value, 'years').toDate();
+                        this.fechaMaximaNacimiento = moment().subtract(excepciones[0].value, 'years').toDate();
+                    }
+                    break;
             }
         }
     }
