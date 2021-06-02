@@ -1,3 +1,27 @@
+# [5.49.0](https://github.com/andes/app/compare/v5.48.0...v5.49.0) (2021-06-02)
+
+
+### Bug Fixes
+
+* **buscador-ficha:** doble request ([46df6a4](https://github.com/andes/app/commit/46df6a4a3a460d9c36320d3b3ea0c1a8c0151520))
+* **COM:** bug buscar org origen ([56ae829](https://github.com/andes/app/commit/56ae829eb30478aff0bf1c55ccb80223787ae883))
+* **ficha:** clasificacion y loader buscar paciente ([5aab87c](https://github.com/andes/app/commit/5aab87c463361ad9fc04a4b7b61d4c622a2b8feb))
+* **mapa-camas:** edición de egreso en internación validada ([#2269](https://github.com/andes/app/issues/2269)) ([9c031c8](https://github.com/andes/app/commit/9c031c8bd390cecaa9bedab606bfe0e6f73f4ddb))
+* **mpi:** quita regex del nombre ([#2298](https://github.com/andes/app/issues/2298)) ([2fb85b1](https://github.com/andes/app/commit/2fb85b1ae14412685b9eac2e5073667183442e88))
+* **rup:** cambia solicitante por profesional ([#2294](https://github.com/andes/app/issues/2294)) ([88da8e6](https://github.com/andes/app/commit/88da8e6dfbb6a314963a327adb7821ac2c2af505))
+* **top:** deshabilita boton hasta no cargar datos requeridos en formulario ([#2288](https://github.com/andes/app/issues/2288)) ([410056d](https://github.com/andes/app/commit/410056d3061c471c00d74c8678066af2e17de334))
+
+
+### Features
+
+* **ficha-epidemiologica:** mensaje no hay fichas ([b247443](https://github.com/andes/app/commit/b247443baa4d9c8dcc0235e2addaef289b27137d))
+* **fichaEpidemiologia:** Se agrega al pacientes la información de identificación si es extranjero ([48e0dc9](https://github.com/andes/app/commit/48e0dc95eb0667e871774a35e2cb78fb462f27ad))
+* **mapa-camas:** columna obra social en listado internación ([#2290](https://github.com/andes/app/issues/2290)) ([f1df855](https://github.com/andes/app/commit/f1df8555c9ae8b862581555cf9bb501808a79ba9))
+* **mapa-camas:** muestra la prestacion de estadistica en resumen de internacion ([#2299](https://github.com/andes/app/issues/2299)) ([f0029ae](https://github.com/andes/app/commit/f0029ae60598b039df0ae671a09e42b8c88d2ad6))
+* **mapa-camas:** obra social prepaga ([#2285](https://github.com/andes/app/issues/2285)) ([0b7fd1b](https://github.com/andes/app/commit/0b7fd1b2a91273c3251ebe3e56ee48fa6f1c965d))
+* **mpi:**  se agrega idPacientePrincipal en  paciente ([#2295](https://github.com/andes/app/issues/2295)) ([5c3b228](https://github.com/andes/app/commit/5c3b228a5aa4ceb5bb25d41938648226adc47e06))
+* **rup:** agregar unidad organizativa a la prestación ([#2300](https://github.com/andes/app/issues/2300)) ([398884e](https://github.com/andes/app/commit/398884e8b0c6ecadda265082722d0505ce89a738))
+
 # [5.48.0](https://github.com/andes/app/compare/v5.47.0...v5.48.0) (2021-05-26)
 
 
