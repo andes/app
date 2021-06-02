@@ -39,6 +39,8 @@ import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
 
 @NgModule({
   declarations: [
@@ -75,7 +77,8 @@ import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta
     SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
     MPILibModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ZXingScannerModule
   ],
   providers: [
     Server,
@@ -88,7 +91,8 @@ import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta
     PrestacionService,
     PacienteService,
     AgendaService,
-    TurnoService
+    TurnoService,
+    ScanParser
   ],
   bootstrap: [AppComponent]
 })

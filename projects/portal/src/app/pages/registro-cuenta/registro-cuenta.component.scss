@@ -19,6 +19,7 @@ main {
         position: absolute;
         top: 15px;
         left: 30px;
+        cursor: pointer;
         svg {
             width: 70%;
         }
@@ -28,11 +29,15 @@ main {
         position: absolute;
         top: 15px;
         right: 30px;
+
+        plex-icon{
+            color:#ffffff;
+        }
     }
 
     .titulo-registro{
         text-align: center;
-        color:#ffffff;
+        color:#000000;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -47,37 +52,160 @@ main {
 
         h3 {
             font-size: 1rem;
-            color:#062837 !important;
+            color:#00a8e0 !important;
         }
     }
+    .botones-scan{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+        z-index: 35;
+    }
 
-    .escanear{
+    .boton-escanear{
+        width: 50%;
         background: #00a8e0;
         color:#ffffff;
         font-weight: bold;
-        padding: 2rem 7rem 2rem 7rem;
+        padding: .5rem .5rem .5rem .5rem;
         border-radius: 50px;
+        cursor: pointer;
+
+        plex-icon{
+            margin-left: 1rem;
+        }
     }
 
+    zxing-scanner {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 30;
+    }
+    
     form {
         background: #dcd0e6;
-        width: 500px;
+        width: 800px;
         height: auto;
         border-radius: 15px;
-
-        .label-container {
-            width: 100px;
+        flex-direction: column;
+        
+        plex-text,plex-int,plex-select{
+            width: 250px;
         }
 
-        .forgot-pass-container {
-            position: relative;
-            .forgot-pass {
+        .campo-registro{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .label-registro{
                 width: 150px;
-                position: absolute;
-                top: -25px;
-                left: -60px;
-                font-size: 0.7rem;
+                margin-right: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+            }
+
+            .campo-hint{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+        }
+
+        .botones-container{
+            display: flex;
+            justify-content: space-between;
+
+            plex-button{
+                margin: 0 .1rem 0 .1rem;
+            }
+        }
+
+        .info-tramite{
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+
+            plex-grid{
+                margin: 0 2rem 0 2rem;
+                flex: none;
+            }
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        form{
+            width: 500px;
+        }
+
+        .boton-escanear{
+            width: 95%;
+        }
+    }
+
+    @media screen and (max-width: 425px) {
+        form{
+            width: 400px;
+            margin-top: 50px;
+
+            plex-text,plex-int,plex-select{
+                width: 200px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 376px) {
+        form{
+            width: 350px;
+            
+            plex-text,plex-int,plex-select{
+                width: 175px;
+            }
+
+            .campo-registro{
+                align-items: flex-end;
+                margin-top:0;
+                margin-bottom:0;
+
+                .label-registro{
+                    justify-content: flex-end;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        
+        form{
+            width: 300px;
+            margin-top: 300px;
+
+            .campo-registro{
+                flex-direction: column;
+
+                .label-registro{
+                    width: 100%;
+                    justify-content: flex-start;
+                }
+            }
+
+            .label-registro{
+                margin-right: 0;
+            }
+
+            .info-tramite{
+                a{
+                    display: flex;
+                    justify-content: center;
+                    font-size: 14px;
+                }
             }
         }
     }
 }
+

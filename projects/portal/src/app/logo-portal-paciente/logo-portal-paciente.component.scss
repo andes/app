@@ -1,3 +1,10 @@
 path {
     fill: #fff;
 }
+
+@media screen and (max-width: 425px) {
+    #logo-pdp{
+        max-width: 75%;
+        left: 20px; 
+    }
+}

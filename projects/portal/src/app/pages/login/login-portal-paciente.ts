@@ -49,4 +49,7 @@ export class LoginComponent implements OnInit {
         return !this.formulario.form.valid || (!this.usuario || !this.password);
     }
 
+    irRegistro() {
+        this.router.navigate(['/registro'])
+    }
 }
