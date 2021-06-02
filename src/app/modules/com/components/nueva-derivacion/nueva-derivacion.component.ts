@@ -1,18 +1,18 @@
-import { AdjuntosService } from './../../../rup/services/adjuntos.service';
-import { DriveService } from 'src/app/services/drive.service';
-import { DerivacionesService } from './../../../../services/com/derivaciones.service';
-import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { TipoTrasladoService } from 'src/app/services/com/tipoTraslados.service';
+import { DriveService } from 'src/app/services/drive.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ProfesionalService } from 'src/app/services/profesional.service';
-import { map, switchMap } from 'rxjs/operators';
+import { DerivacionesService } from './../../../../services/com/derivaciones.service';
+import { AdjuntosService } from './../../../rup/services/adjuntos.service';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -88,26 +88,19 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         }
         ]);
 
-        this.paramsSubscribe = this.route.params.pipe(
-            map(params => {
-                if (params['paciente']) {
-                    this.seleccionarPaciente(params['paciente']);
-                    this.seleccionarProfesional(this.auth.profesional);
-                }
-            }),
-            switchMap(() => {
-                return this.organizacionService.getById(this.auth.organizacion.id).pipe(
-                    map(org => {
-                        this.esCOM = org.esCOM;
-                        this.modelo.organizacionOrigen = this.esCOM ? null : this.auth.organizacion;
-                    })
-                );
-            })).subscribe();
+        const paciente = this.route.snapshot.paramMap.get('paciente');
+        if (paciente) {
+            this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
+                this.esCOM = org.esCOM;
+                this.modelo.organizacionOrigen = this.esCOM ? null : this.auth.organizacion;
+                this.seleccionarPaciente(paciente);
+                this.seleccionarProfesional(this.auth.profesional);
+            });
+        }
 
         this.extensions = this.extensions.concat(this.imagenes);
-        this.adjuntosService.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-        });
+        this.adjuntosService.generateToken().subscribe(data => this.fileToken = data.token);
+
         this.cargarDestinos();
         this.cargarTipoTraslados();
     }
@@ -167,30 +160,30 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     // let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'internacion');
                     // this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
-                        // this.modelo.prestacion = prestacion.id,
-                        this.modelo.paciente = {
-                            id: this.paciente.id,
-                            nombre: this.paciente.nombre,
-                            apellido: this.paciente.apellido,
-                            documento: this.paciente.documento,
-                            sexo: this.paciente.sexo,
-                            fechaNacimiento: this.paciente.fechaNacimiento
-                        };
-                        if (this.paciente.financiador) {
-                            this.modelo.paciente.obraSocial = this.paciente.financiador[0];
-                        }
-                        this.modelo.organizacionDestino = {
-                            id: this.organizacionDestino.id,
-                            nombre: this.organizacionDestino.nombre,
-                            direccion: this.organizacionDestino.direccion
-                        };
-                        this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
-                        this.modelo.adjuntos = this.adjuntos;
+                    // this.modelo.prestacion = prestacion.id,
+                    this.modelo.paciente = {
+                        id: this.paciente.id,
+                        nombre: this.paciente.nombre,
+                        apellido: this.paciente.apellido,
+                        documento: this.paciente.documento,
+                        sexo: this.paciente.sexo,
+                        fechaNacimiento: this.paciente.fechaNacimiento
+                    };
+                    if (this.paciente.financiador) {
+                        this.modelo.paciente.obraSocial = this.paciente.financiador[0];
+                    }
+                    this.modelo.organizacionDestino = {
+                        id: this.organizacionDestino.id,
+                        nombre: this.organizacionDestino.nombre,
+                        direccion: this.organizacionDestino.direccion
+                    };
+                    this.modelo.historial.push({ estado: 'solicitada', organizacionDestino: this.modelo.organizacionDestino, observacion: 'Inicio de derivación' });
+                    this.modelo.adjuntos = this.adjuntos;
 
-                        this.derivacionesService.create(this.modelo).subscribe(respuesta => {
-                            this.router.navigate(['/com']);
-                            this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
-                        });
+                    this.derivacionesService.create(this.modelo).subscribe(respuesta => {
+                        this.router.navigate(['/com']);
+                        this.plex.toast('success', 'Derivación guardada', 'Éxito', 4000);
+                    });
                     // });
                 }
             });
