@@ -18,6 +18,9 @@
         <plex-select name="obraSocial" label="Obra Social" [(ngModel)]="filtros.obraSocial" (change)="filtrar()"
                      [data]="obraSociales$ | async" idField="_id">
         </plex-select>
+        <plex-select name="unidadOrganizativa" label="Unidad Organizativa" [(ngModel)]="filtros.unidadOrganizativa"
+                     idField="conceptId" labelField="term" (change)="filtrar()" [data]="unidadesOrganizativas$ | async">
+        </plex-select>
         <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
         </plex-select>
     </div>

@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject, combineLatest, of, timer } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, multicast, filter, tap } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, multicast, filter } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
@@ -262,7 +262,7 @@ export class MapaCamasService {
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
         let camasMismaUO = [];
         let camasDistintaUO = [];
-        if (cama.id) {
+        if (cama?.id) {
             camas.map(c => {
                 if (c.sala || c.estado === 'disponible') {
                     if (c.id !== cama.id) {

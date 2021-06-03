@@ -20,6 +20,7 @@
                                     <th rowspan="2">Fecha de ingreso</th>
                                     <th rowspan="2">Fecha de egreso</th>
                                     <th rowspan="2" class="w-25">Obra Social</th>
+                                    <th rowspan="2">Unidad Organizativa</th>
                                     <th rowspan="2">Estado</th>
                                 </tr>
                             </thead>
@@ -46,6 +47,9 @@
                                     </td>
                                     <td>
                                         {{ internacion.paciente.obraSocial?.nombre }}
+                                    </td>
+                                    <td>
+                                        {{ internacion.unidadOrganizativa?.term }}
                                     </td>
                                     <td>
                                         <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
@@ -76,7 +80,7 @@
                     <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
                     </plex-button>
                 </app-desocupar-cama>
-                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}"
+                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
                                   (cancel)="volverADetalle()">
                 </app-cambiar-cama>
             </plex-layout-sidebar>

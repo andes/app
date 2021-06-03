@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { Auth } from '@andes/auth';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { cache } from '@andes/shared';
 
 @Injectable()
 export class ListadoInternacionService {
@@ -16,11 +16,12 @@ export class ListadoInternacionService {
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
     public fechaEgresoDesde = new BehaviorSubject<Date>(null);
     public fechaEgresoHasta = new BehaviorSubject<Date>(null);
+    public unidadOrganizativa = new BehaviorSubject<any>(null);
     public estado = new BehaviorSubject<any>(null);
     public obraSocial = new BehaviorSubject<any[]>(null);
+    public refresh = new BehaviorSubject<any>(null);
 
     constructor(
-        private auth: Auth,
         private mapaHTTP: MapaCamasHTTP,
     ) {
         this.listaInternacion$ = combineLatest(
@@ -28,9 +29,10 @@ export class ListadoInternacionService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
+            this.refresh
         ).pipe(
             auditTime(1),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     const filtros = {
                         fechaIngresoDesde, fechaIngresoHasta,
@@ -39,22 +41,24 @@ export class ListadoInternacionService {
 
                     return this.mapaHTTP.getPrestacionesInternacion(filtros);
                 }
-            })
+            }),
+            cache()
         );
 
         this.listaInternacionFiltrada$ = combineLatest(
             this.listaInternacion$,
             this.pacienteText,
             this.estado,
-            this.obraSocial
+            this.obraSocial,
+            this.unidadOrganizativa
         ).pipe(
-            map(([listaInternacion, paciente, estado, obraSocial]) =>
-                this.filtrarListaInternacion(listaInternacion, paciente, estado, obraSocial)
+            map(([listaInternacion, paciente, estado, obraSocial, unidad]) =>
+                this.filtrarListaInternacion(listaInternacion, paciente, estado, obraSocial, unidad)
             )
         );
     }
 
-    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any) {
+    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any, unidad: any) {
         let listaInternacionFiltrada = listaInternacion;
 
         if (paciente) {
@@ -83,6 +87,13 @@ export class ListadoInternacionService {
                 }
             );
         }
+
+        if (unidad) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                internacion.unidadOrganizativa?.term === unidad.term
+            );
+        }
+
         return listaInternacionFiltrada;
     }
 

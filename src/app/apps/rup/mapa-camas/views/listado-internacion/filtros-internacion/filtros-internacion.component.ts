@@ -4,7 +4,6 @@ import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { ListadoInternacionService } from '../listado-internacion.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
-import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { arrayToSet } from '@andes/shared';
@@ -23,6 +22,7 @@ export class FiltrosInternacionComponent implements OnInit {
     };
     estadosInternacion;
     requestInProgress: boolean;
+    unidadesOrganizativas$: Observable<any[]>;
 
     obraSociales$: Observable<any[]>;
 
@@ -46,12 +46,25 @@ export class FiltrosInternacionComponent implements OnInit {
                 return rs;
             })
         );
+
+        this.unidadesOrganizativas$ = this.listadoInternacionService.listaInternacion$.pipe(
+            map(listado => {
+                let unidades = [];
+                listado.forEach(int => {
+                    if (int.unidadOrganizativa && !unidades.some(u => u?.term === int.unidadOrganizativa.term)) {
+                        unidades.push(int.unidadOrganizativa);
+                    }
+                });
+                return unidades;
+            })
+        );
     }
 
     filtrar() {
         this.listadoInternacionService.pacienteText.next(this.filtros.paciente);
         this.listadoInternacionService.estado.next(this.filtros.estado?.id);
         this.listadoInternacionService.obraSocial.next(this.filtros.obraSocial);
+        this.listadoInternacionService.unidadOrganizativa.next(this.filtros.unidadOrganizativa);
     }
 
     filtrarFecha() {

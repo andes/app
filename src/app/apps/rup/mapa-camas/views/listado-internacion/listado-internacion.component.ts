@@ -22,8 +22,6 @@ export class InternacionListadoComponent implements OnInit {
 
     // VARIABLES
     public mostrar = 'datosInternacion';
-    public listaInternacion;
-    public listaInternacionAux;
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
@@ -120,6 +118,11 @@ export class InternacionListadoComponent implements OnInit {
 
     cambiarCama() {
         this.mostrar = 'desocuparCama';
+    }
+
+    refresh() {
+        this.listadoInternacionService.refresh.next(true);
+        this.volverADetalle();
     }
 
     volverADetalle() {

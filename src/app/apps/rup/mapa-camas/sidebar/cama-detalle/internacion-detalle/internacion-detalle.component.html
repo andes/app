@@ -25,7 +25,7 @@
         <ng-container *ngIf="mostrar === 'movimientos'">
             <app-movimientos-internacion>
                 <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos)"
-                             [disabled]="(prestacion$ | async).ejecucion.registros[1]" label="Cambiar cama"
+                             [disabled]="(prestacion$ | async).ejecucion?.registros[1]" label="Cambiar cama"
                              type="warning" size="sm" (click)="changeCama()">
                 </plex-button>
             </app-movimientos-internacion>
