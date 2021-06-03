@@ -229,6 +229,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     guardar(valid) {
         if (valid.formValid) {
             this.disableButton = true;
+            if (this.checkTraslado) {
+                const organizacionValor = this.registro.valor.InformeEgreso.UnidadOrganizativaDestino;
+                this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = {
+                    id: null,
+                    nombre: organizacionValor
+                };
+            }
             if (this.capa === 'estadistica') {
                 this.egresoExtendido();
             } else {

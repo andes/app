@@ -15,6 +15,10 @@
                     <div class="col">
                         <b>Tipo de egreso</b>
                         <p>{{informeEgreso.tipoEgreso?.nombre}}</p>
+                        <ng-container *ngIf="informeEgreso.tipoEgreso?.nombre === 'Traslado'">
+                            <b>Organización destino</b>
+                            <p>{{informeEgreso.UnidadOrganizativaDestino?.nombre}}</p>
+                        </ng-container>
                     </div>
                 </div>
 
