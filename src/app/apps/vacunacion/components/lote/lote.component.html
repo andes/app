@@ -1,58 +1,58 @@
 <plex-layout [main]="showSidebar ? 8 : 12">
-    <plex-layout-main>
-        <plex-title titulo="Lotes de vacunacion" size="sm">
-        </plex-title>
-        <plex-table [columns]="columns" #table="plTable">
-            <plex-table-columns>
-            </plex-table-columns>
-            <tr *ngFor="let vacuna of vacunas$ | async" (click)="showInSideBar(vacuna)" class='selectable'>
-                <td *plTableCol="'nombre'"> {{vacuna.nombre}} </td>
-            </tr>
-        </plex-table>
-    </plex-layout-main>
+	<plex-layout-main>
+		<plex-title titulo="Lotes de vacunacion" size="sm"></plex-title>
+		<plex-list>
+			<plex-item *ngFor="let vacuna of vacunas$ | async" (click)="showInSideBar(vacuna)">
+				<plex-label icon="vacuna" titulo=' ' subtitulo="{{vacuna.nombre}}" size="xl" type="info">
+				</plex-label>
+			</plex-item>
+		</plex-list>
 
-    <plex-layout-sidebar type="invert">
-        <plex-title titulo="Detalle vacuna" size="md" *ngIf="vacunaSelected">
-            <plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
-            </plex-button>
-        </plex-title>
-        <plex-grid cols="2">
-            <plex-label titulo="Nombre" subtitulo="{{vacunaSelected?.nombre}}">
-            </plex-label>
-            <plex-label titulo="Codigo" subtitulo="{{vacunaSelected?.codigo}}">
-            </plex-label>
-            <plex-label titulo="Snomed_conceptId" subtitulo="{{vacunaSelected?.snomed_conceptId}}">
-            </plex-label>
-        </plex-grid>
-        <br>
-        <ng-container *ngIf="!creando">
-            <plex-title titulo="Lotes de la vacuna" size="sm">
-                <plex-button type="success" size="sm" (click)="crearLote()" class='mr-1' icon="plus"></plex-button>
-            </plex-title>
-            <plex-select name="lote" [(ngModel)]="lote" [data]="lotes$ | async"
-                         placeholder="Seleccione el lote correspondiente" label="Lote" idField="_id"
-                         labelField="codigo + ' - ' + descripcion">
-            </plex-select>
-        </ng-container>
 
-        <ng-container *ngIf="creando">
-            <plex-title titulo="Crear lote" size="sm">
-                <plex-button type="danger" size="sm" (click)="cerrar()" class='mr-1'>
-                    CANCELAR
-                </plex-button>
-                <plex-button type="success" size="sm" (click)="guardar()" [disabled]="!formulario.valid">
-                    GUARDAR
-                </plex-button>
-            </plex-title>
+	</plex-layout-main>
 
-            <form #formulario="ngForm">
-                <plex-text grow="full" label="Código" name="codigo" [(ngModel)]="loteSelected.codigo" [required]="true">
-                </plex-text>
-                <plex-text grow="full" label="Descripción" name="descripcion" [(ngModel)]="loteSelected.descripcion"
-                           [required]="true">
-                </plex-text>
-            </form>
-        </ng-container>
+	<plex-layout-sidebar type="invert">
+		<plex-title titulo="Detalle de la vacuna" size="md" *ngIf="vacunaSelected">
+			<plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
+			</plex-button>
+		</plex-title>
 
-    </plex-layout-sidebar>
+		<plex-detail size="sm" direction="row">
+			<plex-icon name="vacuna" type="info"></plex-icon>
+			<div title>{{vacunaSelected?.nombre}}</div>
+			<div subtitle>{{vacunaSelected?.codigo}}</div>
+		</plex-detail>
+
+		<ng-container *ngIf="!creando">
+			<plex-title titulo="Lotes de la vacuna" size="sm">
+				<plex-button type="success" size="sm" (click)="crearLote()" class='mr-1' icon="plus"></plex-button>
+			</plex-title>
+			<plex-list>
+				<plex-item *ngFor="let lote of lotes$ | async">
+					<plex-label titulo="Codigo" subtitulo="{{lote.codigo}}" size="xl"></plex-label>
+					<plex-label titulo="Descripcion" subtitulo="{{lote.descripcion}}" size="xl"></plex-label>
+				</plex-item>
+			</plex-list>
+		</ng-container>
+
+		<ng-container *ngIf="creando">
+			<plex-title titulo="Crear lote" size="sm">
+				<plex-button type="danger" size="sm" (click)="cerrar()" class='mr-1'>
+					CANCELAR
+				</plex-button>
+				<plex-button type="success" size="sm" (click)="guardar()" [disabled]="!formulario.valid">
+					GUARDAR
+				</plex-button>
+			</plex-title>
+
+			<form #formulario="ngForm">
+				<plex-text grow="full" label="Código" name="codigo" [(ngModel)]="loteSelected.codigo" [required]="true">
+				</plex-text>
+				<plex-text grow="full" label="Descripción" name="descripcion" [(ngModel)]="loteSelected.descripcion"
+						   [required]="true">
+				</plex-text>
+			</form>
+		</ng-container>
+
+	</plex-layout-sidebar>
 </plex-layout>
