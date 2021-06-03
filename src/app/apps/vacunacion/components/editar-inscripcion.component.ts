@@ -110,7 +110,7 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
         if (edad > 59) {
             gruposPosibles.push('mayores60');
         } else {
-            gruposPosibles = gruposPosibles.concat(['factores-riesgo', 'discapacidad']);
+            gruposPosibles = gruposPosibles.concat(['factores-riesgo', 'discapacidad', 'sin-factores-riesgo']);
         }
         this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
             let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
