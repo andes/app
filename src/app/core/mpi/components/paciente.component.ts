@@ -64,6 +64,7 @@ export class PacienteComponent implements OnInit {
         provincia: null,
         localidad: null,
         barrio: null,
+        lugar: null
     };
 
     public direccion: IDireccion = {

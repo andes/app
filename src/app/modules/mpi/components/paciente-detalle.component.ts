@@ -14,10 +14,9 @@ import { Auth } from '@andes/auth';
 export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input() paciente: IPaciente;
-    @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
+    @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
-    @Input() showLugarNacimiento = false;
     @Input() showDocumentos = false;
 
     obraSocial: IObraSocial;
@@ -66,6 +65,10 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         return this.paciente.estado === 'validado' ? 'success' : 'warning';
     }
 
+    get showLugarNacimiento() {
+        return this.fields.findIndex(i => i === 'lugarNacimiento') >= 0;
+    }
+
     get direccion() {
         if (this.paciente.direccion && this.paciente.direccion.length > 0) {
             const dir = this.paciente.direccion[0];
@@ -99,11 +102,23 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             if (this.paciente.lugarNacimiento.localidad) {
                 texto = texto + this.paciente.lugarNacimiento.localidad.nombre;
             }
+            if (this.paciente.lugarNacimiento.lugar) {
+                if (texto.length > 0) {
+                    texto += ', ';
+                }
+                texto = texto + this.paciente.lugarNacimiento.lugar;
+            }
             if (this.paciente.lugarNacimiento.provincia) {
                 if (texto.length > 0) {
                     texto += ', ';
                 }
                 texto = texto + this.paciente.lugarNacimiento.provincia.nombre;
+            }
+            if (this.paciente.lugarNacimiento.pais) {
+                if (texto.length > 0) {
+                    texto += ', ';
+                }
+                texto = texto + this.paciente.lugarNacimiento.pais.nombre;
             }
             return texto;
         }

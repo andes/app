@@ -45,7 +45,11 @@
         <!-- DATOS DE NACIMIENTO -->
 
         <plex-title titulo="Lugar de nacimiento" size="sm">
-            <plex-bool class="mr-3" *ngIf="provinciaActual" [(ngModel)]="nacioProvActual"
+            <plex-bool class="mr-3" *ngIf="paisActual" [(ngModel)]="nacioPaisActual"
+                       label="¿País de {{paisActual[0].nombre}}?" name="nacioPaisActual"
+                       (change)="changePaisActualNacimiento()">
+            </plex-bool>
+            <plex-bool class="mr-3" *ngIf="nacioPaisActual && provinciaActual" [(ngModel)]="nacioProvActual"
                        label="¿Provincia de {{provinciaActual.nombre}}?" name="nacioProvActual"
                        (change)="changeProvActualNacimiento()">
             </plex-bool>
@@ -58,14 +62,23 @@
         <plex-grid type="full" size="lg" responsive>
             <ng-container *ngIf="paciente?.lugarNacimiento">
                 <plex-wrapper>
-                    <plex-select [disabled]="nacioProvActual" [(ngModel)]="paciente.lugarNacimiento.provincia"
-                                 name="provinciaNacimiento" [data]="provincias$ | async" idField="nombre"
-                                 labelField="nombre" label="Provincia"
+                    <plex-select [disabled]="nacioPaisActual" [(ngModel)]="paciente.lugarNacimiento.pais"
+                                 name="paisNacimiento" [data]="paisesNacimiento$ | async" idField="nombre"
+                                 labelField="nombre" label="País" (change)="loadPaisActualNacimiento()" grow="2">
+                    </plex-select>
+                    <plex-select *ngIf="nacioPaisActual" [disabled]="nacioProvActual"
+                                 [(ngModel)]="paciente.lugarNacimiento.provincia" name="provinciaNacimiento"
+                                 [data]="provincias$ | async" idField="nombre" labelField="nombre" label="Provincia"
                                  (change)="loadLocalidadesNacimiento(paciente.lugarNacimiento.provincia)" grow="2">
                     </plex-select>
-                    <plex-select [disabled]="nacioLocActual" label="Localidad" [required]="nacioProvActual"
+                    <plex-text *ngIf="!nacioPaisActual || (nacioPaisActual && !nacioProvActual)" label="Lugar"
+                               [(ngModel)]="paciente.lugarNacimiento.lugar" name="nombre" grow="2">
+                    </plex-text>
+                    <plex-select *ngIf="nacioPaisActual && nacioProvActual" [disabled]="nacioLocActual"
+                                 label="Localidad" [required]="nacioProvActual"
                                  [(ngModel)]="paciente.lugarNacimiento.localidad" name="localidadNacimiento"
-                                 [data]="localidadesNacimiento$ | async" labelField="nombre" grow="2">
+                                 [data]="localidadesNacimiento$ | async" labelField="nombre"
+                                 (change)="updateNacioLocalidadActual()" grow="2">
                     </plex-select>
                 </plex-wrapper>
             </ng-container>
@@ -92,7 +105,8 @@
                             <h6>
                                 <b hint="Domicilio declarado por el paciente como su domicilio actual"
                                    detach="both">Domicilio
-                                    referido por el paciente</b></h6>
+                                    referido por el paciente</b>
+                            </h6>
                         </plex-grid>
                     </div>
                     <plex-select [disabled]="viveProvActual" [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
@@ -124,7 +138,8 @@
                         <plex-grid type="auto" size="sm" cols="2">
                             <h6 class="mb-0">
                                 <b hint="Domicilio declarado en el documento de identidad del paciente "
-                                   detach="both">Domicilio legal del paciente</b></h6>
+                                   detach="both">Domicilio legal del paciente</b>
+                            </h6>
                             <span span="2">{{ direccionLegal }}</span>
                         </plex-grid>
                     </div>

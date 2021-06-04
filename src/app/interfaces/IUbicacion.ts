@@ -15,4 +15,5 @@ export interface IUbicacion {
         id: String,
         nombre: String
     };
+    lugar?: String;
 }
