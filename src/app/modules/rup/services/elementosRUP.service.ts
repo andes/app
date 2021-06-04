@@ -79,6 +79,13 @@ export class ElementosRUPService {
         );
     }
 
+    requeridosDinamicos(prestacion, conceptoId) {
+        return this.server.post('/modules/rup/elementos-rup/requeridos', {
+            prestacion: prestacion.id,
+            conceptId: conceptoId
+        });
+    }
+
 
     getById(id: string) {
         return this.populateElemento(this.cacheById[id], false);
