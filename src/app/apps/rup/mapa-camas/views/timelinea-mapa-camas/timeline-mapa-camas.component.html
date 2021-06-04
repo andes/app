@@ -4,12 +4,21 @@
             <plex-title titulo="Mapa Visual de Camas">
             </plex-title>
             <plex-wrapper>
-                <plex-datetime [(ngModel)]="desde" class="mr-1"></plex-datetime>
-                <plex-datetime [(ngModel)]="hasta" class="mr-1"></plex-datetime>
+                <plex-datetime [(ngModel)]="desde" class="mr-1" (change)="cargarMovimientosFecha()"></plex-datetime>
+                <plex-datetime [(ngModel)]="hasta" class="mr-1" (change)="cargarMovimientosFecha()"></plex-datetime>
+
                 <plex-select [data]="sectores$ | async" name="sectores" [(ngModel)]="sectorSelected"
                              placeholder="Sector"></plex-select>
 
-                <plex-button label="Visualizar" type="success" (click)="onVisualizar()"></plex-button>
+                <plex-select [(ngModel)]="unidadOrganizativaSelect" name="unidadOrganizativa"
+                             [data]="unidadesOrganizativas$ | async" idField="term" labelField="term"
+                             placeholder="Unidad organizativa">
+                </plex-select>
+                <plex-text type="text" [(ngModel)]="paciente" name="paciente"
+                           placeholder="Escriba un documento / apellido / nombre">
+                </plex-text>
+
+                <plex-button label="Visualizar" type="success" (click)="filtrar()"></plex-button>
             </plex-wrapper>
         </header>
 
