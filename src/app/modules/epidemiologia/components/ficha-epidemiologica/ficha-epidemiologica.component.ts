@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
+import { cache } from '@andes/shared';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
@@ -115,7 +116,9 @@ export class FichaEpidemiologicaComponent implements OnInit {
   onSelect(paciente: IPaciente): void {
     if (paciente) {
       this.pacienteSelected = paciente;
-      this.fichasPaciente = this.formEpidemiologiaService.search({ paciente: this.pacienteSelected._id });
+      this.fichasPaciente = this.formEpidemiologiaService.search({ paciente: this.pacienteSelected._id }).pipe(
+        cache()
+      );
     }
   }
 
@@ -123,7 +126,13 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.fichaPaciente$ = of(null);
     if (ficha) {
       this.fichaPaciente$ = of(ficha);
+      this.getFicha(nombreFicha);
+    } else if (this.checkDias()) {
+      this.getFicha(nombreFicha);
     }
+  }
+
+  getFicha(nombreFicha) {
     this.showFicha = nombreFicha;
     this.editFicha = true;
   }
@@ -138,5 +147,19 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.showFicha = null;
     this.pacienteSelected = null;
     this.resultadoBusqueda = [];
+  }
+
+  checkDias() {
+    let check = true;
+    this.fichasPaciente.subscribe(fichas => {
+      if (fichas.length) {
+        const fichasOrdenadas = fichas.sort((a, b) => b.createdAt - a.createdAt);
+        if (moment().diff(moment(fichasOrdenadas[0].createdAt), 'days') < 14) {
+          this.plex.info('warning', ' El paciente tiene una ficha registrada en los ultimos 14 días', 'No es posible crear una nueva ficha');
+          check = false;
+        }
+      }
+    });
+    return check;
   }
 }
