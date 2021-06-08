@@ -88,8 +88,8 @@
                             <plex-bool *ngIf="field.key==='resideinstitucion' "
                                        [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
                                        [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
-                                       [readonly]="!editFicha"
-                                       (change)="getInstituciones(false); clearDependencias($event,'mpi', ['tipoinstitucion','lugarinstitucion'])">
+                                       [readonly]="!editFicha" (change)="getInstituciones(false); clearDependencias($event,'mpi', 
+                                       ['tipoinstitucion','lugarinstitucion','otrosreside','otrosresidenombre'])">
                             </plex-bool>
                             <plex-select *ngIf="field.key==='tipoinstitucion' && seccion.fields['resideinstitucion']"
                                          [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
@@ -101,7 +101,17 @@
                                          [(ngModel)]="seccion.fields[field.key]" [readonly]="!editFicha"
                                          [data]="residencias$ | async">
                             </plex-select>
-
+                            <plex-bool *ngIf="field.key==='otrosreside' && seccion.fields['resideinstitucion'] "
+                                       [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                       [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                       [readonly]="!editFicha"
+                                       (change)="clearDependencias($event,'mpi', ['otrosresidenombre'])">
+                            </plex-bool>
+                            <plex-text *ngIf="field.key==='otrosresidenombre' && seccion.fields['otrosreside']"
+                                       [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
+                                       [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                       readonly="true" [readonly]="!editFicha">
+                            </plex-text>
                             <!--Clasificación-->
                             <ng-container *ngIf="seccion.id==='clasificacion'">
                                 <plex-select *ngIf="field.key==='clasificacion' "
