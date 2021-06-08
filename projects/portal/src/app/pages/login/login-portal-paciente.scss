@@ -1,0 +1,70 @@
+// pdp-login-portal {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     height: 100vh;
+// }
+
+main {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    overflow: hidden;
+
+    background: rgb(134, 66, 153);
+    background: linear-gradient(
+        135deg,
+        rgba(134, 66, 153, 1) 0%,
+        rgba(104, 72, 157, 1) 50%,
+        rgba(74, 147, 200, 1) 100%
+    );
+
+    .logo-pdp {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        svg {
+            width: 70%;
+        }
+    }
+
+    .social-pdp {
+        position: absolute;
+        top: 15px;
+        right: 30px;
+    }
+
+    form {
+        background: #dcd0e6;
+        width: 450px;
+        height: auto;
+        border-radius: 15px;
+
+        h1 {
+            font-size: 1rem;
+        }
+
+        .label-container {
+            width: 100px;
+        }
+
+        .forgot-pass-container {
+            position: relative;
+            .forgot-pass {
+                width: 150px;
+                position: absolute;
+                top: -20px;
+                left: -15px;
+                font-size: 0.7rem;
+            }
+        }
+
+        plex-text,
+        .button-container {
+            width: 250px;
+        }
+    }
+}
