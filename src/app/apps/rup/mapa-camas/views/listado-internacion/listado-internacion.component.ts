@@ -46,21 +46,42 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Fecha de ingreso',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return moment(this.devuelveFecha(a, 'ingreso')).diff(moment(this.devuelveFecha(b, 'ingreso'))); }
+            sort: (a, b) => {
+                const fecha1 = moment(this.devuelveFecha(a, 'ingreso'));
+                const fecha2 = moment(this.devuelveFecha(b, 'ingreso'));
+                return fecha1.diff(fecha2);
+            }
         },
         {
             key: 'fechaEgreso',
             label: 'Fecha de egreso',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return moment(this.devuelveFecha(a, 'egreso') || new Date()).diff(moment(this.devuelveFecha(b, 'egreso') || new Date())); }
+            sort: (a, b) => {
+                let fecha1 = this.devuelveFecha(a, 'egreso');
+                let fecha2 = this.devuelveFecha(b, 'egreso');
+                if (fecha1) {
+                    fecha1 = moment(fecha1);
+                    if (fecha2) {
+                        fecha2 = moment(fecha2);
+                        return fecha1.diff(fecha2);
+                    } else {
+                        return 1;
+                    }
+                }
+                return -1;
+            }
         },
         {
             key: 'obraSocial',
             label: 'Obra social',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.paciente.obraSocial?.nombre.localeCompare(b.paciente.obraSocial?.nombre); }
+            sort: (a, b) => {
+                const p1 = a.paciente.obraSocial?.nombre || '';
+                const p2 = b.paciente.obraSocial?.nombre || '';
+                return p1.localeCompare(p2);
+            }
         },
         {
             key: 'unidadOrganizativa',
