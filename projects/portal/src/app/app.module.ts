@@ -41,6 +41,7 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,9 @@ import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
     ReactiveFormsModule,
     MPILibModule,
     BrowserAnimationsModule,
-    ZXingScannerModule
+    ZXingScannerModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   providers: [
     Server,

@@ -1,6 +1,6 @@
 <main justify="center">
     <div class="logo-pdp">
-        <div pdpLogo (click)="volverLogin()"></div>
+        <pdp-logo (click)="volverLogin()"></pdp-logo>
     </div>
     <div class="social-pdp">
         <plex-grid cols="4">
@@ -16,10 +16,12 @@
                    (deviceChange)="onDeviceChange($event)" (torchCompatible)="onTorchCompatible($event)">
     </zxing-scanner>
     <div class="botones-scan" *ngIf="hasPermission && scanHabilitado">
-        <plex-button *ngIf="torchAvailable$ | async" size="md" (click)="toggleTorch()">{{torchEnabled?'turn off':'turn
+        <plex-button *ngIf="torchAvailable$ | async" size="md" ariaLabel="activar o desactivar luz"
+                     (click)="toggleTorch()">{{torchEnabled?'turn off':'turn
             on'}}
         </plex-button>
-        <plex-button *ngIf="hasDevices" type="danger" icon="close" size="md" (click)="clearResult()"></plex-button>
+        <plex-button *ngIf="hasDevices" type="danger" icon="close" size="md" ariaLabel="cerrar scanner"
+                     (click)="clearResult()"></plex-button>
 
     </div>
     <form [formGroup]="formRegistro" justify="center">
@@ -100,9 +102,14 @@
                 </div>
             </div>
         </div>
+        <div class="my-2" justify="center" *ngIf="!scanHabilitado">
+            <re-captcha name="recaptcha" formControlName="recaptcha" siteKey="6Lc5nUsaAAAAALJ15OtJMKpdW9XSEOl13A_3Hx6i"
+                        (resolved)="resolved($event)">
+            </re-captcha>
+        </div>
         <div class="botones-container my-2" justify="center">
-            <plex-button type="info" name="enviar" size="md" class="mb-3" [disabled]="formRegistro.invalid"
-                         (click)="registrarUsuario()">
+            <plex-button type="info" name="enviar" size="md" class="mb-3" ariaLabel="registrar cuenta"
+                         [disabled]="formRegistro.invalid" (click)="registrarUsuario()">
                 Registrarme
             </plex-button>
         </div>

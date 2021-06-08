@@ -7,10 +7,8 @@ import { map, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'pdp-login-portal',
-    templateUrl: 'login-portal-paciente.component.html',
-    styleUrls: [
-        `login-portal-paciente.scss`
-    ]
+    templateUrl: './login-portal-paciente.component.html',
+    styleUrls: ['./login-portal-paciente.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -50,6 +48,6 @@ export class LoginComponent implements OnInit {
     }
 
     irRegistro() {
-        this.router.navigate(['/registro'])
+        this.router.navigate(['/registro']);
     }
 }
