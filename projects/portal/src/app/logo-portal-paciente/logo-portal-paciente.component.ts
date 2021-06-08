@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: '[pdpLogo]',
+  selector: 'pdp-logo',
   templateUrl: './logo-portal-paciente.component.html',
   styleUrls: ['./logo-portal-paciente.component.scss']
 })
