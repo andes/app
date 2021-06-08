@@ -26,6 +26,57 @@ export class InternacionListadoComponent implements OnInit {
     public puedeValidar = false;
     public puedeRomper = false;
     public editando = false;
+    public columns = [
+        {
+            key: 'apellido-nombre',
+            label: 'Apellido y nombre',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre); }
+        },
+        {
+            key: 'documento',
+            label: 'Documento',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.paciente.documento.localeCompare(b.paciente.documento); }
+        },
+        {
+            key: 'fechaIngreso',
+            label: 'Fecha de ingreso',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return moment(this.devuelveFecha(a, 'ingreso')).diff(moment(this.devuelveFecha(b, 'ingreso'))); }
+        },
+        {
+            key: 'fechaEgreso',
+            label: 'Fecha de egreso',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return moment(this.devuelveFecha(a, 'egreso') || new Date()).diff(moment(this.devuelveFecha(b, 'egreso') || new Date())); }
+        },
+        {
+            key: 'obraSocial',
+            label: 'Obra social',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.paciente.obraSocial?.nombre.localeCompare(b.paciente.obraSocial?.nombre); }
+        },
+        {
+            key: 'unidadOrganizativa',
+            label: 'Unidad organizativa',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term); }
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo); }
+        }
+    ];
 
     constructor(
         private plex: Plex,
