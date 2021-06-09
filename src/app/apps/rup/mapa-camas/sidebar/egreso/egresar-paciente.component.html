@@ -16,8 +16,8 @@
                      [required]="true" grow="full">
         </plex-select>
         <ng-container *ngIf="registro.valor.InformeEgreso.tipoEgreso?.nombre === 'Traslado'">
-            <plex-bool class="pb-1" [(ngModel)]="checkTraslado" type="slide" label="Otra organización"
-                       name="checkTraslado" (change)="onchange($event)">
+            <plex-bool class="pb-1" [(ngModel)]="checkTraslado" type="checkbox" label="Otra organización"
+                       name="checkTraslado" (change)="onChangeTraslado($event)">
             </plex-bool>
             <ng-container *ngIf="!checkTraslado">
                 <plex-select grow="full" label="Organización destino"
@@ -27,8 +27,9 @@
                 </plex-select>
             </ng-container>
             <ng-container *ngIf="checkTraslado">
-                <plex-text grow="full" label="Otra" name="otraOrganizacion"
-                           [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino" [required]="true">
+                <plex-text grow="full" label="Organización destino" name="otraOrganizacion"
+                           [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre"
+                           [required]="true">
                 </plex-text>
             </ng-container>
         </ng-container>
