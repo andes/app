@@ -42,6 +42,7 @@ export class CamaDetalleComponent implements OnInit {
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
+    public capa: string;
     public cama: ISnapshot;
     public prestacion: IPrestacion;
     public estadoCama;
@@ -82,6 +83,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.capa = this.mapaCamasService.capa;
         this.cama$ = this.mapaCamasService.selectedCama;
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),

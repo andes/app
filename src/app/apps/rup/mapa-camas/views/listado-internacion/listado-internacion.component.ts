@@ -26,6 +26,78 @@ export class InternacionListadoComponent implements OnInit {
     public puedeValidar = false;
     public puedeRomper = false;
     public editando = false;
+    public columns = [
+        {
+            key: 'apellido-nombre',
+            label: 'Apellido y nombre',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre); }
+        },
+        {
+            key: 'documento',
+            label: 'Documento',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.paciente.documento.localeCompare(b.paciente.documento); }
+        },
+        {
+            key: 'fechaIngreso',
+            label: 'Fecha de ingreso',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => {
+                const fecha1 = moment(this.devuelveFecha(a, 'ingreso'));
+                const fecha2 = moment(this.devuelveFecha(b, 'ingreso'));
+                return fecha1.diff(fecha2);
+            }
+        },
+        {
+            key: 'fechaEgreso',
+            label: 'Fecha de egreso',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => {
+                let fecha1 = this.devuelveFecha(a, 'egreso');
+                let fecha2 = this.devuelveFecha(b, 'egreso');
+                if (fecha1) {
+                    fecha1 = moment(fecha1);
+                    if (fecha2) {
+                        fecha2 = moment(fecha2);
+                        return fecha1.diff(fecha2);
+                    } else {
+                        return 1;
+                    }
+                }
+                return -1;
+            }
+        },
+        {
+            key: 'obraSocial',
+            label: 'Obra social',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => {
+                const p1 = a.paciente.obraSocial?.nombre || '';
+                const p2 = b.paciente.obraSocial?.nombre || '';
+                return p1.localeCompare(p2);
+            }
+        },
+        {
+            key: 'unidadOrganizativa',
+            label: 'Unidad organizativa',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term); }
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo); }
+        }
+    ];
 
     constructor(
         private plex: Plex,
