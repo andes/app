@@ -23,6 +23,8 @@
                         <plex-label aligned="center" icon="paciente" size="sm" direction="column"
                                     titulo="{{ cama.paciente?.nombre }} {{ cama.paciente?.apellido }}"
                                     subtitulo="{{ cama.paciente?.documento }}"></plex-label>
+                        <plex-label *ngIf="cama.fechaIngreso" aligned="center" size="sm" direction="column"
+                                    titulo="Dias de estada" subtitulo="{{ diasEstada(cama) }}"></plex-label>
                     </ng-container>
 
                     <ng-container ngProjectAs="plex-button" *ngIf="permisosMapaCamasService.movimientos">

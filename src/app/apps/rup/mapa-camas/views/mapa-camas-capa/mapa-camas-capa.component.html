@@ -65,9 +65,15 @@
                 </app-recursos-listado>
             </ng-container>
 
-            <!-- Listado de camas -->
+            <ng-container *ngIf="listadoRecursos">
+                <app-recursos-listado [permisoIngreso]="permisosMapaCamasService.ingreso"
+                                      [permisoBloqueo]="permisosMapaCamasService.bloqueo"
+                                      (accionRecurso)='accionListadoRecurso($event)'></app-recursos-listado>
+
+            </ng-container>
+
             <ng-container *ngIf="!listadoRecursos">
-                <fieldset [hidden]="mainView !== 'principal'">
+                <fieldset [hidden]="mainView !== 'mapa-camas'">
                     <cdk-virtual-scroll-viewport #scrollViewport [itemSize]="65.56">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -112,6 +118,13 @@
                                     <th class="sortable" (click)="sortTable('paciente')">
                                         PACIENTE
                                         <span *ngIf="sortBy === 'paciente'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </th>
+                                    <th class="sortable" (click)="sortTable('diasEstada')">
+                                        DIAS DE ESTADA
+                                        <span *ngIf="sortBy === 'diasEstada'">
                                             <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                                             <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                         </span>

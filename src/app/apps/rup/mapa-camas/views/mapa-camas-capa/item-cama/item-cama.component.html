@@ -44,6 +44,11 @@
             </span>
             <span class="d-block"></span>
         </td>
+        <td>
+            <span>
+                {{ cama.fechaIngreso ? diasEstada : '' }}
+            </span>
+        </td>
         <td *ngIf="columns.documento">
             <span>
                 {{(cama.paciente) ? cama.paciente.documento : 'Sin Paciente'}}

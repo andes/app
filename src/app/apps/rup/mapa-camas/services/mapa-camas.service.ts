@@ -387,6 +387,19 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            } else if (sortBy === 'diasEstada') {
+                snapshots = snapshots.sort((a, b) => {
+                    const estadaA = this.calcularDiasEstada(a.fechaIngreso);
+                    const estadaB = this.calcularDiasEstada(b.fechaIngreso);
+                    if (a.fechaIngreso) {
+                        if (b.fechaIngreso) {
+                            return estadaA.localeCompare(estadaB);
+                        } else {
+                            return 1;
+                        }
+                    }
+                    return -1;
+                });
             } else if (sortBy === 'fechaMovimiento') {
                 snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
             } else if (sortBy === 'usuario') {
@@ -606,5 +619,14 @@ export class MapaCamasService {
 
             })
         );
+    }
+
+    calcularDiasEstada(fechaDesde, fechaHasta?) {
+        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+        let dateDif = moment(fechaHasta).endOf('day').diff(moment(fechaDesde).startOf('day'), 'days');
+        let diasEstada = dateDif === 0 ? 1 : dateDif;
+        return diasEstada;
     }
 }

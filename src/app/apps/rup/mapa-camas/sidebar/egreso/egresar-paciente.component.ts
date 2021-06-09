@@ -230,7 +230,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setFecha(this.fecha);
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.capa === 'estadistica') {
-            this.calcularDiasEstada();
+            this.setDiasEstada();
             this.checkEstadoCama();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
 
@@ -369,13 +369,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
 
-    calcularDiasEstada() {
-        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
-            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
-            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
-        let dateDif = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').diff(moment(this.informeIngreso.fechaIngreso).startOf('day'), 'days');
-        let diasEstada = dateDif === 0 ? 1 : dateDif;
-        this.registro.valor.InformeEgreso['diasDeEstada'] = diasEstada;
+    setDiasEstada() {
+        const fechaIngreso = this.informeIngreso.fechaIngreso;
+        const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
+        this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
     }
 
     loadOrganizacion(event) {
