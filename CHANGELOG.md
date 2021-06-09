@@ -1,3 +1,27 @@
+# [5.50.0](https://github.com/andes/app/compare/v5.49.0...v5.50.0) (2021-06-09)
+
+
+### Bug Fixes
+
+* **inscripcion:** agrega grupo sin FR ([#2311](https://github.com/andes/app/issues/2311)) ([a431896](https://github.com/andes/app/commit/a43189676a146cf813499c6eb232297e7afc368a))
+* **mapa-camas:** corrige dias de estada totales en censo mensual ([#2315](https://github.com/andes/app/issues/2315)) ([338b60e](https://github.com/andes/app/commit/338b60e556991a8b10f1380bb19a1f5f3e9920fc))
+
+
+### Features
+
+* **com:** se cambia lo de switchmap y lo de los params ([05f79b7](https://github.com/andes/app/commit/05f79b78c403aa099fbfb8e5253ec8f781b86a7f))
+* **COM:** asignar origen desde org COM ([89cc173](https://github.com/andes/app/commit/89cc1732c5547d3c70323b29b636120da1b000c6))
+* **ficha:** field localidades ([f405f22](https://github.com/andes/app/commit/f405f2216ab49895491d7f0fc31e4eacfe8d03d8))
+* **ficha-epidemiogica:** check dias ([fe23442](https://github.com/andes/app/commit/fe23442bf4ff65e15846d9adaaa088810f3c9cf0))
+* **inscripcion:** agrega control de edad por reglas ([#2309](https://github.com/andes/app/issues/2309)) ([862afba](https://github.com/andes/app/commit/862afbaed53a36f5839a910dc056f33fb058fd74))
+* **login:** se implementa v0.1 ([#2238](https://github.com/andes/app/issues/2238)) ([a01a4d7](https://github.com/andes/app/commit/a01a4d7e078dcabf27976cd82bcc64d58d22ba75))
+* **mapa-camas:**  seleccion de otra organizacion en traslado ([#2310](https://github.com/andes/app/issues/2310)) ([8b0d11e](https://github.com/andes/app/commit/8b0d11e1d7066fba1834f71f407c6aa0debc6458))
+* **mapa-camas:** guarda unidad organizativa en prestacion ([#2283](https://github.com/andes/app/issues/2283)) ([ea930c6](https://github.com/andes/app/commit/ea930c6184afbf3839c636443a3e78922084ba92))
+* **mapa-camas:** plex-table en listado de internacion ([#2317](https://github.com/andes/app/issues/2317)) ([43eaa8a](https://github.com/andes/app/commit/43eaa8a86c723daca8b1c62e0aafcf77d8715ed7))
+* **mapa-camas:** sincronizar plex-datetime en resumen internacion ([#2307](https://github.com/andes/app/issues/2307)) ([520cbc6](https://github.com/andes/app/commit/520cbc67676aff82aa67bbbcedee6af836b6a97b))
+* **mapa-camsa:** agrega fecha de ingreso en censo diario ([#2308](https://github.com/andes/app/issues/2308)) ([79fdbe3](https://github.com/andes/app/commit/79fdbe3ec01c8f60e92d7b9a53e9b64238e09135))
+* **vac:** desvincular paciente de inscripción ([#2277](https://github.com/andes/app/issues/2277)) ([2d4d587](https://github.com/andes/app/commit/2d4d587eb627f5fd8bd16c7e52c26d8c934a1b86))
+
 # [5.49.0](https://github.com/andes/app/compare/v5.48.0...v5.49.0) (2021-06-02)
 
 
