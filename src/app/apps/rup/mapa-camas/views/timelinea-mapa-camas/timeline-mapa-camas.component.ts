@@ -55,7 +55,7 @@ export class TimelineMapaCamasComponent implements OnInit {
     public internacion: IResumenInternacion;
     public prestaciones: IPrestacion[];
     public prestacionesCopy: IPrestacion[];
-
+    datos = [];
     groups = [];
     movimientos;
     movimientosCopia;
@@ -116,10 +116,10 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             })
         );
-        this.cargarMovimientosFecha();
+        this.cargarMovimientosPeriodo();
     }
 
-    cargarMovimientosFecha() {
+    cargarMovimientosPeriodo() {
 
         forkJoin([
             this.mapaCamasService.snapshot(
@@ -140,6 +140,7 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             this.movimientos = movimientos;
             this.movimientosCopia = movimientos;
+            this.sectorName();
             this.cargarMovimientos();
         });
 
@@ -153,8 +154,6 @@ export class TimelineMapaCamasComponent implements OnInit {
             this.movimientos = this.movimientos.filter(
                 m => m.sectores.some(s => s._id === this.sectorSelected.id)
             );
-            this.sectorName(this.sectorSelected._id);
-
 
         }
 
@@ -162,45 +161,19 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             this.movimientos = this.movimientos.filter(
                 m => m.unidadOrganizativa.conceptId === this.unidadOrganizativaSelect.conceptId);
-            this.sectorName(this.unidadOrganizativaSelect._id);
-
 
         }
 
-        if (this.paciente && this.movimientos.length > 0) {
-            let ocupadas = this.movimientos.filter(m => m.estado === 'ocupada');
-            const esNumero = Number.isInteger(Number(this.paciente));
-            if (esNumero) {
-                this.movimientos = ocupadas.filter(o => o.paciente.documento.includes(this.paciente));
-            } else {
-
-                this.movimientos = ocupadas.filter(ocupada => {
-                    let nombreApellido = ocupada.paciente.apellido.concat(' ', ocupada.paciente.paciente);
-                    if (nombreApellido.toLowerCase().includes(this.paciente.toLowerCase())) {
-                        return ocupada;
-                    }
-                }
-
-                );
-
-            }
-            this.movimientos.forEach(movimiento => {
-                this.sectorName(movimiento.unidadOrganizativa._id);
-
-            });
-        }
-
-        this.cargarMovimientos();
 
     }
 
 
-    private sectorName(key) {
+    private sectorName() {
 
         this.movimientos.forEach((snap) => {
             const sectores = snap.sectores || [];
 
-            const index = sectores.findIndex(i => i._id === key);
+            const index = sectores.findIndex(i => i._id === snap.unidadOrganizativa._id);
 
             const sectorName = [...sectores.slice(index + 1)].map(s => s.nombre).join(', ');
 
@@ -209,15 +182,17 @@ export class TimelineMapaCamasComponent implements OnInit {
     }
 
     cargarMovimientos() {
-        let movimientos = this.movimientos;
+
         if (this.sectorSelected || this.unidadOrganizativaSelect || this.paciente) {
 
             this.timelineDiv.nativeElement.innerHTML = '';
+            this.datos = [];
 
-
+            this.filtrar();
+            let movimientos = this.movimientos;
             const camasUnicas = {};
 
-            const datos = [];
+
 
             const movs = this.groupBy(movimientos, 'idCama');
             for (const k in movs) {
@@ -242,7 +217,7 @@ export class TimelineMapaCamasComponent implements OnInit {
                         }
                         fechaFin = fechaFin || new Date();
 
-                        datos.push({
+                        this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
                             desde: movimiento.fecha,
@@ -264,7 +239,7 @@ export class TimelineMapaCamasComponent implements OnInit {
                         }
                         fechaFin = fechaFin || new Date();
 
-                        datos.push({
+                        this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
                             desde: movimiento.fecha,
@@ -285,7 +260,6 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             }
 
-
             const tracks = Object.values(camasUnicas).map((k: any) => {
                 return {
                     'content': k.title,
@@ -293,8 +267,10 @@ export class TimelineMapaCamasComponent implements OnInit {
                 };
             });
 
+            this.filtrarPaciente();
+
             let c = 0;
-            const items = new DataSet(datos.map(d => {
+            const items = new DataSet(this.datos.map(d => {
                 return {
                     group: d.cama,
                     id: c++,
@@ -348,6 +324,30 @@ export class TimelineMapaCamasComponent implements OnInit {
 
 
 
+
+
+    }
+
+
+    private filtrarPaciente() {
+        if (this.paciente && this.datos.length > 0) {
+
+            const esNumero = Number.isInteger(Number(this.paciente));
+            if (esNumero) {
+                this.datos = this.datos.filter(dato => dato.paciente?.documento.includes(this.paciente));
+            } else {
+
+                this.datos = this.datos.filter(dato => {
+                    let nombreApellido = dato.paciente?.apellido.concat(' ', dato.paciente.paciente);
+                    if (nombreApellido?.toLowerCase().includes(this.paciente.toLowerCase())) {
+                        return dato;
+                    }
+                }
+
+                );
+
+            }
+        }
 
 
     }
