@@ -16,6 +16,10 @@
                         <b>Tipo de egreso</b>
                         <p>{{informeEgreso.tipoEgreso?.nombre}}</p>
                     </div>
+                    <div class="col" *ngIf="informeEgreso.tipoEgreso?.nombre === 'Traslado'">
+                        <b>Organización destino</b>
+                        <p>{{informeEgreso.UnidadOrganizativaDestino?.nombre}}</p>
+                    </div>
                 </div>
 
                 <!-- Detalle  -->
@@ -71,12 +75,12 @@
                 <fieldset>
                     <legend class="small"
                             *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.lenght > 0">
-                        Procedimientos
-                        Quirúrgicos y Obstétricos</legend>
+                        Procedimientos Quirúrgicos y Obstétricos
+                    </legend>
                     <div class="row"
                          *ngIf="informeEgreso.procedimientosQuirurgicos && informeEgreso.procedimientosQuirurgicos.length > 0">
                         <div class="col">
-                            <b>Procedimientos Quirúrgicos</b>
+                            <b> Procedimientos Quirúrgicos </b>
                             <ul class="list-unstyled">
                                 <li class="" *ngFor="let p of informeEgreso.procedimientosQuirurgicos">
                                     <span *ngIf="p.procedimiento">{{ p.procedimiento.nombre}}</span>
@@ -89,7 +93,8 @@
 
                 <!-- Datos del evento obstétrico -->
                 <fieldset>
-                    <legend *ngIf="informeEgreso.terminacionEmbarazo" class="small">Procedimientos Obstétricos
+                    <legend *ngIf="informeEgreso.terminacionEmbarazo" class="small">
+                        Eventos Obstétricos
                     </legend>
                     <div class="row">
                         <div class="col" *ngIf="informeEgreso.terminacionEmbarazo">

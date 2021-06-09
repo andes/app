@@ -43,7 +43,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public prestacion: IPrestacion;
     public maquinaEstados: IMaquinaEstados;
     public estadoDestino;
-    public esTraslado = false;
+    public checkTraslado = false;
     private informeIngreso;
     public registro: any = {
         destacado: false,
@@ -74,7 +74,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     producidaPor: null,
                     lugar: null,
                     comoSeProdujo: null
-                },
+                }
             }
         }
     };
@@ -166,6 +166,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
+
+                    const informeEgreso = this.registro.valor.InformeEgreso;
+                    this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.UnidadOrganizativaDestino?.id;
                 }
 
                 if (this.view === 'listado-internacion') {
@@ -383,6 +386,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
             event.callback(organizacionSalida);
         }
+    }
+
+    onChangeTraslado(event) {
+        if (event.value) {
+            this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = { id: null, nombre: '' };
+        } else {
+            this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = null;
+        }
+
     }
 
     codigoCIE10(event) {
