@@ -216,7 +216,9 @@ export class TimelineMapaCamasComponent implements OnInit {
                             }
                         }
                         fechaFin = fechaFin || new Date();
-
+                        if (!this.checkPaciente(movimiento.paciente)) {
+                            continue;
+                        }
                         this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
@@ -239,6 +241,9 @@ export class TimelineMapaCamasComponent implements OnInit {
                         }
                         fechaFin = fechaFin || new Date();
 
+                        if (!this.checkPaciente(movimiento.paciente)) {
+                            continue;
+                        }
                         this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
@@ -260,6 +265,7 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             }
 
+
             const tracks = Object.values(camasUnicas).map((k: any) => {
                 return {
                     'content': k.title,
@@ -267,7 +273,6 @@ export class TimelineMapaCamasComponent implements OnInit {
                 };
             });
 
-            this.filtrarPaciente();
 
             let c = 0;
             const items = new DataSet(this.datos.map(d => {
@@ -329,27 +334,19 @@ export class TimelineMapaCamasComponent implements OnInit {
     }
 
 
-    private filtrarPaciente() {
-        if (this.paciente && this.datos.length > 0) {
-
+    private checkPaciente(paciente) {
+        if (this.paciente && paciente) {
             const esNumero = Number.isInteger(Number(this.paciente));
             if (esNumero) {
-                this.datos = this.datos.filter(dato => dato.paciente?.documento.includes(this.paciente));
+                return paciente?.documento.includes(this.paciente);
             } else {
-
-                this.datos = this.datos.filter(dato => {
-                    let nombreApellido = dato.paciente?.apellido.concat(' ', dato.paciente.paciente);
-                    if (nombreApellido?.toLowerCase().includes(this.paciente.toLowerCase())) {
-                        return dato;
-                    }
-                }
-
-                );
-
+                const nombreApellido = `${paciente.apellido} ${paciente.nombre}`;
+                return nombreApellido?.toLowerCase().includes(this.paciente.toLowerCase());
             }
+        } else if (this.paciente && !paciente) {
+            return false;
         }
-
-
+        return true;
     }
 
 
