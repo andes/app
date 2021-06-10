@@ -64,7 +64,7 @@ export class MapaCamasService {
 
     public columnsMapa = new BehaviorSubject<MapaCamaListadoColumns>({} as any);
 
-    public mainView = new BehaviorSubject<any>('mapa-camas');
+    public mainView = new BehaviorSubject<any>('principal');
 
     public ambito;
     public capa;
@@ -224,7 +224,7 @@ export class MapaCamasService {
     }
 
     resetView() {
-        this.mainView.next('mapa-camas');
+        this.mainView.next('principal');
     }
 
     getEstadoCama(cama: ISnapshot) {

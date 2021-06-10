@@ -19,6 +19,7 @@ export class InternacionListadoComponent implements OnInit {
     listaInternacion$: Observable<IPrestacion[]>;
     selectedPrestacion$: Observable<IPrestacion>;
     fechaIngresoHasta$ = this.listadoInternacionService.fechaIngresoHasta;
+    mainView$ = this.mapaCamasService.mainView;
 
     // VARIABLES
     public mostrar = 'datosInternacion';
@@ -103,7 +104,7 @@ export class InternacionListadoComponent implements OnInit {
         private plex: Plex,
         private location: Location,
         private prestacionService: PrestacionesService,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private permisosMapaCamasService: PermisosMapaCamasService
     ) { }

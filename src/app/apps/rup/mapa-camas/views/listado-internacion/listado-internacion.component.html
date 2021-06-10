@@ -1,48 +1,58 @@
 <ng-container *ngIf="fechaIngresoHasta$ | async as fechaHasta">
     <ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
         <plex-layout [main]="selectedPrestacion.id !== null ? 8 : 12">
-            <plex-layout-main>
-                <header>
-                    <plex-title titulo="LISTADO DE INTERNACION">
-                        <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
-                    </plex-title>
+            <plex-layout-main *ngIf="mainView$ | async as mainView">
+                <ng-container *ngIf="mainView === 'principal'">
+                    <header>
+                        <plex-title titulo="LISTADO DE INTERNACION">
+                            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+                        </plex-title>
 
-                    <app-filtros-internacion></app-filtros-internacion>
-                </header>
+                        <app-filtros-internacion></app-filtros-internacion>
+                    </header>
 
-                <plex-table [columns]="columns" #table="plTable" [offset]="0">
-                    <plex-table-columns>
-                    </plex-table-columns>
-                    <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
-                        (click)="seleccionarPrestacion(internacion, selectedPrestacion)" class="selectable"
-                        [class.selected]=" internacion.id === selectedPrestacion.id">
-                        <td *plTableCol="'apellido-nombre'">
-                            {{ internacion.paciente | nombre }}
-                        </td>
-                        <td *plTableCol="'documento'">
-                            {{ internacion.paciente.documento }}
-                        </td>
-                        <td *plTableCol="'fechaIngreso'">
-                            {{ devuelveFecha(internacion,"ingreso") | fecha }}
-                            {{ devuelveFecha(internacion,"ingreso") | hora }}
-                        </td>
-                        <td *plTableCol="'fechaEgreso'">
-                            <span *ngIf="devuelveFecha(internacion, 'egreso') as fechaEgreso">
-                                {{ fechaEgreso | fecha }}
-                                {{ fechaEgreso | hora }}
-                            </span>
-                        </td>
-                        <td class="w-25" *plTableCol="'obraSocial'">
-                            {{ internacion.paciente.obraSocial?.nombre }}
-                        </td>
-                        <td *plTableCol="'unidadOrganizativa'">
-                            {{ internacion.unidadOrganizativa?.term }}
-                        </td>
-                        <td *plTableCol="'estado'">
-                            {{internacion.estadoActual.tipo }}
-                        </td>
-                    </tr>
-                </plex-table>
+                    <plex-table [columns]="columns" #table="plTable" [offset]="0">
+                        <plex-table-columns>
+                        </plex-table-columns>
+                        <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
+                            (click)="seleccionarPrestacion(internacion, selectedPrestacion)" class="selectable"
+                            [class.selected]=" internacion.id === selectedPrestacion.id">
+                            <td *plTableCol="'apellido-nombre'">
+                                {{ internacion.paciente | nombre }}
+                            </td>
+                            <td *plTableCol="'documento'">
+                                {{ internacion.paciente.documento }}
+                            </td>
+                            <td *plTableCol="'fechaIngreso'">
+                                {{ devuelveFecha(internacion,"ingreso") | fecha }}
+                                {{ devuelveFecha(internacion,"ingreso") | hora }}
+                            </td>
+                            <td *plTableCol="'fechaEgreso'">
+                                <span *ngIf="devuelveFecha(internacion, 'egreso') as fechaEgreso">
+                                    {{ fechaEgreso | fecha }}
+                                    {{ fechaEgreso | hora }}
+                                </span>
+                            </td>
+                            <td class="w-25" *plTableCol="'obraSocial'">
+                                {{ internacion.paciente.obraSocial?.nombre }}
+                            </td>
+                            <td *plTableCol="'unidadOrganizativa'">
+                                {{ internacion.unidadOrganizativa?.term }}
+                            </td>
+                            <td *plTableCol="'estado'">
+                                {{internacion.estadoActual.tipo }}
+                            </td>
+                        </tr>
+                    </plex-table>
+                </ng-container>
+
+                <ng-container *ngIf="mainView !== 'principal'">
+                    <vista-prestacion [idPrestacion]="mainView.id">
+                        <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()">
+                        </plex-button>
+                    </vista-prestacion>
+                </ng-container>
+
             </plex-layout-main>
 
             <plex-layout-sidebar type="invert">
