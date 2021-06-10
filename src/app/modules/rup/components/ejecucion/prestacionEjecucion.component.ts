@@ -1,28 +1,26 @@
-import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
-import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { PrestacionesService } from './../../services/prestaciones.service';
-import { ConceptObserverService } from './../../services/conceptObserver.service';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { RUPComponent } from '../core/rup.component';
+import { Plex } from '@andes/plex';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
-import { HUDSService } from '../../services/huds.service';
-
-import { PlantillasService } from '../../services/plantillas.service';
-
-import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
-import { RupEjecucionService } from '../../services/ejecucion.service';
-import { takeUntil, filter, map } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { type } from 'os';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getRegistros, populateRelaciones, unPopulateRelaciones } from '../../operators/populate-relaciones';
+import { RupEjecucionService } from '../../services/ejecucion.service';
+import { HUDSService } from '../../services/huds.service';
+import { PlantillasService } from '../../services/plantillas.service';
+import { RUPComponent } from '../core/rup.component';
+import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
+import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
+
+
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -109,7 +107,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
         public ps: PlantillasService,
-        public seguimientoPacienteService: SeguimientoPacienteService,
         public ejecucionService: RupEjecucionService
     ) {
     }
@@ -183,9 +180,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     this.ejecucionService.paciente = paciente;
 
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                                    if (paciente) {
-                                        this.registroSeguimiento();
-                                    }
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
@@ -846,17 +840,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento' || registro.concepto.semanticTag === 'situación';
 
         return checkSemtag;
-    }
-
-    registroSeguimiento() {
-        // Se evalúa si hay registros de seguimiento
-        this.seguimientoPacienteService.getRegistros({ paciente: this.paciente.id }).subscribe(seguimientoPaciente => {
-            if (seguimientoPaciente.length) {
-                this.flagSeguimiento = true;
-            } else {
-                this.flagSeguimiento = false;
-            }
-        });
     }
 
 }

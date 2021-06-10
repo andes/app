@@ -1,16 +1,20 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@andes/shared';
+import { NgDragDropModule } from 'ng-drag-drop';
+import { ChartsModule } from 'ng2-charts';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { TOPLibModule } from 'src/app/components/top/top.module';
+import { MPILibModule } from '../mpi/mpi-lib.module';
+import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
 import { ChartComponent } from './components/ejecucion/resumen-paciente/chart.component';
 import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
-import { SeguimientoPacienteComponent } from './components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
-import { VistaHudsComponent } from './components/ejecucion/vistaHuds.component';
 import { VistaAccesosHudsComponent } from './components/huds/vista-accesos-huds.component';
 import { VistaCDAComponent } from './components/huds/vistaCDA.component';
 import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
@@ -19,12 +23,6 @@ import { VistaProcedimientoComponent } from './components/huds/vistaProcedimient
 import { VistaRegistroComponent } from './components/huds/vistaRegistro';
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
 import { ElementosRUPModule } from './elementos-rup.module';
-import { ChartsModule } from 'ng2-charts';
-import { MPILibModule } from '../mpi/mpi-lib.module';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { TOPLibModule } from 'src/app/components/top/top.module';
-import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
-import { NgDragDropModule } from 'ng-drag-drop';
 import { RUPLibModule } from './rup-lib.module';
 
 @NgModule({
@@ -49,7 +47,6 @@ import { RUPLibModule } from './rup-lib.module';
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
-        SeguimientoPacienteComponent,
         ChartComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,
@@ -64,7 +61,6 @@ import { RUPLibModule } from './rup-lib.module';
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
-        SeguimientoPacienteComponent,
         ChartComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,

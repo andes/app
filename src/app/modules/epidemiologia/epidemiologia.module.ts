@@ -8,16 +8,16 @@ import { SelectSearchDirective } from '../../directives/select-search.directive'
 import { SelectSearchService } from '../../services/select-search.service';
 import { FormsService } from '../forms-builder/services/form.service';
 import { MPILibModule } from '../mpi/mpi-lib.module';
+import { ElementosRUPModule } from '../rup/elementos-rup.module';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidemiologica-contactos/ficha-epidemiologica-contactos.component';
 import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
-import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
-import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
+import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
-import { ElementosRUPModule } from '../rup/elementos-rup.module';
+import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 
 
 
@@ -31,7 +31,7 @@ import { ElementosRUPModule } from '../rup/elementos-rup.module';
     HistorialFichaComponent,
     SeguimientoEpidemiologiaComponent,
     DetalleSeguimientoComponent,
-    FichaFieldsPipe
+    SeguimientoFieldsPipe
   ],
   imports: [
     CommonModule,

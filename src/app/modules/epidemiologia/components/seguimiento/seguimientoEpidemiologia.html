@@ -8,13 +8,13 @@
             <plex-grid size="lg" type="full">
                 <plex-wrapper>
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                        [max]="fechaHasta">
+                                   [max]="fechaHasta">
                     </plex-datetime>
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                        [min]="fechaDesde">
+                                   [min]="fechaDesde">
                     </plex-datetime>
                     <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
-                        labelField="nombre">
+                                 labelField="nombre">
                     </plex-select>
                     <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
                 </plex-wrapper>
@@ -30,42 +30,52 @@
                             <b label> Acción </b>
                         </plex-item>
                         <ng-container *ngFor="let seguimiento of seguimientos$ | async">
-                            <ng-container *ngIf="seguimiento | fichaFields as fields">
-                                <plex-item [colors]="fields.colorPrioridad" (click)="selectSeguimiento(seguimiento)">
+                            <ng-container *ngIf="seguimiento | seguimientoFields as alarmas">
+                                <plex-item [colors]="alarmas.colorPrioridad" (click)="selectSeguimiento(seguimiento)">
                                     <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
-                                        subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
-                                    <plex-label [tituloBold]="true" titulo="{{ fields.telefonocaso }}"></plex-label>
+                                                subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
+                                    <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente.telefonoActual }}">
+                                    </plex-label>
                                     <div>
-                                        <plex-badge *ngIf="fields.alarma" type="danger" tooltip="{{ fields.alarma }}"
-                                            class="mr-2">
+                                        <!-- mejorar esta parte -->
+                                        <plex-badge *ngIf="seguimiento.score.value >=6" type="danger"
+                                                    tooltip="Persona de riesgo" class="mr-2">
                                             <plex-icon type="danger" name="bell"></plex-icon>
                                         </plex-badge>
-                                        <plex-badge *ngIf="fields.estado?.key === 'pendiente'" type="warning">Pendiente
+                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
+                                                    type="warning">
+                                            Pendiente
                                         </plex-badge>
-                                        <plex-badge *ngIf="fields.estado?.key === 'seguimiento'" type="info"
-                                            icon="phone" class="mr-2">
-                                            {{ fields.estado.value | fecha }} <plex-icon size="sm" name="phone"
-                                                type="info"></plex-icon>
-                                        </plex-badge>
-                                        <plex-badge *ngIf="fields.estado?.key === 'seguimiento'" type="warning"
-                                            icon="phone">
-                                            {{ fields.llamados.length }} <plex-icon size="sm" name="phone"
-                                                type="warning">
+                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="info"
+                                                    icon="phone" class="mr-2">
+                                            {{ seguimiento.ultimoEstado.valor | date:"dd/MM/yyy HH:mm" }} <plex-icon
+                                                       size="sm" name="phone" type="info">
                                             </plex-icon>
                                         </plex-badge>
-                                        <plex-badge *ngIf="fields.estado?.key === 'alta'" type="success">De alta
+                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
+                                                    type="warning" icon="phone">
+                                            {{ seguimiento.llamados.length }} <plex-icon size="sm" name="phone"
+                                                       type="warning">
+                                            </plex-icon>
                                         </plex-badge>
-                                        <plex-badge *ngIf="fields.estado?.key === 'fallecido'" type="danger">Fallecido
+                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success">De
+                                            alta
+                                        </plex-badge>
+                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'fallecido'"
+                                                    type="danger">
+                                            Fallecido
                                         </plex-badge>
                                     </div>
                                     <div>
-                                        <plex-button *ngIf="fields.estado?.key === 'pendiente'" type="success" size="sm"
-                                            tooltip="Iniciar Seguimiento" label="Iniciar Seguimiento"
-                                            (click)="iniciarSeguimiento(seguimiento)">
+                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
+                                                     type="success" size="sm" tooltip="Iniciar Seguimiento"
+                                                     label="Iniciar Seguimiento"
+                                                     (click)="iniciarSeguimiento(seguimiento)">
                                         </plex-button>
-                                        <plex-button *ngIf="fields.estado?.key === 'seguimiento'" type="success"
-                                            size="sm" tooltip="Continuar Seguimiento" label="Continuar Seguimiento"
-                                            (click)="iniciarSeguimiento(seguimiento)">
+                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
+                                                     type="success" size="sm" tooltip="Continuar Seguimiento"
+                                                     label="Continuar Seguimiento"
+                                                     (click)="iniciarSeguimiento(seguimiento)">
                                         </plex-button>
                                     </div>
                                 </plex-item>
@@ -77,15 +87,16 @@
 
             <div *ngIf="!(seguimientos$ | async)?.length && !inProgress" class="h-50" justify="center">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                    [titulo]="query ? 'No hay resultados' : 'Realice una búsqueda'"
-                    subtitulo="Complete los filtros deseados y/o busque por paciente en el panel lateral y presione Buscar Fichas">
+                            [titulo]="query ? 'No hay resultados' : 'Realice una búsqueda'"
+                            subtitulo="Complete los filtros deseados y/o busque por paciente en el panel lateral y presione Buscar Fichas">
                 </plex-label>
             </div>
         </ng-container>
-        <vista-prestacion *ngIf="selectedLlamado" [idPrestacion]="selectedLlamado" [btnClose]="true" (onClose)="verLlamado(null)" ></vista-prestacion>
+        <vista-prestacion *ngIf="selectedLlamado" [idPrestacion]="selectedLlamado" [btnClose]="true"
+                          (onClose)="verLlamado(null)"></vista-prestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
         <detalle-seguimiento [seguimiento]="seguimiento" (returnDetalle)="returnDetalle()"
-            (verLlamado)=verLlamado($event)></detalle-seguimiento>
+                             (verLlamado)=verLlamado($event)></detalle-seguimiento>
     </plex-layout-sidebar>
 </plex-layout>
