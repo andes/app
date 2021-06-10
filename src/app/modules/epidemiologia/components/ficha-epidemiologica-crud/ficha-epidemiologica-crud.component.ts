@@ -66,7 +66,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public clasificacion = [
     { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
     { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
-    { id: 'otrasEstrategias', nombre: 'Otras estrategias' }
+    { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
+    { id: 'controlAlta', nombre: 'Control de alta' }
   ];
   public tipoBusqueda = [
     { id: 'activa', nombre: 'Activa' },
@@ -169,6 +170,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public organizacionesInternacion$: Observable<any>;
   public vacunas$: Observable<any>;
   public estaInternado = false;
+  public showSemana = true;
 
   constructor(
     private formsService: FormsService,
@@ -224,6 +226,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 sec.fields.map(field => {
                   if (!this.editFicha && Object.keys(field)[0] === 'organizacion') {
                     this.organizaciones$ = this.organizacionService.getById(field.organizacion.id ? field.organizacion.id : field.organizacion);
+                  }
+                  if (Object.keys(field)[0] === 'asintomaticoespecial') {
+                    this.showSemana = this.secciones[buscado].fields['asintomaticoespecial'];
                   }
                   let key = Object.keys(field);
                   this.secciones[buscado].fields[key[0]] = field[key[0]];
@@ -568,7 +573,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
       event.value.id === 'ut' || event.value.id === 'uti';
     if (this.estaInternado) {
-      this.organizacionesInternacion$ = this.organizacionService.get({ internaciones: true });
+      this.organizacionesInternacion$ = this.organizacionService.get({ aceptaDerivacion: true });
     }
     return this.estaInternado;
   }
@@ -616,5 +621,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         seccion.fields['semanaepidemiologica'] = resultado ? resultado : '';
       }
     });
+  }
+
+  ocultarFuc(event) {
+    if (event.value) {
+      this.showSemana = false;
+    } else {
+      this.showSemana = true;
+    }
   }
 }
