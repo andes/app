@@ -19,7 +19,6 @@ import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/segu
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
 import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
-
 @NgModule({
   declarations: [
     FichaEpidemiologicaComponent,
