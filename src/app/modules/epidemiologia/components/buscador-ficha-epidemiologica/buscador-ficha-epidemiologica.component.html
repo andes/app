@@ -64,14 +64,9 @@
                             {{ fieldSisa.codigoSisa ? 'SISA ' + fieldSisa.codigoSisa : 'SIN REGISTRO' }}
                             <plex-button icon="pencil" type="success" size="sm" title="Editar código SISA"
                                          (click)="editarCodigoSISA(ficha, fieldSisa.codigoSisa)">
-                                <ng-container *ngIf="ficha | fichaFields as fields">
-                                    <plex-badge type="{{ fields.codigoSisa ? 'success' : 'danger' }}">
-                                        {{ fields.codigoSisa ? 'SISA ' + fields.codigoSisa : 'SIN REGISTRO' }}
-                                        <plex-button icon="pencil" type="success" size="sm" title="Editar código SISA"
-                                                     (click)="editarCodigoSISA(ficha, fields.codigoSisa)">
-                                        </plex-button>
-                                    </plex-badge>
-                                </ng-container>
+                            </plex-button>
+                        </plex-badge>
+                    </ng-container>
                 </td>
             </tr>
         </plex-table>
