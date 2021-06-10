@@ -1,15 +1,15 @@
-import { DerivacionesService } from './../../../services/com/derivaciones.service';
-import { Plex } from '@andes/plex';
-import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
-import { Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
-import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
-import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
+import { Plex } from '@andes/plex';
+import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { DocumentosService } from 'src/app/services/documentos.service';
 import { DriveService } from 'src/app/services/drive.service';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { AdjuntosService } from '../../rup/services/adjuntos.service';
 import { PrestacionesService } from '../../rup/services/prestaciones.service';
-import { DocumentosService } from 'src/app/services/documentos.service';
+import { DerivacionesService } from './../../../services/com/derivaciones.service';
 
 @Component({
     selector: 'detalle-derivacion',
@@ -21,6 +21,7 @@ export class DetalleDerivacionComponent implements OnInit {
     public derivacion;
     public reglaSeleccionada;
     public prioridad = 'baja';
+    public dispositivo = null;
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
         { id: 'media', label: 'Media' },
@@ -47,6 +48,7 @@ export class DetalleDerivacionComponent implements OnInit {
     @Input('derivacion')
     set _derivacion(value) {
         this.derivacion = value;
+        this.dispositivo = value.dispositivo;
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
             this.reglaSeleccionada = {};
@@ -177,8 +179,9 @@ export class DetalleDerivacionComponent implements OnInit {
             if (this.reglaSeleccionada.definePrioridad) {
                 this.nuevoEstado.prioridad = this.prioridad;
             }
-            this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
 
+            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+            this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             let body: any = {
                 estado: this.nuevoEstado,
                 trasladoEspecial: {

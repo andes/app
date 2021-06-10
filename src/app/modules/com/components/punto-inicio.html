@@ -92,13 +92,21 @@
                                                      (click)="imprimirComprobante(derivacion)">
                                             COMPROBANTE
                                         </plex-button>
-                                        <plex-badge
-                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
-                                            {{ derivacion.estado }}</plex-badge>
+                                        <plex-badge *ngIf="derivacion.dispositivo" type="danger"
+                                                    title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
+                                            <plex-icon name="{{derivacion.dispositivo.icono}}"></plex-icon>
+                                        </plex-badge>
+
                                         <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
                                                     title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
+
+                                        <plex-badge
+                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                            {{ derivacion.estado }}
+                                        </plex-badge>
+
                                     </plex-item>
                                 </ng-container>
                             </plex-list>
@@ -196,13 +204,17 @@
                                                      (click)="imprimirComprobante(derivacion)">
                                             COMPROBANTE
                                         </plex-button>
-                                        <plex-badge
-                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
-                                            {{ derivacion.estado }}</plex-badge>
+                                        <plex-badge *ngIf="derivacion.dispositivo" type="danger"
+                                                    title="{{derivacion.dispositivo.nombre}}: {{derivacion.dispositivo.descripcion}}">
+                                            <plex-icon name="{{derivacion.dispositivo.icono}}"></plex-icon>
+                                        </plex-badge>
                                         <plex-badge *ngIf="derivacion.tipoTraslado" type="warning"
                                                     title="Requiere traslado especial: {{derivacion.tipoTraslado.nombre}}">
                                             <plex-icon name="avion"></plex-icon>
                                         </plex-badge>
+                                        <plex-badge
+                                                    type="{{(derivacion.estado === 'denegada' || derivacion.estado === 'rechazada')?'danger':'success'}}">
+                                            {{ derivacion.estado }}</plex-badge>
 
                                     </plex-item>
                                 </ng-container>

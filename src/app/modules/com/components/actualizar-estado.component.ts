@@ -1,10 +1,10 @@
-import { AdjuntosService } from './../../rup/services/adjuntos.service';
-import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { Plex } from '@andes/plex';
-import { Input, Component, OnInit, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
+import { FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
+import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { AdjuntosService } from './../../rup/services/adjuntos.service';
 
 @Component({
     selector: 'actualizar-estado',
@@ -25,6 +25,8 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     public nuevoEstado;
     public documentosUrl = [];
     public prioridad = '';
+    public dispositivo = null;
+    public oxigeno = 'oxigeno';
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
         { id: 'media', label: 'Media' },
@@ -38,6 +40,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
             observacion: ''
         };
         this.prioridad = value.prioridad;
+        this.dispositivo = value.dispositivo;
         this.adjuntosEstado = [];
         this.derivacion = value;
     }
@@ -65,6 +68,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
             if (this.derivacion.prioridad !== this.prioridad) {
                 this.nuevoEstado.prioridad = this.prioridad;
             }
+
+            this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
+
             const body = { estado: this.nuevoEstado };
 
             this.derivacionService.updateHistorial(this.derivacion._id, body).subscribe(() => {
@@ -77,6 +83,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     setPrioridad(prioridad) {
         this.prioridad = prioridad;
     }
+
 
     onUpload($event) {
         if ($event.status === 200) {

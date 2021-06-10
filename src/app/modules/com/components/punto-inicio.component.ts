@@ -1,16 +1,16 @@
-import { PuntoInicioService } from './../services/punto-inicio.service';
-import { DerivacionesService } from './../../../services/com/derivaciones.service';
-import { Component, OnInit } from '@angular/core';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Auth } from '@andes/auth';
-import { IDerivacion } from '../interfaces/IDerivacion.interface';
-import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { DocumentosService } from 'src/app/services/documentos.service';
 import { Unsubscribe } from '@andes/shared';
-import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../services/organizacion.service';
+import { IDerivacion } from '../interfaces/IDerivacion.interface';
+import { DerivacionesService } from './../../../services/com/derivaciones.service';
+import { PuntoInicioService } from './../services/punto-inicio.service';
 
 @Component({
     selector: 'com-punto-inicio',
