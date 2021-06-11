@@ -8,12 +8,15 @@
         <div subtitle>
             {{ paciente.documento }}
             <br>
-            <plex-button class="mt-4 mr-2" size="sm" type="warning"
+            <plex-button class="mr-2" size="sm" type="warning"
                          label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
                          (click)="modal.show()">
             </plex-button>
             <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios"
                          (click)="datosSecundarios = !datosSecundarios">
+            </plex-button>
+            <plex-button class="ml-2" size="sm" type="warning" icon="pencil" tooltip="Editar mis datos"
+                         (click)="goTo('mis-datos-personales')">
             </plex-button>
         </div>
 

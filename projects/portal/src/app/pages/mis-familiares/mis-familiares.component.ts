@@ -23,7 +23,7 @@ export class PDPMisFamiliaresComponent implements OnInit {
 
     ngOnInit(): void {
         this.pacienteService.me().subscribe(paciente => {
-            this.familiares = paciente.relaciones.map(rel => {
+            this.familiares = paciente.relaciones?.map(rel => {
                 rel.id = rel.referencia;
                 return rel;
             });

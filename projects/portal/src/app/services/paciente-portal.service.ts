@@ -40,4 +40,8 @@ export class PacientePortalService {
     registro(paciente) {
         return this.server.post(`${this.mobileUrl}/registro`, paciente);
     }
+
+    save(paciente: IPaciente): Observable<IPaciente> {
+        return this.server.patch(this.mobileUrl + '/pacientes/' + paciente.id, paciente, {});
+    }
 }
