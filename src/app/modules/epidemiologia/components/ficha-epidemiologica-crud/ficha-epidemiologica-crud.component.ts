@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { cache } from '@andes/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -67,7 +66,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public clasificacion = [
     { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
     { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
-    { id: 'otrasEstrategias', nombre: 'Otras estrategias' }
+    { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
+    { id: 'controlAlta', nombre: 'Control de alta' }
   ];
   public tipoBusqueda = [
     { id: 'activa', nombre: 'Activa' },
@@ -170,6 +170,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public organizacionesInternacion$: Observable<any>;
   public vacunas$: Observable<any>;
   public estaInternado = false;
+  public showSemana = true;
 
   constructor(
     private formsService: FormsService,
@@ -200,6 +201,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
             if (buscado !== -1) {
               if (sec.name === 'Usuario' && this.editFicha) {
+                this.organizaciones$ = this.auth.organizaciones();
                 sec.fields.map(field => {
                   switch (Object.keys(field)[0]) {
                     case 'responsable':
@@ -222,6 +224,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 });
               } else {
                 sec.fields.map(field => {
+                  if (!this.editFicha && Object.keys(field)[0] === 'organizacion') {
+                    this.organizaciones$ = this.organizacionService.getById(field.organizacion.id ? field.organizacion.id : field.organizacion);
+                  }
+                  if (Object.keys(field)[0] === 'asintomaticoespecial') {
+                    this.showSemana = this.secciones[buscado].fields['asintomaticoespecial'];
+                  }
                   let key = Object.keys(field);
                   this.secciones[buscado].fields[key[0]] = field[key[0]];
                 });
@@ -245,13 +253,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     if (!this.auth.getPermissions('epidemiologia:?').length) {
       this.router.navigate(['inicio']);
     }
-    this.organizaciones$ = this.auth.organizaciones();
-    this.provincias$ = this.provinciaService.get({}).pipe(
-      cache()
-    );
-    this.paises$ = this.paisService.get({}).pipe(
-      cache()
-    );
+    this.provincias$ = this.provinciaService.get({});
+    this.paises$ = this.paisService.get({});
   }
 
   registrarFicha() {
@@ -369,6 +372,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   setFields() {
+    this.organizaciones$ = this.auth.organizaciones();
     this.secciones.map(seccion => {
       switch (seccion.id) {
         case 'usuario':
@@ -569,7 +573,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
       event.value.id === 'ut' || event.value.id === 'uti';
     if (this.estaInternado) {
-      this.organizacionesInternacion$ = this.organizacionService.get({ internaciones: true });
+      this.organizacionesInternacion$ = this.organizacionService.get({ aceptaDerivacion: true });
     }
     return this.estaInternado;
   }
@@ -617,5 +621,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         seccion.fields['semanaepidemiologica'] = resultado ? resultado : '';
       }
     });
+  }
+
+  ocultarFuc(event) {
+    if (event.value) {
+      this.showSemana = false;
+    } else {
+      this.showSemana = true;
+    }
   }
 }
