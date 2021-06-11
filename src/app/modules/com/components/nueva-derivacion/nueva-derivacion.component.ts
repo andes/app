@@ -162,7 +162,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                     // this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
 
                     // this.modelo.prestacion = prestacion.id,
-                    this.modelo.organizacionOrigen = this.auth.organizacion;
+
                     this.modelo.paciente = {
                         id: this.paciente.id,
                         nombre: this.paciente.nombre,
