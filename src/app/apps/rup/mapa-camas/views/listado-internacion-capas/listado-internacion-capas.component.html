@@ -1,13 +1,13 @@
 <plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
-        <header *ngIf="mainView === 'mapa-camas'">
+        <header *ngIf="mainView === 'principal'">
             <plex-title titulo="HISTORIAL MOVIMIENTOS ">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <app-filtros-listado-capas></app-filtros-listado-capas>
         </header>
 
-        <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'mapa-camas'">
+        <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'principal'">
             <plex-title titulo="Listado Internacion">
                 <plex-table-columns>
                 </plex-table-columns>
@@ -32,7 +32,7 @@
             </tr>
         </plex-table>
 
-        <ng-container *ngIf="mainView !== 'mapa-camas'">
+        <ng-container *ngIf="mainView !== 'principal'">
             <vista-prestacion [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
             </vista-prestacion>

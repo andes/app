@@ -8,7 +8,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { map, take } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
@@ -45,8 +45,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     puedeVerHistorial$: Observable<boolean>;
 
-    mainView;
-    subscription: Subscription;
+    mainView$ = this.mapaCamasService.mainView;
 
     public columns: MapaCamaListadoColumns = {
         fechaMovimiento: false,
@@ -85,23 +84,12 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
 
     ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
         this.ws.disconnect();
     }
 
     ngOnInit() {
         this.ws.connect();
         this.mapaCamasService.resetView();
-
-        // CROTADA: si uso ngIf en el layout se rompen los tooltips
-        // tengo que averiguar
-        this.subscription = this.mapaCamasService.mainView.subscribe((v) => {
-            this.mainView = v;
-        });
-        ////////////////////////////////////////////////////////////////////
-
         const ambito = this.route.snapshot.paramMap.get('ambito');
         this.mapaCamasService.setAmbito(ambito);
         this.permisosMapaCamasService.setAmbito(ambito);
