@@ -11,7 +11,7 @@
                                  (click)="verListadoInternacionMedico()">
                     </plex-button>
                     <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
-                                   size="sm" label="VER CENSO" type="primary" class="d-inline-block" [right]="true"
+                                   size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
                                    [items]="itemsCensoDropdown">
                     </plex-dropdown>
                     <plex-button *feature="'mapaVisualCamas'" type="info" size="sm" (click)="onVisualizar()"

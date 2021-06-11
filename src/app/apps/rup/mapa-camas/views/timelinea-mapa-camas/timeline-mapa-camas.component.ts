@@ -2,14 +2,12 @@
  * NO MIRAR ESTA PANTALLA - TODAVÏA NO SE ESTA USANDO
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
-import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
-import { getRegistros } from '../../../../../modules/rup/operators/populate-relaciones';
+import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
-
+import { cache } from '@andes/shared';
 import { Timeline } from 'vis-timeline/peer';
 import { DataSet } from 'vis-data';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
@@ -18,7 +16,7 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { ISectores } from 'src/app/interfaces/IOrganizacion';
 import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 
 @Component({
     selector: 'in-timeline-mapa-camas',
@@ -54,35 +52,31 @@ export class TimelineMapaCamasComponent implements OnInit {
     private ambito: string;
 
     @ViewChild('prueba') timelineDiv;
-
-    private idInternacion: string;
-
     public internacion: IResumenInternacion;
-
     public prestaciones: IPrestacion[];
     public prestacionesCopy: IPrestacion[];
-
+    datos = [];
     groups = [];
-
+    movimientos;
+    movimientosCopia;
     desde: Date = moment().add(-2, 'M').startOf('M').toDate();
     hasta: Date = new Date();
-
-
+    public organizacion$: Observable<any>;
+    public unidadesOrganizativas$: Observable<any>;
+    public sectores$: Observable<ISectores[]>;
+    public sectorSelected;
+    public unidadOrganizativaSelect;
+    public paciente: string;
 
     constructor(
         private activatedRoute: ActivatedRoute,
         public elementosRUPService: ElementosRUPService,
         private mapaCamasService: MapaCamasHTTP,
-
         private organizacionesService: OrganizacionService,
         private auth: Auth
     ) {
 
     }
-
-
-    datos = {};
-
 
     groupBy(xs: ISnapshot[], key: string) {
         return xs.reduce((rv, x) => {
@@ -91,15 +85,16 @@ export class TimelineMapaCamasComponent implements OnInit {
         }, {});
     }
 
-
-    sectores$: Observable<ISectores[]>;
-    sectorSelected;
-
     ngOnInit() {
         this.capa = this.activatedRoute.snapshot.paramMap.get('capa');
         this.ambito = this.activatedRoute.snapshot.paramMap.get('ambito');
 
-        this.sectores$ = this.organizacionesService.getById(this.auth.organizacion.id).pipe(
+        this.organizacion$ = this.organizacionesService.getById(this.auth.organizacion.id).pipe(
+            cache()
+        );
+        this.unidadesOrganizativas$ = this.organizacion$.pipe(pluck('unidadesOrganizativas'));
+
+        this.sectores$ = this.organizacion$.pipe(
             map((organizacion) => {
                 const { mapaSectores } = organizacion;
 
@@ -121,11 +116,11 @@ export class TimelineMapaCamasComponent implements OnInit {
 
             })
         );
-
+        this.cargarMovimientosPeriodo();
     }
 
+    cargarMovimientosPeriodo() {
 
-    onVisualizar() {
         forkJoin([
             this.mapaCamasService.snapshot(
                 this.ambito,
@@ -141,26 +136,63 @@ export class TimelineMapaCamasComponent implements OnInit {
             )
         ]).subscribe(([estados, movimientos]) => {
 
-            this.timelineDiv.nativeElement.innerHTML = '';
-
             movimientos = [...estados, ...movimientos];
 
-            movimientos = movimientos.filter(
+            this.movimientos = movimientos;
+            this.movimientosCopia = movimientos;
+            this.sectorName();
+            this.cargarMovimientos();
+        });
+
+
+    }
+
+    filtrar() {
+        this.movimientos = this.movimientosCopia.slice();
+
+        if (this.sectorSelected && this.movimientos.length > 0) {
+            this.movimientos = this.movimientos.filter(
                 m => m.sectores.some(s => s._id === this.sectorSelected.id)
             );
 
-            movimientos.forEach((snap) => {
-                const sectores = snap.sectores || [];
+        }
 
-                const index = sectores.findIndex(i => i._id === this.sectorSelected._id);
+        if (this.unidadOrganizativaSelect && this.movimientos.length > 0) {
 
-                const sectorName = [...sectores.slice(index + 1)].map(s => s.nombre).join(', ');
-                (snap as any).sectorName = sectorName;
-            });
+            this.movimientos = this.movimientos.filter(
+                m => m.unidadOrganizativa.conceptId === this.unidadOrganizativaSelect.conceptId);
 
+        }
+
+
+    }
+
+
+    private sectorName() {
+
+        this.movimientos.forEach((snap) => {
+            const sectores = snap.sectores || [];
+
+            const index = sectores.findIndex(i => i._id === snap.unidadOrganizativa._id);
+
+            const sectorName = [...sectores.slice(index + 1)].map(s => s.nombre).join(', ');
+
+            (snap as any).sectorName = sectorName;
+        });
+    }
+
+    cargarMovimientos() {
+
+        if (this.sectorSelected || this.unidadOrganizativaSelect || this.paciente) {
+
+            this.timelineDiv.nativeElement.innerHTML = '';
+            this.datos = [];
+
+            this.filtrar();
+            let movimientos = this.movimientos;
             const camasUnicas = {};
 
-            const datos = [];
+
 
             const movs = this.groupBy(movimientos, 'idCama');
             for (const k in movs) {
@@ -184,8 +216,10 @@ export class TimelineMapaCamasComponent implements OnInit {
                             }
                         }
                         fechaFin = fechaFin || new Date();
-
-                        datos.push({
+                        if (!this.checkPaciente(movimiento.paciente)) {
+                            continue;
+                        }
+                        this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
                             desde: movimiento.fecha,
@@ -207,7 +241,10 @@ export class TimelineMapaCamasComponent implements OnInit {
                         }
                         fechaFin = fechaFin || new Date();
 
-                        datos.push({
+                        if (!this.checkPaciente(movimiento.paciente)) {
+                            continue;
+                        }
+                        this.datos.push({
                             cama: k,
                             title: movimiento.sectorName + ', ' + movimiento.nombre,
                             desde: movimiento.fecha,
@@ -236,8 +273,9 @@ export class TimelineMapaCamasComponent implements OnInit {
                 };
             });
 
+
             let c = 0;
-            const items = new DataSet(datos.map(d => {
+            const items = new DataSet(this.datos.map(d => {
                 return {
                     group: d.cama,
                     id: c++,
@@ -287,10 +325,29 @@ export class TimelineMapaCamasComponent implements OnInit {
             timeline.setGroups(groups as any);
             timeline.setItems(items);
 
+        }
 
-        });
+
+
+
+
     }
 
+
+    private checkPaciente(paciente) {
+        if (this.paciente && paciente) {
+            const esNumero = Number.isInteger(Number(this.paciente));
+            if (esNumero) {
+                return paciente?.documento.includes(this.paciente);
+            } else {
+                const nombreApellido = `${paciente.apellido} ${paciente.nombre}`;
+                return nombreApellido?.toLowerCase().includes(this.paciente.toLowerCase());
+            }
+        } else if (this.paciente && !paciente) {
+            return false;
+        }
+        return true;
+    }
 
 
 
