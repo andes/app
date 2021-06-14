@@ -54,7 +54,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         sector: false,
         usuarioMovimiento: false,
         prioridad: false,
-        guardia: false
+        guardia: false,
+        diasEstada: false
     };
 
     public sortBy: string;

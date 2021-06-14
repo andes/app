@@ -389,10 +389,10 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
             } else if (sortBy === 'diasEstada') {
                 snapshots = snapshots.sort((a, b) => {
-                    const estadaA = this.calcularDiasEstada(a.fechaIngreso);
-                    const estadaB = this.calcularDiasEstada(b.fechaIngreso);
                     if (a.fechaIngreso) {
                         if (b.fechaIngreso) {
+                            const estadaA = this.calcularDiasEstada(a.fechaIngreso);
+                            const estadaB = this.calcularDiasEstada(b.fechaIngreso);
                             return estadaA.localeCompare(estadaB);
                         } else {
                             return 1;

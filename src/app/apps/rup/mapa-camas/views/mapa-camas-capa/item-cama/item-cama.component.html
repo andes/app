@@ -44,8 +44,8 @@
             </span>
             <span class="d-block"></span>
         </td>
-        <td>
-            <span>
+        <td *ngIf="columns.diasEstada">
+            <span justify="center">
                 {{ cama.fechaIngreso ? diasEstada : '' }}
             </span>
         </td>

@@ -8,4 +8,5 @@ export interface MapaCamaListadoColumns {
     sexo: boolean;
     prioridad: boolean;
     guardia: boolean;
+    diasEstada: boolean;
 }
