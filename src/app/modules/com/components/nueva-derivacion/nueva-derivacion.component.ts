@@ -54,6 +54,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         obraSocial: null,
         historial: []
     };
+    organizacionesOrigen = [];
     organizacionesDestino = [];
     tipoTraslados = [];
     paramsSubscribe: any;
@@ -93,6 +94,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
                 this.esCOM = org.esCOM;
                 this.modelo.organizacionOrigen = this.esCOM ? null : this.auth.organizacion;
+                if (this.esCOM) {
+                    this.cargarOrigenes();
+                }
                 this.seleccionarPaciente(paciente);
                 this.seleccionarProfesional(this.auth.profesional);
             });
@@ -132,6 +136,13 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
                 this.plex.info('danger', 'Intente nuevamente', 'Error al asignar profesional por defecto');
             }
         );
+    }
+
+
+    cargarOrigenes() {
+        this.organizacionService.get({ esCOM: false }).subscribe(resultado => {
+            this.organizacionesOrigen = resultado;
+        });
     }
 
     cargarDestinos() {
