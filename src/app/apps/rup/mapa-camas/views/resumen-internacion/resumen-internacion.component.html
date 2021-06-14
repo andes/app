@@ -2,17 +2,18 @@
     <plex-layout-main>
         <header>
             <plex-title titulo="Exploración Visual">
-                <plex-datetime [(ngModel)]="desde" size="sm" class="mr-1" (change)="setView(desde,hasta)">
+                <plex-datetime [(ngModel)]="desde" class="mr-1" (change)="setView(desde,hasta)">
                 </plex-datetime>
-                <plex-datetime [(ngModel)]="hasta" size="sm" class="mr-1" (change)="setView(desde,hasta)">
+                <plex-datetime [(ngModel)]="hasta" class="mr-1" (change)="setView(desde,hasta)">
                 </plex-datetime>
 
-                <plex-text *ngIf="textoFiltroVisivility" size="sm" [(ngModel)]="textoFiltro" [debounce]="400"
+                <plex-text *ngIf="textoFiltroVisivility" [(ngModel)]="textoFiltro" [debounce]="400"
                            (change)="zoomChange()">
                 </plex-text>
-                <plex-button size="sm" type="info" (click)="textoFiltroVisivility = !textoFiltroVisivility">
+                <plex-button class="mr-1" type="info" (click)="textoFiltroVisivility = !textoFiltroVisivility">
                     <plex-icon name="zoom"></plex-icon>
                 </plex-button>
+                <plex-button type="danger" label="VOLVER" (click)="volver()"></plex-button>
             </plex-title>
             <div #prueba></div>
         </header>
