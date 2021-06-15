@@ -14,10 +14,10 @@ import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidem
 import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
+import { ActualizarSeguimientoComponent } from './components/seguimiento/actualizar-seguimiento/actualizar-seguimiento.component';
 import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
 import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
-import { FichaFieldsPipe } from './pipes/fichaFields.pipe';
 import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
     SeguimientoEpidemiologiaComponent,
     DetalleSeguimientoComponent,
     SeguimientoFieldsPipe,
-    FichaFieldsPipe
+    ActualizarSeguimientoComponent
   ],
   imports: [
     CommonModule,

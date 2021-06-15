@@ -1,0 +1,27 @@
+<plex-title main titulo="Actualizar Seguimiento">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<paciente-detalle [paciente]="seguimiento.paciente" reload="true" orientacion="horizontal" [fields]="[]">
+</paciente-detalle>
+<form #formEstado="ngForm">
+    <plex-title size="sm" titulo="Actualizar">
+    </plex-title>
+    <plex-wrapper>
+
+        <div class="w-100" justify>
+            <plex-select tmOrganizaciones label="Organización" name="organizacion"
+                [(ngModel)]='seguimiento.organizacion'></plex-select>
+        </div>
+        <div class="w-100" justify>
+            <plex-button type="danger" (click)="cerrar()">
+                Cancelar
+            </plex-button>
+            <plex-button type="success" (click)="guardar($event)" [validateForm]="formEstado">
+                Guardar
+            </plex-button>
+        </div>
+    </plex-wrapper>
+
+
+</form>
