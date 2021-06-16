@@ -141,6 +141,7 @@ export class CamaMainComponent implements OnInit {
         return {
             nombre: this.camaEditada.nombre,
             unidadOrganizativa: this.camaEditada.unidadOrganizativa,
+            unidadOrganizativaOriginal: this.camaEditada.unidadOrganizativa,
             fecha: this.camaEditada.fecha,
             tipoCama: this.camaEditada.tipoCama,
             equipamiento: this.camaEditada.equipamiento,
