@@ -2,22 +2,32 @@
     <plex-layout-main type="invert">
         <pdp-titulo></pdp-titulo>
         <pdp-menu>
-            <plex-list>
-                <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno._id)" [selected]="turno.selected">
-                    <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
-                                subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
-                    </plex-label>
-                    <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion.nombre }}"
-                                subtitulo="Te atendió: {{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}">
-                    </plex-label>
-                    <plex-badge *ngIf="turno.asistencia"
-                                type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
-                        turno.asistencia }}
-                    </plex-badge>
-                    <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
-                    <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>
-                </plex-item>
-            </plex-list>
+            <plex-title size="sm" titulo="Mis turnos">
+                <plex-button (click)="goTo()" type="info" size="sm" class="mr-2">historial de turnos</plex-button>
+                <plex-button (click)="darTurnos()" type="success" size="sm">solicitar turno</plex-button>
+            </plex-title>
+            <ng-container *ngIf="showTurnosDisponibles">
+                <pdp-dar-turno (detalleTurnos)="turnosDisponibles($event)"></pdp-dar-turno>
+            </ng-container>
+            <ng-container *ngIf="!showTurnosDisponibles">
+                <plex-list>
+                    <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno._id)"
+                               [selected]="turno.selected">
+                        <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
+                                    subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
+                        </plex-label>
+                        <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion.nombre }}"
+                                    subtitulo="Te atendió: {{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}">
+                        </plex-label>
+                        <plex-badge *ngIf="turno.asistencia"
+                                    type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
+                            turno.asistencia }}
+                        </plex-badge>
+                        <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
+                        <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>
+                    </plex-item>
+                </plex-list>
+            </ng-container>
         </pdp-menu>
     </plex-layout-main>
     <plex-layout-sidebar>

@@ -33,6 +33,11 @@ import { PrestacionService } from './services/prestacion.service';
 import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 import { LogoPortalPacienteComponent } from './logo-portal-paciente/logo-portal-paciente.component';
+import { DarTurnoComponent } from './components/dar-turno/dar-turno.component';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
+import { TurnoService } from 'src/app/services/turnos/turno.service';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,9 @@ import { LogoPortalPacienteComponent } from './logo-portal-paciente/logo-portal-
     PDPDetalleVacunaComponent,
     PDPMisCertificadosComponent,
     PDPMisCertificadoDetalleComponent,
-    LogoPortalPacienteComponent
+    LogoPortalPacienteComponent,
+    DarTurnoComponent,
+    DarTurnoDetalleComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +83,10 @@ import { LogoPortalPacienteComponent } from './logo-portal-paciente/logo-portal-
     AdjuntosService,
     CertificadoService,
     CategoriasService,
-    PrestacionService
+    PrestacionService,
+    PacienteService,
+    AgendaService,
+    TurnoService
   ],
   bootstrap: [AppComponent]
 })
