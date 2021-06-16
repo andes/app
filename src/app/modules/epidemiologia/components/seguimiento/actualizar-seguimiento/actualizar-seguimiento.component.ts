@@ -10,6 +10,7 @@ export class ActualizarSeguimientoComponent {
     @Input() seguimiento;
     @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
     @Output() verLlamado = new EventEmitter<any>();
+    editContactos;
 
     constructor(
         private plex: Plex,
@@ -17,7 +18,7 @@ export class ActualizarSeguimientoComponent {
     ) { }
 
     guardar() {
-        this.seguimientoPacientesService.update(this.seguimiento.id, { organizacionSeguimiento: this.seguimiento.organizacionSeguimiento }).subscribe(() => {
+        this.seguimientoPacientesService.update(this.seguimiento.id, { organizacionSeguimiento: this.seguimiento.organizacionSeguimiento, contactosEstrechos: this.seguimiento.contactosEstrechos }).subscribe(() => {
             this.plex.toast('success', 'La derivación fue actualizada exitosamente');
             this.returnDetalle.emit(false);
         });
@@ -25,5 +26,9 @@ export class ActualizarSeguimientoComponent {
 
     cerrar() {
         this.returnDetalle.emit(false);
+    }
+
+    hideSubmit($event) {
+        this.editContactos = $event;
     }
 }

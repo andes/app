@@ -5,23 +5,28 @@
 <paciente-detalle [paciente]="seguimiento.paciente" reload="true" orientacion="horizontal" [fields]="[]">
 </paciente-detalle>
 <form #formEstado="ngForm">
-    <plex-title size="sm" titulo="Actualizar">
-    </plex-title>
-    <plex-wrapper>
 
-        <div class="w-100" justify>
-            <plex-select tmOrganizaciones label="Organización" name="organizacion"
-                [(ngModel)]='seguimiento.organizacion'></plex-select>
-        </div>
-        <div class="w-100" justify>
-            <plex-button type="danger" (click)="cerrar()">
-                Cancelar
-            </plex-button>
-            <plex-button type="success" (click)="guardar($event)" [validateForm]="formEstado">
-                Guardar
-            </plex-button>
-        </div>
-    </plex-wrapper>
+    <ng-container *ngIf="!editContactos">
+        <plex-title size="sm" titulo="Actualizar">
+        </plex-title>
+        <plex-wrapper>
+            <div class="w-100" justify>
+                <plex-select tmOrganizaciones label="Organización" name="organizacion"
+                    [(ngModel)]='seguimiento.organizacionSeguimiento'></plex-select>
+            </div>
+        </plex-wrapper>
+    </ng-container>
+        
+    <app-ficha-epidemiologica-contactos [editMode]="true" [contactos]="seguimiento.contactosEstrechos" (onEditEmit)="hideSubmit($event)">
+    </app-ficha-epidemiologica-contactos>
 
+    <div class="w-100" justify *ngIf="!editContactos">
+        <plex-button type="danger" (click)="cerrar()">
+            Cancelar
+        </plex-button>
+        <plex-button type="success" [disabled]="!seguimiento.organizacionSeguimiento" (click)="guardar($event)" [validateForm]="formEstado">
+            Guardar
+        </plex-button>
+    </div>
 
 </form>
