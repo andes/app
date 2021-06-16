@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -15,6 +15,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'in-resumen-internacion',
@@ -37,9 +38,6 @@ import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
             cursor: pointer;
         }
 
-        /* .vis-background.vis-item {
-            background-color: #FF000022;
-        } */
     `],
     encapsulation: ViewEncapsulation.None
 })
@@ -72,7 +70,8 @@ export class ResumenInternacionComponent implements OnInit {
         public elementosRUPService: ElementosRUPService,
         private mapaCamasHTTP: MapaCamasHTTP,
         private pacienteService: PacienteService,
-        private plex: Plex
+        private plex: Plex,
+        private location: Location
     ) {
 
     }
@@ -404,7 +403,7 @@ export class ResumenInternacionComponent implements OnInit {
         // Configuration for the Timeline
         const options = {
             width: '100%',
-            height: '220px',
+            height: '235px',
             margin: {
                 item: 20
             },
@@ -560,7 +559,9 @@ export class ResumenInternacionComponent implements OnInit {
         this.prestacionIdSelected = null;
     }
 
-
+    volver() {
+        this.location.back();
+    }
 }
 
 interface IDataSet {
