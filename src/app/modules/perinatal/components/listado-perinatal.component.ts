@@ -130,8 +130,8 @@ export class ListadoPerinatalComponent implements OnInit {
         this.location.back();
     }
 
-    esAusente(fechaProximoControl) {
-        return (moment().diff(moment(fechaProximoControl), 'days') >= 1);
+    esAusente(fechaProximoControl, fechaFinEmbarazo) {
+        return ((moment().diff(moment(fechaProximoControl), 'days') >= 1) && !fechaFinEmbarazo);
     }
 
 }

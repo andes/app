@@ -31,7 +31,8 @@
                 <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
                 <td *plTableCol="'edad'">{{ carnet.paciente | edad }}</td>
                 <td *plTableCol="'ausente'">
-                    <plex-badge *ngIf="esAusente(carnet.fechaProximoControl)" size="sm" type="danger">AUSENTE
+                    <plex-badge *ngIf="esAusente(carnet.fechaProximoControl,carnet.fechaFinEmbarazo)" size="sm"
+                                type="danger">AUSENTE
                         <plex-button icon="alert-circle-outline" size="sm"></plex-button>
                     </plex-badge>
                 </td>
