@@ -1,3 +1,22 @@
+# [5.51.0](https://github.com/andes/app/compare/v5.50.0...v5.51.0) (2021-06-16)
+
+
+### Bug Fixes
+
+* **com:** Se agrega la posibilidad de modificar el dispositivo de oxigeno en el detalle ([4237914](https://github.com/andes/app/commit/423791448a6cb2c8ef1ff3f31a971d74061354ba))
+* **COM:** Fix error en merge para instituciones de com ([cd69e29](https://github.com/andes/app/commit/cd69e2901a41498b56b80fc9130ce1ab69a2e993))
+* **ficha-epidemiologica:** organizaciones y nuevo req ([565914a](https://github.com/andes/app/commit/565914a0382649d57d5cb13cf4111ccf79eb8aca))
+* **mapa-camas:** limpia header en resumen de paciente ([#2326](https://github.com/andes/app/issues/2326)) ([9b62b40](https://github.com/andes/app/commit/9b62b40106400af6911ca876d251881eee7eb283))
+* **permisos:** submódulo si hay al menos 1 permiso ([86a680e](https://github.com/andes/app/commit/86a680e4a9dd9eb35f817685a83cda2939804d6f))
+
+
+### Features
+
+* **com:** Se agrega la posibilidad de asignar dispositivo de oxigeno al proceso de derivación ([a0a24c0](https://github.com/andes/app/commit/a0a24c03974444bf241621b7561604a9a72b8e68))
+* **inicio:** item "Punto inicio" para submódulos ([939e003](https://github.com/andes/app/commit/939e00373b615837d28ede160406e8903d831d01))
+* **mapa-camas:** edicion de unidad organizativa de una cama ([#2327](https://github.com/andes/app/issues/2327)) ([69d5fea](https://github.com/andes/app/commit/69d5fea4b8fd2a8d1b485fb05c9bd8ad7650a25a))
+* **mapa-camas:** visualizar registros en listado de internacion ([#2319](https://github.com/andes/app/issues/2319)) ([8a56c6c](https://github.com/andes/app/commit/8a56c6c3b6fa02f51eced561bc572d38e1b1b01c))
+
 # [5.50.0](https://github.com/andes/app/compare/v5.49.0...v5.50.0) (2021-06-09)
 
 
