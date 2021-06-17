@@ -1,4 +1,4 @@
-<plex-layout [main]="prestacionIdSelected ? 6 : 12">
+<plex-layout [main]="prestacionSelected ? 6 : 12">
     <plex-layout-main>
         <header>
             <plex-title titulo="Exploración Visual">
@@ -51,7 +51,7 @@
 
     <plex-layout-sidebar>
 
-        <vista-prestacion *ngIf="prestacionIdSelected" [idPrestacion]="prestacionIdSelected">
+        <vista-prestacion *ngIf="prestacionSelected" [prestacion]="prestacionSelected">
 
             <plex-button type="danger" (click)="onClose()" size="sm">
                 <plex-icon name="close"></plex-icon>
