@@ -46,22 +46,26 @@ export class ResumenInternacionComponent implements OnInit {
     @ViewChild('prueba') timelineDiv;
 
     private idInternacion: string;
-
     public internacion: IResumenInternacion;
+    public prestacionSelected: IPrestacion;
+    public datoIdSelected: string;
 
     public prestaciones: IPrestacion[];
     public timeline;
-    groups = [];
+    private groups = [];
 
-    desde: Date;
-    hasta: Date;
+    public desde: Date;
+    public hasta: Date;
 
     public fechaActual = moment().toDate();
-    groupSelected = 'prestaciones';
-    dataSet: IDataSet[] = [];
+    private groupSelected = 'prestaciones';
+    private dataSet: IDataSet[] = [];
 
-    dataSetVisible$ = new BehaviorSubject<IDataSet[]>([]);
+    public dataSetVisible$ = new BehaviorSubject<IDataSet[]>([]);
+    public capa = '';
 
+    public textoFiltro = '';
+    public textoFiltroVisivility = false;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -72,11 +76,8 @@ export class ResumenInternacionComponent implements OnInit {
         private pacienteService: PacienteService,
         private plex: Plex,
         private location: Location
-    ) {
+    ) { }
 
-    }
-
-    capa = '';
 
     public columns: IPlexTableColumns[] = [
         {
@@ -140,8 +141,6 @@ export class ResumenInternacionComponent implements OnInit {
         this.idInternacion = this.activatedRoute.snapshot.paramMap.get('idInternacion');
         this.capa = this.activatedRoute.snapshot.paramMap.get('capa');
 
-
-
         this.getInternacion().subscribe((resumen) => {
             this.internacion = resumen as any;
 
@@ -168,20 +167,13 @@ export class ResumenInternacionComponent implements OnInit {
                         data.unidadOrganizativa = '';
                         data.cama = '';
                     }
-
-
                 });
 
                 this.craearTimelinea(huds, movimientos);
             });
-
-
-
-
-
         });
     }
-    _movimientos = [];
+
 
 
     procesarHUDS() {
@@ -198,8 +190,6 @@ export class ResumenInternacionComponent implements OnInit {
                     }).sort((a, b) => {
                         return a.ejecucion.fecha.getTime() - b.ejecucion.fecha.getTime();
                     });
-
-
 
                 const solicitudes = filtrarPorRegistros(
                     this.prestaciones,
@@ -218,7 +208,6 @@ export class ResumenInternacionComponent implements OnInit {
                     (item) => ['trastorno', 'hallazgo', 'situación', 'evento'].includes(item.registro.concepto.semanticTag)
                 );
 
-
                 this.prestaciones.forEach(p => {
                     this.dataSet.push({
                         group: 'prestaciones',
@@ -233,7 +222,6 @@ export class ResumenInternacionComponent implements OnInit {
                         term: p.solicitud.tipoPrestacion.term
                     });
                 });
-
 
                 solicitudes.forEach(p => {
                     this.dataSet.push({
@@ -330,7 +318,6 @@ export class ResumenInternacionComponent implements OnInit {
 
                 return dataSetMovimientos;
             })
-
         );
     }
 
@@ -403,7 +390,7 @@ export class ResumenInternacionComponent implements OnInit {
         // Configuration for the Timeline
         const options = {
             width: '100%',
-            height: '235px',
+            height: '220px',
             margin: {
                 item: 20
             },
@@ -434,7 +421,6 @@ export class ResumenInternacionComponent implements OnInit {
         this.timeline.setGroups(groups);
         this.timeline.setItems(items);
 
-
         this.timeline.on('select', function (properties) {
             const ii = (this.timeline as any).itemsData.get(properties.items[0]);
         });
@@ -460,21 +446,16 @@ export class ResumenInternacionComponent implements OnInit {
                 this.selectTrack(this.timeline, group);
                 const ii = (this.timeline as any).itemsData.get(item);
                 this.onItemSelect(ii);
-
             }
-
         });
 
         this.timeline.on('rangechanged', (properties) => {
             this.zoomChange(properties.start, properties.end);
         });
-
     }
 
     setView(inicio, fin) {
-
         this.timeline.setWindow(inicio, fin);
-
     }
 
     selectTrack(timeline, track) {
@@ -491,7 +472,6 @@ export class ResumenInternacionComponent implements OnInit {
                 groupItem.className = groupItem.className.substring(0, groupItem.className.length - 9);
             }
         });
-
 
         const className: string = groupInfo.className;
         const isSelected = className.endsWith('selected');
@@ -513,9 +493,6 @@ export class ResumenInternacionComponent implements OnInit {
     getHUDS(paciente) {
         return this.prestacionService.getByPaciente(paciente.id, true);
     }
-
-    textoFiltro = '';
-    textoFiltroVisivility = false;
 
     zoomChange(start: Date, end: Date) {
 
@@ -540,23 +517,19 @@ export class ResumenInternacionComponent implements OnInit {
     }
 
 
-
-    prestacionIdSelected: string;
-    datoIdSelected: string;
-
     onItemSelect(data) {
         if (data.id === this.datoIdSelected) {
             this.datoIdSelected = null;
-            this.prestacionIdSelected = null;
+            this.prestacionSelected = null;
         } else {
             this.datoIdSelected = data.id;
-            this.prestacionIdSelected = data.idPrestacion;
+            this.prestacionSelected = this.prestaciones.find(p => p.id === data.id);
         }
     }
 
     onClose() {
         this.datoIdSelected = null;
-        this.prestacionIdSelected = null;
+        this.prestacionSelected = null;
     }
 
     volver() {

@@ -1,8 +1,7 @@
-import { Component, ViewEncapsulation, Input, HostBinding, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, Input, OnInit } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -77,5 +76,4 @@ export class VistaPrestacionComponent implements OnInit {
             () => this.requestInProgress = false
         );
     }
-
 }
