@@ -5,7 +5,7 @@
             <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF"
                          [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
             </plex-button>
-            <plex-button *ngIf='onClose' type="danger" size="sm" icon="close" title="Cerrar"
+            <plex-button *ngIf='btnClose' type="danger" size="sm" icon="close" title="Cerrar"
                          [disabled]="requestInProgress" (click)="close()" titlePosition="left">
             </plex-button>
             <ng-content></ng-content>

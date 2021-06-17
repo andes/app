@@ -13,8 +13,7 @@
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
                                    [min]="fechaDesde">
                     </plex-datetime>
-                    <plex-select grow="1" tmOrganizaciones name="organizacion" [data]="organizacion"
-                                 label="Organización" [(ngModel)]="organizacion">
+                    <plex-select grow="1" tmOrganizaciones name="organizacion" label="Organización" [(ngModel)]="organizacion">
                     </plex-select>
                     <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
                                  labelField="nombre">
@@ -82,7 +81,7 @@
                                                          (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
                                             </plex-button>
                                             <plex-button type="info" size="sm" class="ml-2" tooltip="Actualizar Datos"
-                                                         label="Actualizar Datos"
+                                                         icon="pencil"
                                                          (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
                                             </plex-button>
                                         </div>

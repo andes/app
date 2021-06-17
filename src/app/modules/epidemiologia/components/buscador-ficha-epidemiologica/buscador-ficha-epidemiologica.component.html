@@ -59,11 +59,11 @@
                     </plex-button>
                 </td>
                 <td *plTableCol="'sisa'">
-                    <ng-container *ngIf="ficha | codigoSisaField as fieldSisa">
-                        <plex-badge type="{{ fieldSisa.codigoSisa ? 'success' : 'danger' }}">
-                            {{ fieldSisa.codigoSisa ? 'SISA ' + fieldSisa.codigoSisa : 'SIN REGISTRO' }}
+                    <ng-container *ngIf="ficha | codigoSisaField as sisaField">
+                        <plex-badge type="{{ sisaField.codigoSisa ? 'success' : 'danger' }}">
+                            {{ sisaField.codigoSisa ? 'SISA ' + sisaField.codigoSisa : 'SIN REGISTRO' }}
                             <plex-button icon="pencil" type="success" size="sm" title="Editar código SISA"
-                                         (click)="editarCodigoSISA(ficha, fieldSisa.codigoSisa)">
+                                         (click)="editarCodigoSISA(ficha, sisaField.codigoSisa)">
                             </plex-button>
                         </plex-badge>
                     </ng-container>

@@ -6,6 +6,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { SeguimientoPacientesService } from '../../services/seguimiento-pacientes.service';
+import { Auth } from '@andes/auth';
 
 @Component({
   selector: 'seguimiento-epidemiologia',
@@ -34,7 +35,8 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     private route: ActivatedRoute,
     private elementosRUPService: ElementosRUPService,
     private prestacionesService: PrestacionesService,
-    private router: Router) {
+    private router: Router,
+    private auth: Auth) {
   }
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
       { id: 'alta', nombre: 'De Alta' },
       { id: 'fallecido', nombre: 'Fallecido' }
     ];
+    this.organizacion = this.auth.organizacion;
   }
 
   volverInicio() {

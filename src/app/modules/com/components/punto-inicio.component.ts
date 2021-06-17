@@ -12,7 +12,6 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { PuntoInicioService } from './../services/punto-inicio.service';
-import { ColoresPrioridades as colores } from 'src/app/utils/enumerados';
 
 @Component({
     selector: 'com-punto-inicio',

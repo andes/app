@@ -1,16 +1,16 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { cache } from '@andes/shared';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { cache } from '@andes/shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { LocalidadService } from '../../../../services/localidad.service';
+import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
-import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',

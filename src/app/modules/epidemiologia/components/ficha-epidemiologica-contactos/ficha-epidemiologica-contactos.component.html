@@ -13,7 +13,7 @@
 
         <plex-item *ngFor="let _unContacto of contactos; let i = index" class="">
             <plex-label titulo="{{ _unContacto.apellidoNombre }}"
-                subtitulo="{{ (_unContacto.dni | number) || 'Sin DNI' }}">
+                subtitulo="{{ _unContacto.dni || 'Sin DNI' }}">
             </plex-label>
             <plex-label titulo="Teléfono" subtitulo="{{ _unContacto.telefono}}">
             </plex-label>
@@ -55,7 +55,7 @@
             <plex-button type="danger" (click)="cerrar()">
                 Cancelar
             </plex-button>
-            <plex-button type="success" (click)="aceptar($event)" [validateForm]="formEstado">
+            <plex-button type="success" [disabled]="!contactoEdicion.dni && !contactoEdicion.telefono" (click)="aceptar($event)" [validateForm]="formEstado">
                 Aceptar
             </plex-button>
         </div>
