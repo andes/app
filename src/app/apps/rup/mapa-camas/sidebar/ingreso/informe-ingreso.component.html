@@ -18,7 +18,7 @@
         </paciente-detalle>
         <fieldset>
             <plex-title size="sm" titulo="DATOS DE INTERNACION">
-                <plex-badge *ngIf="prestacion.esCensable" type="info" size="sm">
+                <plex-badge *ngIf="prestacion.ejecucion.registros[0].esCensable" type="info" size="sm">
                     Censable
                 </plex-badge>
             </plex-title>
