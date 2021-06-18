@@ -70,6 +70,7 @@ export class IPrestacion {
     estados: IPrestacionEstado[];
     estadoActual: IPrestacionEstado;
     unidadOrganizativa: ISnomedConcept;
+    esCensable: boolean;
     createdAt: Date;
     updatedAt: Date;
 
