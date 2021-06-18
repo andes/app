@@ -36,6 +36,9 @@
                 <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts" label="Regitrado en SISA"
                              [(ngModel)]="filtrarSISA" labelField="nombre">
                 </plex-select>
+                <plex-select grow="1" name="clasificacion" [data]="clasificacion" label="Clasificación"
+                             [(ngModel)]="idClasificacion" labelField="nombre">
+                </plex-select>
             </plex-wrapper>
         </plex-grid>
         <plex-table *ngIf="listado?.length && !inProgress" [columns]="columns" #table="plTable" (scroll)="onScroll()"

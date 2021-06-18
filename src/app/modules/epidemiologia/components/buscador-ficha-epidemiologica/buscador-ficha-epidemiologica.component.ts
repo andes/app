@@ -26,6 +26,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public organizacion = null;
   public zonaSanitaria = null;
   public idPcr = null;
+  public idClasificacion = null;
   public dataType$: Observable<any>;
   public fichas$: Observable<any>;
   public showFicha = false;
@@ -50,6 +51,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public registroSisaOpts = [
     { id: 'noSISA', nombre: 'Sin registro SISA' },
     { id: 'SISA', nombre: 'Con registro SISA' },
+  ];
+  public clasificacion = [
+    { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
+    { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
+    { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
+    { id: 'controlAlta', nombre: 'Control de alta' }
   ];
   public filtrarSISA;
   public permisoHuds = false;
@@ -136,6 +143,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       skip: 0,
       limit: 15
     };
+
+    debugger;
+    if (this.idClasificacion) {
+      this.query.clasificacion = this.idClasificacion.id;
+    }
 
     if (this.filtrarSISA) {
       this.query.codigoSisa = this.filtrarSISA.id === 'SISA';
