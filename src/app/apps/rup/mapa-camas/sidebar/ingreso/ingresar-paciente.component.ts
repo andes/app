@@ -497,6 +497,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         let cambios = {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros,
+            esCensable: this.prestacion.esCensable,
             paciente: this.paciente
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
@@ -554,8 +555,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     onType() {
         this.inProgress = true;
     }
-
-
 
     // Se debe controlar que:
     // La cama este disponible en la fecha que la quiero usar,

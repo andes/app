@@ -12,7 +12,18 @@
                               (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
             </carpeta-paciente>
         </ng-container>
-        <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN"></plex-title>
+        <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
+            <ng-container *ngIf="prestacion?.id">
+                <plex-button *ngIf="!cama.esCensable && !prestacion?.esCensable" type="warning"
+                             label="Convertir en censable" size="sm" (click)="prestacion.esCensable = true">
+                </plex-button>
+                <plex-badge *ngIf="!cama.esCensable && prestacion?.esCensable" type="info" size="sm">
+                    Censable
+                    <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="prestacion.esCensable = false">
+                    </plex-button>
+                </plex-badge>
+            </ng-container>
+        </plex-title>
         <plex-wrapper>
             <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
                            name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required
