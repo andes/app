@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
+import { IDerivacion } from '../interfaces/IDerivacion.interface';
 
 @Injectable()
 export class PuntoInicioService {
@@ -13,8 +13,9 @@ export class PuntoInicioService {
     public priorityOrder = {
         'especial': 1,
         'alta': 2,
-        'media': 3,
-        'baja': 4
+        'intermedia': 3,
+        'media': 4,
+        'baja': 5
     };
     public sortBy = new BehaviorSubject<string>('fecha');
     public sortOrder = new BehaviorSubject<string>('asc');
@@ -57,10 +58,10 @@ export class PuntoInicioService {
                         let prioridadA = this.priorityOrder[a.prioridad];
                         let prioridadB = this.priorityOrder[b.prioridad];
                         if (!prioridadA) {
-                            prioridadA = 5;
+                            prioridadA = 6;
                         }
                         if (!prioridadB) {
-                            prioridadB = 5;
+                            prioridadB = 6;
                         }
                         return prioridadA - prioridadB;
                     });

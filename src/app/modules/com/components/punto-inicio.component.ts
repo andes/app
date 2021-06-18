@@ -36,6 +36,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
         { id: 'media', label: 'Media' },
+        { id: 'intermedia', label: 'Intermedia' },
         { id: 'alta', label: 'Alta' },
         { id: 'especial', label: 'Especial' }
     ];
@@ -75,6 +76,12 @@ export class ComPuntoInicioComponent implements OnInit {
             hover: '#C6B300',
             background: '#f8f5de',
             name: 'media'
+        },
+        {
+            border: '#d1a67e',
+            hover: '#e97204',
+            background: '#f7e5ca',
+            name: 'intermedia'
         },
         {
             border: '#e4a4a4',
