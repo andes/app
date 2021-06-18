@@ -50,6 +50,7 @@
                 <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
+                <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
                     <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm" tooltip="Editar"
                                  (click)="editarVerFicha(ficha,true)">

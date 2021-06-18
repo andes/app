@@ -90,6 +90,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
     },
     {
+      key: 'clasificacion',
+      label: 'Clasificación'
+    },
+    {
       key: 'acciones',
       label: 'Acciones',
       sorteable: false
@@ -144,7 +148,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       limit: 15
     };
 
-    debugger;
+
     if (this.idClasificacion) {
       this.query.clasificacion = this.idClasificacion.id;
     }
