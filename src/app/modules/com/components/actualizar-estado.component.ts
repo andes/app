@@ -30,6 +30,7 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
         { id: 'media', label: 'Media' },
+        { id: 'intermedia', label: 'Intermedia' },
         { id: 'alta', label: 'Alta' },
         { id: 'especial', label: 'Especial' }
     ];

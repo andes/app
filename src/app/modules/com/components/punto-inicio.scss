@@ -8,6 +8,7 @@
 // Prioridades
 .baja,
 .media,
+.intermedia,
 .alta,
 .especial {
     display: inline-block;
@@ -28,9 +29,14 @@
 .media {
     background: #c6b300;
 }
+.intermedia {
+    background: #e49b2d
+}
 .alta {
     background: #b70b0b;
 }
 .especial {
     background: #02111c;
 }
+
+
