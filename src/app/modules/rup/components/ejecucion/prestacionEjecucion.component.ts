@@ -209,6 +209,21 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 this.ps.get(x.concepto.conceptId, x.esSolicitud).subscribe(() => { });
                             });
 
+                            if (this.prestacion.ejecucion.registros.length === 0) {
+                                this.elementosRUPService.requeridosDinamicos(
+                                    this.prestacion,
+                                    this.prestacion.solicitud.tipoPrestacion.conceptId
+                                ).subscribe(conceptos => {
+                                    conceptos.forEach(target => {
+                                        if (target.tipo === 'requerido') {
+                                            this.ejecucionService.agregarConcepto(target.concepto);
+                                        } else {
+                                            this.ejecucionService.addSugeridos([target.concepto]);
+                                        }
+                                    });
+                                });
+                            }
+
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
@@ -221,6 +236,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     }
                                 }
                             }
+
+
                         }
 
                     }, (err) => {
