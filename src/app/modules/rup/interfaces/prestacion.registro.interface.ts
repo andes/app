@@ -29,6 +29,8 @@ export class IPrestacionRegistro {
     // Indica los id de otros registros dentro array 'registros' de la prestación
     relacionadoCon: any[];
 
+    esCensable: boolean;
+
     esDiagnosticoPrincipal: Boolean;
 
     isEmpty: Boolean;

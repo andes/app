@@ -85,6 +85,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private subscription2: Subscription;
 
+    public get esInternacionCensable() {
+        return this.prestacion?.ejecucion.registros[0]?.esCensable;
+    }
+
     constructor(
         private plex: Plex,
         private servicioProfesional: ProfesionalService,
@@ -497,7 +501,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         let cambios = {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros,
-            esCensable: this.prestacion.esCensable,
             paciente: this.paciente
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
@@ -506,6 +509,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }, (err) => {
             this.plex.info('danger', err);
         });
+    }
+
+    setValueCensable() {
+        this.prestacion.ejecucion.registros[0].esCensable = !this.prestacion.ejecucion.registros[0].esCensable;
     }
 
     crearPrestacion(paciente) {
