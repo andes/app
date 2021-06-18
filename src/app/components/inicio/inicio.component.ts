@@ -82,11 +82,18 @@ export class InicioComponent implements AfterViewInit {
                         this.secciones = this.modulos.filter(x => (!x.principal && (!x.submodulos || !x.submodulos.length)));
 
                         // Se ordenan módulos
-                        this.modulos.sort((a, b) => a.orden - b.orden);
+                        this.modulos.sort((a, b) => Number(a.orden) - Number(b.orden));
 
                         // Se ordenan submódulos
                         this.modulos.map(x => {
                             if (x.submodulos && x.submodulos.length > 0) {
+                                if (x.submodulos.length > 4) {
+                                    x.submodulos.main = x.submodulos.slice(0, 4);
+                                    x.submodulos.secondary = x.submodulos.slice(4);
+                                } else {
+                                    x.submodulos.main = x.submodulos;
+                                    x.submodulos.secondary = [];
+                                }
                                 return x.submodulos.sort((a, b) => a.orden - b.orden);
                             }
                         });
