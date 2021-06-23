@@ -1,3 +1,17 @@
+# [5.52.0](https://github.com/andes/app/compare/v5.51.0...v5.52.0) (2021-06-23)
+
+
+### Bug Fixes
+
+* **turnos-prestaciones:** disabled exportar ([#2333](https://github.com/andes/app/issues/2333)) ([7798cbc](https://github.com/andes/app/commit/7798cbc3b592321978942837d5f4b5b9b37e9c6d))
+
+
+### Features
+
+* **COM:** remover COM de origen ([84b4bae](https://github.com/andes/app/commit/84b4bae952527819c824f4e162628d355bf6df11))
+* **COM:** Se le agrega nuevo color para identificar prioridades intermedias, se le agrega también el ordenamiento ([3f348cc](https://github.com/andes/app/commit/3f348ccda94c67848c905f45758bdd9fd5164340))
+* **rup:** elementos rup requeridos dinámicos ([#2323](https://github.com/andes/app/issues/2323)) ([d1d5926](https://github.com/andes/app/commit/d1d5926c2efd944dcb18b629b75689760d2d062b))
+
 # [5.51.0](https://github.com/andes/app/compare/v5.50.0...v5.51.0) (2021-06-16)
 
 
