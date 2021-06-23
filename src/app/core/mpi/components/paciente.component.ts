@@ -17,6 +17,8 @@ import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion
 import { Subscription, EMPTY } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
+import { IUbicacion } from 'src/app/interfaces/IUbicacion';
+
 @Component({
     selector: 'paciente',
     templateUrl: 'paciente.html',
@@ -57,6 +59,14 @@ export class PacienteComponent implements OnInit {
         ultimaActualizacion: new Date()
     };
 
+    public lugarNacimiento: IUbicacion = {
+        pais: null,
+        provincia: null,
+        localidad: null,
+        barrio: null,
+        lugar: null
+    };
+
     public direccion: IDireccion = {
         valor: '',
         codigoPostal: '',
@@ -92,6 +102,7 @@ export class PacienteComponent implements OnInit {
         edadReal: null,
         fechaFallecimiento: null,
         direccion: [this.direccion],
+        lugarNacimiento: this.lugarNacimiento,
         estadoCivil: undefined,
         fotoId: null,
         foto: null,
@@ -255,6 +266,9 @@ export class PacienteComponent implements OnInit {
         }
         if (!this.paciente.direccion || !this.paciente.direccion.length) {
             this.paciente.direccion = [this.direccion];
+        }
+        if (!this.paciente.lugarNacimiento) {
+            this.paciente.lugarNacimiento = this.lugarNacimiento;
         }
         this.pacienteModel = Object.assign({}, this.paciente);
 

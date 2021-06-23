@@ -64,6 +64,10 @@
                     [subtitulo]="numeroAfiliado" justify="{{ justificado }}">
         </plex-label>
 
+        <plex-label *ngIf="showLugarNacimiento" titulo="Lugar de Nacimiento"
+                    [subtitulo]="lugarNacimiento || 'No indica'" justify="{{ justificado }}">
+        </plex-label>
+
         <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion || 'Sin dirección'"
                     justify="{{ justificado }}">
         </plex-label>

@@ -2,6 +2,7 @@ import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRela
 import { IContacto } from '../../../interfaces/IContacto';
 import { IDireccion } from './IDireccion';
 import { EstadoCivil } from '../../../utils/enumerados';
+import { IUbicacion } from '../../../interfaces/IUbicacion';
 
 export interface IPaciente {
     id: string;
@@ -23,6 +24,7 @@ export interface IPaciente {
     edadReal: { valor: number, unidad: string };
     fechaFallecimiento: Date;
     direccion: IDireccion[];
+    lugarNacimiento?: IUbicacion;
     estadoCivil: EstadoCivil;
     fotoId: string;
     foto: string;
