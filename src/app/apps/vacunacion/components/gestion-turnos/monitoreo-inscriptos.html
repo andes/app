@@ -144,16 +144,36 @@
             </plex-button>
         </plex-title>
         <hr class="mb-2">
-        <plex-title titulo="Datos de la inscripción" size="sm" *ngIf="!editando && !dacionTurno && !showAgregarNota">
-            <plex-button type="info" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}" size="sm"
-                         (click)="showAgregarNota = true"
-                         title="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}">
-            </plex-button>
-            <plex-button type="warning" size="sm" (click)="editPaciente()" icon="pencil"
-                         *ngIf="permisosEdicion.length && !editando" title="Editar inscripción">
-            </plex-button>
+
+        <plex-title titulo="Inscripción" size="sm" *ngIf="!editando && !dacionTurno && !showAgregarNota">
+
             <plex-button type="success" size="sm" title="{{ pacienteSelected.turno ? 'Modificar turno' : 'Dar turno' }}"
-                         icon="calendar-plus" class='mr-1' (click)="darTurno()"></plex-button>
+                         icon="calendar-plus" (click)="darTurno()">
+            </plex-button>
+            <plex-datetime class="ml-1" type="date" btnOnly="true" name="proximoLlamado" size="sm"
+                           [(ngModel)]="fechaProximoLlamado" label="" [min]="hoy"
+                           tooltip="{{ pacienteSelected.fechaProximoLlamado ? 'Modificar fecha de próximo llamado' : 'Fecha de próximo llamado' }}"
+                           (change)="setProximoLlamado()">
+            </plex-datetime>
+            <plex-badge *ngIf="pacienteSelected.fechaProximoLlamado" class="ml-1" type="warning" size="md">
+                Próx. llamado: {{ pacienteSelected.fechaProximoLlamado | fecha}}
+                <plex-button label="" icon="undo" tooltip="Eliminar próximo llamado"
+                             (click)="fechaProximoLlamado = null; setProximoLlamado()">
+                </plex-button>
+            </plex-badge>
+
+            <plex-dropdown class="ml-1" right="true" size="sm" icon="dots-vertical" type="primary">
+                <div class="text-right">
+                    <plex-button *ngIf="permisosEdicion.length" type="link" label="Editar inscripción" size="sm"
+                                 icon="pencil" (click)="editPaciente()">
+                    </plex-button>
+                    <plex-button type="link" label="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}"
+                                 size="sm" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}"
+                                 (click)="showAgregarNota = true">
+                    </plex-button>
+                </div>
+            </plex-dropdown>
+
         </plex-title>
         <notas *ngIf="showAgregarNota" [inscripcion]="pacienteSelected" (returnNotas)="returnNotas($event)">
         </notas>
