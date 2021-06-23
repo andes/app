@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { map, switchMap, pluck, filter } from 'rxjs/operators';
+import { map, switchMap, pluck, filter, first } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { notNull } from '@andes/shared';
@@ -65,6 +65,23 @@ export class CamaDetalleComponent implements OnInit {
 
     public turnero$: Observable<string>;
 
+    items = [
+        {
+            label: 'Último movimiento',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.deshacerInternacion(false);
+            }
+        },
+        {
+            label: 'Toda la internación',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.deshacerInternacion(true);
+            }
+        }
+    ];
+
     constructor(
         public plex: Plex,
         private router: Router,
@@ -113,8 +130,11 @@ export class CamaDetalleComponent implements OnInit {
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
-                // true si cada movimiento tiene idMovimiento o es un ingreso
-                return historial.length > 0 && !historial.some((mov: any) => !mov.extras?.ingreso && mov.idMovimiento === undefined);
+                const egreso = historial.some(mov => mov.extras?.egreso);
+                const tieneIDMov = historial.every(
+                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento
+                );
+                return historial.length > 0 && tieneIDMov && !egreso;
             })
         );
     }
@@ -181,21 +201,23 @@ export class CamaDetalleComponent implements OnInit {
         });
     }
 
-    deshacerInternacion(cama) {
-        this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
-            if (resultado) {
-                this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.fecha, cama)
-                    .subscribe((internacion) => {
-                        if (this.mapaCamasService.capa === 'estadistica') {
-                            const prestacion = { id: internacion.idInternacion, solicitud: { turno: null } };
-                            this.prestacionesService.invalidarPrestacion(prestacion).subscribe();
-                        }
-                        this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
-                        this.mapaCamasService.select(null);
-                        this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
-                        this.cancel.emit();
-                    });
-            }
+    deshacerInternacion(completo: boolean) {
+        this.cama$.pipe(first()).subscribe(cama => {
+            this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
+                if (resultado) {
+                    this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.idInternacion, completo)
+                        .subscribe((response) => {
+                            if (response.status && this.mapaCamasService.capa === 'estadistica') {
+                                const prestacion = { id: cama.idInternacion, solicitud: { turno: null } };
+                                this.prestacionesService.invalidarPrestacion(prestacion).subscribe();
+                            }
+                            this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
+                            this.mapaCamasService.select(null);
+                            this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
+                            this.cancel.emit();
+                        });
+                }
+            });
         });
     }
 

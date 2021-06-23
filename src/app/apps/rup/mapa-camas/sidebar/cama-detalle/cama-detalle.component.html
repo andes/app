@@ -87,9 +87,12 @@
                     <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <plex-button tooltip="Deshacer Internacion" icon="account-off" type="danger" size="sm"
+                    <!-- <plex-button tooltip="Deshacer Internacion" icon="account-off" type="danger" size="sm"
                                  (click)="deshacerInternacion(cama)">
-                    </plex-button>
+                    </plex-button> -->
+                    <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
+                                   tooltip="Deshacer Internacion" [items]="items">
+                    </plex-dropdown>
                 </ng-container>
             </plex-title>
             <fieldset>

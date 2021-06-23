@@ -111,23 +111,27 @@ export class CambiarCamaComponent implements OnInit {
     cambiarCama(camaActual, camaNueva, fecha) {
         const idMov = new ObjectID().toString();
 
-        let camaDesocupada = {
+        let camaDesocupada: any = {
             _id: camaActual.id,
             estado: 'disponible',
             idInternacion: null,
             paciente: null,
             sala: camaActual.sala,
-            idMovimiento: idMov
+            extras: {
+                idMovimiento: idMov
+            }
         };
 
-        let camaOcupada = {
+        let camaOcupada: any = {
             _id: camaNueva.id,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
             paciente: camaActual.paciente,
             nota: (!camaActual.sala) ? camaActual.nota : null,
             sala: camaNueva.sala,
-            idMovimiento: idMov
+            extras: {
+                idMovimiento: idMov
+            }
         };
 
         if (camaActual.sala) {
