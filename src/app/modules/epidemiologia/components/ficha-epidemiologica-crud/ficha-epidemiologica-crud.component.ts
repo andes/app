@@ -309,7 +309,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         });
       }
       if (campos.length) {
-        const buscado = this.ficha.findIndex(sec => sec.name === seccion.seccion);
+        const buscado = this.ficha.findIndex(sec => sec.name === seccion.name);
         if (buscado !== -1) {
           // si ya existe la sección, la reemplazo
           this.ficha[buscado] = { name: seccion.name, fields: campos };
