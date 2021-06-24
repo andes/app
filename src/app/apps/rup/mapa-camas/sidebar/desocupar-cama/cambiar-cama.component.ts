@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { Observable, combineLatest, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { map, switchMap, take } from 'rxjs/operators';
+import { ObjectID } from 'bson';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -108,21 +109,29 @@ export class CambiarCamaComponent implements OnInit {
     }
 
     cambiarCama(camaActual, camaNueva, fecha) {
-        let camaDesocupada = {
+        const idMov = new ObjectID().toString();
+
+        let camaDesocupada: any = {
             _id: camaActual.id,
             estado: 'disponible',
             idInternacion: null,
             paciente: null,
             sala: camaActual.sala,
+            extras: {
+                idMovimiento: idMov
+            }
         };
 
-        let camaOcupada = {
+        let camaOcupada: any = {
             _id: camaNueva.id,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
             paciente: camaActual.paciente,
             nota: (!camaActual.sala) ? camaActual.nota : null,
             sala: camaNueva.sala,
+            extras: {
+                idMovimiento: idMov
+            }
         };
 
         if (camaActual.sala) {

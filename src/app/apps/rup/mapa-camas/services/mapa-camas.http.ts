@@ -71,12 +71,12 @@ export class MapaCamasHTTP {
         }
     }
 
-    deshacerInternacion(ambito: string, capa: string, fecha: Date, data): Observable<ISnapshot> {
+    deshacerInternacion(ambito: string, capa: string, idInternacion: string, completo: boolean): Observable<{ status: boolean }> {
         const params = {
-            ...data,
             ambito: ambito,
             capa: capa,
-            fecha,
+            idInternacion,
+            completo
         };
         return this.server.patch(`${this.url}/deshacer`, params);
     }

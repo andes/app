@@ -43,6 +43,8 @@ export interface ISnapshot {
         egreso?: boolean,
         idInternacion?: String,
         tipo_egreso?: String,
+        idMovimiento?: string;
+
     };
     nota: String;
     prioridad?: {
