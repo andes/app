@@ -15,10 +15,11 @@
 
             <label class="form-control-label text-capitalize-first"> {{ registro.concepto.term}} </label>
 
-            <!-- {{resultado?.message}} -->
-
-            <p *ngIf="mensaje?.texto">
-                <plex-badge type="{{mensaje.type}}">
+            <p>
+                <ng-container *ngIf="!hasRules">
+                    {{registro.valor}}
+                </ng-container>
+                <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
                     {{mensaje.texto}}
                     <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
                                  title="Registrar">

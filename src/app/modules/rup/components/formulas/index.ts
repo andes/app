@@ -49,7 +49,7 @@ export class FormulaBaseService {
      */
     public calcular(paciente, prestacion, registros) {
         let __CONTEXT_FUNCTION__;
-        if (registros.filter(r => !r.valor).length === 0) {
+        if (registros.filter(r => r.valor === null || r.valor === undefined).length === 0) {
             const $ = registros.map(r => r.valor);
             const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
             // tslint:disable-next-line:no-eval

@@ -12,6 +12,7 @@ import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;
+    public hasRules = false;
 
     ngOnInit() {
         const provider = ReflectiveInjector.resolveAndCreate(FormularRegister.list());
@@ -24,6 +25,8 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.formulaProvider = provider.get(formulaService.service);
             this.formulaProvider.formula = this.params.formula;
         }
+
+        this.hasRules = this.elementoRUP.rules?.length > 0;
         this.emitChange2(null);
 
         this.addFact('value', this.registro.valor);
