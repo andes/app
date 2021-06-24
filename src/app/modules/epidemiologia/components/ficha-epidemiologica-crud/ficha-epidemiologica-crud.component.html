@@ -1,6 +1,10 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ficha {{fichaName}}" main>
+            <plex-bool class="mr-4" [(ngModel)]="showFichaParcial" label="Cargar ficha parcial"
+                       (change)="clearDependencias({value:false},'clasificacionFinal',
+            ['segundaclasificacion','tipomuestra','antigeno','lamp','pcr','identificadorpcr','pcrM','clasificacionfinal'])">
+            </plex-bool>
             <plex-button *ngIf="!hideVolver" type="danger" (click)="toBack()">Volver
             </plex-button>
             <plex-button *ngIf="editFicha" position="right" type="success" (click)="registrarFicha()">
@@ -278,8 +282,7 @@
                                 </plex-bool>
                             </ng-container>
                             <!--Clasificación y final-->
-                            <ng-container *ngIf="seccion.id==='clasificacionFinal'">
-
+                            <ng-container *ngIf="seccion.id==='clasificacionFinal' && !showFichaParcial">
                                 <plex-select *ngIf="field.key==='segundaclasificacion'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -335,6 +338,10 @@
                                            [required]="field.required" readonly="true">
                                 </plex-text>
                             </ng-container>
+                            <plex-label *ngIf="seccion.id==='clasificacionFinal' && showFichaParcial && field.key==='parcial'"
+                                        titulo="La seccion no se encuentra disponible"
+                                        subtitulo="Destilde el campo Ficha parcial para hablitar la sección">
+                            </plex-label>
                             <!--Antecedentes epidemiológicos-->
                             <ng-container *ngIf="seccion.id==='antecedentesEpidemiologicos'">
                                 <plex-select *ngIf="field.key==='personalsalud'"

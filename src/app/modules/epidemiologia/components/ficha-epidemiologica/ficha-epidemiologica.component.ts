@@ -127,8 +127,22 @@ export class FichaEpidemiologicaComponent implements OnInit {
     if (ficha) {
       this.fichaPaciente$ = of(ficha);
       this.getFicha(nombreFicha);
-    } else if (this.checkDias()) {
-      this.getFicha(nombreFicha);
+    } else {
+      let check = true;
+      this.fichasPaciente.subscribe(async fichas => {
+        if (fichas.length) {
+          const fichasOrdenadas = fichas.sort((a, b) => b.createdAt - a.createdAt);
+          if (moment().diff(moment(fichasOrdenadas[0].createdAt), 'days') < 14) {
+            const respuesta = await this.plex.confirm('¿ Desea crear una ficha nueva de todas formas ?', `El paciente tiene una ficha registrada el día ${moment(fichasOrdenadas[0].createdAt).format('L')}`, 'Crear nueva ficha', 'Cancelar');
+            if (!respuesta) {
+              check = false;
+            }
+          }
+        }
+        if (check) {
+          this.getFicha(nombreFicha);
+        }
+      });
     }
   }
 
@@ -147,19 +161,5 @@ export class FichaEpidemiologicaComponent implements OnInit {
     this.showFicha = null;
     this.pacienteSelected = null;
     this.resultadoBusqueda = [];
-  }
-
-  checkDias() {
-    let check = true;
-    this.fichasPaciente.subscribe(fichas => {
-      if (fichas.length) {
-        const fichasOrdenadas = fichas.sort((a, b) => b.createdAt - a.createdAt);
-        if (moment().diff(moment(fichasOrdenadas[0].createdAt), 'days') < 14) {
-          this.plex.info('warning', ' El paciente tiene una ficha registrada en los ultimos 14 días', 'No es posible crear una nueva ficha');
-          check = false;
-        }
-      }
-    });
-    return check;
   }
 }
