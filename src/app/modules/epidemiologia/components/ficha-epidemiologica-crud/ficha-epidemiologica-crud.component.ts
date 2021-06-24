@@ -171,6 +171,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public vacunas$: Observable<any>;
   public estaInternado = false;
   public showSemana = true;
+  public showFichaParcial = false;
 
   constructor(
     private formsService: FormsService,
