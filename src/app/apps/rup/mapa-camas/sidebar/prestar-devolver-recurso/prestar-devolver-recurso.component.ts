@@ -87,14 +87,12 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             ),
             this.camasHTTP.snapshot(this.ambito, 'medica', this.fecha, null, null, this.cama.id).pipe(
                 map(snapshots => snapshots[0])
-            ),
-            this.camasHTTP.historial(this.ambito, 'estadistica', this.fecha, new Date(), { idCama: this.cama.id }),
-            this.camasHTTP.historial(this.ambito, 'medica', this.fecha, new Date(), { idCama: this.cama.id }),
-        ]).subscribe(([estadistica, medica, historialEst, historialMed]) => {
+            )
+        ]).subscribe(([estadistica, medica]) => {
             this.inProgress = false;
             const camasDisponibles = estadistica.estado === 'disponible' && medica.estado === 'disponible';
-            const historialVacio = historialEst.length === 0 && historialMed.length === 0;
-            if (camasDisponibles && historialVacio) {
+
+            if (camasDisponibles) {
                 this.accionPermitida = true;
             } else {
                 this.accionPermitida = false;
