@@ -115,6 +115,7 @@ export class CambiarCamaComponent implements OnInit {
             estado: 'disponible',
             idInternacion: null,
             paciente: null,
+            fechaIngreso: null,
             sala: camaActual.sala,
             extras: {
                 idMovimiento: idMov

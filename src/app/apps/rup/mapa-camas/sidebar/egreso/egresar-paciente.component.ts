@@ -214,7 +214,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 });
             }
             this.fecha = fecha;
-            this.calcularDiasEstada();
+            this.setDiasEstada();
         });
     }
 
@@ -262,6 +262,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     idInternacion: null,
                     paciente: null,
                     nota: null,
+                    fechaIngreso: null,
                     extras: {
                         egreso: true,
                         idInternacion: this.cama.idInternacion,

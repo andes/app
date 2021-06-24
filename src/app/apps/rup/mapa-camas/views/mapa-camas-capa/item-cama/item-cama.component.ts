@@ -38,10 +38,6 @@ export class ItemCamaComponent implements OnChanges {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
     }
 
-    get diasEstada() {
-        return this.mapaCamasService.calcularDiasEstada(this.cama.fechaIngreso);
-    }
-
     constructor(
         public auth: Auth,
         private router: Router,

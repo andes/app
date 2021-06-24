@@ -18,6 +18,12 @@
             <span class="d-block">{{ cama.fecha | fecha }}</span>
             <span class="d-block">{{ cama.fecha | hora }} hs</span>
         </td>
+        <td *ngIf="columns.fechaIngreso">
+            <ng-container *ngIf="cama.fechaIngreso">
+                <span class="d-block">{{ cama.fechaIngreso | fecha }}</span>
+                <span class="d-block">{{ cama.fechaIngreso | hora }} hs</span>
+            </ng-container>
+        </td>
         <td>
             <span class="d-block">
                 <strong>
@@ -44,11 +50,6 @@
             </span>
             <span class="d-block"></span>
         </td>
-        <td *ngIf="columns.diasEstada">
-            <span justify="center">
-                {{ cama.fechaIngreso ? diasEstada : '' }}
-            </span>
-        </td>
         <td *ngIf="columns.documento">
             <span>
                 {{(cama.paciente) ? cama.paciente.documento : 'Sin Paciente'}}
@@ -68,6 +69,11 @@
         <td *ngIf="columns.usuarioMovimiento">
             <span>
                 {{cama.createdBy | nombre }}
+            </span>
+        </td>
+        <td *ngIf="columns.diasEstada">
+            <span justify="center" *ngIf="cama.fechaIngreso">
+                {{ cama.diaEstada }}
             </span>
         </td>
         <td class="d-flex align-items-center">

@@ -49,6 +49,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     public columns: MapaCamaListadoColumns = {
         fechaMovimiento: false,
+        fechaIngreso: false,
         documento: false,
         sexo: false,
         sector: false,
