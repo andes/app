@@ -196,6 +196,7 @@ export class PrestacionesService {
     }
 
     getConceptosByPaciente(idPaciente: string, soloValidados?: boolean): Observable<any[]> {
+
         if (this._cacheRegistros[idPaciente]) {
             return new Observable(observe => observe.next(this._cacheRegistros[idPaciente]));
         } else {
@@ -205,6 +206,7 @@ export class PrestacionesService {
                     prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
                 }
                 prestaciones.forEach((prestacion: any) => {
+
                     prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.hasSections) { // COLONO O EPICRISIS
                             registro.registros.forEach(seccion => {
@@ -214,6 +216,7 @@ export class PrestacionesService {
                             });
                         }
                     });
+
 
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
@@ -258,12 +261,13 @@ export class PrestacionesService {
                                 idRegistro: registro.id,
                                 fechaCarga: prestacion.ejecucion.fecha,
                                 profesional: registro.createdBy.nombreCompleto,
+                                organizacion: prestacion.solicitud.organizacion.nombre,
                                 fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
                                 estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
                                 evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                                relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
+                                relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => { r.fechaCarga = prestacion.ejecucion.fecha; return r; }),
                                 valor: registro.valor
                             }],
                             registros: [registro],
@@ -278,12 +282,13 @@ export class PrestacionesService {
                             fechaCarga: prestacion.ejecucion.fecha,
                             idRegistro: registro.id,
                             profesional: registro.createdBy.nombreCompleto,
+                            organizacion: prestacion.solicitud.organizacion.nombre,
                             fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
                             estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
                             evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                            relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
+                            relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => { r.fechaCarga = prestacion.ejecucion.fecha; return r; }),
                             valor: registro.valor
                         };
                         registroEncontrado.prestaciones.push(registro.idPrestacion);
@@ -317,6 +322,10 @@ export class PrestacionesService {
 
     getByPacienteProcedimiento(idPaciente: any) {
         return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter(reg => PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && !reg.esSolicitud))));
+    }
+
+    getByPacienteElementoRegistros(idPaciente: any) {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter(reg => PrestacionesService.SemanticTags.elementoderegistro.find(e => e === reg.concepto.semanticTag))));
     }
 
     /**
