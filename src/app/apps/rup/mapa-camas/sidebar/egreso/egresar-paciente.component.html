@@ -146,14 +146,16 @@
                                  labelField="nom">
                     </plex-select>
 
-                    <plex-button type="danger" size="md" icon="trash-can" label="" [disabled]="prestacionValidada"
-                                 (click)="removeProcedimiento(i)">
-                    </plex-button>
 
                     <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
                                    [max]="fechaMaxProcedimiento" [(ngModel)]="procedimiento.fecha" [debounce]="600"
                                    grow="full">
                     </plex-datetime>
+
+                    <plex-button type="danger" size="md" icon="trash-can"
+                                 ariaLabel="Borrar nuevo procedimiento quirúrgico" [disabled]="prestacionValidada"
+                                 (click)="removeProcedimiento(i)">
+                    </plex-button>
                 </plex-wrapper>
             </div>
         </ng-container>

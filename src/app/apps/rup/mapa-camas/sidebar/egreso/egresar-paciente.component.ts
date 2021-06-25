@@ -125,7 +125,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.inProgress = true;
         this.fecha = this.mapaCamasService.fecha;
-        this.fechaMaxProcedimiento = moment(this.registro[1]?.valor.InformeEgreso.fechaEgreso).endOf('day');
 
         this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => {
@@ -157,12 +156,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
+            this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
+
             this.view = view;
             this.capa = capa;
             if (capa === 'estadistica') {
                 if (!prestacion) { return; }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+
                 if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
@@ -171,6 +173,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
                     this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.UnidadOrganizativaDestino?.id;
+                    this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
                 }
 
                 if (this.view === 'listado-internacion') {
@@ -229,6 +232,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
             this.checkEstadoCama();
+            this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
+
         }
     }
 
