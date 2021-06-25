@@ -311,8 +311,8 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
                                                     <plex-badge size="sm"
-                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'danger' : 'info' }}">
-                                                        {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
+                                                                [type]="registro.evoluciones[0].estado === 'activo' ? 'danger' : 'info'">
+                                                        {{ registro.evoluciones[0].estado }}
                                                     </plex-badge>
                                                 </ng-container>
                                                 <button class="btn btn-sm btn-primary btn-icon-rup p-0"
