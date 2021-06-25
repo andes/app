@@ -1,6 +1,6 @@
+import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Server } from '@andes/shared';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
 // Por el momento lo dejo en any.
@@ -13,13 +13,16 @@ interface ElementoHUDS {
 
 @Injectable()
 export class HUDSService {
+
     private _registrosHUDS: ElementoHUDS[] = [];
     private _obsRegistros = new BehaviorSubject<ElementoHUDS[]>([]);
     public registrosHUDS = this._obsRegistros.asObservable();
     public activeTab = -1;
     private hudsUrl = '/modules/huds/accesos';
 
-    constructor(private server: Server) { }
+    constructor(
+        private server: Server
+    ) { }
 
     /**
      * Controladores globales de las tabs de la huds
@@ -150,3 +153,4 @@ export class HUDSService {
         return { relacionesOrdenadas, registrosDeep };
     }
 }
+
