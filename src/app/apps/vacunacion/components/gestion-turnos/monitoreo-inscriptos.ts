@@ -37,7 +37,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public permisosEdicion;
     public editando = false;
     public dacionTurno = false;
-    public fechaProximoLlamado = null;
+    public fechaProximoLlamado;
     public hoy = moment().startOf('day').add(1, 'days').toDate();
     public columns = [
         {
