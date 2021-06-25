@@ -38,8 +38,8 @@
         </plex-grid>
         <plex-grid type="full" size="lg" class="mt-4 h-25 mr-2">
             <plex-label icon="mano-corazon" titulo="{{ prestacion.term  }}" subtitulo="Prestación"></plex-label>
-            <plex-label icon="centro-salud" type="warning" titulo="{{ agenda.organizacion.nombre}}"
-                        subtitulo="Organización"></plex-label>
+            <plex-label icon="centro-salud" titulo="{{ agenda.organizacion.nombre}}" subtitulo="Organización">
+            </plex-label>
             <plex-label icon="medico"
                         titulo="{{profesionales.length ?(profesionales | enumerar:['apellido','nombre']) : 'Sin profesional asignado'}}"
                         subtitulo="Equipo profesional">

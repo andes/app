@@ -4,7 +4,7 @@
         <pdp-menu>
             <plex-title size="sm" titulo="Mis turnos">
                 <plex-button (click)="goTo()" type="info" size="sm" class="mr-2">historial de turnos</plex-button>
-                <plex-button (click)="darTurnos()" type="success" size="sm">solicitar turno</plex-button>
+                <plex-button (click)="darTurnos()" type="success" size="sm">tomar turno</plex-button>
             </plex-title>
             <ng-container *ngIf="showTurnosDisponibles">
                 <pdp-dar-turno (detalleTurnos)="turnosDisponibles($event)"></pdp-dar-turno>
