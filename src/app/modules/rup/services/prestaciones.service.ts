@@ -232,12 +232,13 @@ export class PrestacionesService {
                             }
                         }
                     });
+                    const prestacion = prestaciones.find(p => p.id === registro.idPrestacion);
                     if (!registroEncontrado) {
                         let dato = {
                             tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
                             idRegistro: registro.id,
-                            fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
+                            fechaEjecucion: prestacion.ejecucion.fecha,
                             concepto: registro.concepto,
                             prestaciones: [registro.idPrestacion],
                             esSolicitud: registro.esSolicitud,
@@ -246,7 +247,7 @@ export class PrestacionesService {
                                 tipoPrestacion: registro.tipoPrestacion,
                                 idPrestacion: registro.idPrestacion,
                                 idRegistro: registro.id,
-                                fechaCarga: registro.createdAt,
+                                fechaCarga: prestacion.ejecucion.fecha,
                                 profesional: registro.createdBy.nombreCompleto,
                                 fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
                                 estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
@@ -265,7 +266,7 @@ export class PrestacionesService {
                         let nuevaEvolucion = {
                             tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
-                            fechaCarga: registro.createdAt,
+                            fechaCarga: prestacion.ejecucion.fecha,
                             idRegistro: registro.id,
                             profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
