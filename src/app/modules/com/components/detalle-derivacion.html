@@ -84,13 +84,7 @@
                 <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full">
                 </tipo-traslado>
-                <div class="mt-1" *ngIf="reglaSeleccionada?.definePrioridad">
-                    <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
-                    <ng-container *ngFor="let p of opcionesPrioridad">
-                        <div [class]="p.id" [class.selected]="p.id === prioridad" (click)="setPrioridad(p.id);">
-                        </div>
-                    </ng-container>
-                </div>
+                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad" (onChangeEvent)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
