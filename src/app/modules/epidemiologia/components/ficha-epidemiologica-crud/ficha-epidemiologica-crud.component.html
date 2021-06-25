@@ -1,9 +1,9 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ficha {{fichaName}}" main>
-            <plex-bool class="mr-4" [(ngModel)]="showFichaParcial" label="Cargar ficha parcial"
-                       (change)="clearDependencias({value:false},'clasificacionFinal',
-            ['segundaclasificacion','tipomuestra','antigeno','lamp','pcr','identificadorpcr','pcrM','clasificacionfinal'])">
+            <plex-bool class="mr-4" [(ngModel)]="showFichaParcial" label="Cargar ficha parcial" (change)="clearDependencias({value:false},'clasificacionFinal',
+            ['segundaclasificacion','tipomuestra','antigeno','lamp','pcr','identificadorpcr',
+            'pcrM','clasificacionfinal','fechamuestra'])" [readonly]="!editFicha">
             </plex-bool>
             <plex-button *ngIf="!hideVolver" type="danger" (click)="toBack()">Volver
             </plex-button>
