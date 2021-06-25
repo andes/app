@@ -6,6 +6,8 @@ import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.serv
 import { Auth } from '@andes/auth';
 import { InscripcionService } from '../../services/inscripcion.service';
 import { Router } from '@angular/router';
+import { Plex } from '@andes/plex';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'monitoreo-inscriptos',
@@ -102,7 +104,8 @@ export class MonitoreoInscriptosComponent implements OnInit {
         private gruposService: GrupoPoblacionalService,
         private auth: Auth,
         private inscripcionService: InscripcionService,
-        private router: Router
+        private router: Router,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -243,5 +246,31 @@ export class MonitoreoInscriptosComponent implements OnInit {
                 }
             }
         }
+    }
+
+    incrementarLlamado() {
+        let llamado = {
+            fechaRealizacion: new Date(),
+            usuario: this.auth.usuario,
+            numeroIntento: 1,
+        };
+        if (this.pacienteSelected.llamados?.length) {
+            let ultimoLlamado = this.pacienteSelected.llamados[this.pacienteSelected.llamados.length - 1].numeroIntento;
+
+            llamado.numeroIntento = ultimoLlamado + 1;
+
+            this.pacienteSelected.llamados.push(llamado);
+        } else {
+            this.pacienteSelected.llamados = [llamado];
+        }
+
+        this.inscripcionService.patch(this.pacienteSelected).pipe(
+            catchError((err) => {
+                this.plex.toast('danger', 'No se pudo incrementar cantidad de llamados');
+                return null;
+            }),
+        ).subscribe(() => {
+            this.plex.toast('success', 'Se incrementó correctamente la cantidad de llamados');
+        });
     }
 }
