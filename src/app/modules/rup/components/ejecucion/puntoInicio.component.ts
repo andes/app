@@ -73,6 +73,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public accesoHudsTurno = null;
     public tieneAccesoHUDS: Boolean;
     public matchPaciente: Boolean = true;
+    public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -165,11 +166,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
-            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
-                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
-                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
-                && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
+            this.fueraDeAgenda = this.prestaciones.filter(p => {
+                const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
+                const estadoActual = p.estadoActual;
+                const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
+                const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
+
+                return (!p.solicitud.turno && esHoy
+                    && (creadaPorMi || puedeValidar)
+                    && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada'));
+            });
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -447,14 +453,22 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     tienePermisos(turno) {
-        let existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
+        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
         if (turno.prestacion) {
+            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestacion.solicitud.tipoPrestacion.id);
+
             const estado = turno.prestacion.estados[turno.prestacion.estados.length - 1];
-            if (estado.tipo !== 'pendiente' && estado.createdBy.username !== this.auth.usuario.username) {
+            if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
             }
         }
         return existe;
+    }
+
+    checkPuedeValidar(prestacion) {
+        const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
+        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
+        return miPrestacion || permisoValidar;
     }
 
     cargarTurnos(agenda) {
