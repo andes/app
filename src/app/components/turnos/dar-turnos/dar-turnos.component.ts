@@ -341,7 +341,8 @@ export class DarTurnosComponent implements OnInit {
         }
         if (!this.solicitudPrestacion) {
             let regla: any = {
-                paciente: this.pacienteSeleccionado.id
+                paciente: this.pacienteSeleccionado.id,
+                documento: this.pacienteSeleccionado.documento
             };
             if (this.prestacionSeleccionada && this.prestacionSeleccionada.conceptId) {
                 regla.prestacion = this.prestacionSeleccionada.conceptId;
