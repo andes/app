@@ -157,8 +157,7 @@
             </plex-datetime>
             <plex-badge *ngIf="pacienteSelected.fechaProximoLlamado" class="ml-1" type="warning" size="md">
                 Próx. llamado: {{ pacienteSelected.fechaProximoLlamado | fecha}}
-                <plex-button label="" icon="undo" tooltip="Eliminar próximo llamado"
-                             (click)="fechaProximoLlamado = undefined; setProximoLlamado()">
+                <plex-button label="" icon="undo" tooltip="Eliminar próximo llamado" (click)="setProximoLlamado(true)">
                 </plex-button>
             </plex-badge>
 
