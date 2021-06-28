@@ -250,7 +250,10 @@ export class MonitoreoInscriptosComponent implements OnInit {
         }
     }
 
-    setProximoLlamado() {
+    setProximoLlamado(undo = false) {
+        if (undo) {
+            this.fechaProximoLlamado = undefined;
+        }
         if (this.fechaProximoLlamado) {
             this.fechaProximoLlamado = moment(this.fechaProximoLlamado).startOf('day').toDate();
         }
