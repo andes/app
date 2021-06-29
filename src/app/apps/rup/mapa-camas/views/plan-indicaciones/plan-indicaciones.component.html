@@ -1,0 +1,93 @@
+<plex-layout [main]="indicacionView || indicacionEventoSelected ? 8 : 12">
+    <plex-layout-main>
+        <plex-title titulo="Plan de indicaciones">
+            <plex-datetime [(ngModel)]="fecha" skipBy="d" size="sm" type="date" (change)="onDateChange()">
+            </plex-datetime>
+        </plex-title>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td rowspan="2">
+                        Indicacion
+                        <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
+                                     (click)="onDetenerClick()"></plex-button>
+                        <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
+                                     (click)="onPausarClick()"></plex-button>
+                        <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
+                                     (click)="onContinuarClick()"></plex-button>
+
+                    </td>
+                    <td colspan="8">
+                        Mañana
+                    </td>
+                    <td colspan="8">
+                        Tarde
+                    </td>
+                    <td colspan="8">
+                        Noche
+                    </td>
+                </tr>
+                <tr>
+                    <td *ngFor="let hora of horas">
+                        {{ hora}}
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let indicacion of indicaciones">
+                    <tr [class.table-warning]="indicacion.estado.tipo === 'pausado'"
+                        [class.table-danger]="indicacion.estado.tipo === 'suspendido'">
+                        <td justify>
+                            <span>
+                                <plex-bool type="checkbox" [(ngModel)]="selectedIndicacion[indicacion.id]"
+                                           (change)="onSelectedChange()"> </plex-bool>
+                                {{ indicacion.concepto.term }}
+                            </span>
+                            <plex-button type="info" size="sm" (click)="onSelectIndicacion(indicacion)">
+                                <plex-icon name="eye"></plex-icon>
+                            </plex-button>
+                        </td>
+                        <td *ngFor="let hora of horas" class="pointer"
+                            [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"
+                            (click)="onIndicacionesCellClick(indicacion, hora)">
+
+
+                            <span *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora]" class="punto"
+                                  [ngClass]="eventos[indicacion.id][hora].estado"></span>
+
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+
+        </table>
+
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <ng-container *ngIf="indicacionView">
+            <plex-title [titulo]="indicacionView.concepto.term"></plex-title>
+            <plex-label size="lg" titulo="Indicaciones">
+            </plex-label>
+            <div [innerHtml]="indicacionView.valor.solicitudPrestacion.indicaciones">
+            </div>
+
+            <plex-label size="lg" titulo="Motivo" [subtitulo]="indicacionView.valor.solicitudPrestacion.motivo">
+            </plex-label>
+
+            <plex-label size="lg" titulo="Desde" [subtitulo]="indicacionView.fechaInicio | fecha">
+            </plex-label>
+
+            <plex-title titulo="Estados"></plex-title>
+
+
+        </ng-container>
+
+        <ng-container *ngIf="indicacionEventoSelected">
+            <in-plan-indicacion-evento [hora]="horaSelected" [indicacion]="indicacionEventoSelected" [fecha]="fecha"
+                                       [evento]="eventos[indicacionEventoSelected.id] && eventos[indicacionEventoSelected.id][horaSelected]"
+                                       (events)="onEventos($event)">
+            </in-plan-indicacion-evento>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
