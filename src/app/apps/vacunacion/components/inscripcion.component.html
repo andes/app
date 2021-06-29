@@ -102,11 +102,6 @@
                             <plex-bool type="checkbox" name="plasma" [(ngModel)]="ciudadano.plasma"
                                        label="He recibido plasma / suero hiperinmune / inmunoglobulinas / anticuerpos monoclonales hace menos de 3 meses">
                             </plex-bool>
-                            <plex-bool justify="left" type="checkbox" name="embarazada"
-                                       [(ngModel)]="ciudadano.embarazada"
-                                       label="Estoy embarazada / Sospecho que podría estar embarazada"></plex-bool>
-                            <plex-bool type="checkbox" name="amamantando" [(ngModel)]="ciudadano.amamantando"
-                                       label="Me encuentro amamantando"></plex-bool>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'">

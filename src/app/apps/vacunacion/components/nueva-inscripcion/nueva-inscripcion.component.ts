@@ -58,8 +58,6 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         convaleciente: false,
         vacuna: false,
         plasma: false,
-        amamantando: false,
-        embarazada: false,
         profesion: '',
         matricula: null,
         establecimiento: '',

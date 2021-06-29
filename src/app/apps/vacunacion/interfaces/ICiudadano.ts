@@ -24,8 +24,6 @@ export interface ICiudadano {
     convaleciente: boolean;
     vacuna: boolean;
     plasma: boolean;
-    amamantando: boolean;
-    embarazada: boolean;
     profesion: string;
     matricula: number;
     establecimiento: string;
