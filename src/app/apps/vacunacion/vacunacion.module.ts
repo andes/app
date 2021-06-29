@@ -23,6 +23,7 @@ import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-
 import { DacionTurnoComponent } from './components/gestion-turnos/dacion-turno.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { NotasComponent } from './components/notas.component';
+import { LoteComponent } from './components/lote/lote.component';
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import { NotasComponent } from './components/notas.component';
         NuevaInscripcionComponent,
         MonitoreoInscriptosComponent,
         DacionTurnoComponent,
-        NotasComponent
+        NotasComponent,
+        LoteComponent
     ],
     providers: [
         {

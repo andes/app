@@ -1,0 +1,59 @@
+<plex-layout [main]="showSidebar ? 8 : 12">
+	<plex-layout-main>
+		<plex-title titulo="Vacunas" size="md"></plex-title>
+		<plex-list>
+			<plex-item *ngFor="let vacuna of vacunas$ | async" (click)="showInSideBar(vacuna)"
+					   [selected]="vacunaSelected === vacuna">
+				<plex-label icon="vacuna" titulo=' ' subtitulo="{{vacuna.nombre}}" size="lg" type="info">
+				</plex-label>
+			</plex-item>
+		</plex-list>
+
+
+	</plex-layout-main>
+
+	<plex-layout-sidebar type="invert">
+		<plex-title titulo="Detalle de la vacuna" size="md" *ngIf="vacunaSelected">
+			<plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
+			</plex-button>
+		</plex-title>
+
+		<plex-detail size="md" direction="row">
+			<plex-icon name="vacuna" type="info"></plex-icon>
+			<div title>{{vacunaSelected?.nombre}}</div>
+			<div subtitle>{{vacunaSelected?.codigo}}</div>
+		</plex-detail>
+
+		<ng-container *ngIf="!creando">
+			<plex-title titulo="Lotes de la vacuna" size="sm">
+				<plex-button type="success" size="sm" (click)="crearLote()" class='mr-1' icon="plus"></plex-button>
+			</plex-title>
+			<plex-list>
+				<plex-item *ngFor="let lote of lotes$ | async">
+					<plex-label titulo="Codigo" subtitulo="{{lote.codigo}}" size="lg"></plex-label>
+					<plex-label titulo="Descripcion" subtitulo="{{lote.descripcion}}" size="lg"></plex-label>
+				</plex-item>
+			</plex-list>
+		</ng-container>
+
+		<ng-container *ngIf="creando">
+			<plex-title titulo="Crear lote" size="sm">
+				<plex-button type="danger" size="sm" (click)="cerrar()" class='mr-1'>
+					CANCELAR
+				</plex-button>
+				<plex-button type="success" size="sm" (click)="guardar()" [disabled]="!formulario.valid">
+					GUARDAR
+				</plex-button>
+			</plex-title>
+
+			<form #formulario="ngForm">
+				<plex-text grow="full" label="Código" name="codigo" [(ngModel)]="loteSelected.codigo" [required]="true">
+				</plex-text>
+				<plex-text grow="full" label="Descripción" name="descripcion" [(ngModel)]="loteSelected.descripcion"
+						   [required]="true">
+				</plex-text>
+			</form>
+		</ng-container>
+
+	</plex-layout-sidebar>
+</plex-layout>
