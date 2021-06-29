@@ -64,6 +64,10 @@ import { ListadoInternacionCapasComponent } from './views/listado-internacion-ca
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { PlanIndicacionesComponent } from './views/plan-indicaciones/plan-indicaciones.component';
+import { PlanIndicacionesServices } from './services/plan-indicaciones.service';
+import { PlanIndicacionesEventosServices } from './services/plan-indicaciones-eventos.service';
+import { PlanIndicacionEventoComponent } from './views/plan-indicaciones/indicacion-eventos/indicacion-eventos.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -105,7 +109,9 @@ export const INTERNACION_COMPONENTS = [
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,
-    TimelineMapaCamasComponent
+    TimelineMapaCamasComponent,
+    PlanIndicacionesComponent,
+    PlanIndicacionEventoComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -116,6 +122,8 @@ export const INTERNACION_PROVIDERS = [
     ScrollDispatcher,
     IntegridadService,
     PermisosMapaCamasService,
+    PlanIndicacionesServices,
+    PlanIndicacionesEventosServices
 ];
 
 @NgModule({
