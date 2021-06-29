@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { VacunasService } from 'src/app/services/vacunas.service';
 import { Plex } from '@andes/plex';
 
@@ -13,10 +12,6 @@ export class LoteComponent implements OnInit {
   public showSidebar = false;
   public vacunas$: Observable<any[]>;
   public lotes$: Observable<any[]>;
-  public lotes2$: Observable<any[]>;
-  public loteEncontrado;
-  public lote2;
-  public vacunasEncontradas;
   public creando = false;
   public seEncuentra = false;
 
@@ -43,12 +38,12 @@ export class LoteComponent implements OnInit {
 
   showInSideBar(vacuna) {
     if (vacuna) {
-      this.limpiarForm();
-      vacuna.id = vacuna._id;
       this.loteSelected.vacuna = vacuna;
       this.vacunaSelected = vacuna;
+      this.vacunaSelected.id = vacuna._id;
       this.showSidebar = true;
       this.loadLote();
+      this.cerrar();
     }
   }
 
