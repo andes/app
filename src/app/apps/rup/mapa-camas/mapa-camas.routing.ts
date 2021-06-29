@@ -11,6 +11,7 @@ import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { PlanIndicacionesComponent } from './views/plan-indicaciones/plan-indicaciones.component';
 
 export const INTERNACION_ROUTES = [
 
@@ -38,6 +39,8 @@ export const INTERNACION_ROUTES = [
     { path: ':ambito/:capa/visualizacion', component: TimelineMapaCamasComponent },
 
     { path: ':ambito/:capa/resumen/:idInternacion', component: ResumenInternacionComponent },
+
+    { path: ':ambito/:capa/plan-indicaciones/:idInternacion', component: PlanIndicacionesComponent },
 
     { path: ':ambito/:capa', component: MapaCamasCapaComponent },
 

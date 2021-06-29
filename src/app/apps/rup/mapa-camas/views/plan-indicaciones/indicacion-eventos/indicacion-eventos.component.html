@@ -1,0 +1,13 @@
+<plex-title titulo="Registrar evento"></plex-title>
+
+<plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora"></plex-datetime>
+
+<plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado"></plex-select>
+
+<plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [required]="true" [html]="true">
+</plex-text>
+
+<div justify class="mt-2">
+    <plex-button type="danger" (click)="onCancelar()">Cancelar</plex-button>
+    <plex-button type="success" (click)="onGuardar()">Aceptar</plex-button>
+</div>
