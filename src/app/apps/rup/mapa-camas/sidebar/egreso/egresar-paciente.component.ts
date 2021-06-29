@@ -37,6 +37,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public fecha: Date;
     public fechaMax: Date;
     public fechaMin: Date;
+    public fechaMaxProcedimiento: Date;
     public view: string;
     public capa: string;
     public cama: ISnapshot;
@@ -155,12 +156,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
+            this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
+
             this.view = view;
             this.capa = capa;
             if (capa === 'estadistica') {
                 if (!prestacion) { return; }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+
                 if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
@@ -169,6 +173,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
                     this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.UnidadOrganizativaDestino?.id;
+                    this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
                 }
 
                 if (this.view === 'listado-internacion') {
@@ -187,13 +192,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         if (this.cama) {
                             this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
                             this.checkHistorial(fecha);
+                            if (this.subscription3) {
+                                this.subscription3.unsubscribe();
+                            }
+                            this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                                this.estadoDestino = relacionesPosibles[0].destino;
+                            });
                         }
-                        if (this.subscription3) {
-                            this.subscription3.unsubscribe();
-                        }
-                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                            this.estadoDestino = relacionesPosibles[0].destino;
-                        });
                     });
                 }
             }
@@ -209,6 +214,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 });
             }
             this.fecha = fecha;
+            this.calcularDiasEstada();
         });
     }
 
@@ -226,6 +232,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
             this.checkEstadoCama();
+            this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
+
         }
     }
 
@@ -237,7 +245,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 this.egresoSimplificado(this.estadoDestino);
             }
-            this.onSave.emit();
+            this.onSave.emit(null);
         } else {
             this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
             return;
@@ -293,7 +301,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
                 this.disableButton = false;
-                this.onSave.emit();
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al egresar paciente!');
                 this.disableButton = false;
@@ -309,14 +316,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
                         this.listadoInternacionService.setFechaHasta(moment().toDate());
-                        this.onSave.emit();
                     });
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
                 });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
-            this.onSave.emit();
         }
     }
 
@@ -564,7 +569,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // La cama este disponible en la fecha que la quiero usar,
 
     checkEstadoCama() {
-        this.mapaCamasService.get(this.fecha, this.cama.id).subscribe((cama) => {
+        this.mapaCamasService.get(this.fecha, this.cama?.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
