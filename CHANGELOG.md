@@ -1,3 +1,22 @@
+# [5.53.0](https://github.com/andes/app/compare/v5.52.0...v5.53.0) (2021-06-30)
+
+
+### Bug Fixes
+
+* **ficha-epidemio:** secciones repetidas ([cd8a5ee](https://github.com/andes/app/commit/cd8a5eef7f740da3b1d230dd09303a90a8798f3d))
+* **huds:** evoluciones ([#2347](https://github.com/andes/app/issues/2347)) ([1f27ffc](https://github.com/andes/app/commit/1f27ffc6e385cadbd846ffdc9cba92a7cd5e0179))
+* **mapa-camas:** fecha máxima  procedimientos quirúrgicos   ([#2343](https://github.com/andes/app/issues/2343)) ([0e0f098](https://github.com/andes/app/commit/0e0f098ba3d9e7ecf4ff42c5b2dd20156d272f61))
+* **rup:** muestra resultado de la formula ([#2330](https://github.com/andes/app/issues/2330)) ([0db0db0](https://github.com/andes/app/commit/0db0db046bfc727a2059f38fbf9594773813e9e1))
+* **VAC:** saca condición para que sea posible la edición ([#2338](https://github.com/andes/app/issues/2338)) ([40b2e0c](https://github.com/andes/app/commit/40b2e0c4b62a9dae25ea2ab2062dbe153a6a4799))
+
+
+### Features
+
+* **ficha-epidemiologica:** ficha parcial ([6d8e2da](https://github.com/andes/app/commit/6d8e2da39a626e021de1b677f571accdefc48acb))
+* **mapa-camas:** elimina controles de movimientos ([#2341](https://github.com/andes/app/issues/2341)) ([e5d60a4](https://github.com/andes/app/commit/e5d60a44ab38e0ec7be9f591c388bc827cd1d6e4))
+* **mapa-camas:** eliminar internacion con varios movimientos ([#2301](https://github.com/andes/app/issues/2301)) ([acef41f](https://github.com/andes/app/commit/acef41f1a273e9f25bae0b6f6037e12cb4138792))
+* **rup:** permisos especiales para validar ([#2322](https://github.com/andes/app/issues/2322)) ([e321fde](https://github.com/andes/app/commit/e321fded81e20f4309326a7c7e3d8910a402b50c))
+
 # [5.52.0](https://github.com/andes/app/compare/v5.51.0...v5.52.0) (2021-06-23)
 
 
