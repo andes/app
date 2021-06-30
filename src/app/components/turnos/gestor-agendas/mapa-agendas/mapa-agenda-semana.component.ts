@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service';
 
 
 @Component({
@@ -15,24 +15,22 @@ export class MapaAgendasSemanaComponent implements OnInit {
     public horaFin = 20;
     public horarios = [];
     public filasPorHorario;
-    public parametros;
     public intervalo = 30;
-    public agendasDeLaSemana = [];
     public _fecha;
+    public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
-    @Input() dataF: any;
+    @Input() calendario: any;
     @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
-        this.cargarSemana();
+        this.cabiarSemana();
     }
 
     constructor(
-        private agendaService: AgendaService
+        private mapaAgendaService: MapaAgendasService
     ) { }
 
     ngOnInit() {
-
     }
 
     private cargarSemana() {
@@ -55,64 +53,71 @@ export class MapaAgendasSemanaComponent implements OnInit {
     private cargarTabla() {
 
 
-        this.parametros = {
-            fechaDesde: moment(this._fecha).startOf('week').toDate(),
-            fechaHasta: moment(this._fecha).endOf('week').toDate(),
-            organizacion: '',
-            idTipoPrestacion: '',
-            idProfesional: '',
-            espacioFisico: '',
-            otroEspacioFisico: '',
-            estado: ''
-        };
+        this.semana.forEach(dia => {
 
-        this.agendaService.get(this.parametros).subscribe((agendas: any) => {
-            agendas.forEach(agenda => {
+            dia.horarios.forEach(hora => {
+                hora.intervalos.forEach((intervalo, aux) => {
+                    this.semanaSeleccionada?.forEach(diaSemana => {
+                        if (moment(dia.fecha).isSame(diaSemana.fecha, 'day')) {
 
-                this.semana.forEach(dia => {
+                            diaSemana.agendas?.forEach(agenda => {
 
-                    if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
+                                let turnos = [];
 
-                        let turnos = agenda.bloques[0].turnos.filter(turno => turno.estado === 'asignado');
-                        turnos.forEach(t => this.dataF.forEach(tipoPrestacion => {
+                                agenda.informacion.asignado.forEach(turno => {
 
-                            if (tipoPrestacion.color && t.tipoPrestacion.conceptId === tipoPrestacion.conceptId) {
 
-                                t.tipoPrestacion['color'] = tipoPrestacion.color;
+                                    let horaTurno = moment(turno.horaInicio);
+                                    let horaInicial = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * aux);
+                                    let horaFin = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * (aux + 1));
 
-                            }
-                        }));
-
-                        turnos.forEach(turno => dia.horarios.forEach(hora => {
-
-                            hora.intervalos.forEach((intervalo, aux) => {
-
-                                let horaTurno = moment(turno.horaInicio);
-                                let horaInicial = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * aux);
-                                let horaFin = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * (aux + 1));
-
-                                if (horaTurno.isBetween(horaInicial, horaFin, null, '[)')) {
-
-                                    intervalo.turnos.push(turno);
+                                    if (horaTurno.isBetween(horaInicial, horaFin, null, '[)')) {
+                                        turnos.push(turno);
+                                    }
+                                });
+                                if (turnos.length > 0) {
+                                    intervalo.turnos.push({
+                                        turnos: turnos,
+                                        nombre: agenda.nombre,
+                                        color: agenda.color
+                                    });
 
                                 }
 
+
+
                             });
-
-
-                        }));
-
-
-                    }
-
+                        }
+                    });
                 });
             });
 
-        }, err => {
-            if (err) {
-            }
+
+
         });
 
+
+
+
+
+    }
+
+    private cabiarSemana() {
+
+        this.semanaSeleccionada = this.calendario.semanas.find(dias => dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+
+        if (this.semanaSeleccionada) {
+
+            this.cargarSemana();
+
+        } else {
+            this.mapaAgendaService.cargarAgendasMes(this._fecha);
+            this.mapaAgendaService.calendario$.subscribe(calendario => {
+                this.semanaSeleccionada = calendario.find(dias => dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+                this.cargarSemana();
+            });
+
+        }
 
     }
 
@@ -140,9 +145,10 @@ export class MapaAgendasSemanaComponent implements OnInit {
     }
 
 
-    detalleDia(dia) {
+    detalleDia(turno) {
 
-        this.diaDetalle.emit(dia);
+        this.diaDetalle.emit(turno);
     }
+
 
 }

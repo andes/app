@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
-import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service';
 
 
 @Component({
@@ -11,108 +11,57 @@ import { AgendaService } from 'src/app/services/turnos/agenda.service';
 })
 export class MapaAgendasMesComponent implements OnInit {
 
-    public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-    public parametros;
+    public headers = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     public _fecha;
+    public dia;
     public calendario;
-    @Output() diaDetalle = new EventEmitter<any>();
-    @Input() dataF: any;
+    public accion = null;
+    @Output() semanaDetalle = new EventEmitter<any>();
+    @Output() agendasDetalles = new EventEmitter<any>();
     @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
-        this.cargarMes();
+        this.cargarAgendas();
     }
 
     constructor(
-        private agendaService: AgendaService
+        private mapaAgendasService: MapaAgendasService
+
     ) { }
 
     ngOnInit() {
 
+
     }
 
-    private cargarMes() {
-        this.calendario = [];
-        let inicio = moment(this._fecha).startOf('month').startOf('week');
-        let ultimoDiaMes = moment(this._fecha).endOf('month');
-        let primerDiaMes = moment(this._fecha).startOf('month');
-        let cantidadSemanas = Math.ceil(moment(this._fecha).endOf('month').endOf('week').diff(moment(this._fecha).startOf('month').startOf('week'), 'weeks', true));
+    private cargarAgendas() {
 
-        for (let r = 1; r <= cantidadSemanas; r++) {
-            let week = [];
-            this.calendario.push(week);
-
-            for (let c = 1; c <= 7; c++) {
-                let dia = inicio.toDate();
-                let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
-                if (isThisMonth) {
-                    week.push({
-                        fecha: dia,
-                        turnos: []
-                    });
-                } else {
-                    week.push({ estado: 'vacio' });
-                }
-                inicio.add(1, 'day');
-            }
-
-        }
-
-        this.cargarTabla();
-    }
-
-
-    private cargarTabla() {
-
-        this.parametros = {
-            fechaDesde: moment(this._fecha).startOf('month').toDate(),
-            fechaHasta: moment(this._fecha).endOf('month').toDate(),
-            organizacion: '',
-            idTipoPrestacion: '',
-            idProfesional: '',
-            espacioFisico: '',
-            otroEspacioFisico: '',
-            estado: ''
-        };
-
-        this.agendaService.get(this.parametros).subscribe((agendas: any) => {
-            agendas.forEach(agenda => {
-                this.calendario.forEach(semana => {
-
-                    semana.forEach(dia => {
-
-                        if (dia.estado !== 'vacio' && moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
-                            let turnos = [];
-                            turnos = agenda.bloques[0].turnos.filter(turno => turno.estado === 'asignado');
-
-                            turnos.forEach(t => this.dataF.forEach(tipoPrestacion => {
-
-                                if (tipoPrestacion.color && t.tipoPrestacion.conceptId === tipoPrestacion.conceptId) {
-
-                                    t.tipoPrestacion['color'] = tipoPrestacion.color;
-
-                                }
-                            }));
-                            turnos.forEach(turno => dia.turnos.push(turno));
-                            dia.turnos.sort((a, b) =>
-                                a.tipoPrestacion.conceptId.localeCompare(b.tipoPrestacion.conceptId));
-                        }
-
-                    });
-                });
-            });
-
-        }, err => {
-            if (err) {
-            }
-        });
-
+        this.mapaAgendasService.cargarAgendasMes(this._fecha);
+        this.mapaAgendasService.calendario$.subscribe(date => this.calendario = date);
     }
 
     detalleDia(dia) {
-
-        this.diaDetalle.emit(dia);
+        if (dia.agendas.length > 0) {
+            let agendasDia = [];
+            dia.agendas.forEach(tipoPrestacion =>
+                tipoPrestacion.agendasPorPrestacion.forEach(agenda => {
+                    agendasDia.push(agenda);
+                })
+            );
+            this.dia = {
+                fecha: dia.fecha,
+                agendas: agendasDia
+            };
+            this.agendasDetalles.emit(this.dia);
+        }
     }
 
+    close() {
+        this.accion = null;
+    }
+    week(semanas, indice) {
+        let calendario = { semanas: semanas, indice: indice };
+        this.semanaDetalle.emit(calendario);
+    }
 
 }

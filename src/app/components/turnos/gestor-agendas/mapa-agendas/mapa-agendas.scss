@@ -1,19 +1,36 @@
 @import '~@andes/plex/src/lib/css/variables';
 
-.mapa-turnos {
+.semana {
     width: 100%;
+    height: 97%;
     border-collapse: collapse;
     table-layout: fixed;
   
     tr td:first-child {
-        width: 80px;
+         width: 50px;
+         
+        &.first {
+            background-image: linear-gradient(
+                to top right,
+                white 48%,
+                black,
+                white 52%
+              );
+    
+           } 
+        }
+        tr {
+            &.punteado{
+            border-top:3px dotted #8f8b8b;
+            }
         }
 
     tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
     td {
-        border: 1px solid #d0d0d0;
+       width: 100%;
+        border: 1px solid #181717;
         position: relative;
         &.selectable {
             cursor: pointer!important;
@@ -26,7 +43,23 @@
         }
     }
     
-  
+    .circulo {
+       
+        width: 20px;
+        height: 20px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer!important;
+        &:hover {
+            background: #080808;
+         
+            box-shadow: 0 0 0 2px #080808;
+        }
+    
+   }
 
 }
 .mes {
@@ -34,14 +67,27 @@
     border-collapse: collapse;
     table-layout: fixed;
     text-align: center;
+    
     // Rows
     tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+    tr td:first-child {
+        width: 80px;
+       &.first {
+        background-image: linear-gradient(
+            to top right,
+            white 48%,
+            black,
+            white 52%
+          );
+
+       } 
+    }
 
     // Cells
     td {
-        border: 1px solid #d0d0d0;
+        border: 2px solid #181717;
         position: relative;
         &.selectable {
             cursor: pointer!important;
@@ -52,13 +98,38 @@
                 color: black;
             }
         }
+        &.semana{
+            
+            background-color: #00a8e0;
+            cursor: pointer!important;
+            &:hover {
+                box-sizing: border-box;
+                box-shadow: inset 0 0 0 2px transparentize($color: $light-blue, $amount: 0.4);
+                background-color: $light-blue !important;
+                color: black;
+            }
+         
+            
+        }
     }
-    
+
+    .progress {
+        text-align:center;
+        width:80%;
+        margin:auto;
+    }
+    .progress-value {
+        position:absolute;
+        right:0;
+        left:0;
+    }
 
     // Día
     .dia {
+        text-align: right;
         font-size: 1.5em;
         line-height: 0.8em;
+        
     }
 
 }

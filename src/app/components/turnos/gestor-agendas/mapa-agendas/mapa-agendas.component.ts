@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
-import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 @Component({
     selector: 'mapa-agenda',
@@ -10,21 +9,16 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 })
 export class MapaAgendasComponent implements OnInit {
 
-
-    public parametros;
-
-
+    accion;
+    dia;
     public prestacionesPermisos;
-    public verDia = false;
-    public verMes = false;
+    public verMes = true;
     public diaInicio = new Date();
-    public dataF;
-    public verSemana = true;
+    public verSemana = false;
+    public calendario;
     constructor(
-
         private auth: Auth,
-        private conceptoTurneablesService: ConceptosTurneablesService,
-        private router: Router
+        private router: Router,
 
     ) { }
 
@@ -34,46 +28,38 @@ export class MapaAgendasComponent implements OnInit {
         if (!this.prestacionesPermisos.length) {
             this.router.navigate(['inicio']);
         }
-
-
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
-        }
-        this.conceptoTurneablesService.getAll().subscribe((data) => {
-            if (this.prestacionesPermisos[0] === '*') {
-                this.dataF = data;
-            } else {
-                this.dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
-            }
-        });
     }
 
 
+    visualizarSemana(calendario) {
+        this.accion = null;
+        let diaSema = calendario.semanas[calendario.indice].find(dia => !dia.estado);
 
-    visualizarDia(event?) {
-        if (event) {
-            this.verDia = true;
-            this.verSemana = false;
-            this.verMes = false;
-            this.diaInicio = moment(event);
-        }
-        this.verDia = true;
-        this.verSemana = false;
-        this.verMes = false;
-        this.diaInicio = moment(this.diaInicio);
-    }
-
-    visualizarSemana() {
+        this.calendario = calendario;
         this.verSemana = true;
-        this.verDia = false;
+
         this.verMes = false;
-        this.diaInicio = moment(this.diaInicio);
+        this.diaInicio = moment(diaSema.fecha);
     }
 
     visualizarMes() {
-        this.verDia = false;
+        this.accion = null;
         this.verSemana = false;
         this.diaInicio = moment(this.diaInicio);
         this.verMes = true;
+    }
+
+    verAgendas(dia) {
+        this.accion = 'verDetalle';
+        this.dia = dia;
+    }
+
+    turnos(dia) {
+        this.accion = 'verDetalle';
+        this.dia = dia;
+    }
+
+    close() {
+        this.accion = null;
     }
 }

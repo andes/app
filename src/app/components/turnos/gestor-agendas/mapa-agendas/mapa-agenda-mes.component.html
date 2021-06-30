@@ -1,32 +1,44 @@
-<plex-layout>
-    <plex-layout-main>
-        <fieldset>
-            <table class="mes table table-striped table-hover">
-                <tr>
-                    <td *ngFor="let dia of headers" class="text-center">
-                        <small class="text-capitalize font-weight-bold">{{dia}}</small>
+<table class="mes table table-striped table-hover">
+    <tr>
+        <td class="first"></td>
+        <td *ngFor="let dia of headers" class="text-center">
+            <p class="font-weight-bold text-uppercase">{{dia}}</p>
+        </td>
+    </tr>
 
-                    </td>
-                </tr>
+    <ng-container *ngFor="let semana of calendario;let i=index">
+        <tr>
+            <td class="semana" (click)="week(calendario,i)">
+                <plex-icon size="xl" name="eye" type="primary">
+                </plex-icon>
 
-                <ng-container *ngFor="let semana of calendario;let i=index">
-                    <tr>
-                        <td *ngFor="let dia of semana" (click)="detalleDia(dia.fecha)" class="selectable">
-                            <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
-                            <ng-container *ngIf="dia.turnos?.length>0">
-                                <span *ngFor="let turno of dia.turnos" [style.background]="turno.tipoPrestacion.color"
-                                      tooltip="{{turno.tipoPrestacion.term}}">
-                                    <plex-icon name="account-circle"></plex-icon>
-                                </span>
+            </td>
+            <td *ngFor="let dia of semana" (click)="detalleDia(dia)" class="selectable">
+                <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
+                <ng-container *ngIf="dia.agendas?.length>0">
+                    <div class="progress mt-1" *ngFor="let agenda of dia.agendas">
+                        <span
+                              class="progress-value">{{agenda.informacion.asignado.length}}/{{agenda.informacion.asignado.length+
+                            agenda.informacion.disponible.length}}</span>
+                        <div *ngIf="agenda.color" class="progress-bar" tooltip="{{agenda.tipoPrestacion}}"
+                             [style.background]="agenda.color" role="progressbar"
+                             [style.width]="agenda.informacion.porcentajeAsignado+'%'"
+                             [attr.aria-valuenow]="agenda.informacion.porcentajeAsignado" aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
 
 
-                            </ng-container>
-
-                        </td>
-                    </tr>
-
+                        <div *ngIf="agenda.color" tooltip="{{agenda.tipoPrestacion}}" class="progress-bar"
+                             [style.background]="agenda.color" role="progressbar" [style.opacity]="0.6"
+                             [style.width]="agenda.informacion.porcentajeDisponible +'%'"
+                             [attr.aria-valuenow]="agenda.informacion.porcentajeDisponible" aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
                 </ng-container>
-            </table>
-        </fieldset>
-    </plex-layout-main>
-</plex-layout>
+
+            </td>
+        </tr>
+
+    </ng-container>
+</table>
