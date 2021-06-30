@@ -1,41 +1,39 @@
-<fieldset>
-    <table class="mapa-turnos hora table table-striped table-hover">
-        <tr>
-            <td>Horarios</td>
-            <td *ngFor="let dia of semana" class="text-center">
-                <small class="text-capitalize font-weight-bold">{{dia.nombre}}</small>
-                <br>
-                <small>{{dia.fecha | date:"dd/MM"}}</small>
+<table class="semana mt-1">
+    <tr>
+        <td class="first"></td>
+        <td *ngFor="let dia of semana" class="text-center">
+            <span class="font-weight-bold text-uppercase">{{dia.nombre}}</span>
+        </td>
+    </tr>
 
+    <ng-container *ngFor="let hora of horarios;let i=index">
+        <tr>
+            <td [attr.rowspan]="filasPorHorario.length">
+                <span class="font-weight-bold text-uppercase">{{hora.hora}}:00</span>
+            </td>
+            <td *ngFor="let dia of semana">
+                <ng-container *ngIf=" dia.horarios[i].intervalos[0].turnos.length>0">
+
+                    <ng-container *ngFor="let turno of dia.horarios[i].intervalos[0].turnos">
+                        <div *ngIf="turno.color" (click)="detalleDia(turno)" [style.background]="turno.color"
+                             class="circulo">{{turno.turnos.length}}</div>
+                    </ng-container>
+                </ng-container>
             </td>
         </tr>
+        <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
+            <tr *ngIf="aux>0" class="punteado">
+                <td *ngFor="let dia  of semana">
+                    <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
+                        <ng-container *ngFor="let turno of dia.horarios[i].intervalos[aux].turnos">
+                            <div *ngIf="turno.color" (click)="detalleDia(turno)" [style.background]="turno.color"
+                                 class="circulo">{{turno.turnos.length}}</div>
+                        </ng-container>
 
-        <ng-container *ngFor="let hora of horarios;let i=index">
-            <tr>
-                <td [attr.rowspan]="filasPorHorario.length">{{hora.hora}}:00</td>
-                <td *ngFor="let dia of semana" (click)="detalleDia(dia.fecha)" class="selectable">
-                    <ng-container *ngIf=" dia.horarios[i].intervalos[0].turnos.length>0">
-
-                        <span *ngFor="let turno of dia.horarios[i].intervalos[0].turnos"
-                              [style.background]="turno.tipoPrestacion.color" tooltip="{{turno.tipoPrestacion.term}}">
-                            <plex-icon name="account-circle"></plex-icon>
-                        </span>
                     </ng-container>
                 </td>
             </tr>
-            <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
-                <tr *ngIf="aux>0">
-                    <td *ngFor="let dia  of semana" (click)="detalleDia(dia.fecha)" class="selectable">
-                        <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
-                            <span *ngFor="let turno of dia.horarios[i].intervalos[aux].turnos"
-                                  [style.background]="turno.tipoPrestacion.color"
-                                  tooltip="{{turno.tipoPrestacion.term}}">
-                                <plex-icon name="account-circle"></plex-icon>
-                            </span>
-                        </ng-container>
-                    </td>
-                </tr>
-            </ng-container>
         </ng-container>
-    </table>
-</fieldset>
+    </ng-container>
+
+</table>

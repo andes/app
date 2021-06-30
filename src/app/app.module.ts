@@ -99,7 +99,6 @@ import { EstadisticasPacientesComponent } from './components/turnos/dashboard/es
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { MapaAgendasMesComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agenda-mes.component';
 import { MapaAgendasSemanaComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agenda-semana.component';
-import { MapaAgendasDiaComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas-dia.component';
 import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
@@ -205,6 +204,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { InstitucionService } from './services/turnos/institucion.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
+import { MapaAgendasService } from './services/turnos/mapa-agendas.service';
 import { SmsService } from './services/turnos/sms.service';
 import { TurnoService } from './services/turnos/turno.service';
 // TOP
@@ -288,7 +288,6 @@ registerLocaleData(localeEs, 'es');
         MapaAgendasComponent,
         MapaAgendasMesComponent,
         MapaAgendasSemanaComponent,
-        MapaAgendasDiaComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -365,6 +364,7 @@ registerLocaleData(localeEs, 'es');
         ConfigPrestacionService,
         PlanificarAgendaComponent,
         AgendaService,
+        MapaAgendasService,
         AppMobileService,
         TurnoService,
         EspacioFisicoService,
