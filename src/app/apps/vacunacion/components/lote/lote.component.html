@@ -34,6 +34,80 @@
 					<plex-label titulo="Descripcion" subtitulo="{{lote.descripcion}}" size="lg"></plex-label>
 				</plex-item>
 			</plex-list>
+			<br>
+			<ng-container *ngIf="!detalle">
+				<plex-title titulo="Dosis" size="sm"></plex-title>
+				<plex-list>
+
+					<plex-accordion *ngFor="let dosis of dosis$ | async" (click)="mostrarDosis(dosis)"
+									[selected]="dosisSelected === dosis">
+						<plex-panel>
+							<section plex-accordion-title justify>
+								<div class="w-50">
+									<plex-label icon="pipeta" type="info" case="capitalize" size="lg" titulo="Codigo"
+												subtitulo="{{dosis.codigo}}"></plex-label>
+								</div>
+								<div class="w-50">
+									<plex-label size="lg" titulo="Nombre" subtitulo="{{dosis.nombre}}"></plex-label>
+								</div>
+								<div>
+									<plex-button type="info" size="sm" icon="pico-abajo" class="ml-2">
+									</plex-button>
+								</div>
+							</section>
+							<plex-grid cols="2">
+								<plex-button type="info" size="block" (click)="cargarEsquemas()">
+									ESQUEMAS
+								</plex-button>
+								<plex-button type="info" size="block" (click)="cargarCondiciones()">
+									CONDICIONES
+								</plex-button>
+							</plex-grid>
+							<br>
+							<ng-container *ngIf="mostrarEsquemas">
+								<plex-list>
+									<plex-item *ngFor="let esquema of esquemas$ | async">
+										<plex-label titulo="Codigo" subtitulo="{{esquema.codigo}}" size="lg">
+										</plex-label>
+										<plex-badge size="sm" type="success">{{ esquema.nombre }}</plex-badge>
+									</plex-item>
+								</plex-list>
+							</ng-container>
+							<ng-container *ngIf="mostrarCondiciones">
+								<plex-list>
+									<plex-item *ngFor="let cond of condicion">
+										<plex-label titulo="Codigo" subtitulo="{{cond.codigo}}" size="lg"></plex-label>
+										<plex-label titulo="Nombre" subtitulo="{{cond.nombre}}" size="lg"></plex-label>
+									</plex-item>
+								</plex-list>
+							</ng-container>
+						</plex-panel>
+					</plex-accordion>
+
+				</plex-list>
+			</ng-container>
+			<ng-container *ngIf="detalle">
+				<plex-title titulo="Esquema de la vacuna" size="sm">
+					<plex-button type="danger" size="sm" (click)="atras()" class='mr-1'>
+						VOLVER
+					</plex-button>
+				</plex-title>
+				<plex-list>
+					<plex-item *ngFor="let esquema of esquemas$ | async">
+						<plex-label titulo="Codigo" subtitulo="{{esquema.codigo}}" size="lg"></plex-label>
+						<plex-label titulo="Nombre" subtitulo="{{esquema.nombre}}" size="lg"></plex-label>
+					</plex-item>
+					<br>
+					<ng-container *ngIf="detalle">
+						<plex-title titulo="Condicion de la vacuna" size="sm"></plex-title>
+						<plex-item *ngFor="let cond of condicion">
+							<plex-label titulo="Codigo" subtitulo="{{cond.codigo}}" size="lg"></plex-label>
+							<plex-label titulo="Nombre" subtitulo="{{cond.nombre}}" size="lg"></plex-label>
+						</plex-item>
+					</ng-container>
+
+				</plex-list>
+			</ng-container>
 		</ng-container>
 
 		<ng-container *ngIf="creando">

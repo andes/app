@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VacunasService } from 'src/app/services/vacunas.service';
 import { Plex } from '@andes/plex';
+import { map } from 'rxjs/operators';
+import { cache } from '@andes/shared';
 
 @Component({
   selector: 'app-lote',
@@ -9,11 +11,19 @@ import { Plex } from '@andes/plex';
 })
 export class LoteComponent implements OnInit {
   public vacunaSelected: any;
+  public dosisSelected: any;
   public showSidebar = false;
   public vacunas$: Observable<any[]>;
   public lotes$: Observable<any[]>;
+  public dosis$: Observable<any[]>;
+  public esquemas$: Observable<any>;
   public creando = false;
+  public detalle = false;
   public seEncuentra = false;
+  public condicion = [];
+  public mostrar;
+  public mostrarEsquemas = false;
+  public mostrarCondiciones = false;
 
   public loteSelected =
     {
@@ -38,12 +48,14 @@ export class LoteComponent implements OnInit {
 
   showInSideBar(vacuna) {
     if (vacuna) {
+      vacuna.id = vacuna._id;
       this.loteSelected.vacuna = vacuna;
       this.vacunaSelected = vacuna;
-      this.vacunaSelected.id = vacuna._id;
       this.showSidebar = true;
       this.loadLote();
-      this.cerrar();
+      this.loadDosis();
+      this.atras();
+      // this.cerrar();
     }
   }
 
@@ -55,6 +67,29 @@ export class LoteComponent implements OnInit {
     });
   }
 
+  loadDosis() {
+    this.dosis$ = this.vacunasService.getNomivacDosis({
+      habilitado: true,
+      vacuna: this.vacunaSelected._id,
+      sort: 'codigo'
+    });
+  }
+
+  loadEsquemas() {
+    this.esquemas$ = this.vacunasService.getNomivacEsquemas({
+      habilitado: true,
+      vacuna: this.vacunaSelected._id,
+      codigo: this.dosisSelected.esquema.codigo,
+      sort: 'codigo'
+    });
+    this.condicion = [];
+    this.esquemas$.subscribe(r => {
+      r.forEach(res => {
+        this.condicion.push(res.condicion);
+      });
+    });
+  }
+
   closeSidebar() {
     this.showSidebar = false;
   }
@@ -63,14 +98,38 @@ export class LoteComponent implements OnInit {
     this.creando = true;
   }
 
+  mostrarDosis(dosis) {
+    // this.detalle = true;
+    this.dosisSelected = dosis;
+    this.loadEsquemas();
+  }
+
   cerrar() {
     this.creando = false;
     this.limpiarForm();
   }
 
+  atras() {
+    this.detalle = false;
+  }
+
   limpiarForm() {
     this.loteSelected.codigo = '';
     this.loteSelected.descripcion = '';
+  }
+
+  cambiarOpcion(opcion) {
+    this.mostrar = opcion;
+  }
+
+  cargarEsquemas() {
+    this.mostrarCondiciones = false;
+    this.mostrarEsquemas = true;
+  }
+
+  cargarCondiciones() {
+    this.mostrarEsquemas = false;
+    this.mostrarCondiciones = true;
   }
 
   guardar() {
