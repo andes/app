@@ -345,11 +345,11 @@
 
     <!-- Footer -->
     <plex-layout-footer>
-
-        <plex-button *ngIf="prestacion && prestacion.solicitud.ambitoOrigen != 'internacion'" position="left"
+ 
+        <plex-button *ngIf="prestacion && !rutaVolver" position="left"
                      label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
         </plex-button>
-        <plex-button *ngIf="prestacion && prestacion.solicitud.ambitoOrigen == 'internacion'" position="left"
+        <plex-button *ngIf="prestacion && rutaVolver" position="left"
                      label="{{btnVolver}}" (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
         </plex-button>
 

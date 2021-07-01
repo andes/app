@@ -1,0 +1,64 @@
+<ng-container>
+    <plex-title *ngIf="!contactoEdicion" titulo="Contactos estrechos" size="sm">
+        <plex-button *ngIf="editMode" size="sm" type="success" icon="plus" (click)="editContacto()">
+        </plex-button>
+    </plex-title>
+
+    <plex-title *ngIf="contactoEdicion" titulo="{{ contactoUpdate ? 'Editar Contacto' : 'Nuevo Contacto'}} " size="sm">
+    </plex-title>
+
+
+    <plex-list *ngIf="!contactoEdicion">
+        <plex-label *ngIf="!contactos?.length" titulo="No hay datos de contactos registrados" subtitulo=""></plex-label>
+
+        <plex-item *ngFor="let _unContacto of contactos; let i = index" class="">
+            <plex-label titulo="{{ _unContacto.apellidoNombre }}"
+                subtitulo="{{ _unContacto.dni || 'Sin DNI' }}">
+            </plex-label>
+            <plex-label titulo="Teléfono" subtitulo="{{ _unContacto.telefono}}">
+            </plex-label>
+            <plex-label titulo="Último contacto" subtitulo="{{ _unContacto.fechaUltimoContacto | fecha}}">
+            </plex-label>
+            <plex-badge *ngIf="_unContacto.tipoContacto.nombre; else elseBlock" type="info">
+                {{_unContacto.tipoContacto.nombre}}
+            </plex-badge>
+            <ng-template #elseBlock>
+                <plex-badge type="info">
+                    No especificado
+                </plex-badge>
+            </ng-template>
+            <plex-button *ngIf="editMode" label="" type="warning" size="sm" icon="pencil" (click)="edit(_unContacto)">
+            </plex-button>
+            <plex-button *ngIf="editMode" label="" type="danger" size="sm" icon="delete" (click)="delete(i)">
+            </plex-button>
+        </plex-item>
+    </plex-list>
+
+    <ng-container *ngIf="contactoEdicion">
+        <plex-wrapper>
+            <plex-grid cols="2">
+                <plex-text name="apellidoNombre" label="Nombre Completo" [(ngModel)]="contactoEdicion.apellidoNombre">
+                </plex-text>
+                <plex-text name="documento" label="Documento" [(ngModel)]="contactoEdicion.dni"></plex-text>
+                <plex-text type="number" name="telefono" label="Teléfono" [(ngModel)]="contactoEdicion.telefono">
+                </plex-text>
+                <plex-text name="domicilio" label="Domicilio" [(ngModel)]="contactoEdicion.domicilio"></plex-text>
+                <plex-datetime type="date" name="fechaUltimoContacto" label="Fecha Contacto"
+                    [(ngModel)]="contactoEdicion.fechaUltimoContacto"></plex-datetime>
+                <plex-select name="tipoContacto" label="Tipo Contacto" [(ngModel)]="contactoEdicion.tipoContacto"
+                    [data]="tipoContactos">
+                </plex-select>
+            </plex-grid>
+        </plex-wrapper>
+
+        <div class="w-100" justify>
+            <plex-button type="danger" (click)="cerrar()">
+                Cancelar
+            </plex-button>
+            <plex-button type="success" [disabled]="!contactoEdicion.dni && !contactoEdicion.telefono" (click)="aceptar($event)" [validateForm]="formEstado">
+                Aceptar
+            </plex-button>
+        </div>
+    </ng-container>
+
+</ng-container>

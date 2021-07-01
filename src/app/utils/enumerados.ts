@@ -108,6 +108,33 @@ export enum MotivosLiberacion {
     'Otro'
 }
 
+ // Códigos de color de prioridades
+ export const ColoresPrioridades = [
+    {
+        border: '#b0cfa0',
+        hover: '#80b266',
+        background: '#e9f2e5',
+        name: 'baja'
+    },
+    {
+        border: '#d5c743',
+        hover: '#C6B300',
+        background: '#f8f5de',
+        name: 'media'
+    },
+    {
+        border: '#e4a4a4',
+        hover: '#B70B0B',
+        background: '#f8e6e6',
+        name: 'alta'
+    },
+    {
+        border: '#7a6f93',
+        hover: '#02111C',
+        background: '#dddae3',
+        name: 'especial'
+    }
+];
 
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {

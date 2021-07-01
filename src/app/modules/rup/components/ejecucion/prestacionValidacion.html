@@ -202,10 +202,10 @@
                      position="left">
         </plex-button>
         <!-- Inicio de RUP ambulatorio -->
-        <plex-button *ngIf="validada && prestacion?.solicitud.ambitoOrigen === 'ambulatorio'" label="Punto de Inicio"
+        <plex-button *ngIf="validada && !rutaVolver" label="Punto de Inicio"
                      (click)="volverInicio(prestacion?.solicitud.ambitoOrigen)" type="info" position="left">
         </plex-button>
-        <plex-button *ngIf="validada && prestacion?.solicitud.ambitoOrigen === 'internacion'" label="{{ btnVolver }}"
+        <plex-button *ngIf="validada && prestacion?.solicitud.ambitoOrigen && rutaVolver" label="{{ btnVolver }}"
                      (click)="volverInicio(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info" position="left">
         </plex-button>
         <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"

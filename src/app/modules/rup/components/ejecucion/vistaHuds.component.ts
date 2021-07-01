@@ -1,17 +1,16 @@
-import { Component, OnInit, OnDestroy, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { Plex } from '@andes/plex';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { LogService } from '../../../../services/log.service';
+import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
-import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
-import { HUDSService } from '../../services/huds.service';
-import { Location } from '@angular/common';
-import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -43,7 +42,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
-        public seguimientoPacienteService: SeguimientoPacienteService,
         private location: Location
     ) { }
 
@@ -83,15 +81,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                    if (paciente) {
-                        this.registroSeguimiento();
-                    }
                 });
             });
         } else {
-            if (this.paciente) {
-                this.registroSeguimiento();
-            }
             // Loggeo de lo que ve el profesional
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
             this.logService.post('rup', 'hudsPantalla', {
@@ -134,16 +126,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.cambiarPaciente.emit(true);
     }
 
-    registroSeguimiento() {
-        // Se evalúa si hay registros de seguimiento
-        this.seguimientoPacienteService.getRegistros({ paciente: this.paciente.id }).subscribe(seguimientoPaciente => {
-            if (seguimientoPaciente.length) {
-                this.flagSeguimiento = true;
-            } else {
-                this.flagSeguimiento = false;
-            }
-        });
-    }
 
 
 }

@@ -1,32 +1,38 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
-import { MPILibModule } from '../mpi/mpi-lib.module';
+import { SharedModule } from '@andes/shared';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
-import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
-import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
-import { FormsService } from '../forms-builder/services/form.service';
-import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
+import { DirectiveLibModule } from '../../directives/directives.module';
 import { SelectSearchDirective } from '../../directives/select-search.directive';
 import { SelectSearchService } from '../../services/select-search.service';
-import { SharedModule } from '@andes/shared';
+import { FormsService } from '../forms-builder/services/form.service';
+import { MPILibModule } from '../mpi/mpi-lib.module';
+import { ElementosRUPModule } from '../rup/elementos-rup.module';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
-import { DirectiveLibModule } from '../../directives/directives.module';
+import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidemiologica-contactos/ficha-epidemiologica-contactos.component';
+import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
+import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
+import { ActualizarSeguimientoComponent } from './components/seguimiento/actualizar-seguimiento/actualizar-seguimiento.component';
+import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
+import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
+import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
-
-
-
+import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 @NgModule({
   declarations: [
     FichaEpidemiologicaComponent,
     FichaEpidemiologicaCrudComponent,
+    FichaEpidemiologicaContactosComponent,
     SelectSearchDirective,
     BuscadorFichaEpidemiologicaComponent,
     HistorialFichaComponent,
-    CodigSisaPipe
+    SeguimientoEpidemiologiaComponent,
+    DetalleSeguimientoComponent,
+    SeguimientoFieldsPipe,
+    CodigSisaPipe,
+    ActualizarSeguimientoComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +43,8 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
     ReactiveFormsModule,
     MPILibModule,
     SharedModule,
-    DirectiveLibModule
+    DirectiveLibModule,
+    ElementosRUPModule
   ],
   providers: [FormsService, SelectSearchService],
   exports: [FichaEpidemiologicaCrudComponent]

@@ -1,7 +1,8 @@
 <plex-layout [main]="(showFicha || pacienteSelected) && (!fichaHistorial) && (!codigoSISAEdit) ? 12 : 8">
     <plex-layout-main *ngIf="!showFicha; else elseFicha">
         <plex-title titulo="Fichas epidemiologicas">
-            <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()" [disabled]="inProgress">
+            <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()"
+                         [disabled]="inProgress">
             </plex-button>
         </plex-title>
         <plex-grid cols="{{ !pacienteSelected ? '3' : null }}" size="lg" type="full">
@@ -32,8 +33,8 @@
                 </plex-select>
                 <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
                 </plex-text>
-                <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts"
-                             label="Regitrado en SISA" [(ngModel)]="filtrarSISA" labelField="nombre">
+                <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts" label="Regitrado en SISA"
+                             [(ngModel)]="filtrarSISA" labelField="nombre">
                 </plex-select>
             </plex-wrapper>
         </plex-grid>
@@ -62,7 +63,7 @@
                         <plex-badge type="{{ sisaField.codigoSisa ? 'success' : 'danger' }}">
                             {{ sisaField.codigoSisa ? 'SISA ' + sisaField.codigoSisa : 'SIN REGISTRO' }}
                             <plex-button icon="pencil" type="success" size="sm" title="Editar código SISA"
-                                (click)="editarCodigoSISA(ficha, sisaField.codigoSisa)">
+                                         (click)="editarCodigoSISA(ficha, sisaField.codigoSisa)">
                             </plex-button>
                         </plex-badge>
                     </ng-container>
@@ -84,7 +85,7 @@
             <paciente-buscar (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
             </paciente-buscar>
             <paciente-listado *ngIf="resultadoBusqueda?.length && !pacienteSelected" [pacientes]="resultadoBusqueda"
-                            (selected)="onSelect($event)">
+                              (selected)="onSelect($event)">
             </paciente-listado>
             <div *ngIf="!pacienteSelected && !resultadoBusqueda?.length" class="h-75" justify="center">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
@@ -112,8 +113,7 @@
                 <plex-label titulo="Fecha" subtitulo="{{fichaPaciente.createdAt | fecha}}">
                 </plex-label>
             </plex-grid>
-            <plex-int label="Código SISA" [autoFocus]="true" [(ngModel)]="codigoSisa"
-                name="codigoSISA">
+            <plex-int label="Código SISA" [autoFocus]="true" [(ngModel)]="codigoSisa" name="codigoSISA">
             </plex-int>
         </ng-container>
     </plex-layout-sidebar>
