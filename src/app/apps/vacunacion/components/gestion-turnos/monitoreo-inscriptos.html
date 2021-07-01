@@ -127,6 +127,23 @@
         <paciente-detalle *ngIf="pacienteSelected.paciente" [paciente]="pacienteSelected.paciente" reload="true"
                           orientacion="horizontal">
         </paciente-detalle>
+
+        <plex-title titulo="Llamados" size="sm" class="mb-4">
+            <plex-badge *ngIf="pacienteSelected.llamados?.length" size="sm" type="info" class="mr-1">
+                {{pacienteSelected.llamados[pacienteSelected.llamados.length - 1].fechaRealizacion | fecha}}
+                {{pacienteSelected.llamados[pacienteSelected.llamados.length - 1].fechaRealizacion | hora}}
+                <plex-icon name="calendar-clock" size="sm" class="mr-1"></plex-icon>
+            </plex-badge>
+            <plex-badge size="sm" type="warning" class="mr-1">
+                {{pacienteSelected.llamados.length?pacienteSelected.llamados[pacienteSelected.llamados.length -
+                1].numeroIntento : 0}}
+                <plex-icon name="phone" size="sm" class="mr-1"></plex-icon>
+            </plex-badge>
+            <plex-button type="success" size="sm" icon="phone-plus" class='mr-1' tooltip="Agregar llamado"
+                         (click)="incrementarLlamado()">
+            </plex-button>
+        </plex-title>
+        <hr class="mb-2">
         <plex-title titulo="Datos de la inscripción" size="sm" *ngIf="!editando && !dacionTurno && !showAgregarNota">
             <plex-button type="info" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}" size="sm"
                          (click)="showAgregarNota = true"
