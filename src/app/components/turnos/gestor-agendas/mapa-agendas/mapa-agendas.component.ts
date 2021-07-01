@@ -52,7 +52,6 @@ export class MapaAgendasComponent implements OnInit {
     }
 
     verAgendas(dia) {
-        console.log(dia);
         this.accion = 'verDetalle';
         this.dia = dia;
     }
@@ -82,5 +81,4 @@ export class MapaAgendasComponent implements OnInit {
     close() {
         this.accion = null;
     }
-
 }
