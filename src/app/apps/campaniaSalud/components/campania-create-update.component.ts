@@ -199,11 +199,11 @@ export class CampaniaFormComponent implements OnInit {
     confirmarSvg(archivo: string): boolean {
         let regExXml = /<\?xml (.|\n)*\?>/;
         let regExSvg = /svg (.|\n)*\/svg/; // verificar los <>
-        let regExTamanio = /width.?"35(px)?"(.|\n)*height.?"35(px)?"/;
+        let regExTamanio = /width.?"720(px)?"(.|\n)*height.?"160(px)?"/;
 
         let cumpleTamanio: boolean = regExTamanio.test(archivo);
         if (!cumpleTamanio) {
-            this.plex.info('danger', 'El tamaño de la imagen debe ser 35px x 35px.');
+            this.plex.info('danger', 'El tamaño de la imagen debe ser 720px x 160px.');
         }
 
         return regExXml.test(archivo) && regExSvg.test(archivo) && cumpleTamanio;
