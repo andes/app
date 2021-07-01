@@ -43,7 +43,8 @@
 
             <plex-panel *ngIf="agenda">
                 <div plex-accordion-title>
-                    {{agenda.tipoPrestacion.term}}
+                    {{agenda.tipoPrestacion.term}} |
+                    {{agenda.agenda.horaInicio | date:'HH:mm'}}-{{agenda.agenda.horaFin | date:'HH:mm'}}
                     <plex-badge type="info">{{agenda.asignados.length}}/{{agenda.asignados.length+
                         agenda.disponible.length}}</plex-badge>
                 </div>
@@ -74,21 +75,32 @@
                 <span dato>{{dia.turnos.length}}</span>
             </plex-badge>
 
-            <div title> {{ dia.turnos[0].horaInicio | date :"dd/MM/yy"}} </div>
+            <div title> {{ dia.turnos[0].horaInicio | date :"EEEE"}} {{ dia.turnos[0].horaInicio | date :"dd/MM/yy"}}
+            </div>
         </plex-detail>
         <plex-title titulo="Turnos" size="sm"></plex-title>
 
-        <plex-list>
-            <ng-container *ngFor="let turno of dia.turnos">
-                <plex-item>
-                    <plex-icon name="turno-bold" type="info"></plex-icon>
-                    <plex-label titulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}} | {{turno.horaInicio | date: 'HH:mm'}}"
-                                subtitulo="Otro subtítulo" size="sm">
-                    </plex-label>
+        <plex-accordion *ngFor="let turno of dia.turnos">
 
-                </plex-item>
-            </ng-container>
-        </plex-list>
+            <plex-panel>
+                <div plex-accordion-title>
+                    {{turno.paciente.apellido}} , {{turno.paciente.nombre}} | {{turno.horaInicio | date: 'HH:mm'}}
+
+                </div>
+                <plex-detail size="sm">
+                    <plex-badge *ngIf="turno.estado" size="sm">{{ turno.estado }}</plex-badge>
+                    <plex-label titulo="Prestacion" subtitulo="{{turno.tipoPrestacion.term}}"></plex-label>
+                    <plex-label *ngIf="turno.agenda.espacioFisico" titulo="Espacio Fisico"
+                                subtitulo="{{turno.agenda.espacioFisico}}">
+                    </plex-label>
+                    <plex-label *ngIf="turno.nota" titulo="Nota" subtitulo="{{turno.nota}}"></plex-label>
+                    <plex-label titulo="Organizacion" subtitulo="{{turno.agenda.organizacion.nombre}}"></plex-label>
+                    <plex-label *ngIf="turno.agenda.profesionales[0]?.apellido" titulo="Profesional"
+                                subtitulo="{{turno.agenda.profesionales[0].apellido}},{{turno.agenda.profesionales[0].nombre}}">
+                    </plex-label>
+                </plex-detail>
+            </plex-panel>
+        </plex-accordion>
     </plex-layout-sidebar>
 
 </plex-layout>

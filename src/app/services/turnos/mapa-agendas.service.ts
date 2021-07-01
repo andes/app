@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Injectable } from '@angular/core';
 import { ConceptosTurneablesService } from '../conceptos-turneables.service';
 import { AgendaService } from './agenda.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 
 @Injectable()
 export class MapaAgendasService {
@@ -29,27 +29,30 @@ export class MapaAgendasService {
 
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
 
-        this.conceptoTurneablesService.getAll().subscribe((data) => {
-            if (this.prestacionesPermisos[0] === '*') {
-                this.conceptosTurneables = data;
-            } else {
-                this.conceptosTurneables = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+        forkJoin([this.conceptoTurneablesService.getAll(), this.agendaService.get(parametros)]).subscribe(
+            ([data, agendas]) => {
+                this.tipoPrestacionesColor(data);
+                this.agendas = agendas;
+                this.cargarMes();
             }
+        );
 
-            let tiposPrestacion = this.conceptosTurneables.filter(d => d.color);
-            let setTiposPrestaciones = new Map();
-            tiposPrestacion.forEach(tipoPrestacion => {
-                setTiposPrestaciones.set(tipoPrestacion.conceptId, tipoPrestacion);
-            });
-            this.tiposPrestacion = [...setTiposPrestaciones.values()];
+
+    }
+
+    private tipoPrestacionesColor(data) {
+        if (this.prestacionesPermisos[0] === '*') {
+            this.conceptosTurneables = data;
+        } else {
+            this.conceptosTurneables = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+        }
+
+        let tiposPrestacion = this.conceptosTurneables.filter(d => d.color);
+        let setTiposPrestaciones = new Map();
+        tiposPrestacion.forEach(tipoPrestacion => {
+            setTiposPrestaciones.set(tipoPrestacion.conceptId, tipoPrestacion);
         });
-
-        this.agendaService.get(parametros).subscribe(agendas => {
-            this.agendas = agendas;
-            this.cargarMes();
-        });
-
-
+        this.tiposPrestacion = [...setTiposPrestaciones.values()];
     }
 
     private cargarMes() {

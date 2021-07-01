@@ -78,7 +78,7 @@ export class MapaAgendasSemanaComponent implements OnInit {
                                 if (turnos.length > 0) {
                                     intervalo.turnos.push({
                                         turnos: turnos,
-                                        nombre: agenda.nombre,
+                                        agenda: agenda,
                                         color: agenda.color
                                     });
 
@@ -104,8 +104,9 @@ export class MapaAgendasSemanaComponent implements OnInit {
 
     private cabiarSemana() {
 
-        this.semanaSeleccionada = this.calendario.semanas.find(dias => dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
-
+        this.semanaSeleccionada = this.calendario.semanas.find(dias =>
+            dias.find(dia =>
+                dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
         if (this.semanaSeleccionada) {
 
             this.cargarSemana();
@@ -113,7 +114,8 @@ export class MapaAgendasSemanaComponent implements OnInit {
         } else {
             this.mapaAgendaService.cargarAgendasMes(this._fecha);
             this.mapaAgendaService.calendario$.subscribe(calendario => {
-                this.semanaSeleccionada = calendario.find(dias => dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+                this.semanaSeleccionada = calendario.find(dias =>
+                    dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
                 this.cargarSemana();
             });
 

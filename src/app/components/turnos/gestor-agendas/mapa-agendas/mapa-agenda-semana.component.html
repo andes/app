@@ -2,7 +2,8 @@
     <tr>
         <td class="first"></td>
         <td *ngFor="let dia of semana" class="text-center">
-            <span class="font-weight-bold text-uppercase">{{dia.nombre}}</span>
+            <span class="font-weight-bold text-uppercase">{{dia.nombre}} </span>
+            <span>{{dia.fecha | date:"dd/MM"}}</span>
         </td>
     </tr>
 

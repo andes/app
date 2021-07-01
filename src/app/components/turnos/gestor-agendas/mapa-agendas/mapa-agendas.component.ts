@@ -1,6 +1,8 @@
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
+import { ConsultaComponent } from 'src/app/apps/vacunacion/components/consulta.component';
+import { forEach } from 'vis-util/esnext';
 
 @Component({
     selector: 'mapa-agenda',
@@ -50,11 +52,29 @@ export class MapaAgendasComponent implements OnInit {
     }
 
     verAgendas(dia) {
+        console.log(dia);
         this.accion = 'verDetalle';
         this.dia = dia;
     }
 
     turnos(dia) {
+
+        dia.agenda.agendasPorPrestacion.forEach(agendaPrestacion =>
+            agendaPrestacion.agenda.bloques.forEach(bloque =>
+                bloque.turnos.forEach(turno =>
+                    dia.turnos.forEach(turnoDia => {
+                        if (turno.id === turnoDia.id) {
+
+                            turnoDia['agenda'] = agendaPrestacion.agenda;
+
+                        }
+
+
+                    }
+
+                    )
+                )));
+
         this.accion = 'verDetalle';
         this.dia = dia;
     }
@@ -62,4 +82,5 @@ export class MapaAgendasComponent implements OnInit {
     close() {
         this.accion = null;
     }
+
 }
