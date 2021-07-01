@@ -8,6 +8,8 @@ export class AgendaService {
 
     // URL to web api
     private agendaUrl = '/modules/turnos/agenda';
+    private baseUrlMobile = '/modules/mobileApp';
+
 
     constructor(private server: Server) { }
 
@@ -67,5 +69,9 @@ export class AgendaService {
 
     clonar(data: any): Observable<IAgenda[]> {
         return this.server.post(this.agendaUrl + '/clonar', data);
+    }
+
+    getAgendasDisponibles(params) {
+        return this.server.get(this.baseUrlMobile + '/agendasDisponibles', { params: params });
     }
 }

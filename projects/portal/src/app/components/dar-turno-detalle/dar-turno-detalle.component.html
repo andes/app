@@ -1,0 +1,49 @@
+<ng-container>
+    <plex-title titulo="{{turnoDado ? 'Turno solicitado' : 'Turnos disponibles'}}">
+        <plex-button type="danger" icon="close" size="sm" (click)="volver()"></plex-button>
+    </plex-title>
+    <plex-table [columns]="columns" #table="plTable" *ngIf="!turnoDado && turnosDisponibles?.length">
+        <plex-table-columns>
+        </plex-table-columns>
+        <tr *ngFor="let turno of turnosDisponibles">
+            <td *plTableCol="'hora'">
+                <plex-label size="md" icon="turno-bold" titulo="{{ turno.horaInicio | date:'dd/MM/yyyy' }} | {{ turno.horaInicio |
+                date:'HH:mm' }}">
+                </plex-label>
+            </td>
+            <td *plTableCol="'acciones'">
+                <plex-button type="success" size="sm" (click)="confirmarTurno(turno)">Confirmar</plex-button>
+            </td>
+        </tr>
+    </plex-table>
+    <plex-label *ngIf="!inProgress && !turnosDisponibles?.length" titulo="No hay turnos disponibles en este momento">
+    </plex-label>
+    <ng-container *ngIf="turnoDado">
+        <section class="d-flex flex-column mt-4 h-25" aligned="center" justify="center">
+            <plex-label type="success" size="xl" case="capitalize-first" direction="column" titulo="Turno asignado
+            exitosamente!" subtitulo="Corrobora los datos de tu turno" icon="check"></plex-label>
+        </section>
+        <plex-title size="sm" titulo="Datos de tu turno"></plex-title>
+        <plex-grid cols="2" class="h-25 mb-4 mr-2">
+            <plex-detail direction="column" size="sm">
+                <img [mpiFotoPaciente]="paciente">
+                <div title case="capitalize" title>{{paciente.nombreCompleto }}</div>
+                <div subtitle>{{paciente.documento }}</div>
+            </plex-detail>
+            <plex-detail direction="column" size="md">
+                <plex-icon size="md" name="turno-bold" type="success"></plex-icon>
+                <div title case="capitalize" title>{{turnoSelected.horaInicio | date:'dd/MM/yyyy' }} |
+                    {{turnoSelected.horaInicio | date:'HH:mm'}}</div>
+            </plex-detail>
+        </plex-grid>
+        <plex-grid type="full" size="lg" class="mt-4 h-25 mr-2">
+            <plex-label icon="mano-corazon" titulo="{{ prestacion.term  }}" subtitulo="Prestación"></plex-label>
+            <plex-label icon="centro-salud" titulo="{{ agenda.organizacion.nombre}}" subtitulo="Organización">
+            </plex-label>
+            <plex-label icon="medico"
+                        titulo="{{profesionales.length ?(profesionales | enumerar:['apellido','nombre']) : 'Sin profesional asignado'}}"
+                        subtitulo="Equipo profesional">
+            </plex-label>
+        </plex-grid>
+    </ng-container>
+</ng-container>

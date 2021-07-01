@@ -14,7 +14,7 @@ export class PDPMisTurnosComponent implements OnInit {
 
     public width: number;
     public turnos$: Observable<any>;
-
+    public showTurnosDisponibles = false;
 
     constructor(
         private turnoService: TurnoService,
@@ -44,6 +44,7 @@ export class PDPMisTurnosComponent implements OnInit {
             this.router.navigate([id], { relativeTo: this.activeRoute });
         } else {
             this.router.navigate(['mis-turnos']);
+            this.showTurnosDisponibles = false;
         }
     }
     isResponsive() {
@@ -51,4 +52,11 @@ export class PDPMisTurnosComponent implements OnInit {
         return this.width >= 980;
     }
 
+    darTurnos() {
+        this.showTurnosDisponibles = true;
+    }
+
+    turnosDisponibles(agenda) {
+        this.router.navigate(['dar-turno-detalle', agenda.idAgenda, agenda.prestacion._id], { relativeTo: this.activeRoute });
+    }
 }

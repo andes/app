@@ -12,6 +12,8 @@ import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certif
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
 import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
+import { DarTurnoComponent } from './components/dar-turno/dar-turno.component';
+import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -21,7 +23,9 @@ const routes: Routes = [
     component: PDPMisTurnosComponent,
     canActivate: [RoutingGuard],
     children: [
-      { path: ':id', component: PDPMisTurnosDetallesComponent }]
+      { path: 'dar-turno-detalle/:idAgenda/:idPrestacion', component: DarTurnoDetalleComponent },
+      { path: ':id', component: PDPMisTurnosDetallesComponent }
+    ]
   },
   {
     path: 'mis-vacunas',
@@ -55,6 +59,10 @@ const routes: Routes = [
     children: [
       { path: ':id', component: PDPMisFamiliaresDetalleComponent }
     ]
+  },
+  {
+    path: 'dar-turnos',
+    component: DarTurnoComponent
   }
 
 ];

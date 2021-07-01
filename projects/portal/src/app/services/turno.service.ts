@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { cacheStorage, Server } from '@andes/shared';
-import { Observable } from 'rxjs';
+import { Server } from '@andes/shared';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 @Injectable({
@@ -11,6 +11,10 @@ export class TurnoService {
 
     private agendaUrl = '/modules/mobileApp';
 
+    public tipoPrestacionSubject = new BehaviorSubject(null);
+    public profesionalSubject = new BehaviorSubject(null);
+    public turnoDadoSubject = new BehaviorSubject(null);
+
     constructor(
         private server: Server,
         private auth: Auth
@@ -18,9 +22,7 @@ export class TurnoService {
 
 
     getTurnos(): Observable<any[]> {
-        return this.server.get(this.agendaUrl + '/turnos').pipe(
-            cacheStorage({ key: 'turnos' })
-        );
+        return this.server.get(this.agendaUrl + '/turnos');
     }
 
     getTurno(id: number | string) {
