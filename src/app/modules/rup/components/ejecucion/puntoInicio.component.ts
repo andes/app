@@ -1,24 +1,23 @@
-import { cacheStorage, Unsubscribe } from '@andes/shared';
-import { forkJoin as observableForkJoin, pipe } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { cacheStorage, Unsubscribe } from '@andes/shared';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
+import { SnomedService } from '../../../../apps/mitos';
+import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { TurnoService } from '../../../../services/turnos/turno.service';
+import { WebSocketService } from '../../../../services/websocket.service';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { HUDSService } from '../../services/huds.service';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { TurnoService } from '../../../../services/turnos/turno.service';
-import { SnomedService } from '../../../../apps/mitos';
-import { Subscription, concat } from 'rxjs';
-import { HUDSService } from '../../services/huds.service';
-import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
-import { WebSocketService } from '../../../../services/websocket.service';
-import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
-import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -128,7 +127,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         this.ws.connect();
-        this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'rup' });
+        this.servicioPrestacion.notificaRuta({ nombre: 'Punto de Inicio', ruta: 'rup' });
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
             cacheStorage({ key: 'punto-inicio-pantallas', until: this.auth.session(true) })
         ).subscribe((pantallas) => {

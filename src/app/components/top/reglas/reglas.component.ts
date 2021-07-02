@@ -53,7 +53,7 @@ export class ReglasComponent {
         if (this.prestacionDestino && this.prestacionDestino.conceptId) {
             query.prestacionDestino = this.prestacionDestino.conceptId;
             this.servicioReglas.get(query).subscribe((reglas: any) => {
-                this.reglas = reglas;
+                this.reglas = reglas.filter(r => !r.pacs); // Hasta tener ABM pacs
             });
         }
     }
