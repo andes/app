@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { SnomedService } from 'src/app/apps/mitos/services/snomed.service';
 import { cache } from '@andes/shared';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 
 @Component({
   selector: 'app-ficha-epidemiologica',
@@ -50,7 +51,8 @@ export class FichaEpidemiologicaComponent implements OnInit {
     private formEpidemiologiaService: FormsEpidemiologiaService,
     private router: Router,
     private auth: Auth,
-    private snomedService: SnomedService
+    private snomedService: SnomedService,
+    private motivoAccesoService: ModalMotivoAccesoHudsService
   ) { }
 
   ngOnInit(): void {
@@ -92,7 +94,11 @@ export class FichaEpidemiologicaComponent implements OnInit {
   }
 
   ruteo(id) {
-    this.router.navigate(['/huds/paciente/', id]);
+    this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe(motivo => {
+      if (motivo) {
+        this.router.navigate(['/huds/paciente/', id]);
+      }
+    });
   }
 
   searchStart() {

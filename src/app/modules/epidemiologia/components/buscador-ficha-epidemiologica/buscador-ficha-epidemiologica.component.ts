@@ -11,6 +11,7 @@ import { LocalidadService } from '../../../../services/localidad.service';
 import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',
@@ -51,7 +52,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     { id: 'SISA', nombre: 'Con registro SISA' },
   ];
   public filtrarSISA;
-
+  public permisoHuds = false;
   public columns = [
     {
       key: 'fecha',
@@ -101,13 +102,15 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private router: Router,
     private localidadService: LocalidadService,
     private zonaSanitariaService: ZonaSanitariaService,
-    private pacienteService: PacienteService
+    private pacienteService: PacienteService,
+    private motivoAccesoService: ModalMotivoAccesoHudsService
   ) { }
 
   ngOnInit(): void {
     if (!this.auth.getPermissions('epidemiologia:?').length) {
       this.router.navigate(['inicio']);
     }
+    this.permisoHuds = this.auth.check('huds:visualizacionHuds');
     this.puedeEditar = this.auth.check('epidemiologia:update');
     this.puedeVer = this.auth.check('epidemiologia:read');
     this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
@@ -266,5 +269,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
 
   cancelarSisa() {
     this.codigoSISAEdit = false;
+  }
+
+  verHuds(pacienteId) {
+    this.motivoAccesoService.getAccessoHUDS(this.paciente).subscribe(motivo => {
+      if (motivo) {
+        this.router.navigate(['/huds/paciente/', pacienteId]);
+      }
+    });
   }
 }

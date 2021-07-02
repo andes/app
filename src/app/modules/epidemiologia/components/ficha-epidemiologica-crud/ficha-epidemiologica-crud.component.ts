@@ -251,7 +251,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.auth.getPermissions('epidemiologia:?').length) {
+    // Pregunta por el permiso de huds para el caso en el que se visualiza una ficha desde la huds y no tiene permisos de epidemiologia
+    if (!this.auth.getPermissions('epidemiologia:?').length && !this.auth.check('huds:visualizacionHuds')) {
       this.router.navigate(['inicio']);
     }
     this.provincias$ = this.provinciaService.get({});
