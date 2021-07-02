@@ -6,6 +6,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 
 // Interfaces
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'lista-solicitud-turno-ventanilla',
@@ -38,8 +39,8 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     constructor(
         public servicioPrestacion: PrestacionesService,
         public auth: Auth,
-        private router: Router,
-        private plex: Plex) { }
+        private router: Router
+    ) { }
 
     ngOnInit() {
 
@@ -68,11 +69,9 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     private sortSolicitudes(solicitudes) {
         return solicitudes.sort((a, b) => {
-            let inia = a.solicitud.fecha ? new Date(a.solicitud.fecha) : null;
-            let inib = b.solicitud.fecha ? new Date(b.solicitud.fecha) : null;
-            {
-                return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
-            }
+            const inia = a.solicitud.fecha ? new Date(a.solicitud.fecha) : null;
+            const inib = b.solicitud.fecha ? new Date(b.solicitud.fecha) : null;
+            return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
         });
 
     }
@@ -89,5 +88,9 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
+    }
+
+    darTurno(prestacion: IPrestacion) {
+        this.solicitudPrestacionEmit.emit(prestacion);
     }
 }

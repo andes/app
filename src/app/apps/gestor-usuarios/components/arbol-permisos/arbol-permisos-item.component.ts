@@ -6,6 +6,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { QueriesService } from 'src/app/services/query.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -41,6 +42,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         private organizacionService: OrganizacionService,
         private queryService: QueriesService,
         private grupoPoblacionalService: GrupoPoblacionalService,
+        private servicioIntermedio: ServicioIntermedioService,
         private auth: Auth,
         public plex: Plex
     ) { }
@@ -168,6 +170,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                     this.parseSelecionados();
                                 });
                                 break;
+                            case 'servicio-intermedio':
+                                this.servicioIntermedio.search({ ids: items }).subscribe((data) => {
+                                    this.seleccionados = data.filter(u => items.includes(u.id));
+                                    this.loading = false;
+                                    this.parseSelecionados();
+                                });
+                                break;
                         }
                     }
                 } else {
@@ -217,6 +226,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 this.organizacionService.unidadesOrganizativas(this.auth.organizacion.id).subscribe((data) => {
                     event.callback(data);
 
+                });
+                break;
+            case 'servicio-intermedio':
+                query.term = '^' + event.query;
+                this.servicioIntermedio.search(query).subscribe((data) => {
+                    data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
                 });
                 break;
         }

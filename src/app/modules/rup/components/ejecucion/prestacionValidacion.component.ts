@@ -81,6 +81,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     conceptosTurneables: ITipoPrestacion[] = [];
     public title;
 
+    public hasPacs: boolean;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -172,6 +174,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
             // Si el elemento no indica si requiere diagnostico principal, lo setea en true por defecto
             this.elementoRUP.requiereDiagnosticoPrincipal = typeof this.elementoRUP.requiereDiagnosticoPrincipal === 'undefined' ? true : this.elementoRUP.requiereDiagnosticoPrincipal;
+
+            this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
@@ -576,6 +580,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     toggleVerMasRelaciones(item) {
         this.verMasRelaciones[item] = !this.verMasRelaciones[item];
+    }
+
+    onPacs() {
+        this.servicioPrestacion.visualizarImagen(this.prestacion);
     }
 
 }

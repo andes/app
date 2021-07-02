@@ -28,6 +28,7 @@ export class VistaPrestacionComponent implements OnInit {
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
     public requestInProgress: boolean;
+    public hasPacs: boolean;
 
     constructor(
         private auth: Auth,
@@ -41,6 +42,7 @@ export class VistaPrestacionComponent implements OnInit {
     ngOnInit() {
         this.puedeDescargarInforme = this.auth.check('huds:impresion');
         if (this.prestacion) {
+            this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
             populateRelaciones(this.prestacion);
         }
     }
@@ -54,6 +56,7 @@ export class VistaPrestacionComponent implements OnInit {
         this.servicioPrestacion.getById(this.idPrestacion).pipe(
             map(prestacion => populateRelaciones(prestacion))
         ).subscribe(prestacion => {
+            this.hasPacs = prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.prestacion = prestacion;
                 this.paciente = paciente;
@@ -83,4 +86,9 @@ export class VistaPrestacionComponent implements OnInit {
     close() {
         this.onClose.emit();
     }
+
+    onPacs() {
+        this.servicioPrestacion.visualizarImagen(this.prestacion);
+    }
+
 }

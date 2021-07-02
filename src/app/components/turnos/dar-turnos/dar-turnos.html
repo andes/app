@@ -8,16 +8,23 @@
                     <header>
                         <div class="row align-items-center">
                             <div class="col-4">
-                                <plex-select *ngIf="!_solicitudPrestacion?.solicitud"
+                                <plex-select *ngIf="!_solicitudPrestacion?.solicitud && !tipoPrestacionesPermitidas"
                                              [(ngModel)]="opciones.tipoPrestacion"
                                              (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
                                              (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion"
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion && !tipoPrestacionesPermitidas"
                                              [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
                                              (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
                                              (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
+
+                                <plex-select *ngIf="tipoPrestacionesPermitidas" [(ngModel)]="opciones.tipoPrestacion"
+                                             [data]="tipoPrestacionesPermitidas" placeholder="Tipos de Prestación"
+                                             (change)="filtrar()" name="tipoPrestacion">
+                                </plex-select>
+
+
                             </div>
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
@@ -65,7 +72,7 @@
                                     [agenda]="agenda" [estado]="estadoT" [opcionesCalendario]="ocultarFinesDeSemana"
                                     [mostrarNoDisponibles]="mostrarNoDisponibles"
                                     [_solicitudPrestacion]="_solicitudPrestacion"
-                                    [filtroPrestacion]="opciones.tipoPrestacion"
+                                    [filtroPrestacion]="opciones.tipoPrestacion" [tipoTurno]="tipoTurno"
                                     (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
                 </plex-box>
             </div>
@@ -321,7 +328,8 @@
                             </div>
                             <div class="col">
                                 <div *ngIf="turno.tipoPrestacion">
-                                    <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
+                                    <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}
+                                </div>
                                 <div *ngIf="agenda.profesionales">
                                     <label>Equipo de Salud</label>
                                     <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional |

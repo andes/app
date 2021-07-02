@@ -12,13 +12,18 @@
     <plex-select *ngIf="organizaciones.length || registro.valor.solicitudPrestacion.organizacionDestino"
                  [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino"
                  [data]="organizaciones" label="Organización destino" placeholder="Seleccione la organización"
-                 labelField="nombre" [required]="true">
+                 labelField="nombre" [required]="true" (change)="onOrganizacionChange()">
     </plex-select>
 
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino"
                  (getData)="loadProfesionales($event)" placeholder="Profesionales" (change)="verificarAutocitacion()"
                  labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
     </plex-select>
+
+    <plex-bool [(ngModel)]="registro.valor.solicitudPrestacion.informe" name="informe" label="Requiere informe"
+               *ngIf="reglaSelected?.destino.informe === 'optional'">
+
+    </plex-bool>
 
 </ng-container>
 <div class="row" *ngIf="soloValores">

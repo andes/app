@@ -31,6 +31,7 @@ import { HUDSLibModule } from './huds-lib.module';
 import { BuscadorComponent } from './components/ejecucion/buscador.component';
 import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
 import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
+import { RUPServicioIntermedioAltaComponent } from './components/servicio-intermedio/servicio-intermedio-alta.component';
 
 
 export const RUP_COMPONENTS = [
@@ -46,7 +47,8 @@ export const RUP_COMPONENTS = [
     SnomedLinkComponent,
     BuscadorComponent,
     RupRelacionesComponent,
-    SnomedSinonimoComponent
+    SnomedSinonimoComponent,
+    RUPServicioIntermedioAltaComponent
 ];
 
 export const RUP_PROVIDERS = [

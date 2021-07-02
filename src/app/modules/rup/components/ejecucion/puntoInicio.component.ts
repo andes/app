@@ -1,22 +1,23 @@
-import { cacheStorage, Unsubscribe } from '@andes/shared';
-import { forkJoin as observableForkJoin, pipe } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { cacheStorage, Unsubscribe } from '@andes/shared';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
+import { ITurno } from 'src/app/interfaces/turnos/ITurno';
+import { SnomedService } from '../../../../apps/mitos';
+import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { TurnoService } from '../../../../services/turnos/turno.service';
+import { WebSocketService } from '../../../../services/websocket.service';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { HUDSService } from '../../services/huds.service';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { TurnoService } from '../../../../services/turnos/turno.service';
-import { SnomedService } from '../../../../apps/mitos';
-import { Subscription, concat } from 'rxjs';
-import { HUDSService } from '../../services/huds.service';
-import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
-import { WebSocketService } from '../../../../services/websocket.service';
-import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -40,6 +41,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     ];
     // Lista de prestaciones filtradas por fecha, tipos de prestaciones permitidas, ...
     public prestaciones: any = [];
+
+    public servicioIntermedio: any = [];
+
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
     // Prestaciones que están fuera de la agenda
@@ -75,8 +79,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public matchPaciente: Boolean = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
 
-    constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
+    public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
+
+    constructor(
+        private router: Router,
+        private plex: Plex,
+        public auth: Auth,
         private hudsService: HUDSService,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
@@ -119,6 +127,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         this.ws.connect();
+        this.servicioPrestacion.notificaRuta({ nombre: 'Punto de Inicio', ruta: 'rup' });
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
             cacheStorage({ key: 'punto-inicio-pantallas', until: this.auth.session(true) })
         ).subscribe((pantallas) => {
@@ -138,12 +147,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // tieneTurnosAsignados: true,
     actualizar() {
         this.cancelarDinamica();
-        const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
+
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
         }
 
-        this.lastRequest = observableForkJoin(
+        const requests = [
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
@@ -154,9 +163,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             }),
             // Prestaciones
             this.getPrestaciones(),
-        ).subscribe(data => {
+        ];
+        if (this.permisoServicioIntermedio.length > 0) {
+            requests.push(
+                this.servicioPrestacion.getServicioIntermedios({
+                    fecha: moment(this.fecha).format('YYYY-MM-DD')
+                })
+            );
+        }
+
+        this.lastRequest = observableForkJoin(requests).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+            this.servicioIntermedio = data[2] || [];
+
             if (this.agendas.length) {
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
@@ -327,59 +347,73 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.router.navigate(['/solicitudes/asignadas']);
     }
 
+    prestacionPendiente: IPrestacion;
+    turno: ITurno;
+
     iniciarPrestacion(turno) {
         const paciente = turno.paciente;
         const snomedConcept = turno.tipoPrestacion;
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.get({
-                    organizacion: this.auth.organizacion.id,
-                    turnos: [turno.id],
-                    estado: 'pendiente',
-                    ambitoOrigen: 'ambulatorio'
-                }).subscribe((pendientes) => {
-                    if (pendientes.length) {
-                        this.ejecutarPrestacionPendiente(pendientes[0], turno).subscribe(() => {
-                            if (this.tieneAccesoHUDS) {
-                                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
-                                    if (husdTokenRes.token) {
-                                        window.sessionStorage.setItem('huds-token', husdTokenRes.token);
-                                        this.routeTo('ejecucion', pendientes[0].id); // prestacion pendiente
-                                    }
-                                });
-                            } else {
-                                this.routeTo('ejecucion', pendientes[0].id); // prestacion pendiente
-                            }
-                        });
+        this.servicioPrestacion.get({
+            organizacion: this.auth.organizacion.id,
+            turnos: [turno.id],
+            estado: 'pendiente',
+            ambitoOrigen: 'ambulatorio'
+        }).subscribe((pendientes) => {
+            if (pendientes.length && pendientes[0].inicio === 'servicio-intermedio') {
+                const pretacionPendiente = pendientes[0];
+                this.prestacionPendiente = pretacionPendiente;
+                this.turno = turno;
+            } else {
+                this.plex.confirm(
+                    `Paciente: <b> ${paciente.apellido}, ${paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
+                    '¿Iniciar Prestación?'
+                ).then(confirmacion => {
+                    if (confirmacion) {
+                        if (pendientes.length) {
+                            const pretacionPendiente = pendientes[0];
+
+                            this.ejecutarPrestacionPendiente(pretacionPendiente, turno).subscribe(() => {
+                                if (this.tieneAccesoHUDS) {
+                                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
+                                        if (husdTokenRes.token) {
+                                            window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                                            this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
+                                        }
+                                    });
+                                } else {
+                                    this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
+                                }
+                            });
+
+                        } else {
+                            const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
+                            this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id).subscribe(nuevaPrestacion => {
+                                if (nuevaPrestacion.error) {
+                                    this.plex.info('info', nuevaPrestacion.error, 'Aviso');
+                                }
+                                if (this.tieneAccesoHUDS) {
+                                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
+                                        if (husdTokenRes.token) {
+                                            window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                                            this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
+                                        }
+                                    });
+                                } else {
+                                    this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
+                                }
+                            }, (err) => {
+                                if (err === 'ya_iniciada') {
+                                    this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+                                    this.actualizar();
+                                } else {
+                                    this.plex.info('warning', err, 'Error');
+                                }
+                            });
+                        }
                     } else {
-                        const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-                        this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', fechaPrestacion, turno.id).subscribe(nuevaPrestacion => {
-                            if (nuevaPrestacion.error) {
-                                this.plex.info('info', nuevaPrestacion.error, 'Aviso');
-                            }
-                            if (this.tieneAccesoHUDS) {
-                                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
-                                    if (husdTokenRes.token) {
-                                        window.sessionStorage.setItem('huds-token', husdTokenRes.token);
-                                        this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
-                                    }
-                                });
-                            } else {
-                                this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
-                            }
-                        }, (err) => {
-                            if (err === 'ya_iniciada') {
-                                this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                                this.actualizar();
-                            } else {
-                                this.plex.info('warning', err, 'Error');
-                            }
-                        });
+                        return false;
                     }
                 });
-
-            } else {
-                return false;
             }
         });
     }
@@ -472,6 +506,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     cargarTurnos(agenda) {
+        this.turno = null;
+        this.prestacionPendiente = null;
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
         this.intervalAgendaRefresh();
@@ -597,14 +633,35 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = false;
     }
 
+
+    ejecutarPrestacion2(prestacion) {
+        this.prestacionPendiente = prestacion;
+        this.turno = null;
+    }
+
+    ejecutarPrestacion(prestacion) {
+        this.ejecutarPrestacionPendiente(prestacion).subscribe(() => {
+            if (this.tieneAccesoHUDS) {
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, prestacion.paciente, prestacion.solicitud.tipoPrestacion.term, this.auth.profesional, null, prestacion.id).subscribe((husdTokenRes) => {
+                    if (husdTokenRes.token) {
+                        window.sessionStorage.setItem('huds-token', husdTokenRes.token);
+                        this.routeTo('ejecucion', prestacion.id); // prestacion pendiente
+                    }
+                });
+            } else {
+                this.routeTo('ejecucion', prestacion.id); // prestacion pendiente
+            }
+        });
+    }
+
     /**
        * Ejecutar una prestacion que esta en estado pendiente
     */
-    ejecutarPrestacionPendiente(prestacion, turno) {
+    ejecutarPrestacionPendiente(prestacion, turno?) {
         let params: any = {
             op: 'estadoPush',
             ejecucion: {
-                fecha: turno.horaInicio,
+                fecha: turno?.horaInicio || new Date(),
                 registros: [],
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
             },
@@ -677,5 +734,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         } else {
             this.routeTo(estado, prestacion.id);
         }
+    }
+
+
+    onCancelPrestacion() {
+        this.turno = null;
+        this.prestacionPendiente = null;
     }
 }

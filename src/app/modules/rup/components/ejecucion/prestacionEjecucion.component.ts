@@ -21,7 +21,6 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 
-
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
@@ -95,6 +94,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public activeIndexResumen = 0;
     onDestroy$ = new Subject();
 
+    public hasPacs = false;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -166,6 +167,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
                         }]);
 
+                        this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
@@ -831,6 +833,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         let scopeCruzado = { 'public': 'private', 'private': 'public' };
         registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
+
     toggleVerMasRelaciones(item) {
         this.verMasRelaciones[item] = !this.verMasRelaciones[item];
     }
@@ -841,5 +844,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
         return checkSemtag;
     }
+
+    onPacs() {
+        this.servicioPrestacion.visualizarImagen(this.prestacion);
+    }
+
 
 }
