@@ -63,6 +63,10 @@ export class RecursosListadoComponent implements OnInit {
 
     }
 
+    diasEstada(cama) {
+        return this.mapaCamasService.calcularDiasEstada(cama.fechaIngreso);
+    }
+
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
         let data = {
             verDetalle: true,

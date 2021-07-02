@@ -103,16 +103,25 @@ export class MapaCamasService {
             this.fecha2
         ).pipe(
             switchMap(([ambito, capa, fecha]) => {
-                return this.camasHTTP.snapshot(ambito, capa, fecha);
+                return this.camasHTTP.snapshot(ambito, capa, fecha).pipe(
+                    map(snapshot => [snapshot, fecha])
+                );
             }),
-            map((snapshot: ISnapshot[]) => {
+            map(([snapshot, fecha]: [ISnapshot[], Date]) => {
                 snapshot.forEach((snap) => {
                     const sectores = snap.sectores || [];
                     const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
                     (snap as any).sectorName = sectorName;
 
                     snap._key = snap.id + '-' + snap.idInternacion;
+
+                    if (snap.fechaIngreso && snap.estado === 'ocupada') {
+                        snap.diaEstada = this.calcularDiasEstada(snap.fechaIngreso, fecha);
+                    } else {
+                        snap.diaEstada = 0;
+                    }
                 });
+
 
 
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
@@ -334,8 +343,8 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
@@ -387,6 +396,23 @@ export class MapaCamasService {
                 snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
             } else if (sortBy === 'paciente') {
                 snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            } else if (sortBy === 'diasEstada') {
+                snapshots = snapshots.sort((a, b) => {
+                    if (a.fechaIngreso) {
+                        if (b.fechaIngreso) {
+                            return a.diaEstada - b.diaEstada;
+                        } else {
+                            return 1;
+                        }
+                    }
+                    return -1;
+                });
+            } else if (sortBy === 'fechaIngreso') {
+                snapshots = snapshots.sort((a, b) => {
+                    if (!a.fechaIngreso) { return -1; }
+                    if (!b.fechaIngreso) { return 1; }
+                    return a.fechaIngreso.getTime() - b.fechaIngreso.getTime();
+                });
             } else if (sortBy === 'fechaMovimiento') {
                 snapshots = snapshots.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
             } else if (sortBy === 'usuario') {
@@ -606,5 +632,14 @@ export class MapaCamasService {
 
             })
         );
+    }
+
+    calcularDiasEstada(fechaDesde, fechaHasta?) {
+        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+        const dateDif = moment(fechaHasta).endOf('day').diff(moment(fechaDesde).startOf('day'), 'days');
+        const diasEstada = dateDif === 0 ? 1 : dateDif;
+        return diasEstada;
     }
 }

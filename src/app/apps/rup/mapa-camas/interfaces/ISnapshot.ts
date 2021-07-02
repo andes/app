@@ -20,6 +20,7 @@ export interface ISnapshot {
     capa: String;
     unidadOrganizativaOriginal: ISnomedConcept;
     sectorName?: String;
+    diaEstada?: number;
     sectores: ISectores[];
     nombre: String;
     tipoCama: ISnomedConcept;

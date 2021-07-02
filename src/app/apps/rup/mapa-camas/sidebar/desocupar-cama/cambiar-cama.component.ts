@@ -110,12 +110,12 @@ export class CambiarCamaComponent implements OnInit {
 
     cambiarCama(camaActual, camaNueva, fecha) {
         const idMov = new ObjectID().toString();
-
         let camaDesocupada: any = {
             _id: camaActual.id,
             estado: 'disponible',
             idInternacion: null,
             paciente: null,
+            fechaIngreso: null,
             sala: camaActual.sala,
             extras: {
                 idMovimiento: idMov
@@ -127,6 +127,7 @@ export class CambiarCamaComponent implements OnInit {
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
             paciente: camaActual.paciente,
+            fechaIngreso: camaActual.fechaIngreso,
             nota: (!camaActual.sala) ? camaActual.nota : null,
             sala: camaNueva.sala,
             extras: {

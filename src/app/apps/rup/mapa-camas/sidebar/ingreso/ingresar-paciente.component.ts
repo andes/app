@@ -11,7 +11,7 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable, of } from 'rxjs';
-import { map, switchMap, filter, tap, auditTime } from 'rxjs/operators';
+import { map, switchMap, filter, auditTime } from 'rxjs/operators';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
@@ -392,6 +392,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         // Se modifica el estado de la cama
         this.cama.estado = estado;
         this.cama.paciente = paciente;
+        this.cama.fechaIngreso = this.informeIngreso.fechaIngreso;
 
         if (this.prestacion) { // SOY CAPA ESTADISTICA
             this.cama.idInternacion = idInternacion;
@@ -419,6 +420,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         } else {
             delete this.cama['sectorName'];
+            delete this.cama['diaEstada'];
             delete this.cama['_key'];
             this.cama.extras = {
                 ingreso: true

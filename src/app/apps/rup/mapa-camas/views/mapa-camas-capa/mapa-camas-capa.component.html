@@ -30,14 +30,14 @@
                     <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
                                    class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
                     </plex-dropdown>
-                    <plex-dropdown *ngIf="!listadoRecursos" icon="format-list-checks" type="info" size="sm"
-                                   class="d-inline-block mr-1" [right]="true">
+                    <plex-dropdown *ngIf="!listadoRecursos" tooltip="Agregar columnas" icon="format-list-checks"
+                                   type="info" size="sm" class="d-inline-block mr-1" [right]="true">
                         <plex-grid cols="3">
                             <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
                                        (change)="toggleColumns()"></plex-bool>
                             <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"
                                        (change)="toggleColumns()"></plex-bool>
-                            <plex-bool label="Sector" [(ngModel)]="columns.sector" (change)="toggleColumns()">
+                            <plex-bool label="Dias estada" [(ngModel)]="columns.diasEstada" (change)="toggleColumns()">
                             </plex-bool>
                             <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
                             </plex-bool>
@@ -47,6 +47,11 @@
                             </plex-bool>
                             <plex-bool *ngIf="(ambito$ | async) === 'guardia'" label="Guardia"
                                        [(ngModel)]="columns.guardia" (change)="toggleColumns()">
+                            </plex-bool>
+                            <plex-bool label="Sector" [(ngModel)]="columns.sector" (change)="toggleColumns()">
+                            </plex-bool>
+                            <plex-bool label="Fecha Ingreso" [(ngModel)]="columns.fechaIngreso"
+                                       (change)="toggleColumns()">
                             </plex-bool>
                         </plex-grid>
                     </plex-dropdown>
@@ -89,8 +94,16 @@
                                     </th>
                                     <th *ngIf="columns.fechaMovimiento" class="sortable"
                                         (click)="sortTable('fechaMovimiento')">
-                                        FECHA
+                                        FECHA MOV.
                                         <span *ngIf="sortBy === 'fechaMovimiento'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </th>
+                                    <th *ngIf="columns.fechaIngreso" class="sortable"
+                                        (click)="sortTable('fechaIngreso')">
+                                        FECHA INGRESO
+                                        <span *ngIf="sortBy === 'fechaIngreso'">
                                             <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                                             <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                         </span>
@@ -116,6 +129,7 @@
                                             <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                         </span>
                                     </th>
+
                                     <th *ngIf="columns.documento" class="sortable" (click)="sortTable('documento')">
                                         DOCUMENTO
                                         <span *ngIf="sortBy === 'documento'">
@@ -141,6 +155,13 @@
                                         (click)="sortTable('usuario')">
                                         USUARIO
                                         <span *ngIf="sortBy === 'usuario'">
+                                            <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
+                                            <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
+                                        </span>
+                                    </th>
+                                    <th *ngIf="columns.diasEstada" class="sortable" (click)="sortTable('diasEstada')">
+                                        DIAS DE ESTADA
+                                        <span *ngIf="sortBy === 'diasEstada'">
                                             <plex-icon *ngIf="sortOrder === 'desc'" name="chevron-down"></plex-icon>
                                             <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                         </span>
