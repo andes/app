@@ -1,22 +1,22 @@
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { SnomedService } from '../../../../apps/mitos';
-import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { PrestacionesService } from './../../services/prestaciones.service';
-import { CodificacionService } from '../../services/codificacion.service';
-import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
-import { ReglaService } from '../../../../services/top/reglas.service';
-import { forkJoin, of, combineLatest, Subscription } from 'rxjs';
+import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, forkJoin, of, Subscription } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { HUDSService } from '../../services/huds.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
+import { SnomedService } from '../../../../apps/mitos';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ReglaService } from '../../../../services/top/reglas.service';
 import { populateRelaciones, unPopulateRelaciones } from '../../operators/populate-relaciones';
+import { CodificacionService } from '../../services/codificacion.service';
+import { HUDSService } from '../../services/huds.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
 
 
 @Component({
@@ -82,6 +82,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public title;
 
     public hasPacs: boolean;
+
+    public puedeRompterValidacion = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -178,7 +180,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             this.hasPacs = this.prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
-            if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
+            if (prestacion.estadoActual.tipo === 'validada') {
                 if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                     this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
@@ -187,6 +189,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     });
                     this.motivoReadOnly = true;
                 }
+                const miPrestacion = String(prestacion.estadoActual.createdBy.username) === this.auth.usuario.username;
+                const puedeValidar = this.auth.check('rup:validacion:' + prestacion.solicitud.tipoPrestacion.id);
+                this.puedeRompterValidacion = miPrestacion || puedeValidar;
+
+            } else {
+                this.puedeRompterValidacion = false;
             }
 
             if (this.elementoRUP.requeridos.length > 0) {
