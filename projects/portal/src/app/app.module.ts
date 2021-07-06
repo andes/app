@@ -41,7 +41,7 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
-import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -95,7 +95,13 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
     PacienteService,
     AgendaService,
     TurnoService,
-    ScanParser
+    ScanParser,
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.SITE_KEY,
+      } as RecaptchaSettings,
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,8 @@
+import { captcha } from '../../../../src/environments/apiKeyMaps';
+
 export const environment = {
   production: true,
   API: '/api',
-  APIStatusCheck: false
+  APIStatusCheck: false,
+  SITE_KEY: captcha.key
 };
