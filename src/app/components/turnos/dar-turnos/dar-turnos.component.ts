@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { ObraSocialService } from './../../../services/obraSocial.service';
+import { idCMI } from '../constantes';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -788,7 +789,7 @@ export class DarTurnosComponent implements OnInit {
         let indiceCarpeta = -1;
         if (this.paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
-            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.organizacion.id);
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex((x: any) => x.organizacion._id === this.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
                 this.nroCarpetaOriginal = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
@@ -908,7 +909,7 @@ export class DarTurnosComponent implements OnInit {
                 } else {
                     if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
                         this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
-                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.organizacion.id);
+                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex((x: any) => x.organizacion._id === this.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
                         } else {
@@ -1315,7 +1316,7 @@ export class DarTurnosComponent implements OnInit {
     */
     desplegarObraSocial() {
         let puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
-        return (this.organizacion.id === '5a5e3f7e0bd5677324737244' && !puco);
+        return (this.organizacion.id === idCMI && !puco);
     }
 
 

@@ -44,7 +44,6 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public inscriptosSinturno = [];
     public showDarTurnos = false;
     public solicitudTurno: any;
-    public idVacunacionCovid = '5fd9088a68796d29fcde55eb';
     public columns = [
         {
             key: 'grupo',
@@ -136,9 +135,9 @@ export class MonitoreoInscriptosComponent implements OnInit {
         } else {
             this.gruposPoblacionales = [];
         }
-        this.conceptosTurneablesService.getAll().subscribe(data => {
+        this.conceptosTurneablesService.search({ id: ConceptosTurneablesService.VacunacionCovid_Id }).subscribe(data => {
             this.solicitudTurno = {
-                tipoPrestacion: (data.filter((x) => x.id === this.idVacunacionCovid))[0]
+                tipoPrestacion: (data.filter((x) => x.id === ConceptosTurneablesService.VacunacionCovid_Id))[0]
             };
         });
     }
