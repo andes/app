@@ -9,6 +9,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: '12.x'
+            - run: cp ./projects/portal/src/environments/configuracion.ts.example ./projects/portal/src/environments/configuracion.ts  
+            - run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts  
             - run: npm ci
             - run: npm run lint
             - run: rm browserslist && touch browserslist

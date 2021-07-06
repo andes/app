@@ -102,9 +102,8 @@
                 </div>
             </div>
         </div>
-        <div class="my-2" justify="center" *ngIf="!scanHabilitado">
-            <re-captcha name="recaptcha" formControlName="recaptcha" siteKey="6Lc5nUsaAAAAALJ15OtJMKpdW9XSEOl13A_3Hx6i"
-                        (resolved)="resolved($event)">
+        <div class="my-2" justify="center" *ngIf="!scanHabilitado && captchaEnabled">
+            <re-captcha name="recaptcha" formControlName="recaptcha" (resolved)="resolved($event)">
             </re-captcha>
         </div>
         <div class="botones-container my-2" justify="center">

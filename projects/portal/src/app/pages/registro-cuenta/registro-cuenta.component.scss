@@ -141,6 +141,7 @@ main {
     @media screen and (max-width: 768px) {
         form{
             width: 500px;
+            margin-top: 100px;
         }
 
         .boton-escanear{
@@ -151,7 +152,7 @@ main {
     @media screen and (max-width: 425px) {
         form{
             width: 400px;
-            margin-top: 50px;
+            margin-top: 120px;
 
             plex-text,plex-int,plex-select{
                 width: 200px;
@@ -162,6 +163,7 @@ main {
     @media screen and (max-width: 376px) {
         form{
             width: 350px;
+            margin-top: 160px;
             
             plex-text,plex-int,plex-select{
                 width: 175px;
@@ -187,7 +189,7 @@ main {
         
         form{
             width: 300px;
-            margin-top: 300px;
+            margin-top: 500px;
 
             .campo-registro{
                 flex-direction: column;

@@ -35,6 +35,7 @@ testem.log
 
 #Angular Files
 apiKeyMaps.ts
+projects/portal/src/environments/configuracion.ts
 
 #System Files
 .DS_Store

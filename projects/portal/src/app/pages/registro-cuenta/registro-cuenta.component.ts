@@ -61,7 +61,6 @@ export class RegistroCuentaComponent implements OnInit {
       sexo: ['', Validators.compose([Validators.required])],
       recaptcha: ['', Validators.compose([Validators.required])]
     });
-
     this.textoDocumento = 'Debe ingresar su número de documento, sin espacios ni puntos.';
     this.textoTramite = 'Debe ingresar los 11 dígitos de su número de trámite de documento.';
     this.textoCelular = 'Debe ingresar su número de celular, sin 0 y sin 15.';
