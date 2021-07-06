@@ -332,7 +332,8 @@
                                 <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha"></plex-text>
+                                           [pattern]="patronPCR" [required]="field.required" [readonly]="!editFicha">
+                                </plex-text>
                                 <plex-text *ngIf="field.key==='clasificacionfinal'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
