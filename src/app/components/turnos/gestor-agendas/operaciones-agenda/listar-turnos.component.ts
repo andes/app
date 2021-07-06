@@ -2,6 +2,7 @@ import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncaps
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../services/documentos.service';
+import { idCMI } from '../../constantes';
 @Component({
     selector: 'listar-turnos',
     templateUrl: 'listar-turnos.html',
@@ -35,7 +36,7 @@ export class ListarTurnosComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
-        this.desplegarOS = this.auth.organizacion.id === '5a5e3f7e0bd5677324737244';
+        this.desplegarOS = this.auth.organizacion.id === idCMI;
     }
 
     // Abre diálogo de impresión del navegador

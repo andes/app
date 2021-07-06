@@ -131,7 +131,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
         } else {
             this.gruposPoblacionales = [];
         }
-        this.conceptosTurneablesService.getAll().subscribe(data => {
+        this.conceptosTurneablesService.search({ id: this.idVacunacionCovid }).subscribe(data => {
             this.solicitudTurno = {
                 tipoPrestacion: (data.filter((x) => x.id === this.idVacunacionCovid))[0]
             };

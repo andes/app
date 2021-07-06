@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { ObraSocialService } from './../../../services/obraSocial.service';
+import { idCMI } from '../constantes';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -1315,7 +1316,7 @@ export class DarTurnosComponent implements OnInit {
     */
     desplegarObraSocial() {
         let puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
-        return (this.organizacion.id === '5a5e3f7e0bd5677324737244' && !puco);
+        return (this.organizacion.id === idCMI && !puco);
     }
 
 
