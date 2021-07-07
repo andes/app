@@ -1,10 +1,11 @@
+import { Auth } from '@andes/auth';
+import { cache } from '@andes/shared';
 import { Component, OnInit } from '@angular/core';
-import { Observable, empty } from 'rxjs';
-import { InscripcionService } from '../services/inscripcion.service';
-import { LocalidadService } from 'src/app/services/localidad.service';
+import { empty, Observable } from 'rxjs';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
-import { Auth } from '@andes/auth';
+import { LocalidadService } from 'src/app/services/localidad.service';
+import { InscripcionService } from '../services/inscripcion.service';
 
 @Component({
     selector: 'filtros-vacunacion',
@@ -31,9 +32,9 @@ export class FiltrosVacunacionComponent implements OnInit {
         const gruposHabilitados = this.auth.getPermissions('vacunacion:tipoGrupos:?');
         if (gruposHabilitados.length) {
             if (gruposHabilitados.length === 1 && gruposHabilitados[0] === '*') {
-                this.gruposPoblacionales$ = this.gruposService.search({});
+                this.gruposPoblacionales$ = this.gruposService.search({}).pipe(cache());
             } else {
-                this.gruposPoblacionales$ = this.gruposService.search({ ids: gruposHabilitados });
+                this.gruposPoblacionales$ = this.gruposService.search({ ids: gruposHabilitados }).pipe(cache());
             }
         } else {
             this.gruposPoblacionales$ = empty();

@@ -1,8 +1,8 @@
-import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
+import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Server, ResourceBaseHttp, calcularEdad } from '@andes/shared';
+import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
+import { auditTime, map, switchMap } from 'rxjs/operators';
 import { ILocalidad } from 'src/app/interfaces/ILocalidad';
-import { map, switchMap } from 'rxjs/operators';
 import { ICiudadano } from '../interfaces/ICiudadano';
 
 @Injectable()
@@ -32,6 +32,7 @@ export class InscripcionService extends ResourceBaseHttp {
             this.tieneCertificado,
             this.lastResults
         ).pipe(
+            auditTime(0),
             switchMap(([paciente, grupos, localidad, fechaDesde, fechaHasta, tieneCertificado, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
