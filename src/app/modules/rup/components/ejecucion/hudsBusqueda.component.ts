@@ -1,16 +1,16 @@
-import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit, Optional } from '@angular/core';
-import * as moment from 'moment';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { HUDSService } from '../../services/huds.service';
-import { gtag } from '../../../../shared/services/analytics.service';
-import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
-import { getSemanticClass } from '../../pipes/semantic-class.pipes';
-import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { Plex } from '@andes/plex';
+import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
+import * as moment from 'moment';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { getSemanticClass } from '../../pipes/semantic-class.pipes';
+import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
+import { HUDSService } from '../../services/huds.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
+
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -63,9 +63,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
-            const dateA = a.data.ejecucion ? a.data.ejecucion.fecha : a.data.fecha;
-            const dateB = b.data.ejecucion ? b.data.ejecucion.fecha : b.data.fecha;
-            return moment(dateB).diff(dateA);
+            return moment(b.fecha).diff(a.fecha);
         });
     }
 
@@ -272,7 +270,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                         tipo: 'rup-group',
                         prestacion: p[0].solicitud.tipoPrestacion,
                         profesional: p[0].estadoActual.createdBy.nombreCompleto,
-                        fecha: p[0].estadoActual.createdAt,
+                        fecha: p[0].ejecucion.fecha || p[0].estadoActual.createdAt,
                         estado: p[0].estadoActual.tipo,
                         ambito: p[0].solicitud.ambitoOrigen,
                         organizacion: p[0].solicitud.organizacion.id
@@ -284,7 +282,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                         tipo: 'rup',
                         prestacion: p.solicitud.tipoPrestacion,
                         profesional: lastState.createdBy.nombreCompleto,
-                        fecha: lastState.createdAt,
+                        fecha: p.ejecucion.fecha || lastState.createdAt,
                         estado: lastState.tipo,
                         ambito: p.solicitud.ambitoOrigen,
                         organizacion: p.solicitud.organizacion.id
@@ -389,7 +387,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe(fichas => {
             if (fichas.length) {
                 const fichasEpidemiologia = fichas.map(f => {
-                    f.solicitud = { ambitoOrigen: 'ambulatorio' };
                     return {
                         data: f,
                         tipo: 'ficha-epidemiologica',
