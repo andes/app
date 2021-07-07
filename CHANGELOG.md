@@ -1,3 +1,30 @@
+# [5.54.0](https://github.com/andes/app/compare/v5.53.0...v5.54.0) (2021-07-07)
+
+
+### Bug Fixes
+
+* **integracion:** se resuelven los problemas de integracion ([5bc2f44](https://github.com/andes/app/commit/5bc2f4420cae84e998049d5629b1aa5b2263c9de))
+
+
+### Features
+
+* **EP:** actulizar seguimiento ([1a542f7](https://github.com/andes/app/commit/1a542f72b3e64420a13eee125054f0d5d04a91d5))
+* **EP:** buscador de seguimiento covid19 ([9865abb](https://github.com/andes/app/commit/9865abbadf8ed901d1f02bbae8c731cb09b86cdf))
+* **EP:** buscador de seguimiento covid19 ([2b4e00c](https://github.com/andes/app/commit/2b4e00c00179ae6aa03b3ed13e26ef9a6789bcd3))
+* **EP:** seguimiento actualizar organizacion ([7d2e60d](https://github.com/andes/app/commit/7d2e60dcbf8c1daf07237d612fa5fd2fe6622db7))
+* **epidemiologia:** contactos estrechos component ([004af45](https://github.com/andes/app/commit/004af45271bd84e5624b4bffa974504c378b1d03))
+* **epidemiologia:** contactos estrechos component ([1d029b4](https://github.com/andes/app/commit/1d029b42e0be0ad98c67a9c89b32797dd9826b02))
+* **epidemiologia:** historial de llamados ([4ffa9cf](https://github.com/andes/app/commit/4ffa9cf53d0b15a529acfe05888e30dad3068df4))
+* **epidemiologia:** historial de llamados ([b33175a](https://github.com/andes/app/commit/b33175a20affd228c83028df7780f6e47c1ba7ba))
+* **fichaEpidemio:** Agregamos la dirección del paciente para tenerla a mano en la ficha por el tema de coordenadas ([3f4d587](https://github.com/andes/app/commit/3f4d5874b36a96d4ffca4275fea9f9d601533b26))
+* **fichaEpidemio:** Agregamos la dirección del paciente para tenerla a mano en la ficha por el tema de coordenadas ([149e105](https://github.com/andes/app/commit/149e105c2ff1d4896972b463742ed2f9a39e7d92))
+* **fichaEpidemio:** Agregamos la dirección del paciente para tenerla a mano en la ficha por el tema de coordenadas ([5412313](https://github.com/andes/app/commit/5412313130510cdc6cc7277c299ba554bda49ada))
+* **mapa-camas:** dias de estada ([#2318](https://github.com/andes/app/issues/2318)) ([07df19a](https://github.com/andes/app/commit/07df19a2cb299c9136b2b30e890642b86dbeea3f))
+* **módulos:** mejoras si hay 4 o más submódulos ([#2336](https://github.com/andes/app/issues/2336)) ([bd7bbbd](https://github.com/andes/app/commit/bd7bbbd1dc994743a7d2c1a2010ea2d7f3654552))
+* **pacs:** modulo pacs ([#2291](https://github.com/andes/app/issues/2291)) ([1f76640](https://github.com/andes/app/commit/1f76640136bc87e3d78532d9e1787ea2dddb504c))
+* **seguimiento:** Se elimina lo de seguimiento que hizo SJ ya que no se usa, y se agrega el módulo de seguimiento de pacientes como corresponde ([1ec1003](https://github.com/andes/app/commit/1ec100395babea3e3033a5c114db4a7d116ef98b))
+* **seguimiento:** Se elimina lo de seguimiento que hizo SJ ya que no se usa, y se agrega el módulo de seguimiento de pacientes como corresponde ([7f9d149](https://github.com/andes/app/commit/7f9d1490f9ce20c785344908c2cd35757876b705))
+
 # [5.53.0](https://github.com/andes/app/compare/v5.52.0...v5.53.0) (2021-06-30)
 
 
