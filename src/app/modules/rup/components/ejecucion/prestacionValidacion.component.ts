@@ -83,7 +83,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     public hasPacs: boolean;
 
-    public puedeRompterValidacion = false;
+    public puedeRomperValidacion = false;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -189,12 +189,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     });
                     this.motivoReadOnly = true;
                 }
-                const miPrestacion = String(prestacion.estadoActual.createdBy.username) === this.auth.usuario.username;
-                const puedeValidar = this.auth.check('rup:validacion:' + prestacion.solicitud.tipoPrestacion.id);
-                this.puedeRompterValidacion = miPrestacion || puedeValidar;
+                this.checkRomperValidacion();
 
             } else {
-                this.puedeRompterValidacion = false;
+                this.puedeRomperValidacion = false;
             }
 
             if (this.elementoRUP.requeridos.length > 0) {
@@ -265,6 +263,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         });
     }
 
+    checkRomperValidacion() {
+        const miPrestacion = this.prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
+        const puedeValidar = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
+        this.puedeRomperValidacion = miPrestacion || puedeValidar;
+    }
+
 
     /**
      * Confirmamos validacion y guardamos
@@ -299,6 +303,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     map(prestacion => populateRelaciones(prestacion))
                 ).subscribe(prestacion => {
                     this.prestacion = prestacion;
+                    this.checkRomperValidacion();
                     const recorrerRegistros = registro => {
                         if (!seCreoSolicitud && registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
                             seCreoSolicitud = true;
