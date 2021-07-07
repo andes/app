@@ -27,6 +27,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public zonaSanitaria = null;
   public idPcr = null;
   public idClasificacion = null;
+  public idTipoConfirmacion = null;
   public dataType$: Observable<any>;
   public fichas$: Observable<any>;
   public showFicha = false;
@@ -48,6 +49,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public fichaHistorial;
   public codigoSISAEdit;
   public codigoSisa;
+  public collapse = false;
   public registroSisaOpts = [
     { id: 'noSISA', nombre: 'Sin registro SISA' },
     { id: 'SISA', nombre: 'Con registro SISA' },
@@ -58,6 +60,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
     { id: 'controlAlta', nombre: 'Control de alta' }
   ];
+  public tipoConfirmacion = [
+    { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
+    { id: 'antigeno', nombre: 'Antígeno' },
+    { id: 'pcr', nombre: 'PCR-RT' },
+    { id: 'lamp', nombre: 'LAMP(NeoKit)' }
+  ];
   public filtrarSISA;
   public permisoHuds = false;
   public columns = [
@@ -65,18 +73,21 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       key: 'fecha',
       label: 'Fecha',
       sorteable: true,
+      opcional: true,
       sort: (a: any, b: any) => a.createdAt.getTime() - b.createdAt.getTime()
     },
     {
       key: 'documento',
       label: 'Documento',
       sorteable: true,
+      opcional: true,
       sort: (a: any, b: any) => a.paciente.documento.localeCompare(b.paciente.documento)
     },
     {
       key: 'paciente',
       label: 'Paciente',
       sorteable: true,
+      opcional: true,
       sort: (a: any, b: any) => {
         const nameA = `${a.paciente.apellido} ${a.paciente.nombre}`;
         const nameB = `${b.paciente.apellido} ${b.paciente.nombre}`;
@@ -87,23 +98,37 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       key: 'tipo',
       label: 'Tipo de ficha',
       sorteable: true,
+      opcional: true,
       sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
     },
     {
       key: 'clasificacion',
-      label: 'Clasificación'
+      label: 'Clasificación',
+      opcional: true,
+      sorteable: false
     },
     {
       key: 'acciones',
       label: 'Acciones',
+      opcional: false,
       sorteable: false
     },
     {
       key: 'sisa',
       label: 'Registro SISA',
+      opcional: true,
       sorteable: false
     }
   ];
+  colsVisibles = {
+    'fecha': true,
+    'documento': true,
+    'paciente': true,
+    'tipo': false,
+    'clasificacion': false,
+    'acciones': true,
+    'sisa': true,
+  };
 
   constructor(
     private plex: Plex,
@@ -143,6 +168,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       localidad: this.localidad?.id,
       organizacion: this.organizacion?.id,
       identificadorPcr: this.idPcr,
+      tipoConfirmacion: this.idTipoConfirmacion?.id,
       zonaSanitaria: this.zonaSanitaria?._id,
       skip: 0,
       limit: 15
@@ -293,5 +319,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         this.router.navigate(['/huds/paciente/', pacienteId]);
       }
     });
+  }
+  changeCollapse(event) {
+    this.collapse = event;
   }
 }
