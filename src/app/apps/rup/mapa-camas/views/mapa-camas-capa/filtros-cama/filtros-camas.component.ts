@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { arrayToSet } from '@andes/shared';
 

@@ -108,6 +108,7 @@ export class MapaCamasService {
                 );
             }),
             map(([snapshot, fecha]: [ISnapshot[], Date]) => {
+                snapshot = snapshot.filter(snap => snap.estado !== 'inactiva');
                 snapshot.forEach((snap) => {
                     const sectores = snap.sectores || [];
                     const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
@@ -343,8 +344,8 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
