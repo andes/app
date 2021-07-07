@@ -24,7 +24,7 @@
     </div>
     <div class="popover popover-bottom" *ngIf="!hidePopup">
         <div class="popover-content">
-            <paciente-detalle [paciente]="paciente"></paciente-detalle>
+            <paciente-detalle [paciente]="paciente" size="sm" orientacion="horizontal"></paciente-detalle>
             <plex-button *ngIf="cambiarPaciente" (click)="cambioDePaciente()" label="Cambiar paciente"
                          type="primary btn-sm"></plex-button>
         </div>
