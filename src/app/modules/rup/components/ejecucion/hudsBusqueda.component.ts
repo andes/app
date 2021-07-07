@@ -393,6 +393,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     return {
                         data: f,
                         tipo: 'ficha-epidemiologica',
+                        ambito: 'ambulatorio',
                         prestacion: {
                             term: 'Ficha Epidemiológica'
                         },
