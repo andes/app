@@ -1,7 +1,7 @@
-import { Observable, Subject } from 'rxjs';
-import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { tap, publishReplay, refCount, switchMap, skip } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { publishReplay, refCount, skip, switchMap, tap } from 'rxjs/operators';
 const shiroTrie = require('shiro-trie');
 
 interface IOrganizacion {
@@ -15,7 +15,7 @@ interface IUsuario {
     apellido: string;
     documento: string;
     nombreCompleto: string;
-    username: string;
+    username: number;
 }
 
 export enum Estado { inProgress, active, logout }
