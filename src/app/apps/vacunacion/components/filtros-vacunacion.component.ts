@@ -51,7 +51,11 @@ export class FiltrosVacunacionComponent implements OnInit {
                     grupos.map(grupo => grupo.nombre));
             });
         }
-        this.inscripcionService.pacienteText.next(this.filtro.paciente);
+        if (this.filtro.paciente?.length >= 3) {
+            this.inscripcionService.pacienteText.next(this.filtro.paciente);
+        } else {
+            this.inscripcionService.pacienteText.next(null);
+        }
         this.inscripcionService.localidadSelected.next(this.filtro.localidad);
         if (moment(this.filtro.fechaDesde).isValid()) {
             this.inscripcionService.fechaDesde.next(this.filtro.fechaDesde);
