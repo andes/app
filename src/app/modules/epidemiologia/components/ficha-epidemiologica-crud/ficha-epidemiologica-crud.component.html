@@ -7,7 +7,7 @@
             </plex-bool>
             <plex-button *ngIf="!hideVolver" type="danger" (click)="toBack()">Volver
             </plex-button>
-            <plex-button *ngIf="editFicha" position="right" type="success" (click)="registrarFicha()">
+            <plex-button *ngIf="editFicha" position="right" type="success" [autodisabled]="true" (click)="registrarFicha()">
                 Registrar
                 ficha
             </plex-button>
