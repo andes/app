@@ -128,6 +128,9 @@
         <plex-layout-sidebar type="invert">
             <ng-container *ngIf="paciente">
                 <plex-title size="sm" titulo="Datos del paciente">
+                    <plex-button *ngIf="permisoHuds" size="sm" type="info" (click)="verHuds(paciente.id)">
+                        VER HUDS
+                    </plex-button>
                 </plex-title>
                 <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
             </ng-container>
