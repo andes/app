@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { Observable, combineLatest, forkJoin, of } from 'rxjs';
-import { ISnapshot } from '../../interfaces/ISnapshot';
-import { map, switchMap, take } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ObjectID } from 'bson';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { map, retry, switchMap, take } from 'rxjs/operators';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -152,8 +152,8 @@ export class CambiarCamaComponent implements OnInit {
             };
         }
         return forkJoin(
-            this.mapaCamasService.save(camaOcupada, fecha),
-            this.mapaCamasService.save(camaDesocupada, fecha)
+            this.mapaCamasService.save(camaOcupada, fecha).pipe(retry(3)),
+            this.mapaCamasService.save(camaDesocupada, fecha).pipe(retry(3))
         );
     }
 }
