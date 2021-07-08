@@ -4,7 +4,7 @@
                      [data]="gruposPoblacionales$ | async" (change)="filtrar()" grow="auto">
         </plex-select>
         <plex-text name="paciente" [(ngModel)]="filtro.paciente" label="Paciente" debounce="400" (change)="filtrar()"
-                   grow="4">
+                   grow="4" [minlength]="3">
         </plex-text>
         <plex-select name="localidad" label="Localidad" [(ngModel)]="filtro.localidad" idField="nombre"
                      labelField="nombre" [data]="localidades$ | async" (change)="filtrar()" grow="4">
