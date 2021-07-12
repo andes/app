@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
     public usuario: string;
     public password: string;
     public loading = false;
+    public activacion = false;
 
     @ViewChild('formulario', { static: true }) formulario: NgForm;
 
@@ -35,8 +36,17 @@ export class LoginComponent implements OnInit {
         this.usuario = this.usuario.toLocaleLowerCase();
         this.auth.mobileLogin(this.usuario, this.password).pipe(
             catchError(err => {
-                this.plex.info('danger', 'Usuario o contraseña incorrectos');
                 this.loading = false;
+                if (err === 'new_password_needed') {
+                    this.router.navigate(['/activar-cuenta'], {
+                        queryParams: {
+                            email: this.usuario,
+                            password: this.password
+                        }
+                    });
+                } else {
+                    this.plex.info('danger', 'Usuario o contraseña incorrectos');
+                }
                 return null;
             }),
             map(() => this.router.navigate(['/mis-familiares']))
@@ -49,5 +59,12 @@ export class LoginComponent implements OnInit {
 
     irRegistro() {
         this.router.navigate(['/registro']);
+    }
+
+    activar() {
+        this.usuario = '';
+        this.password = '';
+        this.formulario.form.markAsPristine();
+        this.activacion = !this.activacion;
     }
 }

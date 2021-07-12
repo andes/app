@@ -42,6 +42,7 @@ import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SET
     LogoPortalPacienteComponent,
     DarTurnoComponent,
     DarTurnoDetalleComponent,
-    RegistroCuentaComponent
+    RegistroCuentaComponent,
+    ActivarCuentaComponent
   ],
   imports: [
     BrowserModule,

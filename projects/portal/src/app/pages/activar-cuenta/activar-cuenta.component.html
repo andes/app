@@ -1,0 +1,59 @@
+<main justify="center">
+
+    <div class="logo-pdp">
+        <pdp-logo></pdp-logo>
+    </div>
+
+    <div class="social-pdp">
+        <plex-grid cols="4">
+            <plex-icon size="xl" name="andes"></plex-icon>
+            <plex-icon size="lg" name="email"></plex-icon>
+            <plex-icon size="lg" name="youtube"></plex-icon>
+            <plex-icon size="lg" name="logo-whatsapp"></plex-icon>
+        </plex-grid>
+    </div>
+
+    <form [formGroup]="formRegistro" justify="center">
+        <div class="m-4">
+            <div justify="center" class="mb-3">
+                <div class="andes"></div>
+                <h1>NUEVA CLAVE DE ACCESO</h1>
+                <!-- <h6>Para finalizar la activación, es necesario que cambies la clave actual.</h6> -->
+            </div>
+            <div justify="center">
+                <div justify="center" class="mb-3">
+                    <div justify="end" class="label-container">
+                        <plex-label titulo="Nueva contraseña" [tituloBold]="false" subtitulo="" class="mr-3">
+                        </plex-label>
+                    </div>
+                    <div justify="left">
+                        <plex-text type="password" [(ngModel)]="new_password" formControlName="new_password"
+                                   name="new_password" [required]="true"></plex-text>
+                    </div>
+                </div>
+            </div>
+            <div justify="center">
+                <div justify="center" class="mb-3">
+                    <div justify="end" class="label-container">
+                        <plex-label titulo="Confirmar Nueva contraseña" [tituloBold]="false" subtitulo="" class="mr-3">
+                        </plex-label>
+                    </div>
+                    <div justify="left">
+                        <plex-text type="password" [(ngModel)]="confirm_password" formControlName="confirm_password"
+                                   name="confirm_password" [required]="true">
+                        </plex-text>
+                    </div>
+                </div>
+            </div>
+            <div justify="center">
+                <div justify="center" class="button-container w-100">
+                    <plex-button justify="center" type="info" name="enviar" [disabled]="formRegistro.invalid"
+                                 (click)="activarUsuario()" size="md" class="mb-3">
+                        Actualizar e Ingresar
+                    </plex-button>
+                </div>
+            </div>
+        </div>
+        <plex-loader *ngIf="!loading" type="linear"></plex-loader>
+    </form>
+</main>
