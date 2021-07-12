@@ -74,8 +74,12 @@ import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
+
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
+import { FirmaProfesionalComponent } from './components/profesional/firma/firma-profesional.component';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
+
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -210,9 +214,7 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-
-
-
+import { Ng2ImgMaxService } from 'ng2-img-max';
 
 
 
@@ -277,13 +279,14 @@ registerLocaleData(localeEs, 'es');
         RUPLibModule,
         AuditoriaModule,
         RecaptchaModule,
-        RecaptchaFormsModule
+        RecaptchaFormsModule,
+        Ng2ImgMaxModule
     ],
     declarations: [
         AppComponent,
         InicioComponent,
         InscripcionProfesionalesComponent,
-        ProfesionalComponent, ProfesionalCreateUpdateComponent,
+        ProfesionalComponent, ProfesionalCreateUpdateComponent, FirmaProfesionalComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         MapsComponent,

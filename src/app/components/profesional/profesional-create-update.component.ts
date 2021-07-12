@@ -64,7 +64,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         ultimaActualizacion: new Date()
     };
     profesional: any = {
-        id: '',
+        id: null,
         nombre: '',
         apellido: '',
         documento: null,
@@ -88,6 +88,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     noPoseeContacto = false;
     public seEstaCreandoProfesional = true;
     public profesiones: ISiisa[] = [];
+    public firmaProfesional = null;
+
     constructor(private formBuilder: FormBuilder,
         private profesionalService: ProfesionalService,
         private paisService: PaisService,
@@ -128,7 +130,6 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         });
     }
 
-
     /*Código de filtrado de combos*/
     loadPaises(event) {
         this.paisService.get({}).subscribe(event.callback);
@@ -166,6 +167,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         if (i >= 0) {
             this.profesional.contactos.splice(i, 1);
         }
+    }
+
+    setFirma(firma) {
+        this.firmaProfesional = firma;
     }
 
     renaperVerification(profesional) {
@@ -209,6 +214,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             this.profesionalService.getProfesional({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
+                        let firma = {
+                            firmaP: this.firmaProfesional,
+                            idProfesional: null
+                        };
                         if (datos.length > 0) {
                             datos.forEach(profCandidato => {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
@@ -242,7 +251,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
                                 this.profesionalService.saveProfesional(this.profesional)
-                                    .subscribe(nuevoProfesional => {
+                                    .subscribe(profesionalSaved => {
+                                        firma.idProfesional = profesionalSaved.id;
+                                        this.profesionalService.saveFirma({ firma }).subscribe();
                                         this.plex.info('success', '', `¡El profesional se ${this.seEstaCreandoProfesional ? 'creó' : 'editó'} con éxito!`);
                                         this.router.navigate(['/tm/profesional']);
                                     });
@@ -252,7 +263,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                         } else {
                             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                             this.profesionalService.saveProfesional(this.profesional)
-                                .subscribe(nuevoProfesional => {
+                                .subscribe(profesionalSaved => {
+                                    firma.idProfesional = profesionalSaved.id;
+                                    this.profesionalService.saveFirma({ firma }).subscribe();
                                     this.plex.info('success', '', '¡El profesional se creó con éxito!');
                                     this.router.navigate(['/tm/profesional']);
 
