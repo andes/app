@@ -172,7 +172,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public estaInternado = false;
   public showSemana = true;
   public showFichaParcial = false;
-  public patronPCR = '((HISOP[0-9]+$))*([0-9]+$)*';
+  public patronPCR = '([A-Za-z])*([0-9]+$)+';
 
   constructor(
     private formsService: FormsService,
@@ -288,9 +288,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           if (key) {
             let valor = seccion.fields[key];
             if (key === 'identificadorpcr') {
-              const regexHisop = new RegExp('HISOP');
-              if (valor && !regexHisop.test(valor)) {
-                valor = 'HISOP' + valor;
+              const regexHisop = new RegExp('([A-Za-z])+([0-9]+$)+');
+              if (valor && regexHisop.test(valor)) {
+                const numeroPcr = valor.replace(/[a-z]/gi, '');
+                valor = numeroPcr;
               }
             }
             if (valor !== undefined && valor !== null) {
