@@ -567,9 +567,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   }
 
   setDireccion(nuevaDir) {
-    return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0].valor ||
-      nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion.provincia.id ||
-      nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion.localidad.id);
+    return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0]?.valor ||
+      nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
+      nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
   }
 
   pacienteInternado(event) {
