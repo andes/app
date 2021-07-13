@@ -1,0 +1,22 @@
+<ng-container *ngIf="!soloValores">
+
+    <plex-select [(ngModel)]="registro.valor.medicamento" name="conceptos" (getData)="loadConceptos($event)"
+                 (change)="emitChange()" label="Medicamento" idField="conceptId" labelField="term">
+    </plex-select>
+    <plex-text label="Indicaciones" [html]="true" height=100 [(ngModel)]="registro.valor.indicaciones"
+               name="indicaciones" *ngIf="afterInit">
+    </plex-text>
+
+</ng-container>
+<div class="row" *ngIf="soloValores">
+    <div class="col-12 readonly">
+        <div>
+            <span>Medicamento</span>
+            {{ registro.valor.medicamento.term || '(no definido)' }}
+        </div>
+        <div>
+            <span>Indicaciones</span>
+            <span [innerHTML]="registro.valor.indicaciones"></span>
+        </div>
+
+    </div>

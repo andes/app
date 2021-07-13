@@ -3,6 +3,9 @@
         <plex-title titulo="Plan de indicaciones">
             <plex-datetime [(ngModel)]="fecha" skipBy="d" size="sm" type="date" (change)="onDateChange()">
             </plex-datetime>
+            <plex-button type="success" size="sm" class="ml-2" (click)="onNuevaIndicacion()">
+                Nueva indicación
+            </plex-button>
         </plex-title>
 
         <table class="table table-bordered">
@@ -11,12 +14,13 @@
                     <td rowspan="2">
                         Indicacion
                         <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
-                                     (click)="onDetenerClick()"></plex-button>
+                                     (click)="onDetenerClick()" tooltip="Suspender"></plex-button>
                         <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
-                                     (click)="onPausarClick()"></plex-button>
+                                     (click)="onPausarClick()" tooltip="Pausar"></plex-button>
                         <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
-                                     (click)="onContinuarClick()"></plex-button>
-
+                                     (click)="onContinuarClick()" tooltip="Continuar"></plex-button>
+                        <plex-button *ngIf="completar$ | async" type="success" icon="check" size="sm"
+                                     (click)="onCompletarClick()" tooltip="Completar"></plex-button>
                     </td>
                     <td colspan="8">
                         Mañana
@@ -36,8 +40,7 @@
             </thead>
             <tbody>
                 <ng-container *ngFor="let indicacion of indicaciones">
-                    <tr [class.table-warning]="indicacion.estado.tipo === 'pausado'"
-                        [class.table-danger]="indicacion.estado.tipo === 'suspendido'">
+                    <tr [ngClass]="indicacion.estado.tipo">
                         <td justify>
                             <span>
                                 <plex-bool type="checkbox" [(ngModel)]="selectedIndicacion[indicacion.id]"
@@ -66,23 +69,10 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <ng-container *ngIf="indicacionView">
-            <plex-title [titulo]="indicacionView.concepto.term"></plex-title>
-            <plex-label size="lg" titulo="Indicaciones">
-            </plex-label>
-            <div [innerHtml]="indicacionView.valor.solicitudPrestacion.indicaciones">
-            </div>
-
-            <plex-label size="lg" titulo="Motivo" [subtitulo]="indicacionView.valor.solicitudPrestacion.motivo">
-            </plex-label>
-
-            <plex-label size="lg" titulo="Desde" [subtitulo]="indicacionView.fechaInicio | fecha">
-            </plex-label>
-
-            <plex-title titulo="Estados"></plex-title>
-
-
+            <in-indicacion-detalle [indicacion]="indicacionView">
+                <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
+            </in-indicacion-detalle>
         </ng-container>
-
         <ng-container *ngIf="indicacionEventoSelected">
             <in-plan-indicacion-evento [hora]="horaSelected" [indicacion]="indicacionEventoSelected" [fecha]="fecha"
                                        [evento]="eventos[indicacionEventoSelected.id] && eventos[indicacionEventoSelected.id][horaSelected]"

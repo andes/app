@@ -1,0 +1,24 @@
+<plex-title titulo="Detalle Indicacion">
+    <ng-content></ng-content>
+</plex-title>
+<plex-label size="lg" [titulo]="indicacion.concepto.term"></plex-label>
+<plex-label size="lg" titulo="Indicaciones"></plex-label>
+<div [innerHtml]="observaciones">
+</div>
+
+<!-- <plex-label size="lg" titulo="Motivo" [subtitulo]="indicacion.valor.solicitudPrestacion.motivo">
+</plex-label> -->
+
+<plex-label size="lg" titulo="Desde" [subtitulo]="indicacion.fechaInicio | fecha">
+</plex-label>
+
+<plex-title titulo="Estados"></plex-title>
+
+<plex-list>
+    <plex-item *ngFor="let estado of indicacion.estados">
+        <plex-label> {{ estado.fecha | fecha }} {{ estado.fecha | hora }}</plex-label>
+        <ng-container ngProjectAs="plex-label">
+            <plex-badge type="success"> {{ estado.tipo }}</plex-badge>
+        </ng-container>
+    </plex-item>
+</plex-list>

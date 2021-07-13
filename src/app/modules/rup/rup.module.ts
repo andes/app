@@ -1,39 +1,37 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@andes/shared';
-import { MPILibModule } from '../mpi/mpi-lib.module';
-import { ElementosRUPModule } from './elementos-rup.module';
 import { NgDragDropModule } from 'ng-drag-drop';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { RUPLibModule } from './rup-lib.module';
-
-
-import { PuntoInicioComponent } from './components/ejecucion/puntoInicio.component';
+import { PlanIndicacionesResumenComponent } from 'src/app/apps/rup/mapa-camas/components/plan-indicaciones-resumen.component';
+import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
+import { SnomedBuscarComponent } from '../../components/snomed/snomed-buscar.component';
+import { TOPLibModule } from '../../components/top/top.module';
+import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
+import { DinamicaFormComponent } from '../../components/turnos/autocitar/dinamica.component';
+import { CITASLibModule } from '../../components/turnos/citas.module';
+import { DirectiveLibModule } from '../../directives/directives.module';
+import { EpidemiologiaModule } from '../epidemiologia/epidemiologia.module';
+import { MPILibModule } from '../mpi/mpi-lib.module';
+import { BuscadorComponent } from './components/ejecucion/buscador.component';
+import { HelpSolicitudComponent } from './components/ejecucion/help-solicitud.component';
 import { PrestacionCrearComponent } from './components/ejecucion/prestacionCrear.component';
 import { PrestacionEjecucionComponent } from './components/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/ejecucion/prestacionValidacion.component';
-import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
-import { HelpSolicitudComponent } from './components/ejecucion/help-solicitud.component';
-import { SnomedBuscarComponent } from '../../components/snomed/snomed-buscar.component';
-import { TOPLibModule } from '../../components/top/top.module';
-import { DirectiveLibModule } from '../../directives/directives.module';
-import { CITASLibModule } from '../../components/turnos/citas.module';
-import { DinamicaFormComponent } from '../../components/turnos/autocitar/dinamica.component';
-import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
-import { SnomedLinkComponent } from './directives/snomed-link';
-import { HUDSLibModule } from './huds-lib.module';
-import { BuscadorComponent } from './components/ejecucion/buscador.component';
+import { PuntoInicioComponent } from './components/ejecucion/puntoInicio.component';
 import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
-import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
 import { RUPServicioIntermedioAltaComponent } from './components/servicio-intermedio/servicio-intermedio-alta.component';
-import { EpidemiologiaModule } from '../epidemiologia/epidemiologia.module';
-
+import { SnomedLinkComponent } from './directives/snomed-link';
+import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
+import { ElementosRUPModule } from './elementos-rup.module';
+import { HUDSLibModule } from './huds-lib.module';
+import { RUPLibModule } from './rup-lib.module';
 
 export const RUP_COMPONENTS = [
     PuntoInicioComponent,
@@ -49,7 +47,8 @@ export const RUP_COMPONENTS = [
     BuscadorComponent,
     RupRelacionesComponent,
     SnomedSinonimoComponent,
-    RUPServicioIntermedioAltaComponent
+    RUPServicioIntermedioAltaComponent,
+    PlanIndicacionesResumenComponent
 ];
 
 export const RUP_PROVIDERS = [
