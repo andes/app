@@ -72,7 +72,8 @@ export class InscripcionComponent implements OnInit {
         diaseleccionados: '',
         recaptcha: '',
         morbilidades: undefined,
-        factorRiesgoEdad: false
+        factorRiesgoEdad: false,
+        numeroIdentificacion: ''
     };
 
     public relacion = null;
@@ -88,7 +89,11 @@ export class InscripcionComponent implements OnInit {
     public grupoSelected;
     public captchaEnabled = true;
     public loading = false;
-
+    tipoIdentificacion = null;
+    public tiposIdentificacion = [
+        { id: 'dni', nombre: 'DNI' }, { id: 'pasaporte', nombre: 'PASAPORTE' },
+    ];
+    public extranjero = false;
     constructor(
         private plex: Plex,
         private localidadService: LocalidadService,
@@ -112,6 +117,7 @@ export class InscripcionComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.tipoIdentificacion = this.tiposIdentificacion[0];
         this.sexos = enumerados.getObjSexos();
         this.route.params.subscribe(params => {
             this.opcionesGrupos$.pipe(
@@ -189,14 +195,18 @@ export class InscripcionComponent implements OnInit {
             this.plex.info('danger', 'Revise los datos ingresados');
             return;
         }
+
         this.loading = true;
         this.ciudadano.sexo = this.sexo.id;
         this.ciudadano.profesion = this.profesion ? this.profesion.nombre : '';
         this.ciudadano.fechaRegistro = new Date();
         this.ciudadano.diaseleccionados = this.diaSeleccion ? this.diaSeleccion.id : '';
+        this.ciudadano.documento = this.ciudadano.documento !== '' ? this.ciudadano.documento : this.ciudadano.numeroIdentificacion;
+        this.ciudadano.estado = (this.tipoIdentificacion?.id === 'pasaporte') ? 'inhabilitado' : 'pendiente';
         this.ciudadano.morbilidades = this.ciudadano.morbilidades ? this.ciudadano.morbilidades.map(c => c.id) : [];
+
         this.inscripcionService.save(this.ciudadano).subscribe(inscripto => {
-            if (inscripto.documento) {
+            if (inscripto.documento || inscripto.numeroIdentificacion) {
                 this.modal.showed = true;
             }
             this.loading = false;
@@ -249,14 +259,17 @@ export class InscripcionComponent implements OnInit {
             diaseleccionados: '',
             recaptcha: '',
             morbilidades: undefined,
-            factorRiesgoEdad: false
+            factorRiesgoEdad: false,
+            numeroIdentificacion: ''
         };
         this.formulario.form.markAsPristine();
     }
 
-
     redireccionarConsultas() {
         this.router.navigate(['/vacunacion/consulta-inscripcion']);
     }
-}
 
+    seleccionaTipo() {
+        this.extranjero = (this.tipoIdentificacion?.id === 'pasaporte') ? true : false;
+    }
+}
