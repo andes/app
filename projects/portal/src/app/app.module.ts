@@ -43,6 +43,10 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
+import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
+import { ProvinciaService } from '../../../../../app/src/app/services/provincia.service';
+import { BarrioService } from '../../../../../app/src/app/services/barrio.service';
+import { LocalidadService } from '../../../../../app/src/app/services/localidad.service';
 
 @NgModule({
   declarations: [
@@ -68,7 +72,8 @@ import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.co
     DarTurnoComponent,
     DarTurnoDetalleComponent,
     RegistroCuentaComponent,
-    ActivarCuentaComponent
+    ActivarCuentaComponent,
+    PDPMisDatosPersonalesComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +103,9 @@ import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.co
     AgendaService,
     TurnoService,
     ScanParser,
+    ProvinciaService,
+    LocalidadService,
+    BarrioService,
     {
       provide: RECAPTCHA_SETTINGS,
       useValue: {

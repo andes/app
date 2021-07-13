@@ -1,0 +1,131 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+        <pdp-titulo></pdp-titulo>
+        <!-- Nombre mas descriptivo capaz -->
+        <form #formulario="ngForm">
+            <pdp-menu>
+                <plex-title size="sm" titulo="Mis datos básicos">
+                    <plex-badge type="{{(paciente?.estado==='validado')?'success':'warning'}}">{{paciente?.estado}}
+                    </plex-badge>
+                    <plex-button class="ml-2" size="sm" type="success" (click)="save()" [disabled]="formulario.invalid"
+                                 ariaLabel="Guardar datos">
+                        guardar datos
+                    </plex-button>
+                </plex-title>
+
+                <plex-grid size="md" type="full">
+                    <plex-label icon="account" size="md" case="capitalize" titulo="Nombre"
+                                subtitulo="{{paciente?.nombre}}">
+                    </plex-label>
+                    <plex-label icon="account" size="md" case="capitalize" titulo="Apellido"
+                                subtitulo="{{paciente?.apellido}}">
+                    </plex-label>
+                    <plex-label icon="card-account-details" size="md" case="capitalize" titulo="Documento"
+                                subtitulo="{{paciente?.documento}}">
+                    </plex-label>
+                    <plex-label icon="calendario-fecha" size="md" case="capitalize" titulo="Fecha de Nacimiento"
+                                subtitulo="{{paciente?.fechaNacimiento | fecha}}">
+                    </plex-label>
+                    <plex-label icon="{{(paciente?.sexo==='masculino')?'masculino':'femenino'}}" size="md"
+                                case="capitalize" titulo="Sexo" subtitulo="{{paciente?.sexo}}">
+                    </plex-label>
+                    <plex-label icon="home" size="md" case="capitalize" titulo="Domicilio Legal"
+                                subtitulo="{{paciente?.direccion[1]?.valor}}">
+                    </plex-label>
+                </plex-grid>
+
+                <plex-grid responsive type="full" cols="2" colsSm="1" colsMd="1">
+                    <div>
+                        <plex-title size="sm" titulo="Mis datos de contacto">
+                            <plex-button type="success" size="sm" icon="plus" (click)="creacionContacto()"
+                                         [disabled]="editarContacto" ariaLabel="Crear contacto">
+                            </plex-button>
+                        </plex-title>
+                        <plex-list size="sm" *ngIf="listadoContacto">
+                            <plex-item *ngFor="let c of contactos;let i = index">
+                                <plex-label icon="{{(c.tipo !== 'fijo')?c.tipo:'phone'}}" size="md" titulo="{{c.tipo}}"
+                                            subtitulo="{{c.valor}}"></plex-label>
+                                <plex-button type="warning" size="sm" icon="pencil" (click)="edicionContacto(c, i)"
+                                             ariaLabel="Editar contacto">
+                                </plex-button>
+                                <plex-button type="danger" size="sm" icon="delete" (click)="removerContacto(c, i)"
+                                             ariaLabel="Eliminar contacto">
+                                </plex-button>
+                            </plex-item>
+                        </plex-list>
+                        <plex-wrapper *ngIf="editarContacto">
+                            <plex-select [(ngModel)]="contacto.tipo" [data]="tipoComunicacion" name="tipo"
+                                         [required]="true" label="Tipo" (change)="limpiarCampo(contacto.tipo)">
+                            </plex-select>
+                            <plex-phone label="Número" *ngIf="esContactoTelefonico" [(ngModel)]="contacto.valor"
+                                        placeholder="Ej: 2990000000" name="valor" [required]="true"
+                                        [pattern]="patronContactoNumerico">
+                            </plex-phone>
+                            <plex-text label="Dirección" *ngIf="!esContactoTelefonico" [(ngModel)]="contacto.valor"
+                                       placeholder="Ej: ejemplo@email.com" name="valor" [required]="true"
+                                       [pattern]="patronContactoAlfabetico">
+                            </plex-text>
+                            <plex-button [disabled]="!contacto.tipo || !contacto.valor" type="success" icon="check"
+                                         (click)="editContacto(contacto)" ariaLabel="Guardar contacto editado">
+                            </plex-button>
+                            <plex-button type="danger" icon="close" (click)="volverListado()"
+                                         ariaLabel="Volver listado contactos"></plex-button>
+                        </plex-wrapper>
+                        <plex-wrapper *ngIf="crearContacto">
+                            <plex-select [(ngModel)]="contactoNuevo.tipo" [data]="tipoComunicacion" name="tipo"
+                                         [required]="true" label="Tipo" (change)="limpiarCampo(contactoNuevo.tipo)">
+                            </plex-select>
+                            <plex-phone label="Número" *ngIf="esContactoTelefonico" [(ngModel)]="contactoNuevo.valor"
+                                        placeholder="Ej: 2990000000" name="valor" [required]="true"
+                                        [pattern]="patronContactoNumerico">
+                            </plex-phone>
+                            <plex-text label="Dirección" *ngIf="!esContactoTelefonico" [(ngModel)]="contactoNuevo.valor"
+                                       placeholder="Ej: ejemplo@email.com" name="valor" [required]="true"
+                                       [pattern]="patronContactoAlfabetico">
+                            </plex-text>
+                            <plex-button [disabled]="!contactoNuevo.tipo || !contactoNuevo.valor" type="success"
+                                         icon="check" (click)="guardarContacto()" ariaLabel="Guardar contacto nuevo">
+                            </plex-button>
+                            <plex-button type="danger" icon="close" (click)="volverListado()"
+                                         ariaLabel="Volver listado contactos"></plex-button>
+                        </plex-wrapper>
+                    </div>
+                    <div>
+                        <plex-title size="sm" titulo="Mis domicilio real">
+                            <plex-bool label="Vivo En Neuquén Capital" name="viveenneuquen" type="slide"
+                                       [(ngModel)]="viveenneuquen" (change)="cambiarNeuquen()"></plex-bool>
+                        </plex-title>
+                        <plex-grid size="md" type="full">
+                            <plex-label icon="home" size="md" case="capitalize" titulo="Domicilio real"
+                                        subtitulo="{{paciente?.direccion[0]?.valor}}">
+                            </plex-label>
+                        </plex-grid>
+                        <plex-wrapper>
+                            <plex-select [disabled]="viveenneuquen"
+                                         [(ngModel)]="paciente?.direccion[0].ubicacion.provincia" name="provincia"
+                                         idField="nombre" [data]="provincias$ | async" labelField="nombre"
+                                         label="Provincia"
+                                         (change)="loadLocalidades(paciente?.direccion[0].ubicacion.provincia)"
+                                         [required]="true">
+                            </plex-select>
+                            <plex-select [disabled]="viveenneuquen"
+                                         [(ngModel)]="paciente?.direccion[0].ubicacion.localidad" name="localidad"
+                                         idField="nombre" [data]="localidades$ | async" labelField="nombre"
+                                         label="Localidad"
+                                         (change)="loadBarrios(paciente?.direccion[0].ubicacion.localidad)">
+                            </plex-select>
+                            <plex-select [disabled]="!viveenneuquen"
+                                         [(ngModel)]="paciente?.direccion[0].ubicacion.barrio" name="barrio"
+                                         idField="nombre" [data]="barrios$ | async" labelField="nombre" label="Barrio"
+                                         grow="full">
+                            </plex-select>
+                            <plex-text label="Dirección" [(ngModel)]="paciente?.direccion[0].valor" name="direccion"
+                                       placeholder="Ej: Avenida las Flores 1200" grow="full">
+                            </plex-text>
+                        </plex-wrapper>
+                    </div>
+                </plex-grid>
+            </pdp-menu>
+        </form>
+    </plex-layout-main>
+</plex-layout>
