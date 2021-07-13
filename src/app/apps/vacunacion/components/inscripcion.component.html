@@ -24,19 +24,30 @@
                                      labelField="descripcion" [required]="true" [readonly]="grupoSelected"
                                      (change)="seleccionaGrupo()">
                         </plex-select>
-                        <plex-text type="number" [(ngModel)]="ciudadano.documento" (change)="limpiarRespuesta()"
-                                   name="documento" label="Documento" [pattern]="patronDocumento" [required]="true">
-                        </plex-text>
-                        <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60'" type="slide"
-                                   name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite"
+                        <plex-grid responsive type="full" cols="2" colsSm="1">
+                            <plex-select [(ngModel)]="tipoIdentificacion" label="Tipo de identificación"
+                                         [data]="tiposIdentificacion" name="tipoIdentificacion" required="true"
+                                         placeholder="Seleccione tipo de identificación" (change)="seleccionaTipo()">
+                            </plex-select>
+                            <plex-text *ngIf="!extranjero" type="number" [(ngModel)]="ciudadano.documento"
+                                       (change)="limpiarRespuesta()" name="documento" label="Documento"
+                                       [pattern]="patronDocumento" [required]="true">
+                            </plex-text>
+                            <plex-text *ngIf="extranjero" type="number" [(ngModel)]="ciudadano.numeroIdentificacion"
+                                       name="numeroIdentificacion" label="Número de identificación"
+                                       (change)="limpiarRespuesta()" [required]="true">
+                            </plex-text>
+                        </plex-grid>
+                        <plex-bool *ngIf="ciudadano.grupo && ciudadano.grupo.nombre === 'mayores60' && !extranjero"
+                                   type="slide" name="tieneTramite" [(ngModel)]="ciudadano.tieneTramite"
                                    label="Mi DNI tiene número de trámite" [required]="true"></plex-bool>
 
-                        <plex-int *ngIf="ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud' "
+                        <plex-int *ngIf="(ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud') && !extranjero"
                                   [(ngModel)]="ciudadano.nroTramite" (change)="limpiarRespuesta()" name="nroTramite"
                                   label="Número de Trámite del DNI" [required]="true">
                         </plex-int>
                         <a class="d-inline-block"
-                           *ngIf="ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud'"
+                           *ngIf="(ciudadano.tieneTramite || ciudadano.grupo && ciudadano.grupo.nombre === 'personal-salud') && !extranjero"
                            href="javascript:void(0)" (click)="infoNT()">
                             <plex-icon *ngIf="!infoNrotramite" name="chevron-right" type="info"></plex-icon>
                             <plex-icon *ngIf="infoNrotramite" name="chevron-down" type="info"></plex-icon>

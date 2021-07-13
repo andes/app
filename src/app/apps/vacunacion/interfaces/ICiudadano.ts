@@ -38,4 +38,5 @@ export interface ICiudadano {
         id: String
     };
     factorRiesgoEdad: boolean;
+    numeroIdentificacion: string;
 }

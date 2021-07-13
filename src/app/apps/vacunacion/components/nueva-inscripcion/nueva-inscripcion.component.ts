@@ -69,7 +69,8 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         recaptcha: '',
         morbilidades: undefined,
         paciente: undefined,
-        factorRiesgoEdad: false
+        factorRiesgoEdad: false,
+        numeroIdentificacion: ''
     };
 
     public relacion = null;
@@ -144,7 +145,7 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
                 });
                 this.ciudadano.nombre = this.paciente.nombre;
                 this.ciudadano.apellido = this.paciente.apellido;
-                this.ciudadano.documento = this.paciente.documento;
+                this.ciudadano.documento = this.paciente.documento !== '' ? this.paciente.documento : this.paciente.numeroIdentificacion;
                 this.ciudadano.fechaNacimiento = this.paciente.fechaNacimiento;
                 this.ciudadano.sexo = this.paciente.sexo;
                 if (this.paciente.contacto.length > 0) {
