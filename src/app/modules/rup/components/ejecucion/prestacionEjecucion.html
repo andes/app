@@ -344,18 +344,22 @@
                         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
                     </div>
                 </plex-tab>
+                <plex-tab label="Indicaciones" *ngIf="prestacion.solicitud.ambitoOrigen === 'internacion'"
+                          (click)="panelIndex = 2">
+                    <in-plan-indicaciones-resumen [prestacion]="prestacion"></in-plan-indicaciones-resumen>
+                </plex-tab>
             </plex-tabs>
         </div>
     </plex-layout-sidebar>
 
     <!-- Footer -->
     <plex-layout-footer>
- 
-        <plex-button *ngIf="prestacion && !rutaVolver" position="left"
-                     label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
+
+        <plex-button *ngIf="prestacion && !rutaVolver" position="left" label="Punto de Inicio"
+                     (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
         </plex-button>
-        <plex-button *ngIf="prestacion && rutaVolver" position="left"
-                     label="{{btnVolver}}" (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
+        <plex-button *ngIf="prestacion && rutaVolver" position="left" label="{{btnVolver}}"
+                     (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
         </plex-button>
 
         <plex-button position="right" label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}"

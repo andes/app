@@ -1,10 +1,12 @@
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { PlanIndicacionesEventosServices } from '../../services/plan-indicaciones-eventos.service';
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
@@ -41,6 +43,20 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
             background-color: #c9bd2c;
         }
 
+        tr.pausado {
+            background-color: #ff8d2233;
+            border: 2px solid #ff8d22;
+        }
+
+        tr.completado {
+            background-color: #8cc63f33;
+            border: 2px solid #8cc63f;
+        }
+
+        tr.suspendido {
+            background-color: #dd4b3933;
+            border: 2px solid #dd4b39;
+        }
 
     `]
 })
@@ -57,7 +73,7 @@ export class PlanIndicacionesComponent implements OnInit {
     private selectedBuffer = new BehaviorSubject({});
 
 
-
+    private internacion;
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
             const indicaciones = Object.keys(selected).filter(k => selected[k]).map(k => this.indicaciones.find(i => i.id === k));
@@ -80,6 +96,10 @@ export class PlanIndicacionesComponent implements OnInit {
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'activo'))
     );
 
+    public completar$ = this.botones$.pipe(
+        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'activo'))
+    );
+
 
     eventos = {};
 
@@ -95,7 +115,10 @@ export class PlanIndicacionesComponent implements OnInit {
         private pacienteService: PacienteService,
         private plex: Plex,
         private planIndicacionesServices: PlanIndicacionesServices,
-        private indicacionEventosService: PlanIndicacionesEventosServices
+        private indicacionEventosService: PlanIndicacionesEventosServices,
+        private hudsService: HUDSService,
+        private router: Router,
+        private auth: Auth,
     ) { }
 
 
@@ -105,6 +128,7 @@ export class PlanIndicacionesComponent implements OnInit {
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
 
         this.getInternacion().subscribe((resumen) => {
+            this.internacion = resumen;
             this.pacienteService.getById(resumen.paciente.id).subscribe(paciente => {
                 this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
             });
@@ -115,10 +139,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     actualizar() {
         forkJoin([
-            this.planIndicacionesServices.search({
-                internacion: this.idInternacion,
-                fechaInicio: `<${moment(this.fecha).endOf('day').format()}`
-            }),
+            this.planIndicacionesServices.getIndicaciones(this.idInternacion, this.fecha),
             this.indicacionEventosService.search({
                 internacion: this.idInternacion,
                 fecha: this.indicacionEventosService.queryDateParams(
@@ -128,25 +149,7 @@ export class PlanIndicacionesComponent implements OnInit {
                 )
             })
         ]).subscribe(([datos, eventos]) => {
-            const fecha = moment(this.fecha).endOf('day').toDate();
-            this.indicaciones = datos
-                .filter(ind => !ind.fechaBaja || moment(fecha).startOf('day').isBefore(ind.fechaBaja))
-                .map(ind => {
-                    const estado = ind.estados.sort((a, b) => a.fecha.getTime() - b.fecha.getTime()).reduce(
-                        (acc, current) => {
-                            if (!acc) { return current; }
-                            if (current.fecha.getTime() < fecha.getTime()) {
-                                return current;
-                            }
-                            return acc;
-                        },
-                        null
-                    );
-                    return {
-                        ...ind,
-                        estado
-                    };
-                });
+            this.indicaciones = datos;
 
             const eventosMap = {};
             eventos.forEach(evento => {
@@ -178,6 +181,11 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onSelectedChange() {
         this.selectedBuffer.next(this.selectedIndicacion);
+    }
+
+    onClose() {
+        this.indicacionView = null;
+        this.indicacionEventoSelected = null;
     }
 
     onDateChange() {
@@ -213,6 +221,10 @@ export class PlanIndicacionesComponent implements OnInit {
         this.cambiarEstado('activo');
     }
 
+    onCompletarClick() {
+        this.cambiarEstado('completado');
+    }
+
     onSelectIndicacion(indicacion) {
         if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
             this.indicacionView = indicacion;
@@ -225,6 +237,7 @@ export class PlanIndicacionesComponent implements OnInit {
     onIndicacionesCellClick(indicacion, hora) {
         this.indicacionEventoSelected = indicacion;
         this.horaSelected = hora;
+        this.indicacionView = null;
     }
 
     onEventos(debeActualizar: boolean) {
@@ -233,5 +246,50 @@ export class PlanIndicacionesComponent implements OnInit {
         if (debeActualizar) {
             this.actualizar();
         }
+    }
+
+
+    onNuevaIndicacion() {
+        const concepto = {
+            'conceptId': '4981000013105',
+            'term': 'plan de indicaciones médicas',
+            'fsn': 'plan de indicaciones médicas (procedimiento)',
+            'semanticTag': 'procedimiento'
+        };
+
+        this.crearPrestacion(this.internacion.paciente, concepto, new Date()).pipe(
+            switchMap(prestacion => {
+                return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
+                    map(() => prestacion)
+                );
+            })
+        ).subscribe((prestacion) => {
+            this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/${this.ambito}` });
+            this.router.navigate(['rup/ejecucion', prestacion.id]);
+        });
+
+    }
+
+    crearPrestacion(paciente, concepto, fecha: Date) {
+        const nuevaPrestacion = this.prestacionService.inicializarPrestacion(
+            paciente, concepto, 'ejecucion', this.ambito, fecha
+        );
+        nuevaPrestacion.trackId = this.idInternacion;
+        // nuevaPrestacion.unidadOrganizativa = cama.unidadOrganizativa;
+        return this.prestacionService.post(nuevaPrestacion);
+    }
+
+    generarToken(paciente, concepto, prestacion) {
+        return this.hudsService.generateHudsToken(
+            this.auth.usuario,
+            this.auth.organizacion,
+            paciente,
+            concepto.term,
+            this.auth.profesional,
+            null,
+            prestacion.id
+        ).pipe(
+            tap(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token))
+        );
     }
 }
