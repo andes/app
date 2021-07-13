@@ -90,8 +90,8 @@ export class Auth {
         );
     }
 
-    mobileLogin(email: string, password: string): Observable<any> {
-        return this.server.post('/modules/mobileApp/login', { email, password }, {}).pipe(
+    mobileLogin(email: string, password: string, new_password?: string): Observable<any> {
+        return this.server.post('/modules/mobileApp/login', { email, password, new_password }, { showError: false }).pipe(
             tap((data) => {
                 window.sessionStorage.setItem('jwt', data.token);
                 window.sessionStorage.setItem('user', JSON.stringify(data.user));

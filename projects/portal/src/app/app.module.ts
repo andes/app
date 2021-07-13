@@ -38,6 +38,11 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 import { TurnoService } from 'src/app/services/turnos/turno.service';
+import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
+import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +66,9 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
     PDPMisCertificadoDetalleComponent,
     LogoPortalPacienteComponent,
     DarTurnoComponent,
-    DarTurnoDetalleComponent
+    DarTurnoDetalleComponent,
+    RegistroCuentaComponent,
+    ActivarCuentaComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +80,10 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
     SharedModule.forRoot(environment.API),
     ReactiveFormsModule,
     MPILibModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ZXingScannerModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   providers: [
     Server,
@@ -86,7 +96,14 @@ import { TurnoService } from 'src/app/services/turnos/turno.service';
     PrestacionService,
     PacienteService,
     AgendaService,
-    TurnoService
+    TurnoService,
+    ScanParser,
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.SITE_KEY,
+      } as RecaptchaSettings,
+    }
   ],
   bootstrap: [AppComponent]
 })

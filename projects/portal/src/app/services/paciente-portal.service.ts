@@ -36,4 +36,8 @@ export class PacientePortalService {
     getFamiliar(id: String, options?: any): Observable<IPaciente> {
         return this.server.get(`${this.mobileUrl}/paciente/${id}/relaciones`, options);
     }
+
+    registro(paciente) {
+        return this.server.post(`${this.mobileUrl}/registro`, paciente);
+    }
 }

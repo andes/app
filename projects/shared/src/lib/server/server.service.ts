@@ -93,8 +93,12 @@ export class Server {
     }
     private handleError(response: any, options: Options) {
         let message;
-        if (response.error && response.error.message) {
-            message = response.error.message;
+        if (response.error) {
+            if (response.error.message) {
+                message = response.error.message;
+            } else {
+                message = response.error;
+            }
         } else {
             message = 'La aplicación no pudo comunicarse con el servidor. Por favor revise su conexión a la red.';
         }

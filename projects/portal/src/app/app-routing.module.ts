@@ -14,10 +14,14 @@ import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares
 import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
 import { DarTurnoComponent } from './components/dar-turno/dar-turno.component';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
+import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
+import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegistroCuentaComponent },
+  { path: 'activar-cuenta', component: ActivarCuentaComponent },
   {
     path: 'mis-turnos',
     component: PDPMisTurnosComponent,

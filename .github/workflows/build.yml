@@ -11,6 +11,7 @@ jobs:
                   node-version: '10.x'
             - run: npm ci
             - run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts  
+            - run: cp ./projects/portal/src/environments/configuracion.ts.example ./projects/portal/src/environments/configuracion.ts  
             - run: npm run lint
             - run: rm browserslist && touch browserslist
             - run: npm run build:prod -- --progress=false

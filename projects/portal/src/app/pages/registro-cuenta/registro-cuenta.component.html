@@ -1,0 +1,116 @@
+<main justify="center">
+    <div class="logo-pdp">
+        <pdp-logo (click)="volverLogin()"></pdp-logo>
+    </div>
+    <div class="social-pdp">
+        <plex-grid cols="4">
+            <plex-icon size="xl" name="andes"></plex-icon>
+            <plex-icon size="lg" name="email"></plex-icon>
+            <plex-icon size="lg" name="youtube"></plex-icon>
+            <plex-icon size="lg" name="logo-whatsapp"></plex-icon>
+        </plex-grid>
+    </div>
+    <zxing-scanner *ngIf="scanHabilitado" [torch]="torchEnabled" [tryHarder]="tryHarder" [device]="deviceCurrent"
+                   [formats]="formatsEnabled" (scanSuccess)="onCodeResult($event)"
+                   (permissionResponse)="onHasPermission($event)" (camerasFound)="onCamerasFound($event)"
+                   (deviceChange)="onDeviceChange($event)" (torchCompatible)="onTorchCompatible($event)">
+    </zxing-scanner>
+    <div class="botones-scan" *ngIf="hasPermission && scanHabilitado">
+        <plex-button *ngIf="torchAvailable$ | async" size="md" ariaLabel="activar o desactivar luz"
+                     (click)="toggleTorch()">{{torchEnabled?'turn off':'turn
+            on'}}
+        </plex-button>
+        <plex-button *ngIf="hasDevices" type="danger" icon="close" size="md" ariaLabel="cerrar scanner"
+                     (click)="clearResult()"></plex-button>
+
+    </div>
+    <form [formGroup]="formRegistro" justify="center">
+        <div justify="center" class="mt-3">
+            <div class="titulo-registro">
+                <h1>Bienvenidos/as</h1>
+                <h3>A continuación, un breve formulario para poder registrarme</h3>
+                <h2>En caso de presentar inconvenientes,<strong> comunicarse a info@andes.gob.ar</strong></h2>
+            </div>
+        </div>
+        <div justify="center" class="boton-escanear" (click)="scan()">
+            Tocá para escanear y autocompletar los datos
+            <plex-icon size="xl" name="barcode-scan"></plex-icon>
+        </div>
+        <div class="my-2" justify="center">
+            <div class="campo-registro">
+                <div class="label-registro">
+                    <plex-label titulo="Número de documento" [tituloBold]="false"></plex-label>
+                </div>
+                <div class="campo-hint" [hint]="textoDocumento" hintType="info" hintIcon="help" detach="top">
+                    <plex-int name="numero_documento" formControlName="documento"></plex-int>
+                </div>
+            </div>
+        </div>
+
+        <div class="my-2" justify="center">
+            <div class="campo-registro">
+                <div class="label-registro mr-2">
+                    <plex-label titulo="Seleccione sexo" [tituloBold]="false">
+                    </plex-label>
+                </div>
+                <div justify="left">
+                    <plex-select name="sexo" [data]="opcionesSexo" formControlName="sexo">
+                    </plex-select>
+                </div>
+            </div>
+        </div>
+        <div class="my-2" justify="center">
+            <div class="campo-registro">
+                <div class="label-registro">
+                    <plex-label titulo="Número de trámite" [tituloBold]="false"></plex-label>
+                </div>
+                <div justify="left" [hint]="textoTramite" hintType="info" hintIcon="help" detach="top">
+                    <plex-int name="num_tramite" formControlName="tramite"></plex-int>
+                </div>
+            </div>
+        </div>
+        <div class="info-tramite">
+            <a class="" href="javascript:void(0)" (click)="infoNT()">
+                <plex-icon *ngIf="!infoNrotramite" name="chevron-right" type="info"></plex-icon>
+                <plex-icon *ngIf="infoNrotramite" name="chevron-down" type="info"></plex-icon>
+                Consulta donde encontrar el número de trámite
+            </a>
+            <plex-grid cols="2" *ngIf="infoNrotramite">
+                <img src="assets/img/andes-dni-frente.jpg">
+                <img src="assets/img/andes-dni-dorso.jpg">
+            </plex-grid>
+        </div>
+        <div class="my-2" justify="center">
+            <div class="campo-registro">
+                <div class="label-registro">
+                    <plex-label titulo="Número de celular" [tituloBold]="false"></plex-label>
+                </div>
+                <div justify="left" [hint]="textoCelular" hintType="info" hintIcon="help" detach="top">
+                    <plex-int name="num_celular" formControlName="celular">
+                    </plex-int>
+                </div>
+            </div>
+        </div>
+        <div class="my-2" justify="center">
+            <div class="campo-registro">
+                <div class="label-registro">
+                    <plex-label titulo="Email" [tituloBold]="false"></plex-label>
+                </div>
+                <div justify="left" [hint]="textoEmail" hintType="info" hintIcon="help" detach="top">
+                    <plex-text name="email" formControlName="email" (keyup)="trimEmail($event.target.value)">
+                    </plex-text>
+                </div>
+            </div>
+        </div>
+        <div class="my-2" justify="center" *ngIf="!scanHabilitado && captchaEnabled">
+            <re-captcha name="recaptcha" formControlName="recaptcha" (resolved)="resolved($event)">
+            </re-captcha>
+        </div>
+        <div class="botones-container my-2" justify="center">
+            <plex-button type="info" name="enviar" size="md" class="mb-3" ariaLabel="registrar cuenta"
+                         [disabled]="formRegistro.invalid" (click)="registrarUsuario()">
+                Registrarme
+            </plex-button>
+        </div>
+    </form>
+</main>
