@@ -60,4 +60,8 @@ export class VacunasService {
         return this.server.post(this.nomivacLotesUrl, params, { showError: true });
     }
 
+    guardarNomivacDosis(params: any) {
+        return this.server.post(this.nomivacDosisUrl, params, { showError: true });
+    }
+
 }
