@@ -259,27 +259,18 @@ export class InternacionListadoComponent implements OnInit {
     romperValidacion(selectedPrestacion: IPrestacion, fechaHasta: Date) {
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
-                // guardamos una copia de la prestacion antes de romper la validacion.
-                let prestacionCopia = JSON.parse(JSON.stringify(selectedPrestacion));
-                // Agregamos el estado de la prestacion copiada.
-                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
-                // Guardamos la prestacion copia
-                this.prestacionService.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
-                    let prestacionModificada = prestacionClonada;
-                    // hacemos el patch y luego creamos los planes
-                    let cambioEstado: any = {
-                        op: 'romperValidacion',
-                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id },
-                        desdeInternacion: true
-                    };
-                    // Vamos a cambiar el estado de la prestación a ejecucion
-                    this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe(prestacion => {
-                        this.listadoInternacionService.setFechaHasta(fechaHasta);
-                        this.mapaCamasService.selectPrestacion(prestacion);
-                        this.verificarPrestacion(prestacion);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                    });
+                // hacemos el patch y luego creamos los planes
+                let cambioEstado: any = {
+                    op: 'romperValidacion',
+                    desdeInternacion: true
+                };
+                // En api el estado de la prestación cambia a ejecucion
+                this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe(prestacion => {
+                    this.listadoInternacionService.setFechaHasta(fechaHasta);
+                    this.mapaCamasService.selectPrestacion(prestacion);
+                    this.verificarPrestacion(prestacion);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
         });
