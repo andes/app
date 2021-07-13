@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { PacientePortalService } from '../../../../src/app/services/paciente-portal.service';
-import { ProvinciaService } from '../../../../../../../app/src/app/services/provincia.service';
-import { BarrioService } from '../../../../../../../app/src/app/services/barrio.service';
-import { LocalidadService } from '../../../../../../../app/src/app/services/localidad.service';
-import * as enumerados from '../../../../../../../app/src/app/utils/enumerados';
 import { Auth } from '@andes/auth';
-import { Observable } from 'rxjs';
+import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IContacto } from 'src/app/interfaces/IContacto';
+import { BarrioService } from '../../../../../../src/app/services/barrio.service';
+import { LocalidadService } from '../../../../../../src/app/services/localidad.service';
+import { ProvinciaService } from '../../../../../../src/app/services/provincia.service';
+import * as enumerados from '../../../../../../src/app/utils/enumerados';
+import { PacientePortalService } from '../../../../src/app/services/paciente-portal.service';
 
 @Component({
   selector: 'pdp-mis-datos-personales',

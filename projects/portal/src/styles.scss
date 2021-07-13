@@ -9,7 +9,7 @@ $mdi-font-path: "~@mdi/font/fonts/";
 @import "~@andes/plex/src/lib/styles.scss";
 
 // Importo colores RUP
-@import "./../../../../app/src/app/modules/rup/components/variables.scss";
+@import "./../../../src/app/modules/rup/components/variables.scss";
 @each $bg, $color in $rup_colors {
     .rup-bg-#{$bg} {
         background-color: $color;
