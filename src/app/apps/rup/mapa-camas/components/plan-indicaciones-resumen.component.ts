@@ -1,0 +1,28 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { PlanIndicacionesServices } from '../services/plan-indicaciones.service';
+
+
+@Component({
+    selector: 'in-plan-indicaciones-resumen',
+    templateUrl: './plan-indicaciones-resumen.component.html'
+})
+export class PlanIndicacionesResumenComponent implements OnInit {
+
+    @Input() prestacion: IPrestacion;
+
+    indicaciones$: Observable<any[]>;
+
+    constructor(
+        private planIndicacionesServices: PlanIndicacionesServices,
+    ) {
+
+    }
+
+    ngOnInit() {
+        this.indicaciones$ = this.planIndicacionesServices.getIndicaciones(this.prestacion.trackId, new Date());
+    }
+
+
+}
