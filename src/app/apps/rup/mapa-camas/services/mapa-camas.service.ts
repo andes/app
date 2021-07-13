@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
 import { cache, notNull } from '@andes/shared';
-import { Observable, BehaviorSubject, combineLatest, of, timer } from 'rxjs';
-import { ISnapshot } from '../interfaces/ISnapshot';
-import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
-import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, multicast, filter } from 'rxjs/operators';
-import { ISectores } from '../../../../interfaces/IOrganizacion';
-import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
-import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { MaquinaEstadosHTTP } from './maquina-estados.http';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
+import { catchError, filter, map, multicast, pluck, startWith, switchMap } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { SalaComunService } from '../views/sala-comun/sala-comun.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { ISectores } from '../../../../interfaces/IOrganizacion';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
+import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { IMAQEstado, IMAQRelacion, IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+import { ISnapshot } from '../interfaces/ISnapshot';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
+import { SalaComunService } from '../views/sala-comun/sala-comun.service';
+import { MapaCamasHTTP } from './mapa-camas.http';
+import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
 
 @Injectable()
@@ -198,7 +198,7 @@ export class MapaCamasService {
         );
 
         // const hoy = new Date();
-        const desde = moment().subtract(6, 'months').toDate();
+        const desde = moment().subtract(12, 'months').toDate();
         this.historialInternacion$ = this.historial('internacion', desde).pipe(
             map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
@@ -344,8 +344,8 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
