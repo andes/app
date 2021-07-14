@@ -1,5 +1,5 @@
 const _package = require('../../package.json');
-import { apiKeys, analytics, hotjar, password_recovery, captcha } from './apiKeyMaps';
+import { analytics, apiKeys, captcha, hotjar, password_recovery } from './apiKeyMaps';
 
 export const environment = {
   production: false,
