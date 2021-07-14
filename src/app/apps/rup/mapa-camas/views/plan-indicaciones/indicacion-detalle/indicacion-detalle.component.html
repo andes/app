@@ -1,24 +1,23 @@
 <plex-title titulo="Detalle Indicacion">
     <ng-content></ng-content>
 </plex-title>
-<plex-label size="lg" [titulo]="indicacion.concepto.term"></plex-label>
-<plex-label size="lg" titulo="Indicaciones"></plex-label>
-<div [innerHtml]="observaciones">
-</div>
 
-<!-- <plex-label size="lg" titulo="Motivo" [subtitulo]="indicacion.valor.solicitudPrestacion.motivo">
-</plex-label> -->
+<plex-detail>
+    <plex-icon name="documento-paciente" type="info"></plex-icon>
+    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">{{ indicacion.estado.tipo }}</plex-badge>
+    <plex-badge type="info" tooltip="Fecha de inicio">{{ indicacion.fechaInicio | fecha }}</plex-badge>
+    <div title case="capitalize">{{ indicacion.nombre }} </div>
+</plex-detail>
 
-<plex-label size="lg" titulo="Desde" [subtitulo]="indicacion.fechaInicio | fecha">
-</plex-label>
+<rup [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
+     [soloValores]="true">
+</rup>
 
-<plex-title titulo="Estados"></plex-title>
+<plex-title titulo="Historial Estados"></plex-title>
 
 <plex-list>
     <plex-item *ngFor="let estado of indicacion.estados">
         <plex-label> {{ estado.fecha | fecha }} {{ estado.fecha | hora }}</plex-label>
-        <ng-container ngProjectAs="plex-label">
-            <plex-badge type="success"> {{ estado.tipo }}</plex-badge>
-        </ng-container>
+        <plex-badge [color]="estado.tipo | indicacionColor"> {{ estado.tipo }}</plex-badge>
     </plex-item>
 </plex-list>

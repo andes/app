@@ -358,7 +358,8 @@
                 </plex-tab>
                 <plex-tab label="Indicaciones" *ngIf="prestacion.solicitud.ambitoOrigen === 'internacion'"
                           (click)="panelIndex = 2">
-                    <in-plan-indicaciones-resumen [prestacion]="prestacion"></in-plan-indicaciones-resumen>
+                    <in-plan-indicaciones-resumen [prestacion]="prestacion" (edit)="onEditIndicacion($event)">
+                    </in-plan-indicaciones-resumen>
                 </plex-tab>
             </plex-tabs>
         </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { PlanIndicacionesServices } from '../services/plan-indicaciones.service';
@@ -14,6 +14,8 @@ export class PlanIndicacionesResumenComponent implements OnInit {
 
     indicaciones$: Observable<any[]>;
 
+    @Output() edit = new EventEmitter();
+
     constructor(
         private planIndicacionesServices: PlanIndicacionesServices,
     ) {
@@ -24,5 +26,8 @@ export class PlanIndicacionesResumenComponent implements OnInit {
         this.indicaciones$ = this.planIndicacionesServices.getIndicaciones(this.prestacion.trackId, new Date());
     }
 
+    onEdit(indicacion) {
+        this.edit.emit(indicacion);
+    }
 
 }

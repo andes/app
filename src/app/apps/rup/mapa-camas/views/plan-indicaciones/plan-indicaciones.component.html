@@ -45,7 +45,7 @@
                             <span>
                                 <plex-bool type="checkbox" [(ngModel)]="selectedIndicacion[indicacion.id]"
                                            (change)="onSelectedChange()"> </plex-bool>
-                                {{ indicacion.concepto.term }}
+                                {{ indicacion.nombre }}
                             </span>
                             <plex-button type="info" size="sm" (click)="onSelectIndicacion(indicacion)">
                                 <plex-icon name="eye"></plex-icon>

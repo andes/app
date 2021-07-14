@@ -27,7 +27,7 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                         const estado = ind.estados.sort((a, b) => a.fecha.getTime() - b.fecha.getTime()).reduce(
                             (acc, current) => {
                                 if (!acc) { return current; }
-                                if (current.fecha.getTime() < fecha.getTime()) {
+                                if (current.fecha.getTime() < fechaMax.getTime()) {
                                     return current;
                                 }
                                 return acc;

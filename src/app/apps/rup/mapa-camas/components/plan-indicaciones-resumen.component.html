@@ -6,8 +6,11 @@
 
         <plex-panel *ngFor="let indicacion of indicaciones">
             <div plex-accordion-title>
-                {{ indicacion.concepto.term }}
-                <plex-badge type="success"> {{ indicacion.estado.tipo }} </plex-badge>
+                {{ indicacion.nombre }}
+                <span>
+                    <plex-badge type="success"> {{ indicacion.estado.tipo }} </plex-badge>
+                    <plex-button icon="pencil" size="sm" type="info" (click)="onEdit(indicacion)"></plex-button>
+                </span>
             </div>
         </plex-panel>
 
