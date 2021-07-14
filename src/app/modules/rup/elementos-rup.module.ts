@@ -66,6 +66,7 @@ import { VacunasComponent } from './components/elementos/vacunas.component';
 import { ValorFechaComponent } from './components/elementos/valorFecha.component';
 import { ValorNumericoComponent } from './components/elementos/valorNumerico.component';
 import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
+import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 
@@ -151,7 +152,8 @@ const RUPComponentsArray = [
         RelacionRUPPipe,
         RUPObservacionesModalComponent,
         SemanticIconPipe,
-        SemanticClassPipe
+        SemanticClassPipe,
+        ElementoRUPByIdPipes
 
     ],
     entryComponents: [
@@ -164,7 +166,8 @@ const RUPComponentsArray = [
         VistaPrestacionComponent,
         RelacionRUPPipe,
         SemanticIconPipe,
-        SemanticClassPipe
+        SemanticClassPipe,
+        ElementoRUPByIdPipes
     ],
 })
 export class ElementosRUPModule {

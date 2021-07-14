@@ -6,6 +6,7 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { PlanIndicacionesEventosServices } from '../../services/plan-indicaciones-eventos.service';
@@ -15,6 +16,9 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 @Component({
     selector: 'in-plan-indicacion',
     templateUrl: './plan-indicaciones.component.html',
+    styleUrls: [
+        '../../../../../modules/rup/components/core/_rup.scss'
+    ],
     styles: [`
         .pointer {
             cursor: pointer;
@@ -119,6 +123,7 @@ export class PlanIndicacionesComponent implements OnInit {
         private hudsService: HUDSService,
         private router: Router,
         private auth: Auth,
+        private elementoRUPService: ElementosRUPService
     ) { }
 
 
@@ -226,6 +231,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onSelectIndicacion(indicacion) {
+        this.indicacionEventoSelected = null;
         if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
             this.indicacionView = indicacion;
         } else {
