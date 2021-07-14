@@ -1,3 +1,22 @@
+# [5.55.0](https://github.com/andes/app/compare/v5.54.0...v5.55.0) (2021-07-14)
+
+
+### Bug Fixes
+
+* **ficha-epidemio:** set mpi ([6e7987e](https://github.com/andes/app/commit/6e7987eddc2349b24299f1f62263f035ce40da89))
+* **huds:** fix ordenar prestaciones ([#2361](https://github.com/andes/app/issues/2361)) ([3a5d087](https://github.com/andes/app/commit/3a5d0872cb882a1de61dcee8926f920c8c62df4b))
+* **HUDS:** Mostrar ficha ([#2360](https://github.com/andes/app/issues/2360)) ([e54893c](https://github.com/andes/app/commit/e54893cdbd1099cee5af9f98da2d9691e3554d60))
+* **mapa-camas:** filtra camas inactivas ([#2358](https://github.com/andes/app/issues/2358)) ([8ddd766](https://github.com/andes/app/commit/8ddd7661b8008f8a62e483f964adf9484656bc8a))
+* **mapa-camas:** hisotrial de un año maxima ([#2365](https://github.com/andes/app/issues/2365)) ([06feead](https://github.com/andes/app/commit/06feeade600807ba8033e8056b39116a8f8648cc))
+
+
+### Features
+
+* **EP:** fix duplicidad de save ([#2356](https://github.com/andes/app/issues/2356)) ([01c39cb](https://github.com/andes/app/commit/01c39cb55c1881447a4a0df6dfe3dd8279e0d911))
+* **mapa-camas:** retry operation ([#2362](https://github.com/andes/app/issues/2362)) ([37371ed](https://github.com/andes/app/commit/37371ed2fda488201cf38bfaf56385435897300b))
+* **PDP:** creación de componente para actualizar datos personales ([#2328](https://github.com/andes/app/issues/2328)) ([01f2b9c](https://github.com/andes/app/commit/01f2b9c326a13c8538bf0c9ae6f3a5cac1a46086))
+* **rup:** romper validacion si tengo permisos ([#2355](https://github.com/andes/app/issues/2355)) ([31a85dd](https://github.com/andes/app/commit/31a85dd30b8423846efcf2417ae951fc041e3186))
+
 # [5.54.0](https://github.com/andes/app/compare/v5.53.0...v5.54.0) (2021-07-07)
 
 
