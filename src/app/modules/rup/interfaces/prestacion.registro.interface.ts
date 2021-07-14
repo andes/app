@@ -1,8 +1,8 @@
-import { IElementoRUP, IElementoRUPRequeridos } from './elementoRUP.interface';
-import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IElementoRUP, IElementoRUPRequeridos } from './elementoRUP.interface';
 import { IPrestacion } from './prestacion.interface';
+import { ISnomedConcept } from './snomed-concept.interface';
 
 export class IRegistroPrivacy {
     scope: string;
@@ -52,6 +52,8 @@ export class IPrestacionRegistro {
 
     // Virtuales 🤷
     paciente: IPaciente;
+
+    idEvolucion: string;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept, prestacion?: IPrestacion) {
         this.id = (new ObjectID()).toString();

@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, of, from } from 'rxjs';
-import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
-import { IElementoRUP } from '../interfaces/elementoRUP.interface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Plex } from '@andes/plex';
-import { PrestacionesService } from './prestaciones.service';
-import { switchMap, map, filter } from 'rxjs/operators';
-import { IPrestacion } from '../interfaces/prestacion.interface';
 import { cache } from '@andes/shared';
-import { ElementosRUPService } from './elementosRUP.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, from, of, Subject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IElementoRUP } from '../interfaces/elementoRUP.interface';
+import { IPrestacion } from '../interfaces/prestacion.interface';
+import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { getRegistros } from '../operators/populate-relaciones';
+import { ElementosRUPService } from './elementosRUP.service';
+import { PrestacionesService } from './prestaciones.service';
 
 
 @Injectable()
@@ -70,7 +70,7 @@ export class RupEjecucionService {
         this.sugeridos.next(conceptos);
     }
 
-    agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null) {
+    agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null, extras: any = {}) {
         if (typeof seccion === 'boolean') {
             seccion = seccion && this.seccion.getValue();
         } else {
@@ -80,7 +80,8 @@ export class RupEjecucionService {
             concepto,
             esSolicitud,
             seccion,
-            valor
+            valor,
+            ...extras
         });
     }
 
@@ -156,4 +157,5 @@ export interface EmitConcepto {
     esSolicitud: boolean;
     seccion?: ISnomedConcept;
     valor?: any;
+    idEvolucion?: string;
 }
