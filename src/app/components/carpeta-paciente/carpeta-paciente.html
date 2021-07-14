@@ -14,8 +14,8 @@
 
             <plex-wrapper class="w-100" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
 
-                <plex-int label="Editar número de carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
-                </plex-int>
+                <plex-text label="Editar número de carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
+                </plex-text>
                 <plex-button *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" type="danger"
                              tooltipPosition="left" tooltip="Cancelar edición" icon="close" (click)="cerrarEdicion()">
                 </plex-button>
@@ -38,8 +38,8 @@
     </plex-badge>
 </ng-container>
 <plex-wrapper class="w-100" *ngIf="!showList">
-    <plex-int label="Nuevo número de Carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
-    </plex-int>
+    <plex-text label="Nuevo número de Carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
+    </plex-text>
     <plex-button size="md" type="danger" tooltipPosition="left" tooltip="Cancelar edición" (click)="cancelar()"
                  icon="close">
     </plex-button>
