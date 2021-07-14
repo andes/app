@@ -129,10 +129,10 @@ export class CarpetaPacienteComponent implements OnInit {
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
         if (this.autorizado && this.nuevoNroCarpeta) {
-            if (this.nuevoNroCarpeta.toString() === this.carpetaPaciente.nroCarpeta) {
-                this.plex.toast('danger', 'El número de carpeta ya existe');
+            if (/^\s*$/.test(this.nuevoNroCarpeta)) {
+                this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
             } else {
-                this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.toString().trim();
+                this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
                 if (this.indiceCarpeta > -1) {
                     this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
                 } else {
