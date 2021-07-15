@@ -15,7 +15,7 @@
                     </plex-button>
                 </div>
             </plex-detail>
-            <plex-wrapper span="{{ pacienteSelected ? '2' : 'null' }}">
+            <plex-wrapper span="{{ pacienteSelected ? '2' : 'null' }}" (change)="changeCollapse($event)">
                 <plex-datetime grow="1" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" [max]="fechaHasta">
                 </plex-datetime>
                 <plex-datetime grow="1" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta" [min]="fechaDesde">
@@ -26,27 +26,39 @@
                 <plex-select grow="1" name="localidades" [data]="localidades$ | async" label="Localidad de Residencia"
                              [(ngModel)]="localidad">
                 </plex-select>
-                <plex-select grow="1" name="organizacion" tmOrganizaciones label="Efectores" [(ngModel)]="organizacion">
-                </plex-select>
-                <plex-select grow="1" name="zonaSanitaria" [data]="zonaSanitaria$ | async"
-                             label="Zona Sanitaria Efector" [(ngModel)]="zonaSanitaria" labelField="nombre">
-                </plex-select>
-                <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
-                </plex-text>
-                <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts" label="Regitrado en SISA"
-                             [(ngModel)]="filtrarSISA" labelField="nombre">
-                </plex-select>
+                <div collapse>
+                    <plex-select grow="1" name="organizacion" tmOrganizaciones label="Efectores"
+                                 [(ngModel)]="organizacion">
+                    </plex-select>
+                    <plex-select grow="1" name="zonaSanitaria" [data]="zonaSanitaria$ | async"
+                                 label="Zona Sanitaria Efector" [(ngModel)]="zonaSanitaria" labelField="nombre">
+                    </plex-select>
+                    <plex-text grow="1" label="Identificador PCR" name="idPcr" [(ngModel)]="idPcr">
+                    </plex-text>
+                    <plex-select grow="1" name="registroSisa" [data]="registroSisaOpts" label="Registrado en SISA"
+                                 [(ngModel)]="filtrarSISA" labelField="nombre">
+                    </plex-select>
+                    <plex-select grow="1" name="clasificacion" [data]="clasificacion" label="Clasificación"
+                                 [(ngModel)]="idClasificacion" labelField="nombre">
+                    </plex-select>
+                    <plex-select grow="1" name="tipoConfirmacion" [data]="tipoConfirmacion" label="Tipo Confirmación"
+                                 [(ngModel)]="idTipoConfirmacion" labelField="nombre">
+                    </plex-select>
+                </div>
             </plex-wrapper>
         </plex-grid>
         <plex-table *ngIf="listado?.length && !inProgress" [columns]="columns" #table="plTable" (scroll)="onScroll()"
-                    [offset]="pacienteSelected ? 291: 221">
-            <plex-table-columns>
-            </plex-table-columns>
+                    [offset]="pacienteSelected  ? 291: (collapse ? 292 : 148)">
+            <plex-title titulo="Fichas" size="sm">
+                <plex-table-columns [selected]="colsVisibles">
+                </plex-table-columns>
+            </plex-title>
             <tr *ngFor="let ficha of (fichas$| plSort:table| async )">
                 <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
                 <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
+                <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
                     <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm" tooltip="Editar"
                                  (click)="editarVerFicha(ficha,true)">
@@ -70,7 +82,7 @@
                 </td>
             </tr>
         </plex-table>
-        <div *ngIf="!(fichas$ | async)?.length && !inProgress" class="h-50" justify="center">
+        <div *ngIf="!(fichas$ | async)?.length && !inProgress" justify="center" class="mt-5">
             <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                         [titulo]="query?'No hay resultados': 'Realice una búsqueda'"
                         subtitulo="Complete los filtros deseados y/o busque por paciente en el panel lateral y presione Buscar Fichas">
@@ -87,7 +99,7 @@
             <paciente-listado *ngIf="resultadoBusqueda?.length && !pacienteSelected" [pacientes]="resultadoBusqueda"
                               (selected)="onSelect($event)">
             </paciente-listado>
-            <div *ngIf="!pacienteSelected && !resultadoBusqueda?.length" class="h-75" justify="center">
+            <div *ngIf="!pacienteSelected && !resultadoBusqueda?.length" class="mt-5" justify="center">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                             titulo="Buscar por DNI, Nombre o Apellido"
                             subtitulo="Seleccione un paciente y presione en Buscar Fichas">
