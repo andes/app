@@ -37,6 +37,8 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public permisosEdicion;
     public editando = false;
     public dacionTurno = false;
+    public desasignarInsc: Boolean;
+    public inscriptosSinturno = [];
     public columns = [
         {
             key: 'grupo',
@@ -115,6 +117,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
         this.localidades$ = this.localidadService.getXProvincia(this.idNeuquenProv);
         const gruposHabilitados = this.auth.getPermissions('vacunacion:tipoGrupos:?');
         this.permisosEdicion = this.auth.getPermissions('vacunacion:editar:?');
+        this.desasignarInsc = this.auth.check('vacunacion:desasignar-inscriptos');
         let query = {};
         if (gruposHabilitados.length) {
             if (!(gruposHabilitados.length === 1 && gruposHabilitados[0] === '*')) {
@@ -271,6 +274,19 @@ export class MonitoreoInscriptosComponent implements OnInit {
             }),
         ).subscribe(() => {
             this.plex.toast('success', 'Se incrementó correctamente la cantidad de llamados');
+        });
+    }
+
+    desasignarInscriptos() {
+        this.inscripcionService.get().subscribe(inscripcion => {
+            inscripcion.map(inscripto => {
+                if (!inscripto.turno && !inscripto.fechaProximoLlamado) {
+                    inscripto.asignado = undefined;
+                    this.inscripcionService.patch(inscripto).subscribe();
+                }
+            });
+            this.plex.toast('success', 'Se desasignaron inscriptos ');
+            this.cargarAsignadas();
         });
     }
 }
