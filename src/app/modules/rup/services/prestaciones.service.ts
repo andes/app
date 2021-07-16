@@ -620,21 +620,6 @@ export class PrestacionesService {
         return this.patch(prestacion.id, data);
     }
 
-    /**
-    * Método clonar. Inserta una copia de una prestacion.
-    * @param {any} prestacionCopia Recibe una copia de una prestacion
-    */
-    clonar(prestacionCopia: any, estado: any): Observable<any> {
-
-        // Agregamos el estado de la prestacion copiada.
-        prestacionCopia.estados.push(estado);
-
-        // Eliminamos los id de la prestacion
-        delete prestacionCopia.id;
-        delete prestacionCopia._id;
-
-        return this.server.post(this.prestacionesUrl, prestacionCopia);
-    }
 
     /**
      * Devuelve un listado de prestaciones planificadas desde una prestación origen
@@ -713,31 +698,21 @@ export class PrestacionesService {
                     observer.complete();
                     return false;
                 } else {
-                    const prestacionCopia = JSON.parse(JSON.stringify(prestacion));
-                    const estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion'
+                    };
 
-                    // Guardamos la prestacion copia
-                    this.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
-                        const prestacionModificada = prestacionClonada;
-
-                        // hacemos el patch y luego creamos los planes
-                        let cambioEstado: any = {
-                            op: 'romperValidacion',
-                            estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
-                        };
-
-                        // Vamos a cambiar el estado de la prestación a ejecucion
-                        this.patch(prestacion.id, cambioEstado).subscribe(() => {
-                            observer.next();
-                            observer.complete();
-                        }, (err) => {
-                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                            observer.error();
-                            observer.complete();
-                        });
+                    // En api el estado de la prestación cambia a ejecucion
+                    this.patch(prestacion.id, cambioEstado).subscribe(() => {
+                        observer.next();
+                        observer.complete();
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                        observer.error();
+                        observer.complete();
                     });
                 }
-
             });
 
         });
