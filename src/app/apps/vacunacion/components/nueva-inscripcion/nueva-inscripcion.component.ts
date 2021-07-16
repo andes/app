@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ICiudadano } from '../../interfaces/ICiudadano';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { cache } from '@andes/shared';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ProfesionService } from 'src/app/services/profesion.service';
@@ -130,39 +130,56 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         this.pacienteService.getById(idPaciente).subscribe(
             paciente => {
                 this.paciente = paciente;
-                let gruposPosibles = ['personal-salud', 'policia'];
+                let gruposPosibles = ['personal-salud', 'policia', 'discapacidad'];
+
                 if (this.paciente.edad > 59) {
                     gruposPosibles.push('mayores60');
-                } else {
-                    gruposPosibles = gruposPosibles.concat(['factores-riesgo', 'discapacidad', 'sin-factores-riesgo', 'personas-gestantes']);
                 }
-                this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
-                    let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
-                    if (grupofr) {
-                        this.morbilidades = grupofr.morbilidades;
+
+                forkJoin({
+                    fr: this.grupoPoblacionalService.cumpleExcepciones('factores-riesgo', { paciente: JSON.stringify({ id: this.paciente.id }) }),
+                    sfr: this.grupoPoblacionalService.cumpleExcepciones('sin-factores-riesgo', { paciente: JSON.stringify({ id: this.paciente.id }) }),
+                    pg: this.grupoPoblacionalService.cumpleExcepciones('personas-gestantes', { paciente: JSON.stringify({ id: this.paciente.id }) }),
+                }).subscribe(grupo => {
+
+                    if (grupo.fr) {
+                        gruposPosibles.push('factores-riesgo');
                     }
-                    this.opcionesGrupos = grupos;
-                });
-                this.ciudadano.nombre = this.paciente.nombre;
-                this.ciudadano.apellido = this.paciente.apellido;
-                this.ciudadano.documento = this.paciente.documento !== '' ? this.paciente.documento : this.paciente.numeroIdentificacion;
-                this.ciudadano.fechaNacimiento = this.paciente.fechaNacimiento;
-                this.ciudadano.sexo = this.paciente.sexo;
-                if (this.paciente.contacto.length > 0) {
-                    this.paciente.contacto.forEach((contacto) => {
-                        if (contacto.tipo === 'celular') {
-                            this.ciudadano.telefono = contacto.valor;
+                    if (grupo.sfr) {
+                        gruposPosibles.push('sin-factores-riesgo');
+                    }
+                    if (grupo.pg) {
+                        gruposPosibles.push('personas-gestantes');
+                    }
+
+                    this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
+                        let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+                        if (grupofr) {
+                            this.morbilidades = grupofr.morbilidades;
                         }
-                        if (contacto.tipo === 'email') {
-                            this.ciudadano.email = contacto.valor;
-                        }
+                        this.opcionesGrupos = grupos;
                     });
-                }
-                if (this.paciente.direccion && this.paciente.direccion.length > 0) {
-                    this.ciudadano.localidad = this.paciente.direccion[0].ubicacion.localidad;
-                    this.ciudadano.validaciones = ['domicilio'];
-                }
-                this.ciudadano.paciente = this.paciente;
+                    this.ciudadano.nombre = this.paciente.nombre;
+                    this.ciudadano.apellido = this.paciente.apellido;
+                    this.ciudadano.documento = this.paciente.documento;
+                    this.ciudadano.fechaNacimiento = this.paciente.fechaNacimiento;
+                    this.ciudadano.sexo = this.paciente.sexo;
+                    if (this.paciente.contacto.length > 0) {
+                        this.paciente.contacto.forEach((contacto) => {
+                            if (contacto.tipo === 'celular') {
+                                this.ciudadano.telefono = contacto.valor;
+                            }
+                            if (contacto.tipo === 'email') {
+                                this.ciudadano.email = contacto.valor;
+                            }
+                        });
+                    }
+                    if (this.paciente.direccion && this.paciente.direccion.length > 0) {
+                        this.ciudadano.localidad = this.paciente.direccion[0].ubicacion.localidad;
+                        this.ciudadano.validaciones = ['domicilio'];
+                    }
+                    this.ciudadano.paciente = this.paciente;
+                });
             },
             () => {
                 this.plex.info('danger', 'Intente nuevamente', 'Error en la búsqueda de paciente');

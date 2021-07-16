@@ -40,7 +40,7 @@ export class InscripcionBusquedaPacienteComponent {
         this.pacienteService.checkFallecido(paciente);
         // En caso de que sea extranjero verifica que tenga número de identificacion
         if (paciente.documento === '' && (!paciente.numeroIdentificacion || paciente.numeroIdentificacion === '')) {
-            this.plex.info('warning', 'El paciente no posee número de identifiación');
+            this.plex.info('warning', 'El paciente no posee número de identificación');
         } else {
             this.returnBusqueda.emit({ status: true, paciente: paciente.id });
         }
