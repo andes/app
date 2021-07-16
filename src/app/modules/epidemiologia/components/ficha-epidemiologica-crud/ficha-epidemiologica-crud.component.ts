@@ -66,8 +66,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public clasificacion = [
     { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
     { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
-    { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
-    { id: 'controlAlta', nombre: 'Control de alta' }
+    { id: 'controlAlta', nombre: 'Control de alta' },
+    { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
   ];
   public tipoBusqueda = [
     { id: 'activa', nombre: 'Activa' },
@@ -170,7 +170,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
   public organizacionesInternacion$: Observable<any>;
   public vacunas$: Observable<any>;
   public estaInternado = false;
-  public showSemana = true;
+  public asintomatico = false;
   public showFichaParcial = false;
   public patronPCR = '([A-Za-z])*([0-9]+$)+';
 
@@ -229,8 +229,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                   if (!this.editFicha && Object.keys(field)[0] === 'organizacion') {
                     this.organizaciones$ = this.organizacionService.getById(field.organizacion.id ? field.organizacion.id : field.organizacion);
                   }
-                  if (Object.keys(field)[0] === 'asintomaticoespecial') {
-                    this.showSemana = this.secciones[buscado].fields['asintomaticoespecial'];
+                  if (Object.keys(field)[0] === 'clasificacion') {
+                    this.asintomatico = field.clasificacion.id === 'casoAsintomatico' ? true : false;
                   }
                   let key = Object.keys(field);
                   this.secciones[buscado].fields[key[0]] = field[key[0]];
@@ -516,11 +516,19 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     if (event.value?.id === 'no' || event.value === false) {
       this.secciones.map(seccion => {
         if (seccion.id === idSeccion) {
-          keys.map(element => {
-            if (seccion.fields[element]) {
-              seccion.fields[element] = null;
-            }
-          });
+          if (keys.length) {
+            keys.map(element => {
+              if (seccion.fields[element]) {
+                seccion.fields[element] = null;
+              }
+            });
+          } else {
+            seccion.fields.map(element => {
+              if (seccion.fields[element.key]) {
+                seccion.fields[element.key] = null;
+              }
+            });
+          }
         }
       });
     }
@@ -634,11 +642,16 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     });
   }
 
-  ocultarFuc(event) {
-    if (event.value) {
-      this.showSemana = false;
+  setCasoAsintomatico(event) {
+    if (event.value.id === 'casoAsintomatico') {
+      this.asintomatico = true;
+      this.clearDependencias({ value: false }, 'signosSintomas', []);
+      this.clearDependencias({ value: false }, 'antecedentesEpidemiologicos', ['sospechosoconantecedente',
+        'sospechosoconcontacto', 'sospechosoconglomerado', 'sospechosoasistencial', 'apellidonombresospechoso',
+        'sospechosodni', 'apellidonombrecontacto', 'dnicontacto', 'nombreasistencial']);
     } else {
-      this.showSemana = true;
+      this.asintomatico = false;
+      this.clearDependencias({ value: false }, 'clasificacion', ['situacionespecial']);
     }
   }
 }
