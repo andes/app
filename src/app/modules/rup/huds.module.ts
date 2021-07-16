@@ -1,4 +1,5 @@
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -12,6 +13,7 @@ import { VistaHudsComponent } from './components/ejecucion/vistaHuds.component';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
+import { HUDSTimelineComponent } from './views/huds-timeline/huds-timeline.component';
 
 @NgModule({
     imports: [
@@ -25,14 +27,17 @@ import { RUPLibModule } from './rup-lib.module';
         HUDSLibModule,
         ElementosRUPModule,
         EpidemiologiaModule,
+        SharedModule,
         RouterModule.forChild([
             { path: '', component: HudsBusquedaPacienteComponent, pathMatch: 'full' },
             { path: 'paciente/:id', component: VistaHudsComponent, canActivate: [RoutingHudsGuard] },
+            { path: 'timeline/:id', component: HUDSTimelineComponent },
         ]),
     ],
     declarations: [
         HudsBusquedaPacienteComponent,
-        VistaHudsComponent
+        VistaHudsComponent,
+        HUDSTimelineComponent
     ]
 })
 export class HUDSModule {

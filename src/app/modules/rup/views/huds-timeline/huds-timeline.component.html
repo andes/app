@@ -1,0 +1,101 @@
+<plex-layout [main]="itemSelected ? 6 : 12">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="Exploración Visual">
+                <plex-datetime [(ngModel)]="desde" class="mr-1" size="sm" (change)="setView(desde,hasta)">
+                </plex-datetime>
+                <plex-datetime [(ngModel)]="hasta" class="mr-1" size="sm" (change)="setView(desde,hasta)">
+                </plex-datetime>
+
+                <plex-text *ngIf="textoFiltroVisivility" size="sm" [(ngModel)]="textoFiltro" [debounce]="400"
+                           (change)="zoomChange()">
+                </plex-text>
+                <plex-button class="mr-1" type="info" size="sm"
+                             (click)="textoFiltroVisivility = !textoFiltroVisivility">
+                    <plex-icon name="zoom"></plex-icon>
+                </plex-button>
+                <plex-button [type]="showListado ? 'success' : 'info'" icon="format-list-bulleted" size="sm"
+                             (click)="onToogleListado()"
+                             [tooltip]="showListado ? 'Ocultar listado' : 'Mostrar listado'"></plex-button>
+                <plex-button type="danger" label="VOLVER" size="sm" (click)="volver()"></plex-button>
+            </plex-title>
+            <div #prueba></div>
+        </header>
+
+        <plex-table [columns]="columns" #table="plTable" *ngIf="showListado">
+
+            <tr *ngFor="let data of dataSetVisible$ | plSort:table | async" class="selectable"
+                [class.selected]="datoIdSelected === data.id" (click)="onItemSelect(data)">
+
+                <td>
+                    {{ data.fecha | fecha }} {{ data.fecha | hora }}
+                </td>
+
+                <td>
+                    {{data.term}}
+                </td>
+
+                <td>
+                    {{ data.profesional }}
+                </td>
+
+                <td>
+                    {{ data.organizacion }}
+                </td>
+
+            </tr>
+
+        </plex-table>
+
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <ng-container *ngIf="itemSelected">
+            <ng-container [ngSwitch]="itemSelected.tipo">
+                <ng-container *ngSwitchCase="'rup'">
+                    <vista-prestacion [prestacion]="itemSelected.data">
+                        <plex-button type="danger" (click)="onClose()" size="sm">
+                            <plex-icon name="close"></plex-icon>
+                        </plex-button>
+                    </vista-prestacion>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'cda'">
+                    <plex-title>
+                        <plex-button type="danger" (click)="onClose()" size="sm">
+                            <plex-icon name="close"></plex-icon>
+                        </plex-button>
+                    </plex-title>
+                    <vista-cda [registro]="itemSelected"></vista-cda>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'concepto'">
+                    <plex-title>
+                        <plex-button type="danger" (click)="onClose()" size="sm">
+                            <plex-icon name="close"></plex-icon>
+                        </plex-button>
+                    </plex-title>
+                    <vista-registro *ngIf="itemSelected.group === 'hallazgos' ||   itemSelected.group === 'trastornos'"
+                                    [registro]="itemSelected.data" [paciente]="{ id: pacienteID }">
+                    </vista-registro>
+
+                    <vista-procedimiento *ngIf="itemSelected.group === 'procedimientos' ||   itemSelected.group === 'productos'"
+                                         [registro]="itemSelected.data" [paciente]="{ id: pacienteID }">
+                    </vista-procedimiento>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'ficha-epidemiologica'">
+                    <app-ficha-epidemiologica-crud [fichaPaciente]="itemSelected.data"
+                                                   [fichaName]="itemSelected.data.type.name" [paciente]="paciente"
+                                                   [editFicha]="false" (volver)="onClose();">
+                    </app-ficha-epidemiologica-crud>
+                </ng-container>
+
+
+
+            </ng-container>
+        </ng-container>
+
+
+    </plex-layout-sidebar>
+</plex-layout>
