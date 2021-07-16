@@ -24,7 +24,6 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     extensions = FILE_EXT;
     public nuevoEstado;
     public documentosUrl = [];
-    public prioridad = '';
     public dispositivo = null;
     public oxigeno = 'oxigeno';
     public opcionesPrioridad = [
@@ -38,9 +37,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     @Input('derivacion')
     set _derivacion(value) {
         this.nuevoEstado = {
-            observacion: ''
+            observacion: '',
+            prioridad: value.prioridad
         };
-        this.prioridad = value.prioridad;
         this.dispositivo = value.dispositivo;
         this.adjuntosEstado = [];
         this.derivacion = value;
@@ -66,8 +65,9 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
     actualizarEstado($event) {
         if ($event.formValid) {
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
-            if (this.derivacion.prioridad !== this.prioridad) {
-                this.nuevoEstado.prioridad = this.prioridad;
+
+            if (this.derivacion.prioridad === this.nuevoEstado.prioridad) {
+                delete this.nuevoEstado.prioridad;
             }
 
             this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
@@ -80,11 +80,6 @@ export class ActualizarEstadoDerivacionComponent implements OnInit {
             });
         }
     }
-
-    setPrioridad(prioridad) {
-        this.prioridad = prioridad;
-    }
-
 
     onUpload($event) {
         if ($event.status === 200) {

@@ -20,7 +20,6 @@ export class DetalleDerivacionComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
     public derivacion;
     public reglaSeleccionada;
-    public prioridad = 'baja';
     public dispositivo = null;
     public opcionesPrioridad = [
         { id: 'baja', label: 'Baja' },
@@ -76,11 +75,7 @@ export class DetalleDerivacionComponent implements OnInit {
     unidadesDestino = [];
     reglasDerivacion = [];
     reglasDerivacionFiltradas = [];
-    public nuevoEstado: any = {
-        organizacionDestino: null,
-        estado: null,
-        observacion: ''
-    };
+    public nuevoEstado;
     public esCOM = false;
     requestInProgress;
 
@@ -115,6 +110,7 @@ export class DetalleDerivacionComponent implements OnInit {
             organizacionDestino: this.derivacion.organizacionDestino,
             unidadDestino: this.derivacion.unidadDestino,
             estado: this.derivacion.estado,
+            prioridad: this.derivacion.prioridad || 'baja',
             observacion: ''
         };
 
@@ -157,10 +153,6 @@ export class DetalleDerivacionComponent implements OnInit {
         }
     }
 
-    setPrioridad(prioridad) {
-        this.prioridad = prioridad;
-    }
-
     onReglaChange() {
         if (this.reglaSeleccionada.estadoFinal === 'asignada') {
             this.nuevoEstado.organizacionDestino = null;
@@ -177,10 +169,9 @@ export class DetalleDerivacionComponent implements OnInit {
             this.nuevoEstado.estado = this.reglaSeleccionada.estadoFinal;
 
             this.nuevoEstado.adjuntos = this.adjuntosEstado;
-            if (this.reglaSeleccionada.definePrioridad) {
-                this.nuevoEstado.prioridad = this.prioridad;
+            if (!this.reglaSeleccionada.definePrioridad) {
+                delete this.nuevoEstado.prioridad;
             }
-
             this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
             let body: any = {

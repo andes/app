@@ -5,38 +5,3 @@
     cursor: pointer;
 }
 
-// Prioridades
-.baja,
-.media,
-.intermedia,
-.alta,
-.especial {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    position: relative;
-    margin-right: 0.5rem;
-    cursor: pointer;
-    &:hover,
-    &.selected {
-        border: 4px solid darken($color: $blue, $amount: 0.5);
-    }
-}
-
-.baja {
-    background: #80b266;
-}
-.media {
-    background: #c6b300;
-}
-.intermedia {
-    background: #e49b2d
-}
-.alta {
-    background: #b70b0b;
-}
-.especial {
-    background: #02111c;
-}
-
-

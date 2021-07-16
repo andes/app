@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ReglasDerivacionService } from 'src/app/services/com/reglasDerivaciones.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
-import { ColoresPrioridades as colores } from 'src/app/utils/enumerados';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../services/organizacion.service';
+import { SemaforoService } from '../../semaforo-priorizacion/service/semaforo.service';
 import { IDerivacion } from '../interfaces/IDerivacion.interface';
 import { DerivacionesService } from './../../../services/com/derivaciones.service';
 import { PuntoInicioService } from './../services/punto-inicio.service';
@@ -63,6 +63,7 @@ export class ComPuntoInicioComponent implements OnInit {
     public sortBy = 'fecha';
     public sortOrder = 'asc';
     public ordenarPorPrioridad = false;
+    public opcionesSemaforo;
 
     constructor(
         private derivacionesService: DerivacionesService,
@@ -71,7 +72,8 @@ export class ComPuntoInicioComponent implements OnInit {
         public router: Router, public plex: Plex,
         private reglasDerivacionService: ReglasDerivacionService,
         private documentosService: DocumentosService,
-        private puntoInicioService: PuntoInicioService) { }
+        private puntoInicioService: PuntoInicioService,
+        private semaforoService: SemaforoService) { }
 
     ngOnInit() {
         if (!(this.auth.getPermissions('com:?').length > 0)) {
@@ -89,6 +91,7 @@ export class ComPuntoInicioComponent implements OnInit {
             this.esTrasladoEspecial = org.trasladosEspeciales && org.trasladosEspeciales.length;
             this.cargarDerivaciones();
         });
+        this.semaforoService.findByName('com').subscribe(res => this.opcionesSemaforo = res.options);
     }
 
     onScroll() {
@@ -267,7 +270,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     getColorPrioridad(prioridad) {
         if (prioridad && this.esCOM) {
-            return colores.find(x => x.name === prioridad);
+            return this.opcionesSemaforo.find(x => x.label === prioridad).itemRowStyle;
         } else {
             return false;
         }
