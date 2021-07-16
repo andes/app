@@ -88,7 +88,7 @@ export class InscripcionService extends ResourceBaseHttp {
         return this.server.get(`${this.url}/consultas`, { params, showError: false, showLoader: true });
     }
 
-    get(params: any): Observable<any[]> {
+    get(params?: any): Observable<any[]> {
         return this.server.get(this.url, { params: params, showError: true });
     }
 
