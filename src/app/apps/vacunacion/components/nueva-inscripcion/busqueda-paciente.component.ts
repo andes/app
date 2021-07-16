@@ -38,7 +38,12 @@ export class InscripcionBusquedaPacienteComponent {
     seleccionarPaciente(paciente) {
         // Si se seleccionó por error un paciente fallecido
         this.pacienteService.checkFallecido(paciente);
-        this.returnBusqueda.emit({ status: true, paciente: paciente.id });
+        if (paciente.edad >= 18) {
+            this.returnBusqueda.emit({ status: true, paciente: paciente.id });
+        } else {
+            this.plex.info('warning', 'Sólo se pueden seleccionar personas mayores de 17 años');
+        }
+
     }
 
     cerrar() {
