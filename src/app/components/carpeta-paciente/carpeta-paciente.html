@@ -11,7 +11,9 @@
                          tooltipPosition="left" tooltip="Editar" icon="pencil" (click)="editar()"
                          class="d-flex align-self-center ml-2">
             </plex-button>
+
             <plex-wrapper class="w-100" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
+
                 <plex-text label="Editar número de carpeta" name="nroCarpeta" [(ngModel)]="nuevoNroCarpeta">
                 </plex-text>
                 <plex-button *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" type="danger"
