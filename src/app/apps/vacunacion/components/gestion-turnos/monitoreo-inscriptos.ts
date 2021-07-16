@@ -8,6 +8,7 @@ import { InscripcionService } from '../../services/inscripcion.service';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { catchError } from 'rxjs/operators';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 @Component({
     selector: 'monitoreo-inscriptos',
@@ -37,6 +38,9 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public permisosEdicion;
     public editando = false;
     public dacionTurno = false;
+    public showDarTurnos = false;
+    public solicitudTurno: any;
+    public idVacunacionCovid = '5fd9088a68796d29fcde55eb';
     public columns = [
         {
             key: 'grupo',
@@ -105,7 +109,8 @@ export class MonitoreoInscriptosComponent implements OnInit {
         private auth: Auth,
         private inscripcionService: InscripcionService,
         private router: Router,
-        private plex: Plex
+        private plex: Plex,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) { }
 
     ngOnInit() {
@@ -126,6 +131,11 @@ export class MonitoreoInscriptosComponent implements OnInit {
         } else {
             this.gruposPoblacionales = [];
         }
+        this.conceptosTurneablesService.search({ id: this.idVacunacionCovid }).subscribe(data => {
+            this.solicitudTurno = {
+                tipoPrestacion: (data.filter((x) => x.id === this.idVacunacionCovid))[0]
+            };
+        });
     }
 
     showInSidebar(paciente) {
@@ -173,9 +183,41 @@ export class MonitoreoInscriptosComponent implements OnInit {
         this.editando = true;
     }
 
-    darTurno() {
-        this.dacionTurno = true;
+    // DACION DE TURNO --------------------------------------------
+
+    setDacionTurno() {
+        this.solicitudTurno.organizacion = this.pacienteSelected.turno?.organizacion;
+        this.dacionTurno = !this.dacionTurno;
     }
+
+    // Agenda de citas para seleccion de turno
+    verAgenda() {
+        this.dacionTurno = false;
+        this.showSidebar = false;
+        this.mainSize = 12;
+        this.showDarTurnos = true;
+    }
+
+    returnDacionTurno(horarioTurno) {
+        if (horarioTurno) {
+            this.pacienteSelected.turno = {
+                organizacion: this.solicitudTurno.organizacion,
+                fechaYHora: horarioTurno
+            };
+            this.inscripcionService.update(this.pacienteSelected.id, this.pacienteSelected).subscribe(() => {
+                this.plex.toast('success', 'La inscripción ha sido actualizada exitosamente');
+                this.pacienteLlamado = this.pacienteSelected;
+                this.pacienteProcesado = true;
+            }, error => {
+                this.plex.toast('danger', 'La inscripción no pudo ser actualizada');
+            });
+        }
+        this.showDarTurnos = false;
+        this.showSidebar = true;
+        this.mainSize = 9;
+    }
+
+    // --------------------------------------------------------------
 
     returnEdicion(inscripcionActualizada) {
         if (inscripcionActualizada) {
@@ -217,20 +259,6 @@ export class MonitoreoInscriptosComponent implements OnInit {
         this.inscripcionService.get(params).subscribe(resultado => {
             this.pacientes = resultado;
         });
-    }
-
-    returnDacionTurno(inscripcionActualizada) {
-        if (inscripcionActualizada) {
-            this.pacienteSelected = inscripcionActualizada;
-            if (this.activeTab === 1) {
-                this.pacienteSelected = inscripcionActualizada;
-                this.cargarAsignadas();
-            } else {
-                this.pacienteLlamado = inscripcionActualizada;
-                this.pacienteProcesado = true;
-            }
-        }
-        this.dacionTurno = false;
     }
 
     cambio(activeTab) {

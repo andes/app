@@ -20,10 +20,10 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { EditarInscripcionComponent } from './components/editar-inscripcion.component';
 import { InscripcionBusquedaPacienteComponent } from './components/nueva-inscripcion/busqueda-paciente.component';
 import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-inscripcion.component';
-import { DacionTurnoComponent } from './components/gestion-turnos/dacion-turno.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { NotasComponent } from './components/notas.component';
 import { LoteComponent } from './components/lote/lote.component';
+import { CITASLibModule } from 'src/app/components/turnos/citas.module';
 
 @NgModule({
     imports: [
@@ -36,7 +36,8 @@ import { LoteComponent } from './components/lote/lote.component';
         MPILibModule,
         VacunacionRouting,
         RecaptchaFormsModule,
-        DirectiveLibModule
+        DirectiveLibModule,
+        CITASLibModule
     ],
     declarations: [
         InscripcionComponent,
@@ -49,7 +50,6 @@ import { LoteComponent } from './components/lote/lote.component';
         InscripcionBusquedaPacienteComponent,
         NuevaInscripcionComponent,
         MonitoreoInscriptosComponent,
-        DacionTurnoComponent,
         NotasComponent,
         LoteComponent
     ],
