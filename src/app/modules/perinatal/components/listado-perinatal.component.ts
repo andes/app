@@ -1,10 +1,14 @@
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
+import { OrganizacionService } from '../../../services/organizacion.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
+import { IOrganizacion } from 'src/app/interfaces/IOrganizacion';
+import { ProfesionalService } from 'src/app/services/profesional.service';
+import { Console } from 'console';
 
 @Component({
     selector: 'listado-perinatal',
@@ -18,12 +22,16 @@ export class ListadoPerinatalComponent implements OnInit {
     public fechaCita;
     public fechaUltimoControl;
     public listado$: Observable<any[]>;
+    public organizaciones$: Observable<any[]>;
+    public profesionales$: Observable<any[]>;
     private listadoActual: any[];
     public showSidebar = false;
     // Permite :hover y click()
     public selectable = true;
     // Muestra efecto de selección
     public carnetSelected;
+    public profesional;
+    public organizacion;
     public columns = [
 
         {
@@ -82,6 +90,8 @@ export class ListadoPerinatalComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         private location: Location,
+        private organizacionService: OrganizacionService,
+        private profesionalService: ProfesionalService,
         private carnetPerinatalService: CarnetPerinatalService) { }
 
     ngOnInit(): void {
@@ -92,6 +102,8 @@ export class ListadoPerinatalComponent implements OnInit {
         this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
             map(resp => this.listadoActual = resp)
         );
+        this.organizaciones$ = this.organizacionService.get(this.auth.organizacion.id);
+        this.profesionales$ = this.profesionalService.getProfesional(this.profesional);
     }
 
     filtrar() {
@@ -105,6 +117,8 @@ export class ListadoPerinatalComponent implements OnInit {
         this.carnetPerinatalService.paciente.next(this.paciente);
         this.carnetPerinatalService.fechaDesde.next(this.fechaDesdeEntrada);
         this.carnetPerinatalService.fechaHasta.next(this.fechaHastaEntrada);
+        this.carnetPerinatalService.organizacion.next(this.organizacion);
+        this.carnetPerinatalService.profesional.next(this.profesional);
         this.carnetPerinatalService.fechaUltimoControl.next(this.fechaUltimoControl);
         this.carnetPerinatalService.fechaProximoControl.next(this.fechaCita);
     }
