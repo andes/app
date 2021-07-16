@@ -18,37 +18,26 @@
         </paciente-detalle>
         <fieldset>
             <plex-title size="sm" titulo="DATOS DE INTERNACION">
+                <plex-badge *ngIf="prestacion.ejecucion.registros[0].esCensable" type="info" size="sm">
+                    Censable
+                </plex-badge>
             </plex-title>
-            <div class="row">
-                <div class="col-6">
-                    <plex-label titulo="Fecha ingreso"
-                                [subtitulo]="informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
-                    </plex-label>
-                </div>
-                <div class="col-6">
-                    <plex-label titulo="Motivo" [subtitulo]="informeIngreso.motivo">
-                    </plex-label>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-6">
-                    <plex-label titulo="Origen" [subtitulo]="informeIngreso.origen">
-                    </plex-label>
-                </div>
-                <div class="col-6">
-                    <plex-label titulo="Especialidad/es"
-                                subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
-                    </plex-label>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-6">
-                    <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
-                    </plex-label>
-                </div>
-                <div class="col-6">
-                </div>
-            </div>
+
+            <plex-grid cols="2">
+                <plex-label titulo="Fecha ingreso"
+                            subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+                </plex-label>
+                <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
+                </plex-label>
+                <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen }}">
+                </plex-label>
+                <plex-label titulo="Especialidad/es"
+                            subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
+                </plex-label>
+                <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
+                </plex-label>
+            </plex-grid>
+
         </fieldset>
         <fieldset>
             <plex-title size="sm" titulo="COBERTURA">
