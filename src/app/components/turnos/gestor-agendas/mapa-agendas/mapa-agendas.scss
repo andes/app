@@ -20,6 +20,7 @@
            } 
         }
         tr {
+            height: 22px;
             &.punteado{
             border-top:3px dotted #8f8b8b;
             }
@@ -30,12 +31,13 @@
     }
     td {
        width: 100%;
+       height: 0;
         border: 1px solid #181717;
         position: relative;
         &.selectable {
             cursor: pointer!important;
             &:hover {
-                box-sizing: border-box;
+               
                 box-shadow: inset 0 0 0 2px transparentize($color: $light-blue, $amount: 0.4);
                 background-color: $light-blue !important;
                 color: black;
@@ -46,12 +48,12 @@
     .circulo {
        
         width: 20px;
-        height: 20px;
+        height: 100%;
         -moz-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
         text-align: center;
-        display: inline-block;
+        float:left;
         cursor: pointer!important;
         &:hover {
             background: #080808;

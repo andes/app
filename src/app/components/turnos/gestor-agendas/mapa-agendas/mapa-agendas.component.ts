@@ -12,6 +12,7 @@ import { forEach } from 'vis-util/esnext';
 export class MapaAgendasComponent implements OnInit {
 
     accion;
+    agendas_dia;
     dia;
     public prestacionesPermisos;
     public verMes = true;
@@ -25,7 +26,7 @@ export class MapaAgendasComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        this.prestacionesPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
 
         if (!this.prestacionesPermisos.length) {
             this.router.navigate(['inicio']);
@@ -52,28 +53,34 @@ export class MapaAgendasComponent implements OnInit {
     }
 
     verAgendas(dia) {
+        // agrupo por agendas
+        let agenda_Prestaciones = [];
+        let agendas = {};
+        dia.prestaciones.forEach(p => {
+
+            if (!agendas[p.agenda.id]) {
+                agendas[p.agenda.id] = {
+                    Prestaciones: [],
+                    agenda: p.agenda,
+                    fecha: dia.fecha
+
+                };
+            }
+
+            agendas[p.agenda.id].Prestaciones.push(p);
+
+        });
+
+        for (const property in agendas) {
+
+            agenda_Prestaciones.push(agendas[property]);
+        }
+
         this.accion = 'verDetalle';
-        this.dia = dia;
+        this.agendas_dia = agenda_Prestaciones;
     }
 
     turnos(dia) {
-
-        dia.agenda.agendasPorPrestacion.forEach(agendaPrestacion =>
-            agendaPrestacion.agenda.bloques.forEach(bloque =>
-                bloque.turnos.forEach(turno =>
-                    dia.turnos.forEach(turnoDia => {
-                        if (turno.id === turnoDia.id) {
-
-                            turnoDia['agenda'] = agendaPrestacion.agenda;
-
-                        }
-
-
-                    }
-
-                    )
-                )));
-
         this.accion = 'verDetalle';
         this.dia = dia;
     }
