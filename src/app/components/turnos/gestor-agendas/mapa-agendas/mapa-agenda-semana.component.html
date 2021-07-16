@@ -1,4 +1,4 @@
-<table class="semana mt-1">
+<table class="semana  mt-1" cellspacing="0">
     <tr>
         <td class="first"></td>
         <td *ngFor="let dia of semana" class="text-center">
@@ -16,8 +16,8 @@
                 <ng-container *ngIf=" dia.horarios[i].intervalos[0].turnos.length>0">
 
                     <ng-container *ngFor="let turno of dia.horarios[i].intervalos[0].turnos">
-                        <div *ngIf="turno.color" (click)="detalleDia(turno)" [style.background]="turno.color"
-                             class="circulo">{{turno.turnos.length}}</div>
+                        <div [style.height]="100" *ngIf="turno.color" (click)="detalleDia(turno)"
+                             [style.background]="turno.color" class="circulo">{{turno.turnos.length}}</div>
                     </ng-container>
                 </ng-container>
             </td>

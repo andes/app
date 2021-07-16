@@ -15,23 +15,21 @@
             </td>
             <td *ngFor="let dia of semana" (click)="detalleDia(dia)" class="selectable">
                 <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
-                <ng-container *ngIf="dia.agendas?.length>0">
-                    <div class="progress mt-1" *ngFor="let agenda of dia.agendas">
-                        <span
-                              class="progress-value">{{agenda.informacion.asignado.length}}/{{agenda.informacion.asignado.length+
-                            agenda.informacion.disponible.length}}</span>
-                        <div *ngIf="agenda.color" class="progress-bar" tooltip="{{agenda.tipoPrestacion}}"
-                             [style.background]="agenda.color" role="progressbar"
-                             [style.width]="agenda.informacion.porcentajeAsignado+'%'"
-                             [attr.aria-valuenow]="agenda.informacion.porcentajeAsignado" aria-valuemin="0"
-                             aria-valuemax="100">
+                <ng-container *ngIf="dia.totalPorPrestacion?.length>0">
+                    <div class="progress mt-1" *ngFor="let prestacion of dia.totalPorPrestacion">
+                        <span class="progress-value">{{prestacion.asignado}}/{{prestacion.asignado+
+                            prestacion.disponible}}</span>
+                        <div *ngIf="prestacion.color" class="progress-bar" tooltip="{{prestacion.nombrePrestacion}}"
+                             [style.background]="prestacion.color" role="progressbar"
+                             [style.width]="prestacion.porcentajeAsignado+'%'"
+                             [attr.aria-valuenow]="prestacion.porcentajeAsignado" aria-valuemin="0" aria-valuemax="100">
                         </div>
 
 
-                        <div *ngIf="agenda.color" tooltip="{{agenda.tipoPrestacion}}" class="progress-bar"
-                             [style.background]="agenda.color" role="progressbar" [style.opacity]="0.6"
-                             [style.width]="agenda.informacion.porcentajeDisponible +'%'"
-                             [attr.aria-valuenow]="agenda.informacion.porcentajeDisponible" aria-valuemin="0"
+                        <div *ngIf="prestacion.color" tooltip="{{prestacion.nombrePrestacion}}" class="progress-bar"
+                             [style.background]="prestacion.color" role="progressbar" [style.opacity]="0.6"
+                             [style.width]="prestacion.porcentajeDisponible +'%'"
+                             [attr.aria-valuenow]="prestacion.porcentajeDisponible" aria-valuemin="0"
                              aria-valuemax="100">
                         </div>
                     </div>

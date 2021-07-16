@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { tickAndDetectChanges } from '@andes/plex/src/lib/button/button.component.spec';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service';
 
 
@@ -7,7 +9,7 @@ import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service
     templateUrl: 'mapa-agenda-semana.component.html',
     styleUrls: ['mapa-agendas.scss']
 })
-export class MapaAgendasSemanaComponent implements OnInit {
+export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
     public headers = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
     public semana = [];
@@ -25,12 +27,28 @@ export class MapaAgendasSemanaComponent implements OnInit {
         this._fecha = value;
         this.cabiarSemana();
     }
+    private subscription: Subscription;
+
 
     constructor(
         private mapaAgendaService: MapaAgendasService
     ) { }
 
     ngOnInit() {
+
+        this.subscription = this.mapaAgendaService.calendario$.subscribe(calendario => {
+            this.semanaSeleccionada = calendario.find(dias =>
+                dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+            this.cargarSemana();
+        });
+
+
+    }
+
+    ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     private cargarSemana() {
@@ -52,7 +70,6 @@ export class MapaAgendasSemanaComponent implements OnInit {
 
     private cargarTabla() {
 
-
         this.semana.forEach(dia => {
 
             dia.horarios.forEach(hora => {
@@ -60,11 +77,11 @@ export class MapaAgendasSemanaComponent implements OnInit {
                     this.semanaSeleccionada?.forEach(diaSemana => {
                         if (moment(dia.fecha).isSame(diaSemana.fecha, 'day')) {
 
-                            diaSemana.agendas?.forEach(agenda => {
+                            diaSemana.prestaciones?.forEach(prestacion => {
 
                                 let turnos = [];
 
-                                agenda.informacion.asignado.forEach(turno => {
+                                prestacion.turnosPorPrestacion.forEach(turno => {
 
 
                                     let horaTurno = moment(turno.horaInicio);
@@ -78,8 +95,8 @@ export class MapaAgendasSemanaComponent implements OnInit {
                                 if (turnos.length > 0) {
                                     intervalo.turnos.push({
                                         turnos: turnos,
-                                        agenda: agenda,
-                                        color: agenda.color
+                                        agenda: prestacion.agenda,
+                                        color: prestacion.color
                                     });
 
                                 }
@@ -97,9 +114,6 @@ export class MapaAgendasSemanaComponent implements OnInit {
         });
 
 
-
-
-
     }
 
     private cabiarSemana() {
@@ -113,11 +127,6 @@ export class MapaAgendasSemanaComponent implements OnInit {
 
         } else {
             this.mapaAgendaService.cargarAgendasMes(this._fecha);
-            this.mapaAgendaService.calendario$.subscribe(calendario => {
-                this.semanaSeleccionada = calendario.find(dias =>
-                    dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
-                this.cargarSemana();
-            });
 
         }
 

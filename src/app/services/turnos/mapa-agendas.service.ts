@@ -24,10 +24,11 @@ export class MapaAgendasService {
         this.fecha = fecha;
         let parametros = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
-            fechaHasta: moment(this.fecha).endOf('month').toDate()
+            fechaHasta: moment(this.fecha).endOf('month').toDate(),
+            organizacion: this.auth.organizacion.id
         };
 
-        this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        this.prestacionesPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
 
         forkJoin([this.conceptoTurneablesService.getAll(), this.agendaService.get(parametros)]).subscribe(
             ([data, agendas]) => {
@@ -72,7 +73,8 @@ export class MapaAgendasService {
                 if (isThisMonth) {
                     week.push({
                         fecha: dia,
-                        agendas: []
+                        prestaciones: [],
+                        totalPorPrestacion: []
                     });
                 } else {
                     week.push({ estado: 'vacio' });
@@ -92,94 +94,119 @@ export class MapaAgendasService {
 
             semana.forEach(dia => {
                 if (dia.estado !== 'vacio') {
-                    let turnosDia = [];
+                    let turnosAgenda = [];
                     this.agendas.forEach(agenda => {
-
-
+                        let turnosAgendaBloques = [];
+                        let disponible = 0;
                         if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
-                            agenda.bloques?.forEach((bloque, indiceBloque) => {
-                                let color;
+
+                            agenda.bloques?.forEach((bloque) => {
+
                                 const asignado = bloque.turnos.filter(turno => turno.estado === 'asignado');
-                                const disponible = bloque.turnos.filter(turno => turno.estado === 'disponible');
-                                this.tiposPrestacion.forEach(tipoPrestacion => {
+                                disponible = disponible + bloque.turnos.filter(turno => turno.estado === 'disponible').length;
 
-                                    if (bloque.tipoPrestaciones[0].conceptId === tipoPrestacion.conceptId) {
 
-                                        color = tipoPrestacion.color;
-
-                                    }
+                                asignado.forEach(turnoBloque => {
+                                    turnosAgendaBloques.push(turnoBloque);
                                 });
-                                if ((asignado.length > 0 || disponible.length > 0) && color) {
-
-                                    turnosDia.push({
-                                        agenda: agenda,
-                                        tipoPrestacion: bloque.tipoPrestaciones[0],
-                                        asignados: asignado,
-                                        disponible: indiceBloque === 0 ? disponible : [],
-                                        color: color
-                                    });
-                                }
 
                             });
+
+                            turnosAgenda = [...agenda.sobreturnos, ...turnosAgendaBloques];
+
+
+                            let turnosPrestacion = {};
+                            turnosAgenda.forEach(x => {
+
+                                if (!turnosPrestacion[x.tipoPrestacion.conceptId]) {
+                                    turnosPrestacion[x.tipoPrestacion.conceptId] = {
+                                        turnosPorPrestacion: [],
+                                        tipoPrestacion_id: x.tipoPrestacion.conceptId,
+                                        nombre: x.tipoPrestacion.term,
+                                        agenda: agenda,
+                                        disponible: disponible
+                                    };
+                                }
+
+                                turnosPrestacion[x.tipoPrestacion.conceptId].turnosPorPrestacion.push(x);
+
+                            });
+
+                            for (const property in turnosPrestacion) {
+
+                                dia.prestaciones.push(turnosPrestacion[property]);
+                            }
 
                         }
 
                     });
-
-                    if (turnosDia?.length > 0) {
-
-
-
-                        let turnosPrestacion = {};
-                        turnosDia.forEach(x => {
-
-                            if (!turnosPrestacion.hasOwnProperty(x.tipoPrestacion.conceptId)) {
-                                turnosPrestacion[x.tipoPrestacion.conceptId] = {
-                                    agendasPorPrestacion: [],
-                                    tipoPrestacion: x.tipoPrestacion.term,
-                                    color: x.color
-                                };
-                            }
-
-                            turnosPrestacion[x.tipoPrestacion.conceptId].agendasPorPrestacion.push(x);
-
-                        });
+                    this.getColor(dia.prestaciones);
+                    dia.prestaciones = dia.prestaciones.filter(p => p.color);
+                    this.ordenarInformacionCalendario(dia);
 
 
-                        for (const property in turnosPrestacion) {
-
-                            dia.agendas.push(turnosPrestacion[property]);
-                        }
-
-
-
-                        if (dia.agendas.length > 0) {
-                            dia.agendas.forEach(agendas => {
-
-                                let asignado = [];
-                                let disponible = [];
-                                agendas.agendasPorPrestacion.forEach(agendaPrestacion => {
-                                    agendaPrestacion.asignados.forEach(turnoAsigado => asignado.push(turnoAsigado));
-                                    agendaPrestacion.disponible.forEach(turnoDisponible => disponible.push(turnoDisponible));
-
-                                });
-                                agendas['informacion'] = {
-                                    asignado: asignado,
-                                    disponible: disponible,
-                                    porcentajeAsignado: asignado.length * 100 / (asignado.length + disponible.length),
-                                    porcentajeDisponible: disponible.length * 100 / (asignado.length + disponible.length)
-                                };
-                            });
-
-                        }
-
-                    }
                 }
+
             });
+
         });
         this.calendario$.next(this.calendario);
 
+
     }
 
+    private getColor(prestacionesDia) {
+        let prestacion;
+        prestacionesDia.forEach(prestacionDia => {
+
+            prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === prestacionDia.tipoPrestacion_id);
+            if (prestacion) {
+                prestacionDia['color'] = prestacion.color;
+            }
+        });
+
+    }
+
+    private ordenarInformacionCalendario(dia) {
+        let prestacionesDelDia = dia.prestaciones;
+        let prestacionesTipo;
+        let totalesDiaPrestacion = [];
+        if (prestacionesDelDia.length > 0) {
+
+            this.tiposPrestacion.forEach(prestacion => {
+                let asignado = 0;
+                let disponible = 0;
+                prestacionesTipo = prestacionesDelDia.filter(p => prestacion.conceptId === p.tipoPrestacion_id);
+                if (prestacionesTipo.length > 0) {
+                    prestacionesTipo.forEach(prestaciontipo => {
+                        asignado = asignado + prestaciontipo.turnosPorPrestacion.length;
+                        disponible = disponible + prestaciontipo.disponible;
+                    });
+
+                    let cantidadTotalDiaPrestacion = {
+                        nombrePrestacion: prestacionesTipo[0].nombre,
+                        asignado: asignado,
+                        disponible: disponible,
+                        color: prestacion.color,
+                        id_tipo_prestacion: prestacionesTipo[0].tipoPrestacion_id,
+                        porcentajeAsignado: asignado * 100 / (asignado + disponible),
+                        porcentajeDisponible: disponible * 100 / (asignado + disponible)
+                    };
+
+                    totalesDiaPrestacion.push(cantidadTotalDiaPrestacion);
+
+                }
+                dia.totalPorPrestacion = totalesDiaPrestacion;
+
+
+            });
+
+        }
+
+
+    }
 
 }
+
+
+

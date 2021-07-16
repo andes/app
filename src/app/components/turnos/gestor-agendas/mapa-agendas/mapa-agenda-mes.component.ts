@@ -41,19 +41,10 @@ export class MapaAgendasMesComponent implements OnInit {
     }
 
     detalleDia(dia) {
-        if (dia.agendas.length > 0) {
-            let agendasDia = [];
-            dia.agendas.forEach(tipoPrestacion =>
-                tipoPrestacion.agendasPorPrestacion.forEach(agenda => {
-                    agendasDia.push(agenda);
-                })
-            );
-            this.dia = {
-                fecha: dia.fecha,
-                agendas: agendasDia
-            };
-            this.agendasDetalles.emit(this.dia);
+        if (dia.prestaciones?.length > 0) {
+            this.agendasDetalles.emit(dia);
         }
+
     }
 
     close() {
