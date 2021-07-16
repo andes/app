@@ -1,5 +1,6 @@
 <ng-container>
-    <plex-detail direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}" size="lg" justify="{{ justificado }}">
+    <plex-detail [direction]="orientacion === 'vertical' ? 'column' : 'row'" [size]="size" [items]="datos"
+                 [justify]="justificado">
         <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]=" paciente" />
 
         <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
@@ -56,8 +57,9 @@
                     justify="{{ justificado }}"></plex-label>
 
         <plex-label *ngIf="showFinanciador && obraSocial" [titulo]="financiadorLabel"
-                    subtitulo="{{ obraSocial.financiador}}"></plex-label>
-        <plex-label *ngIf="!obraSocial" [titulo]="financiadorLabel" subtitulo="{{'Sin obra social' }}">
+                    subtitulo="{{ obraSocial.financiador}}" justify="{{ justificado }}"></plex-label>
+        <plex-label *ngIf="!obraSocial" [titulo]="financiadorLabel" subtitulo="{{ 'Sin obra social' }}"
+                    justify="{{ justificado }}">
         </plex-label>
 
         <plex-label *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado"
