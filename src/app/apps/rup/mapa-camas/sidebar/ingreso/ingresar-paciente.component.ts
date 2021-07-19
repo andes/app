@@ -85,6 +85,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private subscription2: Subscription;
 
+    public get esInternacionCensable() {
+        return this.prestacion?.ejecucion.registros[0]?.esCensable;
+    }
+
     constructor(
         private plex: Plex,
         private servicioProfesional: ProfesionalService,
@@ -507,6 +511,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
     }
 
+    setValueCensable() {
+        this.prestacion.ejecucion.registros[0].esCensable = !this.prestacion.ejecucion.registros[0].esCensable;
+    }
+
     crearPrestacion(paciente) {
         // armamos el elemento data a agregar al array de registros
         const nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
@@ -554,8 +562,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     onType() {
         this.inProgress = true;
     }
-
-
 
     // Se debe controlar que:
     // La cama este disponible en la fecha que la quiero usar,
