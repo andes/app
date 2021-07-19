@@ -360,23 +360,22 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 let cambioEstado: any = {
                     op: 'romperValidacion'
                 };
-                this.route.params.subscribe(params => {
-                    // En api el estado de la prestación cambia a ejecucion
-                    this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        // chequeamos si es no nominalizada si
-                        if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
-                        } else {
-                            this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                        }
 
+                // En api el estado de la prestación cambia a ejecucion
+                this.servicioPrestacion.patch(this.prestacion._id, cambioEstado).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    // chequeamos si es no nominalizada si
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+                    } else {
                         this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                    });
+                    }
+
+                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
 
