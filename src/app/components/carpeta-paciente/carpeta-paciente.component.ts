@@ -130,7 +130,9 @@ export class CarpetaPacienteComponent implements OnInit {
     guardarCarpetaPaciente(nuevaCarpeta = false) {
         if (this.autorizado && this.nuevoNroCarpeta) {
             if (/^\s*$/.test(this.nuevoNroCarpeta)) {
-                this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
+                this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
+                this.nuevoNroCarpeta = '';
+                return;
             } else {
                 this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
                 if (this.indiceCarpeta > -1) {
@@ -159,10 +161,11 @@ export class CarpetaPacienteComponent implements OnInit {
                 );
             }
         } else {
-            this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
+            this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
             this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
             this.guardarCarpetaEmit.emit(false);
             this.nuevoNroCarpeta = '';
+            return;
         }
         this.showEdit = false;
         this.showList = true;
