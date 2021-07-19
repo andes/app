@@ -129,36 +129,43 @@ export class CarpetaPacienteComponent implements OnInit {
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
         if (this.autorizado && this.nuevoNroCarpeta) {
-            this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
-            if (this.indiceCarpeta > -1) {
-                this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
+            if (/^\s*$/.test(this.nuevoNroCarpeta)) {
+                this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
+                this.nuevoNroCarpeta = '';
+                return;
             } else {
-                this.carpetaEfectores.push(this.carpetaPaciente);
-                this.indiceCarpeta = this.carpetaEfectores.length - 1;
-            }
-
-            this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
-                resultadoCarpeta => {
-                    this.guardarCarpetaEmit.emit(this.carpetaEfectores);
-                    this.plex.toast('success', 'Nuevo número de carpeta establecido');
-                    this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
-                    this.showNuevaCarpeta = false;
-                    if (nuevaCarpeta) {
-                        this.servicioCarpetaPaciente.incrementarNroCarpeta().subscribe();
-                    }
-                },
-                error => {
-                    this.plex.toast('danger', 'El número de carpeta ya existe');
-                    if (this.indiceCarpeta < 0) {
-                        this.carpetaEfectores.pop();
-                    }
-                    this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+                this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
+                if (this.indiceCarpeta > -1) {
+                    this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
+                } else {
+                    this.carpetaEfectores.push(this.carpetaPaciente);
+                    this.indiceCarpeta = this.carpetaEfectores.length - 1;
                 }
-            );
+                this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
+                    resultadoCarpeta => {
+                        this.guardarCarpetaEmit.emit(this.carpetaEfectores);
+                        this.plex.toast('success', 'Nuevo número de carpeta establecido');
+                        this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
+                        this.showNuevaCarpeta = false;
+                        if (nuevaCarpeta) {
+                            this.servicioCarpetaPaciente.incrementarNroCarpeta().subscribe();
+                        }
+                    },
+                    error => {
+                        this.plex.toast('danger', 'El número de carpeta ya existe');
+                        if (this.indiceCarpeta < 0) {
+                            this.carpetaEfectores.pop();
+                        }
+                        this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+                    }
+                );
+            }
         } else {
-            this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
+            this.plex.toast('warning', '', 'Ingrese un número de carpeta válido');
             this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
             this.guardarCarpetaEmit.emit(false);
+            this.nuevoNroCarpeta = '';
+            return;
         }
         this.showEdit = false;
         this.showList = true;
