@@ -6,9 +6,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
-import { IOrganizacion } from 'src/app/interfaces/IOrganizacion';
 import { ProfesionalService } from 'src/app/services/profesional.service';
-import { Console } from 'console';
 
 @Component({
     selector: 'listado-perinatal',

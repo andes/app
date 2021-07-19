@@ -56,12 +56,8 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.organizacion = organizacion.nombre;
                 }
                 if (profesional) {
-                    let nombreCompleto = [];
-                    nombreCompleto.push(profesional.nombre);
-                    nombreCompleto.push(profesional.apellido);
-                    params.profesional = nombreCompleto;
+                    params.profesional = profesional.id;
                 }
-
                 params.fecha = this.queryDateParams(fechaDesde, fechaHasta);
 
                 return this.search(params).pipe(
