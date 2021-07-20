@@ -1,28 +1,28 @@
 
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Matching } from '@andes/match';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-// import { FORM_DIRECTIVES } from '@angular/common';
-import { ProfesionalService } from './../../services/profesional.service';
-import { PaisService } from './../../services/pais.service';
-import { ProvinciaService } from './../../services/provincia.service';
-import { LocalidadService } from './../../services/localidad.service';
-import { EspecialidadService } from './../../services/especialidad.service';
-import { IProfesional } from './../../interfaces/IProfesional';
-import { IPais } from './../../interfaces/IPais';
-import { IProvincia } from './../../interfaces/IProvincia';
-import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IEspecialidad } from './../../interfaces/IEspecialidad';
-import * as enumerados from './../../utils/enumerados';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ValidacionService } from '../../services/fuentesAutenticas/validacion.service';
+import { SIISAService } from '../../services/siisa.service';
 import {
     IContacto
 } from './../../interfaces/IContacto';
-import { ValidacionService } from '../../services/fuentesAutenticas/validacion.service';
-import { Plex } from '@andes/plex';
-import { Matching } from '@andes/match';
-import { Router, ActivatedRoute } from '@angular/router';
-import { SIISAService } from '../../services/siisa.service';
+import { IEspecialidad } from './../../interfaces/IEspecialidad';
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IPais } from './../../interfaces/IPais';
+import { IProfesional } from './../../interfaces/IProfesional';
+import { IProvincia } from './../../interfaces/IProvincia';
 import { ISiisa } from './../../interfaces/ISiisa';
-import { DomSanitizer } from '@angular/platform-browser';
+import { EspecialidadService } from './../../services/especialidad.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { PaisService } from './../../services/pais.service';
+// import { FORM_DIRECTIVES } from '@angular/common';
+import { ProfesionalService } from './../../services/profesional.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import * as enumerados from './../../utils/enumerados';
 @Component({
     selector: 'profesional-create-update',
     templateUrl: 'profesional-create-update.html',
@@ -214,10 +214,6 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             this.profesionalService.getProfesional({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
-                        let firma = {
-                            firmaP: this.firmaProfesional,
-                            idProfesional: null
-                        };
                         if (datos.length > 0) {
                             datos.forEach(profCandidato => {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
@@ -250,29 +246,35 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             } else {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
-                                this.profesionalService.saveProfesional(this.profesional)
-                                    .subscribe(profesionalSaved => {
-                                        firma.idProfesional = profesionalSaved.id;
-                                        this.profesionalService.saveFirma({ firma }).subscribe();
-                                        this.plex.info('success', '', `¡El profesional se ${this.seEstaCreandoProfesional ? 'creó' : 'editó'} con éxito!`);
-                                        this.router.navigate(['/tm/profesional']);
-                                    });
+                                this.profesionalService.saveProfesional(this.profesional).subscribe(profesionalSaved => {
+                                    this.guardarFirma(profesionalSaved.id);
+                                    this.plex.info('success', '', `¡El profesional se ${this.seEstaCreandoProfesional ? 'creó' : 'editó'} con éxito!`);
+                                    this.router.navigate(['/tm/profesional']);
+                                });
                             }
                             // this.sugeridosEncontrados = true;
                             // this.sugeridos = datos;
                         } else {
                             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
-                            this.profesionalService.saveProfesional(this.profesional)
-                                .subscribe(profesionalSaved => {
-                                    firma.idProfesional = profesionalSaved.id;
-                                    this.profesionalService.saveFirma({ firma }).subscribe();
-                                    this.plex.info('success', '', '¡El profesional se creó con éxito!');
-                                    this.router.navigate(['/tm/profesional']);
+                            this.profesionalService.saveProfesional(this.profesional).subscribe(profesionalSaved => {
+                                this.guardarFirma(profesionalSaved.id);
+                                this.plex.info('success', '', '¡El profesional se creó con éxito!');
+                                this.router.navigate(['/tm/profesional']);
 
-                                });
+                            });
                         }
 
                     });
+        }
+    }
+
+    guardarFirma(profesionalID: string) {
+        if (this.firmaProfesional) {
+            const firma = {
+                firmaP: this.firmaProfesional,
+                idProfesional: profesionalID
+            };
+            this.profesionalService.saveFirma({ firma }).subscribe();
         }
     }
 }
