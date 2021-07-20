@@ -58,8 +58,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public clasificacion = [
     { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
     { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
-    { id: 'otrasEstrategias', nombre: 'Otras estrategias' },
-    { id: 'controlAlta', nombre: 'Control de alta' }
+    { id: 'controlAlta', nombre: 'Control de alta' },
+    { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
   ];
   public tipoConfirmacion = [
     { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
