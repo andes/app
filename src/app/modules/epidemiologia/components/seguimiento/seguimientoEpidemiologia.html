@@ -13,7 +13,8 @@
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
                                    [min]="fechaDesde">
                     </plex-datetime>
-                    <plex-select grow="1" tmOrganizaciones name="organizacion" label="Organización" [(ngModel)]="organizacion">
+                    <plex-select grow="1" tmOrganizaciones name="organizacion" label="Organización"
+                                 [(ngModel)]="organizacion">
                     </plex-select>
                     <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
                                  labelField="nombre">
@@ -100,8 +101,10 @@
                 </plex-label>
             </div>
         </ng-container>
-        <vista-prestacion *ngIf="selectedLlamado" [idPrestacion]="selectedLlamado" [btnClose]="true"
-                          (onClose)="verLlamado(null)"></vista-prestacion>
+        <vista-prestacion *ngIf="selectedLlamado" [idPrestacion]="selectedLlamado">
+            <plex-button type="danger" size="sm" icon="close" title="Cerrar" (click)="verLlamado(null)">
+            </plex-button>
+        </vista-prestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
         <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento"
