@@ -13,6 +13,8 @@ import { Auth } from '@andes/auth';
 })
 export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
+    @Input() size: 'xs' | 'md' | 'lg' = 'lg';
+    @Input() datos = [];
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion', 'lugarNacimiento'];
     @Input() reload: Boolean = false;
