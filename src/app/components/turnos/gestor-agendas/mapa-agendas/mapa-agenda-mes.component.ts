@@ -50,9 +50,9 @@ export class MapaAgendasMesComponent implements OnInit {
     close() {
         this.accion = null;
     }
-    week(semanas, indice) {
-        let calendario = { semanas: semanas, indice: indice };
-        this.semanaDetalle.emit(calendario);
+    week(semana) {
+
+        this.semanaDetalle.emit(semana);
     }
 
 }

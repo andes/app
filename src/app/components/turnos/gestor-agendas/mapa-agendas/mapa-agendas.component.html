@@ -17,8 +17,7 @@
                          (agendasDetalles)="verAgendas($event)">
         </mapa-agenda-mes>
 
-        <mapa-agenda-semana *ngIf="verSemana" [calendario]="calendario" (diaDetalle)="turnos($event)"
-                            [fecha]="diaInicio">
+        <mapa-agenda-semana *ngIf="verSemana" (diaDetalle)="turnos($event)" [fecha]="diaInicio">
         </mapa-agenda-semana>
 
     </plex-layout-main>
@@ -39,51 +38,120 @@
         </plex-detail>
         <plex-title titulo="Agendas" size="sm"></plex-title>
 
-        <plex-accordion *ngFor="let agenda of agendas_dia">
+        <plex-accordion *ngFor="let agenda of agendas_dia; let i = index">
 
-            <plex-panel *ngIf="agenda">
+            <plex-panel *ngIf="agenda.Prestaciones.length>1; else agendaUnaPrestacion">
                 <div plex-accordion-title>
-                    <plex-label titulo="{{agenda.agenda.tipoPrestaciones[0].term}}"
+                    <plex-label titulo="Agenda {{i}}"
                                 subtitulo="{{agenda.agenda.horaInicio | date:'HH:mm'}}-{{agenda.agenda.horaFin | date:'HH:mm'}}">
                     </plex-label>
-
-
-                    <plex-badge type="info">
-                        {{agenda.Prestaciones[0].turnosPorPrestacion.length}}/{{agenda.Prestaciones[0].turnosPorPrestacion.length+
-                        agenda.Prestaciones[0].disponible}}</plex-badge>
+                    <plex-badge size="lg" type="info" class="mr-1">Disponibles
+                        <span dato>{{agenda.Prestaciones[0].disponible}}</span>
+                    </plex-badge>
                 </div>
-                <ng-container *ngFor="let prestacion of agenda.Prestaciones">
 
 
+                <plex-accordion *ngFor="let prestacion of agenda.Prestaciones">
+                    <plex-panel>
+                        <div plex-accordion-title>
+                            <plex-label titulo="{{prestacion.nombre}}">
 
-                    <plex-list *ngIf="prestacion.turnosPorPrestacion.length>0 ; else noAsignados">
-                        <ng-container *ngFor="let turnoAsignado of prestacion.turnosPorPrestacion">
-                            <plex-item [selectable]="turnoAsignado.selectable" size="sm">
-                                <plex-badge *ngIf="turnoAsignado.horaInicio" size="sm">{{turnoAsignado.horaInicio |
-                                    date: 'HH:mm'}}
-                                </plex-badge>
-                                <plex-label size="sm" titulo="Paciente"
-                                            subtitulo="{{turnoAsignado.paciente.apellido}} , {{turnoAsignado.paciente.nombre}}">
-                                </plex-label>
-                                <plex-label size="sm" titulo="Documento"
-                                            subtitulo="{{turnoAsignado.paciente.documento}}">
-                                </plex-label>
-                                <plex-label size="sm" titulo="Sexo" subtitulo="{{turnoAsignado.paciente.sexo}}">
-                                </plex-label>
-                                <plex-label size="sm" titulo="Edad" subtitulo="{{turnoAsignado.paciente | edad}}">
-                                </plex-label>
-                                <plex-label *ngIf="agenda.agenda.profesionales[0]?.apellido" size="sm"
-                                            titulo="Profesional"
-                                            subtitulo="{{agenda.agenda.profesionales[0].apellido}},{{agenda.agenda.profesionales[0].nombre}}">
-                                </plex-label>
-                            </plex-item>
+                            </plex-label>
+
+
+                            <plex-badge type="info">
+                                {{prestacion.turnosPorPrestacion.length}}</plex-badge>
+                        </div>
+
+                        <ng-container *ngIf="prestacion.turnosPorPrestacion.length>0;else noAsignados">
+                            <plex-accordion *ngFor="let turno of prestacion.turnosPorPrestacion">
+                                <plex-panel>
+                                    <div plex-accordion-title>
+                                        <plex-label titulo="{{turno.horaInicio
+                                        | date: 'HH:mm'}}"
+                                                    subtitulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}}">
+                                        </plex-label>
+                                    </div>
+
+                                    <plex-grid cols="2">
+                                        <plex-label size="sm" titulo="Documento"
+                                                    subtitulo="{{turno.paciente.documento}}">
+                                        </plex-label>
+                                        <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
+                                        </plex-label>
+                                        <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
+                                        </plex-label>
+                                        <plex-label size="sm" *ngIf="turno.nota" titulo="Nota"
+                                                    subtitulo="{{turno.nota}}">
+                                        </plex-label>
+                                        <plex-label size="sm" *ngIf="prestacion.agenda.profesionales[0]?.apellido"
+                                                    titulo="Profesional"
+                                                    subtitulo="{{prestacion.agenda.profesionales[0].apellido}},{{prestacion.agenda.profesionales[0].nombre}}">
+                                        </plex-label>
+                                        <plex-label size="sm" titulo="Organizacion"
+                                                    subtitulo="{{prestacion.agenda.organizacion.nombre}}">
+                                        </plex-label>
+                                    </plex-grid>
+                                </plex-panel>
+                            </plex-accordion>
                         </ng-container>
-                    </plex-list>
-                </ng-container>
-                <ng-template #noAsignados>
-                    <plex-label titulo="No hay turnos asignados."></plex-label>
-                </ng-template>
+                        <ng-template #noAsignados>
+                            <plex-label titulo="No hay turnos asignados."></plex-label>
+                        </ng-template>
+                    </plex-panel>
+
+                </plex-accordion>
+
             </plex-panel>
+            <ng-template #agendaUnaPrestacion>
+                <plex-panel>
+                    <div plex-accordion-title>
+                        <plex-label titulo="{{agenda.Prestaciones[0].nombre}}"
+                                    subtitulo="{{agenda.agenda.horaInicio | date:'HH:mm'}}-{{agenda.agenda.horaFin | date:'HH:mm'}}">
+                        </plex-label>
+                        <plex-badge size="lg" type="info" class="mr-1">Disponibles
+                            <span dato>{{agenda.Prestaciones[0].disponible}}</span>
+                        </plex-badge>
+                    </div>
+                    <ng-container *ngIf="agenda.Prestaciones[0].turnosPorPrestacion.length>0;else noAsignados">
+                        <plex-accordion *ngFor="let turno of agenda.Prestaciones[0].turnosPorPrestacion">
+                            <plex-panel>
+                                <div plex-accordion-title>
+                                    <plex-label titulo="{{turno.horaInicio
+                                    | date: 'HH:mm'}}"
+                                                subtitulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}}">
+                                    </plex-label>
+                                </div>
+
+                                <plex-grid cols="2">
+                                    <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente.documento}}">
+                                    </plex-label>
+                                    <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
+                                    </plex-label>
+                                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
+                                    </plex-label>
+                                    <plex-label size="sm" *ngIf="turno.nota" titulo="Nota" subtitulo="{{turno.nota}}">
+                                    </plex-label>
+                                    <plex-label size="sm"
+                                                *ngIf="agenda.Prestaciones[0].agenda.profesionales[0]?.apellido"
+                                                titulo="Profesional"
+                                                subtitulo="{{agenda.Prestaciones[0].agenda.profesionales[0].apellido}},{{agenda.Prestaciones[0].agenda.profesionales[0].nombre}}">
+                                    </plex-label>
+                                    <plex-label size="sm" titulo="Organizacion"
+                                                subtitulo="{{agenda.Prestaciones[0].agenda.organizacion.nombre}}">
+                                    </plex-label>
+                                </plex-grid>
+                            </plex-panel>
+                        </plex-accordion>
+                    </ng-container>
+                    <ng-template #noAsignados>
+                        <plex-label titulo="No hay turnos asignados."></plex-label>
+                    </ng-template>
+                </plex-panel>
+
+            </ng-template>
+
+
         </plex-accordion>
 
     </plex-layout-sidebar>
@@ -98,7 +166,7 @@
             <plex-badge size="lg" type="info" class="mr-1">turnos
                 <span dato>{{dia.turnos.length}}</span>
             </plex-badge>
-            <div title>{{dia.agenda.tipoPrestacion}}
+            <div title>{{dia.turnos[0].tipoPrestacion.term}}
             </div>
 
         </plex-detail>
@@ -116,7 +184,9 @@
                 <plex-grid cols="2">
                     <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente.documento}}">
                     </plex-label>
-                    <plex-label size="sm" titulo="Prestacion" subtitulo="{{turno.tipoPrestacion.term}}">
+                    <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
+                    </plex-label>
+                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
                     </plex-label>
                     <plex-label size="sm" *ngIf="dia.agenda.espacioFisico" titulo="Espacio Fisico"
                                 subtitulo="{{dia.agenda.espacioFisico}}">

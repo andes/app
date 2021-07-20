@@ -56,6 +56,7 @@ export class MapaAgendasService {
         this.tiposPrestacion = [...setTiposPrestaciones.values()];
     }
 
+
     private cargarMes() {
         this.calendario = [];
         let inicio = moment(this.fecha).startOf('month').startOf('week');
@@ -89,9 +90,7 @@ export class MapaAgendasService {
 
 
     private cargarTabla() {
-
         this.calendario.forEach(semana => {
-
             semana.forEach(dia => {
                 if (dia.estado !== 'vacio') {
                     let turnosAgenda = [];
@@ -99,61 +98,30 @@ export class MapaAgendasService {
                         let turnosAgendaBloques = [];
                         let disponible = 0;
                         if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
-
                             agenda.bloques?.forEach((bloque) => {
-
                                 const asignado = bloque.turnos.filter(turno => turno.estado === 'asignado');
                                 disponible = disponible + bloque.turnos.filter(turno => turno.estado === 'disponible').length;
-
 
                                 asignado.forEach(turnoBloque => {
                                     turnosAgendaBloques.push(turnoBloque);
                                 });
-
                             });
-
                             turnosAgenda = [...agenda.sobreturnos, ...turnosAgendaBloques];
-
-
-                            let turnosPrestacion = {};
-                            turnosAgenda.forEach(x => {
-
-                                if (!turnosPrestacion[x.tipoPrestacion.conceptId]) {
-                                    turnosPrestacion[x.tipoPrestacion.conceptId] = {
-                                        turnosPorPrestacion: [],
-                                        tipoPrestacion_id: x.tipoPrestacion.conceptId,
-                                        nombre: x.tipoPrestacion.term,
-                                        agenda: agenda,
-                                        disponible: disponible
-                                    };
-                                }
-
-                                turnosPrestacion[x.tipoPrestacion.conceptId].turnosPorPrestacion.push(x);
-
-                            });
-
-                            for (const property in turnosPrestacion) {
-
-                                dia.prestaciones.push(turnosPrestacion[property]);
-                            }
-
+                            this.ordenarPrestacionesAgendas(dia, turnosAgenda, agenda, disponible);
                         }
 
                     });
                     this.getColor(dia.prestaciones);
                     dia.prestaciones = dia.prestaciones.filter(p => p.color);
                     this.ordenarInformacionCalendario(dia);
-
-
                 }
 
             });
 
         });
         this.calendario$.next(this.calendario);
-
-
     }
+
 
     private getColor(prestacionesDia) {
         let prestacion;
@@ -203,6 +171,52 @@ export class MapaAgendasService {
 
         }
 
+
+    }
+
+
+    private ordenarPrestacionesAgendas(dia, turnosAgenda, agenda, disponible) {
+        let turnosPrestacion = {};
+        let aux = [];
+        if (turnosAgenda.length === 0 && disponible > 0) {
+            let turnoPrestacion = {
+                turnosPorPrestacion: [],
+                tipoPrestacion_id: agenda.tipoPrestaciones[0].conceptId,
+                nombre: agenda.tipoPrestaciones[0].term,
+                agenda: agenda,
+                disponible: disponible
+
+            };
+            dia.prestaciones.push(turnoPrestacion);
+        }
+
+
+        turnosAgenda.forEach(turno => {
+
+            if (!turnosPrestacion[turno.tipoPrestacion.conceptId]) {
+                turnosPrestacion[turno.tipoPrestacion.conceptId] = {
+                    turnosPorPrestacion: [],
+                    tipoPrestacion_id: turno.tipoPrestacion.conceptId,
+                    nombre: turno.tipoPrestacion.term,
+                    agenda: agenda,
+                    disponible: 0
+                };
+            }
+
+            turnosPrestacion[turno.tipoPrestacion.conceptId].turnosPorPrestacion.push(turno);
+        });
+
+
+        for (const property in turnosPrestacion) {
+
+            aux.push(turnosPrestacion[property]);
+
+        }
+        if (aux.length > 0) {
+            aux[0].disponible = disponible;
+            aux.forEach(a => dia.prestaciones.push(a));
+
+        }
 
     }
 

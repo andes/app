@@ -18,7 +18,6 @@ export class MapaAgendasComponent implements OnInit {
     public verMes = true;
     public diaInicio = new Date();
     public verSemana = false;
-    public calendario;
     constructor(
         private auth: Auth,
         private router: Router,
@@ -34,13 +33,11 @@ export class MapaAgendasComponent implements OnInit {
     }
 
 
-    visualizarSemana(calendario) {
+    visualizarSemana(semana) {
+
         this.accion = null;
-        let diaSema = calendario.semanas[calendario.indice].find(dia => !dia.estado);
-
-        this.calendario = calendario;
+        let diaSema = semana.find(dia => !dia.estado);
         this.verSemana = true;
-
         this.verMes = false;
         this.diaInicio = moment(diaSema.fecha);
     }
@@ -75,7 +72,6 @@ export class MapaAgendasComponent implements OnInit {
 
             agenda_Prestaciones.push(agendas[property]);
         }
-
         this.accion = 'verDetalle';
         this.agendas_dia = agenda_Prestaciones;
     }

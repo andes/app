@@ -21,11 +21,11 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     public _fecha;
     public semanaSeleccionada;
     @Output() diaDetalle = new EventEmitter<any>();
-    @Input() calendario: any;
+    calendario: any;
     @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
-        this.cabiarSemana();
+        this.cambiarSemana();
     }
     private subscription: Subscription;
 
@@ -35,11 +35,9 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-
         this.subscription = this.mapaAgendaService.calendario$.subscribe(calendario => {
-            this.semanaSeleccionada = calendario.find(dias =>
-                dias.find(dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
-            this.cargarSemana();
+            this.calendario = calendario;
+            this.cambiarSemana();
         });
 
 
@@ -116,17 +114,19 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
     }
 
-    private cabiarSemana() {
+    private cambiarSemana() {
+        if (this.calendario) {
+            this.semanaSeleccionada = this.calendario.find(dias =>
+                dias.find(dia =>
+                    dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+            if (this.semanaSeleccionada) {
 
-        this.semanaSeleccionada = this.calendario.semanas.find(dias =>
-            dias.find(dia =>
-                dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
-        if (this.semanaSeleccionada) {
+                this.cargarSemana();
 
-            this.cargarSemana();
+            } else {
+                this.mapaAgendaService.cargarAgendasMes(this._fecha);
 
-        } else {
-            this.mapaAgendaService.cargarAgendasMes(this._fecha);
+            }
 
         }
 
