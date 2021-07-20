@@ -163,7 +163,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             switch (grupo.nombre) {
                 case 'discapacidad':
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
-                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
                     break;
                 case 'mayores60':
                     this.fechaMinimaNacimiento = moment('1900-01-01').toDate();
@@ -176,7 +176,7 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
                     break;
                 case 'factores-riesgo': {
                     this.fechaMinimaNacimiento = moment().subtract(60, 'years').toDate();
-                    this.fechaMaximaNacimiento = moment().subtract(18, 'years').toDate();
+                    this.fechaMaximaNacimiento = moment().subtract(12, 'years').toDate();
                     break;
                 }
             }
