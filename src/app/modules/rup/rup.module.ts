@@ -32,6 +32,7 @@ import { BuscadorComponent } from './components/ejecucion/buscador.component';
 import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
 import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
 import { RUPServicioIntermedioAltaComponent } from './components/servicio-intermedio/servicio-intermedio-alta.component';
+import { EpidemiologiaModule } from '../epidemiologia/epidemiologia.module';
 
 
 export const RUP_COMPONENTS = [
@@ -73,6 +74,7 @@ export const RUP_PROVIDERS = [
         ChartsModule,
         InfiniteScrollModule,
         HUDSLibModule,
+        EpidemiologiaModule,
         RouterModule.forChild([
             { path: '', component: PuntoInicioComponent, pathMatch: 'full' },
             { path: 'crear/:opcion', component: PrestacionCrearComponent },
