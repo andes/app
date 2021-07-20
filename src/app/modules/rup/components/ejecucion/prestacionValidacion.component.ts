@@ -356,43 +356,26 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             if (!validar) {
                 return false;
             } else {
-                // guardamos una copia de la prestacion antes de romper la validacion.
-                // let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
-                const prestacionCopia = this.prestacion;
+                // hacemos el patch y luego creamos los planes
+                let cambioEstado: any = {
+                    op: 'romperValidacion'
+                };
 
-                // Agregamos el estado de la prestacion copiada.
-                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
-
-                // Guardamos la prestacion copia
-                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
-
-                    let prestacionModificada = prestacionClonada;
-
-                    // hacemos el patch y luego creamos los planes
-                    let cambioEstado: any = {
-                        op: 'romperValidacion',
-                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
-                    };
-
-                    this.route.params.subscribe(params => {
-                        // Vamos a cambiar el estado de la prestación a ejecucion
-                        this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
-
-                            this.prestacion = prestacion;
-                            // chequeamos si es no nominalizada si
-                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                                // actualizamos las prestaciones de la HUDS
-                                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                                });
-                            } else {
-                                this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                            }
-
-                            this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                        }, (err) => {
-                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                // En api el estado de la prestación cambia a ejecucion
+                this.servicioPrestacion.patch(this.prestacion._id, cambioEstado).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    // chequeamos si es no nominalizada si
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                         });
-                    });
+                    } else {
+                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                    }
+
+                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
 
