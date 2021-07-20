@@ -392,11 +392,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
                         tipo: 'ficha-epidemiologica',
                         ambito: 'ambulatorio',
                         prestacion: {
-                            term: 'Ficha Epidemiológica'
+                            term: `Ficha Epidemiológica ${f.type.name}`
                         },
                         profesional: f.createdBy.nombreCompleto,
                         fecha: f.createdAt,
-                        estado: 'validada'
+                        estado: this.formEpidemiologiaService.getClasificacionFinal(f)
                     };
                 });
                 this.prestaciones = this.prestacionesCopia;

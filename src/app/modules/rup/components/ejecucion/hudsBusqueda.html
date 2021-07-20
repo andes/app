@@ -456,7 +456,8 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <plex-badge size="sm" size="ms" type="{{prestacion.estado}}">
+                                                <plex-badge size="sm"
+                                                            [type]=" prestacion.tipo !== 'ficha-epidemiologica' ? 'success' : 'info'">
                                                     {{prestacion.estado}}
                                                 </plex-badge>
                                             </div>
