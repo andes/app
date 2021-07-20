@@ -1,4 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
+import { CARDS } from '../../enums';
 
 @Component({
     selector: 'pdp-titulo',
@@ -6,6 +7,7 @@ import { Component, ElementRef } from '@angular/core';
 })
 export class PDPTituloComponent {
     public width: number;
+    public cards = CARDS;
 
     constructor(
         private el: ElementRef

@@ -7,4 +7,5 @@ export interface ICard {
     color: string;
     path: string;
     outlet: string;
+    valor?: string;
 }

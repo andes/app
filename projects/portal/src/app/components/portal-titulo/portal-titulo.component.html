@@ -1,17 +1,35 @@
-<plex-title size="{{ isResponsive() ? 'md' : 'sm' }}" titulo="{{ isResponsive() ? 'Mi portal de salud' : 'tu portal' }}"
-            main>
-    <plex-button size="sm" [icon]="isResponsive() ? null : 'mail-outline'" class="ml-2" type="link">
-        info@andes.gob.ar
-    </plex-button>
-    <plex-button size="sm" [label]="isResponsive() ? 'www.andes.gob.ar' : null" class="ml-2" type="link">
-        <plex-icon name="web"></plex-icon>
-    </plex-button>
-    <plex-button class="pt-1" type="info" icon="message-alert" size="sm" hint="tienes dos elementos sin leer"
-                 hintIcon="bell" hintType="warning" detach="top">
-    </plex-button>
+<section class="mt-2 mr-2">
+    <plex-title main size="md" titulo="mi portal">
+        <plex-button *mobile="false" size="sm" icon="mail-outline" label="info@andes.gob.ar" class="ml-2" type="link">
+        </plex-button>
+        <plex-button *mobile="false" size="sm" icon="web" label="www.andes.gob.ar" class="ml-2" type="link">
+        </plex-button>
 
-    <plex-button *mobile="false" size="sm" class="ml-2" type="danger" label="cerrar sesión" routerLink="/">
-    </plex-button>
-    <plex-button *mobile size="sm" class="ml-2" type="danger" icon="close" routerLink="/">
-    </plex-button>
-</plex-title>
+        <!-- Alertas mobile -->
+        <ng-container *ngFor="let card of cards | slice:5:8">
+            <plex-icon *mobile name="{{ card.icono }}"
+                       class="px-2 py-1 color-{{ card.semanticTag }} border-{{ card.semanticTag }}" size="sm"
+                       hint="2da dosis pendiente" hintIcon="bell" hintType="warning" detach="top"
+                       [routerLink]="[ '/' , card.path ]">
+            </plex-icon>
+        </ng-container>
+
+        <plex-button *mobile="false" size="sm" class="mx-2" type="danger" label="cerrar sesión" routerLink="/">
+        </plex-button>
+
+        <!-- Menu hamburguesa -->
+        <plex-help *mobile size="sm" class="ml-2" type="info" icon="menu">
+            <div info id="menuHelp">
+                <plex-grid size="xs">
+                    <ng-container *ngFor="let card of cards">
+                        <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}"
+                                    titulo="{{ card.nombre }}" subtitulo="">
+                        </plex-label>
+                    </ng-container>
+                </plex-grid>
+                <plex-label size="block" class="ml-2" type="danger" icon="logout" titulo="cerrar sesión" routerLink="/">
+                </plex-label>
+            </div>
+        </plex-help>
+    </plex-title>
+</section>

@@ -1,4 +1,4 @@
-<plex-grid *ngIf="paciente" size="md" type="full">
+<plex-grid *ngIf="paciente" size="md" type="full" class="mb-4">
     <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
         <plex-badge></plex-badge>
         <img [mpiFotoPaciente]="paciente">
@@ -8,7 +8,7 @@
         <div subtitle>
             {{ paciente.documento }}
             <br>
-            <plex-button class="mr-2" size="sm" type="warning"
+            <plex-button class="mr-2" size="sm" type="danger"
                          label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
                          (click)="modal.show()">
             </plex-button>
@@ -21,14 +21,13 @@
         </div>
 
     </plex-detail>
+
     <!-- Alertas -->
-    <plex-grid size="sm" type="full" *mobile="false">
-        <plex-card class="border-{{ alerta.semanticTag }}" size="md" *ngFor="let alerta of alertas" aligned="center"
-                   type="default" color="{{ alerta.color }}" (click)="alerta.selected = !alerta.selected"
-                   [selected]="alerta.selected" (click)="goTo(alerta.path)">
-            <plex-label direction="column" titulo="{{ alerta.dato }}" class="color-{{ alerta.semanticTag }}"
-                        subtitulo="" icon="">
-                <p class="" dato>{{ alerta.valor }}</p>
+    <plex-grid type="auto" size="md" *mobile="false" responsive>
+        <plex-card *ngFor="let alerta of alertas" type="custom" mode="filled" color="{{ alerta.color }}"
+                   [selected]="alerta.id === cardSelected?.id" selectable="true" (click)="goTo(alerta.path)">
+            <plex-label direction="column" case="capitalize" titulo="{{ alerta.id }}" subtitulo="{{alerta.nombre}}"
+                        icon="{{ alerta.icono }}">
             </plex-label>
         </plex-card>
     </plex-grid>
@@ -57,15 +56,15 @@
                                [(ngModel)]="descripcionError">
                     </plex-text>
                 </div>
-                <plex-button modal left type="danger" (click)="modal.close()" [validateForm]="formulario">
-                    CANCELAR
-                </plex-button>
-                <plex-button modal right type="success" (click)="modal.close()">
-                    ACEPTAR
-                </plex-button>
             </form>
         </section>
     </main>
+    <plex-button modal left type="danger" (click)="modal.close()" [validateForm]="formulario">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="modal.close()">
+        ACEPTAR
+    </plex-button>
 
 </plex-modal>
 <!-- FIN MODAL -->

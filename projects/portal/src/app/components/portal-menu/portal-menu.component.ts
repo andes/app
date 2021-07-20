@@ -1,5 +1,6 @@
 import { Component, ElementRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { CARDS } from '../../enums';
 
 @Component({
     selector: 'pdp-menu',
@@ -7,48 +8,48 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class PDPMenuComponent {
     public width = 0;
+    public cards = CARDS;
 
     constructor(
         private el: ElementRef,
-        private router: Router,
-        private activeRoute: ActivatedRoute
+        private router: Router
     ) { }
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
-        return this.width >= 980;
+        return this.width >= 780;
     }
 
-    cards = [
-        {
-            id: 10,
-            nombre: 'relaciones',
-            tipo: 'info',
-            semanticTag: 'solicitud',
-            icono: 'familia',
-            path: 'mis-familiares',
-            color: '#0070cc',
-            outlet: 'listado'
-        }, {
-            id: 12,
-            nombre: 'turnos',
-            tipo: 'info',
-            semanticTag: 'solicitud',
-            icono: 'turno-bold',
-            path: 'mis-turnos',
-            color: '#0070cc',
-            outlet: 'listado',
-        },
-        {
-            id: 13,
-            nombre: 'certificados',
-            tipo: 'info',
-            semanticTag: 'elementos de registro',
-            icono: 'documentos',
-            path: 'mis-certificados',
-            color: '#0070cc',
-            outlet: 'listado',
-        }];
+    // cards = [
+    //     {
+    //         id: 10,
+    //         nombre: 'relaciones',
+    //         tipo: 'info',
+    //         semanticTag: 'solicitud',
+    //         icono: 'familia',
+    //         path: 'mis-familiares',
+    //         color: '#0070cc',
+    //         outlet: 'listado'
+    //     }, {
+    //         id: 12,
+    //         nombre: 'turnos',
+    //         tipo: 'info',
+    //         semanticTag: 'solicitud',
+    //         icono: 'turno-bold',
+    //         path: 'mis-turnos',
+    //         color: '#0070cc',
+    //         outlet: 'listado',
+    //     },
+    //     {
+    //         id: 13,
+    //         nombre: 'certificados',
+    //         tipo: 'info',
+    //         semanticTag: 'elementos de registro',
+    //         icono: 'documentos',
+    //         path: 'mis-certificados',
+    //         color: '#0070cc',
+    //         outlet: 'listado',
+    //     }];
 
     goTo(path) {
         this.router.navigate([path]);
