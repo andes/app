@@ -1,0 +1,14 @@
+<div justify="start">
+    <div>
+        <label class="pb-2">Firma profesional</label>
+        <input #upload class="invisible" type="file" (change)="onImageChange($event)" accept="image/*">
+
+        <plex-button class="pb-1" size="sm" label="Cargar archivo" type="info" [disabled]='disabledCargar'
+                     (click)="upload.click()">
+        </plex-button>
+    </div>
+    <div>
+        <img *ngIf='urlFirma && !loading' class="img-firma" [src]="urlFirma" />
+        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+    </div>
+</div>

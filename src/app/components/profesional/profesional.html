@@ -2,14 +2,16 @@
     <plex-layout-main>
         <ng-container>
             <header>
-                <h3>Listado de profesionales</h3>
+                <plex-title titulo="Listado de profesionales"></plex-title>
                 <form [formGroup]="searchForm">
                     <div class="row">
                         <div class="col-md-4">
-                            <plex-int formControlName="documento" label="Documento" placeholder="Ingrese numero de Documento..."></plex-int>
+                            <plex-int formControlName="documento" label="Documento"
+                                      placeholder="Ingrese numero de Documento..."></plex-int>
                         </div>
                         <div class="col-md-4">
-                            <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
+                            <plex-text formControlName="apellido" label="Apellido"
+                                       placeholder="Filtrar por apellido..."></plex-text>
                         </div>
                         <div class="col-md-4">
                             <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre...">
@@ -30,7 +32,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let profesional of datos" (click)="seleccionarProfesional(profesional)" class="hover">
+                        <tr *ngFor="let profesional of datos" (click)="seleccionarProfesional(profesional)"
+                            class="hover">
                             <td>{{profesional.documento}}</td>
                             <td>{{profesional.apellido}}</td>
                             <td>{{profesional.nombre}}</td>
@@ -52,7 +55,7 @@
     <!-- sidebar listado -->
     <plex-layout-sidebar *ngIf='profesionalSelected'>
         <fieldset>
-            <legend>Profesional</legend>
+            <plex-title size="md" titulo="Profesional"></plex-title>
 
             <div class="row mb-1">
                 <div class="col text-center">
@@ -107,7 +110,8 @@
                     </span>
                 </div>
             </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.formacionGrado && profesionalSelected.formacionGrado.length > 0">
+            <div class="row mb-1"
+                 *ngIf="profesionalSelected.formacionGrado && profesionalSelected.formacionGrado.length > 0">
                 <div class="col">
                     <label>Formaciones de Grado</label>
                     <div *ngFor='let formacionGrado of profesionalSelected.formacionGrado'>
@@ -118,11 +122,13 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.formacionPosgrado && profesionalSelected.formacionPosgrado.length > 0 ">
+            <div class="row mb-1"
+                 *ngIf="profesionalSelected.formacionPosgrado && profesionalSelected.formacionPosgrado.length > 0 ">
                 <div class="col">
                     <label>Especialidades</label>
                     <div *ngFor='let formacionPosgrado of profesionalSelected.formacionPosgrado'>
-                        <div *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
+                        <div
+                             *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
                             {{formacionPosgrado.especialidad.nombre}} -
                             Matricula:
                             {{ formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length
@@ -131,7 +137,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-1" *ngIf="!profesionalSelected.profesionalMatriculado && (profesionalSelected.profesionExterna || profesionalSelected.matriculaExterna)">
+            <div class="row mb-1"
+                 *ngIf="!profesionalSelected.profesionalMatriculado && (profesionalSelected.profesionExterna || profesionalSelected.matriculaExterna)">
                 <div class="col" *ngIf="profesionalSelected.profesionExterna">
                     <label>Profesión Externa</label>
                     <div>
@@ -151,7 +158,8 @@
 
     <plex-layout-footer>
         <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
-        <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" label="Editar" type="info" position="right" (click)="routeTo('create', profesionalSelected.id)">
+        <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" label="Editar"
+                     type="info" position="right" (click)="routeTo('create', profesionalSelected.id)">
         </plex-button>
         <plex-button label="Nuevo Profesional" type="success" position="right" routerLink='/tm/profesional/create'>
         </plex-button>

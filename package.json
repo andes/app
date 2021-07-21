@@ -58,6 +58,7 @@
     "ng-drag-drop": "^5.0.0",
     "ng-recaptcha": "^7.0.1",
     "ng2-charts": "^2.4.2",
+    "ng2-img-max": "^2.2.4",
     "ng2-slugify": "^0.1.0",
     "ngx-infinite-scroll": "^8.0.0",
     "ngx-observe": "^1.1.1",

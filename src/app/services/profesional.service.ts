@@ -24,6 +24,14 @@ export class ProfesionalService {
         return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 
+    getFirma(params: any): Observable<any> {
+        return this.server.get(this.profesionalUrl + '/firma', { params: params });
+    }
+
+    getFoto(params: any): Observable<any> {
+        return this.server.get(this.profesionalUrl + '/foto/', { params: params });
+    }
+
     /**
      * Metodo post. Inserta un nuevo profesional
      * @param {IProfesional} profesional
@@ -32,8 +40,8 @@ export class ProfesionalService {
         return this.server.post(this.profesionalUrl, profesional); // ...using post request
     }
 
-    getFoto(params: any): Observable<any> {
-        return this.server.get(this.profesionalUrl + '/foto/', { params: params });
+    saveFirma(firma) {
+        return this.post(firma);
     }
 
     saveProfesional(profesionalModel: any) {
