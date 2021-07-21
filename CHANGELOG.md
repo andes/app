@@ -1,3 +1,25 @@
+# [5.56.0](https://github.com/andes/app/compare/v5.55.0...v5.56.0) (2021-07-21)
+
+
+### Bug Fixes
+
+* **citas:** bug al cargar numero de carpeta a un paciente ([#2367](https://github.com/andes/app/issues/2367)) ([30a745e](https://github.com/andes/app/commit/30a745ef3fa3652e0344807f52492a6907cb7953))
+* **COM:** color prioridad intermedia ([#2375](https://github.com/andes/app/issues/2375)) ([718e43a](https://github.com/andes/app/commit/718e43ac7eb5e8adc5f2428654222866d34925c5))
+* **inscripcion:** modifica rango edad de FR ([#2376](https://github.com/andes/app/issues/2376)) ([62e16fb](https://github.com/andes/app/commit/62e16fb5fa5d8b05eff37984fca0ceb93e4cf2b4))
+
+
+### Features
+
+* **buscador-ficha:** filtro tipoConfirmacion + collapse ([0bcb9c2](https://github.com/andes/app/commit/0bcb9c2dee29f6e9cbd62388fb1f8a1d71fee546))
+* **EP:** resize sidebar paciente ([27fa2ca](https://github.com/andes/app/commit/27fa2cad7a301748e3d545d4d23de1ad09727d7c))
+* **ficha:** Agregamos filtro por clasificación ([f074306](https://github.com/andes/app/commit/f074306b0c870c7bac8767abee1ceebf75310584))
+* **ficha:** filtro clasificacion ([fae3dd2](https://github.com/andes/app/commit/fae3dd20be439dec7bce2c2c8377551eb3c87a2d))
+* **ficha-epidemio:** caso asintomatico ([#2368](https://github.com/andes/app/issues/2368)) ([235b062](https://github.com/andes/app/commit/235b062065a08103c1090cb6e84ac378910f8c86))
+* **ficha-epidemio:** regex pcr ([5f69450](https://github.com/andes/app/commit/5f6945069e5756c8984c2b140b6c564b0162d23c))
+* **mapa-camas:** agrega atributo esCensable al esquema de prestacion ([#2335](https://github.com/andes/app/issues/2335)) ([03ad569](https://github.com/andes/app/commit/03ad5690c1b6974c3f265f3d81622904d41a696c))
+* **mpi:** seteo de atributos en paciente-detalle ([#2354](https://github.com/andes/app/issues/2354)) ([af52e84](https://github.com/andes/app/commit/af52e840cb57fda12d27e19bdec93d2aa92b6a3d))
+* **rup:** nueva coleccion prestaciones historial  ([#2369](https://github.com/andes/app/issues/2369)) ([1fca8ea](https://github.com/andes/app/commit/1fca8ea316783b545aa123235690728ca18c50ce))
+
 # [5.55.0](https://github.com/andes/app/compare/v5.54.0...v5.55.0) (2021-07-14)
 
 
