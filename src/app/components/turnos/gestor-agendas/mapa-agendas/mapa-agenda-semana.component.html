@@ -1,0 +1,40 @@
+<table class="semana  mt-1" cellspacing="0">
+    <tr>
+        <td class="first"></td>
+        <td *ngFor="let dia of semana" class="text-center">
+            <span class="font-weight-bold text-uppercase">{{dia.nombre}} </span>
+            <span>{{dia.fecha | date:"dd/MM"}}</span>
+        </td>
+    </tr>
+
+    <ng-container *ngFor="let hora of horarios;let i=index">
+        <tr>
+            <td [attr.rowspan]="filasPorHorario.length">
+                <span class="font-weight-bold text-uppercase">{{hora.hora}}:00</span>
+            </td>
+            <td *ngFor="let dia of semana">
+                <ng-container *ngIf=" dia.horarios[i].intervalos[0].turnos.length>0">
+
+                    <ng-container *ngFor="let turno of dia.horarios[i].intervalos[0].turnos">
+                        <div [style.height]="100" *ngIf="turno.color" (click)="detalleDia(turno)"
+                             [style.background]="turno.color" class="circulo">{{turno.turnos.length}}</div>
+                    </ng-container>
+                </ng-container>
+            </td>
+        </tr>
+        <ng-container *ngFor="let fila of filasPorHorario; let aux= index;">
+            <tr *ngIf="aux>0" class="punteado">
+                <td *ngFor="let dia  of semana">
+                    <ng-container *ngIf="dia.horarios[i].intervalos[aux].turnos.length>0">
+                        <ng-container *ngFor="let turno of dia.horarios[i].intervalos[aux].turnos">
+                            <div *ngIf="turno.color" (click)="detalleDia(turno)" [style.background]="turno.color"
+                                 class="circulo">{{turno.turnos.length}}</div>
+                        </ng-container>
+
+                    </ng-container>
+                </td>
+            </tr>
+        </ng-container>
+    </ng-container>
+
+</table>

@@ -1,58 +1,45 @@
 // Angular
-import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
-
+import { RouterModule, Routes } from '@angular/router';
 // Global
 import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
-
+// Campañas salud
+import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 // ... Tablas Maestras
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
-import { ProfesionalComponent } from './components/profesional/profesional.component';
-import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
+// Home de Estadisticas
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+import { NovedadesComponent } from './components/novedades/novedades.component';
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
+import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
+import { ProfesionalComponent } from './components/profesional/profesional.component';
+// ... Obras sociales
+import { PucoComponent } from './components/puco/puco.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+// REPORTES
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
+import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
+import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
+import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
+import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
-import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
-import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
-import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
-import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
-import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
-
+import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 // ... MPI
 // import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
-import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
-
-// ... Obras sociales
-import { PucoComponent } from './components/puco/puco.component';
-
-
-// REPORTES
-import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
-import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
-import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
-
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
-
-// Préstamos HC
-import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
-
-// Home de Estadisticas
-import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
-
-
-// Campañas salud
-import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
-// Buscador de turnos y prestaciones
-import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
-import { NovedadesComponent } from './components/novedades/novedades.component';
-import { InscripcionProfesionalesComponent } from './components/profesional/inscripcion-profesionales/inscripcion-profesionales.component';
 
 const appRoutes: Routes = [
 
@@ -79,6 +66,14 @@ const appRoutes: Routes = [
     { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+    {
+        path: 'citas',
+        loadChildren: () => import('./components/turnos/gestor-agendas/mapa-agendas/mapa-agenda.module').then(m => m.MapaAgendaModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        data: { modulo: 'citas' }
+    },
+
     { path: 'citas/panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/agendas', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -96,6 +91,13 @@ const appRoutes: Routes = [
         loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule),
         canActivate: [RoutingNavBar, RoutingGuard],
         runGuardsAndResolvers: 'always'
+    },
+
+    {
+        path: 'rup',
+        loadChildren: () => import('./components/turnos/gestor-agendas/mapa-agendas/mapa-agenda.module').then(m => m.MapaAgendaModule),
+        canActivate: [RoutingNavBar, RoutingGuard],
+        data: { modulo: 'rup' }
     },
 
     {

@@ -9,9 +9,8 @@
 
         <tr class="hover" *ngFor="let espacio of matrix" class="">
             <td>
-                <small
-                    title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio?.descripcion}}"
-                    titlePosition="right">
+                <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio?.descripcion}}"
+                       titlePosition="right">
                     <strong>{{espacio._value.nombre}}</strong>
                 </small>
                 <br>

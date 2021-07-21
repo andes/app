@@ -1,0 +1,45 @@
+<table class="mes table table-striped table-hover">
+    <tr>
+        <td class="first"></td>
+        <td *ngFor="let dia of headers" class="text-center">
+            <p class="font-weight-bold text-uppercase">{{dia}}</p>
+        </td>
+    </tr>
+
+    <ng-container *ngFor="let semana of calendario;let i=index">
+        <tr>
+            <td class="semana" (click)="week(semana)">
+                <plex-icon size="xl" name="eye" type="primary">
+                </plex-icon>
+
+            </td>
+            <td *ngFor="let dia of semana" (click)="detalleDia(dia)" class="selectable">
+                <div *ngIf="!dia.estado" class="dia">{{ dia.fecha | date: 'd' }}</div>
+                <ng-container *ngIf="dia.totalPorPrestacion?.length>0">
+                    <div class="progress mt-1" *ngFor="let prestacion of dia.totalPorPrestacion">
+                        <span class="progress-value" [tooltip]="prestacion.nombrePrestacion">
+                            {{ prestacion.asignado }}
+                            /
+                            {{prestacion.asignado + prestacion.disponible }}
+                        </span>
+                        <div *ngIf="prestacion.color" class="progress-bar" [tooltip]="prestacion.nombrePrestacion"
+                             [style.background]="prestacion.color" role="progressbar"
+                             [style.width]="prestacion.porcentajeAsignado+'%'"
+                             [attr.aria-valuenow]="prestacion.porcentajeAsignado" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+
+
+                        <div *ngIf="prestacion.color" [tooltip]="prestacion.nombrePrestacion" class="progress-bar"
+                             [style.background]="prestacion.color" role="progressbar" [style.opacity]="0.6"
+                             [style.width]="prestacion.porcentajeDisponible +'%'"
+                             [attr.aria-valuenow]="prestacion.porcentajeDisponible" aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </ng-container>
+
+            </td>
+        </tr>
+
+    </ng-container>
+</table>
