@@ -1,8 +1,6 @@
-import { tickAndDetectChanges } from '@andes/plex/src/lib/button/button.component.spec';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service';
-
+import { MapaAgendasService } from './mapa-agendas.service';
 
 @Component({
     selector: 'mapa-agenda-semana',
@@ -117,8 +115,10 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     private cambiarSemana() {
         if (this.calendario) {
             this.semanaSeleccionada = this.calendario.find(dias =>
-                dias.find(dia =>
-                    dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')));
+                dias.find(
+                    dia => dia.fecha && moment(dia.fecha).isSame(this._fecha, 'day')
+                )
+            );
             if (this.semanaSeleccionada) {
 
                 this.cargarSemana();

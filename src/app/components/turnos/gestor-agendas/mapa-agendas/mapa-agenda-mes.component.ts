@@ -1,7 +1,5 @@
-import { EventEmitter } from '@angular/core';
-import { Output } from '@angular/core';
-import { Component, Input, OnInit } from '@angular/core';
-import { MapaAgendasService } from 'src/app/services/turnos/mapa-agendas.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MapaAgendasService } from './mapa-agendas.service';
 
 
 @Component({

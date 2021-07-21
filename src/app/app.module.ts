@@ -97,9 +97,6 @@ import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/ma
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { MapaAgendasMesComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agenda-mes.component';
-import { MapaAgendasSemanaComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agenda-semana.component';
-import { MapaAgendasComponent } from './components/turnos/gestor-agendas/mapa-agendas/mapa-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
@@ -204,7 +201,6 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { InstitucionService } from './services/turnos/institucion.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
-import { MapaAgendasService } from './services/turnos/mapa-agendas.service';
 import { SmsService } from './services/turnos/sms.service';
 import { TurnoService } from './services/turnos/turno.service';
 // TOP
@@ -285,9 +281,6 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
-        MapaAgendasComponent,
-        MapaAgendasMesComponent,
-        MapaAgendasSemanaComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -364,7 +357,6 @@ registerLocaleData(localeEs, 'es');
         ConfigPrestacionService,
         PlanificarAgendaComponent,
         AgendaService,
-        MapaAgendasService,
         AppMobileService,
         TurnoService,
         EspacioFisicoService,

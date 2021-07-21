@@ -1,24 +1,28 @@
 import { Auth } from '@andes/auth';
 import { Injectable } from '@angular/core';
-import { ConceptosTurneablesService } from '../conceptos-turneables.service';
-import { AgendaService } from './agenda.service';
 import { BehaviorSubject, forkJoin } from 'rxjs';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MapaAgendasService {
     public calendario$ = new BehaviorSubject<any[]>(null);
     conceptosTurneables;
     fecha;
     agendas;
     public calendario;
-    tiposPrestacion;
+    tiposPrestacion = new Map();
     prestacionesPermisos;
 
-    constructor(private agendaService: AgendaService,
+    constructor(
+        private agendaService: AgendaService,
         private conceptoTurneablesService: ConceptosTurneablesService,
-        private auth: Auth) { }
+        private auth: Auth
+    ) { }
 
-
+    public setPermisos(permisos: string) {
+        this.prestacionesPermisos = this.auth.getPermissions(permisos);
+    }
 
     public cargarAgendasMes(fecha) {
         this.fecha = fecha;
@@ -28,32 +32,27 @@ export class MapaAgendasService {
             organizacion: this.auth.organizacion.id
         };
 
-        this.prestacionesPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-
-        forkJoin([this.conceptoTurneablesService.getAll(), this.agendaService.get(parametros)]).subscribe(
-            ([data, agendas]) => {
-                this.tipoPrestacionesColor(data);
-                this.agendas = agendas;
-                this.cargarMes();
-            }
-        );
+        forkJoin([
+            this.conceptoTurneablesService.getAll(),
+            this.agendaService.get(parametros)]
+        ).subscribe(([conceptosTurneables, agendas]) => {
+            this.tipoPrestacionesColor(conceptosTurneables);
+            this.agendas = agendas;
+            this.cargarMes();
+        });
 
 
     }
 
-    private tipoPrestacionesColor(data) {
+    private tipoPrestacionesColor(conceptosTurneables: any[]) {
         if (this.prestacionesPermisos[0] === '*') {
-            this.conceptosTurneables = data;
+            this.conceptosTurneables = conceptosTurneables;
         } else {
-            this.conceptosTurneables = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+            this.conceptosTurneables = conceptosTurneables.filter((x) => this.prestacionesPermisos.indexOf(x.id) >= 0);
         }
-
-        let tiposPrestacion = this.conceptosTurneables.filter(d => d.color);
-        let setTiposPrestaciones = new Map();
-        tiposPrestacion.forEach(tipoPrestacion => {
-            setTiposPrestaciones.set(tipoPrestacion.conceptId, tipoPrestacion);
+        this.conceptosTurneables.filter(d => d.color).forEach(tipoPrestacion => {
+            this.tiposPrestacion.set(tipoPrestacion.conceptId, tipoPrestacion);
         });
-        this.tiposPrestacion = [...setTiposPrestaciones.values()];
     }
 
 
@@ -126,8 +125,7 @@ export class MapaAgendasService {
     private getColor(prestacionesDia) {
         let prestacion;
         prestacionesDia.forEach(prestacionDia => {
-
-            prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === prestacionDia.tipoPrestacion_id);
+            prestacion = this.tiposPrestacion.get(prestacionDia.tipoPrestacion_id);
             if (prestacion) {
                 prestacionDia['color'] = prestacion.color;
             }
@@ -176,10 +174,10 @@ export class MapaAgendasService {
 
 
     private ordenarPrestacionesAgendas(dia, turnosAgenda, agenda, disponible) {
-        let turnosPrestacion = {};
-        let aux = [];
+        const turnosPrestacion = {};
+        const aux = [];
         if (turnosAgenda.length === 0 && disponible > 0) {
-            let turnoPrestacion = {
+            const turnoPrestacion = {
                 turnosPorPrestacion: [],
                 tipoPrestacion_id: agenda.tipoPrestaciones[0].conceptId,
                 nombre: agenda.tipoPrestaciones[0].term,

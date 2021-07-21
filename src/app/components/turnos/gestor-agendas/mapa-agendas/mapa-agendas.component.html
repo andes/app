@@ -1,4 +1,4 @@
-<plex-layout main="{{ (accion === 'verDetalle') ? 9 : 12 }}">
+<plex-layout [main]="(accion === 'verDetalle') ? 9 : 12">
     <plex-layout-main>
         <plex-title titulo="CALENDARIO DE TURNOS">
             <plex-datetime *ngIf="verSemana" type="date" label="" [skipBy]="'week'" [(ngModel)]="diaInicio"

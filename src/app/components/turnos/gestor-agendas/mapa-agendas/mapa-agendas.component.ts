@@ -1,8 +1,7 @@
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Component, OnInit } from '@angular/core';
-import { ConsultaComponent } from 'src/app/apps/vacunacion/components/consulta.component';
-import { forEach } from 'vis-util/esnext';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MapaAgendasService } from './mapa-agendas.service';
 
 @Component({
     selector: 'mapa-agenda',
@@ -11,9 +10,9 @@ import { forEach } from 'vis-util/esnext';
 })
 export class MapaAgendasComponent implements OnInit {
 
-    accion;
-    agendas_dia;
-    dia;
+    public accion: string;
+    public agendas_dia;
+    public dia;
     public prestacionesPermisos;
     public verMes = true;
     public diaInicio = new Date();
@@ -21,12 +20,20 @@ export class MapaAgendasComponent implements OnInit {
     constructor(
         private auth: Auth,
         private router: Router,
+        private activeRoute: ActivatedRoute,
+        private mapaAgendasService: MapaAgendasService
 
     ) { }
 
     ngOnInit() {
-        this.prestacionesPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-
+        const { modulo } = this.activeRoute.snapshot.data;
+        if (modulo === 'rup') {
+            this.mapaAgendasService.setPermisos('rup:tipoPrestacion:?');
+            this.prestacionesPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        } else {
+            this.mapaAgendasService.setPermisos('turnos:planificarAgenda:prestacion:?');
+            this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        }
         if (!this.prestacionesPermisos.length) {
             this.router.navigate(['inicio']);
         }
@@ -51,8 +58,8 @@ export class MapaAgendasComponent implements OnInit {
 
     verAgendas(dia) {
         // agrupo por agendas
-        let agenda_Prestaciones = [];
-        let agendas = {};
+        const agenda_Prestaciones = [];
+        const agendas = {};
         dia.prestaciones.forEach(p => {
 
             if (!agendas[p.agenda.id]) {
