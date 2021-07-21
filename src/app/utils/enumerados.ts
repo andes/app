@@ -123,6 +123,12 @@ export enum MotivosLiberacion {
         name: 'media'
     },
     {
+        border: '#d1a67e',
+        hover: '#e97204',
+        background: '#f7e5ca',
+        name: 'intermedia'
+    },
+    {
         border: '#e4a4a4',
         hover: '#B70B0B',
         background: '#f8e6e6',
