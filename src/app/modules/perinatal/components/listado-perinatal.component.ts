@@ -1,12 +1,10 @@
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
-import { ProfesionalService } from 'src/app/services/profesional.service';
 
 @Component({
     selector: 'listado-perinatal',
@@ -20,8 +18,6 @@ export class ListadoPerinatalComponent implements OnInit {
     public fechaCita;
     public fechaUltimoControl;
     public listado$: Observable<any[]>;
-    public organizaciones$: Observable<any[]>;
-    public profesionales$: Observable<any[]>;
     private listadoActual: any[];
     public showSidebar = false;
     // Permite :hover y click()
@@ -88,8 +84,6 @@ export class ListadoPerinatalComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         private location: Location,
-        private organizacionService: OrganizacionService,
-        private profesionalService: ProfesionalService,
         private carnetPerinatalService: CarnetPerinatalService) { }
 
     ngOnInit(): void {
@@ -100,8 +94,6 @@ export class ListadoPerinatalComponent implements OnInit {
         this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
             map(resp => this.listadoActual = resp)
         );
-        this.organizaciones$ = this.organizacionService.get(this.auth.organizacion.id);
-        this.profesionales$ = this.profesionalService.getProfesional(this.profesional);
     }
 
     filtrar() {
@@ -145,5 +137,4 @@ export class ListadoPerinatalComponent implements OnInit {
     esAusente(fechaProximoControl, fechaFinEmbarazo) {
         return ((moment().diff(moment(fechaProximoControl), 'days') >= 1) && !fechaFinEmbarazo);
     }
-
 }

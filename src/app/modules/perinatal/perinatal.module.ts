@@ -13,6 +13,7 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { HistorialPerinatalComponent } from './components/historial-perinatal.component';
 import { AlertasPerinatalComponent } from './components/alertas-perinatal.component';
 import { DetallePerinatalComponent } from './components/detalle-perinatal.component';
+import { DirectiveLibModule } from '../../directives/directives.module';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { DetallePerinatalComponent } from './components/detalle-perinatal.compon
         PerinatalRouting,
         InfiniteScrollModule,
         SharedModule,
+        DirectiveLibModule,
         MPILibModule
     ],
     declarations: [
