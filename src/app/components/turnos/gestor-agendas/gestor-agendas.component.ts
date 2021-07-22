@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy, ViewContainerRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { ProfesionalService } from './../../../services/profesional.service';
-import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { IAgenda } from './../../../interfaces/turnos/IAgenda';
-import * as enumerado from './../enums';
+import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { enumToArray } from '../../../utils/enums';
-import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { Subscription } from 'rxjs';
-import { InstitucionService } from '../../../services/turnos/institucion.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { ITurno } from '../../../interfaces/turnos/ITurno';
+import { InstitucionService } from '../../../services/turnos/institucion.service';
+import { enumToArray } from '../../../utils/enums';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+import { ProfesionalService } from './../../../services/profesional.service';
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import * as enumerado from './../enums';
 
 @Component({
     selector: 'gestor-agendas',
@@ -140,7 +140,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             limit: 15
         };
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
+            this.parametros['tipoPrestaciones'] = [...this.prestacionesPermisos];
         }
 
         // Si hay queryParams se setea 'parametros' para volver al gestor con los mismos filtros
@@ -192,7 +192,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (typeof value.value === 'undefined') {
             return null;
         }
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones?.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         if (tipo === 'fechaDesde') {
