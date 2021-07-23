@@ -5,8 +5,8 @@
     <plex-table-columns>
     </plex-table-columns>
     <tr *ngFor="let ficha of (historial$ | plSort:table | async)">
-        <td *plTableCol="'fecha'">{{ficha.createdAt | date:'dd/MM/yyyy - HH:mm'}}</td>
-        <td *plTableCol="'usuario'">{{ficha.createdBy.nombreCompleto}}</td>
+        <td *plTableCol="'fecha'">{{ (ficha.updatedAt || ficha.createdAt) | date:'dd/MM/yyyy - HH:mm'}}</td>
+        <td *plTableCol="'usuario'">{{ ficha.updatedBy ? ficha.updatedBy.nombreCompleto : ficha.createdBy.nombreCompleto}}</td>
         <td *plTableCol="'acciones'">
             <plex-button type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
             </plex-button>

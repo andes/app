@@ -36,7 +36,7 @@ export class HistorialFichaComponent implements OnChanges {
   ) { }
 
   ngOnChanges(): void {
-    this.historial$ = this.historyService.search({ idFicha: this.ficha.id });
+    this.historial$ = this.historyService.search({ id: this.ficha.id });
   }
 
   verFicha(ficha) {
