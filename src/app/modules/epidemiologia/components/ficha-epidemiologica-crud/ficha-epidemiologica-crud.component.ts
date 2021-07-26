@@ -288,9 +288,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
           if (key) {
             let valor = seccion.fields[key];
             if (key === 'identificadorpcr') {
-              const regexHisop = new RegExp('([A-Za-z])+([0-9]+$)+');
-              if (valor && regexHisop.test(valor)) {
-                const numeroPcr = valor.replace(/[a-z]/gi, '');
+              // Regex que empieza sin 0 y tiene solo números.
+              const regexHisop = new RegExp('^[1-9]+[0-9]*$');
+              if (valor && !regexHisop.test(valor)) {
+                const numeroPcr = valor.replace(/[a-z]*0*/i, '');
                 valor = numeroPcr;
               }
             }
