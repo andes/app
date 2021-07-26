@@ -13,7 +13,7 @@
 
             <plex-grid cols="8" colsLg="6" colsMd="4" colsSm="2" responsive>
                 <plex-card *ngFor="let familiar of familiares" type="dark" mode="filled" selectable="true" size="md"
-                           (click)="gotTo(familiar.id)" [selected]="familiar?.id === selectedId">
+                           (click)="goTo(familiar.id)" [selected]="familiar?.id === selectedId">
                     <img [mpiFotoPaciente]="familiar">
                     <plex-badge type="success">{{ familiar.relacion.nombre }}</plex-badge>
                     <plex-label direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
@@ -29,7 +29,7 @@
 
     <plex-layout-sidebar>
         <plex-title size="{{ isResponsive() ? 'sm' : 'md' }}" titulo="Detalle familiar">
-            <plex-button type="danger" icon="close" size="sm" (click)="gotTo()"></plex-button>
+            <plex-button type="danger" icon="close" size="sm" (click)="goTo()"></plex-button>
         </plex-title>
         <router-outlet></router-outlet>
     </plex-layout-sidebar>

@@ -1,5 +1,6 @@
 import { Component, ElementRef } from '@angular/core';
 import { CARDS } from '../../enums';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'pdp-titulo',
@@ -10,7 +11,8 @@ export class PDPTituloComponent {
     public cards = CARDS;
 
     constructor(
-        private el: ElementRef
+        private el: ElementRef,
+        private router: Router
     ) { }
 
     isResponsive() {
@@ -18,4 +20,7 @@ export class PDPTituloComponent {
         return this.width >= 980;
     }
 
+    goTo(path: string) {
+        this.router.navigate([path]);
+    }
 }

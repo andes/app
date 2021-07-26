@@ -6,10 +6,10 @@ import { Auth } from '@andes/auth';
 import { map, switchMap } from 'rxjs/operators';
 
 @Component({
-    selector: 'pdp-mis-familiares-detalle',
-    templateUrl: './mis-familiares-detalle.component.html'
+    selector: 'pdp-mis-relaciones-detalle',
+    templateUrl: './mis-relaciones-detalle.component.html'
 })
-export class PDPMisFamiliaresDetalleComponent implements OnInit {
+export class PDPMisRelacionesDetalleComponent implements OnInit {
 
     public selectedId;
     public prestaciones$;

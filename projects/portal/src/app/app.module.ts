@@ -34,8 +34,8 @@ import { LoginComponent } from './pages/login/login-portal-paciente';
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
 import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certificados.component';
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
-import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
-import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
+import { PDPMisRelacionesDetalleComponent } from './pages/mis-relaciones/mis-relaciones-detalle.component';
+import { PDPMisRelacionesComponent } from './pages/mis-relaciones/mis-relaciones.component';
 import { PDPMisLaboratoriosDetalleComponent } from './pages/mis-laboratorios/mis-laboratorios-detalle.component';
 import { PDPMisLaboratoriosComponent } from './pages/mis-laboratorios/mis-laboratorios.component';
 import { PDPMisTurnosDetallesComponent } from './pages/mis-turnos/mis-turnos-detalle.component';
@@ -60,8 +60,8 @@ import { PrestacionService } from './services/prestacion.service';
     PDPMisLaboratoriosDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
-    PDPMisFamiliaresComponent,
-    PDPMisFamiliaresDetalleComponent,
+    PDPMisRelacionesComponent,
+    PDPMisRelacionesDetalleComponent,
     PDPTituloComponent,
     PDPMenuComponent,
     PDPMisVacunasComponent,

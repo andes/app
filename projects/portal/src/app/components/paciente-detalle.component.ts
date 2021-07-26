@@ -48,20 +48,6 @@ export class PacienteDetalleComponent implements OnInit {
         const idPaciente = this.auth.mobileUser.pacientes[0].id;
         this.pacienteService.me().subscribe(resp => this.paciente = resp);
         this.alertas = CARDS.filter(card => this.filtroCards.includes(card.nombre));
-        // this.laboratorioService.getLaboratorios(idPaciente).subscribe(laboratorios => {
-        //     this.alertas.map(a => {
-        //         if (a.nombre === 'laboratorios') {
-        //             a.valor = laboratorios.length.toString();
-        //         }
-        //     });
-        // });
-        // this.vacunaService.getVacunas(idPaciente).subscribe(vacunas => {
-        //     this.alertas.map(a => {
-        //         if (a.nombre === 'vacunas') {
-        //             a.valor = vacunas.length.toString();
-        //         }
-        //     });
-        // });
 
         this.errores = [
             {

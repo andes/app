@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PacientePortalService } from '../../services/paciente-portal.service';
 
 @Component({
-    selector: 'pdp-mis-familiares',
-    templateUrl: './mis-familiares.component.html'
+    selector: 'pdp-mis-relaciones',
+    templateUrl: './mis-relaciones.component.html'
 })
-export class PDPMisFamiliaresComponent implements OnInit {
+export class PDPMisRelacionesComponent implements OnInit {
 
     public selectedId;
     public familiares;
@@ -30,11 +30,11 @@ export class PDPMisFamiliaresComponent implements OnInit {
         });
     }
 
-    gotTo(id?) {
+    goTo(id?) {
         if (id) {
             this.router.navigate([id], { relativeTo: this.activeRoute });
         } else {
-            this.router.navigate(['mis-familiares']);
+            this.router.navigate(['mis-relaciones']);
         }
     }
 

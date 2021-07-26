@@ -10,8 +10,8 @@ import { PDPMisVacunasComponent } from './pages/mis-vacunas/mis-vacunas.componen
 import { PDPDetalleVacunaComponent } from './pages/mis-vacunas/mis-vacunas-detalle.component';
 import { PDPMisCertificadosComponent } from './pages/mis-certificados/mis-certificados.component';
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
-import { PDPMisFamiliaresComponent } from './pages/mis-familiares/mis-familiares.component';
-import { PDPMisFamiliaresDetalleComponent } from './pages/mis-familiares/mis-familiares-detalle.component';
+import { PDPMisRelacionesComponent } from './pages/mis-relaciones/mis-relaciones.component';
+import { PDPMisRelacionesDetalleComponent } from './pages/mis-relaciones/mis-relaciones-detalle.component';
 import { DarTurnoComponent } from './components/dar-turno/dar-turno.component';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
@@ -58,11 +58,11 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'mis-familiares',
-    component: PDPMisFamiliaresComponent,
+    path: 'mis-relaciones',
+    component: PDPMisRelacionesComponent,
     canActivate: [RoutingGuard],
     children: [
-      { path: ':id', component: PDPMisFamiliaresDetalleComponent }
+      { path: ':id', component: PDPMisRelacionesDetalleComponent }
     ]
   },
   {

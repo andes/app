@@ -43,7 +43,7 @@ export class ActivarCuentaComponent implements OnInit {
           this.plex.info('warning', err.error);
           return null;
         }),
-        map(() => this.router.navigate(['/mis-familiares']))
+        map(() => this.router.navigate(['/mis-relaciones']))
       ).subscribe();
     }
   }

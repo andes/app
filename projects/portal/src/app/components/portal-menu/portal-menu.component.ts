@@ -20,39 +20,10 @@ export class PDPMenuComponent {
         return this.width >= 780;
     }
 
-    // cards = [
-    //     {
-    //         id: 10,
-    //         nombre: 'relaciones',
-    //         tipo: 'info',
-    //         semanticTag: 'solicitud',
-    //         icono: 'familia',
-    //         path: 'mis-familiares',
-    //         color: '#0070cc',
-    //         outlet: 'listado'
-    //     }, {
-    //         id: 12,
-    //         nombre: 'turnos',
-    //         tipo: 'info',
-    //         semanticTag: 'solicitud',
-    //         icono: 'turno-bold',
-    //         path: 'mis-turnos',
-    //         color: '#0070cc',
-    //         outlet: 'listado',
-    //     },
-    //     {
-    //         id: 13,
-    //         nombre: 'certificados',
-    //         tipo: 'info',
-    //         semanticTag: 'elementos de registro',
-    //         icono: 'documentos',
-    //         path: 'mis-certificados',
-    //         color: '#0070cc',
-    //         outlet: 'listado',
-    //     }];
-
     goTo(path) {
-        this.router.navigate([path]);
+        if (path) {
+            this.router.navigate([path]);
+        }
     }
 
 }

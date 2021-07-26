@@ -10,7 +10,7 @@
             <plex-icon *mobile name="{{ card.icono }}"
                        class="px-2 py-1 color-{{ card.semanticTag }} border-{{ card.semanticTag }}" size="sm"
                        hint="2da dosis pendiente" hintIcon="bell" hintType="warning" detach="top"
-                       [routerLink]="[ '/' , card.path ]">
+                       (click)="goTo(card.path)">
             </plex-icon>
         </ng-container>
 
@@ -23,7 +23,7 @@
                 <plex-grid size="xs">
                     <ng-container *ngFor="let card of cards">
                         <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}"
-                                    titulo="{{ card.nombre }}" subtitulo="">
+                                    titulo="{{ card.nombre }}" subtitulo="" (click)="goTo(card.path)">
                         </plex-label>
                     </ng-container>
                 </plex-grid>

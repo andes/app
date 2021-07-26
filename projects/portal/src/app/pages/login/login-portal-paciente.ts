@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
                 }
                 return null;
             }),
-            map(() => this.router.navigate(['/mis-familiares']))
+            map(() => this.router.navigate(['/mis-relaciones']))
         ).subscribe();
     }
 
