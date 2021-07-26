@@ -33,7 +33,7 @@
                                        (change)="limpiarRespuesta()" name="documento" label="Documento"
                                        [pattern]="patronDocumento" [required]="true">
                             </plex-text>
-                            <plex-text *ngIf="extranjero" type="number" [(ngModel)]="ciudadano.numeroIdentificacion"
+                            <plex-text *ngIf="extranjero" [(ngModel)]="ciudadano.numeroIdentificacion"
                                        name="numeroIdentificacion" label="Número de identificación"
                                        (change)="limpiarRespuesta()" [required]="true">
                             </plex-text>

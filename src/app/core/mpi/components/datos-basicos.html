@@ -115,7 +115,7 @@
                     </plex-select>
 
                     <plex-text label="Número de identificación" [(ngModel)]="paciente.numeroIdentificacion"
-                               name="numeroIdentificacion" pattern="[0-9]+" grow="3">
+                               name="numeroIdentificacion" grow="3">
                     </plex-text>
                 </plex-wrapper>
             </div>
@@ -148,8 +148,8 @@
                                [readonly]="validado">
                     </plex-text>
 
-                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombre"
-                               required="true" [readonly]="validado">
+                    <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombre" required="true"
+                               [readonly]="validado">
                     </plex-text>
 
                     <plex-select [(ngModel)]="paciente.estadoCivil" name="estadoCivil" [data]="estadosCiviles"
