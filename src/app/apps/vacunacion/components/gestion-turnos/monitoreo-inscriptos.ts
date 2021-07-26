@@ -37,6 +37,8 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public permisosEdicion;
     public editando = false;
     public dacionTurno = false;
+    public fechaProximoLlamado;
+    public hoy = moment().startOf('day').add(1, 'days').toDate();
     public columns = [
         {
             key: 'grupo',
@@ -227,7 +229,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
                 this.cargarAsignadas();
             } else {
                 this.pacienteLlamado = inscripcionActualizada;
-                this.pacienteProcesado = true;
+                this.pacienteProcesado = false;
             }
         }
         this.dacionTurno = false;
@@ -246,6 +248,23 @@ export class MonitoreoInscriptosComponent implements OnInit {
                 }
             }
         }
+    }
+
+    setProximoLlamado(undo = false) {
+        if (undo) {
+            this.fechaProximoLlamado = undefined;
+        }
+        if (this.fechaProximoLlamado) {
+            this.fechaProximoLlamado = moment(this.fechaProximoLlamado).startOf('day').toDate();
+        }
+        this.pacienteSelected.fechaProximoLlamado = this.fechaProximoLlamado;
+        this.inscripcionService.patch(this.pacienteSelected).subscribe(paciente => {
+            this.pacienteSelected = paciente;
+            this.pacienteProcesado = true;
+            this.plex.toast('success', 'Cambios guardados correctamente.');
+        }, error => {
+            this.plex.toast('danger', 'Hubo un error guardando los cambios.');
+        });
     }
 
     incrementarLlamado() {
