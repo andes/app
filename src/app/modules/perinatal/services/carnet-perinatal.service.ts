@@ -53,7 +53,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.fechaUltimoControl = fechaUltimoControl;
                 }
                 if (organizacion) {
-                    params.organizacion = organizacion.nombre;
+                    params.organizacion = organizacion.id;
                 }
                 if (profesional) {
                     params.profesional = profesional.id;
