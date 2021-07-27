@@ -1,6 +1,9 @@
 <plex-layout main="{{mainSize}}">
     <plex-layout-main>
         <plex-title titulo="Gestión de turnos" size="lg">
+            <plex-button *ngIf="activeTab===1 && desasignarInsc" type="info" size="md" label="Desasignar inscriptos"
+                         ariaLabel="Desasignar inscriptos" (click)="desasignarInscriptos()">
+            </plex-button>
         </plex-title>
         <plex-tabs (change)="cambio($event);" [activeIndex]="panelIndex">
             <plex-tab label="Llamador de inscriptos" (click)="panelIndex = 0">
