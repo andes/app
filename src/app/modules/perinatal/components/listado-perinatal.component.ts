@@ -24,6 +24,8 @@ export class ListadoPerinatalComponent implements OnInit {
     public selectable = true;
     // Muestra efecto de selección
     public carnetSelected;
+    public profesional;
+    public organizacion;
     public columns = [
 
         {
@@ -105,6 +107,8 @@ export class ListadoPerinatalComponent implements OnInit {
         this.carnetPerinatalService.paciente.next(this.paciente);
         this.carnetPerinatalService.fechaDesde.next(this.fechaDesdeEntrada);
         this.carnetPerinatalService.fechaHasta.next(this.fechaHastaEntrada);
+        this.carnetPerinatalService.organizacion.next(this.organizacion);
+        this.carnetPerinatalService.profesional.next(this.profesional);
         this.carnetPerinatalService.fechaUltimoControl.next(this.fechaUltimoControl);
         this.carnetPerinatalService.fechaProximoControl.next(this.fechaCita);
     }
@@ -133,5 +137,4 @@ export class ListadoPerinatalComponent implements OnInit {
     esAusente(fechaProximoControl, fechaFinEmbarazo) {
         return ((moment().diff(moment(fechaProximoControl), 'days') >= 1) && !fechaFinEmbarazo);
     }
-
 }

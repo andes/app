@@ -10,6 +10,8 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
     public paciente = new BehaviorSubject<string>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
+    public organizacion = new BehaviorSubject<string>(null);
+    public profesional = new BehaviorSubject<string>(null);
     public fechaProximoControl = new BehaviorSubject<Date>(null);
     public fechaUltimoControl = new BehaviorSubject<Date>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
@@ -19,16 +21,17 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
 
     constructor(protected server: Server) {
         super(server);
-
         this.carnetsFiltrados$ = combineLatest(
             this.fechaDesde,
             this.fechaHasta,
+            this.organizacion,
+            this.profesional,
             this.paciente,
             this.fechaProximoControl,
             this.fechaUltimoControl,
             this.lastResults
         ).pipe(
-            switchMap(([fechaDesde, fechaHasta, paciente, fechaProximoControl, fechaUltimoControl, lastResults]) => {
+            switchMap(([fechaDesde, fechaHasta, organizacion, profesional, paciente, fechaProximoControl, fechaUltimoControl, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -41,7 +44,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     skip: this.skip
                 };
                 if (paciente) {
-                    params.paciente = paciente;
+                    params.paciente = '^' + paciente.toUpperCase();
                 }
                 if (fechaProximoControl) {
                     params.fechaProximoControl = fechaProximoControl;
@@ -49,7 +52,12 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                 if (fechaUltimoControl) {
                     params.fechaUltimoControl = fechaUltimoControl;
                 }
-
+                if (organizacion) {
+                    params.organizacion = organizacion.id;
+                }
+                if (profesional) {
+                    params.profesional = profesional.id;
+                }
                 params.fecha = this.queryDateParams(fechaDesde, fechaHasta);
 
                 return this.search(params).pipe(

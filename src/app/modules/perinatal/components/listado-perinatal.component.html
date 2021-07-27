@@ -6,19 +6,36 @@
             <alertas-perinatal></alertas-perinatal>
         </plex-title>
         <plex-wrapper>
-            <plex-datetime type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" label="Fecha Desde"
+
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" label="Fecha Desde"
                            class="fechas" [max]="fechaHastaEntrada" (change)="filtrar()"></plex-datetime>
-            <plex-datetime type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" label="Fecha Hasta"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" label="Fecha Hasta"
                            class="fechas" [min]="fechaDesdeEntrada" (change)="filtrar()"></plex-datetime>
-            <plex-text [(ngModel)]="paciente" name="paciente" label="Buscar paciente" debounce="400"
-                       (change)="filtrar()"></plex-text>
-            <plex-datetime type="date" [(ngModel)]="fechaCita" name="fechaCita" label="Fecha de cita" class="fechas"
-                           (change)="filtrar()">
-            </plex-datetime>
-            <plex-datetime type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl" label="Último control"
+
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaCita" name="fechaCita" label="Fecha de cita"
                            class="fechas" (change)="filtrar()">
             </plex-datetime>
+
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl"
+                           label="Último control" class="fechas" (change)="filtrar()">
+            </plex-datetime>
+
+            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" debounce="400"
+                       (change)="filtrar()"></plex-text>
+
+            <div collapse>
+
+                <plex-select [(ngModel)]="profesional" name="profesional" label="Profesional" tmProfesionales
+                             (change)="filtrar()" labelField="nombre + apellido">
+                </plex-select>
+
+                <plex-select [(ngModel)]="organizacion" name="organizacion" label="Organizacion" tmOrganizaciones
+                             (change)="filtrar()">
+                </plex-select>
+
+            </div>
         </plex-wrapper>
+
         <plex-table [columns]="columns" #table="plTable" [offset]="showSidebar ? 203 : 131" (scroll)="onScroll()">
             <plex-title titulo="Listado de pacientes" size="sm">
                 <plex-table-columns>
