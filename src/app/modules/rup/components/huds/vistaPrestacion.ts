@@ -1,6 +1,6 @@
 
 import { Auth } from '@andes/auth';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -22,8 +22,6 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
     @Input() indice = 0;
-    @Input() btnClose;
-    @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
@@ -81,10 +79,6 @@ export class VistaPrestacionComponent implements OnInit {
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
-    }
-
-    close() {
-        this.onClose.emit();
     }
 
     onPacs() {
