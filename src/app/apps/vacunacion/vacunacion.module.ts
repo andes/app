@@ -24,6 +24,8 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { NotasComponent } from './components/notas.component';
 import { LoteComponent } from './components/lote/lote.component';
 import { CITASLibModule } from 'src/app/components/turnos/citas.module';
+// import { LoteCondicionesComponent } from './components/lote/lote-condiciones.component';
+import { LoteEsquemasComponent } from './components/lote/lote-esquemas.compone';
 
 @NgModule({
     imports: [
@@ -51,7 +53,9 @@ import { CITASLibModule } from 'src/app/components/turnos/citas.module';
         NuevaInscripcionComponent,
         MonitoreoInscriptosComponent,
         NotasComponent,
-        LoteComponent
+        LoteComponent,
+        // LoteCondicionesComponent,
+        LoteEsquemasComponent,
     ],
     providers: [
         {

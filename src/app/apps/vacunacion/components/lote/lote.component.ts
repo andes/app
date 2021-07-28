@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VacunasService } from 'src/app/services/vacunas.service';
 import { Plex } from '@andes/plex';
@@ -19,15 +19,14 @@ export class LoteComponent implements OnInit {
   public dosis$: Observable<any[]>;
   public esquemaNuevo$: Observable<any[]>;
   public esquemas$: Observable<any>;
-  // public nombreDosis$: Observable<any[]>;
   public creando = false;
   public creandoDosis = false;
   public detalle = false;
   public seEncuentra = false;
-  // public condicion = [];
-  // public mostrar;
-  // public mostrarEsquemas = false;
   public mostrarCondiciones = false;
+  public esquemaDosis;
+  public esquemaVacunas;
+  /*
   public columnasCondiciones = [
     {
       key: 'codigo',
@@ -38,7 +37,7 @@ export class LoteComponent implements OnInit {
       label: 'Nombre'
     },
   ];
-
+*/
   public esquemaNuevo = [
     {
       id: 'id',
@@ -126,16 +125,16 @@ export class LoteComponent implements OnInit {
       sort: 'codigo'
     });
   }
-
-  loadEsquemas() {
-    this.esquemas$ = this.vacunasService.getNomivacEsquemas({
-      habilitado: true,
-      vacuna: this.vacunaSelected._id,
-      codigo: this.dosisSeleccionada.esquema.codigo,
-      sort: 'codigo'
-    });
-  }
-
+  /*
+    loadEsquemas() {
+      this.esquemas$ = this.vacunasService.getNomivacEsquemas({
+        habilitado: true,
+        vacuna: this.vacunaSelected._id,
+        codigo: this.dosisSeleccionada.esquema.codigo,
+        sort: 'codigo'
+      });
+    }
+  */
   closeSidebar() {
     this.showSidebar = false;
   }
@@ -150,7 +149,10 @@ export class LoteComponent implements OnInit {
 
   mostrarDosis(dosis) {
     this.dosisSeleccionada = dosis;
-    this.loadEsquemas();
+    this.esquemaDosis = dosis.esquema;
+    this.esquemaVacunas = dosis.vacuna;
+    this.mostrarCondiciones = true;
+    // this.loadEsquemas();
   }
 
   cerrar() {
@@ -170,26 +172,26 @@ export class LoteComponent implements OnInit {
     this.dosisSelected.nombre = null;
     this.dosisSelected.esquema = null;
   }
+  /*
+    mostrarCondicion() {
+      this.mostrarCondiciones = true;
+    }
 
-  mostrarCondicion() {
-    this.mostrarCondiciones = true;
-  }
+    cerrarCondicion(cerrar) {
+      this.mostrarCondiciones = cerrar;
+    }
 
-  cerrarCondicion() {
-    this.mostrarCondiciones = false;
-  }
-
-  cargarCondiciones(codigo, nombre) {
-    this.esquemas$ = this.vacunasService.getNomivacEsquemas({
-      habilitado: true,
-      vacuna: this.vacunaSelected._id,
-      codigo: codigo,
-      nombre: nombre,
-      sort: 'codigo'
-    });
-    this.mostrarCondiciones = true;
-  }
-
+    cargarCondiciones(codigo, nombre) {
+      this.esquemas$ = this.vacunasService.getNomivacEsquemas({
+        habilitado: true,
+        vacuna: this.vacunaSelected._id,
+        codigo: codigo,
+        nombre: nombre,
+        sort: 'codigo'
+      });
+      this.mostrarCondiciones = true;
+    }
+  */
   guardarLote() {
     this.seEncuentra = false;
     this.lotes$.subscribe(lotes => {
@@ -206,9 +208,8 @@ export class LoteComponent implements OnInit {
       }
     });
   }
+
   guardarDosis() {
-    let arre = Object.values(this.dosisSelected.nombre);
-    this.dosisSelected.nombre = arre[1];
     this.vacunasService.guardarNomivacDosis(this.dosisSelected).subscribe(resultado => {
       if (resultado) {
         this.plex.toast('success', 'Dosis creada con éxito.');
