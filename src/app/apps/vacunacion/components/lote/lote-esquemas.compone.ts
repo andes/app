@@ -1,20 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VacunasService } from 'src/app/services/vacunas.service';
-import { Plex } from '@andes/plex';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'lote-esquemas',
     templateUrl: 'lote-esquemas.html',
 })
 
-export class LoteEsquemasComponent implements OnInit {
+export class LoteEsquemasComponent {
     @Input() esquema: any;
     @Input() vacuna: any;
     public esquemas$: Observable<any>;
     public mostrarCondiciones = false;
-    // public condicion;
     public columnasCondiciones = [
         {
             key: 'codigo',
@@ -28,10 +25,6 @@ export class LoteEsquemasComponent implements OnInit {
     constructor(
         private vacunasService: VacunasService,
     ) { }
-
-    ngOnInit(): void {
-        console.log(this.esquema);
-    }
 
     cargarCondiciones(codigo, nombre) {
         this.esquemas$ = this.vacunasService.getNomivacEsquemas({

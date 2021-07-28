@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VacunasService } from 'src/app/services/vacunas.service';
 import { Plex } from '@andes/plex';
-import { map } from 'rxjs/operators';
-import { cache } from '@andes/shared';
-import { Console } from 'console';
 
 @Component({
   selector: 'app-lote',
@@ -23,21 +20,9 @@ export class LoteComponent implements OnInit {
   public creandoDosis = false;
   public detalle = false;
   public seEncuentra = false;
-  public mostrarCondiciones = false;
   public esquemaDosis;
   public esquemaVacunas;
-  /*
-  public columnasCondiciones = [
-    {
-      key: 'codigo',
-      label: 'Codigo'
-    },
-    {
-      key: 'nombre',
-      label: 'Nombre'
-    },
-  ];
-*/
+
   public esquemaNuevo = [
     {
       id: 'id',
@@ -125,16 +110,7 @@ export class LoteComponent implements OnInit {
       sort: 'codigo'
     });
   }
-  /*
-    loadEsquemas() {
-      this.esquemas$ = this.vacunasService.getNomivacEsquemas({
-        habilitado: true,
-        vacuna: this.vacunaSelected._id,
-        codigo: this.dosisSeleccionada.esquema.codigo,
-        sort: 'codigo'
-      });
-    }
-  */
+
   closeSidebar() {
     this.showSidebar = false;
   }
@@ -151,8 +127,6 @@ export class LoteComponent implements OnInit {
     this.dosisSeleccionada = dosis;
     this.esquemaDosis = dosis.esquema;
     this.esquemaVacunas = dosis.vacuna;
-    this.mostrarCondiciones = true;
-    // this.loadEsquemas();
   }
 
   cerrar() {
@@ -172,26 +146,7 @@ export class LoteComponent implements OnInit {
     this.dosisSelected.nombre = null;
     this.dosisSelected.esquema = null;
   }
-  /*
-    mostrarCondicion() {
-      this.mostrarCondiciones = true;
-    }
 
-    cerrarCondicion(cerrar) {
-      this.mostrarCondiciones = cerrar;
-    }
-
-    cargarCondiciones(codigo, nombre) {
-      this.esquemas$ = this.vacunasService.getNomivacEsquemas({
-        habilitado: true,
-        vacuna: this.vacunaSelected._id,
-        codigo: codigo,
-        nombre: nombre,
-        sort: 'codigo'
-      });
-      this.mostrarCondiciones = true;
-    }
-  */
   guardarLote() {
     this.seEncuentra = false;
     this.lotes$.subscribe(lotes => {
