@@ -100,7 +100,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
     };
-
+    public prestacionesTotales;
     public registrosTotales = {
         procedimiento: [],
         hallazgo: [],
@@ -262,6 +262,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
 
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+            this.prestacionesTotales = prestaciones;
             const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             this.prestaciones = groupBy(validadas).map(p => {
                 if (Array.isArray(p)) {
@@ -328,6 +329,14 @@ export class HudsBusquedaComponent implements AfterContentInit {
             });
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
+
+                solicitudes.forEach(s => this.prestacionesTotales.find(p => {
+                    if (s.idPrestacion === p.solicitud.prestacionOrigen) {
+                        s['idPrestacionSolicitud'] = p.id;
+                        s['estadoActual'] = p.estadoActual;
+                    }
+
+                }));
                 this.solicitudes = solicitudes;
                 this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origen: 'top' }).subscribe((solicitudesTOP) => {
                     this.solicitudesTOP = solicitudesTOP;
@@ -339,6 +348,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
+
         this.solicitudesMezcladas.sort((e1, e2) => {
             let fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
             let fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;

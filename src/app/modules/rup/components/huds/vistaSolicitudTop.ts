@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class VistaSolicitudTopComponent implements OnInit {
 
     constructor(
         public servicioTurnos: TurnoService,
+        private router: Router
     ) { }
 
     ngOnInit() {
@@ -35,6 +37,11 @@ export class VistaSolicitudTopComponent implements OnInit {
             });
 
         }
+    }
+
+    goto(id) {
+
+        this.router.navigate(['rup/ejecucion', id]);
     }
 
 }

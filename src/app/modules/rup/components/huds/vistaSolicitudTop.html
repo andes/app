@@ -51,6 +51,9 @@
                         <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos
                             adjuntos)</small>
                         <historial-solicitud [prestacion]="registro" [turno]='turno'></historial-solicitud>
+                        <plex-button *ngIf="estado==='validada'" type="link" size="sm" (click)="goto(registro.id)">
+                            Link Prestacion
+                        </plex-button>
                     </div>
                 </div>
             </div>

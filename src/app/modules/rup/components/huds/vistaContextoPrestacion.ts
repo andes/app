@@ -5,6 +5,7 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { HUDSService } from '../../services/huds.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'vista-contexto-prestacion',
     templateUrl: 'vistaContextoPrestacion.html',
@@ -34,7 +35,8 @@ export class VistaContextoPrestacionComponent implements OnInit {
 
 
     constructor(public _prestacionesService: PrestacionesService,
-        public huds: HUDSService) { }
+        public huds: HUDSService,
+        private router: Router) { }
 
     ngOnInit() {
 
@@ -55,6 +57,9 @@ export class VistaContextoPrestacionComponent implements OnInit {
     getPrestacion() {
         let tipo = 'rup';
         this.huds.toogle(this.prestacion, tipo);
+    }
+    goto() {
+        this.router.navigate(['rup/ejecucion', this._registro.idPrestacionSolicitud]);
     }
 
 
