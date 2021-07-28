@@ -1,3 +1,19 @@
+# [5.57.0](https://github.com/andes/app/compare/v5.56.0...v5.57.0) (2021-07-28)
+
+
+### Bug Fixes
+
+* **citas:** corrige error de filtros ([#2383](https://github.com/andes/app/issues/2383)) ([a224e61](https://github.com/andes/app/commit/a224e61ed06d428b5b84c010b2cb39174c32577a))
+* **EP:** visualizar ficha en huds de rup ([#2377](https://github.com/andes/app/issues/2377)) ([3c704b9](https://github.com/andes/app/commit/3c704b99a2ecc5f82b2c2923c78867a070aae562))
+
+
+### Features
+
+* **epidemiologia:** nuevo regex idPcr ([#2387](https://github.com/andes/app/issues/2387)) ([50154da](https://github.com/andes/app/commit/50154dab85119a1c499d96b69e83e829b79e9458))
+* **pacs:** mapa de agendas con colores ([#2292](https://github.com/andes/app/issues/2292)) ([df3ff7a](https://github.com/andes/app/commit/df3ff7ac9ea6fca97012e9a9aa2e71cb7b39d6d2))
+* **PER-32:** agregar filtros en modulo perinatal ([#2373](https://github.com/andes/app/issues/2373)) ([0f730ad](https://github.com/andes/app/commit/0f730ad712fd553fe6f8837b7dda59f1158660d4))
+* **tm:** firma de profesional  ([#2363](https://github.com/andes/app/issues/2363)) ([fde3953](https://github.com/andes/app/commit/fde3953aa196e2470b4532b7cc30640a702b2bfe))
+
 # [5.56.0](https://github.com/andes/app/compare/v5.55.0...v5.56.0) (2021-07-21)
 
 
