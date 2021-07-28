@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
-import { PrestacionesService } from '../../services/prestaciones.service';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { gtag } from '../../../../shared/services/analytics.service';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
 import { HUDSService } from '../../services/huds.service';
-import { Router } from '@angular/router';
+import { PrestacionesService } from '../../services/prestaciones.service';
 @Component({
     selector: 'vista-contexto-prestacion',
     templateUrl: 'vistaContextoPrestacion.html',
@@ -30,13 +29,14 @@ export class VistaContextoPrestacionComponent implements OnInit {
         return this._prestacion;
     }
 
-    _registro: IPrestacionRegistro;
+    _registro;
     _prestacion: IPrestacion;
 
 
-    constructor(public _prestacionesService: PrestacionesService,
-        public huds: HUDSService,
-        private router: Router) { }
+    constructor(
+        public _prestacionesService: PrestacionesService,
+        public huds: HUDSService
+    ) { }
 
     ngOnInit() {
 
@@ -47,7 +47,7 @@ export class VistaContextoPrestacionComponent implements OnInit {
     }
 
     emitTabs(registro, tipo, index: number) {
-        let registroAux = this.todoRegistro.find(r => r.evoluciones.some(e => e.idRegistro === registro.id));
+        const registroAux = this.todoRegistro.find(r => r.evoluciones.some(e => e.idRegistro === registro.id));
         registroAux.class = getSemanticClass(registroAux.concepto, false);
         gtag('huds-open', tipo, registroAux.concepto.term, index);
         this.huds.toogle(registroAux, tipo);
@@ -55,12 +55,8 @@ export class VistaContextoPrestacionComponent implements OnInit {
     }
 
     getPrestacion() {
-        let tipo = 'rup';
+        const tipo = 'rup';
         this.huds.toogle(this.prestacion, tipo);
     }
-    goto() {
-        this.router.navigate(['rup/ejecucion', this._registro.idPrestacionSolicitud]);
-    }
-
 
 }

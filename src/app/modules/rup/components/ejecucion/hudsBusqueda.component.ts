@@ -330,13 +330,13 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
 
-                solicitudes.forEach(s => this.prestacionesTotales.find(p => {
-                    if (s.idPrestacion === p.solicitud.prestacionOrigen) {
-                        s['idPrestacionSolicitud'] = p.id;
-                        s['estadoActual'] = p.estadoActual;
+                solicitudes.forEach(solicitud => {
+                    const prestacion = this.prestacionesTotales.find(p => solicitud.idPrestacion === p.solicitud.prestacionOrigen);
+                    if (prestacion) {
+                        solicitud['dataPrestacion'] = prestacion;
+                        solicitud['estadoActual'] = prestacion.estadoActual;
                     }
-
-                }));
+                });
                 this.solicitudes = solicitudes;
                 this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origen: 'top' }).subscribe((solicitudesTOP) => {
                     this.solicitudesTOP = solicitudesTOP;

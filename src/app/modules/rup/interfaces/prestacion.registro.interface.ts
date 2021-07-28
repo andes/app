@@ -11,7 +11,7 @@ export class IRegistroPrivacy {
 export class IPrestacionRegistro {
     id: string;
     idPrestacion: string;
-    idPrestacionSolicitud: string;
+
     elementoRUP: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
     // Ejemplo: 'Prescripción de novalgina'
