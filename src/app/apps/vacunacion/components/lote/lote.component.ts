@@ -22,6 +22,7 @@ export class LoteComponent implements OnInit {
   public seEncuentra = false;
   public esquemaDosis;
   public esquemaVacunas;
+  public mostrarCondiciones = {};
 
   public esquemaNuevo = [
     {
@@ -34,11 +35,11 @@ export class LoteComponent implements OnInit {
   public dosisNombre = [
     {
       id: 1,
-      nombre: '1ra Dosis'
+      dosis: '1ra Dosis'
     },
     {
       id: 2,
-      nombre: '2da Dosis'
+      dosis: '2da Dosis'
     }
   ];
 
@@ -53,7 +54,7 @@ export class LoteComponent implements OnInit {
   public dosisSelected =
     {
       codigo: null,
-      nombre: '',
+      nombre: null,
       vacuna: null,
       esquema: null,
       habilitado: true
@@ -127,6 +128,11 @@ export class LoteComponent implements OnInit {
     this.dosisSeleccionada = dosis;
     this.esquemaDosis = dosis.esquema;
     this.esquemaVacunas = dosis.vacuna;
+    if (this.mostrarCondiciones[dosis._id]) {
+      this.mostrarCondiciones[dosis._id] = false;
+    } else {
+      this.mostrarCondiciones[dosis._id] = true;
+    }
   }
 
   cerrar() {
@@ -165,11 +171,13 @@ export class LoteComponent implements OnInit {
   }
 
   guardarDosis() {
+    this.dosisSelected.nombre = this.dosisSelected.nombre.dosis;
     this.vacunasService.guardarNomivacDosis(this.dosisSelected).subscribe(resultado => {
       if (resultado) {
         this.plex.toast('success', 'Dosis creada con éxito.');
         this.cerrar();
       }
     });
+
   }
 }

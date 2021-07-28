@@ -30,8 +30,8 @@
 			</plex-title>
 			<plex-list>
 				<plex-item *ngFor="let lote of lotes$ | async">
-					<plex-label titulo="Codigo" subtitulo="{{lote.codigo}}" size="lg"></plex-label>
-					<plex-label titulo="Descripcion" subtitulo="{{lote.descripcion}}" size="lg"></plex-label>
+					<plex-label titulo="Código" subtitulo="{{lote.codigo}}" size="md"></plex-label>
+					<plex-label titulo="Descripción" subtitulo="{{lote.descripcion}}" size="md"></plex-label>
 				</plex-item>
 			</plex-list>
 			<br>
@@ -46,14 +46,18 @@
 						<plex-panel>
 							<section plex-accordion-title justify>
 								<div class="w-50">
-									<plex-label icon="pipeta" type="info" case="capitalize" size="lg" titulo="Codigo"
+									<plex-label icon="pipeta" type="info" case="capitalize" size="md" titulo="Código"
 												subtitulo="{{dosis.codigo}}"></plex-label>
 								</div>
 								<div class="w-50">
-									<plex-label size="lg" titulo="Nombre" subtitulo="{{dosis.nombre}}"></plex-label>
+									<plex-label size="md" titulo="Nombre" subtitulo="{{dosis.nombre}}"></plex-label>
 								</div>
-								<div>
+								<div *ngIf="!mostrarCondiciones[dosis._id]">
 									<plex-button type="info" size="sm" icon="pico-abajo" class="ml-2">
+									</plex-button>
+								</div>
+								<div *ngIf="mostrarCondiciones[dosis._id]">
+									<plex-button type="info" size="sm" icon="pico-arriba" class="ml-2">
 									</plex-button>
 								</div>
 							</section>
@@ -80,7 +84,7 @@
 									  [(ngModel)]="dosisSelected.codigo" [required]="true"
 									  placeholder="Ingrese codigo de la dosis">
 							</plex-int>
-							<plex-select name="nombreDosis" label="Seleccione nombre/grupo" labelField="nombre"
+							<plex-select name="nombreDosis" label="Seleccione nombre/grupo" labelField="dosis"
 										 [data]="dosisNombre" [(ngModel)]="dosisSelected.nombre" [required]="true">
 							</plex-select>
 						</plex-grid>

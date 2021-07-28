@@ -1,7 +1,7 @@
 <ng-container *ngIf="!mostrarCondiciones">
     <plex-list>
         <plex-item>
-            <plex-label titulo="Codigo" subtitulo="{{esquema.codigo}}" size="lg">
+            <plex-label titulo="Código" subtitulo="{{esquema.codigo}}" size="md">
             </plex-label>
             <plex-badge size="sm" type="info">{{esquema.nombre}}</plex-badge>
             <span>
@@ -14,7 +14,7 @@
 </ng-container>
 
 <ng-container *ngIf="mostrarCondiciones">
-    <plex-title titulo="Condiciones" size="md">
+    <plex-title titulo="Condiciones" size="sm">
         <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrarCondicion()">
         </plex-button>
     </plex-title>
