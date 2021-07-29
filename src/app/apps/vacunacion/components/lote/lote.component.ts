@@ -24,14 +24,6 @@ export class LoteComponent implements OnInit {
   public esquemaVacunas;
   public mostrarCondiciones = {};
 
-  public esquemaNuevo = [
-    {
-      id: 'id',
-      codigo: 'codigo',
-      nombre: 'nombre'
-    }
-  ];
-
   public dosisNombre = [
     {
       id: 1,
