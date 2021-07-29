@@ -38,7 +38,9 @@
 
         <plex-table [columns]="columns" #table="plTable" [offset]="showSidebar ? 203 : 131" (scroll)="onScroll()">
             <plex-title titulo="Listado de pacientes" size="sm">
-                <plex-table-columns>
+                <plex-button size="sm" type="info" label="Descargar" [disabled]="disableDescargar"
+                             (click)="descargarListado()"></plex-button>
+                <plex-table-columns class="pr-2">
                 </plex-table-columns>
             </plex-title>
             <tr *ngFor="let carnet of (listado$| plSort:table| async)" (click)="showInSidebar(carnet)"
