@@ -148,7 +148,8 @@ export class CambiarCamaComponent implements OnInit {
         }
         if (this.cambiarUO) {
             camaOcupada['extras'] = {
-                unidadOrganizativaOrigen: camaActual.unidadOrganizativa
+                unidadOrganizativaOrigen: camaActual.unidadOrganizativa,
+                idMovimiento: idMov
             };
         }
         return forkJoin(
