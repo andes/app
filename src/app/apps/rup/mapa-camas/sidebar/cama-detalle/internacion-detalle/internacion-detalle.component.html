@@ -13,13 +13,12 @@
         <ng-container *ngIf="mostrar === 'ingreso'">
             <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" title="editar ingreso" icon="pencil"
-                             type="warning" size="sm" (click)="toggleEdit()">
+                             type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
-                <ng-container
-                              *ngIf="(prestacion$ | async)?.estadoActual?.tipo !=='validada' && hayMovimientosAt$ | async">
-                    <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
-                                   tooltip="Deshacer Internacion" [items]="itemsDeshacer">
-                    </plex-dropdown>
+                <ng-container *ngIf="anular$ | async">
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                 (click)="onAnularInternacion()">
+                    </plex-button>
                 </ng-container>
             </app-informe-ingreso>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
