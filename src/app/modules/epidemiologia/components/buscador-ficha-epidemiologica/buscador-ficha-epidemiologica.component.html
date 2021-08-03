@@ -1,4 +1,4 @@
-<plex-layout [main]="(showFicha || pacienteSelected) && (!fichaHistorial) && (!codigoSISAEdit) ? 12 : 8">
+<plex-layout *ngIf="!showFicha" [main]="(pacienteSelected) && (!fichaHistorial) && (!codigoSISAEdit) ? 12 : 8">
     <plex-layout-main *ngIf="!showFicha; else elseFicha">
         <plex-title titulo="Fichas epidemiologicas">
             <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()"
@@ -130,22 +130,20 @@
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
-<ng-template #elseFicha>
-    <plex-layout main="8" resizable="true" min="1" max="4" >
-        <plex-layout-main>
-            <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
-                                           (volver)="volver()" [fichaName]="showFicha">
-            </app-ficha-epidemiologica-crud>
-        </plex-layout-main>
-        <plex-layout-sidebar type="invert">
-            <ng-container *ngIf="paciente">
-                <plex-title size="sm" titulo="Datos del paciente">
-                    <plex-button *ngIf="permisoHuds" size="sm" type="info" (click)="verHuds(paciente.id)">
-                        VER HUDS
-                    </plex-button>
-                </plex-title>
-                <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-            </ng-container>
-        </plex-layout-sidebar>
-    </plex-layout>
-</ng-template>
+<plex-layout main="8" *ngIf="showFicha" resizable="true" min="1" max="4" >
+    <plex-layout-main>
+        <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
+                                        (volver)="volver()" [fichaName]="showFicha">
+        </app-ficha-epidemiologica-crud>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <ng-container *ngIf="paciente">
+            <plex-title size="sm" titulo="Datos del paciente">
+                <plex-button *ngIf="permisoHuds" size="sm" type="info" (click)="verHuds(paciente.id)">
+                    VER HUDS
+                </plex-button>
+            </plex-title>
+            <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
