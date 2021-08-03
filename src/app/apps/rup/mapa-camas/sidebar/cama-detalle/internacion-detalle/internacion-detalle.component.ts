@@ -116,7 +116,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         ]).pipe(
             auditTime(1),
             map(([prestacion, movimientos, vista]) => {
-                debugger;
                 return prestacion?.estadoActual.tipo !== 'validada' && movimientos && vista === 'listado-internacion';
             })
         );
