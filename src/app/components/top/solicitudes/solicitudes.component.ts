@@ -117,7 +117,7 @@ export class SolicitudesComponent implements OnInit {
     ngOnInit() {
         if (!this.auth.getPermissions('solicitudes:?').length) {
             this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
-        } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*') {
+        } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*' && !this.auth.getPermissions('solicitudes:tipoPrestacion:?').length) {
             this.router.navigate(['/solicitudes/asignadas']);
         }
 
@@ -645,8 +645,8 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional ?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
-                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional ?.id === this.auth.profesional && prestacion.paciente) {
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
                             this.setRouteToParams(['paciente', prestacion.paciente.id]);
