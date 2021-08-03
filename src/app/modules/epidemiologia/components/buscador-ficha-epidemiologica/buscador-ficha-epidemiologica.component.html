@@ -1,5 +1,5 @@
 <plex-layout *ngIf="!showFicha" [main]="(pacienteSelected) && (!fichaHistorial) && (!codigoSISAEdit) ? 12 : 8">
-    <plex-layout-main *ngIf="!showFicha; else elseFicha">
+    <plex-layout-main>
         <plex-title titulo="Fichas epidemiologicas">
             <plex-button type="success" size="md" label="Buscar Fichas" (click)="searchFichas()"
                          [disabled]="inProgress">
@@ -16,9 +16,11 @@
                 </div>
             </plex-detail>
             <plex-wrapper span="{{ pacienteSelected ? '2' : 'null' }}" (change)="changeCollapse($event)">
-                <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" [max]="fechaHasta">
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
+                               [max]="fechaHasta">
                 </plex-datetime>
-                <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta" [min]="fechaDesde">
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                               [min]="fechaDesde">
                 </plex-datetime>
                 <plex-select grow="1" [(ngModel)]="typeFicha" label="Tipo de ficha" [data]="dataType$ | async"
                              labelField="name" name="selectType">
@@ -44,6 +46,9 @@
                     <plex-select grow="1" name="tipoConfirmacion" [data]="tipoConfirmacion" label="Tipo Confirmación"
                                  [(ngModel)]="idTipoConfirmacion" labelField="nombre">
                     </plex-select>
+                    <plex-select grow="1" name="clasificacionFinal" [data]="clasificacionFinal"
+                                 label="Clasificación Final" [(ngModel)]="idClasificacionFinal" labelField="nombre">
+                    </plex-select>
                 </div>
             </plex-wrapper>
         </plex-grid>
@@ -58,6 +63,7 @@
                 <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>
+                <td *plTableCol="'pcr'">{{ficha.idPcr }}</td>
                 <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
                     <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" size="sm" tooltip="Editar"
@@ -130,10 +136,10 @@
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
-<plex-layout main="8" *ngIf="showFicha" resizable="true" min="1" max="4" >
+<plex-layout main="8" *ngIf="showFicha" resizable="true" min="1" max="4">
     <plex-layout-main>
         <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
-                                        (volver)="volver()" [fichaName]="showFicha">
+                                       (volver)="volver()" [fichaName]="showFicha">
         </app-ficha-epidemiologica-crud>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
