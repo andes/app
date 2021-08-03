@@ -64,6 +64,8 @@ import { ListadoInternacionCapasComponent } from './views/listado-internacion-ca
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { DispositivoService } from 'src/app/services/dispositivo/dispositivo.service';
+import { SeleccionDispositivoComponent } from './views/seleccion-dispositivo/seleccion-dispositivo.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -105,7 +107,8 @@ export const INTERNACION_COMPONENTS = [
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,
-    TimelineMapaCamasComponent
+    TimelineMapaCamasComponent,
+    SeleccionDispositivoComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -116,6 +119,7 @@ export const INTERNACION_PROVIDERS = [
     ScrollDispatcher,
     IntegridadService,
     PermisosMapaCamasService,
+    DispositivoService
 ];
 
 @NgModule({

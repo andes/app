@@ -14,7 +14,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-
+import { DispositivoService } from '../../../../../services/dispositivo/dispositivo.service';
 
 @Component({
     selector: 'app-cama-detalle',
@@ -58,7 +58,6 @@ export class CamaDetalleComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
     public editNota = false;
-
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
@@ -91,8 +90,7 @@ export class CamaDetalleComponent implements OnInit {
         public permisosMapaCamasService: PermisosMapaCamasService,
         private turneroService: TurneroService,
         private motivoAccesoService: ModalMotivoAccesoHudsService
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
@@ -183,6 +181,9 @@ export class CamaDetalleComponent implements OnInit {
         }
     }
 
+    onUsarRespirador() {
+        this.accionCama.emit({ accion: 'seleccionar-dispositivo' });
+    }
 
     onNuevoRegistrio() {
         this.accionCama.emit({ accion: 'nuevo-registro' });

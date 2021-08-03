@@ -1,0 +1,9 @@
+<plex-title size="md" titulo="Uso de respirador">
+    <plex-button label="" tooltip="Guardar" icon="check" type="success" size="sm" [disabled]="!dispositivo?._id"
+                 (click)="onSelect($event)">
+    </plex-button>
+    <ng-content></ng-content>
+</plex-title>
+<plex-select [(ngModel)]="dispositivo" label="Dispositivo" name="dispositivo" placeholder="Seleccione un dispositivo"
+             idField="_id" labelField="descripcion" [data]="tipoDispositivos" grow="full">
+</plex-select>

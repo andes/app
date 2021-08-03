@@ -240,6 +240,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/${this.mapaCamasService.capa}/lista-espera`]);
     }
 
+    afterSeleccionarDispositivo(dispositivo) {
+        // TODO: realizar patch correspondiente
+        this.volverADetalle();
+    }
+
     trackByFn(item: ISnapshot) {
         return item.idCama;
     }
