@@ -28,9 +28,6 @@
                     <plex-radio label="Factor de riesgo asociado a vacunación contra COVID-19"
                                 [required]="!ciudadano.factorRiesgoEdad" name="plex-morbilidades" [data]="morbilidades"
                                 [(ngModel)]="ciudadano.morbilidades" [multiple]="true"></plex-radio>
-                    <plex-label *ngIf="!ciudadano.factorRiesgoEdad"
-                                titulo="(*) Requiere una indicación médica que debe contener el detalle de las condiciones mórbidas consideradas como factor de riesgo">
-                    </plex-label>
                 </div>
             </ng-container>
             <ng-container *ngIf="ciudadano.grupo?.nombre !== 'discapacidad'">
