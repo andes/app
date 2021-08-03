@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy, ContentChild, AfterContentInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { PlexOptionsComponent } from '@andes/plex';
+import { Plex, PlexOptionsComponent } from '@andes/plex';
+import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { auditTime, first, map, tap } from 'rxjs/operators';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, Subscription, combineLatest } from 'rxjs';
+import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Auth } from '@andes/auth';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
-import { map, tap } from 'rxjs/operators';
-import { InternacionListadoComponent } from '../../../views/listado-internacion/listado-internacion.component';
-
+import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -17,7 +17,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
 
-    prestacion$: Observable<IPrestacion>;
+    public prestacion$: Observable<IPrestacion>;
 
     view$ = this.mapaCamasService.view;
 
@@ -29,6 +29,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public editar = false;
     public existeEgreso = false;
     public mostrar;
+    public hayMovimientosAt$: Observable<Boolean>;
+    public anular$: Observable<Boolean>;
+
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
@@ -39,7 +42,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     constructor(
         private mapaCamasService: MapaCamasService,
-        public permisosMapaCamasService: PermisosMapaCamasService
+        public permisosMapaCamasService: PermisosMapaCamasService,
+        private mapaCamasHTTP: MapaCamasHTTP,
+        private plex: Plex,
+        private prestacionesService: PrestacionesService,
+        private listadoInternacionService: ListadoInternacionService
     ) { }
 
     ngOnDestroy() {
@@ -92,6 +99,31 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                 this.accion.emit(null);
             }
         });
+
+        this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
+            map((historial) => {
+                const tieneIDMov = historial.every(
+                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
+                );
+                return historial.length > 0 && tieneIDMov;
+            })
+        );
+
+        this.anular$ = combineLatest([
+            this.prestacion$,
+            this.hayMovimientosAt$,
+            this.mapaCamasService.view
+        ]).pipe(
+            auditTime(1),
+            map(([prestacion, movimientos, vista]) => {
+                debugger;
+                return prestacion?.estadoActual.tipo !== 'validada' && movimientos && vista === 'listado-internacion';
+            })
+        );
+    }
+
+    onAnularInternacion() {
+        this.deshacerInternacion(true);
     }
 
     onActiveOption(opcion) {
@@ -119,5 +151,24 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     toggleEdit() {
         this.editar = !this.editar;
         this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+    }
+
+
+    deshacerInternacion(completo: boolean) {
+        this.prestacion$.pipe(first()).subscribe(prestacion => {
+            this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
+                if (resultado) {
+                    this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, prestacion.id, completo).subscribe((response) => {
+                        if (response.status && this.mapaCamasService.capa === 'estadistica') {
+                            const prestacionAux = { id: prestacion.id, solicitud: { turno: null } };
+                            this.prestacionesService.invalidarPrestacion(prestacionAux).subscribe();
+                        }
+                        this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
+                        this.mapaCamasService.selectPrestacion(null);
+                        this.listadoInternacionService.refresh.next(true);
+                    });
+                }
+            });
+        });
     }
 }
