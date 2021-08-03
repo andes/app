@@ -127,5 +127,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     }
 
 
+    onExploracionClick() {
+        this.router.navigate(['huds', 'timeline', this.paciente.id]);
+    }
+
+
 
 }

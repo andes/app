@@ -39,7 +39,8 @@ import { RUPLibModule } from './rup-lib.module';
         InfiniteScrollModule,
         TOPLibModule,
         NgDragDropModule,
-        RUPLibModule
+        RUPLibModule,
+        SharedModule
 
     ],
     declarations: [
