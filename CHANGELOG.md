@@ -1,3 +1,18 @@
+# [5.58.0](https://github.com/andes/app/compare/v5.57.0...v5.58.0) (2021-08-04)
+
+
+### Bug Fixes
+
+* **inscripcion-vacunas:** se quita requisito de certificado ([#2393](https://github.com/andes/app/issues/2393)) ([81fdfd8](https://github.com/andes/app/commit/81fdfd8efb608b7374b30151246a6042e0c63639))
+* **mapa-camas:** se agrega idMovimiento al hacer un pase de servicio ([#2391](https://github.com/andes/app/issues/2391)) ([25d0878](https://github.com/andes/app/commit/25d08788d5dcebaefbbdcdda5a7f87e46b08f0ca))
+
+
+### Features
+
+* **EP:** buscador fecha tipo date ([#2392](https://github.com/andes/app/issues/2392)) ([ad89d5b](https://github.com/andes/app/commit/ad89d5baa9aaf4ee7c33d10c3648dc0c1e64e20a))
+* **huds:** timeline ([#2372](https://github.com/andes/app/issues/2372)) ([32fbb77](https://github.com/andes/app/commit/32fbb7758454a26c4e90a81691caa4cb83153fae))
+* **mapa-camas:** listado-internación, deshacer egreso ([#2384](https://github.com/andes/app/issues/2384)) ([8eefa30](https://github.com/andes/app/commit/8eefa304cbbd9bfe70d1690b2d1a634e938d5436))
+
 # [5.57.0](https://github.com/andes/app/compare/v5.56.0...v5.57.0) (2021-07-28)
 
 
