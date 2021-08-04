@@ -6,15 +6,15 @@
 let _package = require('../../package.json');
 
 export const environment = {
-  production: false,
-  environmentName: 'development',
-  API: '//localhost:3002/api',
-  WS: '//localhost:3002', // para websocket
-  APIStatusCheck: false,
-  version: _package.version,
-  MAPS_KEY: '',
-  HOTJAR_KEY: '',
-  ANALYTICS_KEY: '',
-  PASSWORD_RECOVER: '',
-  SITE_KEY: ''
+    production: false,
+    environmentName: 'development',
+    API: '//localhost:3002/api',
+    WS: '//localhost:3002', // para websocket
+    APIStatusCheck: false,
+    version: _package.version,
+    MAPS_KEY: '',
+    HOTJAR_KEY: '',
+    ANALYTICS_KEY: '',
+    PASSWORD_RECOVER: '',
+    SITE_KEY: ''
 };

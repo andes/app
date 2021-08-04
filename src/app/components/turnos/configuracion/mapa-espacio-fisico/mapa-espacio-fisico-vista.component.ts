@@ -42,11 +42,11 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
 
 
     constructor(public plex: Plex,
-        public espacioFisicoService: EspacioFisicoService,
-        public organizacionService: OrganizacionService,
-        public servicioAgenda: AgendaService,
-        public auth: Auth,
-        private router: Router) { }
+                public espacioFisicoService: EspacioFisicoService,
+                public organizacionService: OrganizacionService,
+                public servicioAgenda: AgendaService,
+                public auth: Auth,
+                private router: Router) { }
 
     ngOnInit() {
         this.permisoEdicion = this.auth.getPermissions('espaciosFisicos:?').length > 0 ? this.auth.getPermissions('espaciosFisicos:?')[0] === '*' : false;

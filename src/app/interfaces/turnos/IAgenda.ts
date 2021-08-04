@@ -10,24 +10,24 @@ export interface IAgenda {
     tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [{
-        id: String,
-        nombre: String,
-        apellido: String
+        id: String;
+        nombre: String;
+        apellido: String;
     }];
     organizacion: {
-        id: String,
-        nombre: String
+        id: String;
+        nombre: String;
     };
     espacioFisico: {
-        id: String,
-        nombre: String,
+        id: String;
+        nombre: String;
         servicio: {
-            id: String,
-            nombre: String
+            id: String;
+            nombre: String;
         };
         sector: {
-            id: String,
-            nombre: String
+            id: String;
+            nombre: String;
         };
     };
     otroEspacioFisico: IEspacioFisico;
@@ -49,9 +49,9 @@ export interface IAgenda {
     dinamica: Boolean;
     cupo: Number;
     avisos: [{
-        profenionalId: String,
-        estado: String,
-        fecha: Date
+        profenionalId: String;
+        estado: String;
+        fecha: Date;
     }];
     enviarSms: String;
     condicionLlave: boolean;

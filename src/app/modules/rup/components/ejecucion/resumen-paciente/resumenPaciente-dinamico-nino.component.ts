@@ -20,10 +20,10 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public registro = null;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
-        private servicioVacunas: VacunasService,
-        private prestacionesService: PrestacionesService,
-        public elementosRUPService: ElementosRUPService,
-        private plex: Plex) { }
+                private servicioVacunas: VacunasService,
+                private prestacionesService: PrestacionesService,
+                public elementosRUPService: ElementosRUPService,
+                private plex: Plex) { }
 
     ngOnInit() {
         this.loadPrestaciones();

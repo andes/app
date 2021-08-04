@@ -18,7 +18,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     public showBotonExportaXLS = false;
     public showBotonImprimir = false;
     public opcionesOrganizacion: any = [];
-    public opcionesReportes: { id: number, nombre: string }[] = [];
+    public opcionesReportes: { id: number; nombre: string }[] = [];
     public parametros = {};
     public organizacion;
     public tipoReportes;
@@ -28,8 +28,8 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
     // Variables "ResumenDiarioMensual"
     public showResumenDiarioMensual = false;
-    public opcionesMes: { id: number, nombre: string }[] = [];
-    public opcionesAnio: { id: number, nombre: string }[] = [];
+    public opcionesMes: { id: number; nombre: string }[] = [];
+    public opcionesAnio: { id: number; nombre: string }[] = [];
     public anio;
     public mes;
     public divirTurnos = false;
@@ -249,7 +249,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     }
 
     public toExcel() {
-        let data: Array<{ title: string, table: any }>;
+        let data: Array<{ title: string; table: any }>;
 
         if (this.showResumenDiarioMensual) {
             data = this.reporte.map(item => {
@@ -266,7 +266,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 title: this.parametros['tipoReportes'],
                 table: document.getElementById(this.parametros['tipoReportes']),
             }],
-                `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
+            `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
         }
     }
 

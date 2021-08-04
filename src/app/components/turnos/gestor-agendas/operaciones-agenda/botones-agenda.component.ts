@@ -25,7 +25,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     private _agendasSeleccionadas: Array<any>;
 
-    @Input('agendasSeleccionadas')
+    @Input()
     set agendasSeleccionadas(value: any) {
         this._agendasSeleccionadas = value;
         this.cantidadSeleccionadas = this._agendasSeleccionadas.length;
@@ -37,7 +37,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     private _turnosSuspendidos: Array<any>;
 
-    @Input('turnosSuspendidos')
+    @Input()
     set turnosSuspendidos(value: any) {
         this._turnosSuspendidos = value;
     }

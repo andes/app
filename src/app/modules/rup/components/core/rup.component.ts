@@ -56,7 +56,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     public mensaje: any = {};
 
     private rulesEngine: Engine;
-    private rulesEvent = new Subject<{ type: string, params: any }>();
+    private rulesEvent = new Subject<{ type: string; params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
 
     /**

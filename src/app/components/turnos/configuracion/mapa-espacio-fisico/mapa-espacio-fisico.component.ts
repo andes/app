@@ -203,7 +203,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             fin = this.aproximar(moment(this.agendaSeleccionada.horaFin), true);
         }
         let span = this.calcFrame(start, end);
-        let unit = parseInt(this.unit.toString(), 0);
+        let unit = parseInt(this.unit.toString(), 10);
         for (let i = 0; i < span; i++) {
             let it: any = {
                 colspan: 1,
@@ -258,7 +258,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                 let _end = end.endOf('hour');
                 return _end.diff(_start, 'hours');
             default:
-                let unit = parseInt(this.unit.toString(), 0);
+                let unit = parseInt(this.unit.toString(), 10);
                 return (end.diff(start) / 60000) / unit;
         }
     }

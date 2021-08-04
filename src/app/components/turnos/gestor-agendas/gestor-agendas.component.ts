@@ -152,15 +152,21 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
 
             if (this.parametros.idTipoPrestacion) {
-                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => { this.prestaciones = rta; });
+                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => {
+                    this.prestaciones = rta;
+                });
             }
             if (this.parametros.espacioFisico || this.parametros.idProfesional || this.parametros.estado) {
                 this.mostrarMasOpciones = true;
                 if (this.parametros.idProfesional) {
-                    this.serviceProfesional.get({ id: this.parametros.idProfesional }).subscribe(rta => { this.profesionales = rta[0]; });
+                    this.serviceProfesional.get({ id: this.parametros.idProfesional }).subscribe(rta => {
+                        this.profesionales = rta[0];
+                    });
                 }
                 if (this.parametros.espacioFisico) {
-                    this.servicioEspacioFisico.getById(this.parametros.espacioFisico).subscribe(rta => { this.modelo.espacioFisico = rta; });
+                    this.servicioEspacioFisico.getById(this.parametros.espacioFisico).subscribe(rta => {
+                        this.modelo.espacioFisico = rta;
+                    });
                 }
                 this.estado = this.estadosAgendaArray.find(e => e.id === this.queryParams.estado);
             }

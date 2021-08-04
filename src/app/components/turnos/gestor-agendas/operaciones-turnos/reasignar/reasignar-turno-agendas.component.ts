@@ -32,7 +32,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     // Agenda destino
     private _agendaDestino;
-    @Input('agendaDestino')
+    @Input()
     set agendaDestino(value: any) {
         this._agendaDestino = value;
     }
@@ -41,7 +41,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _turnoSeleccionado;
-    @Input('turnoSeleccionado')
+    @Input()
     set turnoSeleccionado(value: any) {
         this._turnoSeleccionado = value;
     }
@@ -51,7 +51,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _datosAgenda;
-    @Input('datosAgenda') // IDs de agenda y bloque del turno origen
+    @Input() // IDs de agenda y bloque del turno origen
     set datosAgenda(value: any) {
         this._datosAgenda = value;
     }
@@ -66,7 +66,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     countBloques = [];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-        public serviceTurno: TurnoService, public smsService: SmsService) { }
+                public serviceTurno: TurnoService, public smsService: SmsService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -197,7 +197,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     // esta funcion se repite en suspender turno
     // TODO: aplicar buenas practicas de programacion
     enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) { return; }
+        if (!paciente.telefono) {
+            return;
+        }
         let smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,
@@ -211,12 +213,12 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
         },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
+        err => {
+            if (err) {
+                this.plex.toast('danger', 'ERROR: Servicio caído');
 
-                }
-            });
+            }
+        });
     }
 
     hayTurnosDisponibles(agenda: any) {
@@ -275,7 +277,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let bloqueTurno = this.agendaAReasignar.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
         let index;
         if (bloqueTurno) {
-            index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });
+            index = bloqueTurno.turnos.findIndex(t => {
+                return t.id === turno._id;
+            });
             if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'turnoDoble')) || (index === (bloqueTurno.turnos.length - 1))) {
                 return false;
             } else {

@@ -42,36 +42,36 @@ export class TensionSistolicaComponent extends RUPComponent implements OnInit {
             if (Edad > 17 && Edad < 110) {
                 switch (true) {
                     case (tensionSistolica <= 50):
-                        // rango coma
+                    // rango coma
                         mensaje.texto = 'Estado de Coma';
                         break;
                     case (tensionSistolica >= 60 && tensionSistolica <= 80):
-                        // rango hipotension
+                    // rango hipotension
                         mensaje.texto = 'Hipotensión';
                         break;
                     // Rengo de tension sistolica
                     case (tensionSistolica >= 110 && tensionSistolica <= 120):
-                        // rango optima
+                    // rango optima
                         mensaje.texto = 'Optima';
                         break;
                     case (tensionSistolica > 120 && tensionSistolica <= 129):
-                        // rango normal
+                    // rango normal
                         mensaje.texto = 'Normal';
                         break;
                     case (tensionSistolica >= 130 && tensionSistolica <= 139):
-                        // rango normal-alta
+                    // rango normal-alta
                         mensaje.texto = 'Normal-alta';
                         break;
                     case (tensionSistolica >= 140 && tensionSistolica <= 159):
-                        // rango hipertension arterial grado 1
+                    // rango hipertension arterial grado 1
                         mensaje.texto = 'Hipertensión arterial grado 1';
                         break;
                     case (tensionSistolica >= 160 && tensionSistolica <= 179):
-                        // rango hipertension arterial grado 2
+                    // rango hipertension arterial grado 2
                         mensaje.texto = 'Hipertensión arterial grado 2';
                         break;
                     case (tensionSistolica >= 180):
-                        // rango hipertension arterial grado 3
+                    // rango hipertension arterial grado 3
                         mensaje.texto = 'Hipertensión arterial grado 3';
                         break;
 

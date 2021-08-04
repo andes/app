@@ -22,7 +22,9 @@ export class RelacionesPacientesComponent implements OnInit {
         // Se guarda estado de las relaciones al comenzar la edición
         if (valor.relaciones) {
             this.relacionesIniciales = valor.relaciones.slice(0, valor.relaciones.length);
-            this.idPacientesRelacionados = this.relacionesIniciales.map(rel => { return { id: rel.referencia }; });
+            this.idPacientesRelacionados = this.relacionesIniciales.map(rel => {
+                return { id: rel.referencia };
+            });
         }
     }
     get paciente(): IPaciente {
@@ -183,7 +185,9 @@ export class RelacionesPacientesComponent implements OnInit {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
-            this.idPacientesRelacionados = this.paciente.relaciones.map(rel => { return { id: rel.referencia }; });
+            this.idPacientesRelacionados = this.paciente.relaciones.map(rel => {
+                return { id: rel.referencia };
+            });
             // notificamos cambios
             this.actualizar.emit({
                 relaciones: this.paciente.relaciones,

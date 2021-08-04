@@ -32,9 +32,9 @@ export class AddformTerapeuticoComponent implements OnInit {
     @Output() objNuevoMedicamento = new EventEmitter();
 
     constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
-        public servicioFormTerapeutico: FormTerapeuticoService,
-        private SNOMED: SnomedService
+                private plex: Plex, public auth: Auth,
+                public servicioFormTerapeutico: FormTerapeuticoService,
+                private SNOMED: SnomedService
     ) { }
 
 

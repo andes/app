@@ -15,7 +15,7 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 export class ClonarAgendaComponent implements OnInit {
     primerDiaMes: moment.Moment;
     ultimoDiaMes: moment.Moment;
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this._agenda = value;
     }
@@ -175,7 +175,9 @@ export class ClonarAgendaComponent implements OnInit {
                 } else {
                     // concatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
-                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
+                        let aux = this.agendasFiltradas.map(elem => {
+                            return elem.id;
+                        });
                         if (aux.indexOf(fil.id) < 0) {
                             this.agendasFiltradas = this.agendasFiltradas.concat(fil);
 
@@ -194,7 +196,9 @@ export class ClonarAgendaComponent implements OnInit {
                     }
                     dia.estado = 'noSeleccionado';
                     filtro.forEach((fil) => {
-                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
+                        let aux = this.agendasFiltradas.map(elem => {
+                            return elem.id;
+                        });
                         let indice = aux.indexOf(fil.id);
                         if (indice >= 0) {
                             this.agendasFiltradas.splice(indice, 1);
@@ -221,8 +225,14 @@ export class ClonarAgendaComponent implements OnInit {
 
                     if (agenda.profesionales && agenda.profesionales.length &&
                         this.agenda.profesionales && this.agenda.profesionales.length > 0) {
-                        if (agenda.profesionales.map(elem => { return elem.id; }).some
-                            (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                        if (agenda.profesionales.map(elem => {
+                            return elem.id;
+                        }).some
+                        (v => {
+                            return this.agenda.profesionales.map(elem => {
+                                return elem.id;
+                            }).includes(v);
+                        })) {
                             agenda.conflictoProfesional = 1;
                             dia.estado = 'conflicto';
 
@@ -272,11 +282,11 @@ export class ClonarAgendaComponent implements OnInit {
                             this.volverAlGestor.emit(true);
                         });
                     },
-                        err => {
-                            if (err) {
+                    err => {
+                        if (err) {
 
-                            }
-                        });
+                        }
+                    });
                 }
             }).catch(() => {
             });

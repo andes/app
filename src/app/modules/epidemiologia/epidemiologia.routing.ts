@@ -7,26 +7,26 @@ import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/segu
 
 
 const routes: Routes = [
-  {
-    path: 'ficha-epidemiologica',
-    component: FichaEpidemiologicaComponent
-  },
-  {
-    path: 'buscador-ficha-epidemiologica',
-    component: BuscadorFichaEpidemiologicaComponent
-  },
-  {
-    path: 'ficha-epidemiologica-contactos',
-    component: FichaEpidemiologicaContactosComponent
-  },
-  {
-    path: 'seguimiento',
-    component: SeguimientoEpidemiologiaComponent
-  },
+    {
+        path: 'ficha-epidemiologica',
+        component: FichaEpidemiologicaComponent
+    },
+    {
+        path: 'buscador-ficha-epidemiologica',
+        component: BuscadorFichaEpidemiologicaComponent
+    },
+    {
+        path: 'ficha-epidemiologica-contactos',
+        component: FichaEpidemiologicaContactosComponent
+    },
+    {
+        path: 'seguimiento',
+        component: SeguimientoEpidemiologiaComponent
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class EpidemiologiaRoutingModule { }

@@ -58,7 +58,7 @@ export class CampaniaFormComponent implements OnInit {
      */
     sexos: any[];
 
-    /*CARGA DE IMAGENES*/
+    /* CARGA DE IMAGENES*/
     @ViewChild('upload', { static: true }) uploadComponent: ElementRef;
 
     /**
@@ -90,10 +90,10 @@ export class CampaniaFormComponent implements OnInit {
      */
     formatosValidos = ['svg'];
 
-    /*FIN CARGA DE IMAGENES*/
+    /* FIN CARGA DE IMAGENES*/
 
     constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitizer: DomSanitizer,
-        private auth: Auth, private router: Router) { }
+                private auth: Auth, private router: Router) { }
 
     ngOnInit(): void {
         if (!this.auth.check('campania:crear')) {
@@ -131,9 +131,9 @@ export class CampaniaFormComponent implements OnInit {
                 this.campaniaEdit.imagen = this.imagenSvg;
                 (this.campaniaEdit.id ? this.campaniaSaludService.putCampanias(this.campaniaEdit)
                     : this.campaniaSaludService.postCampanias(this.campaniaEdit)).subscribe(res => {
-                        this.plex.info('success', 'Los datos están correctos');
-                        this.guardar.emit(res);
-                    });
+                    this.plex.info('success', 'Los datos están correctos');
+                    this.guardar.emit(res);
+                });
             }
 
         } else {
@@ -141,7 +141,7 @@ export class CampaniaFormComponent implements OnInit {
         }
     }
 
-    /*INICIO CARGA DE IMAGENES*/
+    /* INICIO CARGA DE IMAGENES*/
     changeListener($event): void {
         this.readThis($event.target);
     }
@@ -209,5 +209,5 @@ export class CampaniaFormComponent implements OnInit {
         return regExXml.test(archivo) && regExSvg.test(archivo) && cumpleTamanio;
     }
 
-    /*FIN CARGA DE IMAGENES*/
+    /* FIN CARGA DE IMAGENES*/
 }

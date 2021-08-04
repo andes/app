@@ -224,7 +224,9 @@ export class MapaCamasService {
             switchMap(([cama, ambito, capa]) => {
                 if (cama.idInternacion && capa !== 'estadistica') {
                     return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                        catchError((err) => { return of({}); })
+                        catchError((err) => {
+                            return of({});
+                        })
                     );
                 }
                 return of({});
@@ -344,7 +346,7 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
@@ -410,8 +412,12 @@ export class MapaCamasService {
                 });
             } else if (sortBy === 'fechaIngreso') {
                 snapshots = snapshots.sort((a, b) => {
-                    if (!a.fechaIngreso) { return -1; }
-                    if (!b.fechaIngreso) { return 1; }
+                    if (!a.fechaIngreso) {
+                        return -1;
+                    }
+                    if (!b.fechaIngreso) {
+                        return 1;
+                    }
                     return a.fechaIngreso.getTime() - b.fechaIngreso.getTime();
                 });
             } else if (sortBy === 'fechaMovimiento') {

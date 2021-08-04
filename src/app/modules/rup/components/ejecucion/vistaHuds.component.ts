@@ -95,7 +95,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                     fechaNacimiento: this.paciente.fechaNacimiento,
                     documento: this.paciente.documento
                 }
-            }).subscribe(() => { return true; });
+            }).subscribe(() => {
+                return true;
+            });
         }
 
     }

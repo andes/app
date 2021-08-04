@@ -15,7 +15,7 @@ export class ListarTurnosComponent implements OnInit {
 
     private _agendas;
     public desplegarOS = false;
-    @Input('agendas') // recibe un array de agendas
+    @Input() // recibe un array de agendas
     set agendas(value: any) {
         this._agendas = value;
         let turnos = [];

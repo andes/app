@@ -161,7 +161,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.view = view;
             this.capa = capa;
             if (capa === 'estadistica') {
-                if (!prestacion) { return; }
+                if (!prestacion) {
+                    return;
+                }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
 
@@ -313,14 +315,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
             this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
                 this.prestacion.id).subscribe((snapshot) => {
-                    const ultimaCama = snapshot[0];
-                    this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-                        this.listadoInternacionService.setFechaHasta(moment().toDate());
-                    });
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                const ultimaCama = snapshot[0];
+                this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.listadoInternacionService.setFechaHasta(moment().toDate());
                 });
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+            });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
         }
@@ -407,7 +409,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
-                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                datos.map(dato => {
+                    dato.nombre = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(datos);
             });
 
@@ -505,7 +509,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
-                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                datos.map(dato => {
+                    dato.nombre = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(datos);
             });
         }
@@ -539,7 +545,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             };
             this.procedimientosQuirurgicosService.get(query).subscribe((rta) => {
-                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+                rta.map(dato => {
+                    dato.nom = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(rta);
             });
 

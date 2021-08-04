@@ -22,7 +22,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
     private _agendaAReasignar: any;
 
-    @Input('agendaAReasignar')
+    @Input()
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
         this.actualizar();
@@ -241,7 +241,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
     enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) { return; }
+        if (!paciente.telefono) {
+            return;
+        }
         let smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,

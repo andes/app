@@ -70,11 +70,11 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     // Inicialización
     constructor(private pacienteService: PacienteService,
-        private paisService: PaisService,
-        private provinciaService: ProvinciaService,
-        private localidadService: LocalidadService,
-        private barrioService: BarrioService,
-        public plex: Plex, public auth: Auth) { }
+                private paisService: PaisService,
+                private provinciaService: ProvinciaService,
+                private localidadService: LocalidadService,
+                private barrioService: BarrioService,
+                public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.soloLectura = !this.auth.check('mpi:paciente:patchAndes');

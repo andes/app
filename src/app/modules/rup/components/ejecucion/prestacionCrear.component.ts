@@ -67,14 +67,14 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     constructor(private router: Router,
-        private route: ActivatedRoute,
-        private plex: Plex, public auth: Auth,
-        public servicioAgenda: AgendaService,
-        public servicioPrestacion: PrestacionesService,
-        private location: Location,
-        private osService: ObraSocialCacheService,
-        private pacienteService: PacienteService,
-        private hudsService: HUDSService) { }
+                private route: ActivatedRoute,
+                private plex: Plex, public auth: Auth,
+                public servicioAgenda: AgendaService,
+                public servicioPrestacion: PrestacionesService,
+                private location: Location,
+                private osService: ObraSocialCacheService,
+                private pacienteService: PacienteService,
+                private hudsService: HUDSService) { }
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');

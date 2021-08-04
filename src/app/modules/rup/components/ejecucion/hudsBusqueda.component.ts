@@ -517,7 +517,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.searchTerm) {
 
             this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter
-                (p => this.filtrarPorTerm(p));
+            (p => this.filtrarPorTerm(p));
         }
     }
 

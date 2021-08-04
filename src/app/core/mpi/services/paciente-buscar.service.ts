@@ -98,7 +98,9 @@ export class PacienteBuscarService {
             }),
             mergeMap((resultado: any) => {
                 // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                if (resultado) { return of(resultado); }
+                if (resultado) {
+                    return of(resultado);
+                }
 
                 // 1.3. Si no encontró el paciente escaneado, busca uno similar (suggest)
                 return this.pacienteService.match({
@@ -189,7 +191,9 @@ export class PacienteBuscarService {
                 }
                 return { pacientes: resultado, err: null };
             },
-                err => { return { pacientes: [], err: err }; }
+            err => {
+                return { pacientes: [], err: err };
+            }
             ),
         );
     }

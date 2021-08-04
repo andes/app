@@ -359,7 +359,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
 
     validarRUP() {
-        if (!this.prestacionFake) { return true; }
+        if (!this.prestacionFake) {
+            return true;
+        }
 
         let flagValid = true;
         this.rupElements.forEach((item) => {
@@ -577,7 +579,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             });
             if (movimientoEncontrado && movimientoEncontrado.length) {
                 this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
-                this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada`);
+                this.plex.info('warning', 'No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada');
             }
         });
     }

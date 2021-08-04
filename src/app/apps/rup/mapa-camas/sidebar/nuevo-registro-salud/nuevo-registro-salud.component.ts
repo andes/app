@@ -81,5 +81,5 @@ export class NuevoRegistroSaludComponent implements OnInit {
         );
     }
 }
-    // this.router.navigate(['rup/ejecucion', prestacion.id]);
+// this.router.navigate(['rup/ejecucion', prestacion.id]);
 

@@ -77,10 +77,10 @@ export class ExportarHudsComponent implements OnInit {
                     this.showLabel = false;
                 }
             },
-                // Si viene error, segundo callback
-                () => {
-                    this.pacienteSelected = '';
-                });
+            // Si viene error, segundo callback
+            () => {
+                this.pacienteSelected = '';
+            });
         }
     }
 

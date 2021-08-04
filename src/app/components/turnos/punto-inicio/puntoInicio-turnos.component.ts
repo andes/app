@@ -70,7 +70,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this._activatedRoute.params.subscribe(parameters => {
             if (parameters && parameters['idPaciente']) {
                 this.getPacienteById(parameters['idPaciente']);
-                window.history.replaceState({}, '', `/citas/punto-inicio`);
+                window.history.replaceState({}, '', '/citas/punto-inicio');
             }
         });
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
@@ -168,7 +168,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
         switch (operacion) {
             case 'darTurno':
-                // Si se seleccionó por error un paciente fallecido
+            // Si se seleccionó por error un paciente fallecido
                 this.servicePaciente.checkFallecido(paciente);
                 this.solicitudPrestacion = null;
                 this.showDashboard = false;

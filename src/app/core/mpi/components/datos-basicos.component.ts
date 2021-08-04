@@ -80,7 +80,9 @@ export class DatosBasicosComponent implements OnInit {
         this.generos = enumerados.getObjGeneros();
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.estados = enumerados.getEstados();
-        this.parentescoService.get().subscribe(resultado => { this.parentescoModel = resultado; });
+        this.parentescoService.get().subscribe(resultado => {
+            this.parentescoModel = resultado;
+        });
     }
 
     public checkForm() {
@@ -188,7 +190,9 @@ export class DatosBasicosComponent implements OnInit {
         }
     }
     private copiarContacto(paciente: IPaciente) {
-        if (!paciente.contacto || !paciente.contacto.length) { return; }
+        if (!paciente.contacto || !paciente.contacto.length) {
+            return;
+        }
         if (!this.paciente.contacto[0].valor) {
             this.paciente.contacto[0].valor = paciente.contacto[0].valor;
             this.paciente.contacto[0].tipo = paciente.contacto[0].tipo;
@@ -197,7 +201,9 @@ export class DatosBasicosComponent implements OnInit {
     }
 
     private copiarDireccion(tutor: IPaciente) {
-        if (!tutor.direccion || !tutor.direccion.length) { return; }
+        if (!tutor.direccion || !tutor.direccion.length) {
+            return;
+        }
         if (!this.paciente.direccion[0].valor) {
             this.paciente.direccion[0].valor = tutor.direccion[0].valor;
             this.direccionImportada = true;

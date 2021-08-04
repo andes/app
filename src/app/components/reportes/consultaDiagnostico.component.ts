@@ -17,7 +17,7 @@ import * as moment from 'moment';
 
 export class ConsultaDiagnosticoComponent implements OnInit {
     private _diagnosticos;
-    @Input('diagnosticos') // recibe un array de parametros
+    @Input() // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
     }

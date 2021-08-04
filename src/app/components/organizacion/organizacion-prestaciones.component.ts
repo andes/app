@@ -83,7 +83,7 @@ export class OrganizacionOfertaPrestacionalComponent implements OnInit {
     /*
      * EDITAR
      */
-    onEditar(oferta: { _id: string, prestacion: ITipoPrestacion, detalle: string }) {
+    onEditar(oferta: { _id: string; prestacion: ITipoPrestacion; detalle: string }) {
         this.ofertaPrestacionalSeleccionada = oferta;
         this.prestacion = oferta.prestacion;
         this.detalle = oferta.detalle;

@@ -188,10 +188,12 @@ export class PlantillasRUPComponent implements OnInit {
             this.descendientes = result;
 
             // TODO: Mensajes HTML más robustos desde PLEX?
-            this.plex.info('info', result.map(x => { return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`; }).join(''),
-                `Descendientes de ${this.procedimiento.term}`).then(infoResult => {
-                    this.mostrarDescendientes = false;
-                });
+            this.plex.info('info', result.map(x => {
+                return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`;
+            }).join(''),
+            `Descendientes de ${this.procedimiento.term}`).then(infoResult => {
+                this.mostrarDescendientes = false;
+            });
         });
     }
 

@@ -17,7 +17,7 @@ export class FormTerapeuticoDetallePageComponent implements OnInit, OnChanges {
     ngOnInit() {
     }
 
-     ngOnChanges(changes: any) {
+    ngOnChanges(changes: any) {
     }
 
 }

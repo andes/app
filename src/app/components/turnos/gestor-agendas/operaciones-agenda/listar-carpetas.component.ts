@@ -18,7 +18,7 @@ export class ListarCarpetasComponent implements OnInit {
     private _agendasSeleccionadas;
     public idOrganizacion = this.auth.organizacion.id;
 
-    @Input('agendasSeleccionadas')
+    @Input()
     set agendasSeleccionadas(value: any) {
         this._agendasSeleccionadas = value;
     }

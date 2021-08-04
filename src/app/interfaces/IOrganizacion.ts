@@ -20,9 +20,9 @@ export interface ISectores {
 export interface IOrganizacion {
     id: string;
     codigo: {
-        sisa: String,
-        cuie: String,
-        remediar: String
+        sisa: String;
+        cuie: String;
+        remediar: String;
     };
     nombre: String;
     tipoEstablecimiento: ITipoEstablecimiento;
@@ -32,10 +32,10 @@ export interface IOrganizacion {
     contacto: [IContacto];
 
     edificio: [{
-        id: String,
-        descripcion: String,
-        contacto: IContacto,
-        direccion: IDireccion,
+        id: String;
+        descripcion: String;
+        contacto: IContacto;
+        direccion: IDireccion;
     }];
     nivelComplejidad: Number;
     activo: Boolean;
@@ -50,7 +50,7 @@ export interface IOrganizacion {
      * @type {[{ idSisa: number, nombre: string }]}
      * @memberof IOrganizacion
      */
-    ofertaPrestacional?: [{ _id: string, prestacion: ITipoPrestacion, detalle: string }];
+    ofertaPrestacional?: [{ _id: string; prestacion: ITipoPrestacion; detalle: string }];
     /**
      * Indica si debe mostrarse en los mapas. Por defecto se muestra en los hospitales, centro de salud, punto sanitario
      * @type {boolean}

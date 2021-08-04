@@ -164,32 +164,32 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.obraSocialService.getSumar({ dni: search }),
                         this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
-                            this.loading = false;
-                            this.resSumar = t[0];
-                            this.resPuco = t[1];
-                            this.resProfe = (t[2] as any);
+                        this.loading = false;
+                        this.resSumar = t[0];
+                        this.resPuco = t[1];
+                        this.resProfe = (t[2] as any);
 
-                            if ((this.resPuco.length > 0) || (this.resProfe.length > 0)) {
-                                if (this.resPuco.length > 0) {
-                                    this.usuarios = <any>this.resPuco;
-                                }
-                                if (this.resProfe.length > 0) {
-                                    if (this.resPuco) {
-                                        this.usuarios = this.resPuco.concat(this.resProfe);
-                                    } else {
-                                        this.usuarios = <any>this.resProfe;
-                                    }
-                                }
-                            } else if (this.resSumar.length > 0) {
-                                const dataSumar = this.resSumar[0];
-                                this.usuarios.push({
-                                    dni: dataSumar.afidni,
-                                    nombre: `${dataSumar.afinombre} ${dataSumar.afiapellido}`,
-                                    financiador: 'Programa SUMAR',
-                                    claveBeneficiario: dataSumar.clavebeneficiario
-                                });
+                        if ((this.resPuco.length > 0) || (this.resProfe.length > 0)) {
+                            if (this.resPuco.length > 0) {
+                                this.usuarios = <any>this.resPuco;
                             }
-                        });
+                            if (this.resProfe.length > 0) {
+                                if (this.resPuco) {
+                                    this.usuarios = this.resPuco.concat(this.resProfe);
+                                } else {
+                                    this.usuarios = <any>this.resProfe;
+                                }
+                            }
+                        } else if (this.resSumar.length > 0) {
+                            const dataSumar = this.resSumar[0];
+                            this.usuarios.push({
+                                dni: dataSumar.afidni,
+                                nombre: `${dataSumar.afinombre} ${dataSumar.afiapellido}`,
+                                financiador: 'Programa SUMAR',
+                                claveBeneficiario: dataSumar.clavebeneficiario
+                            });
+                        }
+                    });
                 } else {    // Cuando se quiere buscar un dni sin ingresar un periodo
                     this.loading = false;
                 }

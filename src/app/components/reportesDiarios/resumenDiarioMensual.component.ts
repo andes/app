@@ -20,7 +20,7 @@ export class ResumenDiarioMensualComponent implements OnInit {
     fecha = new Date();
 
     private _reporte;
-    @Input('reporte') // recibe un array
+    @Input() // recibe un array
 
     set reporte(value: any) {
         this._reporte = value;
@@ -32,7 +32,7 @@ export class ResumenDiarioMensualComponent implements OnInit {
 
 
     private _parametros;
-    @Input('parametros') // recibe
+    @Input() // recibe
 
     public set parametros(value: any) {
         this._parametros = value;

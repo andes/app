@@ -119,7 +119,9 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
 
     @Unsubscribe()
     loadDatos(event) {
-        if (!event) { return; }
+        if (!event) {
+            return;
+        }
         if (event.query && event.query.length > 2) {
             return this.getData(event.query).subscribe((data) => {
                 event.callback(data);

@@ -68,10 +68,12 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
             };
             forkJoin(
                 [this.snomedService.get(queryPresentacion),
-                this.snomedService.get(queryUnidades)]
+                 this.snomedService.get(queryUnidades)]
             ).subscribe(([resultado, presentaciones]) => {
                 this.medicamento.presentacion = resultado[0];
-                this.unidades = presentaciones.map(elto => { return { id: elto.term, valor: elto.term }; });
+                this.unidades = presentaciones.map(elto => {
+                    return { id: elto.term, valor: elto.term };
+                });
             });
         }
     }

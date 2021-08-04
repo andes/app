@@ -23,10 +23,18 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public conceptosInternacion;
 
     public registros = [
-        { label: 'VALORACION INICIAL', handler: () => { this.nuevoRegistro(this.conceptosInternacion.valoracionInicial); } },
-        { label: 'EVOLUCION', handler: () => { this.nuevoRegistro(this.conceptosInternacion.evolucion); } },
-        { label: 'PLAN DE INDICACIONES', handler: () => { this.nuevoRegistro(this.conceptosInternacion.indicaciones); } },
-        { label: 'EPICRISIS', handler: () => { this.nuevoRegistro(this.conceptosInternacion.epicrisis); } },
+        { label: 'VALORACION INICIAL', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.valoracionInicial);
+        } },
+        { label: 'EVOLUCION', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.evolucion);
+        } },
+        { label: 'PLAN DE INDICACIONES', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.indicaciones);
+        } },
+        { label: 'EPICRISIS', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.epicrisis);
+        } },
 
     ];
     public tipoPrestaciones = [];

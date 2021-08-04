@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 
 @Component({
-    template: ``,
+    template: '',
 })
 export class LogoutComponent implements OnInit {
 

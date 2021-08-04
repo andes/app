@@ -25,12 +25,12 @@ export interface IMAQEstado {
     color: string;
     icon: string;
     acciones: {
-        label: string,
-        tipo: string,
+        label: string;
+        tipo: string;
         parametros: {
-            concepto?: ISnomedConcept,
-            unidadOrganizativa?: string[],
-        }
+            concepto?: ISnomedConcept;
+            unidadOrganizativa?: string[];
+        };
     }[];
 }
 
@@ -45,6 +45,6 @@ export interface IMAQRelacion {
         label: string;
         options?: [{
             nombre: string;
-        }]
+        }];
     }];
 }

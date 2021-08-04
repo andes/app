@@ -200,7 +200,9 @@ export class CamaMainComponent implements OnInit {
     darBaja() {
         const puedeInactivar = this.verificarBaja();
         // No me fio del disabled del boton.
-        if (!puedeInactivar) { return; }
+        if (!puedeInactivar) {
+            return;
+        }
         const textoModal = `¿Dar de baja la cama "${this.cama.nombre}"?'`;
         const tituloModal = '¿Desea dar de baja?';
         this.plex.confirm(textoModal, tituloModal).then(confirmacion => {

@@ -461,7 +461,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     (!this.organizacionModel.id || this.organizacionModel.id !== organizaciones[0].id)) { // y estoy creando o editando una organizacion diferente a la que trajo
 
                     this.auth.organizaciones().subscribe((organizacionesUser: any) => {
-                        const tienePermisosParaOrgEncontrada = organizacionesUser.some((orgUser: any) => { return orgUser.id === organizaciones[0].id; });
+                        const tienePermisosParaOrgEncontrada = organizacionesUser.some((orgUser: any) => {
+                            return orgUser.id === organizaciones[0].id;
+                        });
                         if (tienePermisosParaOrgEncontrada) {
                             this.plex.confirm(`¿Desea editar la organización ${organizaciones[0].nombre}?`, 'Existe otra organización con mismo código SISA').then((resultado: any) => {
                                 if (resultado) {

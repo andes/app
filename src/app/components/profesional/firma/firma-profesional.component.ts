@@ -14,7 +14,7 @@ import { IMAGENES_EXT } from '@andes/shared';
     styleUrls: ['firma-profesional.scss']
 })
 export class FirmaProfesionalComponent {
-    @Input('profesional')
+    @Input()
     set profesional(value: IProfesional) {
         if (value) {
             this._profesional = value;
@@ -46,8 +46,8 @@ export class FirmaProfesionalComponent {
             this.profesionalService.getFirma({ id: this.profesional.id }).pipe(
                 catchError(() =>
                     of(null))).subscribe(resp => {
-                        this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
-                    });
+                this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
+            });
         }
     }
 

@@ -27,7 +27,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
     public mostrarHeaderCompleto = false; // Pongo false por defecto, estipo que arranca así. [Agregado para AOT]
     public motivoSuspensionSelect = { select: null };
-    public motivoSuspension: { id: number; nombre: string; }[];
+    public motivoSuspension: { id: number; nombre: string }[];
     public estadosAgenda = EstadosAgenda;
     public ag;
     public showData = false;
@@ -47,10 +47,10 @@ export class SuspenderAgendaComponent implements OnInit {
             id: 2,
             nombre: 'profesional'
         },
-        {
-            id: 3,
-            nombre: 'organizacion'
-        }];
+                                 {
+                                     id: 3,
+                                     nombre: 'organizacion'
+                                 }];
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
 
         (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;
@@ -120,7 +120,9 @@ export class SuspenderAgendaComponent implements OnInit {
     }
 
     send(turno: any, mensaje) {
-        if (!turno.paciente || !turno.paciente.telefono) { return; }
+        if (!turno.paciente || !turno.paciente.telefono) {
+            return;
+        }
         let smsParams = {
             telefono: turno.paciente.telefono,
             mensaje: mensaje,

@@ -13,7 +13,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 })
 
 export class CambiarCamaComponent implements OnInit {
-    camasDisponibles$: Observable<{ camasMismaUO, camasDistintaUO }>;
+    camasDisponibles$: Observable<{ camasMismaUO; camasDistintaUO }>;
     selectedCama$: Observable<ISnapshot>;
 
     // EVENTOS

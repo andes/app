@@ -30,7 +30,7 @@ export class PanelEspacioComponent implements OnInit {
 
     ngOnInit() {
         this.colores = ['#FF9999', '#FFCC99', '#FFFF99', '#CCFF99', '#99FF99', '#99FFFF', '#99CCFF', '#9999FF', '#CC99FF',
-            '#FF99FF', '#FF99CC', '#E0E0E0', '#CCCC00'];
+                        '#FF99FF', '#FF99CC', '#E0E0E0', '#CCCC00'];
         this.loadEspacios();
         this.espacioSeleccionados = [];
     }
@@ -139,7 +139,9 @@ export class PanelEspacioComponent implements OnInit {
     }
 
     public seleccionarEspacio(espacio) {
-        let arrayTemp = this.horarios.map(elem => { return elem.hora; });
+        let arrayTemp = this.horarios.map(elem => {
+            return elem.hora;
+        });
         let i1Horarios: number;
         let i2Horarios: number;
         let bandera = true;

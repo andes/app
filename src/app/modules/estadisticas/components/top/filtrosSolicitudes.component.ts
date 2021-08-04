@@ -116,7 +116,9 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         let filtrosParams = {
             solicitudDesde: this.desde,
             solicitudHasta: this.hasta,
-            estados: this.seleccion.estados ? this.seleccion.estados.map(tipoEstado => { return tipoEstado.id; }) : undefined,
+            estados: this.seleccion.estados ? this.seleccion.estados.map(tipoEstado => {
+                return tipoEstado.id;
+            }) : undefined,
             organizaciones: this.seleccion.organizaciones ? this.seleccion.organizaciones.map(org => {
                 return { id: org.id };
             }) : undefined,

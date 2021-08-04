@@ -21,7 +21,7 @@ export class DetalleAgendaComponent implements OnInit {
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
     private _agenda: any;
     // Parámetros
-    @Input('agenda')
+    @Input()
     set agenda(value: any) {
         this._agenda = value;
     }
@@ -31,10 +31,10 @@ export class DetalleAgendaComponent implements OnInit {
 
 
     constructor(public plex: Plex,
-        public router: Router,
-        public auth: Auth,
-        public serviceTurno: TurnoService,
-        public serviceAgenda: AgendaService) {
+                public router: Router,
+                public auth: Auth,
+                public serviceTurno: TurnoService,
+                public serviceAgenda: AgendaService) {
     }
 
     ngOnInit() {

@@ -5,7 +5,9 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class DerivacionesService extends ResourceBaseHttp {
     protected url = '/modules/com/derivaciones';
-    constructor(protected server: Server) { super(server); }
+    constructor(protected server: Server) {
+        super(server);
+    }
     private apiUrl = environment.API;
 
     updateHistorial(id, movimiento) {

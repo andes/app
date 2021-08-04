@@ -42,7 +42,9 @@ export class Tabla2DComponent implements OnInit, OnChanges {
         // ARMAR CSV para visualizar todos los datos
         let tabla = Object.keys(value).map(city => {
             let dataReturn = { Localidad: city };
-            Object.keys(value[city]).map(c => { dataReturn[this.tipoTurno[c]] = value[city][c]; });
+            Object.keys(value[city]).map(c => {
+                dataReturn[this.tipoTurno[c]] = value[city][c];
+            });
             return dataReturn;
         });
         // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv en la primer row

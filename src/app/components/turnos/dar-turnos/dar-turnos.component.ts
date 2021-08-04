@@ -53,7 +53,7 @@ export class DarTurnosComponent implements OnInit {
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
-    @Input('pacienteSeleccionado')
+    @Input()
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.actualizarDatosPaciente(this._pacienteSeleccionado.id);
@@ -64,7 +64,7 @@ export class DarTurnosComponent implements OnInit {
 
     private tipoTurno = 'programado';
 
-    @Input('solicitudPrestacion')
+    @Input()
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
@@ -265,7 +265,9 @@ export class DarTurnosComponent implements OnInit {
             if (this.permisos[0] === '*') {
                 dataF = data;
             } else {
-                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+                dataF = data.filter((x) => {
+                    return this.permisos.indexOf(x.id) >= 0;
+                });
             }
             event.callback(dataF);
             if (this._solicitudPrestacion) {
@@ -549,7 +551,7 @@ export class DarTurnosComponent implements OnInit {
                     // Usamos CalendarioDia para hacer chequeos
                     let cal = new CalendarioDia(null, this.agendasDelDia, this._solicitudPrestacion, this.tipoTurno);
 
-                    /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
+                    /* Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
                     if (cal.estado !== 'ocupado') {
                         if (this.agenda.dinamica) {
                             this.estadoT = 'dinamica';
@@ -623,7 +625,7 @@ export class DarTurnosComponent implements OnInit {
                         }
                     } else {
 
-                        /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
+                        /* Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                         this.estadoT = 'noTurnos';
 
                         if (this.opciones.tipoPrestacion || this.opciones.profesional) {

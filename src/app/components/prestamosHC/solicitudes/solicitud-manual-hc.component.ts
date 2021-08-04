@@ -32,7 +32,7 @@ export class SolicitudManualComponent {
 
     pacientesSearch = true;
 
-    @Input('pacienteSeleccionado')
+    @Input()
     set pacienteSeleccionado(value: any) {
         this.paciente = value;
         this.searchPaciente(this.paciente);

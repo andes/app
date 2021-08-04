@@ -27,49 +27,49 @@ export interface ISnapshot {
     equipamiento: ISnomedConcept[];
     idCama: String;
     paciente?: {
-        id: String,
-        documento: String,
-        nombre: String,
-        apellido: String,
-        sexo: String,
-        fechaNacimiento: Date
+        id: String;
+        documento: String;
+        nombre: String;
+        apellido: String;
+        sexo: String;
+        fechaNacimiento: Date;
     };
     organizacion: {
-        _id: String,
-        nombre: String
+        _id: String;
+        nombre: String;
     };
     sala?: boolean;
     extras: {
-        ingreso?: boolean,
-        egreso?: boolean,
-        idInternacion?: String,
-        tipo_egreso?: String,
+        ingreso?: boolean;
+        egreso?: boolean;
+        idInternacion?: String;
+        tipo_egreso?: String;
         idMovimiento?: string;
 
     };
     nota: String;
     prioridad?: {
-        id: number,
-        label: string,
-        type: string
+        id: number;
+        label: string;
+        type: string;
     };
     createdAt?: Date;
     createdBy?: {
-        id: String,
-        nombreCompleto: String,
-        nombre: String,
-        apellido: String,
-        username: Number,
-        documento: Number
+        id: String;
+        nombreCompleto: String;
+        nombre: String;
+        apellido: String;
+        username: Number;
+        documento: Number;
     };
     updatedAt?: Date;
     updatedBy?: {
-        id: String,
-        nombreCompleto: String,
-        nombre: String,
-        apellido: String,
-        username: Number,
-        documento: Number
+        id: String;
+        nombreCompleto: String;
+        nombre: String;
+        apellido: String;
+        username: Number;
+        documento: Number;
     };
 
 

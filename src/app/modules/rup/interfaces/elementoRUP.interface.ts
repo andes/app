@@ -25,8 +25,8 @@ export interface IElementoRUP {
     reglas: { [key: string]: any };
     // Indica el estilo para aplicar al componente
     style: {
-        columns: number,
-        cssClass: string
+        columns: number;
+        cssClass: string;
     };
     // Conceptos SNOMED relacionados que se muestran e implementan de la misma manera.
     // Por ejemplo: "Toma de temperatura del paciente (SCTID: 56342008)" y
@@ -58,8 +58,8 @@ export interface IElementoRUPRequeridos {
     concepto: ISnomedConcept;
     // Indica estilos para la instancia del elementoRUP
     style: {
-        columns: Number,
-        cssClass: String
+        columns: Number;
+        cssClass: String;
     };
     // Indica parámetros para la instancia del elementoRUP en formato {key: value}
     params: { [key: string]: any };

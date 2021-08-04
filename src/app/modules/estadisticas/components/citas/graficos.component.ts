@@ -12,7 +12,7 @@ export class GraficosComponent implements OnInit {
     @Input() titulo = '';
     @Input() type = 'bar';
 
-    @Input('data')
+    @Input()
     set data(value: any) {
         this.limpiarData();
         // Es necesario cargar los datos dentro de un setTimout porque si no se saca del DOM

@@ -30,10 +30,10 @@ export class EspecialidadComponent implements OnInit {
     tengoDatos = true;
 
     constructor(private formBuilder: FormBuilder,
-        public plex: Plex,
-        private especialidadService: EspecialidadService,
-        private router: Router,
-        private auth: Auth, ) { }
+                public plex: Plex,
+                private especialidadService: EspecialidadService,
+                private router: Router,
+                private auth: Auth, ) { }
 
     ngOnInit() {
         // Crea el formulario reactivo

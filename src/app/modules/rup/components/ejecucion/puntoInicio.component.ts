@@ -131,7 +131,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
             cacheStorage({ key: 'punto-inicio-pantallas', until: this.auth.session(true) })
         ).subscribe((pantallas) => {
-            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
+            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => {
+                return espacio.id;
+            });
         });
     }
 
@@ -429,7 +431,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         const msg = operacion === 'noAsistio' ?
             `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?` :
-            `¿Está seguro que desea revertir los cambios?`;
+            '¿Está seguro que desea revertir los cambios?';
 
         this.plex.confirm(msg).then(confirmacion =>
             confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(this.actualizar.bind(this)) : false

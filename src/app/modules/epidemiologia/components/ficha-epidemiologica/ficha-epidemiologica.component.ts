@@ -11,161 +11,161 @@ import { cache } from '@andes/shared';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 
 @Component({
-  selector: 'app-ficha-epidemiologica',
-  templateUrl: './ficha-epidemiologica.component.html'
+    selector: 'app-ficha-epidemiologica',
+    templateUrl: './ficha-epidemiologica.component.html'
 })
 export class FichaEpidemiologicaComponent implements OnInit {
-  fichaSelected = {};
-  itemsDropdownFichas = [];
-  public showFicha = null;
-  public showLabel = true;
-  public selectedForm;
-  public pacienteSelected = null;
-  public resultadoBusqueda = null;
-  public fichasPaciente: Observable<any>;
-  public fichaPaciente$: Observable<any>;
-  public permisoHuds = false;
-  public puedeEditar: boolean;
-  public puedeCrear: boolean;
-  public puedeVer: boolean;
-  public editFicha = false;
+    fichaSelected = {};
+    itemsDropdownFichas = [];
+    public showFicha = null;
+    public showLabel = true;
+    public selectedForm;
+    public pacienteSelected = null;
+    public resultadoBusqueda = null;
+    public fichasPaciente: Observable<any>;
+    public fichaPaciente$: Observable<any>;
+    public permisoHuds = false;
+    public puedeEditar: boolean;
+    public puedeCrear: boolean;
+    public puedeVer: boolean;
+    public editFicha = false;
 
-  public columns = [
-    {
-      key: 'fecha',
-      label: 'Fecha'
-    },
-    {
-      key: 'nombre',
-      label: 'Nombre'
-    },
-    {
-      key: 'acciones',
-      label: 'Acciones'
-    }
-  ];
+    public columns = [
+        {
+            key: 'fecha',
+            label: 'Fecha'
+        },
+        {
+            key: 'nombre',
+            label: 'Nombre'
+        },
+        {
+            key: 'acciones',
+            label: 'Acciones'
+        }
+    ];
 
-  constructor(
-    private plex: Plex,
-    private formsService: FormsService,
-    private formEpidemiologiaService: FormsEpidemiologiaService,
-    private router: Router,
-    private auth: Auth,
-    private snomedService: SnomedService,
-    private motivoAccesoService: ModalMotivoAccesoHudsService
-  ) { }
+    constructor(
+        private plex: Plex,
+        private formsService: FormsService,
+        private formEpidemiologiaService: FormsEpidemiologiaService,
+        private router: Router,
+        private auth: Auth,
+        private snomedService: SnomedService,
+        private motivoAccesoService: ModalMotivoAccesoHudsService
+    ) { }
 
-  ngOnInit(): void {
-    if (!this.auth.getPermissions('epidemiologia:?').length) {
-      this.router.navigate(['inicio']);
-    }
-    this.puedeEditar = this.auth.check('epidemiologia:update');
-    this.puedeVer = this.auth.check('epidemiologia:read');
-    this.puedeCrear = this.auth.check('epidemiologia:create');
+    ngOnInit(): void {
+        if (!this.auth.getPermissions('epidemiologia:?').length) {
+            this.router.navigate(['inicio']);
+        }
+        this.puedeEditar = this.auth.check('epidemiologia:update');
+        this.puedeVer = this.auth.check('epidemiologia:read');
+        this.puedeCrear = this.auth.check('epidemiologia:create');
 
-    this.plex.updateTitle([
-      { route: '/', name: 'EPIDEMIOLOGÍA' },
-      { name: 'Ficha epidemiológica' }
-    ]);
+        this.plex.updateTitle([
+            { route: '/', name: 'EPIDEMIOLOGÍA' },
+            { name: 'Ficha epidemiológica' }
+        ]);
 
-    this.formsService.search().subscribe(fichas => {
-      fichas.forEach(element => {
-        if (element.snomedCode) {
-          this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
-            this.itemsDropdownFichas.push({
-              'label': res[0] ? res[0].fsn : element.name, handler: () => {
-                this.selectedForm = element;
-                this.mostrarFicha(element.name);
-              }
+        this.formsService.search().subscribe(fichas => {
+            fichas.forEach(element => {
+                if (element.snomedCode) {
+                    this.snomedService.getQuery({ expression: element.snomedCode }).subscribe(res => {
+                        this.itemsDropdownFichas.push({
+                            'label': res[0] ? res[0].fsn : element.name, handler: () => {
+                                this.selectedForm = element;
+                                this.mostrarFicha(element.name);
+                            }
+                        });
+                    });
+                } else {
+                    this.itemsDropdownFichas.push({
+                        'label': element.name, handler: () => {
+                            this.selectedForm = element;
+                            this.mostrarFicha(element.name);
+                        }
+                    });
+                }
+
             });
-          });
+        });
+        this.permisoHuds = this.auth.check('huds:visualizacionHuds');
+    }
+
+    ruteo(id) {
+        this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', id]);
+            }
+        });
+    }
+
+    searchStart() {
+        this.showLabel = false;
+    }
+
+    searchEnd(resultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.pacienteSelected = '';
+        this.showLabel = true;
+    }
+
+    onSelect(paciente: IPaciente): void {
+        if (paciente) {
+            this.pacienteSelected = paciente;
+            this.fichasPaciente = this.formEpidemiologiaService.search({ paciente: this.pacienteSelected._id }).pipe(
+                cache()
+            );
+        }
+    }
+
+    mostrarFicha(nombreFicha, ficha?) {
+        this.fichaPaciente$ = of(null);
+        if (ficha) {
+            this.fichaPaciente$ = of(ficha);
+            this.getFicha(nombreFicha);
         } else {
-          this.itemsDropdownFichas.push({
-            'label': element.name, handler: () => {
-              this.selectedForm = element;
-              this.mostrarFicha(element.name);
-            }
-          });
+            let check = true;
+            this.fichasPaciente.subscribe(async fichas => {
+                if (fichas.length) {
+                    const fichasOrdenadas = fichas.sort((a, b) => b.createdAt - a.createdAt);
+                    if (moment().diff(moment(fichasOrdenadas[0].createdAt), 'days') < 14) {
+                        const respuesta = await this.plex.confirm('¿ Desea crear una ficha nueva de todas formas ?', `El paciente tiene una ficha registrada el día ${moment(fichasOrdenadas[0].createdAt).format('L')}`, 'Crear nueva ficha', 'Cancelar');
+                        if (!respuesta) {
+                            check = false;
+                        }
+                    }
+                }
+                if (check) {
+                    this.getFicha(nombreFicha);
+                }
+            });
         }
-
-      });
-    });
-    this.permisoHuds = this.auth.check('huds:visualizacionHuds');
-  }
-
-  ruteo(id) {
-    this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe(motivo => {
-      if (motivo) {
-        this.router.navigate(['/huds/paciente/', id]);
-      }
-    });
-  }
-
-  searchStart() {
-    this.showLabel = false;
-  }
-
-  searchEnd(resultado) {
-    if (resultado.err) {
-      this.plex.info('danger', resultado.err);
-      return;
     }
-    this.resultadoBusqueda = resultado.pacientes;
-  }
 
-  onSearchClear() {
-    this.resultadoBusqueda = [];
-    this.pacienteSelected = '';
-    this.showLabel = true;
-  }
-
-  onSelect(paciente: IPaciente): void {
-    if (paciente) {
-      this.pacienteSelected = paciente;
-      this.fichasPaciente = this.formEpidemiologiaService.search({ paciente: this.pacienteSelected._id }).pipe(
-        cache()
-      );
+    getFicha(nombreFicha) {
+        this.showFicha = nombreFicha;
+        this.editFicha = true;
     }
-  }
 
-  mostrarFicha(nombreFicha, ficha?) {
-    this.fichaPaciente$ = of(null);
-    if (ficha) {
-      this.fichaPaciente$ = of(ficha);
-      this.getFicha(nombreFicha);
-    } else {
-      let check = true;
-      this.fichasPaciente.subscribe(async fichas => {
-        if (fichas.length) {
-          const fichasOrdenadas = fichas.sort((a, b) => b.createdAt - a.createdAt);
-          if (moment().diff(moment(fichasOrdenadas[0].createdAt), 'days') < 14) {
-            const respuesta = await this.plex.confirm('¿ Desea crear una ficha nueva de todas formas ?', `El paciente tiene una ficha registrada el día ${moment(fichasOrdenadas[0].createdAt).format('L')}`, 'Crear nueva ficha', 'Cancelar');
-            if (!respuesta) {
-              check = false;
-            }
-          }
-        }
-        if (check) {
-          this.getFicha(nombreFicha);
-        }
-      });
+    verFicha(ficha) {
+        this.fichaPaciente$ = of(ficha);
+        this.showFicha = ficha.type.name;
+        this.editFicha = false;
     }
-  }
 
-  getFicha(nombreFicha) {
-    this.showFicha = nombreFicha;
-    this.editFicha = true;
-  }
-
-  verFicha(ficha) {
-    this.fichaPaciente$ = of(ficha);
-    this.showFicha = ficha.type.name;
-    this.editFicha = false;
-  }
-
-  volver() {
-    this.showFicha = null;
-    this.pacienteSelected = null;
-    this.resultadoBusqueda = [];
-  }
+    volver() {
+        this.showFicha = null;
+        this.pacienteSelected = null;
+        this.resultadoBusqueda = [];
+    }
 }

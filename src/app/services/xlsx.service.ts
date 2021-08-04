@@ -17,7 +17,7 @@ export class ExcelService {
      * Exporta multiples tablas a un archivo de excel,
      * poniendo en cada hoja el titulo o nombre correspondiente a la tabla
      */
-    public exportMultipleTablesAsExcelFile(data: Array<{title: string, table: any}>, excelFileName: string) {
+    public exportMultipleTablesAsExcelFile(data: Array<{title: string; table: any}>, excelFileName: string) {
         const workbook = XLSX.utils.book_new();
         for (const item of data) {
             const sheet = XLSX.utils.table_to_sheet(item.table, {raw: true});

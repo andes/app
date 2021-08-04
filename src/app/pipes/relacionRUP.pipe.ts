@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({ name: 'relacionRUP' })
 export class RelacionRUPPipe implements PipeTransform {
-    transform(relacion: { concepto: { term: any }, cara: any }, args: any[]): string {
+    transform(relacion: { concepto: { term: any }; cara: any }, args: any[]): string {
         if (relacion.cara) {
             return 'diente ' + relacion.concepto.term + ' (' + (relacion.cara !== 'pieza' ? 'cara ' + relacion.cara : relacion.cara + ' completa') + ')';
         } else if (relacion.concepto?.term) {

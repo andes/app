@@ -6,8 +6,8 @@ export interface ICiudadano {
     tieneTramite: boolean;
     nroTramite: string;
     grupo: {
-        id: String,
-        nombre: String
+        id: String;
+        nombre: String;
     };
     documento: string;
     nombre: string;
@@ -35,7 +35,7 @@ export interface ICiudadano {
     validado?: boolean;
     validaciones?: any[];
     paciente?: {
-        id: String
+        id: String;
     };
     factorRiesgoEdad: boolean;
     numeroIdentificacion: string;

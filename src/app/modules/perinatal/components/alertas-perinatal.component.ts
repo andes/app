@@ -5,20 +5,20 @@ import { map } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'alertas-perinatal',
-  templateUrl: './alertas-perinatal.component.html'
+    selector: 'alertas-perinatal',
+    templateUrl: './alertas-perinatal.component.html'
 })
 export class AlertasPerinatalComponent implements OnInit {
-  public listado$: Observable<any[]>;
+    public listado$: Observable<any[]>;
 
-  constructor(private carnetPerinatalService: CarnetPerinatalService) { }
+    constructor(private carnetPerinatalService: CarnetPerinatalService) { }
 
-  ngOnInit(): void {
-    this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
-      map(resp => {
-        return resp.filter(item => (moment().diff(moment(item.fechaProximoControl), 'days') >= 1) && !item.fechaFinEmbarazo);
-      })
-    );
-  }
+    ngOnInit(): void {
+        this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
+            map(resp => {
+                return resp.filter(item => (moment().diff(moment(item.fechaProximoControl), 'days') >= 1) && !item.fechaFinEmbarazo);
+            })
+        );
+    }
 
 }

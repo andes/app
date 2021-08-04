@@ -15,7 +15,7 @@ export class ImprimirSolicitudesComponent implements OnInit {
     public solicitudes;
     public idOrganizacion = this.auth.organizacion.id;
 
-    @Input('solicutudes')
+    @Input()
     set solicutudes(value: any) {
         this.solicitudes = value;
     }

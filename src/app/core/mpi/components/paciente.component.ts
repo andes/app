@@ -444,7 +444,7 @@ export class PacienteComponent implements OnInit {
 
     checkDisableValidar() {
         let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 9999 && sexo !== undefined && sexo !== 'otro');
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 10) >= 9999 && sexo !== undefined && sexo !== 'otro');
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -584,10 +584,10 @@ export class PacienteComponent implements OnInit {
                                 this.plex.toast('success', '¡Paciente Validado!');
                             }
                         },  // error
-                            () => {
-                                this.plex.toast('danger', 'Validación Fallida');
-                                this.disableValidar = false;
-                            })
+                        () => {
+                            this.plex.toast('danger', 'Validación Fallida');
+                            this.disableValidar = false;
+                        })
                     );
                 }
                 this.loading = false;

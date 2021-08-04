@@ -2,9 +2,9 @@
 export interface IPacienteRelacion {
     id?: string;
     relacion: {
-        id: string,
-        nombre: string,
-        opuesto: string
+        id: string;
+        nombre: string;
+        opuesto: string;
     };
     referencia: string;
     nombre: string;

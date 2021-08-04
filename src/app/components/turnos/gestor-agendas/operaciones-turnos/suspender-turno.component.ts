@@ -52,10 +52,10 @@ export class SuspenderTurnoComponent implements OnInit {
             id: 2,
             nombre: 'profesional'
         },
-        {
-            id: 3,
-            nombre: 'organizacion'
-        }];
+                                 {
+                                     id: 3,
+                                     nombre: 'organizacion'
+                                 }];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
         // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
@@ -107,7 +107,9 @@ export class SuspenderTurnoComponent implements OnInit {
         if (this.accion === 'suspenderTurno') {
             patch = {
                 op: this.accion,
-                turnos: this.turnos.map((resultado) => { return resultado.id; }),
+                turnos: this.turnos.map((resultado) => {
+                    return resultado.id;
+                }),
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
             };
         } else {
@@ -190,7 +192,9 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) { return; }
+        if (!paciente.telefono) {
+            return;
+        }
         let smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,

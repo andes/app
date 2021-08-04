@@ -54,7 +54,6 @@ module.exports = {
             }
         ],
         "@angular-eslint/no-host-metadata-property": "error",
-        "@angular-eslint/no-input-rename": "error",
         "@angular-eslint/no-inputs-metadata-property": "error",
         "@angular-eslint/no-output-rename": "error",
         "@angular-eslint/no-outputs-metadata-property": "error",
@@ -68,7 +67,21 @@ module.exports = {
                 "accessibility": "explicit"
             }
         ],
-        "@typescript-eslint/indent": "error",
+        "@typescript-eslint/indent": [
+            "error",
+            4,
+            {
+                "ObjectExpression": "first",
+                "FunctionDeclaration": {
+                    "parameters": "first"
+                },
+                "FunctionExpression": {
+                    "parameters": "first"
+                },
+                "SwitchCase": 1,
+                "ArrayExpression": "first"
+            }
+        ],
         "@typescript-eslint/member-delimiter-style": [
             "error",
             {
@@ -82,8 +95,6 @@ module.exports = {
                 }
             }
         ],
-        "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/naming-convention": "error",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "error",
         "@typescript-eslint/no-inferrable-types": [
@@ -92,13 +103,6 @@ module.exports = {
                 "ignoreParameters": true
             }
         ],
-        "@typescript-eslint/no-shadow": [
-            "error",
-            {
-                "hoist": "all"
-            }
-        ],
-        "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/quotes": [
             "error",
@@ -124,7 +128,6 @@ module.exports = {
         "guard-for-in": "off",
         "id-blacklist": "off",
         "id-match": "off",
-        "indent": "error",
         "max-len": [
             "off",
             {
@@ -173,15 +176,13 @@ module.exports = {
         "no-new-wrappers": "error",
         "no-redeclare": "error",
         "no-restricted-imports": "error",
-        "no-shadow": "error",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-underscore-dangle": "off",
-        "no-unused-expressions": "error",
         "no-unused-labels": "error",
         "no-var": "error",
         "prefer-const": "off",
-        "quotes": "error",
+        "quotes": ["error", "single"],
         "radix": "error",
         "semi": "error",
         "spaced-comment": [

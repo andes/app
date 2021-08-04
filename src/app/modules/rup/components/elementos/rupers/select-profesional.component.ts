@@ -22,7 +22,7 @@ export class SelectProfesionalComponent extends SelectBaseComponent {
 
     public idField = 'id';
 
-    public labelField = `apellido + ' ' + nombre`;
+    public labelField = 'apellido + \' \' + nombre';
 
     getData(input: string) {
         let query = {

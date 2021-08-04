@@ -68,7 +68,9 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
 
         if (this.params.query) {
             this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
-                this.conceptosSeleccionar = resultado.map(r => { r['checked'] = false; return r; });
+                this.conceptosSeleccionar = resultado.map(r => {
+                    r['checked'] = false; return r;
+                });
                 if (this.params.extraQuery) {
                     // agregamos al resultado las opciones extra, si existieran
                     this.conceptosSeleccionar = this.conceptosSeleccionar.concat(this.params.extraQuery);

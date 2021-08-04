@@ -65,14 +65,14 @@ export class EncabezadoReportesComponent implements OnInit {
             id: 1,
             nombre: 'Reporte C2'
         },
-        {
-            id: 2,
-            nombre: 'Diagnósticos'
-        },
-        {
-            id: 3,
-            nombre: 'Consultas por prestación'
-        },
+                         {
+                             id: 2,
+                             nombre: 'Diagnósticos'
+                         },
+                         {
+                             id: 3,
+                             nombre: 'Consultas por prestación'
+                         },
         ];
     }
 
@@ -115,20 +115,48 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.showCantidadConsultaXPrestacion = false;
                 this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
-                    this.totalConsultas = this.diagnosticos.map(elem => { return elem.total; }).reduce(this.add, 0);
-                    this.totalMenor1 = this.diagnosticos.map(elem => { return elem.sumaMenor1; }).reduce(this.add, 0);
-                    this.total1 = this.diagnosticos.map(elem => { return elem.suma1; }).reduce(this.add, 0);
-                    this.total24 = this.diagnosticos.map(elem => { return elem.suma24; }).reduce(this.add, 0);
-                    this.total59 = this.diagnosticos.map(elem => { return elem.suma59; }).reduce(this.add, 0);
-                    this.total1014 = this.diagnosticos.map(elem => { return elem.suma1014; }).reduce(this.add, 0);
-                    this.total1524 = this.diagnosticos.map(elem => { return elem.suma1524; }).reduce(this.add, 0);
-                    this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
-                    this.total3544 = this.diagnosticos.map(elem => { return elem.suma3544; }).reduce(this.add, 0);
-                    this.total4564 = this.diagnosticos.map(elem => { return elem.suma4564; }).reduce(this.add, 0);
-                    this.totalMayor65 = this.diagnosticos.map(elem => { return elem.sumaMayor65; }).reduce(this.add, 0);
-                    this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
-                    this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
-                    this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
+                    this.totalConsultas = this.diagnosticos.map(elem => {
+                        return elem.total;
+                    }).reduce(this.add, 0);
+                    this.totalMenor1 = this.diagnosticos.map(elem => {
+                        return elem.sumaMenor1;
+                    }).reduce(this.add, 0);
+                    this.total1 = this.diagnosticos.map(elem => {
+                        return elem.suma1;
+                    }).reduce(this.add, 0);
+                    this.total24 = this.diagnosticos.map(elem => {
+                        return elem.suma24;
+                    }).reduce(this.add, 0);
+                    this.total59 = this.diagnosticos.map(elem => {
+                        return elem.suma59;
+                    }).reduce(this.add, 0);
+                    this.total1014 = this.diagnosticos.map(elem => {
+                        return elem.suma1014;
+                    }).reduce(this.add, 0);
+                    this.total1524 = this.diagnosticos.map(elem => {
+                        return elem.suma1524;
+                    }).reduce(this.add, 0);
+                    this.total2534 = this.diagnosticos.map(elem => {
+                        return elem.suma2534;
+                    }).reduce(this.add, 0);
+                    this.total3544 = this.diagnosticos.map(elem => {
+                        return elem.suma3544;
+                    }).reduce(this.add, 0);
+                    this.total4564 = this.diagnosticos.map(elem => {
+                        return elem.suma4564;
+                    }).reduce(this.add, 0);
+                    this.totalMayor65 = this.diagnosticos.map(elem => {
+                        return elem.sumaMayor65;
+                    }).reduce(this.add, 0);
+                    this.totalMasculino = this.diagnosticos.map(elem => {
+                        return elem.sumaMasculino;
+                    }).reduce(this.add, 0);
+                    this.totalFemenino = this.diagnosticos.map(elem => {
+                        return elem.sumaFemenino;
+                    }).reduce(this.add, 0);
+                    this.totalOtro = this.diagnosticos.map(elem => {
+                        return elem.sumaOtro;
+                    }).reduce(this.add, 0);
                 });
                 break;
             case 'Consultas por prestación':

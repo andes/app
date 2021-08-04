@@ -14,7 +14,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
     @Input() agenda: IAgenda;
     private _agendasSeleccionadas: Array<any>;
 
-    @Input('agendasSeleccionadas')
+    @Input()
     set agendasSeleccionadas(value: any) {
         this._agendasSeleccionadas = value;
     }
@@ -68,11 +68,11 @@ export class AgregarNotaAgendaComponent implements OnInit {
                     this.saveAgregarNotaAgenda.emit(agenda);
                 }
             },
-                err => {
-                    if (err) {
+            err => {
+                if (err) {
 
-                    }
-                });
+                }
+            });
 
         });
     }

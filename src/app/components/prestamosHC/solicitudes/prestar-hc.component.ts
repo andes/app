@@ -15,7 +15,7 @@ export class PrestarHcComponent implements OnInit {
     @Output() cancelPrestarEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
-    @Input('prestar')
+    @Input()
     set prestar(value: any) {
         this.prestamo = value;
         let _prestarHC: any = {

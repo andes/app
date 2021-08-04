@@ -103,7 +103,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             tipoTurno: 'profesional',
         };
         // ¿Ragnar Turno?
-        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, `¿Confirmar Autocitación?`)
+        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, '¿Confirmar Autocitación?')
             .then((confirmado) => {
                 if (!confirmado) {
                     return false;
@@ -130,7 +130,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             let bloqueTurno = this.agendaSeleccionada.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
             let index;
             if (bloqueTurno) {
-                index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });
+                index = bloqueTurno.turnos.findIndex(t => {
+                    return t.id === turno._id;
+                });
                 if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'turnoDoble')) || (index === (bloqueTurno.turnos.length - 1))) {
                     return false;
                 } else {

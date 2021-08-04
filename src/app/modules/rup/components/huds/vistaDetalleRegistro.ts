@@ -6,8 +6,8 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
     selector: 'vista-detalle-registro',
     templateUrl: 'vistaDetalleRegistro.html',
     styleUrls: [
-        `../elementos/OdontogramaRefset.scss`,
-        `../variables.scss`,
+        '../elementos/OdontogramaRefset.scss',
+        '../variables.scss',
         'vistaDetalleRegistro.scss'
     ]
 })

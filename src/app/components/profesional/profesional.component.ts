@@ -34,10 +34,10 @@ export class ProfesionalComponent implements OnInit {
     // cantidad: IProfesional[];
 
     constructor(private formBuilder: FormBuilder,
-        private profesionalService: ProfesionalService,
-        public sanitizer: DomSanitizer,
-        private router: Router,
-        private auth: Auth, ) { }
+                private profesionalService: ProfesionalService,
+                public sanitizer: DomSanitizer,
+                private router: Router,
+                private auth: Auth, ) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({

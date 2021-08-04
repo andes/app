@@ -33,14 +33,18 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Apellido y nombre',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre); }
+            sort: (a, b) => {
+                return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre);
+            }
         },
         {
             key: 'documento',
             label: 'Documento',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.paciente.documento.localeCompare(b.paciente.documento); }
+            sort: (a, b) => {
+                return a.paciente.documento.localeCompare(b.paciente.documento);
+            }
         },
         {
             key: 'fechaIngreso',
@@ -89,14 +93,18 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Unidad organizativa',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term); }
+            sort: (a, b) => {
+                return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term);
+            }
         },
         {
             key: 'estado',
             label: 'Estado',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo); }
+            sort: (a, b) => {
+                return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo);
+            }
         }
     ];
 

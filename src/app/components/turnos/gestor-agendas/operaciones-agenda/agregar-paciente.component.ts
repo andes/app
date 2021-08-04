@@ -139,7 +139,9 @@ export class AgregarPacienteComponent implements OnInit {
 
     loadObraSocial(paciente) {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!paciente || !paciente.documento) { return; }
+        if (!paciente || !paciente.documento) {
+            return;
+        }
         this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocialPaciente = resultado.map((os: any) => {

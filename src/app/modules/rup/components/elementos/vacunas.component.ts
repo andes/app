@@ -180,7 +180,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         );
                         if (listaVacunas && listaVacunas.length) {
                             let filtroDuplicadas = nomivacFiltradas.filter(v => {
-                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) { return v; }
+                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) {
+                                    return v;
+                                }
                             });
                             listaVacunas = [...listaVacunas, ...filtroDuplicadas];
                         } else {

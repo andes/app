@@ -321,8 +321,12 @@ export class ListarSolicitudesComponent implements OnInit {
         let val = this.sortDescending ? -1 : 1;
         let carpetas_numeros = this.carpetas.filter(x => !isNaN(x.numero));
         let carpetas_letras = this.carpetas.filter(x => isNaN(x.numero));
-        carpetas_letras.sort((a, b) => { return (a.numero > b.numero) ? val : (b.numero > a.numero) ? -val : 0; });
-        carpetas_numeros.sort((a, b) => { return (parseInt(a.numero, 10) > parseInt(b.numero, 10)) ? val : ((parseInt(b.numero, 10) > parseInt(a.numero, 10)) ? -val : 0); });
+        carpetas_letras.sort((a, b) => {
+            return (a.numero > b.numero) ? val : (b.numero > a.numero) ? -val : 0;
+        });
+        carpetas_numeros.sort((a, b) => {
+            return (parseInt(a.numero, 10) > parseInt(b.numero, 10)) ? val : ((parseInt(b.numero, 10) > parseInt(a.numero, 10)) ? -val : 0);
+        });
 
         let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
