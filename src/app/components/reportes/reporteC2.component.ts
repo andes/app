@@ -40,7 +40,7 @@ export class ReporteC2Component implements OnInit {
         return a + b;
     }
 
-    @Input() // recibe un array de parametros
+    @Input('diagnosticos') // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
         this.totalConsultas = this.diagnosticos.map(elem => {

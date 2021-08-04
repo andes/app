@@ -27,7 +27,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     private _agendaAReasignar: any;
 
-    @Input()
+    @Input('agendaAReasignar')
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
     }

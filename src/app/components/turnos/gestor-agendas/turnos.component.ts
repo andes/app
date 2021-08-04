@@ -20,7 +20,7 @@ export class TurnosComponent implements OnInit {
     private _agenda: IAgenda;
     public idOrganizacion = this.auth.organizacion.id;
     // Parámetros
-    @Input()
+    @Input('agenda')
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;

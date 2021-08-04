@@ -18,7 +18,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     private _turnosSeleccionados: Array<any>;
 
-    @Input()
+    @Input('turnosSeleccionados')
     set turnosSeleccionados(value: any) {
         this._turnosSeleccionados = value;
     }
@@ -71,11 +71,11 @@ export class AgregarNotaTurnoComponent implements OnInit {
                     this.saveAgregarNotaTurno.emit();
                 }
             },
-            err => {
-                if (err) {
+                err => {
+                    if (err) {
 
-                }
-            });
+                    }
+                });
 
         });
     }

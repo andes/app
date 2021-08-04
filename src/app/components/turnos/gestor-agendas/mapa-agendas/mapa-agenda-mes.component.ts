@@ -16,7 +16,7 @@ export class MapaAgendasMesComponent implements OnInit {
     public accion = null;
     @Output() semanaDetalle = new EventEmitter<any>();
     @Output() agendasDetalles = new EventEmitter<any>();
-    @Input()
+    @Input('fecha')
     set fecha(value: any) {
         this._fecha = value;
         this.cargarAgendas();

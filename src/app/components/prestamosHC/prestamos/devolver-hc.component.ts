@@ -32,7 +32,7 @@ export class DevolverHcComponent implements OnInit {
 
     }
 
-    @Input()
+    @Input('devolver')
     set devolver(value: any) {
         this.prestamo = value;
     }

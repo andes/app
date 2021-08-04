@@ -26,7 +26,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
-    @Input()
+    @Input('editaAgenda')
     set editaAgenda(value: any) {
         if (value.otroEspacioFisico) {
             this.espacioFisicoPropios = false;
@@ -257,13 +257,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             if (bloque.cantidadTurnos) {
                 bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor
-                ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
+                    ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
                 bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor
-                ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
+                    ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
                 bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor
-                ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
+                    ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
                 bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor
-                ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
+                    ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
                 if (!this.modelo.intercalar) {
                     const duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
                     bloque.duracionTurno = Math.floor(duracion);
@@ -459,19 +459,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             switch (cual) {
                 case 'accesoDirectoDelDia':
                     this.elementoActivo.accesoDirectoDelDiaPorc = Math.ceil
-                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                        ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'accesoDirectoProgramado':
                     this.elementoActivo.accesoDirectoProgramadoPorc = Math.ceil
-                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                        ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoGestion':
                     this.elementoActivo.reservadoGestionPorc = Math.ceil
-                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                        ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoProfesional':
                     this.elementoActivo.reservadoProfesionalPorc = Math.ceil
-                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                        ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
                     break;
             }
             this.validarTodo();
@@ -483,19 +483,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             switch (cual) {
                 case 'accesoDirectoDelDia':
                     this.elementoActivo.accesoDirectoDelDia = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                        ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'accesoDirectoProgramado':
                     this.elementoActivo.accesoDirectoProgramado = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                        ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'reservadoGestion':
                     this.elementoActivo.reservadoGestion = Math.floor
-                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                        ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'reservadoProfesional':
                     this.elementoActivo.reservadoProfesional = Math.floor
-                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                        ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
             }
         }
@@ -864,10 +864,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.hideGuardar = false;
             },
-            (err) => {
-                this.hideGuardar = false;
-                this.plex.info('warning', err, 'Aviso');
-            });
+                (err) => {
+                    this.hideGuardar = false;
+                    this.plex.info('warning', err, 'Aviso');
+                });
         } else {
             if (!this.verificarNoNominalizada()) {
                 this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');

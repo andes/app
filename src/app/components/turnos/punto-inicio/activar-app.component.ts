@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 })
 export class ActivarAppComponent {
 
-    @Input()
+    @Input('paciente')
     set paciente(value: IPaciente) {
         if (value) {
             this._paciente = value;

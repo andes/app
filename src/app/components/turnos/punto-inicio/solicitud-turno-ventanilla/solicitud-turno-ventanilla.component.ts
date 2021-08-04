@@ -15,7 +15,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     private _paciente: any;
 
-    @Input()
+    @Input('paciente')
     set paciente(value: any) {
         this._paciente = value;
     }

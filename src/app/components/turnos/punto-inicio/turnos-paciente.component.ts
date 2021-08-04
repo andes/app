@@ -41,7 +41,7 @@ export class TurnosPacienteComponent implements OnInit {
     public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
     public _paciente: IPaciente;
-    @Input()
+    @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
     }
@@ -49,7 +49,7 @@ export class TurnosPacienteComponent implements OnInit {
     get operacion(): string {
         return this._operacion;
     }
-    @Input()
+    @Input('paciente')
     set paciente(value: any) {
         this._paciente = value;
     }
@@ -57,7 +57,7 @@ export class TurnosPacienteComponent implements OnInit {
         return this._paciente;
     }
 
-    @Input()
+    @Input('turnos')
     set turnos(value: any) {
         if (value) {
             this._turnos = value;
@@ -76,7 +76,7 @@ export class TurnosPacienteComponent implements OnInit {
 
     // Inicialización
     constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
-                public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
+        public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;

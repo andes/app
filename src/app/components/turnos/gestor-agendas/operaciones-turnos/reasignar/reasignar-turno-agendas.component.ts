@@ -32,7 +32,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     // Agenda destino
     private _agendaDestino;
-    @Input()
+    @Input('agendaDestino')
     set agendaDestino(value: any) {
         this._agendaDestino = value;
     }
@@ -41,7 +41,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _turnoSeleccionado;
-    @Input()
+    @Input('turnoSeleccionado')
     set turnoSeleccionado(value: any) {
         this._turnoSeleccionado = value;
     }
@@ -51,7 +51,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     private _datosAgenda;
-    @Input() // IDs de agenda y bloque del turno origen
+    @Input('datosAgenda') // IDs de agenda y bloque del turno origen
     set datosAgenda(value: any) {
         this._datosAgenda = value;
     }
@@ -66,7 +66,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     countBloques = [];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-                public serviceTurno: TurnoService, public smsService: SmsService) { }
+        public serviceTurno: TurnoService, public smsService: SmsService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -213,12 +213,12 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
         },
-        err => {
-            if (err) {
-                this.plex.toast('danger', 'ERROR: Servicio caído');
+            err => {
+                if (err) {
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
 
-            }
-        });
+                }
+            });
     }
 
     hayTurnosDisponibles(agenda: any) {

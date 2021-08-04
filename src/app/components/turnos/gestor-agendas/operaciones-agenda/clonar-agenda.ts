@@ -15,7 +15,7 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 export class ClonarAgendaComponent implements OnInit {
     primerDiaMes: moment.Moment;
     ultimoDiaMes: moment.Moment;
-    @Input()
+    @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
     }
@@ -45,7 +45,7 @@ export class ClonarAgendaComponent implements OnInit {
     private original = true;
     private inicioAgenda: Date;
 
-    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
+    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router,) { }
     ngOnInit() {
         moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
@@ -228,11 +228,11 @@ export class ClonarAgendaComponent implements OnInit {
                         if (agenda.profesionales.map(elem => {
                             return elem.id;
                         }).some
-                        (v => {
-                            return this.agenda.profesionales.map(elem => {
-                                return elem.id;
-                            }).includes(v);
-                        })) {
+                            (v => {
+                                return this.agenda.profesionales.map(elem => {
+                                    return elem.id;
+                                }).includes(v);
+                            })) {
                             agenda.conflictoProfesional = 1;
                             dia.estado = 'conflicto';
 
@@ -282,11 +282,11 @@ export class ClonarAgendaComponent implements OnInit {
                             this.volverAlGestor.emit(true);
                         });
                     },
-                    err => {
-                        if (err) {
+                        err => {
+                            if (err) {
 
-                        }
-                    });
+                            }
+                        });
                 }
             }).catch(() => {
             });

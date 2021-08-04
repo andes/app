@@ -14,14 +14,14 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 export class VistaContextoPrestacionComponent implements OnInit {
 
     public todoRegistro;
-    @Input()
+    @Input('registro')
     set registro(value: IPrestacionRegistro) {
         this._registro = value;
     }
     get registro() {
         return this._registro;
     }
-    @Input()
+    @Input('prestacion')
     set prestacion(value: IPrestacion) {
         this._prestacion = value;
     }

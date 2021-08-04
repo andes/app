@@ -19,7 +19,7 @@ export class PanelAgendaComponent implements OnInit {
 
     private subscriptionID = null;
     private _editarAgendaPanel: any;
-    @Input()
+    @Input('editaAgendaPanel')
     set editaAgendaPanel(value: any) {
         this._editarAgendaPanel = value;
         this.agenda = value;

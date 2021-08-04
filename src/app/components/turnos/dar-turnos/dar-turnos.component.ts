@@ -53,7 +53,7 @@ export class DarTurnosComponent implements OnInit {
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
-    @Input()
+    @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.actualizarDatosPaciente(this._pacienteSeleccionado.id);
@@ -64,7 +64,7 @@ export class DarTurnosComponent implements OnInit {
 
     private tipoTurno = 'programado';
 
-    @Input()
+    @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
