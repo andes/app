@@ -135,9 +135,9 @@ export class MonitoreoInscriptosComponent implements OnInit {
         } else {
             this.gruposPoblacionales = [];
         }
-        this.conceptosTurneablesService.search({ id: ConceptosTurneablesService.VacunacionCovid_Id }).subscribe(data => {
+        this.conceptosTurneablesService.search({ conceptId: ConceptosTurneablesService.VacunacionCovid_ID }).subscribe(data => {
             this.solicitudTurno = {
-                tipoPrestacion: (data.filter((x) => x.id === ConceptosTurneablesService.VacunacionCovid_Id))[0]
+                tipoPrestacion: (data.filter((x) => x.conceptId === ConceptosTurneablesService.VacunacionCovid_ID))[0]
             };
         });
     }
@@ -188,6 +188,10 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
     // DACION DE TURNO --------------------------------------------
+
+    darTurno() {
+        this.dacionTurno = true;
+    }
 
     setDacionTurno() {
         this.solicitudTurno.organizacion = this.pacienteSelected.turno?.organizacion;
