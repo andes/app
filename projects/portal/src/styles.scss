@@ -1,23 +1,200 @@
-/* You can add global styles to this file, and also import other style files */
-$adi-font-path: "~@andes/icons/fonts/";
-@import "~@andes/icons/scss/andes-icons";
+/**
+ * Codigo repetido hasta que acomodemos la paleta de colores de PLEX y RUP.
+ * Faltan algunas tareas de refactor más.
+ **/
 
-// [TODO]: Migrar a adi y eliminar
-$mdi-font-path: "~@mdi/font/fonts/";
-@import "~@mdi/font/scss/materialdesignicons";
+$problema: #f1930d; // deprecated
+$trastorno: #ff4a1a;
+$hallazgo: #f4a03b;
+$procedimiento: #92278e;
+$solicitud: #0070cc;
+// $productos: #ef0993;
+$producto: #00bcb4;
+$adjunto: #141413;
+$todos: #111;
+$otro: #b9c512;
+$invert: #002738;
+$calificador: #660520;
+$laboratorio: #a0a0a0;
+$registro: #8bc43f; // elemento de registro
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
+// la interpolacion del string a una variable directamente
+$plex-tabs-color-extend: (
+    problema: $problema,
+    calificador: $calificador,
+    laboratorio: $laboratorio,
+    trastorno: $trastorno,
+    situación: $problema,
+    hallazgo: $hallazgo,
+    procedimiento: $procedimiento,
+    regimen: $procedimiento,
+    entidad: $procedimiento,
+    solicitud: $solicitud,
+    producto: $producto,
+    adjunto: $adjunto,
+    elementoderegistro: $registro,
+    invert: $invert,
+    todos: $todos,
+    otro: $otro
+);
 
-@import "~@andes/plex/src/lib/styles.scss";
+.logo-nav {
+    float: left;
+    background-color: var(--nav-bar-icon-color);
+    ;
+    width: 100px;
+    height: 50px;
+    padding: 7px;
+}
+nav .actions {
+    position: absolute;
+    right: 0;
+}
 
-// Importo colores RUP
-@import "./../../../src/app/modules/rup/components/variables.scss";
-@each $bg, $color in $rup_colors {
-    .rup-bg-#{$bg} {
-        background-color: $color;
-    }
-    .rup-color-#{$bg} {
-        color: $color;
-    }
-    .rup-border-#{$bg} {
-        border: solid 1px $color;
+//@import 'app/modules/rup/assets/font.css';
+
+$adi-font-path: '~@andes/icons/fonts/';
+@import '~@andes/icons/scss/andes-icons';
+// Plex
+@import '~@andes/plex/src/lib/styles.scss';
+
+div[collapse] {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 140px;
+}
+
+#menu-vertical {
+    overflow-y: scroll;
+    height: 100vh;
+    max-width: 100px;
+}
+
+// TODO: Hacer mixins
+.color-producto {
+    color: $producto; 
+}
+
+.color-trastorno {
+    color: $trastorno;
+}
+
+.color-hallazgo {
+    color: $hallazgo; 
+}
+
+.color-procedimiento {
+    color: $procedimiento;
+}
+
+.color-laboratorio {
+    color: $laboratorio;
+}
+
+.color-solicitud {
+    color: $solicitud;
+}
+
+.color-otro {
+    color: $otro;
+}
+
+.color-registro {
+    color: $registro;
+}
+
+// registro
+.border-producto {
+    border: solid 1px $producto;
+    outline: none;;
+    border-collapse: collapse 
+}
+
+.border-trastorno {
+    border: solid 1px $trastorno;
+    outline: none;
+    border-collapse: collapse;
+}
+
+.border-hallazgo {
+    border: solid 1px $hallazgo;
+    outline: none;;
+    border-collapse: collapse 
+}
+
+.border-procedimiento {
+    border: solid 1px $procedimiento;
+    outline: none;
+    border-collapse: collapse;
+}
+
+.border-laboratorio {
+    border: solid 1px $laboratorio;
+    outline: none;
+    border-collapse: collapse;
+}
+
+.border-solicitud {
+    border: solid 1px $solicitud;
+    outline: none;
+    border-collapse: collapse;
+}
+
+.border-otro {
+    border: solid 1px $otro;
+    outline: none;
+    border-collapse: collapse;
+}
+
+.border-registro {
+    border: solid 1px $registro;
+    outline: none;
+    border-collapse: collapse;
+}
+
+// Backgrounds
+.bg-producto {
+    background-color: $producto; 
+}
+
+.bg-trastorno {
+    background-color:  $trastorno;
+}
+
+.bg-hallazgo {
+    background-color: $hallazgo; 
+}
+
+.bg-procedimiento {
+    background-color:  $procedimiento;
+}
+
+.bg-laboratorio {
+    background-color:  $laboratorio;
+}
+
+.bg-solicitud {
+    background-color:  $solicitud;
+}
+
+.bg-otro {
+    background-color:  $otro;
+}
+
+.bg-registro {
+    background-color: $registro;
+}
+
+// Helpers
+.no-margin {
+    margin: 0!important;
+}
+
+// Override
+plex-item section.item.custom-colors.selectable.selected {
+    background-color: #edf8fd!important;
+
+    &:hover {
+        color: black!important;
     }
 }
