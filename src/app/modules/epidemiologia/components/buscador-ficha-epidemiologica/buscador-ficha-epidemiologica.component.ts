@@ -129,7 +129,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       key: 'sisa',
       label: 'Registro SISA',
       opcional: true,
-      sorteable: false
+      sorteable: false,
+      right: true
     }
   ];
   colsVisibles = {
