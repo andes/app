@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VacunasService } from 'src/app/services/vacunas.service';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lote',
@@ -54,10 +56,15 @@ export class LoteComponent implements OnInit {
 
   constructor(
     private vacunasService: VacunasService,
-    private plex: Plex
+    private plex: Plex,
+    private auth: Auth,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
+    if (!this.auth.getPermissions('vacunacion:crear-dosis-lote:?').length) {
+      this.router.navigate(['inicio']);
+    }
     this.vacunas$ = this.vacunasService.getNomivacVacunas({
       habilitado: true,
       calendarioNacional: 'NO',
