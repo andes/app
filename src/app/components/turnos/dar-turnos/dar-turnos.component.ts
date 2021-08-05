@@ -418,7 +418,7 @@ export class DarTurnosComponent implements OnInit {
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
-                idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
+                tipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.conceptId : ''),
                 organizacion: this.organizacion.id,
                 nominalizada: true
             };
@@ -1211,17 +1211,7 @@ export class DarTurnosComponent implements OnInit {
 
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
-        this.telefono = '';
-        this.cambioTelefono = false;
-        if (paciente && paciente.contacto) {
-            if (paciente.contacto.length > 0) {
-                paciente.contacto.forEach((contacto) => {
-                    if (contacto.tipo === 'celular') {
-                        this.telefono = contacto.valor;
-                    }
-                });
-            }
-        }
+        this.telefono = paciente?.contacto?.find(c => c.tipo === 'celular')?.valor || '';
     }
 
     noSeAsignaTurno() {
