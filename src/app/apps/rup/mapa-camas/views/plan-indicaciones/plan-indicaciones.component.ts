@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -16,6 +16,7 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
 @Component({
     selector: 'in-plan-indicacion',
     templateUrl: './plan-indicaciones.component.html',
+    encapsulation: ViewEncapsulation.None,
     styleUrls: [
         '../../../../../modules/rup/components/core/_rup.scss'
     ],
@@ -25,7 +26,7 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
         }
 
         .selected {
-            border: 2px solid #5bc0de;
+            border: 2px solid #5bc0de!important;
         }
 
         .punto {
@@ -47,17 +48,17 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
             background-color: #c9bd2c;
         }
 
-        tr.pausado {
+        tr.on-hold {
             background-color: #ff8d2233;
             border: 2px solid #ff8d22;
         }
 
-        tr.completado {
+        tr.completed {
             background-color: #8cc63f33;
             border: 2px solid #8cc63f;
         }
 
-        tr.suspendido {
+        tr.stopped, tr.cancelled  {
             background-color: #dd4b3933;
             border: 2px solid #dd4b39;
         }
@@ -80,28 +81,30 @@ export class PlanIndicacionesComponent implements OnInit {
     private internacion;
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
-            const indicaciones = Object.keys(selected).filter(k => selected[k]).map(k => this.indicaciones.find(i => i.id === k));
+            const indicaciones = Object.keys(selected)
+                .filter(k => selected[k])
+                .map(k => this.indicaciones.find(i => i.id === k));
             return indicaciones;
         })
     );
 
     public detener$ = this.botones$.pipe(
         map(indicaciones => {
-            const b = indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'activo' || ind.estado.tipo === 'pausado');
+            const b = indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending');
             return b;
         })
     );
 
     public continuar$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'pausado'))
+        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending'))
     );
 
     public pausar$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'activo'))
+        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
     );
 
     public completar$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'activo'))
+        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
     );
 
 
@@ -215,19 +218,19 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onPausarClick() {
-        this.cambiarEstado('pausado');
+        this.cambiarEstado('on-hold');
     }
 
     onDetenerClick() {
-        this.cambiarEstado('suspendido');
+        this.cambiarEstado('cancelled');
     }
 
     onContinuarClick() {
-        this.cambiarEstado('activo');
+        this.cambiarEstado('active');
     }
 
     onCompletarClick() {
-        this.cambiarEstado('completado');
+        this.cambiarEstado('completed');
     }
 
     onSelectIndicacion(indicacion) {

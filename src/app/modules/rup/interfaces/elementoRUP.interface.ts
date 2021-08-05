@@ -51,6 +51,8 @@ export interface IElementoRUP {
     permiteRepetidos?: boolean;
 
     rules?: any[];
+    tags?: string[];
+    tabs?: string[];
 }
 
 export interface IElementoRUPRequeridos {

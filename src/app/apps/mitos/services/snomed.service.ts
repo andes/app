@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
+import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Server, Cache } from '@andes/shared';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SnomedService {
@@ -21,6 +21,10 @@ export class SnomedService {
 
     getQuery(params: any): Observable<any[]> {
         return this.server.get(this.snomedURLexpression, { params: params, showError: true });
+    }
+
+    findConcepto(conceptId: string) {
+        return this.server.get(`${this.snomedURL}/concepts/${conceptId}`);
     }
 
 }

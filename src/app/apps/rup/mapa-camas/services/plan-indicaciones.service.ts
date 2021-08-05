@@ -34,6 +34,9 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                             },
                             null
                         );
+                        if (moment(estado.fecha).isBefore(fecha, 'd')) {
+                            estado.tipo = 'pending';
+                        }
                         return {
                             ...ind,
                             estado

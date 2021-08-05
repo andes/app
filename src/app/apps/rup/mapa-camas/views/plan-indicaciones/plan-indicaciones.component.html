@@ -50,6 +50,8 @@
                             <plex-button type="info" size="sm" (click)="onSelectIndicacion(indicacion)">
                                 <plex-icon name="eye"></plex-icon>
                             </plex-button>
+                            <plex-icon name="alert" *ngIf="indicacion.estado.tipo === 'pending'"
+                                       tooltip="Pendiente de validar"></plex-icon>
                         </td>
                         <td *ngFor="let hora of horas" class="pointer"
                             [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"

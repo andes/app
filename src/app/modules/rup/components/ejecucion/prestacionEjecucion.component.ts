@@ -468,7 +468,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
 
-        debugger;
         nuevoRegistro.idEvolucion = idEvolucion;
 
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
