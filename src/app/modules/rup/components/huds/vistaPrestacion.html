@@ -5,8 +5,11 @@
             <plex-button *ngIf="hasPacs" type="info" (click)="onPacs()" size="sm">
                 VER IMAGEN
             </plex-button>
-            <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF"
+            <plex-button *ngIf="puedeDescargarInforme" type="info" size="sm" icon="download" title="Descargar PDF"
                          [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
+            </plex-button>
+            <plex-button *ngIf="_puedeEditar" type="info" size="sm" icon="pencil" title="Editar prestación"
+                         [disabled]="requestInProgress" (click)="abrirPrestacion()" titlePosition="left">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>

@@ -84,6 +84,9 @@ export class IPrestacion {
     unidadOrganizativa: ISnomedConcept;
     createdAt: Date;
     updatedAt: Date;
+    createdBy: {
+        id: String,
+    };
 
     metadata: { key: string, valor: any }[];
 
