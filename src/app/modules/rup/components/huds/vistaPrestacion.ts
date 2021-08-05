@@ -1,6 +1,7 @@
 
 import { Auth } from '@andes/auth';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -9,8 +10,6 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { populateRelaciones } from '../../operators/populate-relaciones';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
-import { ActivatedRoute, Router } from '@angular/router';
-
 @Component({
     selector: 'vista-prestacion',
     templateUrl: 'vistaPrestacion.html',
@@ -21,15 +20,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class VistaPrestacionComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
-    @Input() evolucionActual: any;
     @Input() puedeEditar: boolean;
-    @Input() ruta: boolean;
-    @Input() indice = 0;
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
     public requestInProgress: boolean;
     public hasPacs: boolean;
+
+    _puedeEditar: boolean;
+
 
     constructor(
         private auth: Auth,
@@ -62,10 +61,11 @@ export class VistaPrestacionComponent implements OnInit {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.prestacion = prestacion;
                 this.paciente = paciente;
-                this.puedeEditar = this.puedeEditar && this.prestacion.createdBy.id === this.auth.usuario.id;
+                this._puedeEditar = this.puedeEditar && this.checkUser();
             });
         });
     }
+
     get idPrestacion(): any {
         return this._idPrestacion;
     }
@@ -74,6 +74,10 @@ export class VistaPrestacionComponent implements OnInit {
         return fecha.getTime();
     }
 
+    checkUser() {
+        const permisoExtra = this.auth.check('rup:validacion:' + this.prestacion.solicitud.tipoPrestacion.id);
+        return permisoExtra || this.prestacion.createdBy.id === this.auth.usuario.id;
+    }
 
     descargarInforme() {
         this.requestInProgress = true;
@@ -91,9 +95,11 @@ export class VistaPrestacionComponent implements OnInit {
     }
 
     abrirPrestacion() {
-        if (this.ruta) {
-            this.servicioPrestacion.notificaRuta(this.ruta);
-        }
+        this.servicioPrestacion.notificaRuta({
+            // Generico por ahora
+            nombre: 'VOLVER',
+            ruta: this.router.url
+        });
         this.router.navigate(['./rup/ejecucion', this.prestacion.id]);
     }
 
