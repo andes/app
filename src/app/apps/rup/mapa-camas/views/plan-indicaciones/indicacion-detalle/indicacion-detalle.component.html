@@ -4,12 +4,18 @@
 
 <plex-detail>
     <plex-icon name="documento-paciente" type="info"></plex-icon>
-    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">{{ indicacion.estado.tipo }}</plex-badge>
-    <plex-badge type="info" tooltip="Fecha de inicio">{{ indicacion.fechaInicio | fecha }}</plex-badge>
-    <div title case="capitalize">{{ indicacion.nombre }} </div>
+    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">
+        {{ indicacion.estado.tipo | indicacionLabel }}
+    </plex-badge>
+    <plex-badge type="info" tooltip="Fecha de inicio">
+        {{ indicacion.fechaInicio | fecha }}
+    </plex-badge>
+    <div title case="capitalize">
+        {{ indicacion.nombre }}
+    </div>
 </plex-detail>
 
-<rup [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
+<rup *ngIf="init" [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
      [soloValores]="true">
 </rup>
 
@@ -18,6 +24,9 @@
 <plex-list>
     <plex-item *ngFor="let estado of indicacion.estados">
         <plex-label> {{ estado.fecha | fecha }} {{ estado.fecha | hora }}</plex-label>
-        <plex-badge [color]="estado.tipo | indicacionColor"> {{ estado.tipo }}</plex-badge>
+        <plex-label> {{ estado.createdBy | nombre }} </plex-label>
+        <plex-badge [color]="estado.tipo | indicacionColor">
+            {{ estado.tipo | indicacionLabel }}
+        </plex-badge>
     </plex-item>
 </plex-list>

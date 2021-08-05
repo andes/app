@@ -10,11 +10,9 @@ import { RUPComponent } from '../../../core/rup.component';
 @RupElement('SolicitudPrescripcionMedicamentoComponent')
 export class SolicitudPrescripcionMedicamentoComponent extends RUPComponent implements OnInit, AfterViewInit {
 
-    public reglasMatch = [];
-    public reglaSelected = null;
-
-    public organizaciones: any[] = [];
     afterInit = false;
+
+    showModal = false;
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -47,12 +45,31 @@ export class SolicitudPrescripcionMedicamentoComponent extends RUPComponent impl
     getData(input: string) {
         return this.snomedService.get({
             search: input,
-            semanticTag: 'fármaco de uso clínico'
+            semanticTag: 'fármaco de uso clínico',
         });
     }
 
     isEmpty() {
         const value = this.registro.valor;
         return !value.indicaciones;
+    }
+
+    onSelectMedicamentos(medicamento) {
+        this.registro.valor.medicamento = medicamento;
+        this.emitChange2();
+    }
+
+    emitChange2() {
+        this.emitChange();
+        if (this.registro.valor.medicamento?.conceptId) {
+            const ctid = this.registro.valor.medicamento.conceptId;
+            this.snomedService.getQuery({
+                expression: `${ctid}.411116001.736474004`
+            }).subscribe((cts: any[]) => {
+                if (cts.length) {
+                    this.registro.valor.via = cts[0];
+                }
+            });
+        }
     }
 }

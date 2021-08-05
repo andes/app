@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { PlanIndicacionesResumenComponent } from 'src/app/apps/rup/mapa-camas/components/plan-indicaciones-resumen.component';
+import { MapaCamasPlanIndicacionModule } from 'src/app/apps/rup/mapa-camas/views/plan-indicaciones/plan-indicaciones.module';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
 import { SnomedBuscarComponent } from '../../components/snomed/snomed-buscar.component';
 import { TOPLibModule } from '../../components/top/top.module';
@@ -47,8 +47,7 @@ export const RUP_COMPONENTS = [
     BuscadorComponent,
     RupRelacionesComponent,
     SnomedSinonimoComponent,
-    RUPServicioIntermedioAltaComponent,
-    PlanIndicacionesResumenComponent
+    RUPServicioIntermedioAltaComponent
 ];
 
 export const RUP_PROVIDERS = [
@@ -74,6 +73,7 @@ export const RUP_PROVIDERS = [
         InfiniteScrollModule,
         HUDSLibModule,
         EpidemiologiaModule,
+        MapaCamasPlanIndicacionModule,
         RouterModule.forChild([
             { path: '', component: PuntoInicioComponent, pathMatch: 'full' },
             { path: 'crear/:opcion', component: PrestacionCrearComponent },

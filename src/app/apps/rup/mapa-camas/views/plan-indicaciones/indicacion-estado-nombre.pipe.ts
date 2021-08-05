@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'indicacionColor'
+    name: 'indicacionLabel'
 })
-export class IndicacionColorPipe implements PipeTransform {
+export class IndicacionLabelPipe implements PipeTransform {
     transform(estado: string): any {
         switch (estado) {
             case 'on-hold':
-                return '#ff8d22';
+                return 'pausado';
             case 'completed':
-                return '#8cc63f';
+                return 'completado';
             case 'stopped':
             case 'cancelled':
-                return '#dd4b39';
+                return 'suspendido';
             default:
-                return '#00a8e0';
+                return 'activo';
         }
     }
 }

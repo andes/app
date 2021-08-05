@@ -59,10 +59,6 @@ import { FiltrosCamasComponent } from './views/mapa-camas-capa/filtros-cama/filt
 import { ItemCamaComponent } from './views/mapa-camas-capa/item-cama/item-cama.component';
 import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
 import { RecursosListadoComponent } from './views/mapa-camas-capa/recursos-listado/recursos-listado.component';
-import { IndicacionDetalleComponent } from './views/plan-indicaciones/indicacion-detalle/indicacion-detalle.component';
-import { IndicacionColorPipe } from './views/plan-indicaciones/indicacion-estado-color.pipes';
-import { PlanIndicacionEventoComponent } from './views/plan-indicaciones/indicacion-eventos/indicacion-eventos.component';
-import { PlanIndicacionesComponent } from './views/plan-indicaciones/plan-indicaciones.component';
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
@@ -110,10 +106,7 @@ export const INTERNACION_COMPONENTS = [
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,
-    TimelineMapaCamasComponent,
-    PlanIndicacionesComponent,
-    PlanIndicacionEventoComponent,
-    IndicacionDetalleComponent
+    TimelineMapaCamasComponent
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -149,13 +142,11 @@ export const INTERNACION_PROVIDERS = [
     ],
     declarations: [
         ...INTERNACION_COMPONENTS,
-        IndicacionColorPipe
     ],
     providers: [
         ...INTERNACION_PROVIDERS
     ],
     exports: [
-        IndicacionColorPipe
     ],
 })
 export class MapaCamasModule {

@@ -12,6 +12,7 @@ import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { RUPComponent } from './components/core/rup.component';
 import { RUPAccionesEnvioInformeComponent } from './components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
+import { RUPMedicamentosBusquedaDetalleComponent } from './components/ejecucion/medicamentos-busqueda-detalle/medicamentos-busqueda-detalle.component';
 import { ModalSeleccionEmailComponent } from './components/ejecucion/modal-seleccion-email.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
 import { AutocitadoComponent } from './components/elementos/autocitado.component';
@@ -153,8 +154,8 @@ const RUPComponentsArray = [
         RUPObservacionesModalComponent,
         SemanticIconPipe,
         SemanticClassPipe,
-        ElementoRUPByIdPipes
-
+        ElementoRUPByIdPipes,
+        RUPMedicamentosBusquedaDetalleComponent
     ],
     entryComponents: [
         ...RUPComponentsArray

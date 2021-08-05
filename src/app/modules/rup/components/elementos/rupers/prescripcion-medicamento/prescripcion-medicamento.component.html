@@ -1,11 +1,37 @@
 <ng-container *ngIf="!soloValores">
+    <div class="grow">
+        <plex-select [(ngModel)]="registro.valor.medicamento" name="conceptos" (getData)="loadConceptos($event)"
+                     (change)="emitChange2()" label="Medicamento" idField="conceptId" labelField="term">
+        </plex-select>
+        <plex-button size="sm" type="info" icon="eye" (click)="showModal = true" class="align-self-end"></plex-button>
+    </div>
 
-    <plex-select [(ngModel)]="registro.valor.medicamento" name="conceptos" (getData)="loadConceptos($event)"
-                 (change)="emitChange()" label="Medicamento" idField="conceptId" labelField="term">
-    </plex-select>
+    <!-- NO VISIBLE PARA EL USUARIO POR AHORA -->
+    <!-- <plex-select [(ngModel)]="registro.valor.via" name="conceptos" [snomedExpression]="'<<736479009'"
+                 (change)="emitChange()" label="Via de Administracion">
+    </plex-select> -->
+
+    <plex-wrapper>
+        <plex-int [(ngModel)]="registro.valor.cantidad" name="conceptos" (change)="emitChange()" label="Cantidad">
+        </plex-int>
+
+        <plex-int [(ngModel)]="registro.valor.frecuencia" name="conceptos" (change)="emitChange()" label="Frecuencia"
+                  suffix="Hora" [min]="1" [max]="12">
+        </plex-int>
+    </plex-wrapper>
+
     <plex-text label="Indicaciones" [html]="true" height=100 [(ngModel)]="registro.valor.indicaciones"
                name="indicaciones" *ngIf="afterInit">
     </plex-text>
+
+    <plex-modal size="lg" [startOpen]="true" *ngIf="showModal" (closed)="showModal = false">
+        <main>
+            <section class="w-100 h-100">
+                <rup-medicamentos-busqueda-detalle (select)="onSelectMedicamentos($event); showModal = false">
+                </rup-medicamentos-busqueda-detalle>
+            </section>
+        </main>
+    </plex-modal>
 
 </ng-container>
 <div class="row" *ngIf="soloValores">
@@ -13,6 +39,18 @@
         <div>
             <span>Medicamento</span>
             {{ registro.valor.medicamento.term || '(no definido)' }}
+        </div>
+        <div *ngIf="registro.valor.via">
+            <span>Via de Administración</span>
+            {{ registro.valor.via.term }}
+        </div>
+        <div *ngIf="registro.valor.frecuencia">
+            <span>Frecuencia</span>
+            Cada {{ registro.valor.frecuencia }} HS
+        </div>
+        <div *ngIf="registro.valor.frecuencia">
+            <span>Cantidad</span>
+            {{ registro.valor.cantidad }}
         </div>
         <div>
             <span>Indicaciones</span>

@@ -5,6 +5,7 @@ import { Component, Input, OnChanges } from '@angular/core';
     templateUrl: './indicacion-detalle.component.html'
 })
 export class IndicacionDetalleComponent implements OnChanges {
+    init = false;
     @Input() indicacion;
 
     public observaciones: string;
@@ -14,8 +15,11 @@ export class IndicacionDetalleComponent implements OnChanges {
             this.observaciones = this.indicacion.valor.solicitudPrestacion.indicaciones;
         } else {
             this.observaciones = this.indicacion.valor.indicaciones;
-
         }
+
+        // Por como esta diseñado el rup component no acepta un update de Inputs.
+        this.init = false;
+        setTimeout(() => this.init = true, 1);
     }
 
 }

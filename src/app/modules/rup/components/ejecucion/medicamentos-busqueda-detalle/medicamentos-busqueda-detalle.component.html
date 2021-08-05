@@ -1,0 +1,23 @@
+<plex-wrapper>
+    <plex-select [(ngModel)]="via" name="conceptos" [snomedExpression]="viaExpresssion" (change)="refreshListado()"
+                 label="Via de Administracion">
+    </plex-select>
+
+    <plex-select [(ngModel)]="producto" name="conceptos" [snomedExpression]="'<<312415009'" (change)="refreshListado()"
+                 label="Ingrediente" [preload]="false">
+    </plex-select>
+
+    <plex-select [(ngModel)]="unidadPresentacion" name="conceptos" [snomedExpression]="unidadPresentacionExpression"
+                 (change)="refreshListado()" label="Unidad de Presentación">
+    </plex-select>
+
+    <plex-select [(ngModel)]="potencia" name="conceptos" [snomedExpression]="potenciaExpression"
+                 (change)="refreshListado()" label="Potencia">
+    </plex-select>
+</plex-wrapper>
+
+<plex-list [height]="'300px'">
+    <plex-item *ngFor="let concepto of listado" (click)="onClick(concepto)">
+        <plex-label> {{ concepto.term }} </plex-label>
+    </plex-item>
+</plex-list>
