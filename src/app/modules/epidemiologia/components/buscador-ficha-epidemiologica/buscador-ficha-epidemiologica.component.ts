@@ -206,14 +206,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         }
         return this.formEpidemiologiaService.search(this.query).pipe(
           map(resultados => {
-            resultados.map(ficha => {
+            resultados.forEach(ficha => {
               const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
-              if (seccionClasificacion) {
-                const pcr = seccionClasificacion.fields.find(field => Object.keys(field)[0] === 'identificadorpcr');
-                ficha.idPcr = pcr ? pcr.identificadorpcr : 'Sin PCR';
-              } else {
-                ficha.idPcr = 'Sin PCR';
-              }
+              const idPcr = seccionClasificacion?.fields.find(field => field.identificadorpcr)?.identificadorpcr;
+              ficha.idPcr = idPcr ? idPcr : 'Sin PCR';
             });
             this.listado = lastResults ? lastResults.concat(resultados) : resultados;
             this.query.skip = this.listado.length;
