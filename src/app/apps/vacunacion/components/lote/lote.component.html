@@ -29,7 +29,7 @@
 				<plex-button type="success" size="sm" (click)="crearLote()" class='mr-1' icon="plus"></plex-button>
 			</plex-title>
 			<plex-list>
-				<plex-item *ngFor="let lote of lotes$ | async">
+				<plex-item *ngFor="let lote of lotes$ | async" [selectable]="false">
 					<plex-label titulo="Código" subtitulo="{{lote.codigo}}" size="md"></plex-label>
 					<plex-label titulo="Descripción" subtitulo="{{lote.descripcion}}" size="md"></plex-label>
 				</plex-item>
@@ -52,23 +52,16 @@
 								<div class="w-50">
 									<plex-label size="md" titulo="Nombre" subtitulo="{{dosis.nombre}}"></plex-label>
 								</div>
-								<div *ngIf="!mostrarCondiciones[dosis._id]">
-									<plex-button type="info" size="sm" icon="pico-abajo" class="ml-2">
-									</plex-button>
-								</div>
-								<div *ngIf="mostrarCondiciones[dosis._id]">
-									<plex-button type="info" size="sm" icon="pico-arriba" class="ml-2">
-									</plex-button>
-								</div>
+								<plex-button type="info" size="sm"
+											 [icon]="mostrarCondiciones[dosis._id] ? 'pico-arriba' : 'pico-abajo'"
+											 class="ml-2"> </plex-button>
 							</section>
-
 							<lote-esquemas [esquema]="dosis.esquema" [vacuna]="dosis.vacuna">
-
 							</lote-esquemas>
-
 						</plex-panel>
 					</plex-accordion>
 				</ng-container>
+
 				<ng-container *ngIf="creandoDosis">
 					<plex-title titulo="Crear dosis" size="sm">
 						<plex-button type="danger" size="sm" class='mr-1' (click)="cerrar()">
