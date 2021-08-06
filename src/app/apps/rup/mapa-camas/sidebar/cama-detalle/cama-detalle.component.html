@@ -71,7 +71,11 @@
             </fieldset>
         </ng-container>
         <ng-container *ngIf="cama.paciente">
-            <plex-title size="sm" justify titulo="DATOS DEL PACIENTE">
+            <plex-title size="md" justify titulo="DATOS DEL PACIENTE">
+                <plex-badge *ngIf="respiradorEnUso(cama)" type="info">
+                    Respirador
+                    <plex-icon name="{{ respiradorEnUso(cama)?.dispositivo.icono }}"> </plex-icon>
+                </plex-badge>
 
                 <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="info"
                              (click)="onVerResumen(cama)" class="mr-1">
@@ -93,23 +97,27 @@
                 </ng-container>
 
                 <plex-dropdown right="true" size="sm" type="primary" icon='chevron-down' tooltip="Opciones">
-                    <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="info"
-                                 (click)="onVerResumen(cama)" class="mr-1">
-                    </plex-button>
-
-                    <ng-container *ngIf="turnero$ | async as pantalla">
-                        <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">
-                            <plex-icon name="bell-ring-outline"></plex-icon>
+                    <div class="text-right">
+                        <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="link"
+                                     (click)="onVerResumen(cama)">
                         </plex-button>
-                    </ng-container>
 
-                    <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
-                        <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
+                        <ng-container *ngIf="turnero$ | async as pantalla">
+                            <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info">
+                                <plex-icon name="bell-ring-outline"></plex-icon>
+                            </plex-button>
+                        </ng-container>
+
+                        <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
+                            <plex-button size="sm" type="link" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
+                            </plex-button>
+                        </ng-container>
+
+                        <plex-button size="sm" type="link"
+                                     label="{{ respiradorEnUso(cama) ? 'Retirar respirador' : 'Usar respirador '}}"
+                                     (click)="agregarQuitarRespirador(cama)">
                         </plex-button>
-                    </ng-container>
-
-                    <plex-button size="sm" label="Usar respirador" type="warning" (click)="onUsarRespirador()">
-                    </plex-button>
+                    </div>
                 </plex-dropdown>
             </plex-title>
 

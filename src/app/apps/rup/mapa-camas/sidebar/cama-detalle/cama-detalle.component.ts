@@ -14,7 +14,6 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { DispositivoService } from '../../../../../services/dispositivo/dispositivo.service';
 
 @Component({
     selector: 'app-cama-detalle',
@@ -180,8 +179,14 @@ export class CamaDetalleComponent implements OnInit {
             }
         }
     }
+    /* Devuelve el respirador que se encuentra en uso o null. Un respirador está en uso
+        si no posee fechaHasta */
+    respiradorEnUso(cama: ISnapshot) {
+        const ultimoRespirador = cama.respiradores?.length ? cama.respiradores[cama.respiradores.length - 1] : null;
+        return ultimoRespirador?.fechaHasta ? null : ultimoRespirador;
+    }
 
-    onUsarRespirador() {
+    agregarQuitarRespirador(cama: ISnapshot) {
         this.accionCama.emit({ accion: 'seleccionar-dispositivo' });
     }
 

@@ -347,7 +347,7 @@ export class MapaCamasService {
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
@@ -522,6 +522,10 @@ export class MapaCamasService {
                 return this.salaComunService.egresarPaciente(data, fecha);
             }
         }
+    }
+
+    setRespiradores(data, fecha): Observable<any> {
+        return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
     }
 
     changeTime(cama, fechaOriginal, nuevaFecha, idInternacion, ambito: string = null, capa: string = null) {

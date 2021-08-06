@@ -240,8 +240,25 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/${this.mapaCamasService.capa}/lista-espera`]);
     }
 
-    afterSeleccionarDispositivo(dispositivo) {
-        // TODO: realizar patch correspondiente
+    afterSeleccionarDispositivo(cama, dispositivo) {
+        if (dispositivo) {
+            let respiradores = cama.respiradores || [];
+            const index = respiradores.findIndex(r => r._id === dispositivo._id);
+            index > -1 ? respiradores[index] = dispositivo : respiradores.push(dispositivo);
+            const data = {
+                _id: cama._id,
+                respiradores
+            };
+            this.mapaCamasService.save(data, cama.fecha, false).subscribe(response => {
+                if (response) {
+                    this.plex.toast('success', 'Dispositivo actualizado exitosamente.');
+                } else {
+                    this.plex.toast('danger', 'Ocurrió un error al cargar el dispositivo.');
+                }
+            }, error => {
+                this.plex.toast('danger', 'Ocurrió un error al cargar el dispositivo.');
+            });
+        }
         this.volverADetalle();
     }
 

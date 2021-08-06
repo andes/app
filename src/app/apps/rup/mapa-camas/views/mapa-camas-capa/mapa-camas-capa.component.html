@@ -232,13 +232,8 @@
             <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()"
                               (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
             </app-cama-detalle>
-
             <app-seleccion-dispositivo *ngIf="accion === 'seleccionar-dispositivo'"
-                                       (selected)="afterSeleccionarDispositivo()">
-
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
-                </plex-button>
-
+                                       (selected)="afterSeleccionarDispositivo(selectedCama, $event)">
             </app-seleccion-dispositivo>
         </ng-container>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">

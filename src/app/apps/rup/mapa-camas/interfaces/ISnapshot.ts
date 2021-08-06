@@ -71,7 +71,10 @@ export interface ISnapshot {
         username: Number;
         documento: Number;
     };
-
-
+    respiradores?: [{
+        dispositivo: any,
+        fechaDesde: Date,
+        fechaHasta: Date
+    }];
 }
 
