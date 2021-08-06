@@ -1,0 +1,25 @@
+<ng-container *ngIf="!mostrarCondiciones">
+    <plex-grid type="full" size="md" justify align="center">
+        <plex-label titulo="Código" subtitulo="{{esquema.codigo}}" size="md">
+        </plex-label>
+        <plex-badge size="sm" type="info">{{esquema.nombre}}</plex-badge>
+        <plex-button type="info" size="sm" (click)="cargarCondiciones(esquema.codigo, esquema.nombre)">
+            CONDICIONES
+        </plex-button>
+    </plex-grid>
+</ng-container>
+
+<ng-container *ngIf="mostrarCondiciones">
+    <plex-title titulo="Condiciones" size="sm">
+        <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrarCondicion()">
+        </plex-button>
+    </plex-title>
+    <plex-table [columns]="columnasCondiciones" #table="plTable">
+        <plex-table-columns>
+        </plex-table-columns>
+        <tr *ngFor="let con of esquemas$ | async">
+            <td *plTableCol="'codigo'">{{con?.condicion.codigo}}</td>
+            <td *plTableCol="'nombre'">{{con?.condicion.nombre}}</td>
+        </tr>
+    </plex-table>
+</ng-container>
