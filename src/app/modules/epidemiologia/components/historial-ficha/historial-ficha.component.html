@@ -6,7 +6,14 @@
     </plex-table-columns>
     <tr *ngFor="let ficha of (historial$ | plSort:table | async)">
         <td *plTableCol="'fecha'">{{ (ficha.updatedAt || ficha.createdAt) | date:'dd/MM/yyyy - HH:mm'}}</td>
-        <td *plTableCol="'usuario'">{{ ficha.updatedBy ? ficha.updatedBy.nombreCompleto : ficha.createdBy.nombreCompleto}}</td>
+        <td *plTableCol="'usuario'">
+            <ng-container *ngIf="ficha.updatedBy">
+                {{ ficha.updatedBy.nombreCompleto ? ficha.updatedBy.nombreCompleto : 'Proceso Automático'}}
+            </ng-container>
+            <ng-container *ngIf="!ficha.updatedBy">
+                {{ ficha.createdBy.nombreCompleto }}
+            </ng-container>
+        </td>
         <td *plTableCol="'acciones'">
             <plex-button type="success" icon="eye" size="sm" (click)="verFicha(ficha)">
             </plex-button>
