@@ -28,6 +28,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public idPcr = null;
   public idClasificacion = null;
   public idTipoConfirmacion = null;
+  public idClasificacionFinal = null;
   public dataType$: Observable<any>;
   public fichas$: Observable<any>;
   public showFicha = false;
@@ -66,6 +67,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     { id: 'pcr', nombre: 'PCR-RT' },
     { id: 'lamp', nombre: 'LAMP(NeoKit)' }
   ];
+  public clasificacionFinal = [
+    { id: 'Confirmado', nombre: 'Confirmado' },
+    { id: 'Sospechoso', nombre: 'Sospechoso' },
+    { id: 'Descartado', nombre: 'Descartado' }
+  ];
   public filtrarSISA;
   public permisoHuds = false;
   public columns = [
@@ -102,6 +108,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       sort: (a: any, b: any) => a.type.name.localeCompare(b.type.name)
     },
     {
+      key: 'pcr',
+      label: 'PCR',
+      sorteable: false,
+      opcional: true
+    },
+    {
       key: 'clasificacion',
       label: 'Clasificación',
       opcional: true,
@@ -117,7 +129,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       key: 'sisa',
       label: 'Registro SISA',
       opcional: true,
-      sorteable: false
+      sorteable: false,
+      right: true
     }
   ];
   colsVisibles = {
@@ -128,6 +141,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     'clasificacion': false,
     'acciones': true,
     'sisa': true,
+    'pcr': true
   };
 
   constructor(
@@ -170,6 +184,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       identificadorPcr: this.idPcr,
       tipoConfirmacion: this.idTipoConfirmacion?.id,
       zonaSanitaria: this.zonaSanitaria?._id,
+      clasificacionFinal: this.idClasificacionFinal?.id,
       skip: 0,
       limit: 15
     };
@@ -191,12 +206,13 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         }
         return this.formEpidemiologiaService.search(this.query).pipe(
           map(resultados => {
-            if (resultados) {
-              this.listado = lastResults ? lastResults.concat(resultados) : resultados;
-              this.query.skip = this.listado.length;
-            } else {
-              this.listado = [];
-            }
+            resultados.forEach(ficha => {
+              const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+              const idPcr = seccionClasificacion?.fields.find(field => field.identificadorpcr)?.identificadorpcr;
+              ficha.idPcr = idPcr ? idPcr : 'Sin PCR';
+            });
+            this.listado = lastResults ? lastResults.concat(resultados) : resultados;
+            this.query.skip = this.listado.length;
             this.inProgress = false;
             return this.listado;
           })
