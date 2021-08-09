@@ -10,10 +10,10 @@ export class DominiosNacionalesService {
     ) { }
 
     getDominiosIdPaciente(idPaciente: String): Observable<any> {
-        return this.server.get(this.ipsUrl + 'getDomains/' + idPaciente);
+        return this.server.get(this.ipsUrl + 'dominios/' + idPaciente);
     }
 
     getDocumentos(params: any): Observable<any> {
-        return this.server.get(this.ipsUrl + 'getDocuments/', { params: params, showError: true });
+        return this.server.get(this.ipsUrl + 'documentos/', { params: params, showError: true });
     }
 }
