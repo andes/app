@@ -1,10 +1,11 @@
 import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'listado-perinatal',
@@ -27,7 +28,6 @@ export class ListadoPerinatalComponent implements OnInit {
     public profesional;
     public organizacion;
     public columns = [
-
         {
             key: 'fechaInicio',
             label: 'Fecha inicio',
@@ -80,11 +80,18 @@ export class ListadoPerinatalComponent implements OnInit {
             sort: (a: any, b: any) => a.fechaUltimoControl.getTime() - b.fechaUltimoControl.getTime()
         }
     ];
+
+    get disableDescargar() {
+        return !this.fechaDesdeEntrada || !this.fechaHastaEntrada;
+    }
+
     constructor(
         private auth: Auth,
         private router: Router,
         private location: Location,
-        private carnetPerinatalService: CarnetPerinatalService) { }
+        private carnetPerinatalService: CarnetPerinatalService,
+        private documentosService: DocumentosService
+    ) { }
 
     ngOnInit(): void {
         if (!this.auth.getPermissions('perinatal:?').length) {
@@ -136,5 +143,16 @@ export class ListadoPerinatalComponent implements OnInit {
 
     esAusente(fechaProximoControl, fechaFinEmbarazo) {
         return ((moment().diff(moment(fechaProximoControl), 'days') >= 1) && !fechaFinEmbarazo);
+    }
+
+    descargarListado() {
+        const params = {
+            fechaDesde: this.fechaDesdeEntrada,
+            fechaHasta: this.fechaHastaEntrada,
+            profesional: this.profesional?.id,
+            organizacion: this.organizacion?.id
+        };
+
+        this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 }

@@ -69,4 +69,10 @@ export class DocumentosService {
             saveAs(nombreArchivo, 'pdf')
         );
     }
+
+    descargarListadoPerinatal(params, nombreArchivo: string): Observable<any> {
+        return this.server.post('/bi/queries/listado-perinatal/csv', { params }, { responseType: 'blob' }).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
+    }
 }
