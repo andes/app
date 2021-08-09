@@ -7,9 +7,9 @@ import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneable
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
+import { DominiosNacionalesService } from '../../services/dominios-nacionales.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
-import { DominiosNacionalesService } from './../../services/dominiosNacionales.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 
@@ -362,7 +362,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     listarDominios() {
-        // Listar los dominios de ese paciente
         this.domNacional.getDominiosIdPaciente(this.paciente.id).subscribe((resultado) => {
             this.dominios = resultado;
         });
