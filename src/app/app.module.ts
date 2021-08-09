@@ -149,7 +149,6 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { CDAService } from './modules/rup/services/CDA.service';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
-import { DominiosNacionalesService } from './modules/rup/services/dominiosNacionales.service';
 // ... RUP
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
 // RUP
@@ -392,7 +391,6 @@ registerLocaleData(localeEs, 'es');
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,
-        DominiosNacionalesService,
         RiesgoCardiovascularService,
         FormulaBaseService,
         CampaniaSaludService,

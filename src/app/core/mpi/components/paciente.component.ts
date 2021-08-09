@@ -51,9 +51,6 @@ export class PacienteComponent implements OnInit {
     loading = true;
     autoFocus = 0;
 
-    // PruebaFederador
-    public pacientesFederador: any = null;
-
     public contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -428,10 +425,6 @@ export class PacienteComponent implements OnInit {
     setMainSize(tabIndex) {
         if (this.pacientesSimilares && this.pacientesSimilares.length) {
             this.mainSize = 9;
-            return;
-        }
-        if (this.pacientesFederador && this.pacientesFederador.length) {
-            this.mainSize = 8;
             return;
         }
         if (tabIndex === 1) {

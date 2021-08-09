@@ -16,13 +16,13 @@ import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/res
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { VistaAccesosHudsComponent } from './components/huds/vista-accesos-huds.component';
+import { VistaIPSComponent } from './components/huds/vista-ips.component';
 import { VistaCDAComponent } from './components/huds/vistaCDA.component';
 import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './components/huds/vistaDetalleRegistro';
 import { VistaProcedimientoComponent } from './components/huds/vistaProcedimiento';
 import { VistaRegistroComponent } from './components/huds/vistaRegistro';
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
-import { VistaIPSComponent } from './components/huds/vistaIPS.component';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
 
