@@ -44,6 +44,7 @@ export class Auth {
     public orgs = [];
     private permisos: string[];
     public mobileUser: any;
+    private feature: { [key: string]: boolean };
 
 
     constructor(private server: Server) {
@@ -57,6 +58,7 @@ export class Auth {
                 this.organizacion = payload.organizacion;
                 this.profesional = payload.profesional;
                 this.permisos = payload.permisos;
+                this.feature = payload.feature;
                 this.estado = Estado.active;
                 this.initShiro();
             }),
@@ -162,5 +164,9 @@ export class Auth {
     // Método que modifica la contraseña del usuario
     resetPassword(data): Observable<any> {
         return this.server.post('/auth/resetPassword', data, { showError: false });
+    }
+
+    featureFlag(name: string): boolean {
+        return !!this.feature[name];
     }
 }
