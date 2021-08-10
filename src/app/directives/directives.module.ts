@@ -1,18 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@andes/shared';
+import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
+import { FeatureFlagDirective } from './feature-flag.directive';
 import { SelectFinanciadorDirective } from './financiador-select-directive';
 import { HoverClassDirective } from './hover-class.directive';
 import { SelectOrganizacionDirective } from './organizacion-select.directive';
 import { SelectPrestacionesDirective } from './prestaciones-select.directive';
 import { SelectProfesionalesDirective } from './profesionales-select.directive';
+import { ServicioIntermedioDirective } from './servicio-intermedio.directive';
 
-import { GaleriaPipe } from 'src/app/pipes/galeria.pipe';
-import { FeatureFlagDirective } from './feature-flag.directive';
 @NgModule({
     imports: [
         CommonModule,
@@ -29,7 +30,8 @@ import { FeatureFlagDirective } from './feature-flag.directive';
         SelectPrestacionesDirective,
         SelectProfesionalesDirective,
         GaleriaPipe,
-        FeatureFlagDirective
+        FeatureFlagDirective,
+        ServicioIntermedioDirective
     ],
     exports: [
         SelectFinanciadorDirective,
@@ -38,7 +40,8 @@ import { FeatureFlagDirective } from './feature-flag.directive';
         SelectPrestacionesDirective,
         SelectProfesionalesDirective,
         GaleriaPipe,
-        FeatureFlagDirective
+        FeatureFlagDirective,
+        ServicioIntermedioDirective
     ],
 })
 export class DirectiveLibModule {

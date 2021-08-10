@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ReglaService {
@@ -26,4 +26,11 @@ export class ReglaService {
         return this.server.delete(this.reglaUrl, { params: params, showError: true });
     }
 
+    saveRaw(regla: any): Observable<any> {
+        if (regla.id) {
+            return this.server.patch(this.reglaUrl + '/' + regla.id, regla);
+        } else {
+            return this.server.post('/modules/top/reglas-v2', regla);
+        }
+    }
 }
