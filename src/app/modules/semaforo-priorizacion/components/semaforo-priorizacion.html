@@ -1,0 +1,7 @@
+<div class="mt-1">
+    <plex-label [tituloBold]="true" titulo="Prioridad"></plex-label>
+    <ng-container *ngFor="let p of semaforo.options">
+        <div class="box" [class]="p.label" [style.background]="p.color" [class.selected]="p.label === prioridad" (click)="select(p)" >
+        </div>
+    </ng-container>
+</div>
