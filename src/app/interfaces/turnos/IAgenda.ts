@@ -45,6 +45,7 @@ export interface IAgenda {
     turnosRestantesProfesional: number; // Virtual
     estadosAgendas: String[];
     nota: String;
+    link: String;
     nominalizada: Boolean;
     dinamica: Boolean;
     cupo: Number;

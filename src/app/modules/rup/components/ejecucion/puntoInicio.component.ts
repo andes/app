@@ -738,6 +738,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
     }
 
+    linkVideollamada(link) {
+        window.open(link);
+    }
+
 
     onCancelPrestacion() {
         this.turno = null;

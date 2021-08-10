@@ -52,6 +52,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public autorizado = false;
     public today = new Date();
     public mobileEnabled: null;
+    public virtual = false;
     showClonar = false;
     showAgenda = true;
     espacioFisicoPropios = true;
