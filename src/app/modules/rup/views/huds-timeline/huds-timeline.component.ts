@@ -21,35 +21,8 @@ import { HUDSStore } from '../../services/huds.store';
 @Component({
     selector: 'huds-timeline',
     templateUrl: './huds-timeline.component.html',
-    styleUrls: ['../../components/core/_rup.scss'],
-    styles: [`
+    styleUrls: ['../../components/core/_rup.scss', './huds-timeline.scss'],
 
-        .vis-dot {
-            border-color: var(--color);
-        }
-
-        .vis-group.selected {
-            background-color: var(--bg-color);
-        }
-
-        .vis-label.selected {
-            background-color: var(--bg-color);
-        }
-
-        .vis-label {
-            cursor: pointer;
-        }
-
-        .vis-item.vis-dot.relacion {
-            top: -10px!important;
-        }
-
-        .vis-item.vis-range {
-            border-radius: 20px;
-            background-color: var(--color);
-        }
-
-    `],
     encapsulation: ViewEncapsulation.None
 })
 export class HUDSTimelineComponent implements OnInit {

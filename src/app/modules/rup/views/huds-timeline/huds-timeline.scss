@@ -1,0 +1,265 @@
+// Mixins
+@mixin text-contrast($n) {
+    $color-brightness: round((red($n) * 299) + (green($n) * 587) + (blue($n) * 114) / 1000);
+    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
+    
+    @if abs($color-brightness) < ($light-color/2){
+      color: white;
+    }
+  
+    @else {
+      color: black;
+    }
+  }
+
+// Extension de estilos vis-timeline
+        // baseIcon
+        @mixin baseIcon() {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            border-radius: 50%;
+            background-color: white;
+            padding: .25rem;
+            margin-right: .25rem;
+        }
+
+        // Grilla
+        .vis-panel .vis-bottom {
+            top: 0px!important;
+        }
+
+        // Tracks
+        .vis-labelset {
+            width: 190px;
+
+            .vis-label {
+                cursor: pointer;
+
+                .vis-inner {
+                    padding: 0 10px 0 0;
+                }
+            }
+        }
+
+        .vis-ltr .vis-label.vis-nested-group.vis-group-level-2 .vis-inner {
+            padding-left: 5px!important;
+        }
+
+        .vis-label {
+
+        &.vis-label.vis-nesting-group {
+
+            .vis-inner {
+                                
+                &:after {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    
+                    color: white;
+                    margin-left: 0.25rem;
+                    padding: .25rem;
+                    background-color: #00a8e0;                    
+                    width: 20px;
+                    height: 20px;
+                    content: "\25BC";
+                    // Botones textuales
+                    text-transform: uppercase;
+                    font-size: .5rem;
+                    }
+            }
+
+            &.expanded, &.collapsed {
+                &:before {
+                    content: ""!important;
+                    margin-left: 0.95rem;
+                }
+                
+            }
+        }   
+        
+        &.vis-nested-group {
+        
+            &.vis-group-level-1 {
+                background-color: white;
+            // ITEM
+            display: flex;
+            flex-direction: row;
+        
+            .vis-inner {  
+                display: flex;
+                align-self: center;
+                overflow: hidden;
+                padding-left: 5px!important;
+        
+                // item-title
+                text-align: left;
+                font-weight: 700;
+                color: black;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+            }
+
+            &.vis-group-level-2 {
+                display: flex;
+                align-items: center;
+                background-color: rgba(0,0,0,0.05);
+                text-transform: capitalize;
+
+                &.vis-inner {
+                    padding-left: 0px!important;
+                }
+
+                &:before {
+                    display: none!important;
+                }
+            }
+        }
+
+                // Semantics
+                &.prestaciones {
+                    &:before {
+                        --color: #0070cc;
+                        @include baseIcon();
+                        width: 15px;
+                        height: 15px;
+                        content: " ";
+                        background-color: var(--color);
+                        border: solid 1.5px var(--color);
+                    }
+                }
+                
+                &.trastornos {
+                    &:before {
+                        --color: #ff4a1a;
+                        @include baseIcon();
+                        width: 15px;
+                        height: 15px;
+                        content: " ";
+                        background-color: var(--color);
+                        border: solid 1.5px var(--color);
+                    }
+                }
+                
+                &.procedimientos {
+                    &:before {
+                        --color: #92278e;
+                        @include baseIcon();
+                        width: 15px;
+                        height: 15px;
+                        content: "";
+                        background-color: var(--color);
+                        border: solid 1.5px var(--color);
+                    }
+                }
+                
+                &.hallazgos {
+                    &:before {
+                        --color: #f4a03b;
+                        @include baseIcon();
+                        width: 15px;
+                        height: 15px;
+                        content: " ";
+                        background-color: var(--color);
+                        border: solid 1.5px var(--color);
+                    }
+                }
+                
+                &.productos {
+                    &:before {
+                        --color: #00bcb4;
+                        @include baseIcon();
+                        width: 15px;
+                        height: 15px;
+                        content: " ";
+                        background-color: var(--color);
+                        border: solid 1.5px var(--color);
+                    }
+                }
+            }
+    
+
+        // Area
+        .vis-group.selected, .vis-label.selected  {
+            background-color: var(--bg-color);
+
+            .vis-dot {
+                box-shadow: inset 0 0 0 0.1em white;
+                border: solid 1.5px var(--color);
+                top: -4px!important;
+                left: -3px!important;
+                width: 18px;
+                height: 18px;
+            }
+        }
+        
+        .vis-item {
+            border-style: none;
+            border-radius: 0;
+            box-sizing: border-box;
+            border-radius: 999px;
+            border-color: transparent;
+
+            // Puntos            
+            &.vis-dot {
+                border-radius: 999px;
+                background-color: var(--color);
+                width: 12px;
+                height: 12px;
+
+                // TODO: resolver inyeccion de clase desde .ts
+                &.selected {
+
+                }
+                
+                &.relacion {
+                    top: -10px!important;
+                }
+
+                &:hover:not(.relacion) {
+                    cursor: pointer;
+                    box-shadow: inset 0 0 0 0.1em white;
+                    border: solid 1.5px var(--color);
+                    top: -4px!important;
+                    left: -3px!important;
+                    width: 18px;
+                    height: 18px;
+                }
+            } 
+
+            // Segmentos
+            &.vis-range {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: inset 0 0 0 0.25em white;
+                box-sizing: border-box;
+                white-space: nowrap;
+                border-style: none;
+                border-radius: 999px;
+                box-sizing: border-box;
+                text-align: left;
+                text-transform: uppercase;
+                padding: 0rem 1rem;
+                background-color: var(--color);
+                font-weight: bolder;
+                font-size: .65rem;
+                @include text-contrast(#741b03);
+            }            
+
+            &:hover:not(.vis-point, .vis-dot) {
+                box-sizing: border-box;
+                cursor: pointer;
+                border: solid 1px var(--color);
+            }
+        }
+
+        // Override: modificar en _rup.scss 
+        .solo-valores-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))!important;
+            grid-gap: 40px;
+        }
