@@ -22,9 +22,8 @@
                                     </div>
                                     <br>
                                     <div class="col-4">
-                                        <plex-text label="Organización" [(ngModel)]="organizacion" name="organizacion"
-                                                   [readonly]="true">
-                                        </plex-text>
+                                        <plex-select tmOrganizaciones label="Organización" (change)="refreshSelection($event,'organizacion')"  [(ngModel)]="organizacion" name="organizacion" >
+                                        </plex-select>
                                     </div>
                                     <br>
                                     <div class="col-4">
