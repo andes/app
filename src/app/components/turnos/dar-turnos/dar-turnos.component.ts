@@ -46,6 +46,7 @@ export class DarTurnosComponent implements OnInit {
     nroCarpetaOriginal: string;
     public lenNota = 140;
     public nota = '';
+    public link: String = '';
     public changeCarpeta = false;
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
@@ -541,7 +542,7 @@ export class DarTurnosComponent implements OnInit {
                 this.filtrarBloques(esAgendaDeHoy);
 
                 if (this.agenda) {
-
+                    this.link = this.agenda.link;
                     const idAgendas = this.agendasDelDia.map(elem => {
                         return elem.id;
                     });
@@ -961,7 +962,8 @@ export class DarTurnosComponent implements OnInit {
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id,
                 estadoFacturacion: this.estadoFacturacion,
-                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null
+                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
+                link: this.link
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
@@ -999,7 +1001,8 @@ export class DarTurnosComponent implements OnInit {
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
                 estadoFacturacion: this.estadoFacturacion,
-                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null
+                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null,
+                link: this.link
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                 this.showTab = 1;
