@@ -1,3 +1,20 @@
+# [5.59.0](https://github.com/andes/app/compare/v5.58.0...v5.59.0) (2021-08-11)
+
+
+### Bug Fixes
+
+* **ficha-epidemiologica:** fix duplicidad sidebars buscador ([#2396](https://github.com/andes/app/issues/2396)) ([52100b2](https://github.com/andes/app/commit/52100b2e7d303d14bf57b49de90a5365009c5142))
+
+
+### Features
+
+* **EP:** refactor de historial de ficha ([#2385](https://github.com/andes/app/issues/2385)) ([e86d733](https://github.com/andes/app/commit/e86d733b8f70c9ee2ecd7e1b0be725f0c896036a))
+* **huds:** clasificacion final ficha epidemiologica ([#2381](https://github.com/andes/app/issues/2381)) ([36b932d](https://github.com/andes/app/commit/36b932d544e29ba9e777f878c5b365a409c16d9f))
+* **MISC:** componente semaforo priorizacion ([#2349](https://github.com/andes/app/issues/2349)) ([2578922](https://github.com/andes/app/commit/257892275b0e9954458d2a18d98a333214792c83))
+* **mpi:** permite letras en nro. de identificacion de extranjero ([#2386](https://github.com/andes/app/issues/2386)) ([c8055e6](https://github.com/andes/app/commit/c8055e663587539953651bf05f87d6ab23c462dc))
+* **per:** descargar listado de controles ([#2390](https://github.com/andes/app/issues/2390)) ([8bbb5e5](https://github.com/andes/app/commit/8bbb5e5ab5f70209f26b202d20eae9ba66a519b5))
+* **rup:** vista-prestacion boton editar ([#2137](https://github.com/andes/app/issues/2137)) ([2a14035](https://github.com/andes/app/commit/2a1403519a8676b4d135d98d0e918875a0a3b15f))
+
 # [5.58.0](https://github.com/andes/app/compare/v5.57.0...v5.58.0) (2021-08-04)
 
 
