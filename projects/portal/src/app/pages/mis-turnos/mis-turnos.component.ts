@@ -15,6 +15,7 @@ export class PDPMisTurnosComponent implements OnInit {
     public turnos$: Observable<any>;
     public showTurnosDisponibles = false;
     public showProximos;
+    public fecha = new Date();
 
     constructor(
         private turnoService: TurnoService,
@@ -61,12 +62,16 @@ export class PDPMisTurnosComponent implements OnInit {
         this.router.navigate(['dar-turno-detalle', agenda.idAgenda, agenda.prestacion._id], { relativeTo: this.activeRoute });
     }
 
+
     /**
      * Filtra los turnos con respecto a la fecha actual
      * @param {boolean} mostrarProximos define si filtramos por proximos o historicos
      */
-    filtrarTurnos(mostrarProximos = false){
+    filtrarTurnos(mostrarProximos = false) {
         this.showProximos = mostrarProximos;
         this.turnoService.filtroProximos.next(mostrarProximos);
+    }
+    linkVideollamada(link) {
+        window.open(link);
     }
 }

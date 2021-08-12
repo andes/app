@@ -34,6 +34,9 @@
                         </plex-badge>
                         <plex-badge type="info">{{ turno.horaInicio | date:'dd/MM/yyyy' }}</plex-badge>
                         <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>
+                        <plex-button *ngIf="turno.link && turno.horaInicio > fecha" type="info" icon="monitor" size="sm"
+                                     tooltip="Consultorio Virtual" (click)="linkVideollamada(turno.link)">
+                        </plex-button>
                     </plex-item>
                 </plex-list>
                 

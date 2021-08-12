@@ -12,6 +12,7 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
 
     public turno$: Observable<any>;
     public width: number;
+    public fecha = new Date();
     constructor(
         private turnoService: TurnoService,
         private activeRoute: ActivatedRoute,
@@ -35,5 +36,8 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
         return this.width >= 980;
+    }
+    linkVideollamada(link) {
+        window.open(link);
     }
 }
