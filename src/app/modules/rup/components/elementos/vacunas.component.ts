@@ -147,6 +147,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
             ]).pipe(
                 map(([registrosRup, registrosNomivac]) => {
                     let listaVacunas = [];
+                    registrosRup = registrosRup.filter(reg => !reg.registro.esSolicitud);
                     if (registrosRup && registrosRup.length) {
                         registrosRup.sort(function (a, b) {
                             let dateA = new Date(a.fecha).getTime();
