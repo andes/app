@@ -84,7 +84,7 @@
                 <dispositivo [modelo]="derivacion" [tipo]="oxigeno" grow="full"></dispositivo>
                 <tipo-traslado *ngIf="reglaSeleccionada?.modificaDestino" [derivacion]="derivacion" grow="full">
                 </tipo-traslado>
-                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad" (onChangeEvent)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
+                <semaforo-priorizacion *ngIf="reglaSeleccionada?.definePrioridad" [name]="'com'" [prioridad]="nuevoEstado.prioridad" (change)="nuevoEstado.prioridad = $event?.label"></semaforo-priorizacion>
                 <plex-text [(ngModel)]="nuevoEstado.observacion" label="Observacion" name="observacion" multiline="true"
                            grow="full">
                 </plex-text>
