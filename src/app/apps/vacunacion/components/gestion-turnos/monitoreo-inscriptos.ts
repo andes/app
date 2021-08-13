@@ -207,7 +207,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
     returnDacionTurno(horarioTurno) {
-        if (horarioTurno) {
+        if (horarioTurno && horarioTurno !== true) {
             this.pacienteSelected.turno = {
                 organizacion: this.solicitudTurno.organizacion,
                 fechaYHora: horarioTurno

@@ -214,6 +214,6 @@
 </plex-layout>
 
 <!-- Vista de agenda para selección de turnos -->
-<dar-turnos *ngIf="showDarTurnos" (afterDarTurno)="returnDacionTurno()" (afterDarTurno)="returnDacionTurno($event)"
+<dar-turnos *ngIf="showDarTurnos" (afterDarTurno)="returnDacionTurno($event)"
             [pacienteSeleccionado]="pacienteSelected.paciente" [solicitudVacunacion]="solicitudTurno">
 </dar-turnos>

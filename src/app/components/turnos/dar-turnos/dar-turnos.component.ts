@@ -1218,16 +1218,17 @@ export class DarTurnosComponent implements OnInit {
 
     noSeAsignaTurno() {
         if (this.solicitudVacunacion) {
+            // se ingreso desde monitoreo de inscriptos
             this.afterDarTurno.emit(null);
             this.plex.clearNavbar();
-            return;
-        }
-        if (this._pacienteSeleccionado) {
-            this.afterDarTurno.emit(this.paciente);
         } else {
-            this.buscarPaciente();
+            // se ingreso desde citas
+            if (this._pacienteSeleccionado) {
+                this.afterDarTurno.emit(this.paciente);
+            } else {
+                this.buscarPaciente();
+            }
         }
-
         let operacion: Observable<IListaEspera>;
         const datosPrestacion = this.opciones.tipoPrestacion;
         const datosProfesional = !this.opciones.profesional ? null : {
@@ -1257,7 +1258,9 @@ export class DarTurnosComponent implements OnInit {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
-
+        if (this.solicitudVacunacion) {
+            return;
+        }
         this.estadoT = 'noSeleccionada';
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
