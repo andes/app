@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TurnoService } from '../../../../services/turnos/turno.service';
-
+import { HUDSService } from '../../services/huds.service';
 @Component({
     selector: 'vista-solicitud-top',
     templateUrl: 'vistaSolicitudTop.html'
@@ -15,6 +15,7 @@ export class VistaSolicitudTopComponent implements OnInit {
 
     constructor(
         public servicioTurnos: TurnoService,
+        public huds: HUDSService
     ) { }
 
     ngOnInit() {
@@ -35,6 +36,11 @@ export class VistaSolicitudTopComponent implements OnInit {
             });
 
         }
+    }
+
+    getPrestacion() {
+        let tipo = 'rup';
+        this.huds.toogle(this.registro, tipo);
     }
 
 }

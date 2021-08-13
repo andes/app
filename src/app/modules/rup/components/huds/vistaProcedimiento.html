@@ -1,7 +1,7 @@
 <section class="grid-envolvente">
     <div class=" concepto prestacion-offset">
         <div>
-            <plex-badge type="danger" *ngIf="registro.privacy.scope !== 'public'">
+            <plex-badge type="danger" *ngIf="registro.privacy !== 'public'">
                 Registro Privado
             </plex-badge>
             <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
@@ -19,10 +19,15 @@
                 <div class="divisor">
                     <div class="datos-prestacion">
                         <plex-icon name="historial" class="text-info" size="xl"></plex-icon>
-                        <h5 class="ml-1 text-primary evoluciones">Registros</h5>
+                        <h5 class="ml-1 text-primary evoluciones">
+                            Registros
+                        </h5>
                     </div>
                     <div class="justify-content-end nav-fecha">
-
+                        <plex-button size="sm" type="info" tooltip="Registros de la solicitud"
+                                     *ngIf="registro.estadoActual?.tipo === 'validada'" (click)="abrirSolicitud()">
+                            <plex-icon name="zoom"></plex-icon>
+                        </plex-button>
                     </div>
                 </div>
 

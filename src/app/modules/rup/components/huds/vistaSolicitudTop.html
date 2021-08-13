@@ -11,6 +11,9 @@
                     <div class="datos-prestacion">
                         <plex-icon name="historial" class="text-info" size="xl"></plex-icon>
                         <h5 class="ml-1 text-primary evoluciones">Datos de la Solicitud</h5>
+                        <plex-button class="ml-2" *ngIf="estado === 'validada'" size="sm" type="primary" icon="eye"
+                                     tooltip="Ver prestacion" (click)="getPrestacion()">
+                        </plex-button>
                     </div>
                     <div class="justify-content-end nav-fecha">
 
@@ -33,7 +36,8 @@
                             {{registro.solicitud.registros[0].valor.solicitudPrestacion.motivo}}
                         </span>
                         <b>Estado</b>
-                        <span *ngIf="!turno">{{estado}}</span>
+                        <span *ngIf="!turno">{{estado}}
+                        </span>
                         <ng-container *ngIf="turno">
                             <span>Turno Dado</span>
                             <b>Fecha Turno</b>
@@ -51,6 +55,7 @@
                         <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos
                             adjuntos)</small>
                         <historial-solicitud [prestacion]="registro" [turno]='turno'></historial-solicitud>
+
                     </div>
                 </div>
             </div>

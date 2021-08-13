@@ -196,14 +196,20 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <plex-button *ngIf='registro.evoluciones' size="sm" type="info"
-                                                             icon="information-outline"
-                                                             title="Registrado por profesional" titlePosition="left">
-                                                </plex-button>
-                                                <plex-button *ngIf='!registro.evoluciones' size="sm" type="info"
-                                                             icon="information-outline" title="Registrado por gestión"
-                                                             titlePosition="left">
-                                                </plex-button>
+                                                <plex-badge size="sm"
+                                                            [type]="registro.estadoActual.tipo === 'validada' ? 'success' :'info'"
+                                                            *ngIf="registro.estadoActual">
+                                                    {{ registro.estadoActual.tipo }}
+                                                    <plex-button *ngIf='registro.evoluciones' size="sm" type="info"
+                                                                 icon="information-outline"
+                                                                 title="Registrado por profesional"
+                                                                 titlePosition="left">
+                                                    </plex-button>
+                                                    <plex-button *ngIf='!registro.evoluciones' size="sm" type="info"
+                                                                 icon="information-outline"
+                                                                 title="Registrado por gestión" titlePosition="left">
+                                                    </plex-button>
+                                                </plex-badge>
                                             </div>
                                         </div>
                                     </div>

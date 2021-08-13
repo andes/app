@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
-import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
-import { PrestacionesService } from '../../services/prestaciones.service';
-import { ElementosRUPService } from '../../services/elementosRUP.service';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { ElementosRUPService } from '../../services/elementosRUP.service';
+import { HUDSService } from '../../services/huds.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
     selector: 'vista-procedimiento',
@@ -15,7 +15,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 export class VistaProcedimientoComponent implements OnInit {
 
     @Input() paciente: IPaciente;
-    @Input() registro: IPrestacionRegistro;
+    @Input() registro: any;
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
     @Input() indice = 0;
@@ -25,7 +25,8 @@ export class VistaProcedimientoComponent implements OnInit {
 
     constructor(
         public prestacionesService: PrestacionesService,
-        public elementosRUPService: ElementosRUPService
+        public elementosRUPService: ElementosRUPService,
+        public huds: HUDSService
     ) { }
 
     ngOnInit() {
@@ -51,4 +52,10 @@ export class VistaProcedimientoComponent implements OnInit {
         }
     }
 
+    abrirSolicitud() {
+        this.huds.toogle(
+            (this.registro as any).dataPrestacion,
+            'rup'
+        );
+    }
 }
