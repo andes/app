@@ -21,6 +21,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     private validacion = false;
     public lote;
     public vacunasEncontradas;
+    public vacunasPorConceptId;
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -73,6 +74,14 @@ export class VacunasComponent extends RUPComponent implements OnInit {
         this.vacunas$ = this.vacunasService.getNomivacVacunas({ habilitado: true, calendarioNacional: filtroCalendario, sort: 'nombre' }).pipe(
             map(vacunas => {
                 return vacunas.map((v) => {
+                    this.vacunasPorConceptId = vacunas
+                        .filter(vac => vac.snomed_conceptId === this.registro.concepto.conceptId)
+                        .map(vac => {
+                            return {
+                                conceptId: vac.snomed_conceptId,
+                                codigo: vac.codigo
+                            };
+                        });
                     return { _id: v._id, codigo: v.codigo, nombre: v.nombre, snomed_conceptId: v.snomed_conceptId };
                 });
             })
@@ -166,8 +175,8 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         });
                     }
                     if (registrosNomivac && registrosNomivac.length) {
-                        let nomivacFiltradas = registrosNomivac.filter((vac) =>
-                            vac.codigo && vac.codigo === this.registro.valor.vacuna.vacuna.codigo.toString()
+                        let nomivacFiltradas = registrosNomivac.filter((regNomi) =>
+                            this.vacunasPorConceptId.some(vac => vac.codigo.toString() === regNomi.codigo)
                         );
                         if (listaVacunas && listaVacunas.length) {
                             let filtroDuplicadas = nomivacFiltradas.filter(v => {
