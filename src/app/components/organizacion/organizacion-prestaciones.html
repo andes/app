@@ -21,7 +21,7 @@
                                     label="elemento ofertaPrestacional"
                                     [ngClass]="{'bg-inverse text-white': (ofertaPrestacionalSeleccionada && ofertaPrestacional.prestacion.conceptId === ofertaPrestacionalSeleccionada.prestacion.conceptId)}">
                                     <td>
-                                        <span *ngIf="ofertaPrestacional?.fsn !== ''"
+                                        <span *ngIf="ofertaPrestacional?.prestacion?.fsn"
                                               class="d-block">{{ofertaPrestacional.prestacion.fsn}}</span>
                                     </td>
                                     <td>
