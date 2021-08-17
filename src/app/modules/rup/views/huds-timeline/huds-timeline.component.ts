@@ -74,13 +74,7 @@ export class HUDSTimelineComponent implements OnInit {
     };
 
     public columns: IPlexTableColumns[] = [
-        {
-            key: 'fecha',
-            label: 'Fecha Registro',
-            sorteable: true,
-            opcional: false,
-            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime()
-        },
+
         {
             key: 'term',
             label: 'Registro',
@@ -104,6 +98,14 @@ export class HUDSTimelineComponent implements OnInit {
             opcional: false,
             sort: (a: any, b: any) => a.organizacion.localeCompare(b.organizacion),
             filterBy: (a: any) => a.organizacion
+        },
+        {
+            key: 'fecha',
+            label: 'Fecha Registro',
+            sorteable: true,
+            opcional: false,
+            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime(),
+            right: true
         }
     ];
 
@@ -153,7 +155,8 @@ export class HUDSTimelineComponent implements OnInit {
                         term: p.prestacion.term,
                         color: p.ambito === 'ambulatorio' ? '#0070cc' : '#ffa900',
                         tipo: p.tipo,
-                        data: p.data
+                        data: p.data,
+                        icon: 'mano-corazon'
                     });
                 });
 
@@ -168,7 +171,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'termometro'
                     });
                 });
 
@@ -182,7 +186,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'trastorno'
                     });
                 });
 
@@ -196,7 +201,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'lupa-ojo'
                     });
                 });
 
@@ -210,7 +216,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'pildoras'
                     });
                 });
 
@@ -533,6 +540,7 @@ interface IDataSet {
     color?: string;
     tipo?: string;
     data?: any;
+    icon?: string
 }
 
 const filtrarPorRegistros = (prestaciones: IPrestacion[], callback) => {

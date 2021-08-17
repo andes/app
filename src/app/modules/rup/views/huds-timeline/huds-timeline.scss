@@ -19,10 +19,14 @@
             align-items: center;
             justify-content: center;
             align-self: center;
+            
+            font: normal normal normal 14px/1 "Andes Icons";
             border-radius: 50%;
             background-color: white;
             padding: .25rem;
             margin-right: .25rem;
+            width: 25px;
+            height: 25px;
         }
 
         // Grilla
@@ -73,7 +77,7 @@
 
             &.expanded, &.collapsed {
                 &:before {
-                    content: ""!important;
+                    content: "";
                     margin-left: 0.95rem;
                 }
                 
@@ -125,11 +129,9 @@
                     &:before {
                         --color: #0070cc;
                         @include baseIcon();
-                        width: 15px;
-                        height: 15px;
-                        content: " ";
-                        background-color: var(--color);
+                        content: "\e8df";
                         border: solid 1.5px var(--color);
+                        color: var(--color);
                     }
                 }
                 
@@ -137,11 +139,9 @@
                     &:before {
                         --color: #ff4a1a;
                         @include baseIcon();
-                        width: 15px;
-                        height: 15px;
-                        content: " ";
-                        background-color: var(--color);
+                        content: "\e8df"!important;
                         border: solid 1.5px var(--color);
+                        color: var(--color);
                     }
                 }
                 
@@ -149,11 +149,9 @@
                     &:before {
                         --color: #92278e;
                         @include baseIcon();
-                        width: 15px;
-                        height: 15px;
-                        content: "";
-                        background-color: var(--color);
+                        content: "\e8db";
                         border: solid 1.5px var(--color);
+                        color: var(--color);
                     }
                 }
                 
@@ -161,11 +159,9 @@
                     &:before {
                         --color: #f4a03b;
                         @include baseIcon();
-                        width: 15px;
-                        height: 15px;
-                        content: " ";
-                        background-color: var(--color);
+                        content: "\e879";
                         border: solid 1.5px var(--color);
+                        color: var(--color);
                     }
                 }
                 
@@ -173,11 +169,9 @@
                     &:before {
                         --color: #00bcb4;
                         @include baseIcon();
-                        width: 15px;
-                        height: 15px;
-                        content: " ";
-                        background-color: var(--color);
+                        content: "\e8be";
                         border: solid 1.5px var(--color);
+                        color: var(--color);
                     }
                 }
             }
