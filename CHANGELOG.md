@@ -1,3 +1,15 @@
+# [5.60.0](https://github.com/andes/app/compare/v5.59.0...v5.60.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* **EP:** fix bug no se guarda prioridad en habilitar derivacion ([#2403](https://github.com/andes/app/issues/2403)) ([66b90b2](https://github.com/andes/app/commit/66b90b2f1a9c69ac7988088be4656d9960b96b83))
+
+
+### Features
+
+* **HUDS:** se agrega estado solicitud y link a la prestación ([#2389](https://github.com/andes/app/issues/2389)) ([a3646a4](https://github.com/andes/app/commit/a3646a4c3428da2085f53b54d61fad336ca52e87))
+
 # [5.59.0](https://github.com/andes/app/compare/v5.58.0...v5.59.0) (2021-08-11)
 
 
