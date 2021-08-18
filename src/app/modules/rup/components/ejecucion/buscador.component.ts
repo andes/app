@@ -1,16 +1,16 @@
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { PrestacionesService } from '../../services/prestaciones.service';
-import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
-import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { gtag } from '../../../../shared/services/analytics.service';
-import { forkJoin } from 'rxjs';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
-import { map } from 'rxjs/operators';
-import { Plex } from '@andes/plex';
+import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
+import { IPrestacion } from './../../interfaces/prestacion.interface';
+import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 
 
 @Component({
@@ -81,8 +81,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             conceptos.forEach(element => {
                 if (this.results.sugeridos['todos'].indexOf(element) === -1) {
                     this.results.sugeridos['todos'] = [
-                        element,
-                        ...this.results.sugeridos['todos']
+                        ...this.results.sugeridos['todos'],
+                        element
                     ];
                 }
             });
