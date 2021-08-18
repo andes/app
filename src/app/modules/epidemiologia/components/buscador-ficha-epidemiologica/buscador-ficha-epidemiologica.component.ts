@@ -12,6 +12,7 @@ import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PermisosService } from 'src/app/apps/gestor-usuarios/services/permisos.service';
 
 @Component({
   selector: 'app-buscador-ficha-epidemiologica',
@@ -51,6 +52,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public codigoSISAEdit;
   public codigoSisa;
   public collapse = false;
+  public userOrganzaciones = [];
   public registroSisaOpts = [
     { id: 'noSISA', nombre: 'Sin registro SISA' },
     { id: 'SISA', nombre: 'Con registro SISA' },
@@ -153,7 +155,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     private localidadService: LocalidadService,
     private zonaSanitariaService: ZonaSanitariaService,
     private pacienteService: PacienteService,
-    private motivoAccesoService: ModalMotivoAccesoHudsService
+    private motivoAccesoService: ModalMotivoAccesoHudsService,
+    private permisosService: PermisosService
   ) { }
 
   ngOnInit(): void {
@@ -171,6 +174,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     this.dataType$ = this.formsService.search();
     this.localidades$ = this.localidadService.get({ codigo: 15 });
     this.zonaSanitaria$ = this.zonaSanitariaService.search();
+    if (this.puedeEditar) {
+      this.permisosService.organizaciones().subscribe(permisos => {
+        this.userOrganzaciones = permisos;
+      });
+    }
   }
 
   searchFichas() {
@@ -338,5 +346,9 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   }
   changeCollapse(event) {
     this.collapse = event;
+  }
+
+  checkEdit(organizacion) {
+    return (this.userOrganzaciones.some(org => org.id === organizacion));
   }
 }
