@@ -269,11 +269,7 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     getColorPrioridad(prioridad) {
-        if (prioridad && this.esCOM) {
-            return this.opcionesSemaforo.find(x => x.label === prioridad).itemRowStyle;
-        } else {
-            return false;
-        }
+        return prioridad ? this.opcionesSemaforo.find(x => x.label === prioridad)?.itemRowStyle : false;
     }
 }
 

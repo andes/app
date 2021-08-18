@@ -7,6 +7,7 @@ import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.s
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { SeguimientoPacientesService } from '../../services/seguimiento-pacientes.service';
 import { Auth } from '@andes/auth';
+import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/semaforo.service';
 
 @Component({
   selector: 'seguimiento-epidemiologia',
@@ -29,6 +30,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
   selectedLlamado;
   actualizacionSeguimiento;
   organizacion;
+  opcionesSemaforo;
 
   constructor(
     private seguimientoPacientesService: SeguimientoPacientesService,
@@ -36,6 +38,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     private elementosRUPService: ElementosRUPService,
     private prestacionesService: PrestacionesService,
     private router: Router,
+    private semaforoService: SemaforoService,
     private auth: Auth) {
   }
 
@@ -47,6 +50,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
       { id: 'fallecido', nombre: 'Fallecido' }
     ];
     this.organizacion = this.auth.organizacion;
+    this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res => this.opcionesSemaforo = res.options);
   }
 
   volverInicio() {
@@ -105,6 +109,11 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     this.actualizacionSeguimiento = false;
   }
 
+  reload() {
+    this.closeSideBar();
+    this.buscar();
+  }
+
   iniciarSeguimiento(seguimiento) {
     const concepto = this.elementosRUPService.getConceptoSeguimientoCOVID();
     let nuevaPrestacionSeguimiento = this.prestacionesService.inicializarPrestacion(seguimiento.paciente, concepto, 'ejecucion', 'ambulatorio');
@@ -116,5 +125,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
 
   verLlamado($event) {
     this.selectedLlamado = $event;
+  }
+
+  getColorPrioridad(prioridad) {
+    return prioridad ? this.opcionesSemaforo.find(x => x.id === prioridad)?.itemRowStyle : false;
   }
 }

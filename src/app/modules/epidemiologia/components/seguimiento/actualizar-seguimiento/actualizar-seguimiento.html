@@ -16,6 +16,7 @@
             </div>
         </plex-wrapper>
     </ng-container>
+    <semaforo-priorizacion [name]="'seguimiento-epidemiologico'" [prioridad]="seguimiento.score?.value || 0" (change)="changePriority($event)"></semaforo-priorizacion>
         
     <app-ficha-epidemiologica-contactos [editMode]="true" [contactos]="seguimiento.contactosEstrechos" (onEditEmit)="hideSubmit($event)">
     </app-ficha-epidemiologica-contactos>

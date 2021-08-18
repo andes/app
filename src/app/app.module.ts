@@ -319,7 +319,8 @@ registerLocaleData(localeEs, 'es');
         CampaniaFormComponent,
 
         LogoSvgComponent,
-        AcronimoSvgComponent
+        AcronimoSvgComponent,
+
     ],
     entryComponents: [
         HeaderPacienteComponent

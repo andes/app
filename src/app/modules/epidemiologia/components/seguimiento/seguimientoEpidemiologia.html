@@ -34,7 +34,7 @@
                         </plex-item>
                         <ng-container *ngFor="let seguimiento of seguimientos$ | async">
                             <ng-container *ngIf="seguimiento | seguimientoFields as alarmas">
-                                <plex-item [colors]="alarmas.colorPrioridad" (click)="selectSeguimiento(seguimiento)">
+                                <plex-item [colors]="getColorPrioridad(seguimiento.score.value)" (click)="selectSeguimiento(seguimiento)">
                                     <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
                                                 subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
                                     <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente.telefonoActual }}">
@@ -110,6 +110,6 @@
         <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento"
                              (returnDetalle)="closeSideBar()" (verLlamado)=verLlamado($event)></detalle-seguimiento>
         <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento"
-                                (returnDetalle)="closeSideBar()"></actualizar-seguimiento>
+                                (returnDetalle)="closeSideBar()" (saveDetalle)="reload()"></actualizar-seguimiento>
     </plex-layout-sidebar>
 </plex-layout>
