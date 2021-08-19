@@ -17,15 +17,12 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
 
     // Devuelve una seccion entera de una ficha o un campo especifico
     getField(ficha, seccionName: string, fieldName?: string) {
-        let fieldBuscado;
         const seccionBuscada = ficha.secciones.find(s => s.name === seccionName);
         if (fieldName) {
-            seccionBuscada.fields.map(field => {
-                if (Object.keys(field)[0] === fieldName) {
-                    fieldBuscado = Object.values(field)[0];
-                }
-            });
+            const fieldBuscado = seccionBuscada?.fields.find(field => field[fieldName]);
+            return fieldBuscado ? fieldBuscado[fieldName] : null;
+        } else {
+            return seccionBuscada;
         }
-        return fieldBuscado ? fieldBuscado : seccionBuscada;
     }
 }

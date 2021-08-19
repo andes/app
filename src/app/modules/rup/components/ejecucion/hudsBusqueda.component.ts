@@ -393,7 +393,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     buscarFichasEpidemiologicas() {
-
         this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe(fichas => {
             if (fichas.length) {
                 const fichasEpidemiologia = fichas.map(f => {
@@ -406,7 +405,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                         prestacion: {
                             term: `Ficha Epidemiológica ${f.type.name}`
                         },
-                        profesional: usuarioConfirma ? usuarioConfirma : usuarioPcr ? usuarioPcr : f.createdBy.nombreCompleto,
+                        profesional: usuarioConfirma || usuarioPcr || f.createdBy.nombreCompleto,
                         fecha: f.createdAt,
                         estado: this.formEpidemiologiaService.getClasificacionFinal(f)
                     };
