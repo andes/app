@@ -446,7 +446,7 @@
                                            (change)="clearDependencias($event,'antecedentesEpidemiologicos',['fechaantigripal'])">
                                 </plex-bool>
                                 <plex-datetime *ngIf="field.key==='fechaantigripal' && seccion.fields['vacunacionantigripal']"
-                                               [label]="field.label?field.label:field.key" grow="auto"
+                                               [label]="field.label?field.label:field.key" grow="auto" type="date"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>

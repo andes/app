@@ -208,7 +208,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                       this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.usuario.nombreCompleto;
                       break;
                     case 'organizacion':
-                      this.secciones[buscado].fields[Object.keys(field)[0]] = this.auth.organizacion.id;
+                      this.secciones[buscado].fields[Object.keys(field)[0]] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
                       this.setOrganizacion(this.secciones[buscado], this.auth.organizacion.id);
                       break;
                     case 'fechanotificacion':
@@ -378,7 +378,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
       switch (seccion.id) {
         case 'usuario':
           seccion.fields['responsable'] = this.auth.usuario.nombreCompleto;
-          seccion.fields['organizacion'] = this.auth.organizacion.id;
+          seccion.fields['organizacion'] = { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre };
           seccion.fields['fechanotificacion'] = new Date();
           this.setOrganizacion(seccion, this.auth.organizacion.id);
           break;
