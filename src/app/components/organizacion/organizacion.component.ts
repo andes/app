@@ -1,11 +1,9 @@
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { SectoresService } from '../../services/sectores.service';
 
 const limit = 25;
 
@@ -26,12 +24,11 @@ export class OrganizacionComponent implements OnInit {
     finScroll = false;
     tengoDatos = true;
     private idOrganizaciones = [];
-    constructor(private formBuilder: FormBuilder,
+    constructor(
         public organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router,
-        private plex: Plex,
-        private sectoresService: SectoresService) { }
+        private plex: Plex) { }
 
     ngOnInit() {
         if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
@@ -65,7 +62,7 @@ export class OrganizacionComponent implements OnInit {
             nombre: this.nombre,
             skip: this.skip,
             limit: limit,
-            ids: this.idOrganizaciones
+            user: this.auth.usuario.username
         };
         this.organizacionService.get(parametros)
             .subscribe(
