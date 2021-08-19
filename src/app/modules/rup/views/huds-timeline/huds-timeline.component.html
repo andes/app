@@ -26,15 +26,14 @@
             <tr *ngFor="let data of dataSetVisible$ | plSort:table | async" class="selectable"
                 [class.selected]="datoIdSelected === data.id" (click)="onItemSelect(data)">
                 <td>
-                    <plex-label icon="{{ data.icon }}" titulo="{{ data.term }}" subtitulo="{{ data.tipo }}"
-                                case="capitalize">
+                    <plex-label [icon]="data.icon" [titulo]="data.term" case="capitalize">
                     </plex-label>
                 </td>
                 <td>
-                    <plex-label titulo="{{ data.profesional }}" case="capitalize"></plex-label>
+                    <plex-label [titulo]="data.profesional" case="capitalize"></plex-label>
                 </td>
                 <td>
-                    <plex-label titulo="{{ data.organizacion }}" case="capitalize"></plex-label>
+                    <plex-label [titulo]="data.organizacion" case="capitalize"></plex-label>
                 </td>
                 <td>
                     <plex-badge type="info">

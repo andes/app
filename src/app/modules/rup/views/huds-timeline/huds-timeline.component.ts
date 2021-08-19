@@ -260,7 +260,7 @@ export class HUDSTimelineComponent implements OnInit {
                 // idPrestacion: i.idPrestacion,
                 color: ultimo.estado === 'resuelto' ? '#00a8e0' : '#ff4a1a',
                 type: 'range',
-                data: p
+                data: { tipo: 'concepto', data: p, group: 'trastornos' }
             });
 
             p.evoluciones.forEach(ev => {
@@ -362,7 +362,7 @@ export class HUDSTimelineComponent implements OnInit {
             // verticalScroll: true,
             type: 'point',
             stack: false,
-            selectable: false,
+            selectable: true,
             // groupHeightMode: 'fixed',
             template: (item, element: HTMLElement, data) => {
                 const group = this.groups.find(g => g.id === data.group);
@@ -540,7 +540,7 @@ interface IDataSet {
     color?: string;
     tipo?: string;
     data?: any;
-    icon?: string
+    icon?: string;
 }
 
 const filtrarPorRegistros = (prestaciones: IPrestacion[], callback) => {
