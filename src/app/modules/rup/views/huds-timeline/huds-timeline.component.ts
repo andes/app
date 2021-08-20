@@ -21,35 +21,8 @@ import { HUDSStore } from '../../services/huds.store';
 @Component({
     selector: 'huds-timeline',
     templateUrl: './huds-timeline.component.html',
-    styleUrls: ['../../components/core/_rup.scss'],
-    styles: [`
+    styleUrls: ['../../components/core/_rup.scss', './huds-timeline.scss'],
 
-        .vis-dot {
-            border-color: var(--color);
-        }
-
-        .vis-group.selected {
-            background-color: var(--bg-color);
-        }
-
-        .vis-label.selected {
-            background-color: var(--bg-color);
-        }
-
-        .vis-label {
-            cursor: pointer;
-        }
-
-        .vis-item.vis-dot.relacion {
-            top: -10px!important;
-        }
-
-        .vis-item.vis-range {
-            border-radius: 20px;
-            background-color: var(--color);
-        }
-
-    `],
     encapsulation: ViewEncapsulation.None
 })
 export class HUDSTimelineComponent implements OnInit {
@@ -101,13 +74,7 @@ export class HUDSTimelineComponent implements OnInit {
     };
 
     public columns: IPlexTableColumns[] = [
-        {
-            key: 'fecha',
-            label: 'Fecha Registro',
-            sorteable: true,
-            opcional: false,
-            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime()
-        },
+
         {
             key: 'term',
             label: 'Registro',
@@ -131,6 +98,14 @@ export class HUDSTimelineComponent implements OnInit {
             opcional: false,
             sort: (a: any, b: any) => a.organizacion.localeCompare(b.organizacion),
             filterBy: (a: any) => a.organizacion
+        },
+        {
+            key: 'fecha',
+            label: 'Fecha Registro',
+            sorteable: true,
+            opcional: false,
+            sort: (a: any, b: any) => a.fecha.getTime() - b.fecha.getTime(),
+            right: true
         }
     ];
 
@@ -180,7 +155,8 @@ export class HUDSTimelineComponent implements OnInit {
                         term: p.prestacion.term,
                         color: p.ambito === 'ambulatorio' ? '#0070cc' : '#ffa900',
                         tipo: p.tipo,
-                        data: p.data
+                        data: p.data,
+                        icon: 'mano-corazon'
                     });
                 });
 
@@ -195,7 +171,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'termometro'
                     });
                 });
 
@@ -209,7 +186,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'trastorno'
                     });
                 });
 
@@ -223,7 +201,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'lupa-ojo'
                     });
                 });
 
@@ -237,7 +216,8 @@ export class HUDSTimelineComponent implements OnInit {
                         organizacion: p.evoluciones.organizacion,
                         profesional: p.evoluciones.profesional,
                         tipo: 'concepto',
-                        data: p.original
+                        data: p.original,
+                        icon: 'pildoras'
                     });
                 });
 
@@ -280,7 +260,7 @@ export class HUDSTimelineComponent implements OnInit {
                 // idPrestacion: i.idPrestacion,
                 color: ultimo.estado === 'resuelto' ? '#00a8e0' : '#ff4a1a',
                 type: 'range',
-                data: p
+                data: { tipo: 'concepto', data: p, group: 'trastornos' }
             });
 
             p.evoluciones.forEach(ev => {
@@ -382,7 +362,7 @@ export class HUDSTimelineComponent implements OnInit {
             // verticalScroll: true,
             type: 'point',
             stack: false,
-            selectable: false,
+            selectable: true,
             // groupHeightMode: 'fixed',
             template: (item, element: HTMLElement, data) => {
                 const group = this.groups.find(g => g.id === data.group);
@@ -560,6 +540,7 @@ interface IDataSet {
     color?: string;
     tipo?: string;
     data?: any;
+    icon?: string;
 }
 
 const filtrarPorRegistros = (prestaciones: IPrestacion[], callback) => {

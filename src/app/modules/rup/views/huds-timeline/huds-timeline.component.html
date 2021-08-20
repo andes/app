@@ -1,4 +1,4 @@
-<plex-layout [main]="itemSelected ? 6 : 12">
+<plex-layout [main]="itemSelected ? 8 : 12" resizable="true" min="4" max="8" [steps]="2">
     <plex-layout-main>
         <header>
             <plex-title titulo="Exploración Visual">
@@ -23,33 +23,28 @@
         </header>
 
         <plex-table [columns]="columns" #table="plTable" *ngIf="showListado">
-
             <tr *ngFor="let data of dataSetVisible$ | plSort:table | async" class="selectable"
                 [class.selected]="datoIdSelected === data.id" (click)="onItemSelect(data)">
-
                 <td>
-                    {{ data.fecha | fecha }} {{ data.fecha | hora }}
+                    <plex-label [icon]="data.icon" [titulo]="data.term" case="capitalize">
+                    </plex-label>
                 </td>
-
                 <td>
-                    {{data.term}}
+                    <plex-label [titulo]="data.profesional" case="capitalize"></plex-label>
                 </td>
-
                 <td>
-                    {{ data.profesional }}
+                    <plex-label [titulo]="data.organizacion" case="capitalize"></plex-label>
                 </td>
-
                 <td>
-                    {{ data.organizacion }}
+                    <plex-badge type="info">
+                        {{ data.fecha | fecha }} {{ data.fecha | hora }}
+                    </plex-badge>
                 </td>
-
             </tr>
-
         </plex-table>
-
     </plex-layout-main>
 
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <ng-container *ngIf="itemSelected">
             <ng-container [ngSwitch]="itemSelected.tipo">
                 <ng-container *ngSwitchCase="'rup'">
@@ -61,7 +56,7 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="'cda'">
-                    <plex-title>
+                    <plex-title titulo="Detalle">
                         <plex-button type="danger" (click)="onClose()" size="sm">
                             <plex-icon name="close"></plex-icon>
                         </plex-button>
@@ -70,7 +65,7 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="'concepto'">
-                    <plex-title>
+                    <plex-title titulo="Detalle">
                         <plex-button type="danger" (click)="onClose()" size="sm">
                             <plex-icon name="close"></plex-icon>
                         </plex-button>
@@ -90,12 +85,7 @@
                                                    [editFicha]="false" (volver)="onClose();">
                     </app-ficha-epidemiologica-crud>
                 </ng-container>
-
-
-
             </ng-container>
         </ng-container>
-
-
     </plex-layout-sidebar>
 </plex-layout>
