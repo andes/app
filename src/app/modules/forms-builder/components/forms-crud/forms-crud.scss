@@ -27,10 +27,13 @@
 
 cdk-virtual-scroll-viewport {
     height: calc(100vh - 265px);
-    .form-item {
-        height: 80px;
-        &:last-child {
-            margin-bottom: 200px;
+    &.form-item {
+        plex-grid{
+            height: 80px;
+            &:last-child {
+                margin-bottom: 200px;
+            }
         }
+      
     }
 }
