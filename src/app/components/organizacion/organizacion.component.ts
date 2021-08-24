@@ -1,9 +1,9 @@
-import { IOrganizacion } from './../../interfaces/IOrganizacion';
-import { OrganizacionService } from './../../services/organizacion.service';
-import { Component, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Component, HostBinding, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { IOrganizacion } from './../../interfaces/IOrganizacion';
+import { OrganizacionService } from './../../services/organizacion.service';
 
 const limit = 25;
 
@@ -23,30 +23,23 @@ export class OrganizacionComponent implements OnInit {
     loader = false;
     finScroll = false;
     tengoDatos = true;
-    private idOrganizaciones = [];
+
     constructor(
         public organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router,
-        private plex: Plex) { }
+        private plex: Plex
+    ) { }
 
     ngOnInit() {
         if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
             this.router.navigate(['inicio']);
         } else {
             this.updateTitle('Organizaciones');
-            this.reloadOrganizaciones();
+            this.loadDatos();
         }
     }
 
-    private reloadOrganizaciones() {
-        this.auth.organizaciones().subscribe(data => {
-            if (data) {
-                data.forEach(dat => { this.idOrganizaciones.push(dat.id); });
-            }
-            this.loadDatos();
-        });
-    }
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle('Tablas maestras / ' + nombre);
@@ -82,11 +75,11 @@ export class OrganizacionComponent implements OnInit {
                 });
     }
 
-    onReturn(objOrganizacion: IOrganizacion): void {
+    onReturn(): void {
         this.updateTitle('Organizaciones');
         this.showcreate = false;
         this.seleccion = null;
-        this.reloadOrganizaciones();
+        this.loadDatos();
     }
 
     activate(objOrganizacion: IOrganizacion) {
