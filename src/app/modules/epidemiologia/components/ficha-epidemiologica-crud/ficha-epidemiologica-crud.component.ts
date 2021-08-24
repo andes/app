@@ -338,7 +338,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         id: this.paciente.id,
         documento: this.paciente.documento,
         nombre: this.paciente.nombre,
-        nombreAutopercibido: this.paciente.alias ? this.paciente.alias : null,
+        alias: this.paciente.alias,
         apellido: this.paciente.apellido,
         fechaNacimiento: this.paciente.fechaNacimiento,
         estado: this.paciente.estado,
