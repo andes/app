@@ -1,3 +1,18 @@
+# [5.61.0](https://github.com/andes/app/compare/v5.60.0...v5.61.0) (2021-08-25)
+
+
+### Bug Fixes
+
+* **rup:** reordena sugeridos ([#2408](https://github.com/andes/app/issues/2408)) ([cb6ce96](https://github.com/andes/app/commit/cb6ce96798bb20e74600093b20c50bb9cafbca9d))
+* **vac:** registro segundas dosis combinadas ([#2407](https://github.com/andes/app/issues/2407)) ([04e53e5](https://github.com/andes/app/commit/04e53e59cdc614b44d86787e7c1bf1a3631ed752))
+* **vac:** solicitudes como vacunas aplicadas ([#2402](https://github.com/andes/app/issues/2402)) ([677ceb5](https://github.com/andes/app/commit/677ceb53063ef45b094fa58bb2b0cae9b8f7fa27))
+
+
+### Features
+
+* **huds:** aplica estilos a timeline ([#2411](https://github.com/andes/app/issues/2411)) ([c103301](https://github.com/andes/app/commit/c1033012750011b640b4af9e314be8983054d86f))
+* **tm:** carga de organizaciones por usuario ([#2412](https://github.com/andes/app/issues/2412)) ([39cc994](https://github.com/andes/app/commit/39cc9945e372ed923097add8577fcbe3eb7a11a2))
+
 # [5.60.0](https://github.com/andes/app/compare/v5.59.0...v5.60.0) (2021-08-18)
 
 
