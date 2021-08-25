@@ -9,6 +9,7 @@ import { SelectSearchService } from '../../services/select-search.service';
 import { FormsService } from '../forms-builder/services/form.service';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ElementosRUPModule } from '../rup/elementos-rup.module';
+import { SemaforoModule } from '../semaforo-priorizacion/semaforo-priorizacion.module';
 import { BuscadorFichaEpidemiologicaComponent } from './components/buscador-ficha-epidemiologica/buscador-ficha-epidemiologica.component';
 import { FichaEpidemiologicaContactosComponent } from './components/ficha-epidemiologica-contactos/ficha-epidemiologica-contactos.component';
 import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiologica-crud/ficha-epidemiologica-crud.component';
@@ -32,7 +33,7 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
     DetalleSeguimientoComponent,
     SeguimientoFieldsPipe,
     CodigSisaPipe,
-    ActualizarSeguimientoComponent
+    ActualizarSeguimientoComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +45,8 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
     MPILibModule,
     SharedModule,
     DirectiveLibModule,
-    ElementosRUPModule
+    ElementosRUPModule,
+    SemaforoModule
   ],
   providers: [FormsService, SelectSearchService],
   exports: [FichaEpidemiologicaCrudComponent]

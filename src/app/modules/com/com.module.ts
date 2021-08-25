@@ -10,8 +10,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { DerivacionesService } from 'src/app/services/com/derivaciones.service';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ElementosRUPModule } from '../rup/elementos-rup.module';
-import { SemaforoPriorizacionComponent } from '../semaforo-priorizacion/components/semaforo-priorizacion.component';
-import { SemaforoService } from '../semaforo-priorizacion/service/semaforo.service';
+import { SemaforoModule } from '../semaforo-priorizacion/semaforo-priorizacion.module';
 import { ReglasDerivacionService } from './../../services/com/reglasDerivaciones.service';
 import { TipoTrasladoService } from './../../services/com/tipoTraslados.service';
 import { DispositivoService } from './../../services/dispositivo/dispositivo.service';
@@ -36,7 +35,6 @@ export const COM_COMPONENTS = [
     ActualizarEstadoDerivacionComponent,
     TipoTrasladoComponent,
     DispositivoComponent,
-    SemaforoPriorizacionComponent
 ];
 
 export const COM_PROVIDERS = [
@@ -44,8 +42,7 @@ export const COM_PROVIDERS = [
     ReglasDerivacionService,
     TipoTrasladoService,
     PuntoInicioService,
-    DispositivoService,
-    SemaforoService
+    DispositivoService
 ];
 
 @NgModule({
@@ -60,7 +57,8 @@ export const COM_PROVIDERS = [
         InfiniteScrollModule,
         MPILibModule,
         DirectiveLibModule,
-        ElementosRUPModule
+        ElementosRUPModule,
+        SemaforoModule
     ],
     declarations: [
         ...COM_COMPONENTS

@@ -15,7 +15,6 @@ export class SemaforoPriorizacionComponent implements OnInit {
     @Input() name;
     @Input() prioridad;
     public semaforo: ISemaforo;
-    opciones;
 
     constructor(
         private semaforoService: SemaforoService
