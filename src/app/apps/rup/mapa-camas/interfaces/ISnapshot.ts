@@ -72,9 +72,9 @@ export interface ISnapshot {
         documento: Number;
     };
     respiradores?: [{
-        dispositivo: any,
-        fechaDesde: Date,
-        fechaHasta: Date
+        dispositivo: any;
+        fechaDesde: Date;
+        fechaHasta: Date;
     }];
 }
 

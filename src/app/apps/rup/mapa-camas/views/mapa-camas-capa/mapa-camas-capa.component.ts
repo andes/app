@@ -242,7 +242,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     afterSeleccionarDispositivo(cama, dispositivo) {
         if (dispositivo) {
-            let respiradores = cama.respiradores || [];
+            const respiradores = cama.respiradores || [];
             const index = respiradores.findIndex(r => r._id === dispositivo._id);
             index > -1 ? respiradores[index] = dispositivo : respiradores.push(dispositivo);
             const data = {

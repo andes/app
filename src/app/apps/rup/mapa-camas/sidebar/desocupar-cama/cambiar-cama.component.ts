@@ -152,6 +152,27 @@ export class CambiarCamaComponent implements OnInit {
                 idMovimiento: idMov
             };
         }
+
+        // Si existe un respirador (No perteneciente a la cama) en uso, se da de baja con facha de hoy.
+        if (camaActual.respiradores?.length) {
+            const ultimoRespirador = camaActual.respiradores[camaActual.respiradores.length - 1];
+            if (!ultimoRespirador.fechaHasta) {
+                ultimoRespirador.fechaHasta = new Date();
+                const data = {
+                    _id: camaActual._id,
+                    respiradores: camaActual.respiradores
+                };
+                this.mapaCamasService.save(data, camaActual.fecha, false).subscribe(response => {
+                    if (response) {
+                        this.plex.toast('success', 'Se actualizó un respirador exitosamente.');
+                    } else {
+                        this.plex.toast('danger', 'Ocurrió un error actualizando un respirador.');
+                    }
+                }, error => {
+                    this.plex.toast('danger', 'Ocurrió un error actualizando un respirador.');
+                });
+            }
+        }
         return forkJoin(
             this.mapaCamasService.save(camaOcupada, fecha).pipe(retry(3)),
             this.mapaCamasService.save(camaDesocupada, fecha).pipe(retry(3))

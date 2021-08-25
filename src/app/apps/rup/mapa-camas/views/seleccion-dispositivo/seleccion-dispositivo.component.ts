@@ -30,7 +30,7 @@ export class SeleccionDispositivoComponent implements OnInit {
             this.fechaIngreso = moment(resumen?.fechaIngreso).startOf('day').toDate();
         });
         this.mapaCamasService.camaSelectedSegunView$.subscribe(cama => {
-            let ultimoRespirador = cama.respiradores?.length ? cama.respiradores[cama.respiradores.length - 1] : null;
+            const ultimoRespirador = cama.respiradores?.length ? cama.respiradores[cama.respiradores.length - 1] : null;
             if (ultimoRespirador && !ultimoRespirador.fechaHasta) {
                 // Si existe uno y todavía esta en uso
                 this.respirador = { ...ultimoRespirador };
