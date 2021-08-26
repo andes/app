@@ -979,7 +979,7 @@ export class DarTurnosComponent implements OnInit {
                         this.afterDarTurno.emit(true);
                         return false;
                     } else {
-                        this.buscarPaciente();
+                        this.resetBuscarPaciente();
                     }
                     this.turnoTipoPrestacion = undefined;
                 });
@@ -1073,14 +1073,14 @@ export class DarTurnosComponent implements OnInit {
                 });
             }
         } else {
-            // Esto parece estar al pedo, pero si no está dentro del else no se refrescan los cambios del turno doble.
+            // Esto parece estar de más, pero si no está dentro del else no se refrescan los cambios del turno doble.
             this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
         }
         this.afterDarTurno.emit(pacienteSave);
         if (this.paciente && this._pacienteSeleccionado) {
             return false;
         } else {
-            this.buscarPaciente();
+            this.resetBuscarPaciente();
         }
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
     }
@@ -1175,7 +1175,7 @@ export class DarTurnosComponent implements OnInit {
         if (paciente) {
             this.actualizarDatosPaciente(paciente.id);
         } else {
-            this.buscarPaciente();
+            this.resetBuscarPaciente();
         }
     }
 
@@ -1218,17 +1218,31 @@ export class DarTurnosComponent implements OnInit {
 
     noSeAsignaTurno() {
         if (this.solicitudVacunacion) {
-            // se ingreso desde monitoreo de inscriptos
+            // se ingresó desde monitoreo de inscriptos
             this.afterDarTurno.emit(null);
             this.plex.clearNavbar();
-        } else {
-            // se ingreso desde citas
-            if (this._pacienteSeleccionado) {
-                this.afterDarTurno.emit(this.paciente);
-            } else {
-                this.buscarPaciente();
-            }
+            this.ponerEnListaEspera();
+            return;
         }
+
+        // se ingresó desde citas
+        if (this._pacienteSeleccionado) {
+            this.afterDarTurno.emit(this.paciente);
+        } else {
+            this.resetBuscarPaciente();
+        }
+
+        this.ponerEnListaEspera();
+        this.estadoT = 'noSeleccionada';
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
+        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
+        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
+        this.afterDarTurno.emit(this.paciente);
+        this.plex.clearNavbar();
+    }
+
+    // Agrega paciente a lista de espera en caso de no asignarse el turno
+    ponerEnListaEspera() {
         let operacion: Observable<IListaEspera>;
         const datosPrestacion = this.opciones.tipoPrestacion;
         const datosProfesional = !this.opciones.profesional ? null : {
@@ -1258,18 +1272,10 @@ export class DarTurnosComponent implements OnInit {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
-        if (this.solicitudVacunacion) {
-            return;
-        }
-        this.estadoT = 'noSeleccionada';
-        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
-        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
-        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(this.paciente);
-        this.plex.clearNavbar();
     }
 
-    buscarPaciente() {
+    // resetea variables para la pantalla 'buscar paciente'
+    resetBuscarPaciente() {
         this.plex.clearNavbar();
         this.showDarTurnos = false;
         this.mostrarCalendario = false;
@@ -1296,7 +1302,7 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
         this.afterDarTurno.emit(true);
-        this.buscarPaciente();
+        this.resetBuscarPaciente();
     }
 
     redirect(pagina: string) {
