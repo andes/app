@@ -38,7 +38,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public resultadoBusqueda = [];
   public showBusquedaPaciente = false;
   public editFicha = false;
-  public puedeEditar: boolean;
   public puedeVer: boolean;
   public puedeVerHistorial: boolean;
   public pacienteSelected: IPaciente;
@@ -164,7 +163,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       this.router.navigate(['inicio']);
     }
     this.permisoHuds = this.auth.check('huds:visualizacionHuds');
-    this.puedeEditar = this.auth.check('epidemiologia:update');
     this.puedeVer = this.auth.check('epidemiologia:read');
     this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
     this.plex.updateTitle([
@@ -174,7 +172,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     this.dataType$ = this.formsService.search();
     this.localidades$ = this.localidadService.get({ codigo: 15 });
     this.zonaSanitaria$ = this.zonaSanitariaService.search();
-    if (this.puedeEditar) {
+    if (this.auth.check('epidemiologia:update')) {
       this.permisosService.organizaciones().subscribe(permisos => {
         this.userOrganzaciones = permisos;
       });
@@ -346,9 +344,5 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   }
   changeCollapse(event) {
     this.collapse = event;
-  }
-
-  checkEdit(organizacion) {
-    return (this.userOrganzaciones.some(org => org.id === organizacion));
   }
 }

@@ -66,8 +66,8 @@
                 <td *plTableCol="'pcr'">{{ficha.idPcr }}</td>
                 <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
-                    <plex-button *ngIf="checkEdit(ficha.secciones[0].fields[0].organizacion.id)" type="warning"
-                                 icon="pencil" size="sm" tooltip="Editar" (click)="editarVerFicha(ficha,true)">
+                    <plex-button *ngIf="ficha | checkEdit:userOrganzaciones " type="warning" icon="pencil" size="sm"
+                                 tooltip="Editar" (click)="editarVerFicha(ficha,true)">
                     </plex-button>
                     <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" tooltip="Ver"
                                  (click)="editarVerFicha(ficha,false)">
