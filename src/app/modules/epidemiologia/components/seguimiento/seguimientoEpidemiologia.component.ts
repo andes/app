@@ -43,6 +43,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.auth.getPermissions('epidemiologia:seguimiento:?').length) {
+      this.router.navigate(['inicio']);
+    }
     this.estadosSeguimiento = [
       { id: 'pendiente', nombre: 'Pendiente' },
       { id: 'seguimiento', nombre: 'Seguimiento' },
