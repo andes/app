@@ -31,6 +31,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     actualizacionSeguimiento;
     organizacion;
     opcionesSemaforo;
+    esAuditor;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -46,12 +47,15 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         if (!this.auth.getPermissions('epidemiologia:seguimiento:?').length) {
             this.router.navigate(['inicio']);
         }
+        this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
+
         this.estadosSeguimiento = [
             { id: 'pendiente', nombre: 'Pendiente' },
             { id: 'seguimiento', nombre: 'Seguimiento' },
             { id: 'alta', nombre: 'De Alta' },
             { id: 'fallecido', nombre: 'Fallecido' }
         ];
+
         this.organizacion = this.auth.organizacion;
         this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res => this.opcionesSemaforo = res.options);
     }

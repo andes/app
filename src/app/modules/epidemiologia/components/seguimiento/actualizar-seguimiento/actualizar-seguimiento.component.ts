@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SeguimientoPacientesService } from '../../../services/seguimiento-pacientes.service';
@@ -8,19 +9,21 @@ import { SeguimientoPacientesService } from '../../../services/seguimiento-pacie
 })
 export class ActualizarSeguimientoComponent implements OnInit {
     @Input() seguimiento;
-    @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
-    @Output() saveDetalle: EventEmitter<any> = new EventEmitter<any>();
-    @Output() verLlamado = new EventEmitter<any>();
+    @Output() close: EventEmitter<any> = new EventEmitter<any>();
+    @Output() save: EventEmitter<any> = new EventEmitter<any>();
     editContactos;
     scoreValue;
+    esAuditor;
 
     constructor(
+        private auth: Auth,
         private plex: Plex,
         private seguimientoPacientesService: SeguimientoPacientesService
     ) { }
 
     ngOnInit() {
         this.scoreValue = this.seguimiento.score.value;
+        this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
     }
 
     guardar() {
@@ -38,7 +41,7 @@ export class ActualizarSeguimientoComponent implements OnInit {
 
         this.seguimientoPacientesService.update(this.seguimiento.id, data).subscribe(() => {
             this.plex.toast('success', 'La derivación fue actualizada exitosamente');
-            this.saveDetalle.emit(false);
+            this.save.emit(false);
         });
     }
 
@@ -47,7 +50,7 @@ export class ActualizarSeguimientoComponent implements OnInit {
     }
 
     cerrar() {
-        this.returnDetalle.emit(false);
+        this.close.emit(false);
     }
 
     hideSubmit($event) {
