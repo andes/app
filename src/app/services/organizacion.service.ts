@@ -1,12 +1,57 @@
 import { Server, Cache } from '@andes/shared';
-import { IOrganizacion, ISectores } from './../interfaces/IOrganizacion';
+import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
+import { auditTime, switchMap, map } from 'rxjs/operators';
+import { Auth } from '@andes/auth';
 
 @Injectable()
 export class OrganizacionService {
     private organizacionUrl = '/core/tm/organizaciones'; // URL to web api
-    constructor(public server: Server) { }
+
+    public organizacionesFiltradas$: Observable<IOrganizacion[]>;
+    public nombre = new BehaviorSubject<string>(null);
+    public soloNoActivo = new BehaviorSubject<boolean>(null);
+    public lastResults = new BehaviorSubject<any[]>(null);
+    private limit = 15;
+    private skip;
+
+    constructor(
+        public server: Server,
+        private auth: Auth) {
+
+        this.organizacionesFiltradas$ = combineLatest(
+            this.nombre,
+            this.soloNoActivo,
+            this.lastResults
+        ).pipe(
+            auditTime(0),
+            switchMap(([nombre, soloNoActivo = false, lastResults]) => {
+                if (!lastResults) {
+                    this.skip = 0;
+                }
+                if (this.skip > 0 && this.skip % this.limit !== 0) {
+                    return EMPTY;
+                }
+                const params: any = {
+                    activo: !soloNoActivo,
+                    limit: this.limit,
+                    skip: this.skip,
+                    user: this.auth.usuario.username
+                };
+                if (nombre) {
+                    params.nombre = nombre;
+                }
+                return this.get(params).pipe(
+                    map(resultados => {
+                        const listado = lastResults ? lastResults.concat(resultados) : resultados;
+                        this.skip = listado.length;
+                        return listado;
+                    })
+                );
+            })
+        );
+    }
 
     /**
      * Metodo get. Trae el objeto organizacion.

@@ -4,8 +4,8 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
-
-const limit = 25;
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'organizaciones',
@@ -15,14 +15,52 @@ export class OrganizacionComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     showcreate = false;
-    datos: IOrganizacion[] = [];
+    listado$: Observable<IOrganizacion[]>;
+    listadoActual: IOrganizacion[];
     seleccion: IOrganizacion;
-    skip = 0;
-    nombre = '';
-    soloNoActivo = false;
     loader = false;
-    finScroll = false;
-    tengoDatos = true;
+    filtros: any = {};
+    queryParams = {
+        skip: 0,
+        limit: 15
+    };
+    public columns = [
+        {
+            key: 'codigoSisa',
+            label: 'Código Sisa',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.codigo.sisa.localeCompare(b.codigo.sisa); }
+        },
+        {
+            key: 'nombre',
+            label: 'Nombre',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.nombre.localeCompare(b.nombre); }
+        },
+        {
+            key: 'Complejidad',
+            label: 'complejidad',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return null; }
+        },
+        {
+            key: 'Estado',
+            label: 'estado',
+            sorteable: true,
+            opcional: false,
+            sort: (a, b) => { return a.estado.localeCompare(b.estado); }
+        },
+        {
+            key: 'Acciones',
+            label: 'acciones',
+            sorteable: false,
+            opcional: false,
+            sort: (a, b) => { return null; }
+        }
+    ];
 
     constructor(
         public organizacionService: OrganizacionService,
@@ -34,12 +72,12 @@ export class OrganizacionComponent implements OnInit {
     ngOnInit() {
         if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
             this.router.navigate(['inicio']);
-        } else {
-            this.updateTitle('Organizaciones');
-            this.loadDatos();
         }
+        this.updateTitle('Organizaciones');
+        this.listado$ = this.organizacionService.organizacionesFiltradas$.pipe(
+            map(resp => this.listadoActual = resp)
+        );
     }
-
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle('Tablas maestras / ' + nombre);
@@ -49,47 +87,30 @@ export class OrganizacionComponent implements OnInit {
         return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : ''));
     }
 
-    loadDatos(concatenar: boolean = false) {
-        const parametros = {
-            activo: !this.soloNoActivo,
-            nombre: this.nombre,
-            skip: this.skip,
-            limit: limit,
-            user: this.auth.usuario.username
-        };
-        this.organizacionService.get(parametros)
-            .subscribe(
-                datos => {
-                    if (concatenar) {
-                        if (datos.length > 0) {
-                            this.datos = this.datos.concat(datos);
-                        } else {
-                            this.finScroll = true;
-                            this.tengoDatos = false;
-                        }
-                    } else {
-                        this.datos = datos;
-                        this.finScroll = false;
-                    }
-                    this.loader = false;
-                });
+    onScroll() {
+        this.organizacionService.lastResults.next(this.listadoActual);
+    }
+
+    filtrar() {
+        this.organizacionService.nombre.next(this.filtros.nombre);
+        this.organizacionService.soloNoActivo.next(this.filtros.soloNoActivo);
     }
 
     onReturn(): void {
         this.updateTitle('Organizaciones');
         this.showcreate = false;
         this.seleccion = null;
-        this.loadDatos();
+        this.organizacionService.lastResults.next(null);
     }
 
     activate(objOrganizacion: IOrganizacion) {
         if (objOrganizacion.activo) {
 
             this.organizacionService.disable(objOrganizacion)
-                .subscribe(dato => this.loadDatos()); // Bind to view
+                .subscribe(() => this.organizacionService.lastResults.next(null)); // Bind to view
         } else {
             this.organizacionService.enable(objOrganizacion)
-                .subscribe(dato => this.loadDatos()); // Bind to view
+                .subscribe(() => this.organizacionService.lastResults.next(null)); // Bind to view
         }
     }
 
@@ -102,13 +123,6 @@ export class OrganizacionComponent implements OnInit {
         this.showcreate = true;
     }
 
-    nextPage() {
-        if (this.tengoDatos) {
-            this.skip += limit;
-            this.loadDatos(true);
-            this.loader = true;
-        }
-    }
     routeSectores(org) {
         this.router.navigate(['/tm/organizacion/' + org.id + '/sectores']);
     }
@@ -116,12 +130,8 @@ export class OrganizacionComponent implements OnInit {
     routePrestaciones(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/ofertas_prestacionales']);
     }
+
     routerConfiguracion(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/configuracion']);
-    }
-
-    aplicarFiltroBusqueda() {
-        this.skip = 0;
-        this.loadDatos(false);
     }
 }
