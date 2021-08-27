@@ -2,12 +2,14 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { getSemanticClass } from '../../pipes/semantic-class.pipes';
-import { DominiosNacionalesService } from '../../services/dominios-nacionales.service';
+import { IPSService } from '../../services/dominios-nacionales.service';
 import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.service';
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
@@ -35,6 +37,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public loading = false;
 
     public cdas = [];
+
+    public dominios$: Observable<any[]>;
 
     @Input() paciente: any;
 
@@ -126,7 +130,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public auth: Auth,
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
-        public domNacional: DominiosNacionalesService,
+        public ipsService: IPSService,
         @Optional() private ejecucionService: RupEjecucionService
     ) {
     }
@@ -362,9 +366,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     listarDominios() {
-        this.domNacional.getDominiosIdPaciente(this.paciente.id).subscribe((resultado) => {
-            this.dominios = resultado;
-        });
+        this.dominios$ = this.ipsService.getDominiosIdPaciente(this.paciente.id).pipe(
+            tap((dominios) => {
+                this.dominios = dominios;
+            })
+        );
     }
 
     private cargarSolicitudesMezcladas() {

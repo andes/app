@@ -1,93 +1,49 @@
-<form action="">
-    <div class="solo-valores-grid hallazgos">
-        <ng-container *ngIf="ips">
-            <div class="columna">
-                <div class="concepto prestacion-offset">
-                    <h4 *ngIf="ips.title">
-                        Registros de dominio {{ ips.custodian }}
-                    </h4>
-                </div>
-                <div class="divisor">
-                    <div class="datos-prestacion">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
-                             viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
-                            <path fill="#10A6E0"
-                                  d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
-                                        c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
-                                        c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
-                            <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
-                                        8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
-                        </svg>
-                        <h5 class="ml-1 text-primary evoluciones">Registros: {{ ips.title }}</h5>
-                        
-                    </div>
-                    <div class="justify-content-end nav-fecha d-flex align-items-end">
-                    </div>
-                </div>
-                <!-- Template a mejorar-->
-                <div *ngIf="ips.entry.length > 0">
-                <ng-container *ngFor="let e of ips.entry">
-                    <div *ngIf="e.resource.resourceType == 'Composition'">
-                        <plex-title titulo="Composition"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Titulo" subtitulo="{{e.resource.title}}"></plex-label>
-                                <plex-label titulo="Fecha del registro generado" subtitulo="{{e.resource.date |  date}}"></plex-label>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'Patient'">
-                        <plex-title titulo="Paciente"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Nombre" subtitulo="{{e.resource.name[0].text}}"></plex-label>
-                                <plex-label titulo="Fecha Nacimiento" subtitulo="{{e.resource.birthDate |  date}}"></plex-label>
-                                <plex-label titulo="Género" subtitulo="{{e.resource.gender}}"></plex-label>
-                                <div *ngFor="let r of e.resource.identifier ">
-                                    <plex-label titulo="Fuente" subtitulo="{{r.system}} | {{r.value}}"></plex-label>
-                                </div>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'Device'">
-                        <plex-title titulo="Dispositivo"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Identificado" subtitulo="{{e.resource.id}}"></plex-label>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'Condition'">
-                        <plex-title titulo="Condition"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                        <div *ngFor="let r of e.resource.code.coding ">    
-                            <plex-label titulo="Snomed" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
-                        </div>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'AllergyIntolerance'">
-                        <plex-title titulo="Alergias e Intolerancias"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                            <div *ngFor="let r of e.resource.code.coding ">
-                                <plex-label titulo="Snomed" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
-                            </div>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'MedicationStatement'">
-                        <plex-title titulo="Medicamentos"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Fecha" subtitulo="{{e.resource.effectiveDateTime | date}}"></plex-label>
-                                <plex-label titulo="Estado" subtitulo="{{e.resource.status}}"></plex-label>
-                                <!-- <div *ngFor="let m of e.resource.medicationCodeableConcept.coding ">
-                                    <plex-label titulo="Medicamento" subtitulo="{{r.code}} {{r.display}}"></plex-label>
-                                </div> -->
-                                <plex-label *ngIf="e.resource.text" titulo="Descripcion" subtitulo="{{e.resource.text?.div}}"></plex-label>
-                    </div>
-                    <div *ngIf="e.resource.resourceType == 'Immunization'">
-                        <plex-title titulo="Vacunas"></plex-title>
-                        <div class="w-100 h-100 d-flex justify-content-center align-items-center"></div>
-                                <plex-label titulo="Fecha" subtitulo="{{e.resource.occurrenceDateTime | date}}"></plex-label>
-                                <plex-label titulo="Estado" subtitulo="{{e.resource.status}}"></plex-label>
-                                <div *ngFor="let r of e.resource.vaccineCode.coding ">
-                                    <plex-label titulo="Vacuna(s)" subtitulo="{{r.code}} | {{r.display}}"></plex-label>
-                                </div>
-                                <div *ngFor="let p of e.resource.protocolApplied ">
-                                    <plex-label titulo="Esquema" subtitulo="{{p.doseNumberPositiveInt}} | {{p.series}}"></plex-label>
-                                </div>
-                    </div>
-                </ng-container>    
-            </div>        
-            </div>
-        </ng-container>
-    </div>
-</form>
+<ng-container *ngIf="ips">
+    <plex-title [titulo]="composition.title"></plex-title>
+
+
+    <ng-container *ngIf="problemas.length">
+        <plex-title size="sm" titulo="Lista de problemas"></plex-title>
+        <plex-grid cols="3">
+            <ng-container *ngFor="let problema of problemas">
+                <rup-card [titulo]="problema.code.coding[0].display" icono="trastorno" semantic="trastorno"
+                          [estado]="problema.clinicalStatus?.coding[0]?.code" [fecha]="problema.recordedDate">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="alergias.length">
+        <plex-title size="sm" titulo="Alergias"></plex-title>
+        <plex-grid cols="3">
+            <ng-container *ngFor="let alergia of alergias">
+                <rup-card [titulo]="alergia.code.coding[0].display" icono="trastorno" semantic="trastorno"
+                          estado="Activo" [fecha]="alergia.onsetDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="alergias.length">
+        <plex-title size="sm" titulo="Vacunas"></plex-title>
+        <plex-grid cols="2">
+            <ng-container *ngFor="let vacuna of vacunas">
+                <rup-card [titulo]="vacuna.vaccineCode.coding[0].display" icono="vacuna" semantic="vacuna"
+                          [estado]="vacuna.status" [fecha]="vacuna.occurrenceDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="medicamentos.length">
+        <plex-title size="sm" titulo="Medicamentos"></plex-title>
+        <plex-grid cols="2">
+            <ng-container *ngFor="let medicamento of medicamentos">
+                <rup-card [titulo]="medicamento.medicationCodeableConcept.coding[0].display" icono="pildoras"
+                          semantic="producto" [estado]="medicamento.status" [fecha]="medicamento.effectiveDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+</ng-container>
