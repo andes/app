@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class DominiosNacionalesService {
-    private ipsUrl = '/modules/ips/';  // URL to web api
+export class IPSService {
+    private ipsUrl = '/modules/ips/'; // URL to web api
     constructor(
         private server: Server
     ) { }

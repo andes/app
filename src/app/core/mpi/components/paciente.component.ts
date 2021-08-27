@@ -125,7 +125,6 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
-    private subscripcionGetFederador: Subscription = null;
 
     origen = '';
     tipoPaciente = '';

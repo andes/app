@@ -9,6 +9,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TOPLibModule } from 'src/app/components/top/top.module';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
 import { ChartComponent } from './components/ejecucion/resumen-paciente/chart.component';
@@ -41,7 +42,8 @@ import { RUPLibModule } from './rup-lib.module';
         TOPLibModule,
         NgDragDropModule,
         RUPLibModule,
-        SharedModule
+        SharedModule,
+        DirectiveLibModule
 
     ],
     declarations: [

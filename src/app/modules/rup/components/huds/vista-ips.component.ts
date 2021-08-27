@@ -1,36 +1,43 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { DominiosNacionalesService } from '../../services/dominios-nacionales.service';
+import { IPSService } from '../../services/dominios-nacionales.service';
 
 @Component({
     selector: 'vista-ips',
     templateUrl: 'vista-ips.component.html',
     encapsulation: ViewEncapsulation.None,
+    styleUrls: [
+        '../core/_rup.scss'
+    ]
 })
 
 export class VistaIPSComponent implements OnInit {
     @Input() registro: any = {};
-    public ips = {
-        title: '',
-        custodian: '',
-        entry: []
-    };
-    constructor(public domNacional: DominiosNacionalesService) { }
+    public ips = false;
+    constructor(
+        public ipsService: IPSService
+    ) { }
+
+    composition: any;
+
+    vacunas: any[] = [];
+    medicamentos: any[] = [];
+    problemas: any[] = [];
+    alergias: any[] = [];
 
     ngOnInit() {
-        this.domNacional.getDocumentos(this.registro.params).subscribe(result => {
+        this.ipsService.getDocumentos(this.registro.params).subscribe(result => {
             if (result && result.resourceType) {
-                this.ips = {
-                    title: result.id,
-                    custodian: this.registro.params.custodian,
-                    entry: result.entry
-                };
+                this.composition = result.entry.find(entry => entry.resource.resourceType === 'Composition').resource;
+                this.vacunas = result.entry.filter(entry => entry.resource.resourceType === 'Immunization').map(e => e.resource);
+                this.medicamentos = result.entry.filter(entry => entry.resource.resourceType === 'MedicationStatement').map(e => e.resource);
+                this.problemas = result.entry.filter(entry => entry.resource.resourceType === 'Condition').map(e => e.resource);
+                this.alergias = result.entry.filter(entry => entry.resource.resourceType === 'AllergyIntolerance').map(e => e.resource);
             } else {
-                this.ips = {
-                    title: 'No existen registros',
-                    custodian: '',
-                    entry: []
+                this.composition = {
+                    title: 'No existen registros'
                 };
             }
+            this.ips = true;
         });
     }
 
