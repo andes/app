@@ -237,6 +237,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
+    chequearMultiprestacion(id) {
+        const prestacion = this.tiposPrestacion.find(p => p.id === id);
+        if (prestacion.refsetIds?.length > 1) {
+            const prestacionHijo = this.tiposPrestacion.find(p =>
+                prestacion.refsetIds.find(concepto => concepto === p.conceptId));
+            prestacionHijo['esMultiprestacion'] = true;
+            return prestacionHijo;
+        }
+        return prestacion;
+    }
     /**
      * Filtra el listado de agendas y prestaciones
      */
@@ -380,7 +390,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     iniciarPrestacion(turno) {
         const paciente = turno.paciente;
-        const snomedConcept = turno.tipoPrestacion;
+        const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.id); // llamar a metodo y recorrer prestaciones;
         this.servicioPrestacion.get({
             organizacion: this.auth.organizacion.id,
             turnos: [turno.id],
@@ -516,6 +526,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      */
     tienePermisos(turno) {
         const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
+        if (existe) {
+            return this.chequearMultiprestacion(existe);
+        }
         if (turno.prestacion) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestacion.solicitud.tipoPrestacion.id);
 
@@ -566,8 +579,43 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
-            tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
+            tipoPrestaciones: this.cargarTiposPrestacion()
         });
+    }
+
+    cargarTiposPrestacion() {
+        let tiposPrestaciones = this.tiposPrestacion.map(t => t.conceptId);
+        const prestacionMultiple = this.tiposPrestacion.find(tipo => tipo.refsetIds?.length > 1);
+        if (prestacionMultiple) {
+            tiposPrestaciones = [...tiposPrestaciones, ...prestacionMultiple.refsetIds];
+        }
+
+        return tiposPrestaciones;
+    }
+
+    chequearPrestacion(turno) {
+
+        const prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === turno.tipoPrestacion?.conceptId);
+
+        if (prestacion.refsetIds) {
+            const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.id);
+            if (!(turno.prestacion?.length === prestacion.refsetIds?.length)) {
+                return turno.prestacion?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
+            }
+            return turno.prestacion.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
+        }
+        return turno.prestacion ? turno.prestacion[0] : null;
+    }
+
+    chequearEstados(turno, estado) {
+
+        const prestacion = this.chequearPrestacion(turno);
+
+        if (prestacion) {
+
+            return prestacion.estados[prestacion.estados.length - 1].tipo === estado;
+        }
+
     }
 
     cargarPrestacionesTurnos(agenda) {
@@ -578,11 +626,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             agenda['cantidadTurnos'] += bloques.turnos.length;
             // loopeamos los turnos dentro de los bloques
             bloques.turnos.forEach(turno => {
-                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const prestaciones = this.prestaciones.filter(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
                 });
-                // asignamos la prestacion al turno
-                turno['prestacion'] = this.prestaciones[indexPrestacion];
+                // asignamos la prestaciones al turno
+                turno['prestacion'] = prestaciones.length > 0 ? prestaciones : null;
                 if (turno.paciente && turno.paciente.carpetaEfectores) {
                     (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }
