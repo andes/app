@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Server, Cache } from '@andes/shared';
+import { Server, Cache, cacheStorage } from '@andes/shared';
 
 
 @Injectable()
@@ -15,10 +15,10 @@ export class PermisosService {
         return this.server.get(this.permisosUrl, { params });
     }
 
-    // [TODO] Poner cache
-    // @Cache({})
     organizaciones(): Observable<any> {
-        return this.server.get('/modules/gestor-usuarios/organizaciones', {});
+        return this.server.get('/modules/gestor-usuarios/organizaciones', {}).pipe(
+            cacheStorage({ key: 'organizaciones-permisos' })
+        );
     }
 
     copyPermisos = null;

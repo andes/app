@@ -80,7 +80,7 @@ export class GraficosComponent implements OnInit {
     }
 
     descargar(value) {
-        if (this.filtros && this.filtros.tipoDeFiltro === 'turnos') {
+        if (this.filtros) {
             // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv
             Object.keys(this.filtros).map(filtro => value[0][filtro] = this.filtros[filtro] ? this.filtros[filtro] : '');
             this.requestInProgress = true;
