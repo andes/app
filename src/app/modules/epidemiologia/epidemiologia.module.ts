@@ -20,6 +20,7 @@ import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-se
 import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
+import { CheckEditPipe } from './pipes/checkEdit.pipe';
 import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
     DetalleSeguimientoComponent,
     SeguimientoFieldsPipe,
     CodigSisaPipe,
+    CheckEditPipe,
     ActualizarSeguimientoComponent,
   ],
   imports: [

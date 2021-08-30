@@ -37,7 +37,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
   public resultadoBusqueda = [];
   public showBusquedaPaciente = false;
   public editFicha = false;
-  public puedeEditar: boolean;
   public puedeVer: boolean;
   public puedeVerHistorial: boolean;
   public pacienteSelected: IPaciente;
@@ -161,7 +160,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
       this.router.navigate(['inicio']);
     }
     this.permisoHuds = this.auth.check('huds:visualizacionHuds');
-    this.puedeEditar = this.auth.check('epidemiologia:update');
     this.puedeVer = this.auth.check('epidemiologia:read');
     this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
     this.plex.updateTitle([
