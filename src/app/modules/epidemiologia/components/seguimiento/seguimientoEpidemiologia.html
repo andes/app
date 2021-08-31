@@ -22,76 +22,72 @@
                     <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
                 </plex-wrapper>
             </plex-grid>
-            <div class="row" *ngIf='(seguimientos$ | async)?.length'>
-                <div class="col-12">
-
-                    <plex-list [striped]="false" height="60vh" (scrolled)="onScroll()">
-                        <plex-item>
-                            <b label> Paciente </b>
-                            <b label> Teléfono </b>
-                            <b label> Estado </b>
-                            <b label> Acción </b>
-                        </plex-item>
-                        <ng-container *ngFor="let seguimiento of seguimientos$ | async">
-                            <ng-container *ngIf="seguimiento | seguimientoFields as alarmas">
-                                <plex-item [colors]="getColorPrioridad(seguimiento.score.value)" (click)="selectSeguimiento(seguimiento)">
-                                    <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
-                                                subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
-                                    <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente.telefonoActual }}">
-                                    </plex-label>
+            <div *ngIf='(seguimientos$ | async)?.length'>
+                <plex-list [striped]="false" height="calc(100vh - 233px)" (scrolled)="onScroll()">
+                    <plex-item>
+                        <b label> Paciente </b>
+                        <b label> Teléfono </b>
+                        <b label> Estado </b>
+                        <b label> Acción </b>
+                    </plex-item>
+                    <ng-container *ngFor="let seguimiento of seguimientos$ | async">
+                        <ng-container *ngIf="seguimiento | seguimientoFields as alarmas">
+                            <plex-item [colors]="getColorPrioridad(seguimiento.score.value)"
+                                       (click)="selectSeguimiento(seguimiento)">
+                                <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
+                                            subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
+                                <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente.telefonoActual }}">
+                                </plex-label>
+                                <div>
+                                    <!-- mejorar esta parte -->
+                                    <plex-badge *ngIf="seguimiento.score.value >=6" type="danger"
+                                                tooltip="Persona de riesgo" class="mr-2">
+                                        <plex-icon type="danger" name="bell"></plex-icon>
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'" type="warning">
+                                        Pendiente
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="info"
+                                                icon="phone" class="mr-2">
+                                        {{ seguimiento.ultimoEstado.valor | date:"dd/MM/yyy HH:mm" }} <plex-icon
+                                                   size="sm" name="phone" type="info">
+                                        </plex-icon>
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="warning"
+                                                icon="phone">
+                                        {{ seguimiento.llamados.length }} <plex-icon size="sm" name="phone"
+                                                   type="warning">
+                                        </plex-icon>
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success">De
+                                        alta
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'fallecido'" type="danger">
+                                        Fallecido
+                                    </plex-badge>
+                                </div>
+                                <div>
                                     <div>
-                                        <!-- mejorar esta parte -->
-                                        <plex-badge *ngIf="seguimiento.score.value >=6" type="danger"
-                                                    tooltip="Persona de riesgo" class="mr-2">
-                                            <plex-icon type="danger" name="bell"></plex-icon>
-                                        </plex-badge>
-                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
-                                                    type="warning">
-                                            Pendiente
-                                        </plex-badge>
-                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="info"
-                                                    icon="phone" class="mr-2">
-                                            {{ seguimiento.ultimoEstado.valor | date:"dd/MM/yyy HH:mm" }} <plex-icon
-                                                       size="sm" name="phone" type="info">
-                                            </plex-icon>
-                                        </plex-badge>
-                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
-                                                    type="warning" icon="phone">
-                                            {{ seguimiento.llamados.length }} <plex-icon size="sm" name="phone"
-                                                       type="warning">
-                                            </plex-icon>
-                                        </plex-badge>
-                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success">De
-                                            alta
-                                        </plex-badge>
-                                        <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'fallecido'"
-                                                    type="danger">
-                                            Fallecido
-                                        </plex-badge>
+                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
+                                                     type="success" size="sm" tooltip="Iniciar Seguimiento"
+                                                     label="Iniciar Seguimiento"
+                                                     (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                        </plex-button>
+                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
+                                                     type="success" size="sm" tooltip="Continuar Seguimiento"
+                                                     label="Continuar Seguimiento"
+                                                     (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                        </plex-button>
+                                        <plex-button type="info" size="sm" class="ml-2" tooltip="Actualizar Datos"
+                                                     icon="pencil"
+                                                     (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
+                                        </plex-button>
                                     </div>
-                                    <div>
-                                        <div>
-                                            <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
-                                                         type="success" size="sm" tooltip="Iniciar Seguimiento"
-                                                         label="Iniciar Seguimiento"
-                                                         (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
-                                            </plex-button>
-                                            <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
-                                                         type="success" size="sm" tooltip="Continuar Seguimiento"
-                                                         label="Continuar Seguimiento"
-                                                         (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
-                                            </plex-button>
-                                            <plex-button type="info" size="sm" class="ml-2" tooltip="Actualizar Datos"
-                                                         icon="pencil"
-                                                         (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
-                                            </plex-button>
-                                        </div>
-                                    </div>
-                                </plex-item>
-                            </ng-container>
+                                </div>
+                            </plex-item>
                         </ng-container>
-                    </plex-list>
-                </div>
+                    </ng-container>
+                </plex-list>
             </div>
 
             <div *ngIf="!(seguimientos$ | async)?.length && !inProgress" class="h-50" justify="center">
