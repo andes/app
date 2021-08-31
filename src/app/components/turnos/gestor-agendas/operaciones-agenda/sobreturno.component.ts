@@ -43,6 +43,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     public hoy = new Date();
     public inicio: Date;
     public fin: Date;
+    public turno_link;
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -69,6 +70,9 @@ export class AgregarSobreturnoComponent implements OnInit {
                     this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
                     if (this.agenda.tipoPrestaciones.length === 1) {
                         this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                    }
+                    if (agenda.link) {
+                        this.turno_link = agenda.link;
                     }
                 });
             }
@@ -310,6 +314,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 'op': 'agregarSobreturno',
                 'sobreturno': {
                     horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
+                    link: this.turno_link,
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: pacienteSave,
