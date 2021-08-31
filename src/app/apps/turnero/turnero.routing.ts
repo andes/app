@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { PantallasComponent } from './views/pantallas.component';
 import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
 
-let routes = [
+const routes = [
     {
         path: '',
         component: PantallasComponent,

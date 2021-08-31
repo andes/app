@@ -157,7 +157,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
     asignarInscripcion() {
-        let params: any = {};
+        const params: any = {};
         if (this.grupoSelected) {
             params.grupos = [this.grupoSelected.nombre];
         }
@@ -256,7 +256,7 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
     cargarAsignadas() {
-        let params: any = {};
+        const params: any = {};
         if (this.grupoAsignadasSelected) {
             params.grupos = [this.grupoAsignadasSelected.nombre];
         }
@@ -302,13 +302,13 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
     incrementarLlamado() {
-        let llamado = {
+        const llamado = {
             fechaRealizacion: new Date(),
             usuario: this.auth.usuario,
             numeroIntento: 1,
         };
         if (this.pacienteSelected.llamados?.length) {
-            let ultimoLlamado = this.pacienteSelected.llamados[this.pacienteSelected.llamados.length - 1].numeroIntento;
+            const ultimoLlamado = this.pacienteSelected.llamados[this.pacienteSelected.llamados.length - 1].numeroIntento;
 
             llamado.numeroIntento = ultimoLlamado + 1;
 

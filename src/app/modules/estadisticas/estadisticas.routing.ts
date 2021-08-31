@@ -4,7 +4,7 @@ import { CitasComponent } from './components/citas/citas.component';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
 import { TopComponent } from './components/top/top.component';
 
-let routes = [
+const routes = [
     {
         path: 'citas',
         component: CitasComponent

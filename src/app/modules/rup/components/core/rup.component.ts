@@ -56,7 +56,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     public mensaje: any = {};
 
     private rulesEngine: Engine;
-    private rulesEvent = new Subject<{ type: string, params: any }>();
+    private rulesEvent = new Subject<{ type: string; params: any }>();
     private rulesEvent$ = this.rulesEvent.asObservable();
 
     /**
@@ -257,8 +257,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     public validateForm() {
         if (this.formulario) {
 
-            for (let key in this.formulario.controls) {
-                let frm = this.formulario.controls[key];
+            for (const key in this.formulario.controls) {
+                const frm = this.formulario.controls[key];
                 frm.markAsTouched();
                 if (frm.validator) {
                     frm.validator({ value: frm.value });

@@ -31,10 +31,10 @@ export class DetalleAgendaComponent implements OnInit {
 
 
     constructor(public plex: Plex,
-        public router: Router,
-        public auth: Auth,
-        public serviceTurno: TurnoService,
-        public serviceAgenda: AgendaService) {
+                public router: Router,
+                public auth: Auth,
+                public serviceTurno: TurnoService,
+                public serviceAgenda: AgendaService) {
     }
 
     ngOnInit() {

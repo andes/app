@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class ListaEsperaService {
 
-    private listaEsperaUrl = '/modules/turnos/listaEspera';  // URL to web api
+    private listaEsperaUrl = '/modules/turnos/listaEspera'; // URL to web api
 
     constructor(private server: Server) { }
 

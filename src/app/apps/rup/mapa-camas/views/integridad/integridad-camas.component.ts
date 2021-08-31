@@ -42,7 +42,7 @@ export class IntegridadCamasComponent implements OnInit {
             name: 'Integridad'
         }]);
 
-        const capaArr  = this.auth.getPermissions('internacion:rol:?');
+        const capaArr = this.auth.getPermissions('internacion:rol:?');
         if (capaArr.length === 1) {
             this.capa = capaArr[0];
             this.integridadService.setAmbito(this.ambito);

@@ -67,7 +67,7 @@ export class ListadoInternacionService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.includes(paciente));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
-                (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }

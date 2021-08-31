@@ -38,7 +38,7 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
             // Si params.ultimoValor es true, se traen los últimos datos validados de la HUDS
             // Sirve por ejemplo para pre-setear antecedentes y trastornos crónicos
             if (this.params.ultimoValor) {
-                let params: IPrestacionGetParams = {
+                const params: IPrestacionGetParams = {
                     idPaciente: this.paciente.id,
                     conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
                     estado: 'validada'
@@ -62,7 +62,7 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
     }
 
     loadConceptos($event) {
-        let conceptosSelect = this.conceptos.map(elem => {
+        const conceptosSelect = this.conceptos.map(elem => {
             return { id: elem.conceptId, nombre: elem.term, concepto: elem };
         });
         $event.callback(conceptosSelect);

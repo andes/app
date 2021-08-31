@@ -47,7 +47,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
     guardarNota() {
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
-            let patch = {
+            const patch = {
                 'op': 'notaAgenda',
                 // 'nota': agenda.nota
                 'nota': this.nota
@@ -68,11 +68,11 @@ export class AgregarNotaAgendaComponent implements OnInit {
                     this.saveAgregarNotaAgenda.emit(agenda);
                 }
             },
-                err => {
-                    if (err) {
+            err => {
+                if (err) {
 
-                    }
-                });
+                }
+            });
 
         });
     }

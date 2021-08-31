@@ -22,7 +22,7 @@ export class ModalCorreccionPacienteComponent {
      * y que los campos editados no sean vacíos
      */
     get pacienteEdit() {
-        let res = (this.pacienteEdited && this.pacienteEdited.nombre && this.pacienteEdited.apellido &&
+        const res = (this.pacienteEdited && this.pacienteEdited.nombre && this.pacienteEdited.apellido &&
             (this.pacienteEdited.nombre.toUpperCase() !== this.paciente.nombre ||
                 this.pacienteEdited.apellido.toUpperCase() !== this.paciente.apellido));
         return res;

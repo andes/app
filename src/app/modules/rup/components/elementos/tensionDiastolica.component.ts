@@ -1,6 +1,6 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-tension-diastolica',
@@ -22,17 +22,14 @@ export class TensionDiastolicaComponent extends RUPComponent implements OnInit {
     }
 
     getMensajes() {
-        let Edad;
-        // let percentiloTalla;
-        let BajaTensionDiastolica;
-        let tensionSistolica = this.registro.valor;
+        const tensionSistolica = this.registro.valor;
 
-        let mensaje: any = {
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };
 
-        Edad = this.paciente.edad;
+        const Edad = this.paciente.edad;
         // percentiloTalla = 5; //Falta tomar valor del percentilo
 
         if (tensionSistolica) {

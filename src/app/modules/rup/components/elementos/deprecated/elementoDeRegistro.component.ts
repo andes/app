@@ -68,7 +68,9 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
 
         if (this.params.query) {
             this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
-                this.conceptosSeleccionar = resultado.map(r => { r['checked'] = false; return r; });
+                this.conceptosSeleccionar = resultado.map(r => {
+                    r['checked'] = false; return r;
+                });
                 if (this.params.extraQuery) {
                     // agregamos al resultado las opciones extra, si existieran
                     this.conceptosSeleccionar = this.conceptosSeleccionar.concat(this.params.extraQuery);
@@ -120,7 +122,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
 
             }
         } else {
-            let indexEncontrado = this.registro.registros.findIndex(r => (data.conceptId === r.concepto.conceptId));
+            const indexEncontrado = this.registro.registros.findIndex(r => (data.conceptId === r.concepto.conceptId));
             this.registro.registros.splice(indexEncontrado, 1);
             if (this.params && this.params.extraQuery) {
                 this.ocultarPanel = true;
@@ -168,7 +170,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
             registroOrigen = registroOrigen.dragData;
         }
         // Verificamos si ya esta vinculado no dejar que se vinculen de nuevo
-        let control = this.controlVinculacion(registroOrigen, registroDestino);
+        const control = this.controlVinculacion(registroOrigen, registroDestino);
         if (control) {
             // this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
             return false;
@@ -204,7 +206,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
 
         // quitamos relacion si existe
         if (this.confirmarDesvincular[registroId]) {
-            let registroActual = this.registro.registros.find(r => r.id === registroId);
+            const registroActual = this.registro.registros.find(r => r.id === registroId);
 
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
@@ -245,7 +247,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
     // Busca recursivamente en los relacionadoCon de los registros
     recorreArbol(registroDestino, registroOrigen) {
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
-            for (let registro of registroDestino.relacionadoCon) {
+            for (const registro of registroDestino.relacionadoCon) {
                 if (registro.id === registroOrigen.id) {
                     return true;
                 }
@@ -268,8 +270,8 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
          */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
-            let registros = this.registro.registros;
-            let _registro = registros[this.indexEliminar];
+            const registros = this.registro.registros;
+            const _registro = registros[this.indexEliminar];
 
             // Quitamos toda la vinculación que puedan tener con el registro
             registros.forEach(registro => {
@@ -321,7 +323,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
 
     registrosColapsados() {
         this.registro.registros.forEach(registro => {
-            let unRegistro = this.itemsRegistros[registro.id].collapse;
+            const unRegistro = this.itemsRegistros[registro.id].collapse;
             if (unRegistro !== this.collapse) {
                 this.collapse = !this.collapse;
             }

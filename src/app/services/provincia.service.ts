@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ProvinciaService {
 
-    private provinciaUrl = '/core/tm/provincias';  // URL to web api
+    private provinciaUrl = '/core/tm/provincias'; // URL to web api
 
     constructor(private server: Server) { }
 

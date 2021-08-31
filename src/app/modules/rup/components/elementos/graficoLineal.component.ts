@@ -31,9 +31,9 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
                 if (prestaciones.length) {
                     // ordenamos los datosLineales por fecha
-                    prestaciones.sort(function (a, b) {
-                        let dateA = new Date(a.fecha).getTime();
-                        let dateB = new Date(b.fecha).getTime();
+                    prestaciones.sort((a, b) => {
+                        const dateA = new Date(a.fecha).getTime();
+                        const dateB = new Date(b.fecha).getTime();
 
                         return dateA > dateB ? 1 : -1;
                     });
@@ -105,8 +105,8 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                 callbacks: {
                     // Use the footer callback to display the sum of the items showing in the tooltip
                     footer: function (tooltipItems, _data) {
-                        let text = [];
-                        tooltipItems.forEach(function (tooltipItem) {
+                        const text = [];
+                        tooltipItems.forEach((tooltipItem) => {
                             text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
                             text.push('Prestación: ' + data[tooltipItem.index].tipoPrestacion.term);
                         });

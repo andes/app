@@ -2,7 +2,7 @@ import { TurnoService } from '../services/turnos/turno.service';
 import { LogService } from '../services/log.service';
 
 export function cantidadTurnosPorEstadoPaciente(userLogged, serviceTurno) {
-    let datosTurno = { estado: 'asignado', userName: userLogged.username, userDoc: userLogged.documento };
+    const datosTurno = { estado: 'asignado', userName: userLogged.username, userDoc: userLogged.documento };
     let countTemporal = 0;
     let countValidado = 0;
 
@@ -19,7 +19,7 @@ export function cantidadTurnosPorEstadoPaciente(userLogged, serviceTurno) {
 }
 
 export function cantidadTotalDeTurnosAsignados(serviceTurno) {
-    let datosTurno = { estado: 'asignado' };
+    const datosTurno = { estado: 'asignado' };
 
     serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
         return turnos.length;
@@ -35,7 +35,7 @@ export function cantidadTotalDeTurnosAsignados(serviceTurno) {
  */
 export function cantidadTurnosconAsistenciaVerificada(serviceTurno, userLogged?) {
     // TurnosChequeados por usuario o total depende si se envia el usuario
-    let datosTurno = { asistencia: true };
+    const datosTurno = { asistencia: true };
     if (userLogged) {
         datosTurno['usuario'] = userLogged;
     }
@@ -45,14 +45,14 @@ export function cantidadTurnosconAsistenciaVerificada(serviceTurno, userLogged?)
 }
 
 export function cantidadTurnosCodificados(serviceTurno) {
-    let datosTurno = { codificado: true };
+    const datosTurno = { codificado: true };
     serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
         return turnos.length;
     });
 }
 
 export function cantidadTurnosDeUnaFechaPorEfector(fecha: Date, efector, tipos, serviceTurno) {
-    let datosTurno = { organizacion: efector, horaInicio: fecha, tipoTurno: tipos };
+    const datosTurno = { organizacion: efector, horaInicio: fecha, tipoTurno: tipos };
     serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
         return turnos.length;
     });
@@ -60,7 +60,7 @@ export function cantidadTurnosDeUnaFechaPorEfector(fecha: Date, efector, tipos, 
 
 export function cantidadDeContactosActualizados() {
     let logService: LogService;
-    let datosLog = {};
+    const datosLog = {};
 
     logService.get('mpi', datosLog).subscribe(logs => {
         return logs.length;

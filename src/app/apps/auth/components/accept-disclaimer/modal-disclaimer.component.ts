@@ -48,7 +48,7 @@ export class ModalDisclaimerComponent implements OnInit {
     }
 
     aceptarDisclaimer() {
-        let usuario: any = this.auth.usuario;
+        const usuario: any = this.auth.usuario;
         if (!usuario.disclaimers) {
             usuario.disclaimers = [];
         }

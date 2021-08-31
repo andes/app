@@ -65,8 +65,8 @@ export class ListarPrestamosComponent implements OnInit {
         this.loading = true;
 
         if (filter === 'fechaDesde') {
-            let fechaDesde = moment(this.fechaDesde).startOf('day');
-            let _fechaHasta = moment(this.fechaHasta).endOf('day');
+            const fechaDesde = moment(this.fechaDesde).startOf('day');
+            const _fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaDesde > _fechaHasta) {
                 this.filters['fechaHasta'] = this.fechaHasta = moment(this.fechaDesde).endOf('day');
             }
@@ -75,8 +75,8 @@ export class ListarPrestamosComponent implements OnInit {
             }
         }
         if (filter === 'fechaHasta') {
-            let fechaHasta = moment(this.fechaHasta).endOf('day');
-            let _fechaDesde = moment(this.fechaDesde).startOf('day');
+            const fechaHasta = moment(this.fechaHasta).endOf('day');
+            const _fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaHasta < _fechaDesde) {
                 this.filters['fechaDesde'] = this.fechaDesde = moment(this.fechaHasta).startOf('day');
             }
@@ -119,7 +119,7 @@ export class ListarPrestamosComponent implements OnInit {
     loadEspacios(event) {
         let listaEspaciosFisicos = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query,
                 organizacion: this.auth.organizacion.id
             };
@@ -139,7 +139,7 @@ export class ListarPrestamosComponent implements OnInit {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -168,7 +168,7 @@ export class ListarPrestamosComponent implements OnInit {
     switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
         this.carpetasSeleccionadas = this.marcarTodas ?
-            this.carpetas.filter(function (el) {
+            this.carpetas.filter((el) => {
                 return el.estado === 'Prestada';
             }) : [];
         this.verDevolver = false;
@@ -197,7 +197,7 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{ nombre: 'En Archivo', valor: 'En Archivo' }, { nombre: 'Prestada', valor: 'Prestada' }];
+        const listaEstados = [{ nombre: 'En Archivo', valor: 'En Archivo' }, { nombre: 'Prestada', valor: 'Prestada' }];
         event.callback(listaEstados);
     }
 
@@ -208,13 +208,17 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     sortCarpetas() { // se divide this.carpetas en letras y en numeros para hacer el sort correspondiente
-        let val = this.sortDescending ? -1 : 1;
-        let carpetas_numeros = this.carpetas.filter(x => !isNaN(x._id));
-        let carpetas_letras = this.carpetas.filter(x => isNaN(x._id));
-        carpetas_letras.sort((a, b) => { return (a._id > b._id) ? val : (b._id > a._id) ? -val : 0; });
-        carpetas_numeros.sort((a, b) => { return (parseInt(a._id, 10) > parseInt(b._id, 10)) ? val : ((parseInt(b._id, 10) > parseInt(a._id, 10)) ? -val : 0); });
+        const val = this.sortDescending ? -1 : 1;
+        const carpetas_numeros = this.carpetas.filter(x => !isNaN(x._id));
+        const carpetas_letras = this.carpetas.filter(x => isNaN(x._id));
+        carpetas_letras.sort((a, b) => {
+            return (a._id > b._id) ? val : (b._id > a._id) ? -val : 0;
+        });
+        carpetas_numeros.sort((a, b) => {
+            return (parseInt(a._id, 10) > parseInt(b._id, 10)) ? val : ((parseInt(b._id, 10) > parseInt(a._id, 10)) ? -val : 0);
+        });
 
-        let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
+        const carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
         this.carpetas = carpetas_sort;
     }

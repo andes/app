@@ -19,9 +19,9 @@ export class DesarrolloPsicomotorComponent extends RUPComponent implements OnIni
             }
 
             this.conceptos = this.elementoRUP.requeridos.map(x => x.concepto);
-            for (let i in this.conceptos) {
-                let concepto = this.conceptos[i];
-                let a = this.estaSeleccionado(concepto);
+            for (const i in this.conceptos) {
+                const concepto = this.conceptos[i];
+                const a = this.estaSeleccionado(concepto);
                 this.registro.valor[i] = {};
                 this.registro.valor[i] = a;
             }
@@ -42,7 +42,7 @@ export class DesarrolloPsicomotorComponent extends RUPComponent implements OnIni
     }
 
     loadConceptos($event) {
-        let conceptosCheckBox = this.elementoRUP.requeridos.map(elem => {
+        const conceptosCheckBox = this.elementoRUP.requeridos.map(elem => {
             return { id: elem.concepto.conceptId, nombre: elem.concepto.term, concepto: elem.concepto };
         });
         $event.callback(conceptosCheckBox);
@@ -50,7 +50,7 @@ export class DesarrolloPsicomotorComponent extends RUPComponent implements OnIni
 
     selectCheckBox(i) {
         const checked = !this.registro.valor[i].checked;
-        for (let index in this.registro.valor) {
+        for (const index in this.registro.valor) {
             this.registro.valor[index].checked = false;
         }
         this.registro.valor[i].checked = !checked;

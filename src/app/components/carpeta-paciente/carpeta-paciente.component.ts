@@ -83,8 +83,8 @@ export class CarpetaPacienteComponent implements OnInit {
         if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
-            let result = paciente.carpetaEfectores.find((elemento, indice) => {
-                let resultado = (elemento.organizacion as any)._id === this.auth.organizacion.id;
+            const result = paciente.carpetaEfectores.find((elemento, indice) => {
+                const resultado = (elemento.organizacion as any)._id === this.auth.organizacion.id;
                 if (resultado) {
                     this.indiceCarpeta = indice;
                 }
@@ -101,7 +101,7 @@ export class CarpetaPacienteComponent implements OnInit {
             this.servicioCarpetaPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
                 if (carpeta.length > 0) {
-                    let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
+                    const carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
                     if (carpetaE.nroCarpeta) {
                         this.carpetaPaciente = carpetaE;
                         this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;

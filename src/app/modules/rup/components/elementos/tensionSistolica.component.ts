@@ -1,6 +1,6 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-tension-sistolica',
@@ -22,20 +22,14 @@ export class TensionSistolicaComponent extends RUPComponent implements OnInit {
     }
 
     getMensajes() {
-        let Edad;
-        let percentiloTalla;
-        let BajaTensionSistolica;
-        let tensionSistolica = this.registro.valor;
+        const tensionSistolica = this.registro.valor;
 
-        let mensaje: any = {
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };
 
-        Edad = this.paciente.edad;
-        // percentiloTalla = 5; //Falta tomar valor del percentilo
-
-
+        const Edad = this.paciente.edad;
         // Rango de edad del paciente ADULTOS
         if (tensionSistolica) {
 

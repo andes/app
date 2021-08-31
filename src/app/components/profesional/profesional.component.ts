@@ -34,10 +34,10 @@ export class ProfesionalComponent implements OnInit {
     // cantidad: IProfesional[];
 
     constructor(private formBuilder: FormBuilder,
-        private profesionalService: ProfesionalService,
-        public sanitizer: DomSanitizer,
-        private router: Router,
-        private auth: Auth, ) { }
+                private profesionalService: ProfesionalService,
+                public sanitizer: DomSanitizer,
+                private router: Router,
+                private auth: Auth, ) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -59,7 +59,7 @@ export class ProfesionalComponent implements OnInit {
     }
 
     loadDatos(concatenar: boolean = false) {
-        let parametros = {
+        const parametros = {
             'apellido': this.value && this.value.apellido,
             'nombre': this.value && this.value.nombre,
             'documento': this.value && this.value.documento,

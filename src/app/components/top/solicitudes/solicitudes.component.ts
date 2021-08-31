@@ -51,7 +51,7 @@ export class SolicitudesComponent implements OnInit {
     public prestacionesDestino = [];
     public estado;
     public asignadas = false;
-    itemsDropdown: any = [];  // Acciones del dropdown 'vincular
+    itemsDropdown: any = []; // Acciones del dropdown 'vincular
     openedDropDown = null;
     public estadosEntrada = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
@@ -125,7 +125,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
-        let currentUrl = this.router.url;
+        const currentUrl = this.router.url;
         if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
@@ -198,7 +198,7 @@ export class SolicitudesComponent implements OnInit {
     cancelar(prestacionSolicitud) {
         this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then(confirmar => {
             if (confirmar) {
-                let cambioEstado: any = {
+                const cambioEstado: any = {
                     op: 'estadoPush',
                     estado: { tipo: 'anulada' }
                 };
@@ -288,7 +288,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     getParams() {
-        let params: any = {
+        const params: any = {
             ordenFechaDesc: true,
             estados: [
                 'auditoria',
@@ -472,7 +472,7 @@ export class SolicitudesComponent implements OnInit {
         this.showSidebar = false;
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                let patch = {
+                const patch = {
                     op: 'estadoPush',
                     estado: {
                         tipo: 'anulada',
@@ -498,7 +498,7 @@ export class SolicitudesComponent implements OnInit {
         this.showSidebar = false;
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                let patch = {
+                const patch = {
                     op: 'citar',
                     estado: {
                         tipo: 'pendiente',
@@ -581,7 +581,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     private iniciarPrestacion(fecha, observaciones?) {
-        let patch: any = {
+        const patch: any = {
             op: 'estadoPush',
             ejecucion: {
                 fecha,
@@ -645,7 +645,9 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => { this.devolver(prestacion); } };
+                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
+                    this.devolver(prestacion);
+                } };
                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {

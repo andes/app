@@ -228,7 +228,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
 
     loadProfesionales(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.profesionalService.get(query).subscribe(event.callback);

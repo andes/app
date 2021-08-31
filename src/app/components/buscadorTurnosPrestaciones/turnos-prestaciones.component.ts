@@ -196,7 +196,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             estado: '',
             estadoFacturacion: '',
         };
-        let permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
+        const permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
         if (this.auth.profesional) {
             if (permisos === 0) {
                 this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
@@ -225,11 +225,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     refreshSelection(value, tipo) {
-        let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
-        let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
+        const fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
+        const fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
 
         if (this.fechaDesde && this.fechaHasta) {
-            let diff = moment(this.fechaHasta).diff(moment(this.fechaDesde), 'days');
+            const diff = moment(this.fechaHasta).diff(moment(this.fechaDesde), 'days');
             this.botonBuscarDisabled = diff > 31;
         }
 
@@ -326,7 +326,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         const arraySelect = this.selectPrestaciones$.getValue();
         const exp = Object.keys(arraySelect).filter((key) => arraySelect[key] === true);
         let prestacionesTurnos = [];
-        let prestaciones = [];
+        const prestaciones = [];
         exp.forEach(element => {
             prestacionesTurnos = element.split('-');
             if (prestacionesTurnos[1] !== 'undefined') { // Me quedo solo con las prestaciones, obviando los turnos

@@ -43,7 +43,7 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
     onPacienteSelected(paciente: IPaciente) {
         // Si se seleccionó por error un paciente fallecido
         this.pacienteService.checkFallecido(paciente);
-        let cama = this.verificarPaciente(paciente);
+        const cama = this.verificarPaciente(paciente);
         if (cama) {
             this.plex.info('warning', `${paciente.nombreCompleto} (${paciente.documento}) se encuentra internado
                 en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>

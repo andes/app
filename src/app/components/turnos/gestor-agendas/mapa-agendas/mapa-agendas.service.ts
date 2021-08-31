@@ -26,7 +26,7 @@ export class MapaAgendasService {
 
     public cargarAgendasMes(fecha) {
         this.fecha = fecha;
-        let parametros = {
+        const parametros = {
             fechaDesde: moment(this.fecha).startOf('month').toDate(),
             fechaHasta: moment(this.fecha).endOf('month').toDate(),
             organizacion: this.auth.organizacion.id
@@ -58,18 +58,18 @@ export class MapaAgendasService {
 
     private cargarMes() {
         this.calendario = [];
-        let inicio = moment(this.fecha).startOf('month').startOf('week');
-        let ultimoDiaMes = moment(this.fecha).endOf('month');
-        let primerDiaMes = moment(this.fecha).startOf('month');
-        let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
+        const inicio = moment(this.fecha).startOf('month').startOf('week');
+        const ultimoDiaMes = moment(this.fecha).endOf('month');
+        const primerDiaMes = moment(this.fecha).startOf('month');
+        const cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
 
         for (let r = 1; r <= cantidadSemanas; r++) {
-            let week = [];
+            const week = [];
             this.calendario.push(week);
 
             for (let c = 1; c <= 7; c++) {
-                let dia = inicio.toDate();
-                let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
+                const dia = inicio.toDate();
+                const isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
                 if (isThisMonth) {
                     week.push({
                         fecha: dia,
@@ -94,7 +94,7 @@ export class MapaAgendasService {
                 if (dia.estado !== 'vacio') {
                     let turnosAgenda = [];
                     this.agendas.forEach(agenda => {
-                        let turnosAgendaBloques = [];
+                        const turnosAgendaBloques = [];
                         let disponible = 0;
                         if (moment(dia.fecha).isSame(agenda.horaInicio, 'day')) {
                             agenda.bloques?.forEach((bloque) => {
@@ -134,9 +134,9 @@ export class MapaAgendasService {
     }
 
     private ordenarInformacionCalendario(dia) {
-        let prestacionesDelDia = dia.prestaciones;
+        const prestacionesDelDia = dia.prestaciones;
         let prestacionesTipo;
-        let totalesDiaPrestacion = [];
+        const totalesDiaPrestacion = [];
         if (prestacionesDelDia.length > 0) {
 
             this.tiposPrestacion.forEach(prestacion => {
@@ -149,7 +149,7 @@ export class MapaAgendasService {
                         disponible = disponible + prestaciontipo.disponible;
                     });
 
-                    let cantidadTotalDiaPrestacion = {
+                    const cantidadTotalDiaPrestacion = {
                         nombrePrestacion: prestacionesTipo[0].nombre,
                         asignado: asignado,
                         disponible: disponible,

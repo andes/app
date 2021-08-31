@@ -5,12 +5,12 @@ export class ISolicitud {
     // Datos principales del paciente
     paciente: {
         // requirido, validar en middleware
-        id: string,
-        nombre: string,
-        apellido: string,
-        documento: string,
-        sexo: string,
-        fechaNacimiento: Date
+        id: string;
+        nombre: string;
+        apellido: string;
+        documento: string;
+        sexo: string;
+        fechaNacimiento: Date;
     };
     // Tipo de prestación de ejecutarse (destino)
     tipoPrestacion: ISnomedConcept;
@@ -23,27 +23,27 @@ export class ISolicitud {
     turno: string;
     // Profesional Destino
     profesional: {
-        id: string,
-        nombre: string,
-        apellido: string,
-        documento: string
+        id: string;
+        nombre: string;
+        apellido: string;
+        documento: string;
     };
     // Profesional Origen
     profesionalOrigen: {
-        id: string,
-        nombre: string,
-        apellido: string,
-        documento: string
+        id: string;
+        nombre: string;
+        apellido: string;
+        documento: string;
     };
     // Organizacion destino
     organizacion: {
-        id: string,
-        nombre: string
+        id: string;
+        nombre: string;
     };
     // Organizacion
     organizacionOrigen: {
-        id: string,
-        nombre: string
+        id: string;
+        nombre: string;
     };
     // ID de la prestación desde la que se generó esta solicitud
     prestacionOrigen: string;

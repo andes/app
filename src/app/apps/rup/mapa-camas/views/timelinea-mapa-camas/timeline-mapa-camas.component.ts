@@ -189,7 +189,7 @@ export class TimelineMapaCamasComponent implements OnInit {
             this.datos = [];
 
             this.filtrar();
-            let movimientos = this.movimientos;
+            const movimientos = this.movimientos;
             const camasUnicas = {};
 
 
@@ -302,9 +302,9 @@ export class TimelineMapaCamasComponent implements OnInit {
                 stack: false,
                 template: (item, element: HTMLElement, data) => {
                     if (data.color) {
-                        element.parentElement.parentElement.style.setProperty(`--color`, '#' + data.color);
+                        element.parentElement.parentElement.style.setProperty('--color', '#' + data.color);
                     } else if (data.className) {
-                        element.parentElement.parentElement.style.setProperty(`--color`, 'red');
+                        element.parentElement.parentElement.style.setProperty('--color', 'red');
                     }
                     if (data.content) {
                         return data.content;

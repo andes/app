@@ -173,7 +173,7 @@ export class PrestamosHcComponent implements OnInit {
         if (carpetas && carpetas.length) {
             this.verNuevaCarpeta = false;
             this.carpetaSeleccionada = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
-            let msj = `Nro de Carpeta ${this.carpetaSeleccionada.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
+            const msj = `Nro de Carpeta ${this.carpetaSeleccionada.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
             this.plex.info('success', msj, 'Carpeta asignada');
             this.verSolicitudManual = true;
         }

@@ -8,7 +8,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 export class TurnosPrestacionesService {
 
 
-    private turnosPrestacionesURL = '/modules/estadistica/turnos_prestaciones';  // URL to web api
+    private turnosPrestacionesURL = '/modules/estadistica/turnos_prestaciones'; // URL to web api
 
     public listadoPrestaciones$: Observable<any[]>;
     public prestacionesOrdenada$: Observable<any[]>;

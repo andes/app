@@ -4,7 +4,7 @@ import { Server, cache } from '@andes/shared';
 import { BehaviorSubject, zip } from 'rxjs';
 import { switchMap, distinctUntilChanged, map, tap, merge } from 'rxjs/operators';
 
-let shiroTrie = require('shiro-trie');
+const shiroTrie = require('shiro-trie');
 
 
 @Injectable()
@@ -22,7 +22,7 @@ export class PerfilesHttp {
     private selected = new BehaviorSubject(null);
     public selected$ = this.selected.asObservable();
 
-    private url = '/modules/gestor-usuarios/perfiles';  // URL to web api
+    private url = '/modules/gestor-usuarios/perfiles'; // URL to web api
 
     constructor(private server: Server) {
         this.perfiles$ = this.searchParams$

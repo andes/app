@@ -5,8 +5,8 @@ export interface ISalaComun {
     id: String;
     nombre: string;
     organizacion: {
-        id: String,
-        nombre: String
+        id: String;
+        nombre: String;
     };
     capacidad?: number;
     ambito: string;

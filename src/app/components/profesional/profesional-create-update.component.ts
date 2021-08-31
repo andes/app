@@ -39,7 +39,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     // Getter que previene el error de AOT
     // https://github.com/angular/angular-cli/issues/6099
-    get formData(): any { return this.createForm; }
+    get formData(): any {
+        return this.createForm;
+    }
 
     createForm: FormGroup;
     // Definición de arreglos
@@ -91,17 +93,17 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     public firmaProfesional = null;
 
     constructor(private formBuilder: FormBuilder,
-        private profesionalService: ProfesionalService,
-        private paisService: PaisService,
-        private plex: Plex,
-        private router: Router,
-        private route: ActivatedRoute,
-        private provinciaService: ProvinciaService,
-        private localidadService: LocalidadService,
-        private especialidadService: EspecialidadService,
-        private validacionService: ValidacionService,
-        private siisaService: SIISAService,
-        public sanitizer: DomSanitizer) { }
+                private profesionalService: ProfesionalService,
+                private paisService: PaisService,
+                private plex: Plex,
+                private router: Router,
+                private route: ActivatedRoute,
+                private provinciaService: ProvinciaService,
+                private localidadService: LocalidadService,
+                private especialidadService: EspecialidadService,
+                private validacionService: ValidacionService,
+                private siisaService: SIISAService,
+                public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         this.sexos = enumerados.getObjSexos();
@@ -130,7 +132,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         });
     }
 
-    /*Código de filtrado de combos*/
+    /* Código de filtrado de combos*/
     loadPaises(event) {
         this.paisService.get({}).subscribe(event.callback);
     }
@@ -143,10 +145,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         this.localidadService.get({ 'provincia': provincia.value.id }).subscribe(event.callback);
     }
 
-    /*Código de contactos*/
+    /* Código de contactos*/
 
     addContacto(key, valor) {
-        let nuevoContacto = Object.assign({}, {
+        const nuevoContacto = Object.assign({}, {
             tipo: key,
             valor: valor,
             ranking: 0,
@@ -224,8 +226,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                                     fechaNacimiento: profCandidato.fechaNacimiento,
                                     documento: profCandidato.documento
                                 };
-                                let porcentajeMatching = this.match.matchPersonas(this.profesional, prof, this.weights, 'Levenshtein');
-                                let profesionalMatch = {
+                                const porcentajeMatching = this.match.matchPersonas(this.profesional, prof, this.weights, 'Levenshtein');
+                                const profesionalMatch = {
                                     matching: 0,
                                     paciente: null
                                 };

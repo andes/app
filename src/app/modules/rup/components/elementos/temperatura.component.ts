@@ -26,8 +26,8 @@ export class TemperaturaComponent extends RUPComponent implements OnInit {
 
 
     getMensajes() {
-        let temperatura = this.registro.valor;
-        let mensaje: any = {
+        const temperatura = this.registro.valor;
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };

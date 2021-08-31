@@ -7,7 +7,7 @@ import { Options } from 'projects/shared/src/lib/server/options';
 @Injectable()
 export class UsuarioService {
 
-    private usuarioUrl = '/modules/usuarios';  // URL to web api
+    private usuarioUrl = '/modules/usuarios'; // URL to web api
 
     private permisosUrl = '/core/tm/permisos';
 

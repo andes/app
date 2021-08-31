@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class ProfesionService {
-  profesionesURL = '/core/tm/profesiones';
+    profesionesURL = '/core/tm/profesiones';
 
-  constructor(private server: Server) {
-  }
+    constructor(private server: Server) {
+    }
 
-  get(): Observable<any[]> {
-    return this.server.get(this.profesionesURL);
-  }
+    get(): Observable<any[]> {
+        return this.server.get(this.profesionesURL);
+    }
 }

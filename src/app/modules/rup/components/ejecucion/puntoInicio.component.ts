@@ -131,7 +131,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).pipe(
             cacheStorage({ key: 'punto-inicio-pantallas', until: this.auth.session(true) })
         ).subscribe((pantallas) => {
-            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
+            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => {
+                return espacio.id;
+            });
         });
     }
 
@@ -233,15 +235,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         // por tipo de prestación
         if (this.prestacionSeleccion) {
             this.agendas = this.agendas.filter(agenda => (agenda.tipoPrestaciones.find(tipoPrestacion => tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId)));
-            let agendasLength = this.agendas.length;
+            const agendasLength = this.agendas.length;
             if (agendasLength) {
 
                 for (let indexAgenda = 0; indexAgenda < agendasLength; indexAgenda++) {
 
-                    let lengthBloques = this.agendas[indexAgenda].bloques.length;
+                    const lengthBloques = this.agendas[indexAgenda].bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
-                        let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
+                        const _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
                             return (t.tipoPrestacion && t.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
                         });
 
@@ -252,7 +254,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
             // buscamos el paciente en los turnos fuera de agenda
             if (this.fueraDeAgenda) {
-                let _turnos = this.fueraDeAgenda.filter(p => {
+                const _turnos = this.fueraDeAgenda.filter(p => {
                     return (p.solicitud.tipoPrestacion && p.solicitud.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
                 });
 
@@ -264,18 +266,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (typeof this.paciente !== 'undefined' && this.paciente) {
             this.matchPaciente = false;
 
-            let search = this.paciente.toLowerCase();
+            const search = this.paciente.toLowerCase();
 
             // buscamos el paciente en los turnos de la agenda
-            let agendasLength = this.agendas.length;
+            const agendasLength = this.agendas.length;
             if (agendasLength) {
 
                 for (let indexAgenda = 0; indexAgenda < agendasLength; indexAgenda++) {
 
-                    let lengthBloques = this.agendas[indexAgenda].bloques.length;
+                    const lengthBloques = this.agendas[indexAgenda].bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
-                        let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
+                        const _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
                             let nombreCompleto = '';
                             if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
@@ -297,7 +299,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
             // buscamos el paciente en los turnos fuera de agenda
             if (this.fueraDeAgenda) {
-                let _turnos = this.fueraDeAgenda.filter(p => {
+                const _turnos = this.fueraDeAgenda.filter(p => {
                     return (p.paciente &&
                         (p.paciente.nombre.toLowerCase().indexOf(search) >= 0 || p.paciente.apellido.toLowerCase().indexOf(search) >= 0
                             || p.paciente.documento.toLowerCase().indexOf(search) >= 0));
@@ -330,7 +332,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     cargarSolicitudes() {
-        let params = {
+        const params = {
             ordenFechaDesc: true,
             estados: ['asignada'],
             idProfesional: this.auth.profesional
@@ -429,7 +431,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         const msg = operacion === 'noAsistio' ?
             `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?` :
-            `¿Está seguro que desea revertir los cambios?`;
+            '¿Está seguro que desea revertir los cambios?';
 
         this.plex.confirm(msg).then(confirmacion =>
             confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(this.actualizar.bind(this)) : false
@@ -463,10 +465,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     getCantidadPacientes(agenda) {
         let total = 0;
 
-        let lengthBloques = agenda.bloques.length;
+        const lengthBloques = agenda.bloques.length;
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
-            let _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
+            const _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
                 total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
         }
@@ -518,7 +520,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return this.agendaSeleccionada.id ? observableForkJoin(
             this.servicioAgenda.getById(this.agendaSeleccionada.id),
         ).subscribe(data => {
-            let agenda = data[0];
+            const agenda = data[0];
             this.cargarPrestacionesTurnos(agenda);
             this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
         }
@@ -544,7 +546,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             agenda['cantidadTurnos'] += bloques.turnos.length;
             // loopeamos los turnos dentro de los bloques
             bloques.turnos.forEach(turno => {
-                let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
                 });
                 // asignamos la prestacion al turno
@@ -559,7 +561,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
         if (agenda.sobreturnos) {
             agenda.sobreturnos.forEach(sobreturno => {
-                let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
                 });
                 // asignamos la prestacion al turno
@@ -613,8 +615,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     // Detecta si una Agenda es futura
     esFutura(agenda: IAgenda = null) {
-        let fechaAgenda = moment(agenda.horaInicio).startOf('day');
-        let fechaActual = moment(new Date()).endOf('day');
+        const fechaAgenda = moment(agenda.horaInicio).startOf('day');
+        const fechaActual = moment(new Date()).endOf('day');
         return fechaAgenda.isAfter(fechaActual);
     }
 
@@ -658,7 +660,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
        * Ejecutar una prestacion que esta en estado pendiente
     */
     ejecutarPrestacionPendiente(prestacion, turno?) {
-        let params: any = {
+        const params: any = {
             op: 'estadoPush',
             ejecucion: {
                 fecha: turno?.horaInicio || new Date(),

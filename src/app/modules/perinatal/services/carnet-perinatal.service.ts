@@ -39,7 +39,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     // si skip > 0 pero no es multiplo de 'limit' significa que no hay mas resultados
                     return EMPTY;
                 }
-                let params: any = {
+                const params: any = {
                     limit: this.limit,
                     skip: this.skip
                 };
@@ -62,7 +62,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
 
                 return this.search(params).pipe(
                     map(resultados => {
-                        let listado = lastResults ? lastResults.concat(resultados) : resultados;
+                        const listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.skip = listado.length;
                         return listado;
                     })

@@ -6,7 +6,7 @@ import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 
 @Injectable()
 export class TurnoService {
-    private turnoUrl = '/modules/turnos';  // URL to web api
+    private turnoUrl = '/modules/turnos'; // URL to web api
 
     constructor(private server: Server) { }
 

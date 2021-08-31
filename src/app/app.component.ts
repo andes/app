@@ -103,8 +103,8 @@ export class AppComponent {
 
 
     public checkPermissions() {
-        let modulos = [];
-        let modulosNovedades = [];
+        const modulos = [];
+        const modulosNovedades = [];
         this.menuList = [];
         this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });

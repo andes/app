@@ -131,7 +131,7 @@ export class CensosMensualesComponent implements OnInit {
     }
 
     descargarCensoMensual() {
-        let params = {
+        const params = {
             usuario: this.auth.usuario.nombreCompleto,
             listadoCenso: this.censo,
             resumenCenso: this.totales,
@@ -156,23 +156,23 @@ export class CensosMensualesComponent implements OnInit {
     calcularDatosCensoTotal() {
         this.datosCensoTotal['diasF'] = this.censo.length.toFixed(2);
 
-        let promDis: any = (this.censo.length > 0) ? (this.totales.disponibles24 / this.censo.length).toFixed(2) : '0';
+        const promDis: any = (this.censo.length > 0) ? (this.totales.disponibles24 / this.censo.length).toFixed(2) : '0';
         this.datosCensoTotal['promDis'] = promDis;
 
-        let pacienteDia = (this.censo.length > 0) ? Math.round(this.totales.pacientesDia / this.censo.length).toFixed(2) : '0';
+        const pacienteDia = (this.censo.length > 0) ? Math.round(this.totales.pacientesDia / this.censo.length).toFixed(2) : '0';
         this.datosCensoTotal['pacDia'] = pacienteDia;
 
-        let totalEgresos = this.totales.pasesA + this.totales.egresosAlta + this.totales.egresosDefuncion;
-        let mortalidadHospitalaria = (totalEgresos > 0) ? (this.totales.egresosDefuncion / totalEgresos).toFixed(2) : '0';
+        const totalEgresos = this.totales.pasesA + this.totales.egresosAlta + this.totales.egresosDefuncion;
+        const mortalidadHospitalaria = (totalEgresos > 0) ? (this.totales.egresosDefuncion / totalEgresos).toFixed(2) : '0';
         this.datosCensoTotal['mortHosp'] = mortalidadHospitalaria;
 
-        let promedioPermanencia = (totalEgresos > 0) ? (this.totales.pacientesDia / totalEgresos).toFixed(2) : '0';
+        const promedioPermanencia = (totalEgresos > 0) ? (this.totales.pacientesDia / totalEgresos).toFixed(2) : '0';
         this.datosCensoTotal['promPer'] = promedioPermanencia;
 
-        let giroCama = (promDis > 0) ? (totalEgresos / promDis).toFixed(2) : '0';
+        const giroCama = (promDis > 0) ? (totalEgresos / promDis).toFixed(2) : '0';
         this.datosCensoTotal['giroCama'] = giroCama;
 
-        let totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
+        const totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
         this.datosCensoTotal['promDiasEstada'] = (totalEgreso === 0) ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
     }
 

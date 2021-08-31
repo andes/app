@@ -5,7 +5,7 @@ import swal from 'sweetalert2';
 
 @Injectable()
 export class SugerenciasService {
-    private sugerenciasUrl = '/modules/sugerencias/';  // URL to web api
+    private sugerenciasUrl = '/modules/sugerencias/'; // URL to web api
 
     constructor(private server: Server) { }
 

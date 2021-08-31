@@ -13,7 +13,7 @@ const limit = 25;
 })
 export class OrganizacionComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     showcreate = false;
     datos: IOrganizacion[] = [];
     seleccion: IOrganizacion;
@@ -50,7 +50,7 @@ export class OrganizacionComponent implements OnInit {
     }
 
     loadDatos(concatenar: boolean = false) {
-        let parametros = {
+        const parametros = {
             activo: !this.soloNoActivo,
             nombre: this.nombre,
             skip: this.skip,

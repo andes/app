@@ -39,12 +39,12 @@ export class LiberarTurnoComponent implements OnInit {
 
     liberarTurno() {
         if (this.motivoLiberacionSelect) {
-            let patch = {
+            const patch = {
                 op: 'liberarTurno',
                 turnos: this.turnos.map(resultado => resultado._id),
                 observaciones: this.motivoLiberacionSelect.nombre === 'Otro' ? this.otroMotivoLiberacion : this.motivoLiberacionSelect.nombre
             };
-            let mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
+            const mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', mensaje, 'Liberar turno', 4000);
@@ -62,7 +62,7 @@ export class LiberarTurnoComponent implements OnInit {
     agregarPacienteListaEspera() {
 
         for (let x = 0; x < this.turnos.length; x++) {
-            let patch = {
+            const patch = {
                 'op': 'listaEsperaSuspensionAgenda',
                 'idAgenda': this.agenda.id,
                 'pacientes': this.turnos[x]

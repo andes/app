@@ -14,9 +14,9 @@ export class ResumenHistoriaClinicaComponent extends RUPComponent implements OnI
         if (!this.soloValores && !this.registro.valor) {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {
                 if (prestaciones && prestaciones.length) {
-                    prestaciones.sort(function (a, b) {
-                        let dateA = new Date(a.fecha).getTime();
-                        let dateB = new Date(b.fecha).getTime();
+                    prestaciones.sort((a, b) => {
+                        const dateA = new Date(a.fecha).getTime();
+                        const dateB = new Date(b.fecha).getTime();
                         return dateA > dateB ? 1 : -1;
                     });
                     this.registro.valor = prestaciones[prestaciones.length - 1].registro.valor;

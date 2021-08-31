@@ -5,7 +5,7 @@ import { IDisclaimer } from '../interfaces/IDisclaimer';
 
 @Injectable()
 export class DisclaimerService {
-    private url = '/core/tm/disclaimer';  // URL to web api
+    private url = '/core/tm/disclaimer'; // URL to web api
 
     constructor(private server: Server) { }
 

@@ -4,8 +4,8 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false,
-  API: '//localhost:3002/api',
-  WS: '//localhost:3002', // para websocket
-  APIStatusCheck: false
+    production: false,
+    API: '//localhost:3002/api',
+    WS: '//localhost:3002', // para websocket
+    APIStatusCheck: false
 };

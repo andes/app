@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class VacunasService {
 
-    private vacunasURL = '/modules/vacunas';  // URL to web api
+    private vacunasURL = '/modules/vacunas'; // URL to web api
     private nomivacVacunasUrl = '/modules/vacunas/nomivacVacunas';
     private nomivacCategoriasUrl = '/modules/vacunas/nomivacCategorias';
     private nomivacCondicionesUrl = '/modules/vacunas/nomivacCondiciones';

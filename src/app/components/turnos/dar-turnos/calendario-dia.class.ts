@@ -38,7 +38,7 @@ export class CalendarioDia {
                 let hayTurnosDisponibles = (bloquesPrestacion.some(b => b.turnos.some(t => t.estado === 'disponible')));
                 this.estadoAgenda = unaAgenda.estado;
                 if (hayTurnosDisponibles) {
-                    let countBloques = [];
+                    const countBloques = [];
 
                     // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
                     if (unaAgenda.horaInicio >= moment().startOf('day').toDate() && unaAgenda.horaInicio <= moment().endOf('day').toDate()) {
@@ -71,7 +71,7 @@ export class CalendarioDia {
 
                     } else {
                         // En caso contrario, se calculan los contadores por separado
-                        let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+                        const autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
 
                         unaAgenda.bloques.forEach((bloque, indexBloque) => {
                             // Por cada bloque asignamos contadores dinamicos con la cantidad inicial de c/tipo de turno (Para sidebar)

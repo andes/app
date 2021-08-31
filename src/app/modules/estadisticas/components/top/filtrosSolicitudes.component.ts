@@ -100,7 +100,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -113,10 +113,12 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     }
 
     onChange() {
-        let filtrosParams = {
+        const filtrosParams = {
             solicitudDesde: this.desde,
             solicitudHasta: this.hasta,
-            estados: this.seleccion.estados ? this.seleccion.estados.map(tipoEstado => { return tipoEstado.id; }) : undefined,
+            estados: this.seleccion.estados ? this.seleccion.estados.map(tipoEstado => {
+                return tipoEstado.id;
+            }) : undefined,
             organizaciones: this.seleccion.organizaciones ? this.seleccion.organizaciones.map(org => {
                 return { id: org.id };
             }) : undefined,

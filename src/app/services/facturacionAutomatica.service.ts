@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class FacturacionAutomaticaService {
-    private url = '/modules/facturacionAutomatica';  // URL to web api
+    private url = '/modules/facturacionAutomatica'; // URL to web api
 
     constructor(private server: Server) { }
 

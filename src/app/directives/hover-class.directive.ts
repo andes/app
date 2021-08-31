@@ -19,7 +19,7 @@ export class HoverClassDirective {
 
     @HostListener('mouseover') mouseover() {
         this.noQuitarClases = {};
-        let list = this.appHover.split(' ');
+        const list = this.appHover.split(' ');
         list.forEach((i) => {
             if (this.hasClass(i)) {
                 this.noQuitarClases[i] = true;
@@ -30,7 +30,7 @@ export class HoverClassDirective {
     }
 
     @HostListener('mouseout') mouseout() {
-        let list = this.appHover.split(' ');
+        const list = this.appHover.split(' ');
         list.forEach((i) => {
             if (!this.noQuitarClases[i]) {
                 this.renderer.removeClass(this.elementRef.nativeElement, i);

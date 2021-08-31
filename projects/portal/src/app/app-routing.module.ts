@@ -19,68 +19,68 @@ import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.co
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegistroCuentaComponent },
-  { path: 'activar-cuenta', component: ActivarCuentaComponent },
-  {
-    path: 'mis-turnos',
-    component: PDPMisTurnosComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: 'dar-turno-detalle/:idAgenda/:idPrestacion', component: DarTurnoDetalleComponent },
-      { path: ':id', component: PDPMisTurnosDetallesComponent }
-    ]
-  },
-  {
-    path: 'mis-vacunas',
-    component: PDPMisVacunasComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: ':id', component: PDPDetalleVacunaComponent }
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'registro', component: RegistroCuentaComponent },
+    { path: 'activar-cuenta', component: ActivarCuentaComponent },
+    {
+        path: 'mis-turnos',
+        component: PDPMisTurnosComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: 'dar-turno-detalle/:idAgenda/:idPrestacion', component: DarTurnoDetalleComponent },
+            { path: ':id', component: PDPMisTurnosDetallesComponent }
+        ]
+    },
+    {
+        path: 'mis-vacunas',
+        component: PDPMisVacunasComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: ':id', component: PDPDetalleVacunaComponent }
 
-    ]
-  },
-  {
-    path: 'mis-laboratorios',
-    component: PDPMisLaboratoriosComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: ':id', component: PDPMisLaboratoriosDetalleComponent }
-    ]
-  },
-  {
-    path: 'mis-certificados',
-    component: PDPMisCertificadosComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: ':id', component: PDPMisCertificadoDetalleComponent }
-    ]
-  },
-  {
-    path: 'mis-relaciones',
-    component: PDPMisRelacionesComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: ':id', component: PDPMisRelacionesDetalleComponent }
-    ]
-  },
-  {
-    path: 'dar-turnos',
-    component: DarTurnoComponent
-  },
-  {
-    path: 'mis-datos-personales',
-    component: PDPMisDatosPersonalesComponent,
-    canActivate: [RoutingGuard],
-    children: [
-      { path: ':id', component: PDPMisDatosPersonalesComponent }
-    ]
-  },
+        ]
+    },
+    {
+        path: 'mis-laboratorios',
+        component: PDPMisLaboratoriosComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: ':id', component: PDPMisLaboratoriosDetalleComponent }
+        ]
+    },
+    {
+        path: 'mis-certificados',
+        component: PDPMisCertificadosComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: ':id', component: PDPMisCertificadoDetalleComponent }
+        ]
+    },
+    {
+        path: 'mis-relaciones',
+        component: PDPMisRelacionesComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: ':id', component: PDPMisRelacionesDetalleComponent }
+        ]
+    },
+    {
+        path: 'dar-turnos',
+        component: DarTurnoComponent
+    },
+    {
+        path: 'mis-datos-personales',
+        component: PDPMisDatosPersonalesComponent,
+        canActivate: [RoutingGuard],
+        children: [
+            { path: ':id', component: PDPMisDatosPersonalesComponent }
+        ]
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }

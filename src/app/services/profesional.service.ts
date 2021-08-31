@@ -7,7 +7,7 @@ import { Options } from 'projects/shared/src/lib/server/options';
 @Injectable()
 export class ProfesionalService {
 
-    private profesionalUrl = '/core/tm/profesionales';  // URL to web api
+    private profesionalUrl = '/core/tm/profesionales'; // URL to web api
 
     constructor(private server: Server) { }
 

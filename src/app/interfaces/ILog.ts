@@ -2,22 +2,22 @@ import { IOrganizacion } from './IOrganizacion';
 
 export interface ILog {
     fecha: {
-        type: Date
+        type: Date;
     };
     usuario: {
-        nombreCompleto: String,
-        nombre: String,
-        apellido: String,
-        username: Number,
-        documento: Number
+        nombreCompleto: String;
+        nombre: String;
+        apellido: String;
+        username: Number;
+        documento: Number;
     };
     organizacion: { type: IOrganizacion };
     modulo: {
-        type: String,
-        enum: ['mpi', 'turnos', 'rup']
+        type: String;
+        enum: ['mpi', 'turnos', 'rup'];
     };
     operacion: {
-        type: String,
+        type: String;
         enum: [
             // Operaciones genéricas
             'query', 'insert', 'update', 'delete',
@@ -29,17 +29,17 @@ export interface ILog {
             // ... Turnos
             'asignarTurno', 'cancelarTurno', 'listaEspera'
             // ... RUP
-        ]
+        ];
     };
     datosOperacion: any;
     cliente: {
-        ip: String,
+        ip: String;
         app: {
-            type: String,
-            enum: ['desktop', 'mobile']
-        }
+            type: String;
+            enum: ['desktop', 'mobile'];
+        };
     };
     servidor: {
-        ip: String,
+        ip: String;
     };
 }

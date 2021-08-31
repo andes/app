@@ -28,7 +28,7 @@ export interface ISession {
     profesional: string;
     type: string;
     feature: {
-        [key: string]: any
+        [key: string]: any;
     };
     usuario: IUsuario;
 }

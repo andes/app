@@ -47,9 +47,9 @@ export class RecursosListadoComponent implements OnInit {
                     }
                 });
                 return arreglo.map(sector => {
-                    let nombre = sector.sectorName.split(',').reverse()[0];
-                    let aux = sector.sectorName.split(',').reverse();
-                    let subtitulo = aux.slice(1, aux.length).join(', ');
+                    const nombre = sector.sectorName.split(',').reverse()[0];
+                    const aux = sector.sectorName.split(',').reverse();
+                    const subtitulo = aux.slice(1, aux.length).join(', ');
 
                     return {
                         nombre: nombre,
@@ -68,7 +68,7 @@ export class RecursosListadoComponent implements OnInit {
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
-        let data = {
+        const data = {
             verDetalle: true,
             cama: cama,
             selectedCama: selectedCama
@@ -79,7 +79,7 @@ export class RecursosListadoComponent implements OnInit {
 
     selectCama(cama, relacion, $event) {
         $event.stopPropagation();
-        let data = {
+        const data = {
             selectCama: true,
             cama: cama,
             relacion: relacion

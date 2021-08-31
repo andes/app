@@ -148,7 +148,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
 
     private inicializarFrecuentesTP() {
-        let queryFTP = {
+        const queryFTP = {
             'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
         };
         return this.frecuentesProfesionalService.get(queryFTP);
@@ -193,7 +193,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
 
-            let search = this.search.toLowerCase();
+            const search = this.search.toLowerCase();
             let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
             // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
@@ -294,7 +294,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public filtrarResultados(busquedaActual = 'busquedaActual') {
         // almacenamos los resultados en una variable auxiliar para poder loopear
-        let resultados = this.results[busquedaActual]['todos'];
+        const resultados = this.results[busquedaActual]['todos'];
 
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
@@ -324,8 +324,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             }
             if (this.results[busquedaActual]['planes']) {
-                let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
-                let planes = [];
+                const planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
+                const planes = [];
                 planesCopia.forEach(unPlan => {
                     unPlan.esSolicitud = true;
                     planes.push(unPlan);
@@ -361,8 +361,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.results.misFrecuentes['todos'].sort((a, b) => b.frecuencia - a.frecuencia);
             this.results.misFrecuentes['todos'].map(x => {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
-                    let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
-                    let registroFrec = this.results.buscadorBasico['todos'][index];
+                    const index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
+                    const registroFrec = this.results.buscadorBasico['todos'][index];
                     registroFrec.frecuencia = x.frecuencia;
                     this.results.buscadorBasico['todos'].splice(index, 1);
                     this.results.buscadorBasico['todos'].unshift(registroFrec);

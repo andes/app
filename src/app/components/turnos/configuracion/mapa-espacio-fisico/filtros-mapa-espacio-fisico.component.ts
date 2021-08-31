@@ -12,7 +12,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 })
 
 export class FiltrosMapaEspacioFisicoComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     @Output() onChange = new EventEmitter<any>();
 
@@ -55,7 +55,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -73,7 +73,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
 
     loadEdificios(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 edificio: event.query
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
@@ -87,7 +87,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     loadEspacios(event) {
         let listaEspaciosFisicos = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query,
                 activo: true
             };
@@ -107,7 +107,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
 
     loadEquipamientos(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 equipamiento: event.query,
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {

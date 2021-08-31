@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class EstAgendasService {
 
-    private baseURL = '/modules/turnos';  // URL to web api
+    private baseURL = '/modules/turnos'; // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 

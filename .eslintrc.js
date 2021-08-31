@@ -115,7 +115,8 @@ module.exports = {
         "@typescript-eslint/unified-signatures": "error",
         "brace-style": [
             "error",
-            "1tbs"
+            "1tbs",
+            { "allowSingleLine": true }
         ],
         "curly": "error",
         "dot-notation": "off",

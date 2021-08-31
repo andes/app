@@ -28,7 +28,7 @@ export class VistaSolicitudTopComponent implements OnInit {
         }
 
         if (this.registro.solicitud.turno) {
-            let params = {
+            const params = {
                 id: this.registro.solicitud.turno
             };
             this.servicioTurnos.getTurnos(params).subscribe(turnos => {
@@ -39,7 +39,7 @@ export class VistaSolicitudTopComponent implements OnInit {
     }
 
     getPrestacion() {
-        let tipo = 'rup';
+        const tipo = 'rup';
         this.huds.toogle(this.registro, tipo);
     }
 

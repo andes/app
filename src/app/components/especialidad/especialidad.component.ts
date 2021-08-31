@@ -30,10 +30,10 @@ export class EspecialidadComponent implements OnInit {
     tengoDatos = true;
 
     constructor(private formBuilder: FormBuilder,
-        public plex: Plex,
-        private especialidadService: EspecialidadService,
-        private router: Router,
-        private auth: Auth, ) { }
+                public plex: Plex,
+                private especialidadService: EspecialidadService,
+                private router: Router,
+                private auth: Auth, ) { }
 
     ngOnInit() {
         // Crea el formulario reactivo
@@ -56,7 +56,7 @@ export class EspecialidadComponent implements OnInit {
     }
 
     loadDatos(concatenar: boolean = false) {
-        let parametros = {
+        const parametros = {
             'codigoSisa': this.value && this.value.codigoSisa,
             'nombre': this.value && this.value.nombre, 'skip': this.skip, 'limit': limit
         };
@@ -97,10 +97,10 @@ export class EspecialidadComponent implements OnInit {
         if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
-                .subscribe(datos => this.loadDatos());  // Bind to view
+                .subscribe(datos => this.loadDatos()); // Bind to view
         } else {
             this.especialidadService.enable(objEspecialidad)
-                .subscribe(datos => this.loadDatos());  // Bind to view
+                .subscribe(datos => this.loadDatos()); // Bind to view
         }
     }
 

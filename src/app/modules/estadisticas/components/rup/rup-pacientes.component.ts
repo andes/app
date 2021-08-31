@@ -72,7 +72,9 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
         if (this.prestacion) {
             this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
                 if (result.length <= 10) {
-                    result.forEach((item) => { item.check = true; });
+                    result.forEach((item) => {
+                        item.check = true;
+                    });
                     this.prestacionesHijas = result;
                 } else {
                     this.prestacionesHijas = [];
@@ -94,7 +96,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
             this.tablas = [];
             this.registros = [];
 
-            let prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
+            const prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
             this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
                 this.showData = true;
                 if (this.detallar) {
@@ -118,13 +120,13 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
 
     createTable(prestaciones, data) {
         prestaciones.forEach((prestacion) => {
-            let items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
+            const items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
             if (items.length > 0) {
-                let info = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+                const info = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
                 items.forEach((item) => {
-                    let d = item._id.decada > 9 ? 9 : item._id.decada;
-                    let s = item._id.sexo === 'masculino' ? 0 : 1;
+                    const d = item._id.decada > 9 ? 9 : item._id.decada;
+                    const s = item._id.sexo === 'masculino' ? 0 : 1;
 
                     info[s][d] += item.count;
                     info[s][10] += item.count; // total file
@@ -133,7 +135,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                 });
 
 
-                let table = {
+                const table = {
                     prestacion: prestacion,
                     data: info
                 };
@@ -145,14 +147,14 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
     }
 
     crearTotales(prestaciones, data) {
-        let info = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+        const info = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         prestaciones.forEach((prestacion) => {
-            let items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
+            const items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
             if (items.length > 0) {
 
                 items.forEach((item) => {
-                    let d = item._id.decada > 9 ? 9 : item._id.decada;
-                    let s = item._id.sexo === 'masculino' ? 0 : 1;
+                    const d = item._id.decada > 9 ? 9 : item._id.decada;
+                    const s = item._id.sexo === 'masculino' ? 0 : 1;
 
                     info[s][d] += item.count;
                     info[s][10] += item.count; // total file
@@ -161,7 +163,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                 });
             }
         });
-        let table = {
+        const table = {
             prestacion: { term: this.detallar ? 'Totalizado' : this.prestacion.term },
             data: info
         };
@@ -223,7 +225,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                 hijosName: hijos.reduce(((a, item) => a + item.concepto.term + ','), '')
             };
 
-            let names = [];
+            const names = [];
             elemento.relaciones.filter(e => e.concepto.conceptId !== '371531000').forEach((item) => {
                 this.registros.forEach((reg) => {
                     const i = reg.ids.indexOf(item.id);

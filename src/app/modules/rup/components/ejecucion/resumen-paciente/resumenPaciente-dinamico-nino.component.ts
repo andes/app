@@ -13,17 +13,17 @@ import { ElementosRUPService } from '../../../services/elementosRUP.service';
 
 export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     @Input() paciente: IPaciente;
-    private tablaModelo = [];   // modelo de tabla a imprimir, con titulos e idConcepts ordenados como se deberia mostrar. No modificar.
-    public tabla = [];  // tabla que finalmente va a mostrar la informacion. Se utiliza el formato de la tabla modelo para confeccionarla.
+    private tablaModelo = []; // modelo de tabla a imprimir, con titulos e idConcepts ordenados como se deberia mostrar. No modificar.
+    public tabla = []; // tabla que finalmente va a mostrar la informacion. Se utiliza el formato de la tabla modelo para confeccionarla.
     public prestaciones: any = [];
     public vacunas = [];
     public registro = null;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
-        private servicioVacunas: VacunasService,
-        private prestacionesService: PrestacionesService,
-        public elementosRUPService: ElementosRUPService,
-        private plex: Plex) { }
+                private servicioVacunas: VacunasService,
+                private prestacionesService: PrestacionesService,
+                public elementosRUPService: ElementosRUPService,
+                private plex: Plex) { }
 
     ngOnInit() {
         this.loadPrestaciones();
@@ -34,9 +34,9 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     loadResumen() {
         this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {
             if (prestaciones && prestaciones.length) {
-                prestaciones.sort(function (a, b) {
-                    let dateA = new Date(a.fecha).getTime();
-                    let dateB = new Date(b.fecha).getTime();
+                prestaciones.sort((a, b) => {
+                    const dateA = new Date(a.fecha).getTime();
+                    const dateB = new Date(b.fecha).getTime();
                     return dateA > dateB ? 1 : -1;
                 });
                 this.registro = prestaciones[prestaciones.length - 1].registro;
@@ -53,15 +53,15 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     loadPrestaciones() {
         this.servicioResumenPaciente.get(this.paciente.id).subscribe(resultado => {
             // se ordenan las prestaciones encontradas de mayor a menor segun fecha (Mas actuales primero)
-            resultado.sort(function (a, b) {
-                let dateA = new Date(a.fecha).getTime();
-                let dateB = new Date(b.fecha).getTime();
+            resultado.sort((a, b) => {
+                const dateA = new Date(a.fecha).getTime();
+                const dateB = new Date(b.fecha).getTime();
                 return dateA < dateB ? 1 : -1;
             });
             /* Existe la posibilidad de encontrar prestaciones repetidas, por eso se generaa un array auxiliar solo con la
                 prestacion mas actualde cada una. Es decir, la primera aparicion de cada prestacion
                 (Ya que primero son ordenadas por fecha en forma decreciente). */
-            let prestacionesAux = [];
+            const prestacionesAux = [];
             resultado.forEach(unaPrestacion => {
                 if (!prestacionesAux.find(p => p.motivo.conceptId === unaPrestacion.motivo.conceptId)) {
                     prestacionesAux.push(unaPrestacion);
@@ -76,7 +76,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     crearTabla() {
         // Por cada prestacion cargamos los datos que se van a mostrar en la tabla, siendo cada prestacion una fila.
         this.prestaciones.forEach(prestacion => {
-            let filaTabla = [];
+            const filaTabla = [];
             // se carga la fecha
             filaTabla.push({ tiulo: 'Fecha', valor: moment(prestacion.fecha).format('DD/MM/YYYY') });
             // se carga la edad
@@ -85,8 +85,8 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             let unValor;
             prestacion.conceptos.forEach(unConcepto => {
                 unValor = null;
-                if (unConcepto.contenido) {  // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
-                    let conceptoValor = unConcepto.contenido.valor;
+                if (unConcepto.contenido) { // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
+                    const conceptoValor = unConcepto.contenido.valor;
                     unValor = Array.isArray(conceptoValor) && conceptoValor.length > 0 ? conceptoValor.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : conceptoValor;
                 }
                 if (!unValor) {

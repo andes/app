@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class PaisService {
 
-    private paisUrl = '/core/tm/paises';  // URL to web api
+    private paisUrl = '/core/tm/paises'; // URL to web api
 
     constructor(private server: Server) { }
 

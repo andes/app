@@ -108,7 +108,7 @@ export class HUDSService {
     * Genera un token para el acceso a la HUDS de un paciente
     */
     generateHudsToken(usuario, organizacion, paciente, motivo, profesional, idTurno, idPrestacion) {
-        let paramsToken = {
+        const paramsToken = {
             usuario: usuario,
             organizacion: organizacion,
             paciente: paciente,
@@ -130,13 +130,13 @@ export class HUDSService {
     }
 
     armarRelaciones(registros: IPrestacionRegistro[]) {
-        let registrosDeep: any = {};
+        const registrosDeep: any = {};
         let relacionesOrdenadas = [];
-        let roots = registros.filter(x => x.relacionadoCon.length === 0);
+        const roots = registros.filter(x => x.relacionadoCon.length === 0);
 
-        let traverse = (_registros, registro, deep) => {
+        const traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
+            const hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
             registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];

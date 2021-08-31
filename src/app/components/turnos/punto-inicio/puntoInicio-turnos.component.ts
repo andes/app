@@ -51,7 +51,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
-    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
+    searchClear = true; // True si el campo de búsqueda se encuentra vacío
 
     canCreate = this.auth.check('mpi:paciente:postAndes');
 
@@ -70,7 +70,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this._activatedRoute.params.subscribe(parameters => {
             if (parameters && parameters['idPaciente']) {
                 this.getPacienteById(parameters['idPaciente']);
-                window.history.replaceState({}, '', `/citas/punto-inicio`);
+                window.history.replaceState({}, '', '/citas/punto-inicio');
             }
         });
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
@@ -139,7 +139,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showTab = 0;
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
-            this.router.navigate(['/apps/mpi/paciente/con-dni/puntoInicio']);  // abre paciente-cru
+            this.router.navigate(['/apps/mpi/paciente/con-dni/puntoInicio']); // abre paciente-cru
         } else {
             this.getPacienteById(paciente.id);
         }

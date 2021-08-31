@@ -41,7 +41,7 @@ export class InscripcionService extends ResourceBaseHttp {
                     // si skip > 0 pero no es multiplo de 'limit' significa que no hay mas resultados
                     return EMPTY;
                 }
-                let params: any = {
+                const params: any = {
                     limit: this.limit,
                     skip: this.skip,
                     fields: '-nroTramite'
@@ -75,7 +75,7 @@ export class InscripcionService extends ResourceBaseHttp {
 
                 return this.get(params).pipe(
                     map(resultados => {
-                        let listado = lastResults ? lastResults.concat(resultados) : resultados;
+                        const listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.skip = listado.length;
                         return listado;
                     })

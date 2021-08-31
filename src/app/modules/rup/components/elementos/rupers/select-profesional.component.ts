@@ -22,10 +22,10 @@ export class SelectProfesionalComponent extends SelectBaseComponent {
 
     public idField = 'id';
 
-    public labelField = `apellido + ' ' + nombre`;
+    public labelField = 'apellido + \' \' + nombre';
 
     getData(input: string) {
-        let query = {
+        const query = {
             nombreCompleto: input
         };
         return this.serviceProfesional.get(query);

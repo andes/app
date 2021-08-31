@@ -66,7 +66,7 @@ export class GeorrefMapComponent implements OnInit {
             target: this.mapElement.nativeElement,
             layers: [this.layer],
             view: this.view,
-            interactions: defaultInteractions({ doubleClickZoom: false })   // deshabilitamos zoom por doble click
+            interactions: defaultInteractions({ doubleClickZoom: false }) // deshabilitamos zoom por doble click
         });
 
 
@@ -78,7 +78,7 @@ export class GeorrefMapComponent implements OnInit {
         });
 
         // Estilo de los iconos
-        let iconStyle = new OlStyle({
+        const iconStyle = new OlStyle({
             image: new OlIcon(/** @type {olx.style.IconOptions} */({
                 anchor: [0.5, 60],
                 anchorXUnits: 'fraction',
@@ -107,7 +107,7 @@ export class GeorrefMapComponent implements OnInit {
 
     setMarkerMouseEvent(event) {
         // Obtenemos las coordenadas del evento (longitud-latitud)
-        let lonLat = this.map.getEventCoordinate(event);
+        const lonLat = this.map.getEventCoordinate(event);
         this.setMarker(lonLat);
         // Notificamos nuevas coordenadas del marcador (latitud-longitud)
         this.changeCoordinates.emit([lonLat[1], lonLat[0]]);
@@ -115,12 +115,12 @@ export class GeorrefMapComponent implements OnInit {
 
     setMarker(lonLat) {
         // Chequeamos si hay marcadores existentes
-        let markerAdded = this.markerSource.getFeatures();
+        const markerAdded = this.markerSource.getFeatures();
         if (markerAdded && markerAdded.length) {
             markerAdded[0].getGeometry().setCoordinates(lonLat); // modifica las coordenadas del Point
         } else {
             // Configuramos las caracteristicas del nuevo marcador (Point)
-            let marker = new OlFeature({
+            const marker = new OlFeature({
                 geometry: new OlPoint(lonLat)
             });
             // Agregamos el nuevo marcador a la fuente

@@ -80,7 +80,7 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
             // let search = this.searchTerm.trim();
 
             // armamos query para enviar al servicio
-            let query = {
+            const query = {
                 nombre: this.searchTerm,
                 limit: 10
             };
@@ -91,7 +91,7 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
 
                 // buscamos
 
-                let idTimeOut = this.timeoutHandle;
+                const idTimeOut = this.timeoutHandle;
 
                 if (this.lastRequest) {
                     this.lastRequest.unsubscribe();

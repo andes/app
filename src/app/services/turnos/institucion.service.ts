@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class InstitucionService {
-    private institucionUrl = '/modules/turnos/institucion';  // URL to web api
+    private institucionUrl = '/modules/turnos/institucion'; // URL to web api
     constructor(private server: Server) { }
 
     get(params): Observable<IInstitucion[]> {

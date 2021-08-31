@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class EspecialidadService {
 
-    private especialidadUrl = '/core/tm/especialidades';  // URL to web api
+    private especialidadUrl = '/core/tm/especialidades'; // URL to web api
 
     constructor(private server: Server) { }
 

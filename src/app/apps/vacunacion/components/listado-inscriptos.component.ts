@@ -47,56 +47,72 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
             label: 'Grupo',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.grupo.nombre.localeCompare(b.grupo.nombre); }
+            sort: (a, b) => {
+                return a.grupo.nombre.localeCompare(b.grupo.nombre);
+            }
         },
         {
             key: 'documento',
             label: 'Documento',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.documento.localeCompare(b.documento); }
+            sort: (a, b) => {
+                return a.documento.localeCompare(b.documento);
+            }
         },
         {
             key: 'apellido-nombre',
             label: 'Apellido y nombre',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`); }
+            sort: (a, b) => {
+                return `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`);
+            }
         },
         {
             key: 'sexo',
             label: 'Sexo',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.sexo.localeCompare(b.sexo); }
+            sort: (a, b) => {
+                return a.sexo.localeCompare(b.sexo);
+            }
         },
         {
             key: 'edad',
             label: 'Edad',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return moment(a.fechaNacimiento).diff(moment(b.fechaNacimiento)); }
+            sort: (a, b) => {
+                return moment(a.fechaNacimiento).diff(moment(b.fechaNacimiento));
+            }
         },
         {
             key: 'localidad',
             label: 'Localidad',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.localidad?.nombre.localeCompare(b.localidad?.nombre); }
+            sort: (a, b) => {
+                return a.localidad?.nombre.localeCompare(b.localidad?.nombre);
+            }
         },
         {
             key: 'fecha-registro',
             label: 'Fecha de registro',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return moment(a.fechaRegistro).diff(moment(b.fechaRegistro)); }
+            sort: (a, b) => {
+                return moment(a.fechaRegistro).diff(moment(b.fechaRegistro));
+            }
         },
         {
             key: 'estado',
             label: 'Estado',
             sorteable: false,
             opcional: false,
-            sort: (a, b) => { return a.estado.localeCompare(b.estado); }
+            sort: (a, b) => {
+                return a.estado.localeCompare(b.estado);
+            }
         },
         {
             key: 'turno',

@@ -4,7 +4,7 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class GeoreferenciaService {
-    private url = '/modules/georeferencia';  // URL to web api
+    private url = '/modules/georeferencia'; // URL to web api
 
     constructor(private server: Server) { }
     /**

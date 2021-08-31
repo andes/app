@@ -1,6 +1,6 @@
 import { IEnum } from './../../utils/enums';
 
-export let EstadosAgenda: IEnum = {
+export const EstadosAgenda: IEnum = {
     'planificacion': {
         nombre: 'En planificación',
         class: 'default'
@@ -36,7 +36,7 @@ export let EstadosAgenda: IEnum = {
 };
 
 
-export let EstadosAsistencia: IEnum = {
+export const EstadosAsistencia: IEnum = {
     'asistio': {
         nombre: 'Asistio',
         class: 'success'
@@ -51,7 +51,7 @@ export let EstadosAsistencia: IEnum = {
     }
 };
 
-export let PrioridadesPrestacion: IEnum = {
+export const PrioridadesPrestacion: IEnum = {
     'no prioritario': {
         nombre: 'No Prioritario',
         class: 'success'
@@ -67,7 +67,7 @@ export let PrioridadesPrestacion: IEnum = {
 
 };
 
-export let TiposDeTurnos: IEnum = {
+export const TiposDeTurnos: IEnum = {
     'delDia': {
         nombre: 'Del día',
         class: 'info'

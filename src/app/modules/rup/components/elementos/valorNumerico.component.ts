@@ -23,7 +23,7 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
             });
             // si el ojo que todo lo ve encuentra un valor en la consulta no consultamos a la api.
             if (this.params.autocomplete && !this.registro.valor) {
-                let query = this.params.autocomplete.query ? this.params.autocomplete.query : this.registro.concepto.conceptId;
+                const query = this.params.autocomplete.query ? this.params.autocomplete.query : this.registro.concepto.conceptId;
                 // llega en dias desde la BD
                 let deadline = null;
                 if (this.params.autocomplete.deadline) {

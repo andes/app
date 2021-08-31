@@ -7,7 +7,7 @@ import { Plex } from '@andes/plex';
 import { QueriesService } from 'src/app/services/query.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ServicioIntermedioService } from 'src/app/modules/rup/services/servicio-intermedio.service';
-let shiroTrie = require('shiro-trie');
+const shiroTrie = require('shiro-trie');
 
 @Component({
     selector: 'arbol-permisos-item',
@@ -63,7 +63,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
             if (this.allModule) {
                 this.accordions.active = false;
             } else {
-                let index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
+                const index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
                 if (index >= 0) {
                     this.userPermissions.splice(index, 1);
                     this.userPermissions = [...this.userPermissions];
@@ -100,13 +100,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         event.preventDefault();
         if (this.item.type === 'prestacion') {
             try {
-                let clipboardData = event.clipboardData;
-                let pastedText = clipboardData.getData('text');
+                const clipboardData = event.clipboardData;
+                const pastedText = clipboardData.getData('text');
                 if (!this.seleccionados) {
                     this.seleccionados = [];
                 }
-                let arrayPrestaciones = this.seleccionados.concat(JSON.parse(pastedText));
-                let setPrestaciones = new Map();
+                const arrayPrestaciones = this.seleccionados.concat(JSON.parse(pastedText));
+                const setPrestaciones = new Map();
                 arrayPrestaciones.forEach(prestacion => {
                     setPrestaciones.set(prestacion._id, prestacion);
                 });
@@ -124,8 +124,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
             if (this.item.type === 'boolean') {
                 this.state = this.shiro.check(this.makePermission() + ':?');
             } else {
-                let permisos = this.makePermission();
-                let items: String[] = this.shiro.permissions(permisos + ':?');
+                const permisos = this.makePermission();
+                const items: String[] = this.shiro.permissions(permisos + ':?');
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
@@ -185,8 +185,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 }
             }
         } else {
-            let permisos = this.makePermission();
-            let items: String[] = this.shiro.permissions(permisos + ':?');
+            const permisos = this.makePermission();
+            const items: String[] = this.shiro.permissions(permisos + ':?');
             this.itemsCount = items.length;
             this.allModule = items.length > 0 && items.indexOf('*') >= 0;
         }
@@ -195,7 +195,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
         // [TODO] Filtrar otras tipos de datos
-        let query: any = {};
+        const query: any = {};
         if (!event.query || event.query.length === 0) {
             return event.callback([...this.seleccionados]);
         }
@@ -269,7 +269,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                     return [this.makePermission() + ':*'];
                 }
 
-                let lists = [];
+                const lists = [];
                 if (this.seleccionados) {
                     this.seleccionados.forEach(item => {
                         lists.push(this.makePermission() + ':' + item._id);

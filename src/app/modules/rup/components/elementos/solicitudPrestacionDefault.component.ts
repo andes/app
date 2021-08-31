@@ -86,12 +86,12 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     loadProfesionales(event) {
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            let callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
+            const callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
             event.callback(callback);
         }
     }

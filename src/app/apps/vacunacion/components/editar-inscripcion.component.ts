@@ -113,7 +113,7 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
             gruposPosibles = gruposPosibles.concat(['factores-riesgo', 'discapacidad', 'sin-factores-riesgo', 'personas-gestantes']);
         }
         this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
-            let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+            const grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
             if (grupofr) {
                 this.morbilidades = grupofr.morbilidades;
             }

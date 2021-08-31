@@ -1,8 +1,8 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
+
 @Component({
     selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
@@ -25,22 +25,17 @@ export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
         }
     }
     getMensajes() {
-        let saturacionOxigeno = this.registro.valor;
-        let edadEnMeses;
+        const saturacionOxigeno = this.registro.valor;
 
         // Calculo Edad en Meses
-        let edadMeses: any = null;
-        let fechaNac: any;
-        let fechaActual: Date = new Date();
-        let fechaAct: any;
-        let difDias: any;
-        let difMeses: any;
-        fechaNac = moment(this.paciente.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
-        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
-        difDias = fechaAct.diff(fechaNac, 'd');     // Diferencia en días
-        edadEnMeses = Math.trunc(difDias / 30.4375); // Diferencia en Meses
+        const edadMeses: any = null;
+        const fechaNac: any = moment(this.paciente.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
+        const fechaActual: Date = new Date();
+        const fechaAct: any = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
+        const difDias: any = fechaAct.diff(fechaNac, 'd');
+        const edadEnMeses = Math.trunc(difDias / 30.4375);
 
-        let mensaje: any = {
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };

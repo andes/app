@@ -16,7 +16,7 @@ import { OrganizacionService } from '../../services/organizacion.service';
 })
 export class OrganizacionSectoresComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // definición de arreglos
     public disabledPanel = true;
@@ -113,7 +113,7 @@ export class OrganizacionSectoresComponent implements OnInit {
             if (confirmar) {
                 this.sectoresService.deleteSector(this.idOrganizacion, $event._id).subscribe(result => {
                     if (result === $event._id) {
-                        let index = this.mapaSectores.findIndex((item) => item === $event);
+                        const index = this.mapaSectores.findIndex((item) => item === $event);
                         this.mapaSectores.splice(index, 1);
                         this.plex.info('success', 'El sector fue eliminado', 'Sector eliminado!');
                     } else {
@@ -163,7 +163,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
     onAdd(valid) {
         if (valid.formValid) {
-            let item = this.createObject();
+            const item = this.createObject();
             if (!item) {
                 return;
             }

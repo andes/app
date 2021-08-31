@@ -23,34 +23,34 @@ import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
 import { CheckEditPipe } from './pipes/checkEdit.pipe';
 import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
 @NgModule({
-  declarations: [
-    FichaEpidemiologicaComponent,
-    FichaEpidemiologicaCrudComponent,
-    FichaEpidemiologicaContactosComponent,
-    SelectSearchDirective,
-    BuscadorFichaEpidemiologicaComponent,
-    HistorialFichaComponent,
-    SeguimientoEpidemiologiaComponent,
-    DetalleSeguimientoComponent,
-    SeguimientoFieldsPipe,
-    CodigSisaPipe,
-    CheckEditPipe,
-    ActualizarSeguimientoComponent,
-  ],
-  imports: [
-    CommonModule,
-    EpidemiologiaRoutingModule,
-    PlexModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MPILibModule,
-    SharedModule,
-    DirectiveLibModule,
-    ElementosRUPModule,
-    SemaforoModule
-  ],
-  providers: [FormsService, SelectSearchService],
-  exports: [FichaEpidemiologicaCrudComponent]
+    declarations: [
+        FichaEpidemiologicaComponent,
+        FichaEpidemiologicaCrudComponent,
+        FichaEpidemiologicaContactosComponent,
+        SelectSearchDirective,
+        BuscadorFichaEpidemiologicaComponent,
+        HistorialFichaComponent,
+        SeguimientoEpidemiologiaComponent,
+        DetalleSeguimientoComponent,
+        SeguimientoFieldsPipe,
+        CodigSisaPipe,
+        CheckEditPipe,
+        ActualizarSeguimientoComponent,
+    ],
+    imports: [
+        CommonModule,
+        EpidemiologiaRoutingModule,
+        PlexModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MPILibModule,
+        SharedModule,
+        DirectiveLibModule,
+        ElementosRUPModule,
+        SemaforoModule
+    ],
+    providers: [FormsService, SelectSearchService],
+    exports: [FichaEpidemiologicaCrudComponent]
 })
 export class EpidemiologiaModule { }

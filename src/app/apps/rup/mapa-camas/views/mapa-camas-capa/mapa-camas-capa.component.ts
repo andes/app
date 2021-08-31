@@ -68,7 +68,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         if (!this.viewPort || !this.viewPort['_renderedContentOffset']) {
             return '-0px';
         }
-        let offset = this.viewPort['_renderedContentOffset'];
+        const offset = this.viewPort['_renderedContentOffset'];
         return `-${offset}px`;
     }
 
@@ -177,11 +177,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.listadoRecursos = this.listadoRecursos ? false : true;
     }
     verListadoInternacion() {
-        this.router.navigate([`/mapa-camas/listado-internacion`]);
+        this.router.navigate(['/mapa-camas/listado-internacion']);
     }
 
     verListadoInternacionMedico() {
-        this.router.navigate([`/mapa-camas/listado-internacion-medico`]);
+        this.router.navigate(['/mapa-camas/listado-internacion-medico']);
     }
 
     onEdit(accion) {
@@ -207,7 +207,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     refresh(accion) {
-        let i = this.snapshot.findIndex((snap: ISnapshot) => snap.idCama === accion.cama._id);
+        const i = this.snapshot.findIndex((snap: ISnapshot) => snap.idCama === accion.cama._id);
         this.snapshot[i] = accion.cama;
         this.camas = of(this.snapshot);
         this.volverAResumen();

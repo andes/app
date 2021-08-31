@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ProcedimientosQuirurgicosService {
 
-    private camasUrl = '/core/tm/procemientosQuirurgicos';  // URL to web api
+    private camasUrl = '/core/tm/procemientosQuirurgicos'; // URL to web api
     constructor(private server: Server) { }
 
     get(params): Observable<any[]> {

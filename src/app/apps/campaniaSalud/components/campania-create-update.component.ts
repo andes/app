@@ -58,7 +58,7 @@ export class CampaniaFormComponent implements OnInit {
      */
     sexos: any[];
 
-    /*CARGA DE IMAGENES*/
+    /* CARGA DE IMAGENES*/
     @ViewChild('upload', { static: true }) uploadComponent: ElementRef;
 
     /**
@@ -90,10 +90,10 @@ export class CampaniaFormComponent implements OnInit {
      */
     formatosValidos = ['svg'];
 
-    /*FIN CARGA DE IMAGENES*/
+    /* FIN CARGA DE IMAGENES*/
 
     constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitizer: DomSanitizer,
-        private auth: Auth, private router: Router) { }
+                private auth: Auth, private router: Router) { }
 
     ngOnInit(): void {
         if (!this.auth.check('campania:crear')) {
@@ -131,9 +131,9 @@ export class CampaniaFormComponent implements OnInit {
                 this.campaniaEdit.imagen = this.imagenSvg;
                 (this.campaniaEdit.id ? this.campaniaSaludService.putCampanias(this.campaniaEdit)
                     : this.campaniaSaludService.postCampanias(this.campaniaEdit)).subscribe(res => {
-                        this.plex.info('success', 'Los datos están correctos');
-                        this.guardar.emit(res);
-                    });
+                    this.plex.info('success', 'Los datos están correctos');
+                    this.guardar.emit(res);
+                });
             }
 
         } else {
@@ -141,13 +141,13 @@ export class CampaniaFormComponent implements OnInit {
         }
     }
 
-    /*INICIO CARGA DE IMAGENES*/
+    /* INICIO CARGA DE IMAGENES*/
     changeListener($event): void {
         this.readThis($event.target);
     }
 
     readThis(inputValue: any): void {
-        let ext = this.fileExtension(inputValue.value);
+        const ext = this.fileExtension(inputValue.value);
         this.errorFormato = false;
 
         if (!this.formatosValidos.find((item) => item === ext.toLowerCase())) { // se fija si la extensión del archivo está dentro de las opciones permitidas
@@ -156,8 +156,8 @@ export class CampaniaFormComponent implements OnInit {
             this.imagenSegura = null;
             return;
         }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
+        const file: File = inputValue.files[0];
+        const myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
             this.uploadComponent.nativeElement.value = '';
@@ -197,11 +197,11 @@ export class CampaniaFormComponent implements OnInit {
      * @memberof CampaniaFormComponent
      */
     confirmarSvg(archivo: string): boolean {
-        let regExXml = /<\?xml (.|\n)*\?>/;
-        let regExSvg = /svg (.|\n)*\/svg/; // verificar los <>
-        let regExTamanio = /width.?"720(px)?"(.|\n)*height.?"160(px)?"/;
+        const regExXml = /<\?xml (.|\n)*\?>/;
+        const regExSvg = /svg (.|\n)*\/svg/; // verificar los <>
+        const regExTamanio = /width.?"720(px)?"(.|\n)*height.?"160(px)?"/;
 
-        let cumpleTamanio: boolean = regExTamanio.test(archivo);
+        const cumpleTamanio: boolean = regExTamanio.test(archivo);
         if (!cumpleTamanio) {
             this.plex.info('danger', 'El tamaño de la imagen debe ser 720px x 160px.');
         }
@@ -209,5 +209,5 @@ export class CampaniaFormComponent implements OnInit {
         return regExXml.test(archivo) && regExSvg.test(archivo) && cumpleTamanio;
     }
 
-    /*FIN CARGA DE IMAGENES*/
+    /* FIN CARGA DE IMAGENES*/
 }

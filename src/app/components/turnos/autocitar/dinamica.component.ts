@@ -31,11 +31,11 @@ export class DinamicaFormComponent implements OnInit {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex,
-        private router: Router,
-        public serviceTurno: TurnoService,
-        public servicioPrestacion: PrestacionesService,
-        private obraSocialService: ObraSocialService,
-        private pacienteService: PacienteService
+                private router: Router,
+                public serviceTurno: TurnoService,
+                public servicioPrestacion: PrestacionesService,
+                private obraSocialService: ObraSocialService,
+                private pacienteService: PacienteService
     ) {
     }
 
@@ -88,7 +88,7 @@ export class DinamicaFormComponent implements OnInit {
     }
 
     private setPacienteTurno(paciente: IPaciente) {
-        let pacienteSave = {
+        const pacienteSave = {
             id: paciente.id,
             documento: paciente.documento,
             apellido: paciente.apellido,
@@ -153,37 +153,37 @@ export class DinamicaFormComponent implements OnInit {
         if (this.agenda.dinamica) {
             this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
                 '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                    let fechaTurno;
-                    if (confirmacion) {
-                        let datosConfirma = {
-                            nota: '',
-                            motivoConsulta: '',
-                            tipoPrestacion: this.datosTurno.tipoPrestacion,
-                            paciente: paciente,
-                            idAgenda: this.agenda.id
-                        };
+                let fechaTurno;
+                if (confirmacion) {
+                    const datosConfirma = {
+                        nota: '',
+                        motivoConsulta: '',
+                        tipoPrestacion: this.datosTurno.tipoPrestacion,
+                        paciente: paciente,
+                        idAgenda: this.agenda.id
+                    };
                         // guardamos el turno
-                        this.serviceTurno.saveDinamica(datosConfirma).pipe(
-                            map(turnoDado => {
-                                fechaTurno = turnoDado.horaInicio;
-                                return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
-                            }),
-                            switchMap(idturnoDado => {
-                                if (idturnoDado) {
-                                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(
-                                        tap(prestacion => {
-                                            this.router.navigate(['rup/ejecucion/', prestacion.id]);
-                                        })
-                                    );
-                                } else {
-                                    this.plex.info('danger', 'No fue posible crear la prestación');
-                                    return EMPTY;
-                                }
-                            })
-                        ).subscribe();
-                    }
+                    this.serviceTurno.saveDinamica(datosConfirma).pipe(
+                        map(turnoDado => {
+                            fechaTurno = turnoDado.horaInicio;
+                            return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
+                        }),
+                        switchMap(idturnoDado => {
+                            if (idturnoDado) {
+                                return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(
+                                    tap(prestacion => {
+                                        this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                                    })
+                                );
+                            } else {
+                                this.plex.info('danger', 'No fue posible crear la prestación');
+                                return EMPTY;
+                            }
+                        })
+                    ).subscribe();
+                }
 
-                });
+            });
         }
     }
 

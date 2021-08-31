@@ -121,7 +121,7 @@ export class AuditarSolicitudComponent implements OnInit {
 
     confirmar() {
         if (this.corfirmarAuditoria) {
-            let data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional };
+            const data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional };
 
             if (this.estadoSolicitud === 3) {
                 data.organizacion = this.organizacionDestino;
@@ -141,8 +141,8 @@ export class AuditarSolicitudComponent implements OnInit {
 
     // Verifica si la regla para ver si la solicitud es auditable
     esRemisionAuditable() {
-        let regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id);
-        let regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
+        const regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id);
+        const regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
         return regla2.auditable;
     }
 
@@ -183,7 +183,7 @@ export class AuditarSolicitudComponent implements OnInit {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
         } else {
             // Por si hay algún documento en la vieja versión.
@@ -222,7 +222,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     get documentos() {
-        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
         if (solicitudRegistros.some(reg => reg.valor.documentos)) {
             return solicitudRegistros[0].valor.documentos.map((doc) => {
                 doc.url = this.createUrl(doc);

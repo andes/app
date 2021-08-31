@@ -1,18 +1,18 @@
-import { PrestacionesService } from './../../services/prestaciones.service';
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
-import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
-import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { HUDSService } from '../../services/huds.service';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 import { concat, forkJoin } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
+import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
+import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
+import { HUDSService } from '../../services/huds.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
@@ -67,14 +67,14 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     constructor(private router: Router,
-        private route: ActivatedRoute,
-        private plex: Plex, public auth: Auth,
-        public servicioAgenda: AgendaService,
-        public servicioPrestacion: PrestacionesService,
-        private location: Location,
-        private osService: ObraSocialCacheService,
-        private pacienteService: PacienteService,
-        private hudsService: HUDSService) { }
+                private route: ActivatedRoute,
+                private plex: Plex, public auth: Auth,
+                public servicioAgenda: AgendaService,
+                public servicioPrestacion: PrestacionesService,
+                private location: Location,
+                private osService: ObraSocialCacheService,
+                private pacienteService: PacienteService,
+                private hudsService: HUDSService) { }
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
@@ -153,9 +153,8 @@ export class PrestacionCrearComponent implements OnInit {
                     obraSocial: obraSocialPaciente
                 };
             }
-            let conceptoSnomed = this.tipoPrestacionSeleccionada;
-            let nuevaPrestacion;
-            nuevaPrestacion = {
+            const conceptoSnomed = this.tipoPrestacionSeleccionada;
+            const nuevaPrestacion = {
                 paciente: pacientePrestacion,
                 solicitud: {
                     fecha: this.fecha,
@@ -216,7 +215,7 @@ export class PrestacionCrearComponent implements OnInit {
 
         // Hay paciente?
         this.existePaciente();
-        let params = {
+        const params = {
             disponiblesProfesional: true,
             idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
             fechaDesde: moment(new Date()).startOf('day').toDate(),
@@ -245,7 +244,7 @@ export class PrestacionCrearComponent implements OnInit {
     elegirPrestacion(unPacientePresente) {
         if (unPacientePresente.idPrestacion) {
             if (unPacientePresente.estado === 'Programado') {
-                let cambioEstado: any = {
+                const cambioEstado: any = {
                     op: 'estadoPush',
                     estado: { tipo: 'ejecucion' }
                 };
@@ -263,7 +262,7 @@ export class PrestacionCrearComponent implements OnInit {
             // TODO: REVISAR
             // Marcar la asistencia al turno
             if (unPacientePresente.estado !== 'Suspendido' && unPacientePresente.turno.asistencia !== 'asistio') {
-                let patch: any = {
+                const patch: any = {
                     op: 'darAsistencia',
                     turnos: [unPacientePresente.turno]
                 };
@@ -274,8 +273,7 @@ export class PrestacionCrearComponent implements OnInit {
                 });
             }
             // Si aún no existe la prestación creada vamos a generarla
-            let nuevaPrestacion;
-            nuevaPrestacion = {
+            const nuevaPrestacion = {
                 paciente: {
                     id: unPacientePresente.paciente.id,
                     nombre: unPacientePresente.paciente.nombre,

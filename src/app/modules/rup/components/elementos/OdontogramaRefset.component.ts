@@ -88,7 +88,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }).subscribe(odontograma => {
 
             odontograma.forEach(diente => {
-                let nroDiente = Number(diente.term.replace('ISO designation ', ''));
+                const nroDiente = Number(diente.term.replace('ISO designation ', ''));
                 diente.term = nroDiente.toString();
                 if ((nroDiente >= 11 && nroDiente <= 18)) {
                     this.odontograma.cuadranteSuperiorDerecho.push({ concepto: diente, cuadrante: 'TR' });
@@ -118,7 +118,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.odontograma.cuadranteInferiorDerechoTemporal.sort((a, b) => Number(b.concepto.term) - Number(a.concepto.term));
             this.odontograma.cuadranteInferiorIzquierdoTemporal.sort((a, b) => Number(a.concepto.term) - Number(b.concepto.term));
 
-            let params: IPrestacionGetParams = {
+            const params: IPrestacionGetParams = {
                 idPaciente: this.paciente.id,
                 conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
                 estado: 'validada'
@@ -168,9 +168,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.relacionesActuales = this.registro.registros;
 
             // Se arma el último odontograma, con sus relaciones
-            for (let cuadrante of this.cuadrantes) {
+            for (const cuadrante of this.cuadrantes) {
                 if (this.ultimoOdontograma.valor && this.ultimoOdontograma.valor.odontograma) {
-                    for (let diente of this.ultimoOdontograma.valor.odontograma[String(cuadrante)]) {
+                    for (const diente of this.ultimoOdontograma.valor.odontograma[String(cuadrante)]) {
                         diente.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === diente.concepto.conceptId : z === diente.concepto.conceptId))) || {};
                     }
                 }
@@ -182,8 +182,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
 
             // Se arma el Odontograma actual, con sus relaciones
-            for (let cuadrante of this.cuadrantes) {
-                for (let diente of this.odontograma[String(cuadrante)]) {
+            for (const cuadrante of this.cuadrantes) {
+                for (const diente of this.odontograma[String(cuadrante)]) {
                     diente.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => {
                         return z === diente.concepto.conceptId;
                     }) : {});
@@ -202,7 +202,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 this.ultimoOdontogramaIndex--;
                 this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === this.conceptoOdontograma)[0];
                 if (this.ultimoOdontograma) {
-                    let fechaConsulta = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.fecha;
+                    const fechaConsulta = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.fecha;
                     this.armarRelaciones(fechaConsulta);
                 }
                 this.showUltimoOdontograma = true;
@@ -213,7 +213,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     odontogramaSiguiente() {
         this.showUltimoOdontograma = false;
-        let params: IPrestacionGetParams = {
+        const params: IPrestacionGetParams = {
             idPaciente: this.paciente.id,
             conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
             estado: 'validada'
@@ -223,7 +223,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             if (this.ultimoOdontogramaIndex < this.odontogramasHUDS.length - 1) {
                 this.ultimoOdontogramaIndex++;
                 this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === this.conceptoOdontograma)[0];
-                let fechaConsulta = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.fecha;
+                const fechaConsulta = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.fecha;
                 this.armarRelaciones(fechaConsulta);
                 this.showUltimoOdontograma = true;
             }
@@ -244,7 +244,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.popOverText = diente;
 
         if (cara !== 'anulada') {
-            let rel = !huds ? this.getRegistrosRel(diente, cara) : this.getRegistrosRelAnterior(diente, cara);
+            const rel = !huds ? this.getRegistrosRel(diente, cara) : this.getRegistrosRelAnterior(diente, cara);
             if (rel.length) {
                 this.popOverText.relacion = rel;
             } else {
@@ -285,7 +285,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.popOverText = diente;
 
         if (cara !== 'anulada') {
-            let rel = !huds ? this.getRegistrosRel(diente, cara) : this.getRegistrosRelAnterior(diente, cara);
+            const rel = !huds ? this.getRegistrosRel(diente, cara) : this.getRegistrosRelAnterior(diente, cara);
             if (rel.length) {
                 this.popOverText.relacion = rel[index];
             } else {
@@ -412,7 +412,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     seleccionarDiente(diente, cara) {
 
-        let index = this.cara(diente, cara);
+        const index = this.cara(diente, cara);
 
         // No está seleccionado?
         if (index === -1) {
@@ -457,7 +457,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     seleccionarPieza(diente) {
-        let index = this.piezaCompleta(diente, 'pieza');
+        const index = this.piezaCompleta(diente, 'pieza');
 
         if (index === -1) {
             const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: 'pieza' }));
@@ -487,7 +487,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     piezaAnulada(conceptId) {
         if (this.odontogramasHUDS) {
-            let relacion = this.odontogramasHUDS.find(x => x.ejecucion.registros.findIndex(y => y.relacionadoCon.findIndex(z => z.conceptId === conceptId) !== -1) !== -1);
+            const relacion = this.odontogramasHUDS.find(x => x.ejecucion.registros.findIndex(y => y.relacionadoCon.findIndex(z => z.conceptId === conceptId) !== -1) !== -1);
             return relacion && relacion.ejecucion.registros.find(a => this.params.anularPieza.find(b => b === a.concepto.conceptId));
         } else {
             return false;
@@ -505,9 +505,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     comprobarSelecciones() {
-        for (let item of this.piezasSeleccionadas) {
+        for (const item of this.piezasSeleccionadas) {
             if (this.registro.valor.piezas) {
-                let indexSeleccionada = this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === item.concepto.conceptId && x.cara === item.cara);
+                const indexSeleccionada = this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === item.concepto.conceptId && x.cara === item.cara);
                 if (indexSeleccionada !== -1) {
                     this.registro.valor.piezas.splice(indexSeleccionada, 1);
                 }

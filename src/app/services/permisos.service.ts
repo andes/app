@@ -7,7 +7,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class PermisosService {
 
-    private permisosUrl = '/core/tm/permisos';  // URL to web api
+    private permisosUrl = '/core/tm/permisos'; // URL to web api
 
     constructor(private server: Server) { }
 

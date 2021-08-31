@@ -138,14 +138,14 @@ export class ElementosRUPService {
         }
         concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
-            let elemento = this.cacheParaSolicitud[concepto.conceptId];
+            const elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {
                 return this.populateElemento(elemento, esSolicitud);
             } else {
                 return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
             }
         } else {
-            let elemento = this.cache[concepto.conceptId];
+            const elemento = this.cache[concepto.conceptId];
             if (elemento) {
                 return this.populateElemento(elemento, esSolicitud);
             } else {
@@ -175,7 +175,7 @@ export class ElementosRUPService {
     }
 
     getConceptosInternacion() {
-        let conceptosInternacion = {
+        const conceptosInternacion = {
             // Lo pongo así porque no tiene sentido lo que hicieron con los otros conceptos
             // Pronto este listado no tiene más sentido
             valoracionInicial: {

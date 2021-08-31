@@ -7,7 +7,7 @@ import { ForgotComponent } from './components/forgot/forgot.component';
 import { RecoveryComponent } from './components/recovery/recovery.component';
 import { RoutingNavBar, RoutingGuard } from '../../app.routings-guard.class';
 
-let routes = [
+const routes = [
     { path: 'select-organizacion', component: SelectOrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'login', component: LoginComponent, canActivate: [RoutingNavBar] },
     { path: 'forgot', component: ForgotComponent, canActivate: [RoutingNavBar] },

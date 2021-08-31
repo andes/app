@@ -5,7 +5,7 @@ import { IObraSocial } from '../interfaces/IObraSocial';
 
 @Injectable()
 export class ObraSocialService {
-    private url = '/modules/obraSocial';  // URL to web api
+    private url = '/modules/obraSocial'; // URL to web api
 
     constructor(private server: Server) { }
 

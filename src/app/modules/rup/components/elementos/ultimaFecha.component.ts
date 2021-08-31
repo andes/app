@@ -41,8 +41,8 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, query).subscribe((prestaciones: any[]) => {
 
                 prestaciones = prestaciones.sort((a, b) => {
-                    let dateA = a.fecha.getTime();
-                    let dateB = b.fecha.getTime();
+                    const dateA = a.fecha.getTime();
+                    const dateB = b.fecha.getTime();
                     return dateA <= dateB ? 1 : -1;
                 });
                 if (prestaciones.length > 0) {

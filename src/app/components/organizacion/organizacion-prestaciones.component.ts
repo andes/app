@@ -11,7 +11,7 @@ import { ITipoPrestacion } from '../../interfaces/ITipoPrestacion';
     templateUrl: 'organizacion-prestaciones.html',
 })
 export class OrganizacionOfertaPrestacionalComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     disabledPanel = true;
     agregando = false;
     editando = false;
@@ -83,7 +83,7 @@ export class OrganizacionOfertaPrestacionalComponent implements OnInit {
     /*
      * EDITAR
      */
-    onEditar(oferta: { _id: string, prestacion: ITipoPrestacion, detalle: string }) {
+    onEditar(oferta: { _id: string; prestacion: ITipoPrestacion; detalle: string }) {
         this.ofertaPrestacionalSeleccionada = oferta;
         this.prestacion = oferta.prestacion;
         this.detalle = oferta.detalle;

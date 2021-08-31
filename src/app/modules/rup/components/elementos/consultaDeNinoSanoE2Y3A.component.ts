@@ -25,7 +25,7 @@ export class ConsultaDeNinoSanoE2Y3AComponent extends RUPComponent implements On
                 this.validacion = false;
             }
         });
-        let params: any = {
+        const params: any = {
             idPaciente: this.paciente.id,
             ordenFecha: true,
             estado: 'validada'

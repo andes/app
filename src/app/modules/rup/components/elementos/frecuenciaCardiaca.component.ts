@@ -1,6 +1,6 @@
-import { RUPComponent } from './../core/rup.component';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-frecuencia-cardiaca',
@@ -9,7 +9,7 @@ import { RupElement } from '.';
 @RupElement('FrecuenciaCardiacaComponent')
 export class FrecuenciaCardiacaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        let paciente = this.paciente;
+        const paciente = this.paciente;
         // Observa cuando cambia la propiedad 'frecuencia cardicaca' en otro elemento RUP
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
@@ -27,16 +27,13 @@ export class FrecuenciaCardiacaComponent extends RUPComponent implements OnInit 
 
 
     getMensajes() {
-        let Edad;
-        let Sexo;
-        let frecuenciaCardiaca;
-        let mensaje: any = {
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };
-        Sexo = this.paciente.sexo;
-        Edad = this.paciente.edad;
-        frecuenciaCardiaca = this.registro.valor;
+        const Sexo = this.paciente.sexo;
+        const Edad = this.paciente.edad;
+        const frecuenciaCardiaca = this.registro.valor;
         if (frecuenciaCardiaca) {
             if (Sexo === 'masculino') {
                 if (Edad >= 20 && Edad <= 29) {

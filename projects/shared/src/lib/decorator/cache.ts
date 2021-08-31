@@ -6,7 +6,7 @@
 import { cache } from '../operators';
 
 export function Cache({ key }: { key: string | boolean }) {
-    let _cache: any = {};
+    const _cache: any = {};
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const fn = descriptor.value as Function;
         descriptor.value = function (...args) {

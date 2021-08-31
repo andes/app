@@ -23,8 +23,8 @@ export class FormTerapeuticoComponent implements OnInit {
     public datosArbol: any;
     public newMedicamento: any;
     constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
-        public servicioFormTerapeutico: FormTerapeuticoService) { }
+                private plex: Plex, public auth: Auth,
+                public servicioFormTerapeutico: FormTerapeuticoService) { }
 
 
     ngOnInit() {

@@ -128,7 +128,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         }
 
         this.route.params.subscribe(params => {
-            let id = params['id'];
+            const id = params['id'];
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
                     this.inicializar(id);
@@ -196,7 +196,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             }
 
             if (this.elementoRUP.requeridos.length > 0) {
-                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                for (const elementoRequerido of this.elementoRUP.requeridos) {
                     this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                 }
             }
@@ -206,7 +206,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                    let registros = this.prestacion.ejecucion.registros;
+                    const registros = this.prestacion.ejecucion.registros;
 
                     if (!this.validada) {
                         const puederSerC2 = (registro) => {
@@ -214,7 +214,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                         };
 
                         const encolarRequestCIE10 = (registro) => {
-                            let parametros = {
+                            const parametros = {
                                 conceptId: registro.concepto.conceptId,
                                 paciente: this.paciente,
                                 secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
@@ -275,10 +275,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-        let existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
-        let diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
+        const existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
+        const diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        const existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
         if (existeC2) {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
@@ -332,7 +332,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                         // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                         this.servicioPrestacion.prestacionPacienteAusente().subscribe(
                             result => {
-                                let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                                const filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
                                 if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
                                     this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
                                 } else {
@@ -357,7 +357,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 return false;
             } else {
                 // hacemos el patch y luego creamos los planes
-                let cambioEstado: any = {
+                const cambioEstado: any = {
                     op: 'romperValidacion'
                 };
 
@@ -393,8 +393,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     tienePermisos(tipoPrestacion) {
-        let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
+        const permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        const existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
         return existe;
     }
@@ -429,12 +429,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     cargaPlan(prestacionesSolicitadas) {
         prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => ps.solicitud.registros[0].valor.solicitudPrestacion.autocitado);
-        let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
+        const tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return this.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
 
         prestacionesSolicitadas.forEach(ps => {
-            let idRegistro = ps.solicitud.registros[0].id;
+            const idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = [];
             if (ps.solicitud.turno) {
                 this.asignarTurno[idRegistro] = ps;
@@ -455,7 +455,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                 if (agendas) {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
-                        let idRegistro = element.solicitud.registros[0].id;
+                        const idRegistro = element.solicitud.registros[0].id;
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId && pa.term === element.solicitud.tipoPrestacion.term)) {
                             this.asignarTurno[idRegistro] = element;
                         }
@@ -471,8 +471,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     defualtDiagnosticoPrestacion() {
-        let count = 0;
-        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto', 'fármaco de uso clínico'].indexOf(elemento.concepto.semanticTag) >= 0);
+        const count = 0;
+        const items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto', 'fármaco de uso clínico'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1 && this.elementoRUP.requiereDiagnosticoPrincipal) {
             items[0].esDiagnosticoPrincipal = true;
         }
@@ -532,7 +532,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     ordenarPorFecha(direccion: any) {
         if (direccion) {
             this.ordenRegistros = direccion;
-            this.prestacion.ejecucion.registros = this.prestacion.ejecucion.registros.sort(function (a, b) {
+            this.prestacion.ejecucion.registros = this.prestacion.ejecucion.registros.sort((a, b) => {
                 a = new Date(a.createdAt);
                 b = new Date(b.createdAt);
                 if (direccion === 'down') {

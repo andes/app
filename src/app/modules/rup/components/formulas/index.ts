@@ -3,7 +3,7 @@ interface IFormula {
     service: any;
 }
 
-import { Injectable, DebugElement } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 
 
@@ -52,7 +52,7 @@ export class FormulaBaseService {
         if (registros.filter(r => r.valor === null || r.valor === undefined).length === 0) {
             const $ = registros.map(r => r.valor);
             const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
-            // tslint:disable-next-line:no-eval
+            // eslint-disable-next-line no-eval
             eval(str);
             const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion);
             return {

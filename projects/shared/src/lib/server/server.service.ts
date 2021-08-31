@@ -27,10 +27,10 @@ export class Server {
     }
 
     private parse(data: any): any {
-        let dateISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.,]\d+)?Z/i;
-        let dateNet = /\/Date\((-?\d+)(?:-\d+)?\)\//i;
+        const dateISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.,]\d+)?Z/i;
+        const dateNet = /\/Date\((-?\d+)(?:-\d+)?\)\//i;
         const traverse = function (o, func) {
-            for (let i of Object.keys(o)) {
+            for (const i of Object.keys(o)) {
                 o[i] = func.apply(this, [i, o[i]]);
                 if (o[i] !== null && typeof (o[i]) === 'object') {
                     traverse(o[i], func);
@@ -73,7 +73,7 @@ export class Server {
         }
         if (options && options.params) {
             result.params = new HttpParams();
-            for (let param in options.params) {
+            for (const param in options.params) {
                 if (options.params[param] !== undefined && options.params[param] !== null) {
                     if (Array.isArray(options.params[param])) {
                         (options.params[param] as Array<any>).forEach((value) => {

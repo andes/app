@@ -23,7 +23,7 @@ export class DetalleNovedadComponent implements OnInit {
     ngOnInit() {
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
             this.route.params.subscribe(params => {
-                let novedad = params['novedad'];
+                const novedad = params['novedad'];
                 if (novedad) {
                     this.novedad = novedades.filter(n => n._id === novedad)[0];
                     this.fotos = this.getFotos(this.novedad);
@@ -48,7 +48,7 @@ export class DetalleNovedadComponent implements OnInit {
 
     createUrl(doc) {
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/registro-novedades/store/' + doc.id;
         }
     }

@@ -1,17 +1,16 @@
-import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { OrganizacionService } from './../../../../services/organizacion.service';
-import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { AfterViewInit, Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import * as operaciones from './../../../../utils/operacionesJSON';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
 import { Subscription } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
+import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { OrganizacionService } from './../../../../services/organizacion.service';
+import { ProfesionalService } from './../../../../services/profesional.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
+import * as operaciones from './../../../../utils/operacionesJSON';
 
 @Component({
     selector: 'planificar-agenda',
@@ -23,7 +22,7 @@ import { InstitucionService } from '../../../../services/turnos/institucion.serv
 export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
     @Input('editaAgenda')
@@ -116,7 +115,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             if (this.lastRequest) {
                 this.lastRequest.unsubscribe();
             }
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
 
@@ -135,7 +134,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     loadOrganizationData() {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
-            let organization: any = org;
+            const organization: any = org;
             if (organization && organization.turnosMobile) {
                 this.mobileEnabled = organization.turnosMobile;
             }
@@ -144,7 +143,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     loadSectores(event) {
         this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion.id }).subscribe(respuesta => {
-            let sectores = respuesta.map((ef) => {
+            const sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
             });
             event.callback(sectores);
@@ -168,7 +167,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     loadEspaciosFisicos(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 activo: true,
                 nombre: event.query
             };
@@ -206,7 +205,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.tipoPrestaciones.forEach((prestacion, index) => {
                 const copiaPrestacion = operaciones.clonarObjeto(prestacion);
                 if (bloque.tipoPrestaciones) {
-                    let i = bloque.tipoPrestaciones.map(function (e) { return e.nombre; }).
+                    const i = bloque.tipoPrestaciones.map((e) => {
+                        return e.nombre;
+                    }).
                         indexOf(copiaPrestacion.nombre);
                     if (i >= 0) {
                         bloque.tipoPrestaciones[i].activo = true;
@@ -246,7 +247,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     calculosInicio() {
         this.modelo.fecha = this.modelo.horaInicio;
-        let bloques = this.modelo.bloques;
+        const bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             bloque.indice = index;
             if (!this.modelo.intercalar) {
@@ -255,13 +256,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             if (bloque.cantidadTurnos) {
                 bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor
-                    ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
+                ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
                 bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor
-                    ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
+                ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
                 bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor
-                    ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
+                ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
                 bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor
-                    ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
+                ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
                 if (!this.modelo.intercalar) {
                     const duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
                     bloque.duracionTurno = Math.floor(duracion);
@@ -382,7 +383,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 // Si se agrego una prestacion, la agrego a los bloques
                 if (this.modelo.tipoPrestaciones) {
                     this.modelo.tipoPrestaciones.forEach((prestacion) => {
-                        let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                        const copiaPrestacion = operaciones.clonarObjeto(prestacion);
                         copiaPrestacion.activo = false;
                         const tipo = bloque.tipoPrestaciones.find(x => x.nombre === copiaPrestacion.nombre);
                         const i = bloque.tipoPrestaciones.indexOf(tipo);
@@ -414,14 +415,14 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             if (this.elementoActivo.horaFin) {
                 this.aproximar(this.elementoActivo.horaFin);
             }
-            let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-            let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+            const inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+            const fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
             if (inicio && fin) {
-                let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
+                const duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
                 if (duracion) {
                     this.elementoActivo.duracionTurno = Math.floor(duracion);
-                    let cantidad = this.calcularCantidad(inicio, fin, duracion);
+                    const cantidad = this.calcularCantidad(inicio, fin, duracion);
                     this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
                 }
                 this.validarTodo();
@@ -438,8 +439,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     cambiaTurnos(cual: String) {
         this.fecha = new Date(this.modelo.fecha);
-        let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        const inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        const fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
         if (inicio && fin) {
             if (cual === 'cantidad' && this.elementoActivo.cantidadTurnos) {
                 this.elementoActivo.duracionTurno = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
@@ -457,19 +458,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             switch (cual) {
                 case 'accesoDirectoDelDia':
                     this.elementoActivo.accesoDirectoDelDiaPorc = Math.ceil
-                        ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'accesoDirectoProgramado':
                     this.elementoActivo.accesoDirectoProgramadoPorc = Math.ceil
-                        ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoGestion':
                     this.elementoActivo.reservadoGestionPorc = Math.ceil
-                        ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoProfesional':
                     this.elementoActivo.reservadoProfesionalPorc = Math.ceil
-                        ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
                     break;
             }
             this.validarTodo();
@@ -481,19 +482,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             switch (cual) {
                 case 'accesoDirectoDelDia':
                     this.elementoActivo.accesoDirectoDelDia = Math.floor
-                        ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'accesoDirectoProgramado':
                     this.elementoActivo.accesoDirectoProgramado = Math.floor
-                        ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'reservadoGestion':
                     this.elementoActivo.reservadoGestion = Math.floor
-                        ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'reservadoProfesional':
                     this.elementoActivo.reservadoProfesional = Math.floor
-                        ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
             }
         }
@@ -522,7 +523,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (cantidad && inicio && fin) {
             inicio = moment(inicio);
             fin = moment(fin);
-            let total = fin.diff(inicio, 'minutes');
+            const total = fin.diff(inicio, 'minutes');
             return Math.floor(total / cantidad);
         } else {
             if (this.elementoActivo.duracionTurno) {
@@ -537,7 +538,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (duracion && duracion && inicio && fin) {
             inicio = moment(inicio);
             fin = moment(fin);
-            let total = fin.diff(inicio, 'minutes');
+            const total = fin.diff(inicio, 'minutes');
             return Math.floor(total / duracion);
         } else {
             if (this.elementoActivo.cantidadTurnos) {
@@ -556,8 +557,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     aproximar(date: Date) {
-        let m = date.getMinutes();
-        let remaider = m % 5;
+        const m = date.getMinutes();
+        const remaider = m % 5;
         if (remaider !== 0) {
             if (remaider < 3) {
                 date.setMinutes(m - remaider);
@@ -570,15 +571,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     verificarProfesional() {
         this.alertaProfesional = '';
         if (this.modelo.horaInicio && this.modelo.horaFin) {
-            let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-            let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            const iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            const finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
             if (iniAgenda && finAgenda && this.modelo.profesionales) {
                 this.modelo.profesionales.forEach((profesional, index) => {
                     this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                         subscribe(agendas => {
-                            let agds = agendas.filter(agenda => {
+                            const agds = agendas.filter(agenda => {
                                 return agenda.id !== this.modelo.id || !this.modelo.id;
                             });
                             if (agds.length > 0) {
@@ -593,14 +594,14 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     verificarEspacioFisico() {
         this.alertaEspacioFisico = '';
         if (this.modelo.horaInicio && this.modelo.horaFin) {
-            let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-            let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            const iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            const finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Verifica que el espacio fisico no esté ocupado en ese rango horario
             if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
                 this.serviceAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                     subscribe(agendas => {
-                        let agds = agendas.filter(agenda => {
+                        const agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
                         });
                         if (agds.length > 0) {
@@ -648,7 +649,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (this.modelo.profesionales === null) {
             this.modelo.profesionales = [];
         }
-        let bloques = this.modelo.bloques;
+        const bloques = this.modelo.bloques;
         let totalBloques = 0;
 
         // Verifica que la hora inicio y hora fin de la agenda sean correctas
@@ -665,8 +666,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (bloques) {
             bloques.forEach((bloque, index) => {
 
-                let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                let fin = this.combinarFechas(this.fecha, bloque.horaFin);
+                const inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                const fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
                 if (bloque.cantidadTurnos && bloque.duracionTurno) {
                     totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
@@ -694,9 +695,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
 
                 // Verifica que no se solape con ningún otro
-                let mapeo = bloques.map(function (obj) {
+                const mapeo = bloques.map((obj) => {
                     if (obj.indice !== bloque.indice) {
-                        let robj = {};
+                        const robj = {};
                         robj['horaInicio'] = obj.horaInicio;
                         robj['horaFin'] = obj.horaFin;
                         return robj;
@@ -707,12 +708,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
                 mapeo.forEach((bloqueMap, index1) => {
                     if (bloqueMap) {
-                        let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
-                        let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
+                        const bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
+                        const bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
                         // if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
                         if (this.compararFechas(bloqueMapIni, fin) < 0 && this.compararFechas(inicio, bloqueMapFin) < 0) {
                             alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
-                            let alertaOpuesta = 'El bloque ' + (index1 + 1) + ' se solapa con el ' + (bloque.indice + 1);
+                            const alertaOpuesta = 'El bloque ' + (index1 + 1) + ' se solapa con el ' + (bloque.indice + 1);
                             if (this.alertas.indexOf(alertaOpuesta) < 0) {
                                 this.alertas.push(alerta);
                             }
@@ -725,13 +726,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     combinarFechas(fecha1, fecha2) {
         if (fecha1 && fecha2) {
-            let horas: number;
-            let minutes: number;
-            let auxiliar: Date;
 
-            auxiliar = new Date(fecha1);
-            horas = fecha2.getHours();
-            minutes = fecha2.getMinutes();
+            const auxiliar = new Date(fecha1);
+            const horas = fecha2.getHours();
+            const minutes = fecha2.getMinutes();
             // Date.setHours(hour, min, sec, millisec)
             auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
@@ -747,12 +745,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.cupo = (this.setCupo) ? this.cupoMaximo : -1;
         }
 
-        let arrayPrestaciones = new Array<ITipoPrestacion>();
+        const arrayPrestaciones = new Array<ITipoPrestacion>();
         let bloqueConPrestActiva = false;
         let indice = 0;
         do {
             bloqueConPrestActiva = false;
-            let bloque = this.modelo.bloques[indice];
+            const bloque = this.modelo.bloques[indice];
             for (let j = 0; j < bloque.tipoPrestaciones.length; j++) {
                 if (bloque.tipoPrestaciones[j].activo) {
                     bloqueConPrestActiva = true;
@@ -768,7 +766,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if ($event.formValid && this.verificarNoNominalizada() &&
             bloqueConPrestActiva &&
             arrayPrestaciones.length === this.modelo.tipoPrestaciones.length) {
-            let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
@@ -779,7 +776,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
 
             this.modelo.organizacion = this.auth.organizacion;
-            let bloques = this.modelo.bloques;
+            const bloques = this.modelo.bloques;
             if (this.espacioFisicoPropios) {
                 this.modelo.otroEspacioFisico = null;
             } else {
@@ -807,7 +804,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     }
 
                     for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                        let turno = {
+                        const turno = {
                             estado: 'disponible',
                             horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
                             tipoTurno: undefined,
@@ -838,7 +835,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     }
                 }
                 if (!this.dinamica) {
-                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter((el) => {
                         return el.activo === true;
                     });
                 }
@@ -848,7 +845,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             if (!this.modelo.nominalizada) {
                 this.cleanDatosTurnos();
             }
-            espOperation = this.serviceAgenda.save(this.modelo);
+            const espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe((resultado: any) => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
                 this.modelo.id = resultado.id;
@@ -862,10 +859,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.hideGuardar = false;
             },
-                (err) => {
-                    this.hideGuardar = false;
-                    this.plex.info('warning', err, 'Aviso');
-                });
+            (err) => {
+                this.hideGuardar = false;
+                this.plex.info('warning', err, 'Aviso');
+            });
         } else {
             if (!this.verificarNoNominalizada()) {
                 this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
@@ -928,9 +925,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
      * @memberof PlanificarAgendaComponent
      */
     verificarNoNominalizada() {
-        let arrayTP = this.modelo.tipoPrestaciones;
-        let indice = arrayTP.map(
-            function (obj) {
+        const arrayTP = this.modelo.tipoPrestaciones;
+        const indice = arrayTP.map(
+            (obj) => {
                 return obj.noNominalizada;
             }
         ).indexOf(true);

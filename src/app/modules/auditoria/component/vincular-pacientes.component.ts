@@ -46,7 +46,7 @@ export class VincularPacientesComponent {
             this.listaVinculados = [];
 
             if (paciente.identificadores && paciente.identificadores.length) {
-                let vinculados = paciente.identificadores.filter((item: any) => item.entidad === 'ANDES');
+                const vinculados = paciente.identificadores.filter((item: any) => item.entidad === 'ANDES');
                 const obtenerVinculados = from(vinculados).pipe(
                     concatMap(id => this.pacienteService.getById(id.valor).pipe())
                 );

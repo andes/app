@@ -16,7 +16,9 @@ export class HotjarService {
     }
 
     private hotjar() {
-        if (this.ready) { return; }
+        if (this.ready) {
+            return;
+        }
         this.ready = true;
         (function (h: any, o: any, t: any, j: any, a?: any, r?: any) {
             h.hj = h.hj || function () {

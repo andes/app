@@ -41,12 +41,16 @@ export class GoogleTagManagerService {
     public getDataLayer() {
         const window = this.browserGlobals.windowRef();
         window['dataLayer'] = window['dataLayer'] || [];
-        window.gtag = function () { window['dataLayer'].push(arguments); };
+        window.gtag = function () {
+            window['dataLayer'].push(arguments);
+        };
         return window['dataLayer'];
     }
 
     public addGtmToDom() {
-        if (this.loaded) { return; }
+        if (this.loaded) {
+            return;
+        }
         const doc = this.browserGlobals.documentRef();
 
         const window = this.browserGlobals.windowRef();
@@ -78,7 +82,9 @@ export class GoogleTagManagerService {
 
     public event(action: string, category: string, label: string, value: number) {
         const window = this.browserGlobals.windowRef();
-        if (!window.gtag) { return; }
+        if (!window.gtag) {
+            return;
+        }
         window.gtag('event', action, {
             'event_category': category,
             'event_label': label,
@@ -99,7 +105,9 @@ export class GoogleTagManagerService {
 
 export function gtag(action: string, category: string, label: string, value: number) {
     const windowRef = (window as any);
-    if (!windowRef.gtag) { return; }
+    if (!windowRef.gtag) {
+        return;
+    }
     windowRef.gtag('event', action, {
         'event_category': category,
         'event_label': label,
@@ -116,6 +124,8 @@ const dimensionesAlias = {
 
 export function setDimension(dimension: 'profesional', value: string) {
     const windowRef = (window as any);
-    if (!windowRef.gtag) { return; }
+    if (!windowRef.gtag) {
+        return;
+    }
     windowRef.gtag('set', dimensionesAlias[dimension], value);
 }

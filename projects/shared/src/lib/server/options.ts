@@ -1,7 +1,7 @@
 export interface Options {
-  params?: any;
-  showError?: boolean;
-  showLoader?: boolean;
-  responseType?: 'json' | 'blob';
-  token?: string;
+    params?: any;
+    showError?: boolean;
+    showLoader?: boolean;
+    responseType?: 'json' | 'blob';
+    token?: string;
 }

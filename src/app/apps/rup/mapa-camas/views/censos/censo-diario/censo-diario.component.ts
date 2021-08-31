@@ -74,9 +74,9 @@ export class CensosDiariosComponent implements OnInit {
                 Object.keys(censoDiario.pacientes).map(p => {
                     let delDiaAnterior = false;
                     let ingresoAServicio = false;
-                    let censoPaciente = censoDiario.pacientes[p];
+                    const censoPaciente = censoDiario.pacientes[p];
                     censoPaciente.actividad.forEach((actividad: any, index) => {
-                        let movimiento = {
+                        const movimiento = {
                             datos: censoPaciente.datos,
                             ingreso: actividad.ingreso,
                             fechaIngreso: actividad.fechaIngreso,
@@ -114,7 +114,7 @@ export class CensosDiariosComponent implements OnInit {
     }
 
     descargarCenso() {
-        let params = {
+        const params = {
             listadoCenso: (this.censoPacientes.length < 0) ? null : this.censoPacientes,
             resumenCenso: this.censo,
             organizacion: this.organizacion,

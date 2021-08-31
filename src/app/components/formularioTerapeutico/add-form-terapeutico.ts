@@ -32,9 +32,9 @@ export class AddformTerapeuticoComponent implements OnInit {
     @Output() objNuevoMedicamento = new EventEmitter();
 
     constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
-        public servicioFormTerapeutico: FormTerapeuticoService,
-        private SNOMED: SnomedService
+                private plex: Plex, public auth: Auth,
+                public servicioFormTerapeutico: FormTerapeuticoService,
+                private SNOMED: SnomedService
     ) { }
 
 
@@ -58,7 +58,7 @@ export class AddformTerapeuticoComponent implements OnInit {
 
     loadMedicamentos(event) {
         if (event && event.query) {
-            let query = {
+            const query = {
                 search: event.query,
                 semanticTag: ['producto', 'fármaco de uso clínico']
             };

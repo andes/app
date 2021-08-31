@@ -129,7 +129,7 @@ export class InscripcionComponent implements OnInit {
                             this.seleccionaGrupo();
                         }
                     }
-                    let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+                    const grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
                     if (grupofr) {
                         this.morbilidades = grupofr.morbilidades;
                     }

@@ -53,7 +53,7 @@ export class ArbolItemComponent implements OnInit, OnChanges {
 
     borrar(indice) {
         this.plex.confirm(' Ud. está por eliminar el medicamento "' + indice.concepto.term + '", esta seguro?').then((resultado) => {
-            let rta = resultado;
+            const rta = resultado;
             if (rta) {
                 indice.borrado = true;
                 this.servicioFormTerapeutico.put(indice).subscribe((data: any) => {

@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class LocalidadService {
 
-    private localidadUrl = '/core/tm/localidades';  // URL to web api
+    private localidadUrl = '/core/tm/localidades'; // URL to web api
 
     constructor(private server: Server) { }
 

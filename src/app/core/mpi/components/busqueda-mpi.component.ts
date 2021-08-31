@@ -54,7 +54,7 @@ export class BusquedaMpiComponent implements OnInit {
         if (this.escaneado) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanCode(scan);
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            this.router.navigate(['apps/mpi/paciente']); // abre paciente-cru
         }
     }
 
@@ -66,9 +66,9 @@ export class BusquedaMpiComponent implements OnInit {
             this.historialBusquedaService.add(paciente);
             this.pacienteCache.setPaciente(paciente);
             if (paciente.numeroIdentificacion || paciente.tipoIdentificacion) {
-                this.router.navigate(['apps/mpi/paciente/extranjero/mpi']);  // abre formulario paciente extranjero
+                this.router.navigate(['apps/mpi/paciente/extranjero/mpi']); // abre formulario paciente extranjero
             } else {
-                this.router.navigate(['apps/mpi/paciente']);  // abre formulario paciente con/sin-dni
+                this.router.navigate(['apps/mpi/paciente']); // abre formulario paciente con/sin-dni
             }
         }
     }

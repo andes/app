@@ -103,7 +103,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     asignarPaciente(paciente) {
-        let estado: String = 'asignado';
+        const estado: String = 'asignado';
         let telefono;
         if (paciente.contacto) {
             if (paciente.contacto.length > 0) {
@@ -114,7 +114,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 });
             }
         }
-        let pacienteTurno = {
+        const pacienteTurno = {
             id: this.paciente.id,
             documento: this.paciente.documento,
             apellido: this.paciente.apellido,
@@ -187,9 +187,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
      * @memberof RevisionAgendaComponent
      */
     agregarDiagnostico(diagnostico) {
-        let nuevoDiagnostico = {
+        const nuevoDiagnostico = {
             codificacionProfesional: null, // solamente obtenida de RUP o SIPS y definida por el profesional
-            codificacionAuditoria: null,  // corresponde a la codificación establecida la instancia de revisión de agendas
+            codificacionAuditoria: null, // corresponde a la codificación establecida la instancia de revisión de agendas
             primeraVez: false
         };
         nuevoDiagnostico.codificacionAuditoria = diagnostico;
@@ -298,7 +298,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             sinCodificaciones = turno.diagnostico.codificaciones.find(cod => (!cod.codificacionProfesional || !cod.codificacionProfesional.snomed || !cod.codificacionProfesional.snomed.term));
             sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
         }
-        let esCodificado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || (!sinCodificaciones && sinAuditorias));
+        const esCodificado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || (!sinCodificaciones && sinAuditorias));
         return esCodificado;
     }
     isAuditado(turno) {
@@ -309,7 +309,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (turno && turno.diagnostico && turno.diagnostico.codificaciones && !turno.diagnostico.codificaciones.length) {
             sinAuditorias = true; // El turno no tiene codificaciones asociadas
         }
-        let esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias);
+        const esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias);
         return esAuditado;
     }
 
@@ -426,7 +426,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanCode(scan);
-            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
+            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']); // abre paciente-cru
         } else {
             this.resultadoBusqueda = pacientes;
         }
