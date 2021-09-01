@@ -33,14 +33,18 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Apellido y nombre',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre); }
+            sort: (a, b) => {
+                return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre);
+            }
         },
         {
             key: 'documento',
             label: 'Documento',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.paciente.documento.localeCompare(b.paciente.documento); }
+            sort: (a, b) => {
+                return a.paciente.documento.localeCompare(b.paciente.documento);
+            }
         },
         {
             key: 'fechaIngreso',
@@ -89,14 +93,18 @@ export class InternacionListadoComponent implements OnInit {
             label: 'Unidad organizativa',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term); }
+            sort: (a, b) => {
+                return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term);
+            }
         },
         {
             key: 'estado',
             label: 'Estado',
             sorteable: true,
             opcional: false,
-            sort: (a, b) => { return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo); }
+            sort: (a, b) => {
+                return a.estadoActual.tipo.localeCompare(b.estadoActual.tipo);
+            }
         }
     ];
 
@@ -234,7 +242,7 @@ export class InternacionListadoComponent implements OnInit {
         this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (validar) {
                 if (selectedPrestacion.ejecucion.registros[1]) {
-                    let egresoExiste = selectedPrestacion.ejecucion.registros[1].valor;
+                    const egresoExiste = selectedPrestacion.ejecucion.registros[1].valor;
                     if (egresoExiste && selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada') {
                         if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
                             egresoExiste.InformeEgreso.diagnosticoPrincipal) {
@@ -260,7 +268,7 @@ export class InternacionListadoComponent implements OnInit {
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
                 // hacemos el patch y luego creamos los planes
-                let cambioEstado: any = {
+                const cambioEstado: any = {
                     op: 'romperValidacion',
                     desdeInternacion: true
                 };

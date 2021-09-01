@@ -10,7 +10,7 @@ import { Plex } from '@andes/plex';
 export class OrganizacionCreateEmailComponent implements OnInit {
     public idOrganizacion;
     public organizacion;
-    public configuraciones: { emails: { nombre: string, email: string }[] } = {
+    public configuraciones: { emails: { nombre: string; email: string }[] } = {
         emails: [
 
             { nombre: null, email: null }

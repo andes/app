@@ -224,7 +224,9 @@ export class MapaCamasService {
             switchMap(([cama, ambito, capa]) => {
                 if (cama.idInternacion && capa !== 'estadistica') {
                     return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                        catchError((err) => { return of({}); })
+                        catchError((err) => {
+                            return of({});
+                        })
                     );
                 }
                 return of({});
@@ -270,8 +272,8 @@ export class MapaCamasService {
     }
 
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
-        let camasMismaUO = [];
-        let camasDistintaUO = [];
+        const camasMismaUO = [];
+        const camasDistintaUO = [];
         if (cama?.id) {
             camas.map(c => {
                 if (c.sala || c.estado === 'disponible') {
@@ -344,7 +346,7 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
@@ -410,8 +412,12 @@ export class MapaCamasService {
                 });
             } else if (sortBy === 'fechaIngreso') {
                 snapshots = snapshots.sort((a, b) => {
-                    if (!a.fechaIngreso) { return -1; }
-                    if (!b.fechaIngreso) { return 1; }
+                    if (!a.fechaIngreso) {
+                        return -1;
+                    }
+                    if (!b.fechaIngreso) {
+                        return 1;
+                    }
                     return a.fechaIngreso.getTime() - b.fechaIngreso.getTime();
                 });
             } else if (sortBy === 'fechaMovimiento') {
@@ -540,22 +546,14 @@ export class MapaCamasService {
 
     calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {
         let edad: any;
-        let fechaNac: any;
-        let fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
-        let fechaAct: any;
-        let difAnios: any;
-        let difDias: any;
-        let difMeses: any;
-        let difHs: any;
-        let difMn: any;
-
-        fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
-        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
-        difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
-        difAnios = Math.floor(difDias / 365.25);
-        difMeses = Math.floor(difDias / 30.4375);
-        difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
-        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
+        const fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
+        const fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
+        const fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
+        const difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
+        const difAnios = Math.floor(difDias / 365.25);
+        const difMeses = Math.floor(difDias / 30.4375);
+        const difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
+        const difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
 
         if (difAnios !== 0) {
             edad = {

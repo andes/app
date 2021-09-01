@@ -5,7 +5,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class EstRupService {
 
-    private baseURL = '/modules/rup/estadisticas';  // URL to web api
+    private baseURL = '/modules/rup/estadisticas'; // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -14,7 +14,7 @@ export class EstRupService {
      * @param params Filtros de busqueda
      */
 
-    get (params) {
+    get(params) {
         return this.server.get(this.baseURL, { params });
     }
 
@@ -22,7 +22,7 @@ export class EstRupService {
      * Obtiene estadistica demografica de un conjunto de prestaciones
      * @param ids Array de ids de prestaciones
      */
-    demografia (ids) {
+    demografia(ids) {
         return this.server.get(this.baseURL + '/demografia', { params: { ids } });
     }
 

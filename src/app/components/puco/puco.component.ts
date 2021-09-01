@@ -19,14 +19,14 @@ export class PucoComponent implements OnInit, OnDestroy {
 
     public loading = false;
     public errorSearchTerm = false; // true si se ingresan caracteres alfabeticos
-    public periodos = [];   // select
+    public periodos = []; // select
     public periodoSelect;
-    public listaPeriodosPuco = '';   // solo para sidebar
+    public listaPeriodosPuco = ''; // solo para sidebar
     public ultimaActualizacionPuco: Date;
-    public listaPeriodosProfe = '';   // solo para sidebar
+    public listaPeriodosProfe = ''; // solo para sidebar
     public ultimaActualizacionProfe: Date;
-    public cantidadPeriodos = 6;    // cantidad de versiones de padrones que se traen desde la DB
-    public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
+    public cantidadPeriodos = 6; // cantidad de versiones de padrones que se traen desde la DB
+    public periodoMasAntiguo; // la última version hacia atrás del padron a buscar
     public usuarios = [];
     public pacienteSumar: any;
     public showPrintForm = false;
@@ -65,16 +65,16 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
 
-            let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
+            const periodoMasActual = new Date(); // fecha actual para configurar el select a continuacion ..
 
             // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
             for (let i = 0; i < this.cantidadPeriodos; i++) {
-                let periodoAux = moment(periodoMasActual).subtract(i, 'month');
-                this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
+                const periodoAux = moment(periodoMasActual).subtract(i, 'month');
+                this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux }; // Ej: {1, "mayo 2018", "2018/05/05"}
 
             }
-            this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
-            this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
+            this.setPeriodo(this.periodos[0]); // por defecto se setea el periodo en el corriente mes
+            this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1]; // ultimo mes hacia atras que mostrará el select
 
 
             // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
@@ -127,8 +127,8 @@ export class PucoComponent implements OnInit, OnDestroy {
     verificarPeriodo(periodo1, periodo2) {
         periodo1 = new Date(periodo1);
         periodo2 = new Date(periodo2);
-        let p1 = moment(periodo1).startOf('month').format('YYYY-MM-DD');
-        let p2 = moment(periodo2).add(3, 'hours').startOf('month').format('YYYY-MM-DD');
+        const p1 = moment(periodo1).startOf('month').format('YYYY-MM-DD');
+        const p2 = moment(periodo2).add(3, 'hours').startOf('month').format('YYYY-MM-DD');
 
         if (moment(p1).diff(p2) > 0) {
             return p2;
@@ -151,46 +151,46 @@ export class PucoComponent implements OnInit, OnDestroy {
 
             this.loading = true;
             this.errorSearchTerm = false;
-            let search = this.searchTerm.trim();
+            const search = this.searchTerm.trim();
 
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
                 if (this.periodoSelect) {
                     // se verifica que el periodo seleccionado corresponda a un padrón existente.
-                    let periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
-                    let periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
+                    const periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
+                    const periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
 
                     observableForkJoin([
                         this.obraSocialService.getSumar({ dni: search }),
                         this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
-                            this.loading = false;
-                            this.resSumar = t[0];
-                            this.resPuco = t[1];
-                            this.resProfe = (t[2] as any);
+                        this.loading = false;
+                        this.resSumar = t[0];
+                        this.resPuco = t[1];
+                        this.resProfe = (t[2] as any);
 
-                            if ((this.resPuco.length > 0) || (this.resProfe.length > 0)) {
-                                if (this.resPuco.length > 0) {
-                                    this.usuarios = <any>this.resPuco;
-                                }
-                                if (this.resProfe.length > 0) {
-                                    if (this.resPuco) {
-                                        this.usuarios = this.resPuco.concat(this.resProfe);
-                                    } else {
-                                        this.usuarios = <any>this.resProfe;
-                                    }
-                                }
-                            } else if (this.resSumar.length > 0) {
-                                const dataSumar = this.resSumar[0];
-                                this.usuarios.push({
-                                    dni: dataSumar.afidni,
-                                    nombre: `${dataSumar.afinombre} ${dataSumar.afiapellido}`,
-                                    financiador: 'Programa SUMAR',
-                                    claveBeneficiario: dataSumar.clavebeneficiario
-                                });
+                        if ((this.resPuco.length > 0) || (this.resProfe.length > 0)) {
+                            if (this.resPuco.length > 0) {
+                                this.usuarios = <any>this.resPuco;
                             }
-                        });
-                } else {    // Cuando se quiere buscar un dni sin ingresar un periodo
+                            if (this.resProfe.length > 0) {
+                                if (this.resPuco) {
+                                    this.usuarios = this.resPuco.concat(this.resProfe);
+                                } else {
+                                    this.usuarios = <any>this.resProfe;
+                                }
+                            }
+                        } else if (this.resSumar.length > 0) {
+                            const dataSumar = this.resSumar[0];
+                            this.usuarios.push({
+                                dni: dataSumar.afidni,
+                                nombre: `${dataSumar.afinombre} ${dataSumar.afiapellido}`,
+                                financiador: 'Programa SUMAR',
+                                claveBeneficiario: dataSumar.clavebeneficiario
+                            });
+                        }
+                    });
+                } else { // Cuando se quiere buscar un dni sin ingresar un periodo
                     this.loading = false;
                 }
             }, 400);
@@ -213,7 +213,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     }
 
     imprimirConstatacion(usuario: any) {
-        let dto = {
+        const dto = {
             dni: usuario.dni,
             nombre: usuario.nombre,
             codigoFinanciador: (usuario.codigoFinanciador) ? usuario.codigoFinanciador : '',

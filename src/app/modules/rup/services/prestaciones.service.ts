@@ -36,7 +36,7 @@ export class PrestacionesService {
         term: 'internación'
     };
 
-    private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
+    private prestacionesUrl = '/modules/rup/prestaciones'; // URL to web api
     private cache: any[] = [];
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
@@ -123,7 +123,7 @@ export class PrestacionesService {
             params['hudsToken'] = this.hudsService.getHudsToken();
         }
 
-        let opt = { params: params, options };
+        const opt = { params: params, options };
 
         return this.server.get(this.prestacionesUrl, opt);
     }
@@ -137,7 +137,7 @@ export class PrestacionesService {
             options.showError = true;
         }
 
-        let url = this.prestacionesUrl + '/' + id;
+        const url = this.prestacionesUrl + '/' + id;
         return this.server.get(url, options);
     }
 
@@ -237,7 +237,7 @@ export class PrestacionesService {
 
                 let registroSalida = [];
                 registros.forEach(registro => {
-                    let registroEncontrado = registroSalida.find(reg => {
+                    const registroEncontrado = registroSalida.find(reg => {
                         if (reg.concepto.conceptId === registro.concepto.conceptId) {
                             if (reg.evoluciones.find(e => registro.valor && e.idRegistro === registro.valor.idRegistroOrigen)) {
                                 return reg;
@@ -246,7 +246,7 @@ export class PrestacionesService {
                     });
                     const prestacion = prestaciones.find(p => p.id === registro.idPrestacion);
                     if (!registroEncontrado) {
-                        let dato = {
+                        const dato = {
                             tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
                             idRegistro: registro.id,
@@ -267,7 +267,9 @@ export class PrestacionesService {
                                 evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                                relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => { r.fechaCarga = prestacion.ejecucion.fecha; return r; }),
+                                relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => {
+                                    r.fechaCarga = prestacion.ejecucion.fecha; return r;
+                                }),
                                 valor: registro.valor
                             }],
                             registros: [registro],
@@ -275,8 +277,8 @@ export class PrestacionesService {
                         };
                         registroSalida.push(dato);
                     } else {
-                        let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
-                        let nuevaEvolucion = {
+                        const ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                        const nuevaEvolucion = {
                             tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
                             fechaCarga: prestacion.ejecucion.fecha,
@@ -288,7 +290,9 @@ export class PrestacionesService {
                             evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                            relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => { r.fechaCarga = prestacion.ejecucion.fecha; return r; }),
+                            relacionadoCon: (registro.relacionadoCon ? registro.relacionadoCon : []).map(r => {
+                                r.fechaCarga = prestacion.ejecucion.fecha; return r;
+                            }),
                             valor: registro.valor
                         };
                         registroEncontrado.prestaciones.push(registro.idPrestacion);
@@ -345,7 +349,7 @@ export class PrestacionesService {
     }
 
     getCDAByPaciente(idPaciente, token, conceptId = null) {
-        let opt: any = {
+        const opt: any = {
             params: {
                 hudsToken: token
             }
@@ -414,7 +418,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     getRegistrosHuds(idPaciente: string, expresion, deadLine = null, valor = null) {
-        let opt = {
+        const opt = {
             params: {
                 'valor': valor,
                 'expresion': expresion,
@@ -495,7 +499,7 @@ export class PrestacionesService {
                 fechaNacimiento: paciente.fechaNacimiento
             };
         }
-        let prestacion = {
+        const prestacion = {
             paciente: pacientePrestacion
         };
 
@@ -597,7 +601,7 @@ export class PrestacionesService {
     }
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
+        const prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
 
@@ -609,7 +613,7 @@ export class PrestacionesService {
                 });
             }
         });
-        let dto: any = {
+        const dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },
             registros: prestacion.ejecucion.registros,
@@ -674,7 +678,7 @@ export class PrestacionesService {
                 map((prestacion: any) => {
                     if (prestacion) {
                         // vamos a buscar si en la prestación esta registrado un informe del encuentro
-                        let registroEncontrado = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
+                        const registroEncontrado = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
                         if (registroEncontrado) {
                             return registroEncontrado.valor ? '<label>Informe del encuentro</label>' + registroEncontrado.valor : null;
                         }
@@ -708,7 +712,7 @@ export class PrestacionesService {
                     return false;
                 } else {
                     // hacemos el patch y luego creamos los planes
-                    let cambioEstado: any = {
+                    const cambioEstado: any = {
                         op: 'romperValidacion'
                     };
 

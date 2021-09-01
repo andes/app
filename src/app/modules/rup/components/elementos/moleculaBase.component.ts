@@ -22,9 +22,9 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
         const buscarAnterior = this.params && this.params.buscarAnterior;
         if (!this.validacion && !this.soloValores && buscarAnterior) {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, this.registro.concepto.conceptId).subscribe(consulta => {
-                consulta.sort(function (a, b) {
-                    let dateA = new Date(a.fecha).getTime();
-                    let dateB = new Date(b.fecha).getTime();
+                consulta.sort((a, b) => {
+                    const dateA = new Date(a.fecha).getTime();
+                    const dateB = new Date(b.fecha).getTime();
 
                     return dateA > dateB ? -1 : 1;
                 });

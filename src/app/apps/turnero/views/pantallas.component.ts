@@ -39,7 +39,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
         this.ws.connect();
         this.ws.join(`turnero-${this.auth.organizacion}`);
         this.sub = this.ws.events.subscribe(({ event, data }) => {
-            let { pantalla } = data;
+            const { pantalla } = data;
             switch (event) {
                 case 'turnero-activated':
                     temp = this.pantallas.find(item => item.id === pantalla.id);
@@ -55,13 +55,13 @@ export class PantallasComponent implements OnInit, OnDestroy {
                     }
                     break;
                 case 'turnero-create':
-                    let i = this.pantallas.findIndex(item => item.id === pantalla.id);
+                    const i = this.pantallas.findIndex(item => item.id === pantalla.id);
                     if (i < 0) {
                         this.pantallas.push(pantalla);
                     }
                     break;
                 case 'turnero-remove':
-                    let index = this.pantallas.findIndex(item => item.id === pantalla.id);
+                    const index = this.pantallas.findIndex(item => item.id === pantalla.id);
                     if (index >= 0) {
                         this.pantallas.splice(index, 1);
                         this.pantallasService.pantallas = [...this.pantallasService.pantallas];

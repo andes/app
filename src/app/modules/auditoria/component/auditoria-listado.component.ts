@@ -33,7 +33,7 @@ export class ListadoAuditoriaComponent {
     _pacientes: IPacienteMatch[] | IPaciente[];
     seleccionado: IPaciente;
     listado: IPaciente[]; // Contiene un listado plano de pacientes
-    itemsDropdown: any = [];  // Acciones del dropdown 'vincular
+    itemsDropdown: any = []; // Acciones del dropdown 'vincular
     openedDropDown = null;
 
     @Input()
@@ -59,7 +59,7 @@ export class ListadoAuditoriaComponent {
     }
 
     constructor(private plex: Plex,
-        private historialBusquedaService: HistorialBusquedaService) { }
+                private historialBusquedaService: HistorialBusquedaService) { }
 
 
     getCantidadVinculados(paciente: IPaciente) {
@@ -80,10 +80,16 @@ export class ListadoAuditoriaComponent {
             this.itemsDropdown = [];
 
             if (paciente.activo) {
-                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => { this.vincular(this.seleccionado); } };
-                this.itemsDropdown[1] = { label: 'INACTIVAR', handler: () => { this.setActivo(this.seleccionado, false); } };
+                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => {
+                    this.vincular(this.seleccionado);
+                } };
+                this.itemsDropdown[1] = { label: 'INACTIVAR', handler: () => {
+                    this.setActivo(this.seleccionado, false);
+                } };
             } else {
-                this.itemsDropdown[0] = { label: 'ACTIVAR', handler: () => { this.setActivo(this.seleccionado, true); } };
+                this.itemsDropdown[0] = { label: 'ACTIVAR', handler: () => {
+                    this.setActivo(this.seleccionado, true);
+                } };
             }
         }
     }

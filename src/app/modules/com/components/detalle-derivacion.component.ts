@@ -123,7 +123,7 @@ export class DetalleDerivacionComponent implements OnInit {
     }
 
     getOrganizacionesDerivables() {
-        let query = {
+        const query = {
             aceptaDerivacion: true
         };
         this.organizacionService.get(query).subscribe(resultado => {
@@ -174,7 +174,7 @@ export class DetalleDerivacionComponent implements OnInit {
             }
             this.nuevoEstado.dispositivo = this.derivacion.dispositivo;
             this.derivacion.organizacionDestino = this.nuevoEstado.organizacionDestino;
-            let body: any = {
+            const body: any = {
                 estado: this.nuevoEstado,
                 trasladoEspecial: {
                     tipoTraslado: this.derivacion.tipoTraslado,

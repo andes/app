@@ -117,9 +117,9 @@ export class PlantillasRUPComponent implements OnInit {
             return;
         }
 
-        let search = this.searchTerm.trim();
+        const search = this.searchTerm.trim();
 
-        let query = {
+        const query = {
             search: this.searchTerm,
             semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento', 'situación']
 
@@ -188,10 +188,12 @@ export class PlantillasRUPComponent implements OnInit {
             this.descendientes = result;
 
             // TODO: Mensajes HTML más robustos desde PLEX?
-            this.plex.info('info', result.map(x => { return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`; }).join(''),
-                `Descendientes de ${this.procedimiento.term}`).then(infoResult => {
-                    this.mostrarDescendientes = false;
-                });
+            this.plex.info('info', result.map(x => {
+                return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`;
+            }).join(''),
+            `Descendientes de ${this.procedimiento.term}`).then(infoResult => {
+                this.mostrarDescendientes = false;
+            });
         });
     }
 

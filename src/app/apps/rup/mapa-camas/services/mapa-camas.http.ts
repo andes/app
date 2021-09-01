@@ -82,7 +82,7 @@ export class MapaCamasHTTP {
     }
 
     changeTime(ambito: string, capa: string, cama, idInternacion, fechaOriginal, nuevaFecha) {
-        let params = {
+        const params = {
             ambito: ambito,
             capa: capa,
             fechaActualizar: fechaOriginal,

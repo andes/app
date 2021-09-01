@@ -21,7 +21,7 @@ export class SemaforoPriorizacionComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.semaforoService.findByName(this.name).subscribe(res =>  this.semaforo = res);
+        this.semaforoService.findByName(this.name).subscribe(res => this.semaforo = res);
     }
 
     select(e) {

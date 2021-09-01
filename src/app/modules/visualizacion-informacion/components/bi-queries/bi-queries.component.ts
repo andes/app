@@ -58,7 +58,7 @@ export class BiQueriesComponent implements OnInit {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.profesionalService.get(query).subscribe(resultado => {

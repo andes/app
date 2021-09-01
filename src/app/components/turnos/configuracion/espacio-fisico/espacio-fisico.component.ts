@@ -39,7 +39,7 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     loadEspaciosFisicos(concatenar: boolean = false) {
-        let parametros = {
+        const parametros = {
             'descripcion': this.filtros && this.filtros.descripcion,
             'nombre': this.filtros && this.filtros.nombre,
             'edificio': this.filtros && this.filtros.edificio,
@@ -67,10 +67,10 @@ export class EspacioFisicoComponent implements OnInit {
         if (objEspacioFisico.activo) {
 
             this.espacioFisicoService.disable(objEspacioFisico)
-                .subscribe(datos => this.loadEspaciosFisicos());  // Bind to view
+                .subscribe(datos => this.loadEspaciosFisicos()); // Bind to view
         } else {
             this.espacioFisicoService.enable(objEspacioFisico)
-                .subscribe(datos => this.loadEspaciosFisicos());  // Bind to view
+                .subscribe(datos => this.loadEspaciosFisicos()); // Bind to view
         }
     }
 

@@ -6,7 +6,7 @@ import { IProfe } from '../interfaces/IProfe';
 
 @Injectable()
 export class ProfeService {
-    private url = '/modules/obraSocial';  // URL to web api
+    private url = '/modules/obraSocial'; // URL to web api
 
     constructor(private server: Server) { }
     /**

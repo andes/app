@@ -69,10 +69,10 @@ export class CitasComponent implements OnInit {
 
 
     cargarLosFiltros() {
-        this.profesionales =  this.data.profesionales;
-        this.prestaciones =  this.data.prestacion;
-        this.estadoTurno =  getRefactorNombre(this.data.estado_turno);
-        this.estadoAgenda =  getRefactorNombre(this.data.estado_agenda);
-        this.tipoTurno =  getRefactorNombre(this.data.tipoTurno);
+        this.profesionales = this.data.profesionales;
+        this.prestaciones = this.data.prestacion;
+        this.estadoTurno = getRefactorNombre(this.data.estado_turno);
+        this.estadoAgenda = getRefactorNombre(this.data.estado_agenda);
+        this.tipoTurno = getRefactorNombre(this.data.tipoTurno);
     }
 }

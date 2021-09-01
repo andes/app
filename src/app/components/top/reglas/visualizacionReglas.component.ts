@@ -64,7 +64,7 @@ export class VisualizacionReglasComponent implements OnInit {
      */
     actualizarTabla() {
         if (this.filtroIngresado()) {
-            let parametros = {
+            const parametros = {
                 organizacionOrigen: this.organizacionOrigen ? this.organizacionOrigen.id : '',
                 organizacionDestino: this.organizacionDestino ? this.organizacionDestino.id : '',
                 prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
@@ -102,7 +102,7 @@ export class VisualizacionReglasComponent implements OnInit {
      */
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];
-        for (let regla of reglas) {
+        for (const regla of reglas) {
             regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de

@@ -22,7 +22,9 @@ export class RelacionesPacientesComponent implements OnInit {
         // Se guarda estado de las relaciones al comenzar la edición
         if (valor.relaciones) {
             this.relacionesIniciales = valor.relaciones.slice(0, valor.relaciones.length);
-            this.idPacientesRelacionados = this.relacionesIniciales.map(rel => { return { id: rel.referencia }; });
+            this.idPacientesRelacionados = this.relacionesIniciales.map(rel => {
+                return { id: rel.referencia };
+            });
         }
     }
     get paciente(): IPaciente {
@@ -42,7 +44,7 @@ export class RelacionesPacientesComponent implements OnInit {
     buscarPacRel = '';
     idPacientesRelacionados = []; // para foto-directive
     loading = false;
-    searchClear = true;    // true si el campo de búsqueda se encuentra vacío
+    searchClear = true; // true si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
 
@@ -115,7 +117,7 @@ export class RelacionesPacientesComponent implements OnInit {
         } else {
             // relacion inexistente, construimos una nueva
             this.buscarPacRel = '';
-            let nuevaRelacion: IPacienteRelacion = Object.assign({}, {
+            const nuevaRelacion: IPacienteRelacion = Object.assign({}, {
                 id: null,
                 relacion: null,
                 referencia: null,
@@ -178,12 +180,14 @@ export class RelacionesPacientesComponent implements OnInit {
     removeRelacion(i) {
         if (i >= 0) {
             // si la relacion borrada ya se encotraba almacenada en la DB
-            let index = this.relacionesIniciales.findIndex(unaRel => unaRel.referencia === this.paciente.relaciones[i].referencia);
+            const index = this.relacionesIniciales.findIndex(unaRel => unaRel.referencia === this.paciente.relaciones[i].referencia);
             if (index >= 0) {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
-            this.idPacientesRelacionados = this.paciente.relaciones.map(rel => { return { id: rel.referencia }; });
+            this.idPacientesRelacionados = this.paciente.relaciones.map(rel => {
+                return { id: rel.referencia };
+            });
             // notificamos cambios
             this.actualizar.emit({
                 relaciones: this.paciente.relaciones,
@@ -194,7 +198,7 @@ export class RelacionesPacientesComponent implements OnInit {
 
 
     public onChange(data) {
-        let index = this.paciente.relaciones.findIndex((rel: any) => rel.referencia === data.idRelacionado);
+        const index = this.paciente.relaciones.findIndex((rel: any) => rel.referencia === data.idRelacionado);
         if (index >= 0) {
             if (data.operacion === 'edit') {
                 // se muestra en panel principal para su edicion

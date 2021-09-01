@@ -57,7 +57,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            let search = this.searchTerm.trim();
+            const search = this.searchTerm.trim();
 
             this.loading = true;
             // buscamos

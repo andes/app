@@ -49,7 +49,7 @@ export class FiltrosInternacionComponent implements OnInit {
 
         this.unidadesOrganizativas$ = this.listadoInternacionService.listaInternacion$.pipe(
             map(listado => {
-                let unidades = [];
+                const unidades = [];
                 listado.forEach(int => {
                     if (int.unidadOrganizativa && !unidades.some(u => u?.term === int.unidadOrganizativa.term)) {
                         unidades.push(int.unidadOrganizativa);

@@ -67,8 +67,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-        let bloque = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque];
-        let turno = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+        const bloque = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque];
+        const turno = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         // Agenda con el turno que necesitamos
         this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
         this.obraSocialPaciente = null;
@@ -82,7 +82,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     private confirmarTurno(bloque: IBloque, turno: ITurno) {
         // Paciente Turno
-        let pacienteSave = {
+        const pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
             apellido: this.paciente.apellido,
@@ -94,7 +94,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             obraSocial: this.obraSocialPaciente
         };
         // Creo el Turno nuevo
-        let datosTurnoNuevo = {
+        const datosTurnoNuevo = {
             idAgenda: this.agendaSeleccionada.id,
             idBloque: bloque.id,
             idTurno: turno.id,
@@ -103,7 +103,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             tipoTurno: 'profesional',
         };
         // ¿Ragnar Turno?
-        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, `¿Confirmar Autocitación?`)
+        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, '¿Confirmar Autocitación?')
             .then((confirmado) => {
                 if (!confirmado) {
                     return false;
@@ -127,10 +127,12 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     esTurnoDoble(turno) {
         if (this.agendaSeleccionada) {
-            let bloqueTurno = this.agendaSeleccionada.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
+            const bloqueTurno = this.agendaSeleccionada.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
             let index;
             if (bloqueTurno) {
-                index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });
+                index = bloqueTurno.turnos.findIndex(t => {
+                    return t.id === turno._id;
+                });
                 if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'turnoDoble')) || (index === (bloqueTurno.turnos.length - 1))) {
                     return false;
                 } else {

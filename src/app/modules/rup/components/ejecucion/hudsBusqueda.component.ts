@@ -350,8 +350,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
 
         this.solicitudesMezcladas.sort((e1, e2) => {
-            let fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
-            let fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
+            const fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
+            const fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
             return fecha2 - fecha1;
         });
     }
@@ -517,7 +517,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         if (this.searchTerm) {
 
             this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter
-                (p => this.filtrarPorTerm(p));
+            (p => this.filtrarPorTerm(p));
         }
     }
 

@@ -9,7 +9,7 @@ import { ConceptObserverService } from './conceptObserver.service';
 @Injectable()
 export class PlantillasService {
 
-    private url = '/modules/rup/plantillas';  // URL to web api
+    private url = '/modules/rup/plantillas'; // URL to web api
     private cache = {};
     private cacheSolicitud = {};
 
@@ -34,7 +34,7 @@ export class PlantillasService {
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
                 if (plantillas.length > 0) {
                     plantillas = [...plantillas,
-                    { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
+                                  { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
                     cache.next(plantillas.map(p => {
                         return {
                             ...p,
@@ -81,10 +81,14 @@ export class PlantillasService {
         const ctid = plantilla.target?.conceptId || conceptId;
 
         if (plantilla.link) {
-            return () => { window.open(plantilla.link); };
+            return () => {
+                window.open(plantilla.link);
+            };
 
         } else {
-            return () => { this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any); };
+            return () => {
+                this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any);
+            };
         }
 
     }

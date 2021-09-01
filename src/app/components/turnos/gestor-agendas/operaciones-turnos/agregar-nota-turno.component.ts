@@ -48,7 +48,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
         let alertCount = 0;
         this.turnosSeleccionados.forEach((turno, index) => {
 
-            let patch = {
+            const patch = {
                 'op': 'guardarNotaTurno',
                 'idAgenda': this.agenda.id,
                 'idTurno': turno.id,
@@ -71,11 +71,11 @@ export class AgregarNotaTurnoComponent implements OnInit {
                     this.saveAgregarNotaTurno.emit();
                 }
             },
-                err => {
-                    if (err) {
+            err => {
+                if (err) {
 
-                    }
-                });
+                }
+            });
 
         });
     }

@@ -21,7 +21,7 @@ export interface IPaciente {
     numeroIdentificacion: string;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: number;
-    edadReal: { valor: number, unidad: string };
+    edadReal: { valor: number; unidad: string };
     fechaFallecimiento: Date;
     direccion: IDireccion[];
     lugarNacimiento?: IUbicacion;
@@ -30,15 +30,15 @@ export interface IPaciente {
     foto: string;
     relaciones: [IPacienteRelacion];
     financiador: [{
-        codigoPuco: Number,
-        nombre: string,
-        financiador: String,
-        id: string,
-        numeroAfiliado: String
+        codigoPuco: Number;
+        nombre: string;
+        financiador: String;
+        id: string;
+        numeroAfiliado: String;
     }];
     identificadores: [{
-        entidad: string,
-        valor: string
+        entidad: string;
+        valor: string;
     }];
     claveBlocking: [string];
     entidadesValidadoras?: [string];
@@ -47,28 +47,28 @@ export interface IPaciente {
     notaError: string;
     carpetaEfectores?: [{
         organizacion: {
-            id: string,
-            nombre: string
-        },
-        nroCarpeta: string
+            id: string;
+            nombre: string;
+        };
+        nroCarpeta: string;
     }];
     notas?: [{
-        fecha: Date,
-        nota: string,
-        destacada: Boolean
+        fecha: Date;
+        nota: string;
+        destacada: Boolean;
     }];
     _score?: number;
     vinculos: [string];
     documentos: {
-        fecha: Date,
+        fecha: Date;
         tipo: {
-            id: string,
-            label: string
-        },
+            id: string;
+            label: string;
+        };
         archivos: {
-            id: string,
-            ext: string
-        }[]
+            id: string;
+            ext: string;
+        }[];
     }[];
     idPacientePrincipal?: string;
 }

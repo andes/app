@@ -6,8 +6,8 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
     selector: 'vista-detalle-registro',
     templateUrl: 'vistaDetalleRegistro.html',
     styleUrls: [
-        `../elementos/OdontogramaRefset.scss`,
-        `../variables.scss`,
+        '../elementos/OdontogramaRefset.scss',
+        '../variables.scss',
         'vistaDetalleRegistro.scss'
     ]
 })
@@ -37,7 +37,7 @@ export class VistaDetalleRegistroComponent implements OnChanges {
         });
 
         this.detalleRegistros.forEach(unaConsulta => {
-            let registros = unaConsulta.ejecucion.registros.filter(c => c.concepto.conceptId !== '3561000013109');
+            const registros = unaConsulta.ejecucion.registros.filter(c => c.concepto.conceptId !== '3561000013109');
             this.relaciones = [...this.relaciones, ...registros];
         });
 

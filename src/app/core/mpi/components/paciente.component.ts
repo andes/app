@@ -1,23 +1,23 @@
-import { ParentescoService } from '../../../services/parentesco.service';
-import { IContacto } from '../../../interfaces/IContacto';
-import { IDireccion } from '../interfaces/IDireccion';
-import { PacienteService } from '../services/paciente.service';
-import { IPaciente } from '../interfaces/IPaciente';
-import { Plex } from '@andes/plex';
-import * as moment from 'moment';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PacienteCacheService } from '../services/pacienteCache.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { HistorialBusquedaService } from '../services/historialBusqueda.service';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
-import { DatosContactoComponent } from './datos-contacto.component';
-import { DatosBasicosComponent } from './datos-basicos.component';
-import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
-import { Subscription, EMPTY } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+import { EMPTY, Subscription } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { IUbicacion } from 'src/app/interfaces/IUbicacion';
+import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
+import { IContacto } from '../../../interfaces/IContacto';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { ParentescoService } from '../../../services/parentesco.service';
+import { IDireccion } from '../interfaces/IDireccion';
+import { IPaciente } from '../interfaces/IPaciente';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { PacienteService } from '../services/paciente.service';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { DatosBasicosComponent } from './datos-basicos.component';
+import { DatosContactoComponent } from './datos-contacto.component';
+import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 
 @Component({
     selector: 'paciente',
@@ -30,7 +30,7 @@ export class PacienteComponent implements OnInit {
     @ViewChild('datosContacto', { static: false }) datosContacto: DatosContactoComponent;
     @ViewChild('datosBasicos', { static: false }) datosBasicos: DatosBasicosComponent;
 
-    mainSize = 10;  // tamaño de layout-main
+    mainSize = 10; // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
     showRelaciones = false; // en paciente-panel (sidebar)
     parentescoModel: any[];
@@ -244,7 +244,7 @@ export class PacienteComponent implements OnInit {
                     // Caso que el paciente existe y no tiene ninguna entidad validadora e ingresó como validado
                     this.paciente.entidadesValidadoras.push('RENAPER');
                 } else {
-                    let validador = this.paciente.entidadesValidadoras.find(entidad => entidad === 'RENAPER');
+                    const validador = this.paciente.entidadesValidadoras.find(entidad => entidad === 'RENAPER');
                     if (!validador) {
                         this.paciente.entidadesValidadoras.push('RENAPER');
                     }
@@ -279,15 +279,15 @@ export class PacienteComponent implements OnInit {
 
     save(ignoreSuggestions = false) {
         this.delete = true;
-        let contactoValid = this.datosContacto.checkForm();
-        let datosBasicosValid = this.datosBasicos.checkForm();
+        const contactoValid = this.datosContacto.checkForm();
+        const datosBasicosValid = this.datosBasicos.checkForm();
         if (!contactoValid || !datosBasicosValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
         this.disableIgnorarGuardar = ignoreSuggestions;
         this.disableGuardar = true;
-        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+        const pacienteGuardar: any = Object.assign({}, this.pacienteModel);
         pacienteGuardar.ignoreSuggestions = ignoreSuggestions;
         pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
@@ -360,7 +360,7 @@ export class PacienteComponent implements OnInit {
                 if (rel.referencia) {
                     this.pacienteService.getById(rel.referencia).pipe(
                         map(pac => {
-                            let index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
+                            const index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
                             if (index >= 0) {
                                 pac.relaciones.splice(index, 1);
                             }
@@ -374,12 +374,12 @@ export class PacienteComponent implements OnInit {
             });
             // actualizamos/agregamos las relaciones opuestas
             this.relacionesEdit.forEach(rel => {
-                let relacionOpuesta = this.parentescoModel.find((elem) => {
+                const relacionOpuesta = this.parentescoModel.find((elem) => {
                     if (elem.nombre === rel.relacion.opuesto) {
                         return elem;
                     }
                 });
-                let dto = {
+                const dto = {
                     id: null,
                     relacion: relacionOpuesta,
                     referencia: unPacienteSave.id,
@@ -393,7 +393,7 @@ export class PacienteComponent implements OnInit {
                 if (dto.referencia) {
                     this.pacienteService.getById(rel.referencia).pipe(
                         map(pac => {
-                            let index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
+                            const index = pac.relaciones?.findIndex((unaRel: any) => unaRel.referencia === unPacienteSave.id);
                             if (index >= 0) {
                                 pac.relaciones[index] = dto;
                             } else {
@@ -443,8 +443,8 @@ export class PacienteComponent implements OnInit {
 
 
     checkDisableValidar() {
-        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 9999 && sexo !== undefined && sexo !== 'otro');
+        const sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 10) >= 9999 && sexo !== undefined && sexo !== 'otro');
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -494,7 +494,7 @@ export class PacienteComponent implements OnInit {
             this.plex.info('warning', 'La validación requiere ingresar documento y sexo..');
             return;
         }
-        let sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        const sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         if (sexoPaciente === 'otro') {
             this.plex.info('warning', 'La validación requiere sexo MASCULINO o FEMENINO.', 'Atención');
             return;
@@ -575,7 +575,7 @@ export class PacienteComponent implements OnInit {
                                 if (!this.pacienteModel.direccion[0].codigoPostal && resultado.cpostal) {
                                     this.pacienteModel.direccion[0].codigoPostal = resultado.cpostal;
                                 }
-                                if (resultado.direccion[1]) {  // direccion legal
+                                if (resultado.direccion[1]) { // direccion legal
                                     this.pacienteModel.direccion[1] = resultado.direccion[1];
                                 }
                                 if (!this.pacienteModel.cuil && resultado.cuil) {
@@ -583,11 +583,11 @@ export class PacienteComponent implements OnInit {
                                 }
                                 this.plex.toast('success', '¡Paciente Validado!');
                             }
-                        },  // error
-                            () => {
-                                this.plex.toast('danger', 'Validación Fallida');
-                                this.disableValidar = false;
-                            })
+                        }, // error
+                        () => {
+                            this.plex.toast('danger', 'Validación Fallida');
+                            this.disableValidar = false;
+                        })
                     );
                 }
                 this.loading = false;

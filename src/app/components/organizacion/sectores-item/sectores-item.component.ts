@@ -11,7 +11,7 @@ import { SectoresService } from '../../../services/sectores.service';
 })
 export class SectoresItemComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // definición de arreglos
     @Output() onAdd: EventEmitter<any> = new EventEmitter();
@@ -35,7 +35,7 @@ export class SectoresItemComponent implements OnInit {
      * Devuelve el conjunto de clases a aplicar a la card. Según el tipo de elemento seleccionado.
      */
     getClass() {
-        let c = {
+        const c = {
             selected: this.selected === this.root,
         };
         c[this.root.tipoSector.term.replace(' ', '-').replace('ó', 'o').toLocaleLowerCase()] = true;
@@ -50,7 +50,7 @@ export class SectoresItemComponent implements OnInit {
      * @param item
      */
     cloneObject(item) {
-        let i = Object.assign({}, item);
+        const i = Object.assign({}, item);
         delete i['hijos'];
         return i;
     }
@@ -138,7 +138,7 @@ export class SectoresItemComponent implements OnInit {
             if (confirmar) {
                 this.sectoresService.deleteSector(this.idOrganizacion, child._id).subscribe(result => {
                     if (result === child._id) {
-                        let index = this.root.hijos.findIndex((item) => item === child);
+                        const index = this.root.hijos.findIndex((item) => item === child);
                         this.root.hijos.splice(index, 1);
                         this.plex.info('success', 'El sector fue eliminado', 'Sector eliminado!');
                     } else {

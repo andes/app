@@ -38,7 +38,7 @@ export class ReporteErroresComponent implements OnInit {
 
         forkJoin([
             this.pacienteService.get({ reportarError: true, activo: true }), // pacientes
-            this.logPacienteService.get({ operacion: 'error:reportar' })    // registros de errores reportados
+            this.logPacienteService.get({ operacion: 'error:reportar' }) // registros de errores reportados
         ]).subscribe(respuesta => {
             this.pacientesReportados = respuesta[0];
             this.corregirPaciente = null;

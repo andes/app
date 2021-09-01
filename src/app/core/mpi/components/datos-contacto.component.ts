@@ -161,7 +161,7 @@ export class DatosContactoComponent implements OnInit {
     }
 
     contactoTelefonico(index) {
-        let tipoContacto = this.paciente.contacto[index].tipo;
+        const tipoContacto = this.paciente.contacto[index].tipo;
         return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
     }
 
@@ -182,10 +182,10 @@ export class DatosContactoComponent implements OnInit {
     // ------------------- CONTACTO -------------------
 
     addContacto(key, valor) {
-        let indexUltimo = this.paciente.contacto.length - 1;
+        const indexUltimo = this.paciente.contacto.length - 1;
 
         if (this.paciente.contacto[indexUltimo].valor) {
-            let nuevoContacto = Object.assign({}, {
+            const nuevoContacto = Object.assign({}, {
                 tipo: key,
                 valor: valor,
                 ranking: 0,
@@ -217,7 +217,7 @@ export class DatosContactoComponent implements OnInit {
 
     onFocusout(type, value) {
         let item = null;
-        for (let elem of this.paciente.contacto) {
+        for (const elem of this.paciente.contacto) {
             if (elem.tipo === type || elem.valor === value) {
                 item = elem;
             }
@@ -242,10 +242,10 @@ export class DatosContactoComponent implements OnInit {
     activarAppMobile(unPaciente: IPaciente, cuenta: any) {
         // Activa la app mobile
         if (cuenta.email && cuenta.celular) {
-            let poseeMail = unPaciente.contacto.find((c: any) => c.tipo === 'email' && c.valor === cuenta.email);
+            const poseeMail = unPaciente.contacto.find((c: any) => c.tipo === 'email' && c.valor === cuenta.email);
             if (!poseeMail) {
                 // Se agrega nuevo contacto al paciente
-                let nuevo = {
+                const nuevo = {
                     tipo: 'email',
                     valor: cuenta.email,
                     ranking: 1,
@@ -253,7 +253,7 @@ export class DatosContactoComponent implements OnInit {
                     ultimaActualizacion: new Date()
                 };
                 unPaciente.contacto.push(nuevo);
-                let cambios = {
+                const cambios = {
                     op: 'updateContactos',
                     contacto: unPaciente.contacto
                 };
@@ -470,7 +470,7 @@ export class DatosContactoComponent implements OnInit {
     }
 
     geoReferenciar() {
-        let direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
+        const direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
             + ', ' + this.paciente.direccion[0].ubicacion.provincia.nombre;
         // se calcula nueva georeferencia
         this.georeferencia$ = this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta })

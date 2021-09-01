@@ -44,7 +44,7 @@ export class HistorialDerivacionComponent {
     }
 
     documentos(estado) {
-        let adjuntosEstado = estado.adjuntos;
+        const adjuntosEstado = estado.adjuntos;
         if (adjuntosEstado) {
             return adjuntosEstado.map((doc) => {
                 doc.url = this.adjuntosService.createUrl('drive', doc, this.fileToken);

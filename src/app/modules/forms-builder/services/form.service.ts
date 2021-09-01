@@ -7,10 +7,10 @@ export interface Form {
     snomedCode: string;
     active: boolean;
     sections: {
-        id: string,
-        active: boolean,
-        name: string,
-        type: string,
+        id: string;
+        active: boolean;
+        name: string;
+        type: string;
         fields: {
             key: string;
             label: string;

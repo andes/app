@@ -112,7 +112,7 @@ export class ComPuntoInicioComponent implements OnInit {
 
     @Unsubscribe()
     actualizarTabla() {
-        let query = this.getQuery();
+        const query = this.getQuery();
         this.puntoInicioService.get(query).subscribe((data) => {
             this.derivaciones = this.derivaciones.concat(data);
             this.puntoInicioService.derivacionesFiltradas.next(this.derivaciones);
@@ -128,7 +128,7 @@ export class ComPuntoInicioComponent implements OnInit {
     }
 
     private getQuery() {
-        let query: any = { cancelada: false, skip: this.skip, limit: this.limit };
+        const query: any = { cancelada: false, skip: this.skip, limit: this.limit };
         if (this.estado) {
             query.estado = this.estado.id;
         } else {

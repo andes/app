@@ -7,7 +7,7 @@ import { IConfigPrestacion } from './../../interfaces/turnos/IConfigPrestacion';
 @Injectable()
 export class ConfigPrestacionService {
 
-    private prestacionUrl = '/turnos/prestacion';  // URL to web api
+    private prestacionUrl = '/turnos/prestacion'; // URL to web api
     private configPrestacionUrl = '/turnos/configPrestacion';
     constructor(private server: Server) {
     }

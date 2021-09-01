@@ -23,10 +23,18 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public conceptosInternacion;
 
     public registros = [
-        { label: 'VALORACION INICIAL', handler: () => { this.nuevoRegistro(this.conceptosInternacion.valoracionInicial); } },
-        { label: 'EVOLUCION', handler: () => { this.nuevoRegistro(this.conceptosInternacion.evolucion); } },
-        { label: 'PLAN DE INDICACIONES', handler: () => { this.nuevoRegistro(this.conceptosInternacion.indicaciones); } },
-        { label: 'EPICRISIS', handler: () => { this.nuevoRegistro(this.conceptosInternacion.epicrisis); } },
+        { label: 'VALORACION INICIAL', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.valoracionInicial);
+        } },
+        { label: 'EVOLUCION', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.evolucion);
+        } },
+        { label: 'PLAN DE INDICACIONES', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.indicaciones);
+        } },
+        { label: 'EPICRISIS', handler: () => {
+            this.nuevoRegistro(this.conceptosInternacion.epicrisis);
+        } },
 
     ];
     public tipoPrestaciones = [];
@@ -97,7 +105,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
      * @param paciente
      */
     nuevoRegistro(concepto) {
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.pacienteSeleccionado, concepto, 'ejecucion', 'internacion');
+        const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.pacienteSeleccionado, concepto, 'ejecucion', 'internacion');
         this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/inicio' });
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.router.navigate(['rup/ejecucion', prestacion.id]);

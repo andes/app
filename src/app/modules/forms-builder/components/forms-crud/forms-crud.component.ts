@@ -1,10 +1,10 @@
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
-import { Auth } from '@andes/auth';
 
 
 @Component({
@@ -50,7 +50,7 @@ export class AppFormsCrudComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        let fieldsAssigns = [];
+        const fieldsAssigns = [];
         this.formResourceService.search({}).subscribe(resultado => {
             resultado.forEach(r => {
                 r.type === 'section' ? this.secciones.push(r) : this.recursos.push(r);
@@ -67,7 +67,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.form.type = formulario.type;
                 this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
-                let campos = [];
+                const campos = [];
                 formulario.sections.forEach(s => {
                     s.fields.forEach(f => {
                         f.type = this.tiposList.find(t => t.id === f.type) as any;
@@ -145,9 +145,9 @@ export class AppFormsCrudComponent implements OnInit {
             return this.plex.toast('danger', 'Al menos debes agregar un campo');
         }
         if ($event.formValid) {
-            let aux = [];
+            const aux = [];
             this.form.fields.forEach(f => {
-                let cloneField = Object.assign({}, f);
+                const cloneField = Object.assign({}, f);
                 delete cloneField.sections;
                 const field: any = { ...cloneField };
                 cloneField.type = field.type.id;
@@ -156,7 +156,7 @@ export class AppFormsCrudComponent implements OnInit {
                 }
                 if (f.sections && f.sections.length > 0) {
                     f.sections.forEach(s => {
-                        let r = aux.find(item => {
+                        const r = aux.find(item => {
                             if (item.seccion.name === s.name) {
                                 item.campos.push(cloneField);
                                 return true;
@@ -174,8 +174,7 @@ export class AppFormsCrudComponent implements OnInit {
                 type: this.form.type,
                 snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                 sections: aux.map(i => {
-                    let seccion;
-                    seccion = i.seccion;
+                    const seccion = i.seccion;
                     seccion['fields'] = i.campos;
                     return seccion;
                 })

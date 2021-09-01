@@ -161,7 +161,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.view = view;
             this.capa = capa;
             if (capa === 'estadistica') {
-                if (!prestacion) { return; }
+                if (!prestacion) {
+                    return;
+                }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
 
@@ -313,23 +315,23 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
             this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
                 this.prestacion.id).subscribe((snapshot) => {
-                    const ultimaCama = snapshot[0];
-                    this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-                        this.listadoInternacionService.setFechaHasta(moment().toDate());
-                    });
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                const ultimaCama = snapshot[0];
+                this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.listadoInternacionService.setFechaHasta(moment().toDate());
                 });
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+            });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
         }
     }
 
     egresoExtendido() {
-        let registros = this.controlRegistrosGuardar();
+        const registros = this.controlRegistrosGuardar();
         if (registros) {
-            let params: any = {
+            const params: any = {
                 op: 'registros',
                 registros: registros
             };
@@ -344,25 +346,25 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     controlRegistrosGuardar() {
-        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        const registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
 
         if (this.registro.valor.InformeEgreso.UnidadOrganizativaDestino) {
-            let datosOrganizacionDestino = {
+            const datosOrganizacionDestino = {
                 id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
                 nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
             };
             this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = datosOrganizacionDestino;
         }
 
-        let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '58000006');
+        const existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '58000006');
 
         if (!existeEgreso) {
             registros.push(this.registro);
         } else {
-            let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === '58000006');
+            const indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === '58000006');
             registros[indexRegistro] = this.registro;
         }
 
@@ -378,7 +380,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     loadOrganizacion(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query
             };
             this.organizacionService.get(query).subscribe(event.callback);
@@ -402,17 +404,19 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     codigoCIE10(event) {
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombre: event.query
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
-                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                datos.map(dato => {
+                    dato.nombre = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(datos);
             });
 
         } else {
-            let callback = [];
+            const callback = [];
             if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
                 callback.push(this.registro.valor.InformeEgreso.diagnosticoPrincipal);
             }
@@ -440,16 +444,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 sexo: null
             }
         ];
-        let regexCIECausasExternas = new RegExp('^S|^T');
-        let regexCIEProcedimientosObstetricos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2');
-        let regexCIEProcedimientosObstetricosNoReq = new RegExp('^O0[0-6].[0-9]');
+        const regexCIECausasExternas = new RegExp('^S|^T');
+        const regexCIEProcedimientosObstetricos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2');
+        const regexCIEProcedimientosObstetricosNoReq = new RegExp('^O0[0-6].[0-9]');
 
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.existeCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
         }
 
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            let diagCausaExterna = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIECausasExternas.test(d.codigo));
+            const diagCausaExterna = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIECausasExternas.test(d.codigo));
             if (diagCausaExterna && diagCausaExterna.length > 0) {
                 this.existeCausaExterna = true;
             }
@@ -461,14 +465,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         }
 
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            let diagObstetitricos = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
+            const diagObstetitricos = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
             if (diagObstetitricos && diagObstetitricos.length > 0) {
                 this.procedimientosObstetricosNoReq = true;
             }
         }
 
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            let diagObstetitricosReq = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
+            const diagObstetitricosReq = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
             if (diagObstetitricosReq && diagObstetitricosReq.length > 0) {
                 this.procedimientosObstetricos = true;
             }
@@ -476,8 +480,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     searchComoSeProdujo(event) {
-        let desde = 'V00';
-        let hasta = 'Y98';
+        const desde = 'V00';
+        const hasta = 'Y98';
         let filtro;
 
         if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
@@ -499,13 +503,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
         }
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombre: event.query,
                 filtroRango: JSON.stringify(filtro)
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
-                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                datos.map(dato => {
+                    dato.nombre = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(datos);
             });
         }
@@ -517,7 +523,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     addNacimiento() {
-        let nuevoNacimiento = Object.assign({}, {
+        const nuevoNacimiento = Object.assign({}, {
             pesoAlNacer: null,
             condicionAlNacer: null,
             terminacion: null,
@@ -534,12 +540,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     getListaProcedimientosQuirurgicos(event) {
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombre: event.query
 
             };
             this.procedimientosQuirurgicosService.get(query).subscribe((rta) => {
-                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+                rta.map(dato => {
+                    dato.nom = '(' + dato.codigo + ') ' + dato.nombre;
+                });
                 event.callback(rta);
             });
 

@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 @Injectable()
 export class PantallaService {
 
-    private baseURL = '/modules/turnero/pantalla';  // URL to web api
+    private baseURL = '/modules/turnero/pantalla'; // URL to web api
 
     public pantallas = [];
 
@@ -22,7 +22,7 @@ export class PantallaService {
         if (pantalla.id) {
             return this.server.patch(this.baseURL + '/' + pantalla.id, pantalla).pipe(
                 tap((p) => {
-                    let index = this.pantallas.findIndex((value) => value.id === pantalla.id);
+                    const index = this.pantallas.findIndex((value) => value.id === pantalla.id);
                     if (index >= 0) {
                         this.pantallas.splice(index, 1, p);
                         this.pantallas = [...this.pantallas];
@@ -39,7 +39,7 @@ export class PantallaService {
     retoken(pantalla) {
         return this.server.post(this.baseURL + '/' + pantalla.id + '/retoken', {}).pipe(
             tap((p) => {
-                let index = this.pantallas.findIndex((value) => value.id === pantalla.id);
+                const index = this.pantallas.findIndex((value) => value.id === pantalla.id);
                 if (index >= 0) {
                     this.pantallas.splice(index, 1, p);
                     this.pantallas = [...this.pantallas];
@@ -50,7 +50,7 @@ export class PantallaService {
     remove(pantalla) {
         return this.server.delete(this.baseURL + '/' + pantalla.id).pipe(
             tap(() => {
-                let index = this.pantallas.findIndex((value) => value.id === pantalla.id);
+                const index = this.pantallas.findIndex((value) => value.id === pantalla.id);
                 if (index >= 0) {
                     this.pantallas.splice(index, 1);
                     this.pantallas = [...this.pantallas];

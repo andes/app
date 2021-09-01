@@ -4,12 +4,12 @@ import { cacheStorage, Server } from '@andes/shared';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 
 export class SemaforoService {
 
-    private baseURL = '/modules/semaforo';  // URL to web api
+    private baseURL = '/modules/semaforo'; // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 

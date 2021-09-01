@@ -18,7 +18,7 @@ export class PrestarHcComponent implements OnInit {
     @Input('prestar')
     set prestar(value: any) {
         this.prestamo = value;
-        let _prestarHC: any = {
+        const _prestarHC: any = {
             destino: '',
             responsable: '',
             observaciones: ''

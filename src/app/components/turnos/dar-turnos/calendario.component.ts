@@ -65,7 +65,7 @@ export class CalendarioComponent implements OnInit {
 
     /** Devuelve las agendas correspondientes a un día determinado */
     public agendasPorFecha(fecha: moment.Moment): IAgenda[] {
-        let ags = this.agendas.filter((value) => {
+        const ags = this.agendas.filter((value) => {
             return (moment(fecha).isSame(moment(value.horaInicio), 'day'));
         });
         return ags;
@@ -77,22 +77,22 @@ export class CalendarioComponent implements OnInit {
 
         if (this.fecha && this.agendas) {
 
-            let inicio = moment(this.fecha).startOf('month').startOf('week');
-            let ultimoDiaMes = moment(this.fecha).endOf('month');
-            let primerDiaMes = moment(this.fecha).startOf('month');
-            let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
+            const inicio = moment(this.fecha).startOf('month').startOf('week');
+            const ultimoDiaMes = moment(this.fecha).endOf('month');
+            const primerDiaMes = moment(this.fecha).startOf('month');
+            const cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
             this.diaSeleccionado = null;
             this.calendario = [];
 
             for (let r = 1; r <= cantidadSemanas; r++) {
-                let week = [];
+                const week = [];
                 this.calendario.push(week);
 
                 for (let c = 1; c <= 7; c++) {
 
-                    let agendasPorFecha = this.agendasPorFecha(inicio);
-                    let ag = null;
-                    let dia = new CalendarioDia(inicio.toDate(), agendasPorFecha, this._solicitudPrestacion, this.tipoTurno, this.filtroPrestacion, this.filtroProfesional);
+                    const agendasPorFecha = this.agendasPorFecha(inicio);
+                    const ag = null;
+                    const dia = new CalendarioDia(inicio.toDate(), agendasPorFecha, this._solicitudPrestacion, this.tipoTurno, this.filtroPrestacion, this.filtroProfesional);
 
                     if (dia.estado === 'vacio') {
                         //   dia.cantidadAgendas = 0;
@@ -101,7 +101,7 @@ export class CalendarioComponent implements OnInit {
                     }
 
                     dia.weekend = inicio.isoWeekday() >= 6;
-                    let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
+                    const isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
                     if (isThisMonth) {
                         week.push(dia);
                     } else {

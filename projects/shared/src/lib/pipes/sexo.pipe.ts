@@ -4,8 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SexoPipe implements PipeTransform {
     transform(value: any): any {
         let result: string;
-        let sexo = value && value.sexo && (value.sexo.nombre || value.sexo);
-        let genero = value && value.genero && (value.genero.nombre || value.genero);
+        const sexo = value && value.sexo && (value.sexo.nombre || value.sexo);
+        const genero = value && value.genero && (value.genero.nombre || value.genero);
 
         if (!genero) {
             result = sexo;

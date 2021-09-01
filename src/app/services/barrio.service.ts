@@ -6,7 +6,7 @@ import { IBarrio } from './../interfaces/IBarrio';
 @Injectable()
 export class BarrioService {
 
-    private barrioUrl = '/core/tm/barrios';  // URL to web api
+    private barrioUrl = '/core/tm/barrios'; // URL to web api
 
     constructor(private server: Server) { }
 

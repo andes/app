@@ -70,17 +70,17 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     // Inicialización
     constructor(private pacienteService: PacienteService,
-        private paisService: PaisService,
-        private provinciaService: ProvinciaService,
-        private localidadService: LocalidadService,
-        private barrioService: BarrioService,
-        public plex: Plex, public auth: Auth) { }
+                private paisService: PaisService,
+                private provinciaService: ProvinciaService,
+                private localidadService: LocalidadService,
+                private barrioService: BarrioService,
+                public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.soloLectura = !this.auth.check('mpi:paciente:patchAndes');
 
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1);  // eliminamos 'Email'
+        this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1); // eliminamos 'Email'
 
         this.loadPaciente();
 
@@ -113,7 +113,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
         }
 
         if (this.paciente?.direccion?.length) {
-            let direccionOriginal = this.paciente.direccion[0];
+            const direccionOriginal = this.paciente.direccion[0];
             if (direccionOriginal.valor) {
                 this.direccion.valor = direccionOriginal.valor;
             }
@@ -128,10 +128,10 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     addContacto(key, valor) {
-        let indexUltimo = this.contactosTelefonicos.length - 1;
+        const indexUltimo = this.contactosTelefonicos.length - 1;
 
         if (this.contactosTelefonicos[indexUltimo].valor) {
-            let nuevoContacto = Object.assign({}, {
+            const nuevoContacto = Object.assign({}, {
                 tipo: key,
                 valor: valor,
                 ranking: 0,

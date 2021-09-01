@@ -62,7 +62,7 @@ export class PanelAgendaComponent implements OnInit {
         this.editarEspacioFisicoEmit.emit(true);
         if (this.editaAgendaPanel.espacioFisico) {
             this.espaciosList = [this.editaAgendaPanel.espacioFisico];
-            let query = {
+            const query = {
                 nombre: (this.editaAgendaPanel.espacioFisico ? this.editaAgendaPanel.espacioFisico.nombre : ''),
                 limit: 10
             };
@@ -94,7 +94,7 @@ export class PanelAgendaComponent implements OnInit {
                     otroEspacioFisico = this.agenda.otroEspacioFisico;
                 }
 
-                let patch = {
+                const patch = {
                     'op': 'editarAgenda',
                     'profesional': profesional,
                     'espacioFisico': espacioFisico,
@@ -126,7 +126,7 @@ export class PanelAgendaComponent implements OnInit {
 
     loadEdificios(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 edificio: event.query,
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
@@ -138,7 +138,7 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        let query = {};
+        const query = {};
         let listaEspaciosFisicos = [];
         if (event.query) {
             query['nombre'] = event.query;
@@ -172,24 +172,24 @@ export class PanelAgendaComponent implements OnInit {
 
     espaciosChange(agenda) {
 
-        let query: any = {
+        const query: any = {
             limit: 20,
             activo: true,
             organizacion: this.auth.organizacion.id
         };
 
         if (agenda.espacioFisico) {
-            let nombre = agenda.espacioFisico;
+            const nombre = agenda.espacioFisico;
             query.nombre = nombre;
         }
 
         if (agenda.otroEspacioFisico) {
-            let nombre = agenda.otroEspacioFisico;
+            const nombre = agenda.otroEspacioFisico;
             query.nombre = nombre;
         }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
-            let equipamiento = agenda.equipamiento.map((item) => item.term);
+            const equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
         }
 
@@ -229,7 +229,7 @@ export class PanelAgendaComponent implements OnInit {
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    let params = {
+                    const params = {
                         organizacion: this.auth.organizacion.id,
                         idProfesional: profesional.id,
                         rango: true,
@@ -239,7 +239,7 @@ export class PanelAgendaComponent implements OnInit {
                     };
                     this.serviceAgenda.get(params).subscribe(agendas => {
                         // Hay problemas de solapamiento?
-                        let agendasConSolapamiento = agendas.filter(agenda => {
+                        const agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
                         });
 
@@ -253,7 +253,7 @@ export class PanelAgendaComponent implements OnInit {
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
             if (this.agenda.espacioFisico) {
-                let params = {
+                const params = {
                     espacioFisico: this.agenda.espacioFisico._id,
                     rango: true,
                     desde: this.agenda.horaInicio,
@@ -262,7 +262,7 @@ export class PanelAgendaComponent implements OnInit {
                 };
                 this.serviceAgenda.get(params).subscribe(agendas => {
                     // Hay problemas de solapamiento?
-                    let agendasConSolapamiento = agendas.filter(agenda => {
+                    const agendasConSolapamiento = agendas.filter(agenda => {
                         return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
                     });
 

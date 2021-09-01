@@ -5,11 +5,11 @@ export interface ICampaniaSalud {
     link: string;
     imagen: string;
     target?: {
-        sexo?: string,
+        sexo?: string;
         grupoEtario?: {
-            desde?: Number,
-            hasta?: Number
-        }
+            desde?: Number;
+            hasta?: Number;
+        };
     };
     /**
      * Desde y hasta cuando debería esta publicada la campaña
@@ -21,8 +21,8 @@ export interface ICampaniaSalud {
      * @memberof ICampaniaSalud
      */
     vigencia: {
-        desde: Date,
-        hasta: Date
+        desde: Date;
+        hasta: Date;
     };
 
     /**

@@ -42,7 +42,7 @@ export class HistorialCarpetasComponent {
 
     loadCarpetas(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
         }

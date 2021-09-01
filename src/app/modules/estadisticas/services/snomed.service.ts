@@ -9,7 +9,7 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class SnomedService {
-    private snomedURL = '/core/term/snomed';  // URL to web api
+    private snomedURL = '/core/term/snomed'; // URL to web api
     private snomedURLexpression = '/core/term/snomed/expression';
 
     constructor(private server: Server) {

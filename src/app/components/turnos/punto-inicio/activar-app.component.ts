@@ -99,7 +99,7 @@ export class ActivarAppComponent {
     }
 
     contacto(key) {
-        let index = this.paciente.contacto.findIndex(item => item.tipo === key && item.valor !== null);
+        const index = this.paciente.contacto.findIndex(item => item.tipo === key && item.valor !== null);
         if (index >= 0) {
             return this.paciente.contacto[index].valor.toString();
         }
@@ -107,11 +107,11 @@ export class ActivarAppComponent {
     }
 
     addContacto(key, value) {
-        let index = this.paciente.contacto.findIndex(item => item.tipo === key);
+        const index = this.paciente.contacto.findIndex(item => item.tipo === key);
         if (index >= 0) {
             return this.paciente.contacto[index].valor = value;
         } else {
-            let nuevo = {
+            const nuevo = {
                 tipo: key,
                 valor: value,
                 ranking: 1,
@@ -164,11 +164,11 @@ export class ActivarAppComponent {
         if (this.celular && this.email) {
             this.addContacto('celular', this.celular);
             this.addContacto('email', this.email);
-            let cambios = {
+            const cambios = {
                 op: 'updateContactos',
                 contacto: this.paciente.contacto
             };
-            let contacto = {
+            const contacto = {
                 email: this.email,
                 telefono: this.celular
             };

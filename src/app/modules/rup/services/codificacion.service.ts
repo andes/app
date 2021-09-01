@@ -5,7 +5,7 @@ import { ICodificacionPrestacion } from '../interfaces/ICodificacion';
 
 @Injectable()
 export class CodificacionService {
-    private codificacionUrl = '/modules/rup/codificacion/';  // URL to web api
+    private codificacionUrl = '/modules/rup/codificacion/'; // URL to web api
     constructor(private server: Server) { }
 
     addCodificacion(idPrestacion: String): Observable<ICodificacionPrestacion> {

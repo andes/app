@@ -70,7 +70,7 @@ export class NotaComponent implements OnInit {
         this.notas[indice].destacada = !this.notas[indice].destacada;
         if (this.notas.length > 1) {
             this.notas.sort((a, b) => {
-                let resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0));
+                const resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0));
                 return resultado;
             });
             this.notasNew.emit(this.notas);

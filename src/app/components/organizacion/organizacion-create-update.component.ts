@@ -36,7 +36,7 @@ import { IZonaSanitaria} from './../../interfaces/IZonaSanitaria';
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input() seleccion: IOrganizacion;
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
@@ -227,7 +227,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     onSave(valid) {
         if (valid.formValid) {
-            let organizacionGuardar = Object.assign({}, this.organizacionModel);
+            const organizacionGuardar = Object.assign({}, this.organizacionModel);
             organizacionGuardar.contacto.map(elem => {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
                 return elem;
@@ -245,7 +245,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
             organizacionGuardar.direccion.ubicacion.barrio = null;
 
-            let operacion = this.organizacionService.save(organizacionGuardar);
+            const operacion = this.organizacionService.save(organizacionGuardar);
             operacion.subscribe(result => {
                 if (result) {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -264,7 +264,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
 
     addContacto() {
-        let nuevoContacto = Object.assign({}, {
+        const nuevoContacto = Object.assign({}, {
             tipo: 'celular',
             valor: '',
             ranking: 0,
@@ -289,7 +289,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
 
     addEdificio() {
-        let nuevoEdificio = Object.assign({}, {
+        const nuevoEdificio = Object.assign({}, {
             id: null,
             descripcion: '',
             contacto: {
@@ -356,7 +356,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     deleteUO($event) {
         if ($event.conceptId) {
             this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
-                let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);
+                const index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);
                 if (confirmar && index >= 0) {
                     this.organizacionModel.unidadesOrganizativas.splice(index, 1);
                 }
@@ -461,7 +461,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     (!this.organizacionModel.id || this.organizacionModel.id !== organizaciones[0].id)) { // y estoy creando o editando una organizacion diferente a la que trajo
 
                     this.auth.organizaciones().subscribe((organizacionesUser: any) => {
-                        const tienePermisosParaOrgEncontrada = organizacionesUser.some((orgUser: any) => { return orgUser.id === organizaciones[0].id; });
+                        const tienePermisosParaOrgEncontrada = organizacionesUser.some((orgUser: any) => {
+                            return orgUser.id === organizaciones[0].id;
+                        });
                         if (tienePermisosParaOrgEncontrada) {
                             this.plex.confirm(`¿Desea editar la organización ${organizaciones[0].nombre}?`, 'Existe otra organización con mismo código SISA').then((resultado: any) => {
                                 if (resultado) {

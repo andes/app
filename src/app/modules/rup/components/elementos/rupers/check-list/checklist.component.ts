@@ -95,7 +95,9 @@ export class ChecklistComponent extends RUPComponent implements OnInit {
         if (this.multiple) {
             valor = valor || this.valor;
 
-            const otros = (this.otros || []).map(el => { return { ...el, _o: true }; });
+            const otros = (this.otros || []).map(el => {
+                return { ...el, _o: true };
+            });
 
             this.registro.valor = [
                 ...valor,

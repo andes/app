@@ -6,7 +6,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class SolicitudesTopService {
 
-    private baseURL = '/modules/rup/solicitudes/dashboard';  // URL to web api
+    private baseURL = '/modules/rup/solicitudes/dashboard'; // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -19,7 +19,7 @@ export class SolicitudesTopService {
     //     return this.server.get(this.baseURL, { params });
     // }
 
-    post (params) {
+    post(params) {
         return this.server.post(this.baseURL, params);
     }
 

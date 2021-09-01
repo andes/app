@@ -12,6 +12,6 @@ export interface IPrestacionEstado {
         organizacion: {
             id: string;
             nombre: string;
-        }
+        };
     };
 }

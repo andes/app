@@ -1,7 +1,8 @@
+/* eslint-disable no-bitwise */
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { map, tap, distinct, switchMap } from 'rxjs/operators';
+import { distinct, map, switchMap } from 'rxjs/operators';
 import { Server } from './server.service';
 
 @Injectable()
@@ -13,13 +14,13 @@ export class ServerErrorHandler implements ErrorHandler {
 
         let hash = 0;
 
-        if (!string || string.length === 0) { return hash; }
+        if (!string || string.length === 0) {
+            return hash;
+        }
 
         for (let i = 0; i < string.length; i++) {
-            let char = string.charCodeAt(i);
-            // tslint:disable-next-line:no-bitwise
+            const char = string.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
-            // tslint:disable-next-line:no-bitwise
             hash = hash & hash;
         }
 
@@ -45,7 +46,7 @@ export class ServerErrorHandler implements ErrorHandler {
 
 
     handleError(error: Error | HttpErrorResponse | string) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(error);
         if (error instanceof HttpErrorResponse) {
             return;

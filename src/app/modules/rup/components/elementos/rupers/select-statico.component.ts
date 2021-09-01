@@ -24,7 +24,7 @@ import { of } from 'rxjs';
 @RupElement('SelectStaticoComponent')
 export class SelectStaticoComponent extends SelectBaseComponent {
 
-    public labelField = `label`;
+    public labelField = 'label';
 
     getData(input: string) {
         return of(this.params.items);

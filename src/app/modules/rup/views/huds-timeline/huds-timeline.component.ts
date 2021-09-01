@@ -368,10 +368,10 @@ export class HUDSTimelineComponent implements OnInit {
                 const group = this.groups.find(g => g.id === data.group);
                 if (item.type === 'range') {
                     const parent = element.parentElement.parentElement;
-                    parent.style.setProperty(`--color`, data.color || group.color);
+                    parent.style.setProperty('--color', data.color || group.color);
                 } else {
                     const parent = element.parentElement;
-                    parent.style.setProperty(`--color`, data.color || group.color);
+                    parent.style.setProperty('--color', data.color || group.color);
                 }
                 if (data.content) {
                     return data.content;
@@ -400,10 +400,10 @@ export class HUDSTimelineComponent implements OnInit {
 
             this.groups.forEach((g) => {
                 const es: HTMLElement[] = <any>element.querySelectorAll(`.vis-group.${g.id}`);
-                es.forEach((e: any) => e.style.setProperty(`--bg-color`, g.color + '2e'));
+                es.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
 
                 const es2: HTMLElement[] = <any>element.querySelectorAll(`.vis-label.${g.id}`);
-                es2.forEach((e: any) => e.style.setProperty(`--bg-color`, g.color + '2e'));
+                es2.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
             });
         });
 

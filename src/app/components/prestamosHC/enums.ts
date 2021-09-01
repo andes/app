@@ -1,6 +1,6 @@
 import { IEnum } from './../../utils/enums';
 
-export let EstadosCarpetas: IEnum = {
+export const EstadosCarpetas: IEnum = {
     'enArchivo': {
         nombre: 'En Archivo',
         class: 'success'
@@ -11,7 +11,7 @@ export let EstadosCarpetas: IEnum = {
     }
 };
 
-export let EstadosDevolucionCarpetas: IEnum = {
+export const EstadosDevolucionCarpetas: IEnum = {
     'normal': {
         nombre: 'Normal',
         class: 'success'

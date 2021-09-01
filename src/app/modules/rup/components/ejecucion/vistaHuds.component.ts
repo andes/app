@@ -76,7 +76,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
         if (!this.paciente) {
             this.route.params.subscribe(params => {
-                let id = params['id'];
+                const id = params['id'];
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
@@ -95,7 +95,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                     fechaNacimiento: this.paciente.fechaNacimiento,
                     documento: this.paciente.documento
                 }
-            }).subscribe(() => { return true; });
+            }).subscribe(() => {
+                return true;
+            });
         }
 
     }

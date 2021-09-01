@@ -29,8 +29,8 @@ export class VistaCDAComponent implements OnInit {
     }
 
     descargar(archivo) {
-        let token = window.sessionStorage.getItem('jwt');
-        let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
+        const token = window.sessionStorage.getItem('jwt');
+        const url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
     }
 }

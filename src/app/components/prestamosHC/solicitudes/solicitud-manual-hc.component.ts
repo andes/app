@@ -50,7 +50,7 @@ export class SolicitudManualComponent {
     loadEspacios(event) {
         let listaEspaciosFisicos = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query,
                 organizacion: this.auth.organizacion.id
             };
@@ -70,7 +70,7 @@ export class SolicitudManualComponent {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -129,7 +129,7 @@ export class SolicitudManualComponent {
             if (!this.carpetaEfector) {
                 this.serviceCarpetaPaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetas => {
                     if (carpetas.length > 0) {
-                        let _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                        const _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                         if (_carpetaEfector.nroCarpeta) {
                             this.carpetaEfector = _carpetaEfector;
                             cb();

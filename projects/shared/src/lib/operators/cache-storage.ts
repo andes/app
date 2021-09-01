@@ -14,7 +14,7 @@ export function cacheStorage(params: CacheStorageOptions | string) {
     const until$ = typeof params === 'object' ? params.until : undefined;
     const ttl = typeof params === 'object' ? params.ttl : undefined;
 
-    return function <T>(source: Observable<T>): Observable<T> {
+    return function <T> (source: Observable<T>): Observable<T> {
         if (until$) {
             until$.subscribe(() => {
                 window.sessionStorage.removeItem(key);

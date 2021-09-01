@@ -11,7 +11,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
 
     getClasificacionFinal(ficha) {
         const seccionClasificacion = ficha.secciones.find(s => s.name === 'Tipo de confirmación y Clasificación Final');
-        let clasificacionfinal = seccionClasificacion?.fields.find(f => f.clasificacionfinal)?.clasificacionfinal;
+        const clasificacionfinal = seccionClasificacion?.fields.find(f => f.clasificacionfinal)?.clasificacionfinal;
         return clasificacionfinal ? clasificacionfinal : 'Sin clasificación';
     }
 }

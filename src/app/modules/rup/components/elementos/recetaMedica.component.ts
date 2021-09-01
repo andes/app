@@ -42,7 +42,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     loadMedicamentoGenerico(event) {
         const input = event.query;
         if (input && input.length > 2) {
-            let query: any = {
+            const query: any = {
                 expression: '<763158003:732943007=*,[0..0] 774159003=*, 763032000=*',
                 search: input
             };
@@ -58,20 +58,22 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
         this.medicamento.cantidad = null;
         this.unidades = [];
         if (this.medicamento.generico) {
-            let queryPresentacion: any = {
+            const queryPresentacion: any = {
                 expression: `${this.medicamento.generico.conceptId}.763032000`,
                 search: ''
             };
-            let queryUnidades: any = {
+            const queryUnidades: any = {
                 expression: `(^331101000221109: 774160008 =<${this.medicamento.generico.conceptId}).774161007`,
                 search: ''
             };
             forkJoin(
                 [this.snomedService.get(queryPresentacion),
-                this.snomedService.get(queryUnidades)]
+                 this.snomedService.get(queryUnidades)]
             ).subscribe(([resultado, presentaciones]) => {
                 this.medicamento.presentacion = resultado[0];
-                this.unidades = presentaciones.map(elto => { return { id: elto.term, valor: elto.term }; });
+                this.unidades = presentaciones.map(elto => {
+                    return { id: elto.term, valor: elto.term };
+                });
             });
         }
     }
@@ -106,7 +108,7 @@ export class RecetaMedicaComponent extends RUPComponent implements OnInit {
     borrarMedicamento(medicamento) {
         this.plex.confirm('¿Está seguro que desea eliminar el medicamento de la receta?').then((resultado) => {
             if (resultado) {
-                let index = this.registro.valor.medicamentos.indexOf(medicamento);
+                const index = this.registro.valor.medicamentos.indexOf(medicamento);
                 this.registro.valor.medicamentos.splice(index, 1);
             }
         });

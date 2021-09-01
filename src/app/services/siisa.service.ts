@@ -7,7 +7,7 @@ import { ISiisa } from '../interfaces/ISiisa';
 
 @Injectable()
 export class SIISAService {
-    private siisaUrl = '/core/tm/siisa';  // URL to web api
+    private siisaUrl = '/core/tm/siisa'; // URL to web api
 
     constructor(private server: Server) { }
 

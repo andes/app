@@ -23,7 +23,7 @@ export class SelectPrestacionComponent extends SelectBaseComponent {
 
     public idField = 'id';
 
-    public labelField = `term`;
+    public labelField = 'term';
 
 
     getData(input: string) {

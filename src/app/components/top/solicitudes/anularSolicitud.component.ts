@@ -67,7 +67,7 @@ export class AnularSolicitudComponent implements OnInit {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
         } else {
             // Por si hay algún documento en la vieja versión.
@@ -76,7 +76,7 @@ export class AnularSolicitudComponent implements OnInit {
     }
 
     get documentos() {
-        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        const solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
         if (solicitudRegistros.some(reg => reg.valor.documentos)) {
             return solicitudRegistros[0].valor.documentos.map((doc) => {
                 doc.url = this.createUrl(doc);

@@ -306,7 +306,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -321,7 +321,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     loadOrganizacion(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query
             };
             this.organizacionService.get(query).subscribe(event.callback);
@@ -359,7 +359,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
 
     validarRUP() {
-        if (!this.prestacionFake) { return true; }
+        if (!this.prestacionFake) {
+            return true;
+        }
 
         let flagValid = true;
         this.rupElements.forEach((item) => {
@@ -496,9 +498,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     actualizarPrestacion(paciente) {
         // reemplazamos el Informe de ingreso en la prestacion
-        let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+        const indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
         this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
-        let cambios = {
+        const cambios = {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros,
             paciente: this.paciente
@@ -577,7 +579,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             });
             if (movimientoEncontrado && movimientoEncontrado.length) {
                 this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
-                this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada`);
+                this.plex.info('warning', 'No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada');
             }
         });
     }

@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class SmsService {
 
-    private smsUrl = '/core/tm/sms/';  // URL to web api
+    private smsUrl = '/core/tm/sms/'; // URL to web api
 
     constructor(private server: Server) { }
 

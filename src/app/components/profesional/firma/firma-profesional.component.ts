@@ -46,8 +46,8 @@ export class FirmaProfesionalComponent {
             this.profesionalService.getFirma({ id: this.profesional.id }).pipe(
                 catchError(() =>
                     of(null))).subscribe(resp => {
-                        this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
-                    });
+                this.urlFirma = resp.length ? this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp) : null;
+            });
         }
     }
 

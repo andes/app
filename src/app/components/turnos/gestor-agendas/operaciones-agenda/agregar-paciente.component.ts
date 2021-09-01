@@ -1,16 +1,15 @@
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import { Observable } from 'rxjs';
-import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
-import { ObraSocialService } from '../../../../services/obraSocial.service';
-import { TurnoService } from '../../../../services/turnos/turno.service';
+import { Plex } from '@andes/plex';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
+import { ObraSocialService } from '../../../../services/obraSocial.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { TurnoService } from '../../../../services/turnos/turno.service';
 
 @Component({
     selector: 'agregar-paciente',
@@ -112,7 +111,7 @@ export class AgregarPacienteComponent implements OnInit {
         } else if (this.esEscaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanCode(scan);
-            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
+            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']); // abre paciente-cru
         } else {
             this.pacientes = pacientes;
         }
@@ -139,7 +138,9 @@ export class AgregarPacienteComponent implements OnInit {
 
     loadObraSocial(paciente) {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!paciente || !paciente.documento) { return; }
+        if (!paciente || !paciente.documento) {
+            return;
+        }
         this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocialPaciente = resultado.map((os: any) => {
@@ -227,7 +228,7 @@ export class AgregarPacienteComponent implements OnInit {
     guardar($event) {
         if ($event.formValid) {
 
-            let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            const indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
             } else {
@@ -246,7 +247,7 @@ export class AgregarPacienteComponent implements OnInit {
             } else {
                 osPaciente = this.paciente.financiador && this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
             }
-            let pacienteSave = {
+            const pacienteSave = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
                 apellido: this.paciente.apellido,
@@ -260,14 +261,13 @@ export class AgregarPacienteComponent implements OnInit {
 
             // Si cambió el teléfono lo actualizo en el MPI
             if (this.cambioTelefono) {
-                let nuevoCel = {
+                const nuevoCel = {
                     'tipo': 'celular',
                     'valor': this.telefono,
                     'ranking': 1,
                     'activo': true,
                     'ultimaActualizacion': new Date()
                 };
-                let mpi: Observable<any>;
                 let flagTelefono = false;
                 // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
                 // sino, se genera un nuevo contacto
@@ -284,19 +284,18 @@ export class AgregarPacienteComponent implements OnInit {
                 } else {
                     this.paciente.contacto = [nuevoCel];
                 }
-                let cambios = {
+                const cambios = {
                     'op': 'updateContactos',
                     'contacto': this.paciente.contacto
                 };
-                mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-                mpi.subscribe(resultado => {
+                this.servicePaciente.patch(pacienteSave.id, cambios).subscribe(resultado => {
                     if (resultado) {
                         this.plex.info('success', 'Se actualizó el numero de telefono');
                     }
                 });
             }
 
-            let turno = {
+            const turno = {
                 idAgenda: this.agenda.id,
                 horaInicio: this.agenda.horaInicio,
                 estado: 'asignado',

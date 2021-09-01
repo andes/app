@@ -29,7 +29,7 @@ export class PacienteBuscarService {
 */
     public controlarScanner(scan): boolean {
         if (scan) {
-            let index = scan.indexOf('"');
+            const index = scan.indexOf('"');
             if (index >= 0 && index < 20 && scan.length > 5) {
                 /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
                 return false;
@@ -45,7 +45,7 @@ export class PacienteBuscarService {
      * @returns {DocumentoEscaneado} Devuelve el documento encontrado
      */
     public comprobarDocumentoEscaneado(textoLibre: string): PacienteEscaneado {
-        for (let key in DocumentoEscaneados) {
+        for (const key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(textoLibre)) {
                 // Loggea el documento escaneado para análisis
                 return this.parseDocumentoEscaneado(textoLibre, DocumentoEscaneados[key]);
@@ -61,7 +61,7 @@ export class PacienteBuscarService {
      * @returns {*} Datos del paciente
      */
     public parseDocumentoEscaneado(textoLibre: string, documento: DocumentoEscaneado): PacienteEscaneado {
-        let datos = textoLibre.match(documento.regEx);
+        const datos = textoLibre.match(documento.regEx);
         let sexo = '';
         if (documento.grupoSexo > 0) {
             sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
@@ -98,7 +98,9 @@ export class PacienteBuscarService {
             }),
             mergeMap((resultado: any) => {
                 // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                if (resultado) { return of(resultado); }
+                if (resultado) {
+                    return of(resultado);
+                }
 
                 // 1.3. Si no encontró el paciente escaneado, busca uno similar (suggest)
                 return this.pacienteService.match({
@@ -114,7 +116,7 @@ export class PacienteBuscarService {
                             return { pacientes: [], err: null };
                         }
                         // 1.3.2. Busca a uno con el mismo código de barras
-                        let candidato = resultadoSuggest.find(elto => elto.paciente.scan && elto.paciente.scan === textoLibre);
+                        const candidato = resultadoSuggest.find(elto => elto.paciente.scan && elto.paciente.scan === textoLibre);
                         if (candidato) {
                             return { scan: textoLibre, pacientes: [candidato], err: null };
                         } else {
@@ -148,7 +150,7 @@ export class PacienteBuscarService {
             this.skip = 0;
             this.scrollEnd = false;
             // Si matchea una expresión regular, busca inmediatamente el paciente
-            let pacienteEscaneado = this.comprobarDocumentoEscaneado(searchText);
+            const pacienteEscaneado = this.comprobarDocumentoEscaneado(searchText);
             if (pacienteEscaneado) {
                 return this.findByScan(pacienteEscaneado).pipe(
                     map(resultadoPacientes => {
@@ -189,7 +191,9 @@ export class PacienteBuscarService {
                 }
                 return { pacientes: resultado, err: null };
             },
-                err => { return { pacientes: [], err: err }; }
+            err => {
+                return { pacientes: [], err: err };
+            }
             ),
         );
     }

@@ -152,15 +152,21 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
 
             if (this.parametros.idTipoPrestacion) {
-                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => { this.prestaciones = rta; });
+                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => {
+                    this.prestaciones = rta;
+                });
             }
             if (this.parametros.espacioFisico || this.parametros.idProfesional || this.parametros.estado) {
                 this.mostrarMasOpciones = true;
                 if (this.parametros.idProfesional) {
-                    this.serviceProfesional.get({ id: this.parametros.idProfesional }).subscribe(rta => { this.profesionales = rta[0]; });
+                    this.serviceProfesional.get({ id: this.parametros.idProfesional }).subscribe(rta => {
+                        this.profesionales = rta[0];
+                    });
                 }
                 if (this.parametros.espacioFisico) {
-                    this.servicioEspacioFisico.getById(this.parametros.espacioFisico).subscribe(rta => { this.modelo.espacioFisico = rta; });
+                    this.servicioEspacioFisico.getById(this.parametros.espacioFisico).subscribe(rta => {
+                        this.modelo.espacioFisico = rta;
+                    });
                 }
                 this.estado = this.estadosAgendaArray.find(e => e.id === this.queryParams.estado);
             }
@@ -196,7 +202,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         if (tipo === 'fechaDesde') {
-            let fechaDesde = moment(this.fechaDesde).startOf('day');
+            const fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaDesde.isValid()) {
                 this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde : moment().format();
                 this.parametros['organizacion'] = this.auth.organizacion.id;
@@ -204,7 +210,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             }
         }
         if (tipo === 'fechaHasta') {
-            let fechaHasta = moment(this.fechaHasta).endOf('day');
+            const fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaHasta.isValid()) {
                 this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta : moment().format();
                 this.parametros['organizacion'] = this.auth.organizacion.id;
@@ -295,7 +301,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     loadAgendas() {
-        let fecha = moment().format();
+        const fecha = moment().format();
 
         if (this.hoy) {
             this.fechaDesde = fecha;
@@ -430,7 +436,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             if (this.lastRequestProf) {
                 this.lastRequestProf.unsubscribe();
             }
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.lastRequestProf = this.serviceProfesional.get(query).subscribe(event.callback);
@@ -445,7 +451,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     loadEdificios(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 edificio: event.query,
                 organizacion: this.auth.organizacion.id
             };
@@ -461,7 +467,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         let listaEspaciosFisicos = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombre: event.query,
                 organizacion: this.auth.organizacion.id
             };
@@ -511,7 +517,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     if (!multiple) {
                         this.onSeleccionAgendaNoMultiple(ag);
                     } else {
-                        let index = this.estaSeleccionada(agenda);
+                        const index = this.estaSeleccionada(agenda);
                         if (index >= 0) {
                             agenda.agendaSeleccionadaColor = 'success';
                             this.agendasSeleccionadas.splice(index, 1);
@@ -651,8 +657,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     // Devuelve la duración (HH:mm) de una agenda
     duracionAgenda(horaInicio, horaFin) {
-        let horas = moment.duration(horaFin - horaInicio).hours();
-        let minutos = moment.duration(horaFin - horaInicio).minutes();
+        const horas = moment.duration(horaFin - horaInicio).hours();
+        const minutos = moment.duration(horaFin - horaInicio).minutes();
         return horas + (horas === 1 ? ' hora ' : ' horas ') + (minutos > 0 ? minutos + ' minutos' : '');
     }
 
@@ -675,10 +681,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     actualizarAgenda(agenda) {
-        const res = this.agendas.filter(function (element) {
+        const res = this.agendas.filter((element) => {
             return (element.id === agenda.id);
         });
-        let indice = this.agendas.indexOf(res[0]);
+        const indice = this.agendas.indexOf(res[0]);
         this.agendas[indice] = agenda;
     }
 

@@ -34,7 +34,7 @@ export class TurnosComponent implements OnInit {
             this.turnos = this.agenda.bloques[i].turnos;
             // Si la agenda es del día, resto los disponibles que ya pasaron
             if (this.delDia) {
-                let bloque = this.agenda.bloques[i];
+                const bloque = this.agenda.bloques[i];
                 this.arrayDelDia[i] = this.contieneExclusivoGestion(this.agenda) ? 0 : bloque.restantesDelDia + bloque.restantesProgramados;
             }
             if (this.agenda.bloques[i].turnos) {
@@ -89,7 +89,7 @@ export class TurnosComponent implements OnInit {
 
     ngOnInit() {
         this.turnosSeleccionados = [];
-        let agendaActualizar = this.agenda;
+        const agendaActualizar = this.agenda;
         // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
         this.actualizarBotones();
         this.showSeleccionarTodos = (this.turnos.length > 0);
@@ -198,7 +198,9 @@ export class TurnosComponent implements OnInit {
      * @memberof TurnosComponent
      */
     tienenDiagnostico(): Boolean {
-        return this.turnosSeleccionados.some(x => { return x.diagnostico.codificaciones.length > 0; });
+        return this.turnosSeleccionados.some(x => {
+            return x.diagnostico.codificaciones.length > 0;
+        });
     }
 
     ningunoConEstado(estado) {
@@ -238,7 +240,9 @@ export class TurnosComponent implements OnInit {
             turnoSeleccionado = this.turnosSeleccionados[x];
             bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
             if (bloqueTurno) {
-                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                index = bloqueTurno.turnos.findIndex(t => {
+                    return t._id === turnoSeleccionado._id;
+                });
                 if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'disponible')) || (index === (bloqueTurno.turnos.length - 1))) {
                     return false;
                 }
@@ -257,11 +261,11 @@ export class TurnosComponent implements OnInit {
     }
 
     actualizarBotones() {
-        let puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia:').length > 0;
-        let puedeSuspenderTurno = this.auth.getPermissions('turnos:turnos:suspenderTurno:').length > 0;
-        let puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno:').length > 0;
-        let puedeEditarCarpeta = this.auth.getPermissions('turnos:turnos:editarCarpeta:').length > 0;
-        let puedeMarcarTurnDoble = this.auth.getPermissions('turnos:turnos:turnoDoble:').length > 0;
+        const puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia:').length > 0;
+        const puedeSuspenderTurno = this.auth.getPermissions('turnos:turnos:suspenderTurno:').length > 0;
+        const puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno:').length > 0;
+        const puedeEditarCarpeta = this.auth.getPermissions('turnos:turnos:editarCarpeta:').length > 0;
+        const puedeMarcarTurnDoble = this.auth.getPermissions('turnos:turnos:turnoDoble:').length > 0;
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
             darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy() && !this.tienenDiagnostico(),
@@ -287,8 +291,8 @@ export class TurnosComponent implements OnInit {
     }
 
     isDobleSuspendido() {
-        let indiceTurnoPadre = this.turnos.indexOf(this.turnosSeleccionados[0]) - 1;
-        let response = (this.turnos[indiceTurnoPadre].estado === 'suspendido');
+        const indiceTurnoPadre = this.turnos.indexOf(this.turnosSeleccionados[0]) - 1;
+        const response = (this.turnos[indiceTurnoPadre].estado === 'suspendido');
         return response;
     }
 
@@ -324,9 +328,11 @@ export class TurnosComponent implements OnInit {
     }
 
     eventosTurno(operacion) {
-        let patch: any = {
+        const patch: any = {
             op: operacion,
-            turnos: this.turnosSeleccionados.map((resultado) => { return resultado.id; })
+            turnos: this.turnosSeleccionados.map((resultado) => {
+                return resultado.id;
+            })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
@@ -362,7 +368,7 @@ export class TurnosComponent implements OnInit {
     asignarTurnoDoble(operacion) {
         let turnoSeleccionado;
         let index;
-        let turnosActualizar = [];
+        const turnosActualizar = [];
         let bloqueTurno;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             // Se busca la posición del turno y se obtiene el siguiente
@@ -370,7 +376,9 @@ export class TurnosComponent implements OnInit {
             bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
 
             if (bloqueTurno) {
-                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                index = bloqueTurno.turnos.findIndex(t => {
+                    return t._id === turnoSeleccionado._id;
+                });
                 if ((index > -1) && (index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado === 'disponible')) {
                     turnosActualizar.push(bloqueTurno.turnos[index + 1]);
                 } else {
@@ -380,13 +388,17 @@ export class TurnosComponent implements OnInit {
             }
         }
 
-        let patch: any = {
+        const patch: any = {
             op: operacion,
-            turnos: turnosActualizar.map((resultado) => { return resultado.id; })
+            turnos: turnosActualizar.map((resultado) => {
+                return resultado.id;
+            })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.agenda = resultado;
+        });
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
         this.actualizarBotones();
@@ -420,8 +432,8 @@ export class TurnosComponent implements OnInit {
     enviarSMS() {
         let turno;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            let idTurno = this.turnosSeleccionados[x].id;
-            this.turnos.filter(function (el, index, arr) {
+            const idTurno = this.turnosSeleccionados[x].id;
+            this.turnos.filter((el, index, arr) => {
                 if (el.id === idTurno) {
                     turno = el;
                 }
@@ -429,7 +441,9 @@ export class TurnosComponent implements OnInit {
 
             turno.smsVisible = true;
             turno.smsLoader = true;
-            if (!this.turnosSeleccionados[x].paciente || !this.turnosSeleccionados[x].paciente.telefono) { return; }
+            if (!this.turnosSeleccionados[x].paciente || !this.turnosSeleccionados[x].paciente.telefono) {
+                return;
+            }
 
             // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
             if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {

@@ -24,7 +24,7 @@ export class SelectSnomedComponent extends SelectBaseComponent {
 
     public idField = 'conceptId';
 
-    public labelField = `term`;
+    public labelField = 'term';
 
     getData(input: string) {
         const query: any = {

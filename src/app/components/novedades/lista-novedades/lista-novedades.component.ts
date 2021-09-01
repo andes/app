@@ -34,7 +34,7 @@ export class ListaNovedadesComponent implements OnInit {
     }
 
     public getFoto(novedad: any) {
-        let imagenes = novedad.imagenes ? novedad.imagenes : [];
+        const imagenes = novedad.imagenes ? novedad.imagenes : [];
         if (imagenes.length > 0) {
             return this.createUrl(imagenes[0]);
         } else {
@@ -44,7 +44,7 @@ export class ListaNovedadesComponent implements OnInit {
 
     createUrl(doc) {
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/registro-novedades/store/' + doc.id;
         }
     }

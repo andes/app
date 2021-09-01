@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class FinanciadorService {
-  private financiadorUrl = '/core/tm/financiadores';  // URL to web api
+    private financiadorUrl = '/core/tm/financiadores'; // URL to web api
 
-  constructor(private server: Server) { }
+    constructor(private server: Server) { }
 
-  get(): Observable<IFinanciador[]> {
-    return this.server.get(this.financiadorUrl);
-  }
+    get(): Observable<IFinanciador[]> {
+        return this.server.get(this.financiadorUrl);
+    }
 }

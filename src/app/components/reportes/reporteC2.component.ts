@@ -43,23 +43,57 @@ export class ReporteC2Component implements OnInit {
     @Input('diagnosticos') // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
-        this.totalConsultas = this.diagnosticos.map(elem => { return elem.total; }).reduce(this.add, 0);
-        this.totalMenor6m = this.diagnosticos.map(elem => { return elem.sumaMenor6m; }).reduce(this.add, 0);
-        this.total711m = this.diagnosticos.map(elem => { return elem.suma711m; }).reduce(this.add, 0);
-        this.total1 = this.diagnosticos.map(elem => { return elem.suma1; }).reduce(this.add, 0);
-        this.total24 = this.diagnosticos.map(elem => { return elem.suma24; }).reduce(this.add, 0);
-        this.total59 = this.diagnosticos.map(elem => { return elem.suma59; }).reduce(this.add, 0);
-        this.total1014 = this.diagnosticos.map(elem => { return elem.suma1014; }).reduce(this.add, 0);
-        this.total1519 = this.diagnosticos.map(elem => { return elem.suma1519; }).reduce(this.add, 0);
-        this.total2024 = this.diagnosticos.map(elem => { return elem.suma2024; }).reduce(this.add, 0);
-        this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
-        this.total3544 = this.diagnosticos.map(elem => { return elem.suma3544; }).reduce(this.add, 0);
-        this.total4564 = this.diagnosticos.map(elem => { return elem.suma4564; }).reduce(this.add, 0);
-        this.total6574 = this.diagnosticos.map(elem => { return elem.suma6574; }).reduce(this.add, 0);
-        this.totalMayor75 = this.diagnosticos.map(elem => { return elem.sumaMayor65; }).reduce(this.add, 0);
-        this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
-        this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
-        this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
+        this.totalConsultas = this.diagnosticos.map(elem => {
+            return elem.total;
+        }).reduce(this.add, 0);
+        this.totalMenor6m = this.diagnosticos.map(elem => {
+            return elem.sumaMenor6m;
+        }).reduce(this.add, 0);
+        this.total711m = this.diagnosticos.map(elem => {
+            return elem.suma711m;
+        }).reduce(this.add, 0);
+        this.total1 = this.diagnosticos.map(elem => {
+            return elem.suma1;
+        }).reduce(this.add, 0);
+        this.total24 = this.diagnosticos.map(elem => {
+            return elem.suma24;
+        }).reduce(this.add, 0);
+        this.total59 = this.diagnosticos.map(elem => {
+            return elem.suma59;
+        }).reduce(this.add, 0);
+        this.total1014 = this.diagnosticos.map(elem => {
+            return elem.suma1014;
+        }).reduce(this.add, 0);
+        this.total1519 = this.diagnosticos.map(elem => {
+            return elem.suma1519;
+        }).reduce(this.add, 0);
+        this.total2024 = this.diagnosticos.map(elem => {
+            return elem.suma2024;
+        }).reduce(this.add, 0);
+        this.total2534 = this.diagnosticos.map(elem => {
+            return elem.suma2534;
+        }).reduce(this.add, 0);
+        this.total3544 = this.diagnosticos.map(elem => {
+            return elem.suma3544;
+        }).reduce(this.add, 0);
+        this.total4564 = this.diagnosticos.map(elem => {
+            return elem.suma4564;
+        }).reduce(this.add, 0);
+        this.total6574 = this.diagnosticos.map(elem => {
+            return elem.suma6574;
+        }).reduce(this.add, 0);
+        this.totalMayor75 = this.diagnosticos.map(elem => {
+            return elem.sumaMayor65;
+        }).reduce(this.add, 0);
+        this.totalMasculino = this.diagnosticos.map(elem => {
+            return elem.sumaMasculino;
+        }).reduce(this.add, 0);
+        this.totalFemenino = this.diagnosticos.map(elem => {
+            return elem.sumaFemenino;
+        }).reduce(this.add, 0);
+        this.totalOtro = this.diagnosticos.map(elem => {
+            return elem.sumaOtro;
+        }).reduce(this.add, 0);
         this.listaPacientes = false; // con esto se oculta la lista de pacientes cuando se genera un nuevo reporte
     }
 

@@ -6,7 +6,7 @@ import { WebSocketService } from '../../../services/websocket.service';
 @Injectable()
 export class TurneroService {
 
-    private turneroUrl = '/modules/turnero/';  // URL to web api
+    private turneroUrl = '/modules/turnero/'; // URL to web api
 
     constructor(
         private server: Server,

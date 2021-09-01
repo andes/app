@@ -69,7 +69,7 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week'); // primera semana que contiene al 1er dia del mes
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate(); // ultimo dia de la ultima semana del mes
 
-        let params = {
+        const params = {
             fechaDesde: this.today,
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
@@ -84,9 +84,9 @@ export class ClonarAgendaComponent implements OnInit {
     private cargarCalendario() {
         let dia: any = {};
         this.calendario = [];
-        let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
+        const cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
         for (let r = 1; r <= cantidadSemanas; r++) {
-            let week = [];
+            const week = [];
             this.calendario.push(week);
 
             for (let c = 1; c <= 7; c++) {
@@ -119,7 +119,7 @@ export class ClonarAgendaComponent implements OnInit {
                 }
 
                 dia.weekend = this.inicioMesMoment.isoWeekday() >= 6;
-                let isThisMonth = this.inicioMesMoment.isSameOrBefore(this.ultimoDiaMes) && this.inicioMesMoment.isSameOrAfter(this.primerDiaMes);
+                const isThisMonth = this.inicioMesMoment.isSameOrBefore(this.ultimoDiaMes) && this.inicioMesMoment.isSameOrAfter(this.primerDiaMes);
                 if (isThisMonth) {
                     week.push(dia);
                 } else {
@@ -146,22 +146,22 @@ export class ClonarAgendaComponent implements OnInit {
      * @memberof ClonarAgendaComponent
      */
     public seleccionar(dia: any) {
-        let mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
+        const mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
         if (dia.estado !== 'vacio' && dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
-            let original = this.agenda;
+            const original = this.agenda;
             if (dia.original) {
                 this.original = true;
             } else {
                 this.original = false;
             }
             let band = false;
-            let originalIni = moment(original.horaInicio).format('HH:mm');
-            let originalFin = moment(original.horaFin).format('HH:mm');
+            const originalIni = moment(original.horaInicio).format('HH:mm');
+            const originalFin = moment(original.horaFin).format('HH:mm');
             // Filtramos las agendas del mes que coinciden con el dia y horario en el que se intenta clonar
-            let filtro = this.agendas.filter(
-                function (actual) {
-                    let actualIni = moment(actual.horaInicio).format('HH:mm');
-                    let actualFin = moment(actual.horaFin).format('HH:mm');
+            const filtro = this.agendas.filter(
+                (actual) => {
+                    const actualIni = moment(actual.horaInicio).format('HH:mm');
+                    const actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
                     band = band && !(originalIni >= actualFin || originalFin <= actualIni);
@@ -175,7 +175,9 @@ export class ClonarAgendaComponent implements OnInit {
                 } else {
                     // concatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
-                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
+                        const aux = this.agendasFiltradas.map(elem => {
+                            return elem.id;
+                        });
                         if (aux.indexOf(fil.id) < 0) {
                             this.agendasFiltradas = this.agendasFiltradas.concat(fil);
 
@@ -189,13 +191,15 @@ export class ClonarAgendaComponent implements OnInit {
             } else {
                 if (this.original !== true) {
                     if (dia.estado !== 'conflicto') { // Días con agendas en conflicto nunca llegan al array seleccionados
-                        let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                        const i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                         this.seleccionados.splice(i, 1);
                     }
                     dia.estado = 'noSeleccionado';
                     filtro.forEach((fil) => {
-                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
-                        let indice = aux.indexOf(fil.id);
+                        const aux = this.agendasFiltradas.map(elem => {
+                            return elem.id;
+                        });
+                        const indice = aux.indexOf(fil.id);
                         if (indice >= 0) {
                             this.agendasFiltradas.splice(indice, 1);
                         }
@@ -221,8 +225,14 @@ export class ClonarAgendaComponent implements OnInit {
 
                     if (agenda.profesionales && agenda.profesionales.length &&
                         this.agenda.profesionales && this.agenda.profesionales.length > 0) {
-                        if (agenda.profesionales.map(elem => { return elem.id; }).some
-                            (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                        if (agenda.profesionales.map(elem => {
+                            return elem.id;
+                        }).some
+                        (v => {
+                            return this.agenda.profesionales.map(elem => {
+                                return elem.id;
+                            }).includes(v);
+                        })) {
                             agenda.conflictoProfesional = 1;
                             dia.estado = 'conflicto';
 
@@ -242,7 +252,7 @@ export class ClonarAgendaComponent implements OnInit {
                             }
                         }
                     }
-                    let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
+                    const band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
                     return band;
                 } else {
                     return true; // para no descartar las agendas ya existentes en la colección;
@@ -263,7 +273,7 @@ export class ClonarAgendaComponent implements OnInit {
                 if (conf) {
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                     this.seleccionados = [...this.seleccionados];
-                    let data = {
+                    const data = {
                         idAgenda: this.agenda.id,
                         clones: this.seleccionados
                     };
@@ -272,11 +282,11 @@ export class ClonarAgendaComponent implements OnInit {
                             this.volverAlGestor.emit(true);
                         });
                     },
-                        err => {
-                            if (err) {
+                    err => {
+                        if (err) {
 
-                            }
-                        });
+                        }
+                    });
                 }
             }).catch(() => {
             });

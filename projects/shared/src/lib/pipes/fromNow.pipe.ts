@@ -4,7 +4,7 @@ const moment = moment_;
 
 @Pipe({ name: 'fromNow' })
 export class FromNowPipe implements PipeTransform {
-  transform(value: any): any {
-    return moment(value).fromNow();
-  }
+    transform(value: any): any {
+        return moment(value).fromNow();
+    }
 }

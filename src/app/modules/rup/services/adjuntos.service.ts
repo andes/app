@@ -17,7 +17,7 @@ export class AdjuntosService {
         cache()
     );
 
-    private prestacionesUrl = '/modules/mobileApp/prestaciones-adjuntar';  // URL to web api
+    private prestacionesUrl = '/modules/mobileApp/prestaciones-adjuntar'; // URL to web api
 
     constructor(
         private server: Server,
@@ -78,7 +78,7 @@ export class AdjuntosService {
 
     createUrl(modulo: 'rup' | 'drive', doc, token: string) {
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + modulos[modulo] + doc.id + '?token=' + token;
         } else {
             return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);

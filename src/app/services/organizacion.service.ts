@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class OrganizacionService {
-    private organizacionUrl = '/core/tm/organizaciones';  // URL to web api
+    private organizacionUrl = '/core/tm/organizaciones'; // URL to web api
     constructor(public server: Server) { }
 
     /**
@@ -77,7 +77,7 @@ export class OrganizacionService {
      */
 
     clone(item) {
-        let r = Object.assign({}, item);
+        const r = Object.assign({}, item);
         delete r['hijos'];
         return r;
     }
@@ -85,7 +85,7 @@ export class OrganizacionService {
     traverseTree(sector, onlyLeaft) {
         if (sector.hijos && sector.hijos.length > 0) {
             let res = onlyLeaft ? [] : [this.clone(sector)];
-            for (let sec of sector.hijos) {
+            for (const sec of sector.hijos) {
                 res = [...res, ...this.traverseTree(sec, onlyLeaft)];
             }
             return res;
@@ -95,15 +95,15 @@ export class OrganizacionService {
     }
 
     getFlatTree(organizacion, onlyLeaft = true) {
-        let items = organizacion.mapaSectores.reduce((_items, actual) => {
+        const items = organizacion.mapaSectores.reduce((_items, actual) => {
             return [..._items, ...this.traverseTree(actual, onlyLeaft)];
         }, []);
         return items;
     }
 
     getRuta(organizacion, item) {
-        for (let sector of organizacion.mapaSectores) {
-            let res = this.makeTree(sector, item);
+        for (const sector of organizacion.mapaSectores) {
+            const res = this.makeTree(sector, item);
             if (res) {
                 return res;
             }
@@ -114,17 +114,17 @@ export class OrganizacionService {
 
     makeTree(sector, item) {
         if (sector.hijos && sector.hijos.length > 0) {
-            for (let sec of sector.hijos) {
-                let res = this.makeTree(sec, item);
+            for (const sec of sector.hijos) {
+                const res = this.makeTree(sec, item);
                 if (res) {
-                    let r = this.clone(sector);
+                    const r = this.clone(sector);
                     return [r, ...res];
                 }
             }
             return null;
         } else {
             if (item.id === sector.id) {
-                let r = this.clone(sector);
+                const r = this.clone(sector);
                 return [r];
             } else {
                 return null;
@@ -155,7 +155,7 @@ export class OrganizacionService {
     getSectoresNombreCompleto(organizacion: IOrganizacion) {
         const sectores = this.getFlatTree(organizacion);
         for (const sector of sectores) {
-            let sectorRuta = this.getRuta(organizacion, sector);
+            const sectorRuta = this.getRuta(organizacion, sector);
             sectorRuta.pop();
             sector['sectorName'] = (sectorRuta.length > 0) ? '(' + [...sectorRuta].reverse().map(s => s.nombre).join(', ') + ')' : '';
         }

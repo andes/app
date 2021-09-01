@@ -36,7 +36,7 @@ export class ReglasComponent {
 
     loadProfesionales(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(event.callback);
@@ -47,7 +47,7 @@ export class ReglasComponent {
 
 
     cargarReglas() {
-        let query: any = {};
+        const query: any = {};
         this.limpiarForm();
         query.organizacionDestino = this.organizacionDestino.id;
         if (this.prestacionDestino && this.prestacionDestino.conceptId) {
@@ -65,14 +65,14 @@ export class ReglasComponent {
                 this.organizacion = null;
             } else {
                 const longitud = this.reglas.length;
-                let destino = {
+                const destino = {
                     organizacion: {
                         nombre: this.organizacionDestino.nombre,
                         id: this.organizacionDestino.id
                     },
                     prestacion: this.prestacionDestino
                 };
-                let origen = {
+                const origen = {
                     organizacion: {
                         nombre: this.organizacion.nombre,
                         id: this.organizacion.id
@@ -157,10 +157,10 @@ export class ReglasComponent {
     onSave($event) {
         if (this.reglas?.length) {
             if (this.reglaCorrecta) {
-                let data = {
+                const data = {
                     reglas: this.reglas
                 };
-                let operation = this.servicioReglas.save(data);
+                const operation = this.servicioReglas.save(data);
                 operation.subscribe((resultado) => {
                     this.plex.toast('success', 'Las reglas se guardaron correctamente');
                     this.limpiarForm();

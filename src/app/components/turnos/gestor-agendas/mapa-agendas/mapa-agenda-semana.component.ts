@@ -75,14 +75,14 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
                             diaSemana.prestaciones?.forEach(prestacion => {
 
-                                let turnos = [];
+                                const turnos = [];
 
                                 prestacion.turnosPorPrestacion.forEach(turno => {
 
 
-                                    let horaTurno = moment(turno.horaInicio);
-                                    let horaInicial = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * aux);
-                                    let horaFin = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * (aux + 1));
+                                    const horaTurno = moment(turno.horaInicio);
+                                    const horaInicial = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * aux);
+                                    const horaFin = moment(dia.fecha).hour(hora.hora).minute(this.intervalo * (aux + 1));
 
                                     if (horaTurno.isBetween(horaInicial, horaFin, null, '[)')) {
                                         turnos.push(turno);
@@ -133,7 +133,7 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
     }
 
     private generarArregloHorarios() {
-        let horarios = [];
+        const horarios = [];
         for (let index = 0; index < (this.horaFin - this.horaInicio); index++) {
 
             horarios.push({
@@ -146,8 +146,8 @@ export class MapaAgendasSemanaComponent implements OnInit, OnDestroy {
 
 
     private turnosPorHora() {
-        let cantidadTurnosHora = 60 / this.intervalo;
-        let horarioTurnos = [];
+        const cantidadTurnosHora = 60 / this.intervalo;
+        const horarioTurnos = [];
         for (let index = 0; index < cantidadTurnosHora; index++) {
             horarioTurnos.push({ turnos: [] });
 

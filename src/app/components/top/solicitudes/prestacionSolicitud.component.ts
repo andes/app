@@ -53,7 +53,7 @@ export class PrestacionSolicitudComponent implements OnInit {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
         } else {
             // Por si hay algún documento en la vieja versión.
@@ -69,14 +69,14 @@ export class PrestacionSolicitudComponent implements OnInit {
     }
 
     imagenPrevia(i) {
-        let imagenPrevia = i - 1;
+        const imagenPrevia = i - 1;
         if (imagenPrevia >= 0) {
             this.indice = imagenPrevia;
         }
     }
 
     imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
+        const imagenSiguiente = i + 1;
         if (imagenSiguiente <= this.fotos.length - 1) {
             this.indice = imagenSiguiente;
         }

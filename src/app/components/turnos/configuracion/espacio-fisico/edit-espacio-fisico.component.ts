@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Output, Input, OnInit, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { Unsubscribe } from '@andes/shared';
-import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
-import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
-import { OrganizacionService } from './../../../../services/organizacion.service';
-import * as enumerados from './../../../../utils/enumerados';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { SnomedService } from '../../../../apps/mitos';
+import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { OrganizacionService } from './../../../../services/organizacion.service';
+import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
+import * as enumerados from './../../../../utils/enumerados';
 
 @Component({
     selector: 'edit-espacio-fisico',
@@ -33,22 +33,22 @@ export class EditEspacioFisicoComponent implements OnInit {
     public edif: any = {};
     public autorizado: boolean;
     constructor(private SNOMED: SnomedService, public plex: Plex, private router: Router, public espacioFisicoService: EspacioFisicoService, public organizacionService: OrganizacionService,
-        public auth: Auth) { }
+                public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.check('turnos:*') || this.auth.check('turnos:editarEspacio');
         if (!this.autorizado) {
             this.router.navigate(['./inicio']);
         }
-        let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
-        let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
-        let edificio = this.espacioFisicoHijo ? this.espacioFisicoHijo.edificio : '';
-        let sector = this.espacioFisicoHijo ? this.espacioFisicoHijo.sector : '';
-        let servicio = this.espacioFisicoHijo ? this.espacioFisicoHijo.servicio : '';
-        let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
-        let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
-        let equipamiento = this.espacioFisicoHijo ? this.espacioFisicoHijo.equipamiento : [];
-        let estado = this.espacioFisicoHijo ? this.espacioFisicoHijo.estado : '';
+        const nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
+        const descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
+        const edificio = this.espacioFisicoHijo ? this.espacioFisicoHijo.edificio : '';
+        const sector: any = this.espacioFisicoHijo ? this.espacioFisicoHijo.sector : '';
+        const servicio: any = this.espacioFisicoHijo ? this.espacioFisicoHijo.servicio : '';
+        const detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
+        const activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
+        const equipamiento = this.espacioFisicoHijo ? this.espacioFisicoHijo.equipamiento : [];
+        const estado = this.espacioFisicoHijo ? this.espacioFisicoHijo.estado : '';
         // this.modelo = { nombre, descripcion, activo, edificio, detalle, servicio, sector, equipamiento };
         this.modelo = { nombre, descripcion, activo, estado, edificio, detalle, equipamiento };
         if (servicio && servicio !== '') {
@@ -69,7 +69,7 @@ export class EditEspacioFisicoComponent implements OnInit {
     loadSectores(event) {
         // let sectores = [];
         this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(respuesta => {
-            let sectores = respuesta.map((ef) => {
+            const sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
                 return index === self.indexOf(elem);

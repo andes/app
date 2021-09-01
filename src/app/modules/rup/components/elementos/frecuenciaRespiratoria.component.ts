@@ -1,14 +1,10 @@
 import {
-    RUPComponent
-} from './../core/rup.component';
-import {
-    Component,
-    Output,
-    Input,
-    EventEmitter,
-    OnInit
+    Component, OnInit
 } from '@angular/core';
 import { RupElement } from '.';
+import {
+    RUPComponent
+} from './../core/rup.component';
 @Component({
     selector: 'rup-frecuencia-respiratoria',
     templateUrl: 'frecuenciaRespiratoria.html'
@@ -29,16 +25,13 @@ export class FrecuenciaRespiratoriaComponent extends RUPComponent implements OnI
     }
 
     getMensajes() {
-        let Edad;
-        let Sexo;
-        let frecuenciaRespiratoria;
-        let mensaje: any = {
+        const mensaje: any = {
             texto: '',
             class: 'danger'
         };
-        Sexo = this.paciente.sexo;
-        Edad = this.paciente.edad;
-        frecuenciaRespiratoria = this.registro.valor;
+        const Sexo = this.paciente.sexo;
+        const Edad = this.paciente.edad;
+        const frecuenciaRespiratoria = this.registro.valor;
         if (frecuenciaRespiratoria) {
             if (Edad <= 1) {
                 if (frecuenciaRespiratoria >= 20 && frecuenciaRespiratoria <= 40) {

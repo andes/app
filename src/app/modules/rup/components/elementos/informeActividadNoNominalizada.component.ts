@@ -66,12 +66,12 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     loadProfesionales(event) {
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            let callback = (this.registro.valor.informe.profesionales) ? this.registro.valor.informe.profesionales : null;
+            const callback = (this.registro.valor.informe.profesionales) ? this.registro.valor.informe.profesionales : null;
             event.callback(callback);
         }
     }

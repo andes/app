@@ -5,7 +5,7 @@ import { Server, saveAs } from '@andes/shared';
 @Injectable()
 export class QueriesService {
 
-    private biUrl = '/bi';  // URL to web api
+    private biUrl = '/bi'; // URL to web api
 
     constructor(private server: Server) {
     }

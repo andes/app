@@ -36,13 +36,13 @@ export class DarTurnoComponent implements OnInit {
                 this.longitude = position.coords.longitude;
                 this.getAgendasDisponibles({ lat: this.latitude, lng: this.longitude });
             },
-                (error) => {
-                    this.plex.info('warning', 'Para obtener los turnos disponibles debe activar su ubicación', 'Atención');
-                    const currentUrl = this.router.url;
-                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                        this.router.navigate([currentUrl]);
-                    });
+            (error) => {
+                this.plex.info('warning', 'Para obtener los turnos disponibles debe activar su ubicación', 'Atención');
+                const currentUrl = this.router.url;
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                    this.router.navigate([currentUrl]);
                 });
+            });
         });
         this.turnosServicePortal.turnoDadoSubject.subscribe(turno => {
             if (turno) {

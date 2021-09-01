@@ -54,7 +54,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
 
     loadProfesionales(event) {
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
@@ -158,9 +158,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                     let listaVacunas = [];
                     registrosRup = registrosRup.filter(reg => !reg.registro.esSolicitud);
                     if (registrosRup && registrosRup.length) {
-                        registrosRup.sort(function (a, b) {
-                            let dateA = new Date(a.fecha).getTime();
-                            let dateB = new Date(b.fecha).getTime();
+                        registrosRup.sort((a, b) => {
+                            const dateA = new Date(a.fecha).getTime();
+                            const dateB = new Date(b.fecha).getTime();
                             return dateA > dateB ? -1 : 1;
                         });
                         listaVacunas = registrosRup.map(r => {
@@ -175,12 +175,14 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         });
                     }
                     if (registrosNomivac && registrosNomivac.length) {
-                        let nomivacFiltradas = registrosNomivac.filter((regNomi) =>
+                        const nomivacFiltradas = registrosNomivac.filter((regNomi) =>
                             this.vacunasPorConceptId.some(vac => vac.codigo.toString() === regNomi.codigo)
                         );
                         if (listaVacunas && listaVacunas.length) {
-                            let filtroDuplicadas = nomivacFiltradas.filter(v => {
-                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) { return v; }
+                            const filtroDuplicadas = nomivacFiltradas.filter(v => {
+                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) {
+                                    return v;
+                                }
                             });
                             listaVacunas = [...listaVacunas, ...filtroDuplicadas];
                         } else {
@@ -200,8 +202,8 @@ export class VacunasComponent extends RUPComponent implements OnInit {
             const ultimoRegistro = this.vacunasEncontradas[0];
             const tiempoInterdosis = this.registro.valor.vacuna.dosis.tiempoInterdosis;
             if (tiempoInterdosis > 0) {
-                let diasdiferencia = this.registro.valor.vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
-                let contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
+                const diasdiferencia = this.registro.valor.vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
+                const contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
                 if (contdias < tiempoInterdosis) {
                     this.plex.info('danger', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
                     this.registro.valor.vacuna.dosis = Object.assign({}, null);

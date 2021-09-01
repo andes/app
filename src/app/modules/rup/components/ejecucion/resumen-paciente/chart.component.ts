@@ -53,9 +53,9 @@ export class ChartComponent implements AfterViewInit {
             if (prestaciones && prestaciones.length) {
                 this.puntos = prestaciones;
                 // ordenamos los pesos por fecha
-                this.puntos.sort(function (a, b) {
-                    let dateA = new Date(a.fecha).getTime();
-                    let dateB = new Date(b.fecha).getTime();
+                this.puntos.sort((a, b) => {
+                    const dateA = new Date(a.fecha).getTime();
+                    const dateB = new Date(b.fecha).getTime();
                     return dateA > dateB ? 1 : -1;
                 });
 
@@ -79,7 +79,7 @@ export class ChartComponent implements AfterViewInit {
     }
     generarEtiquetasCurva() {
         let expresion;
-        let opcionesGrafico = { titulo: '', labelY: '', unidad: '' };
+        const opcionesGrafico = { titulo: '', labelY: '', unidad: '' };
         switch (this.modelo.radio) {
             case 1: // Peso
                 expresion = '<<27113001';
@@ -151,8 +151,8 @@ export class ChartComponent implements AfterViewInit {
                 callbacks: {
                     // Use the footer callback to display the sum of the items showing in the tooltip
                     footer: function (tooltipItems, _data) {
-                        let text = [];
-                        tooltipItems.forEach(function (tooltipItem) {
+                        const text = [];
+                        tooltipItems.forEach((tooltipItem) => {
                             text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
                             text.push('Prestación: ' + data[tooltipItem.index].tipoPrestacion.term);
                         });

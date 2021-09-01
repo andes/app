@@ -52,10 +52,10 @@ export class SuspenderTurnoComponent implements OnInit {
             id: 2,
             nombre: 'profesional'
         },
-        {
-            id: 3,
-            nombre: 'organizacion'
-        }];
+                                 {
+                                     id: 3,
+                                     nombre: 'organizacion'
+                                 }];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
         // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
@@ -66,7 +66,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
 
     seleccionarTurno(turno) {
-        let indice = this.seleccionadosSMS.indexOf(turno);
+        const indice = this.seleccionadosSMS.indexOf(turno);
         if (indice === -1) {
             if (turno.paciente && turno.paciente.id) {
                 this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
@@ -107,7 +107,9 @@ export class SuspenderTurnoComponent implements OnInit {
         if (this.accion === 'suspenderTurno') {
             patch = {
                 op: this.accion,
-                turnos: this.turnos.map((resultado) => { return resultado.id; }),
+                turnos: this.turnos.map((resultado) => {
+                    return resultado.id;
+                }),
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
             };
         } else {
@@ -135,9 +137,9 @@ export class SuspenderTurnoComponent implements OnInit {
                 if (environment.production === true) {
                     for (let x = 0; x < this.seleccionadosSMS.length; x++) {
 
-                        let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-                        let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                        let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
+                        const dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+                        const horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+                        const mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                         this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
                     }
                 } else {
@@ -156,7 +158,7 @@ export class SuspenderTurnoComponent implements OnInit {
     agregarPacienteListaEspera() {
 
         for (let x = 0; x < this.turnos.length; x++) {
-            let patch = {
+            const patch = {
                 'op': 'listaEsperaSuspensionAgenda',
                 'idAgenda': this.agenda.id,
                 'pacientes': this.turnos[x]
@@ -190,8 +192,10 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) { return; }
-        let smsParams = {
+        if (!paciente.telefono) {
+            return;
+        }
+        const smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,
         };
@@ -219,7 +223,7 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     smsEnviado(turno) {
-        let ind = this.seleccionadosSMS.indexOf(turno);
+        const ind = this.seleccionadosSMS.indexOf(turno);
         if (ind >= 0) {
             if (this.seleccionadosSMS[ind].smsEnviado === undefined) {
                 return 'no enviado';

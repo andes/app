@@ -43,7 +43,7 @@ export function getTipoTurnos() {
 
 export function getRefactorNombre(data) {
     if (data && data.length > 0 && data[0].count > 0) {
-        let nuevoArrayLabels = {};
+        const nuevoArrayLabels = {};
 
         Object.keys(labels).map(tt => {
             nuevoArrayLabels[labels[tt].id] = labels[tt].nombre;

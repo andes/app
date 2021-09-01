@@ -51,7 +51,7 @@ export class SelectOrganizacionComponent implements OnInit {
             ).subscribe(() => {
                 this.ds.getActivos().subscribe(disclaimers => {
                     if (disclaimers && disclaimers.length > 0) {
-                        let disclaimer = disclaimers[0];
+                        const disclaimer = disclaimers[0];
                         this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
                             if (userDisclaimers.some(item => item.id === disclaimer.id)) {
                                 this.router.navigate(['inicio']);

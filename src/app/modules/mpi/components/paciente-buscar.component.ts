@@ -70,7 +70,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if ($event.type) {
             return;
         }
-        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
+        const textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
         if (textoLibre && textoLibre.length) {
             // Controla el scanner
             if (!this.pacienteBuscar.controlarScanner(textoLibre)) {

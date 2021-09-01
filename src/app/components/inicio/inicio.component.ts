@@ -99,7 +99,7 @@ export class InicioComponent implements AfterViewInit {
                         });
 
                         // Novedades?
-                        let modulos = this.modulos.map(p => {
+                        const modulos = this.modulos.map(p => {
                             return p._id;
                         });
                         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {

@@ -54,7 +54,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-        let params = {
+        const params = {
             idPaciente: this.paciente.id,
             estados: [
                 'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes

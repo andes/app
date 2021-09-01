@@ -43,7 +43,7 @@ export class MapaAgendasComponent implements OnInit {
     visualizarSemana(semana) {
 
         this.accion = null;
-        let diaSema = semana.find(dia => !dia.estado);
+        const diaSema = semana.find(dia => !dia.estado);
         this.verSemana = true;
         this.verMes = false;
         this.diaInicio = moment(diaSema.fecha);

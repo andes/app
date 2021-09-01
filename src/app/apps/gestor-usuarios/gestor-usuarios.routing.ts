@@ -5,7 +5,7 @@ import { PerfilDetailComponent } from './components/perfiles-detail.component';
 import { UsuariosListComponent } from './views/usuarios-list.view';
 import { UsuariosEditComponent } from './views/usuarios-edit.view';
 
-let routes = [
+const routes = [
     {
         path: 'perfiles',
         component: PerfilListComponent,

@@ -81,7 +81,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     createUrl(doc) {
         if (doc.id) {
-            let apiUri = environment.API;
+            const apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
         } else {
             // Por si hay algún documento en la vieja versión.
@@ -90,9 +90,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     fromMobile() {
-        let paciente = this.paciente ? this.paciente.id : null;
-        let prestacion = this.prestacion.id;
-        let registro = this.registro.id;
+        const paciente = this.paciente ? this.paciente.id : null;
+        const prestacion = this.prestacion.id;
+        const registro = this.registro.id;
         this.loading = true;
         this.adjuntosService.post({ paciente, prestacion, registro }).subscribe((data) => {
             this.adjunto = data;
@@ -111,7 +111,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             if (data.length > 0) {
                 this.waiting = false;
                 this.adjunto = data[0];
-                let docs = this.adjunto.valor.documentos;
+                const docs = this.adjunto.valor.documentos;
                 docs.forEach((item) => {
                     this.registro.valor.documentos.push(item);
                 });

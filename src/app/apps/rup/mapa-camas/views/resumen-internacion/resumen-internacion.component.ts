@@ -402,7 +402,7 @@ export class ResumenInternacionComponent implements OnInit {
             template: (item, element: HTMLElement, data) => {
                 const group = this.groups.find(g => g.id === data.group);
                 const parent = element.parentElement;
-                parent.style.setProperty(`--color`, group.color);
+                parent.style.setProperty('--color', group.color);
                 if (data.content) {
                     return data.content;
                 }
@@ -430,10 +430,10 @@ export class ResumenInternacionComponent implements OnInit {
 
             this.groups.forEach((g) => {
                 const es: HTMLElement[] = <any>element.querySelectorAll(`.vis-group.${g.id}`);
-                es.forEach((e: any) => e.style.setProperty(`--bg-color`, g.color + '2e'));
+                es.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
 
                 const es2: HTMLElement[] = <any>element.querySelectorAll(`.vis-label.${g.id}`);
-                es2.forEach((e: any) => e.style.setProperty(`--bg-color`, g.color + '2e'));
+                es2.forEach((e: any) => e.style.setProperty('--bg-color', g.color + '2e'));
             });
         });
 
@@ -541,8 +541,8 @@ interface IDataSet {
     group: string;
     id: string;
     idPrestacion: string;
-    organizacion: { id: string, nombre: string };
-    profesional: { id: string, nombre: string };
+    organizacion: { id: string; nombre: string };
+    profesional: { id: string; nombre: string };
     fecha: Date;
     term: string;
     cama?: string;

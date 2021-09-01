@@ -147,7 +147,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
         this.route.params.subscribe(params => {
-            let id = params['id'];
+            const id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -189,7 +189,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             this.prestacion.elementoRUP = this.elementoRUP.id;
                             if (this.elementoRUP.requeridos.length > 0) {
-                                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                for (const elementoRequerido of this.elementoRUP.requeridos) {
                                     this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                 }
                             }
@@ -221,8 +221,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             }
 
                             if (this.elementoRUP.requeridos.length > 0) {
-                                for (let elementoRequerido of this.elementoRUP.requeridos) {
-                                    let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
+                                for (const elementoRequerido of this.elementoRUP.requeridos) {
+                                    const registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
                                     if (!registoExiste) {
                                         this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                         this.ejecucionService.agregarConcepto(elementoRequerido.concepto);
@@ -314,7 +314,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             registro = registro.dragData;
         }
         // buscamos posición actual
-        let posicionActual = this.prestacion.ejecucion.registros.findIndex(r => (registro.id === r.id));
+        const posicionActual = this.prestacion.ejecucion.registros.findIndex(r => (registro.id === r.id));
 
         // si la posición a la que lo muevo es distinta a la actual
         // o si la posición nueva es distinta a la siguiente de la actual (misma posicion)
@@ -405,7 +405,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
-            let registros = this.prestacion.ejecucion.registros;
+            const registros = this.prestacion.ejecucion.registros;
             const _registro = registros[this.indexEliminar];
 
             // Quitamos toda la vinculación que puedan tener con el registro
@@ -413,7 +413,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
 
                     // relacionadoCon está populado, y debe comprobarse el id
-                    let indexRel = registro.relacionadoCon.findIndex(x => x && x.id && x.id === _registro.id);
+                    const indexRel = registro.relacionadoCon.findIndex(x => x && x.id && x.id === _registro.id);
                     if (indexRel !== -1) {
                         registro.relacionadoCon.slice(indexRel, 1);
                     }
@@ -494,14 +494,14 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         if (resultadoHuds.tipo === 'prestacion') {
             // this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
+            const idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
 
-            let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
+            const existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
             if (!existeEjecucion) {
-                let valor = { idRegistroOrigen: idRegistroOrigen };
+                const valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
                     // let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
                 });
@@ -554,7 +554,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
         this.flagValid = true;
         this.rupElements.forEach((item) => {
-            let instance = item.rupInstance;
+            const instance = item.rupInstance;
             instance.checkEmpty();
             this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
@@ -718,10 +718,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     // Actualiza ambas columnas de registros según las relaciones
     armarRelaciones(registros) {
         registros = this.prestacion.ejecucion.registros;
-        let relacionesOrdenadas = [];
+        const relacionesOrdenadas = [];
 
         registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon[0] ? x.relacionadoCon[0] === cosa.id : false);
+            const esPadre = registros.filter(x => x.relacionadoCon[0] ? x.relacionadoCon[0] === cosa.id : false);
 
             if (esPadre.length > 0) {
                 if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
@@ -777,7 +777,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     // Busca recursivamente en los relacionadoCon de los registros
     recorreArbol(registroDestino, registroOrigen) {
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
-            for (let registro of registroDestino.relacionadoCon) {
+            for (const registro of registroDestino.relacionadoCon) {
                 if (registro.id === registroOrigen.id || registro.concepto.conceptId === registroOrigen.concepto.conceptId) {
                     return true;
                 }
@@ -812,7 +812,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     registrosColapsados() {
         this.prestacion.ejecucion.registros.forEach(registro => {
-            let unRegistro = this.itemsRegistros[registro.id].collapse;
+            const unRegistro = this.itemsRegistros[registro.id].collapse;
             if (unRegistro !== this.collapse) {
                 this.collapse = !this.collapse;
             }
@@ -830,7 +830,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     activarPrivacidad(registro) {
-        let scopeCruzado = { 'public': 'private', 'private': 'public' };
+        const scopeCruzado = { 'public': 'private', 'private': 'public' };
         registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
 

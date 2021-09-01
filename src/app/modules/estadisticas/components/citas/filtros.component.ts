@@ -110,7 +110,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
-            let query = {
+            const query = {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
@@ -123,7 +123,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     }
 
     onChange() {
-        let filtrosParams = {
+        const filtrosParams = {
             fechaDesde: this.desde,
             fechaHasta: this.hasta,
             tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,

@@ -76,7 +76,7 @@ export class TurnosPacienteComponent implements OnInit {
 
     // Inicialización
     constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
-        public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
+                public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
@@ -146,12 +146,12 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     async printArancelamiento(turno) {
-        let data = {};
+        const data = {};
         if (this.cambioMotivo) {
             data['motivoConsulta'] = turno.motivoConsulta;
         }
 
-        let obraSocialUpdate = this._obraSocial.find(os => os.nombre === this.obraSocialSeleccionada);
+        const obraSocialUpdate = this._obraSocial.find(os => os.nombre === this.obraSocialSeleccionada);
         turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : {
             codigoPuco: null,
             nombre: this.obraSocialSeleccionada,
@@ -160,7 +160,7 @@ export class TurnosPacienteComponent implements OnInit {
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
         data['turno'] = turno;
-        let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
+        const bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
 
         this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(() => {
             this.documentosService.descargarArancelamiento({ turnoId: turno.id }, 'recupero').subscribe();
@@ -170,7 +170,7 @@ export class TurnosPacienteComponent implements OnInit {
     eventosTurno(turno, operacion) {
         let mensaje = '';
         let tipoToast = 'info';
-        let patch: any = {
+        const patch: any = {
             op: operacion,
             turnos: [turno._id],
         };

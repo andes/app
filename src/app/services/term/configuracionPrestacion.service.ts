@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ConfiguracionPrestacionService {
-    private configPres = '/core/term/configuracionPrestaciones';  // URL to web api
+    private configPres = '/core/term/configuracionPrestaciones'; // URL to web api
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {

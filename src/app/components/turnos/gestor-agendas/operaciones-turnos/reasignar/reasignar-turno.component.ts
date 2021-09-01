@@ -105,7 +105,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     // 1. Lista de agendas similares/candidatas
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-        let params = {
+        const params = {
             idAgenda: idAgendaAReasignar,
             idBloque: idBloque,
             idTurno: idTurno
@@ -124,17 +124,17 @@ export class ReasignarTurnoComponent implements OnInit {
         this.serviceAgenda.getById(idAgenda).subscribe(agendaDestino => {
             this.agendaDestino.agenda = agendaDestino;
 
-            let indiceBloque = agendaDestino.bloques.findIndex(x => x.id === idBloque);
+            const indiceBloque = agendaDestino.bloques.findIndex(x => x.id === idBloque);
             this.agendaDestino.bloque = agendaDestino.bloques[indiceBloque];
 
-            let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === idTurno);
+            const indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === idTurno);
             this.agendaDestino.turno = agendaDestino.bloques[indiceBloque].turnos[indiceTurno];
         });
     }
 
     reasignacionManualAgendas(event) {
         if (event && this.agendaAReasignar.length) {
-            let turnoReasignado = this.agendaAReasignar.map(b => b.map(t => t.id === event.turno.id))[0];
+            const turnoReasignado = this.agendaAReasignar.map(b => b.map(t => t.id === event.turno.id))[0];
             this.seleccionarTurno(turnoReasignado, event.bloque, false);
         }
     }

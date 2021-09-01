@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class EspacioFisicoService {
-    private espacioFisicoUrl = '/modules/turnos/espacioFisico';  // URL to web api
+    private espacioFisicoUrl = '/modules/turnos/espacioFisico'; // URL to web api
     constructor(private server: Server) { }
 
     get(params: any): Observable<IEspacioFisico[]> {

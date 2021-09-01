@@ -24,7 +24,7 @@ export class ActualizarSeguimientoComponent implements OnInit {
     }
 
     guardar() {
-        let data: any = {
+        const data: any = {
             organizacionSeguimiento: this.seguimiento.organizacionSeguimiento,
             contactosEstrechos: this.seguimiento.contactosEstrechos
         };

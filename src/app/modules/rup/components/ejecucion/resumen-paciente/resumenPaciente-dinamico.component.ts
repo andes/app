@@ -66,11 +66,11 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        for (let conceptoGrafico of this.conceptosGrafico) {
+        for (const conceptoGrafico of this.conceptosGrafico) {
             this.graficos.push(this.elementosRUPService.buscarElemento(conceptoGrafico, false));
         }
         // Loopeamos los conceptos que no son graficos y recupermaos su ultimo registro
-        for (let concepto of this.conceptos) {
+        for (const concepto of this.conceptos) {
             this.elementos = [...this.elementos, this.elementosRUPService.buscarElemento(concepto, false)];
             this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<' + concepto.conceptId).subscribe(prestaciones => {
                 if (prestaciones.length) {

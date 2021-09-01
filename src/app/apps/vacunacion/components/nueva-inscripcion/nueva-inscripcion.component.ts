@@ -130,7 +130,7 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         this.pacienteService.getById(idPaciente).subscribe(
             paciente => {
                 this.paciente = paciente;
-                let gruposPosibles = ['personal-salud', 'policia', 'discapacidad'];
+                const gruposPosibles = ['personal-salud', 'policia', 'discapacidad'];
 
                 if (this.paciente.edad > 59) {
                     gruposPosibles.push('mayores60');
@@ -153,7 +153,7 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
                     }
 
                     this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
-                        let grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+                        const grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
                         if (grupofr) {
                             this.morbilidades = grupofr.morbilidades;
                         }

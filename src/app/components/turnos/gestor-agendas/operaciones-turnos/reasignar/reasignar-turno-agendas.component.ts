@@ -66,7 +66,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     countBloques = [];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-        public serviceTurno: TurnoService, public smsService: SmsService) { }
+                public serviceTurno: TurnoService, public smsService: SmsService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -75,9 +75,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-        let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
-        let turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
-        let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
+        const turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+        const turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
+        const bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
         this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
         let tipoTurno;
 
@@ -101,7 +101,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         }
 
         // Creo el Turno nuevo
-        let datosTurnoNuevo = {
+        const datosTurnoNuevo = {
             idAgenda: this.agendaSeleccionada._id,
             idBloque: bloque._id,
             idTurno: turno._id,
@@ -128,8 +128,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
             this.serviceTurno.save(datosTurnoNuevo).subscribe(resultado => {
 
-                let turnoReasignado = this.turnoSeleccionado;
-                let siguiente = {
+                const turnoReasignado = this.turnoSeleccionado;
+                const siguiente = {
                     idAgenda: this.agendaSeleccionada._id,
                     idBloque: this.agendaSeleccionada.bloques[indiceBloque]._id,
                     idTurno: this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno]._id
@@ -144,7 +144,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 }
 
                 // Datos del turno "nuevo", que se guardan en el turno "viejo" para poder referenciarlo
-                let datosTurnoReasignado = {
+                const datosTurnoReasignado = {
                     idAgenda: this.agendaAReasignar.id,
                     idTurno: this.datosAgenda.idTurno,
                     idBloque: this.datosAgenda.idBloque,
@@ -159,11 +159,11 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
                     // Enviar SMS sólo en Producción
                     if (environment.production === true && this.smsStatus) {
-                        let diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
-                        let tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
-                        let dia = moment(turno.horaInicio).format('DD/MM/YYYY');
-                        let tm = moment(turno.horaInicio).format('HH:mm');
-                        let mensaje = 'AVISO:  Su turno de ' + this.turnoSeleccionado.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
+                        const diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
+                        const tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
+                        const dia = moment(turno.horaInicio).format('DD/MM/YYYY');
+                        const tm = moment(turno.horaInicio).format('HH:mm');
+                        const mensaje = 'AVISO:  Su turno de ' + this.turnoSeleccionado.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
                             + ' hs. fue REASIGNADO  al ' + dia + ' a las ' + tm + ' hs.   ' + this.auth.organizacion.nombre;
                         this.plex.toast('info', 'Se informó al paciente mediante un SMS');
                         this.enviarSMS(this.turnoSeleccionado.paciente, mensaje);
@@ -171,7 +171,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                         this.plex.toast('info', 'INFO: SMS no enviado');
                     }
                     if (this.esTurnoDoble(turnoReasignado)) {
-                        let patch: any = {
+                        const patch: any = {
                             op: 'darTurnoDoble',
                             turnos: [turnoSiguiente._id]
                         };
@@ -197,13 +197,15 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     // esta funcion se repite en suspender turno
     // TODO: aplicar buenas practicas de programacion
     enviarSMS(paciente: any, mensaje) {
-        if (!paciente.telefono) { return; }
-        let smsParams = {
+        if (!paciente.telefono) {
+            return;
+        }
+        const smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,
         };
         this.smsService.enviarSms(smsParams).subscribe(sms => {
-            let resultado = sms;
+            const resultado = sms;
             // "if 0 errores"
             if (resultado === '0') {
                 this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
@@ -211,17 +213,17 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
         },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
+        err => {
+            if (err) {
+                this.plex.toast('danger', 'ERROR: Servicio caído');
 
-                }
-            });
+            }
+        });
     }
 
     hayTurnosDisponibles(agenda: any) {
-        let profesionalOrigen = (this.agendaAReasignar.profesionales && this.agendaAReasignar.profesionales.length > 0) ? this.agendaAReasignar.profesionales[0].id : null;
-        let profesionalDestino = (agenda.profesionales && agenda.profesionales.length > 0) ? agenda.profesionales[0]._id : null;
+        const profesionalOrigen = (this.agendaAReasignar.profesionales && this.agendaAReasignar.profesionales.length > 0) ? this.agendaAReasignar.profesionales[0].id : null;
+        const profesionalDestino = (agenda.profesionales && agenda.profesionales.length > 0) ? agenda.profesionales[0]._id : null;
         return agenda.bloques.filter(bloque => {
             return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
                 (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
@@ -245,7 +247,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     tieneTurnos(bloque: IBloque): boolean {
-        let turnos = bloque.turnos;
+        const turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
     }
 
@@ -272,10 +274,12 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
 
     esTurnoDoble(turno) {
-        let bloqueTurno = this.agendaAReasignar.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
+        const bloqueTurno = this.agendaAReasignar.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
         let index;
         if (bloqueTurno) {
-            index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });
+            index = bloqueTurno.turnos.findIndex(t => {
+                return t.id === turno._id;
+            });
             if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'turnoDoble')) || (index === (bloqueTurno.turnos.length - 1))) {
                 return false;
             } else {
