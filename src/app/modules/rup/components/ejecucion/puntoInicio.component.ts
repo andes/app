@@ -242,7 +242,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (prestacion.refsetIds?.length > 1) {
             const prestacionHijo = this.tiposPrestacion.find(p =>
                 prestacion.refsetIds.find(concepto => concepto === p.conceptId));
-            prestacionHijo['esMultiprestacion'] = true;
+            if (prestacionHijo) {
+                prestacionHijo['esMultiprestacion'] = true;
+            }
             return prestacionHijo;
         }
         return prestacion;
@@ -599,10 +601,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         if (prestacion.refsetIds) {
             const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.id);
+            if (!prestacionHijo) {
+
+                return false;
+            }
             if (!(turno.prestacion?.length === prestacion.refsetIds?.length)) {
                 return turno.prestacion?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
             }
             return turno.prestacion.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
+
         }
         return turno.prestacion ? turno.prestacion[0] : null;
     }

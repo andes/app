@@ -259,6 +259,12 @@
                         <rup-seguimientoPaciente [paciente]="paciente">
                         </rup-seguimientoPaciente>
                     </plex-tab>
+                    <plex-tab *ngIf="prestacionesValidadas.length>0" label="Otros Registros">
+                        <ng-container *ngFor="let prestacionValidada of prestacionesValidadas">
+                            <vista-prestacion [prestacion]="prestacionValidada">
+                            </vista-prestacion>
+                        </ng-container>
+                    </plex-tab>
                     <ng-container *ngFor="let registro of registrosHUDS">
                         <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                   [class]="registro.data.class" [color]="registro.data.class"
