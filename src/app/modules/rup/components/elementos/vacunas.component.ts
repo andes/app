@@ -165,6 +165,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         });
                         listaVacunas = registrosRup.map(r => {
                             return {
+                                codigo: r.registro.valor.vacuna.vacuna.codigo,
                                 fechaAplicacion: r.fecha,
                                 vacuna: r.registro.valor.vacuna.vacuna.nombre,
                                 condicion: r.registro.valor.vacuna.condicion.nombre,
@@ -180,7 +181,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         );
                         if (listaVacunas && listaVacunas.length) {
                             const filtroDuplicadas = nomivacFiltradas.filter(v => {
-                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.ordenDosis)) { return v; }
+                                if (!listaVacunas.find(vr => vr.codigo.toString() === v.codigo && vr.dosis === v.ordenDosis)) { return v; }
                             });
                             listaVacunas = [...listaVacunas, ...filtroDuplicadas];
                         } else {
