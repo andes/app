@@ -1,3 +1,11 @@
+# [5.62.0](https://github.com/andes/app/compare/v5.61.0...v5.62.0) (2021-09-01)
+
+
+### Features
+
+* **EP:** semaforo seguimiento ([#2410](https://github.com/andes/app/issues/2410)) ([d40dfe8](https://github.com/andes/app/commit/d40dfe8f8d23790c66d9de700b400469a0f51552))
+* **seguimiento:** control permisos ([#2415](https://github.com/andes/app/issues/2415)) ([1d604ba](https://github.com/andes/app/commit/1d604bae4b7b67c4e414222dc6e0684c2818c898))
+
 # [5.61.0](https://github.com/andes/app/compare/v5.60.0...v5.61.0) (2021-08-25)
 
 
