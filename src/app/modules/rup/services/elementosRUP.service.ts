@@ -231,4 +231,39 @@ export class ElementosRUPService {
         };
     }
 
+    getConceptoCovidConfirmadoNexo() {
+        return {
+            conceptId: '711000246101',
+            term: 'covid-19 confirmado por síntomas y nexo epidemiológico sin pcr',
+            fsn: 'covid-19 confirmado por síntomas y nexo epidemiológico sin pcr (trastorno)',
+            semanticTag: 'trastorno'
+        };
+    }
+
+    getConceptoConfirmadoTestRapido() {
+        return {
+            conceptId: '901000246101',
+            term: 'resultado positivo de test rápido de antígeno COVID-19 (hallazgo)',
+            fsn: 'resultado positivo de test rápido de antígeno COVID-19 (hallazgo) (hallazgo)',
+            semanticTag: 'hallazgo'
+        };
+    }
+
+    getConceptoDescartadoTestRapido() {
+        return {
+            conceptId: '891000246100',
+            term: 'resultado negativo de test rápido de antígeno COVID-19 (hallazgo)',
+            fsn: 'resultado negativo de test rápido de antígeno COVID-19 (hallazgo) (hallazgo)',
+            semanticTag: 'hallazgo'
+        };
+    }
+
+    getConceptoConfirmadoPCR() {
+        return {
+            conceptId: '840539006',
+            term: 'enfermedad causada por COVID-19',
+            fsn: 'enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (trastorno)',
+            semanticTag: 'trastorno'
+        };
+    }
 }
