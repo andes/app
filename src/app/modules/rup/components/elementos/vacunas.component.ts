@@ -169,7 +169,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                                 vacuna: r.registro.valor.vacuna.vacuna.nombre,
                                 condicion: r.registro.valor.vacuna.condicion.nombre,
                                 esquema: r.registro.valor.vacuna.esquema.nombre,
-                                dosis: r.registro.valor.vacuna.dosis.nombre,
+                                dosis: r.registro.valor.vacuna.dosis.orden,
                                 lote: r.registro.valor.vacuna.lote
                             };
                         });
@@ -180,9 +180,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         );
                         if (listaVacunas && listaVacunas.length) {
                             const filtroDuplicadas = nomivacFiltradas.filter(v => {
-                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) {
-                                    return v;
-                                }
+                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.ordenDosis)) { return v; }
                             });
                             listaVacunas = [...listaVacunas, ...filtroDuplicadas];
                         } else {
