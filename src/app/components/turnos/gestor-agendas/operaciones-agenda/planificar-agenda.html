@@ -56,15 +56,18 @@
                         </div>
                     </div>
 
-                    <div *ngIf="modelo.horaInicio && modelo.horaFin">
-                        <plex-bool [(ngModel)]="virtual" tooltip="Ingresar un link para una videollamada"
-                                   label="Agenda Virtual" name="agendaVirtual" type="slide">
-                        </plex-bool>
-                        <plex-text *ngIf="virtual" name="link" [(ngModel)]="modelo.link" label="link"
-                                   placeholder="ingresar link">
-                        </plex-text>
+                    <ng-contanier *feature="'agendaVirtual'">
+                        <div *ngIf="modelo.horaInicio && modelo.horaFin">
+                            <plex-bool [(ngModel)]="virtual" tooltip="Ingresar un link para una videollamada"
+                                       label="Agenda Virtual" name="agendaVirtual" type="slide">
+                            </plex-bool>
+                            <plex-text *ngIf="virtual" name="link" [(ngModel)]="modelo.link" label="link"
+                                       placeholder="ingresar link">
+                            </plex-text>
 
-                    </div>
+                        </div>
+                    </ng-contanier>
+
                     <!--Opcion agenda no nominalizada o dinamica-->
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col">
