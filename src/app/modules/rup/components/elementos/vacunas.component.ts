@@ -174,11 +174,13 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         listaVacunas = registrosRup.map(r => {
                             return {
                                 fechaAplicacion: r.fecha,
+                                codigo: r.registro.valor.vacuna.vacuna.codigo,
                                 vacuna: r.registro.valor.vacuna.vacuna.nombre,
                                 condicion: r.registro.valor.vacuna.condicion.nombre,
                                 esquema: r.registro.valor.vacuna.esquema.nombre,
                                 dosis: r.registro.valor.vacuna.dosis.nombre,
-                                lote: r.registro.valor.vacuna.lote
+                                lote: r.registro.valor.vacuna.lote,
+                                orden: r.registro.valor.vacuna.dosis.orden
                             };
                         });
                     }
@@ -191,10 +193,11 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         }
                         if (listaVacunas && listaVacunas.length) {
                             const filtroDuplicadas = nomivacFiltradas.filter(v => {
-                                if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) {
+                                if (!listaVacunas.find(vr => vr.codigo.toString() === v.codigo && vr.orden === v.ordenDosis)) {
                                     return v;
                                 }
                             });
+
                             listaVacunas = [...listaVacunas, ...filtroDuplicadas];
                         } else {
                             listaVacunas = [...nomivacFiltradas];
