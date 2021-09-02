@@ -18,7 +18,7 @@ export class OrganizacionComponent implements OnInit {
     listado$: Observable<IOrganizacion[]>;
     listadoActual: IOrganizacion[];
     seleccion: IOrganizacion;
-    loader = false;
+    loader = true;
     filtros: any = {};
     queryParams = {
         skip: 0,
@@ -75,7 +75,11 @@ export class OrganizacionComponent implements OnInit {
         }
         this.updateTitle('Organizaciones');
         this.listado$ = this.organizacionService.organizacionesFiltradas$.pipe(
-            map(resp => this.listadoActual = resp)
+            map(resp => {
+                this.listadoActual = resp;
+                this.loader = false;
+                return resp;
+            })
         );
     }
 
@@ -92,12 +96,14 @@ export class OrganizacionComponent implements OnInit {
     }
 
     filtrar() {
+        this.organizacionService.lastResults.next(null);
         this.organizacionService.nombre.next(this.filtros.nombre);
         this.organizacionService.soloNoActivo.next(this.filtros.soloNoActivo);
     }
 
     onReturn(): void {
         this.updateTitle('Organizaciones');
+        this.loader = true;
         this.showcreate = false;
         this.seleccion = null;
         this.organizacionService.lastResults.next(null);

@@ -17,7 +17,7 @@
             </plex-grid>
         </header>
 
-        <plex-table [columns]="columns" #table="plTable" [offset]="0" (scroll)="onScroll()">
+        <plex-table [columns]="columns" #table="plTable" [offset]="(listado$ | async)?.length ? 0 : null" (scroll)="onScroll()">
             <plex-table-columns>
             </plex-table-columns>
             <tr *ngFor="let organizacion of (listado$ | plSort:table | async)" class='selectable'>
@@ -52,9 +52,9 @@
             </tr>
         </plex-table>
 
-        <plex-loader *ngIf="loader"></plex-loader>
-        <div *ngIf="!(listado$ | async)?.length" class="alert alert-warning">
-            <p style="text-align: center;"> No se encontraron resultados </p>
+        <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+        <div *ngIf="!loader && !(listado$ | async)?.length" class="alert alert-warning" justify="center">
+             No se encontraron resultados 
         </div>
     </plex-layout-main>
 </plex-layout>
