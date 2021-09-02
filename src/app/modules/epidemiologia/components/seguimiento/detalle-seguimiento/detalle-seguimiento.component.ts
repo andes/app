@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
 })
 export class DetalleSeguimientoComponent {
     @Input() seguimiento;
-    @Output() returnDetalle: EventEmitter<any> = new EventEmitter<any>();
-    @Output() verLlamado = new EventEmitter<any>();
+    @Output() close: EventEmitter<any> = new EventEmitter<any>();
 
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
@@ -32,7 +31,7 @@ export class DetalleSeguimientoComponent {
     ];
 
     cerrar() {
-        this.returnDetalle.emit(false);
+        this.close.emit(false);
     }
 
     verPrestacion(prestacionId) {

@@ -6,17 +6,17 @@
 </paciente-detalle>
 <form #formEstado="ngForm">
 
-    <ng-container *ngIf="!editContactos">
+    <ng-container *ngIf="esAuditor && !editContactos">
         <plex-title size="sm" titulo="Actualizar">
         </plex-title>
-        <plex-wrapper>
+        <plex-wrapper >
             <div class="w-100" justify>
                 <plex-select tmOrganizaciones label="Organización" name="organizacion"
                     [(ngModel)]='seguimiento.organizacionSeguimiento'></plex-select>
             </div>
         </plex-wrapper>
     </ng-container>
-    <semaforo-priorizacion [name]="'seguimiento-epidemiologico'" [prioridad]="seguimiento.score?.value || 0" (change)="changePriority($event)"></semaforo-priorizacion>
+    <semaforo-priorizacion *ngIf="esAuditor" [name]="'seguimiento-epidemiologico'" [prioridad]="seguimiento.score?.value || 0" (change)="changePriority($event)"></semaforo-priorizacion>
         
     <app-ficha-epidemiologica-contactos [editMode]="true" [contactos]="seguimiento.contactosEstrechos" (onEditEmit)="hideSubmit($event)">
     </app-ficha-epidemiologica-contactos>
