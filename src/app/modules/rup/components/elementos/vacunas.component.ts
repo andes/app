@@ -38,6 +38,14 @@ export class VacunasComponent extends RUPComponent implements OnInit {
             this.vacunas$ = this.vacunasService.getNomivacVacunas({ habilitado: true, calendarioNacional: filtroCalendario, sort: 'nombre' }).pipe(
                 map(vacunas => {
                     return vacunas.map((v) => {
+                        this.vacunasPorConceptId = vacunas
+                            .filter(vac => vac.snomed_conceptId === this.registro.concepto.conceptId)
+                            .map(vac => {
+                                return {
+                                    conceptId: vac.snomed_conceptId,
+                                    codigo: vac.codigo
+                                };
+                            });
                         return { _id: v._id, codigo: v.codigo, nombre: v.nombre, snomed_conceptId: v.snomed_conceptId };
                     });
                 })
@@ -175,9 +183,12 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         });
                     }
                     if (registrosNomivac && registrosNomivac.length) {
-                        const nomivacFiltradas = registrosNomivac.filter((regNomi) =>
-                            this.vacunasPorConceptId.some(vac => vac.codigo.toString() === regNomi.codigo)
-                        );
+                        let nomivacFiltradas = [];
+                        if (this.vacunasPorConceptId) {
+                            nomivacFiltradas = registrosNomivac.filter((regNomi) =>
+                                this.vacunasPorConceptId.some(vac => vac.codigo.toString() === regNomi.codigo)
+                            );
+                        }
                         if (listaVacunas && listaVacunas.length) {
                             const filtroDuplicadas = nomivacFiltradas.filter(v => {
                                 if (!listaVacunas.find(vr => vr.vacuna === v.vacuna && vr.dosis === v.dosis)) {
