@@ -82,13 +82,13 @@
                             <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
                             <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
                         </div>
+                        <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
+                            hint="Novedades del módulo {{ seccion.nombre }}" detach="top" hintIcon="bell"
+                            (click)="irANovedades(seccion._id, $event)"></span>
                         <div class="secundario">
                             <div class="titulo ml-2">{{ seccion.nombre }}</div>
                             <div class="subtitulo ml-2">{{ seccion.subtitulo }}</div>
                         </div>
-                        <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
-                            hint="Novedades del módulo {{ seccion.nombre }}" detach="both" hintIcon="bell"
-                            (click)="irANovedades(seccion._id, $event)"></span>
                     </a>
                 </ng-container>
             </div>
