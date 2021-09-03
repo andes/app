@@ -648,11 +648,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
         if (agenda.sobreturnos) {
             agenda.sobreturnos.forEach(sobreturno => {
-                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const prestaciones = this.prestaciones.filter(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
                 });
                 // asignamos la prestacion al turno
-                sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                sobreturno['prestacion'] = prestaciones.length > 0 ? prestaciones : null;
                 if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
                     (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }

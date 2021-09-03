@@ -498,37 +498,37 @@
                                                          label="VER HUDS" type="primary btn-sm">
                                             </plex-button>
                                             <plex-button size="block"
-                                                         *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && tienePermisos(sobreturno) && verificarAsistencia(sobreturno)"
+                                                         *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !chequearPrestacion(sobreturno) && tienePermisos(sobreturno) && verificarAsistencia(sobreturno)"
                                                          label="INICIAR PRESTACIÓN" type="success btn-sm"
                                                          (click)="iniciarPrestacion(sobreturno)">
                                             </plex-button>
 
                                             <plex-button size="block"
-                                                         *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && verificarAsistencia(sobreturno)"
+                                                         *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !chequearPrestacion(sobreturno) && verificarAsistencia(sobreturno)"
                                                          label="INICIAR PRESTACIÓN" type="disabled btn-sm"
                                                          title="Disponible el {{diaAgenda(agendaSeleccionada)}}"
                                                          titlePosition="top"></plex-button>
 
                                             <plex-button size="block"
-                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
+                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && chequearPrestacion(sobreturno) && chequearEstados(sobreturno,'ejecucion') && tienePermisos(sobreturno)"
                                                          label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                         (click)="setRouteToParams(['ejecucion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                         (click)="setRouteToParams(['ejecucion',  chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                             </plex-button>
 
                                             <plex-button size="block"
-                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno)"
+                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && chequearPrestacion(sobreturno) && chequearEstados(sobreturno,'validada') && tienePermisos(sobreturno)"
                                                          label="VER RESUMEN" type="success btn-sm"
-                                                         (click)="setRouteToParams(['validacion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                         (click)="setRouteToParams(['validacion', chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                             </plex-button>
                                             <plex-button size="block"
-                                                         *ngIf="!sobreturno.asistencia &&!esFutura(agendaSeleccionada)&& agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!sobreturno.prestacion || sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion')"
+                                                         *ngIf="!sobreturno.asistencia &&!esFutura(agendaSeleccionada)&& agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!chequearPrestacion(sobreturno) || chequearEstados(sobreturno,'ejecucion'))"
                                                          type="warning btn-sm" label="REGISTRAR INASISTENCIA"
                                                          (click)=" registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'noAsistio')">
                                             </plex-button>
                                             <plex-button size="block"
-                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
+                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && chequearPrestacion(sobreturno) && chequearEstados(sobreturno,'ejecucion') && tienePermisos(sobreturno)"
                                                          label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                                         (click)="invalidarPrestacion(sobreturno.prestacion)">
+                                                         (click)="invalidarPrestacion(chequearPrestacion(sobreturno))">
                                             </plex-button>
                                             <plex-button size="block"
                                                          *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== sobreturno.link"
