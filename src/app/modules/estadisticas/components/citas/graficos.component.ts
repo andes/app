@@ -30,6 +30,8 @@ export class GraficosComponent implements OnInit {
     @Input() filtros;
     @Input() dashboard;
 
+    public leyenda = '';
+    private DATA_MAX = 20;
     public dataTable = [];
     public dataGraph = [];
     public labelsGraph = [];
@@ -101,9 +103,18 @@ export class GraficosComponent implements OnInit {
 
     cargarResultados(data) {
         if (data && data.length > 0 && data[0].count > 0 && this.filtros) {
-            this.dataGraph = this.type === 'bar' ? [
-                { data: data.map(item => item.count), label: this.filtros.tipoDeFiltro }
-            ] : data.map(item => item.count);
+            if (this.type === 'bar') {
+                if (data.length > this.DATA_MAX) {
+                    this.leyenda = `(Se muestran ${this.DATA_MAX} de ${data.length})`;
+                    data = data.slice(0, this.DATA_MAX);
+                }
+                this.dataGraph = [
+                    { data: data.map(item => item.count), label: this.filtros.tipoDeFiltro }
+                ];
+            } else {
+                this.dataGraph = data.map(item => item.count);
+            }
+
             this.labelsGraph = data.map(item => item.nombre ? item.nombre : item._id);
             this.dataTable = data;
 
