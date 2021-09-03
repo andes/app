@@ -71,16 +71,23 @@ main {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-
+    
     .modulo {
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
         flex-direction: column;
-
+        
         box-sizing: border-box;
         width: 300px;
         margin-bottom: 1rem;
+        
+        &.auto-height {
+            height: auto !important;
+            .submodulos {
+                height: auto;
+            }
+        }
 
         .principal {
             width: 220px;
