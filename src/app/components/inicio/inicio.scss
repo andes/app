@@ -121,7 +121,7 @@ main {
         opacity: 0;
         @for $child from 1 through 10 {
             &:nth-child(#{$child}) {
-                animation: submodulos #{$child/2}s ease-in-out 0.15s 1 forwards;
+                animation: submodulos #{$child/4}s ease-in-out 0.05s 1 forwards;
             }
         }
 
