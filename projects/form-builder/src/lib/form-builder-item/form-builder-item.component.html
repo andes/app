@@ -1,0 +1,127 @@
+<form *ngIf="condition$ | async" #form>
+    <ng-container *ngIf="elemento.type === 'seccion'">
+
+        <plex-title [titulo]="elemento.title"></plex-title>
+
+        <plex-grid type="auto" size="md" [cols]="elemento.cols">
+
+            <ng-container *ngFor="let item of elemento.componentes">
+
+                <lib-form-builder-item class="align-self-center" [elemento]="item" [readonly]="readonly">
+                </lib-form-builder-item>
+
+            </ng-container>
+
+        </plex-grid>
+
+    </ng-container>
+
+    <ng-container *ngIf="!readonly">
+
+        <ng-container *ngIf="elemento.type === 'texto'">
+
+            {{ elemento.value }}
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'input'">
+
+            <plex-text [label]="elemento.label" [placeholder]="elemento.placeholder || ''"
+                       [required]="required$ | async" [(ngModel)]="_valor" [name]="elemento.key"
+                       (change)="onInputChange($event)"></plex-text>
+
+        </ng-container>
+
+
+        <ng-container *ngIf="elemento.type === 'datetime'">
+
+            <plex-datetime [label]="elemento.label" [placeholder]="elemento.placeholder || ''"
+                           [required]="required$ | async" [(ngModel)]="_valor" [type]="elemento.format"
+                           [name]="elemento.key" (change)="onInputChange($event)"></plex-datetime>
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'select'">
+            <ng-container *ngIf="elemento.items">
+                <plex-select [label]="elemento.label" [placeholder]="elemento.placeholder || ''"
+                             [required]="required$ | async" [(ngModel)]="_valor" [data]="elemento.items"
+                             [name]="elemento.key" (change)="onInputChange($event)"
+                             [keyField]="elemento.keyField || 'id'" [labelField]="elemento.labelField || 'nombre'">
+                </plex-select>
+
+            </ng-container>
+            <ng-container *ngIf="!elemento.items">
+                <plex-select [label]="elemento.label" [placeholder]="elemento.placeholder || ''"
+                             [required]="required$ | async" [(ngModel)]="_valor"
+                             (getData)="onSelectRequest(elemento, $event)" [name]="elemento.key"
+                             (change)="onInputChange($event)" [keyField]="elemento.keyField || 'id'"
+                             [labelField]="elemento.labelField || 'nombre'"></plex-select>
+
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'bool'">
+            <plex-bool [type]="elemento.format" [label]="elemento.label" [name]="elemento.key" [(ngModel)]="_valor"
+                       (change)="onInputChange($event)"></plex-bool>
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'radio'">
+            <plex-radio [type]="elemento.orientacion" [multiple]="elemento.multiple" [data]="items$ | async"
+                        [label]="elemento.label" [name]="elemento.key" [(ngModel)]="_valor"
+                        [keyField]="elemento.keyField || 'id'" [labelField]="elemento.labelField || 'label'"
+                        (change)="onInputChange($event)"></plex-radio>
+        </ng-container>
+
+    </ng-container>
+
+
+    <ng-container *ngIf="readonly">
+
+        <ng-container *ngIf="elemento.type === 'texto'">
+
+            {{ elemento.value }}
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'input'">
+
+            <plex-label [titulo]="elemento.label" [subtitulo]="_valor"></plex-label>
+
+        </ng-container>
+
+
+        <ng-container *ngIf="elemento.type === 'datetime'">
+
+            <plex-label [titulo]="elemento.label" [subtitulo]="_valor | fecha"></plex-label>
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'select'">
+            <ng-container *ngIf="_valor">
+                <plex-label *ngIf="!_valor.length" [titulo]="elemento.label"
+                            [subtitulo]="_valor && _valor[elemento.labelField || 'nombre']"></plex-label>
+                <plex-label *ngIf="_valor.length" [titulo]="elemento.label"
+                            [subtitulo]="_valor | enumerar:[elemento.labelField || 'nombre']"></plex-label>
+
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'bool'">
+            <plex-label [titulo]="elemento.label" *ngIf="_valor"></plex-label>
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'radio'">
+            <ng-container *ngIf="_valor">
+                <plex-label *ngIf="!_valor.length" [titulo]="elemento.label"
+                            [subtitulo]="_valor && _valor[elemento.labelField || 'label']"></plex-label>
+                <plex-label *ngIf="_valor.length" [titulo]="elemento.label"
+                            [subtitulo]="_valor | enumerar:[elemento.labelField || 'label']"></plex-label>
+
+            </ng-container>
+
+
+        </ng-container>
+
+    </ng-container>
+
+</form>

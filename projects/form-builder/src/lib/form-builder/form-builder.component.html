@@ -1,0 +1,10 @@
+<ng-container *ngFor="let item of template">
+
+    <lib-form-builder-item [elemento]="item" [readonly]="readonly"></lib-form-builder-item>
+
+</ng-container>
+
+
+<!-- {{ formService.model$ | async | json }}
+
+{{ formService.get('paciente.nombre') | async }} -->
