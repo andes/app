@@ -85,6 +85,7 @@
                         <span class="hover" *ngIf="novedades[seccion._id]?.length > 0" hintType="info"
                             hint="Novedades del módulo {{ seccion.nombre }}" detach="top" hintIcon="bell"
                             (click)="irANovedades(seccion._id, $event)"></span>
+                        <span [class.ml-2]="novedades[seccion._id]?.length === 0"></span>
                         <div class="secundario">
                             <div class="titulo ml-2">{{ seccion.nombre }}</div>
                             <div class="subtitulo ml-2">{{ seccion.subtitulo }}</div>

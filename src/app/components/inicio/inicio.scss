@@ -405,9 +405,9 @@ main {
             width: 80vw;
             margin-top: 6rem;
             .seccion {
-                display: block;
+                display: flex;
                 text-decoration: none;
-                min-width: 225px;
+                min-width: 265px;
                 padding-right: 0;
                 margin-bottom: 0.5rem;
             }
