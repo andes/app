@@ -8,6 +8,7 @@
     </plex-badge>
     <plex-badge *ngIf="inscripcion.estado === 'inhabilitado'" type="danger">Inhabilitado
     </plex-badge>
+    <plex-badge *ngIf="inscripcion.estado === 'noCompletaEsquema'" type="warning">No completa esquema</plex-badge>
     <plex-badge *ngIf="inscripcion.grupo.nombre === 'personal-salud' && inscripcion.personal_salud" type="info">Personal
         verificado
     </plex-badge>
