@@ -14,6 +14,7 @@ import { TurnoService } from '../../../../services/turnos/turno.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { HUDSService } from '../../services/huds.service';
+import { ServicioIntermedioService } from '../../services/servicio-intermedio.service';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
@@ -42,7 +43,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // Lista de prestaciones filtradas por fecha, tipos de prestaciones permitidas, ...
     public prestaciones: any = [];
 
-    public servicioIntermedio: any = [];
+    public servicioSelected: any;
+    public servicioIntermedio: any[] = [];
+    public servicioIntermedioListado: any[] = [];
+    public servicioIntermedioItems: any[] = [];
+    public servicioIntermedioItemsFiltrados: any[] = [];
 
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
@@ -93,7 +98,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public snomed: SnomedService,
         public servicioTurnero: TurneroService,
         public ws: WebSocketService,
-        private conceptosTurneablesService: ConceptosTurneablesService
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        private servicioIntermedioService: ServicioIntermedioService
     ) { }
 
     ngOnDestroy() {
@@ -122,7 +128,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     this.redirect('inicio');
                 }
                 this.tiposPrestacion = data;
-                this.actualizar();
+                this.servicioIntermedioService.getAll().subscribe(servicios => {
+                    this.servicioIntermedio = servicios;
+                    this.actualizar();
+                });
             });
         }
 
@@ -177,7 +186,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.lastRequest = observableForkJoin(requests).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
-            this.servicioIntermedio = data[2] || [];
+            this.servicioIntermedioItems = data[2] || [];
 
             if (this.agendas.length) {
 
@@ -208,6 +217,23 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             if (this.agendas.length) {
                 this.cargarTurnos(this.agendas[0]);
             }
+
+            this.servicioIntermedioListado = this.servicioIntermedioItems.reduce((acc, curr) => {
+                const serId = curr.servicioIntermedioId;
+                const servicioDefinition = this.servicioIntermedio.find(s => s.id === serId);
+                const servicioItem = acc.find(s => s.id === serId);
+                if (servicioItem) {
+                    servicioItem.total +=1;
+                } else {
+                    acc.push({
+                        id: servicioDefinition.id,
+                        nombre: servicioDefinition.nombre,
+                        total: 1
+                    });
+                }
+                return acc;
+            }, []);
+
         });
     }
 
@@ -507,12 +533,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return miPrestacion || permisoValidar;
     }
 
-    cargarTurnos(agenda) {
+    cargarTurnos(agenda, servicio = null) {
         this.turno = null;
         this.prestacionPendiente = null;
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
         this.intervalAgendaRefresh();
+        if (agenda === 'servicio-intermedio') {
+            this.servicioSelected = servicio;
+            this.servicioIntermedioItemsFiltrados = this.servicioIntermedioItems.filter(prestacion => prestacion.servicioIntermedioId === servicio.id);
+        } else {
+            this.servicioSelected = null;
+        }
     }
 
     @Unsubscribe()

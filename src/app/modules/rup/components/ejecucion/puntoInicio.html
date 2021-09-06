@@ -126,19 +126,20 @@
                     </td>
                 </tr>
 
-                <tr class="hover" (click)="cargarTurnos('servicio-intermedio')"
-                    *ngIf="servicioIntermedio && servicioIntermedio.length"
-                    [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'servicio-intermedio'}">
+                <tr class="hover" (click)="cargarTurnos('servicio-intermedio', item)"
+                    *ngFor="let item of servicioIntermedioListado"
+                    [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'servicio-intermedio' && item.id === servicioSelected.id}">
                     <td>
-                        Solicitudes/pedidos pendientes <br /> &nbsp;
+                        <b>{{ item.nombre }} </b><br />
+                        Solicitudes/pedidos pendientes
                     </td>
                     <td colspan="2" class="text-right">
                         <plex-badge type="info">
-                            <ng-container *ngIf="servicioIntermedio.length === 1">
+                            <ng-container *ngIf="item.total === 1">
                                 1 paciente
                             </ng-container>
-                            <ng-container *ngIf="servicioIntermedio.length > 1">
-                                {{servicioIntermedio.length}} pacientes
+                            <ng-container *ngIf="item.total > 1">
+                                {{servicioIntermedioItems.length}} pacientes
                             </ng-container>
                         </plex-badge>
                     </td>
@@ -148,7 +149,7 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <header *ngIf="!buscandoPaciente && !prestacionPendiente">
-            <plex-title titulo="Detalles" size="md">
+            <plex-title titulo="Detalles" size="md" *ngIf="agendaSeleccionada !== 'servicio-intermedio'">
                 <plex-button *ngIf="agendaSeleccionada && agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)"
                              label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
                 </plex-button>
@@ -156,6 +157,10 @@
                              (click)="linkVideollamada(agendaSeleccionada.link)">
                     <plex-icon name="monitor"></plex-icon>
                 </plex-button>
+
+            </plex-title>
+            <plex-title [titulo]="'Detalles ' + servicioSelected.nombre" size="md"
+                        *ngIf="agendaSeleccionada === 'servicio-intermedio'">
 
             </plex-title>
         </header>
@@ -610,7 +615,7 @@
                 <!--Turnos-->
                 <table class="table table-striped">
                     <tbody>
-                        <tr *ngFor="let prestacion of servicioIntermedio" class="hover">
+                        <tr *ngFor="let prestacion of servicioIntermedioItemsFiltrados" class="hover">
                             <td>
                                 <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                 <br>
