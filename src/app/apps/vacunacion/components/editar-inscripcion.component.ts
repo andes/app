@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { InscripcionService } from '../services/inscripcion.service';
 import { cache, calcularEdad } from '@andes/shared';
@@ -105,23 +105,38 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
     }
 
     setGruposPosibles(fechaNacimiento): void {
-        let gruposPosibles = ['personal-salud', 'policia'];
+        const gruposPosibles = ['personal-salud', 'policia', 'discapacidad'];
         const edad = calcularEdad(fechaNacimiento, 'y');
         if (edad > 59) {
             gruposPosibles.push('mayores60');
-        } else {
-            gruposPosibles = gruposPosibles.concat(['factores-riesgo', 'discapacidad', 'sin-factores-riesgo', 'personas-gestantes']);
         }
-        this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
-            const grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
-            if (grupofr) {
-                this.morbilidades = grupofr.morbilidades;
+
+        forkJoin({
+            fr: this.grupoPoblacionalService.cumpleExcepciones('factores-riesgo', { paciente: JSON.stringify({ edad }) }),
+            sfr: this.grupoPoblacionalService.cumpleExcepciones('sin-factores-riesgo', { paciente: JSON.stringify({ edad }) }),
+            pg: this.grupoPoblacionalService.cumpleExcepciones('personas-gestantes', { paciente: JSON.stringify({ edad }) }),
+        }).subscribe(grupo => {
+            if (grupo.fr) {
+                gruposPosibles.push('factores-riesgo');
             }
-            this.opcionesGrupos = grupos;
-            const tieneGrupoValido = this.opcionesGrupos.find(grupo => grupo.nombre === this.inscripcion.grupo.nombre);
-            if (!tieneGrupoValido) {
-                this.inscripcion.grupo = null;
+            if (grupo.sfr) {
+                gruposPosibles.push('sin-factores-riesgo');
             }
+            if (grupo.pg) {
+                gruposPosibles.push('personas-gestantes');
+            }
+
+            this.grupoPoblacionalService.search({ nombre: gruposPosibles }).subscribe(grupos => {
+                const grupofr = grupos.find(g => g.nombre === 'factores-riesgo');
+                if (grupofr) {
+                    this.morbilidades = grupofr.morbilidades;
+                }
+                this.opcionesGrupos = grupos;
+                const tieneGrupoValido = this.opcionesGrupos.find(opcionGrupo => opcionGrupo.nombre === this.inscripcion.grupo.nombre);
+                if (!tieneGrupoValido) {
+                    this.inscripcion.grupo = null;
+                }
+            });
         });
     }
 
