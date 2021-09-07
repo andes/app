@@ -30,7 +30,7 @@ export class DarTurnoComponent implements OnInit {
 
     ngOnInit(): void {
         this.turnosServicePortal.getTurnos().subscribe(turnos => {
-            this.turnosActuales = turnos;
+            this.turnosActuales = turnos.filter(t => moment(t.horaInicio) > moment());
             navigator.geolocation.getCurrentPosition(position => {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;

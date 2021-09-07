@@ -3,9 +3,9 @@
         <plex-label size="lg" icon="estetoscopio" titulo="{{ prestacion.prestacion.term }}"
                     subtitulo="{{prestacion.profesionales.length ?( prestacion.profesionales | enumerar:['apellido','nombre']) : 'Sin profesional asignado'}}">
         </plex-label>
-        <plex-label size="lg" icon="turno-bold" titulo="{{ prestacion.horaInicio | date:'dd/MM/yyyy' }} ">
+        <plex-label class="pt-2" size="md" icon="turno-bold" titulo="{{ prestacion.horaInicio | date:'dd/MM/yyyy' }} ">
         </plex-label>
-        <plex-label size="lg" icon="hospital-building" titulo="{{ prestacion.organizacion }}">
+        <plex-label size="md" icon="hospital-building" titulo="{{ prestacion.organizacion }}">
         </plex-label>
     </plex-item>
 </plex-list>
