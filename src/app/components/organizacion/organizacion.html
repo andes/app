@@ -1,78 +1,63 @@
-<section *ngIf="!showcreate">
-    <div class="row">
-        <div class="col h-100">
-            <plex-box type="primary">
-                <header>
-                    <div class="row">
-                        <div class="col">
-                            <plex-text [(ngModel)]="nombre" label="Nombre" name="nombre"
-                                       placeholder="Ingresar nombre..." (change)="loadDatos()">
-                            </plex-text>
-                        </div>
-                        <div class="col mt-4">
-                            <plex-bool [(ngModel)]="soloNoActivo"
-                                       label="Mostrar solo {{organizacionService.getEstado(false)}}" name="activo"
-                                       (change)="loadDatos()">
-                            </plex-bool>
-                        </div>
-                        <div class="col d-flex justify-content-end mt-4">
-                            <plex-button type="success" label="Nueva Organización" (click)="nuevaOrganizacion()"
-                                         *ngIf="checkAuth('create')"></plex-button>
-                        </div>
-                    </div>
-                    <table style="table-layout:fixed" class="table table-fixed">
-                        <thead>
-                            <tr>
-                                <th width="20%">Código Sisa</th>
-                                <th width="30%">Nombre</th>
-                                <th width="10%">Complejidad</th>
-                                <th width="10%">Estado</th>
-                                <th width="20%" class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </header>
-                <table *ngIf="datos && datos.length" class="table table-fixed">
-                    <tbody>
-                        <tr class="hover" *ngFor="let organizacion of datos">
-                            <td width="20%">
-                                <ng-container *ngIf="organizacion.codigo && organizacion.codigo.sisa">
-                                    {{organizacion.codigo.sisa}}
-                                </ng-container>
-                            </td>
-                            <td width="30%">{{organizacion.nombre}}</td>
-                            <td width="10%" class="text-center">
-                                <p>{{organizacion.nivelComplejidad}}</p>
-                            </td>
-                            <td width="10%" class="text-center">
-                                <plex-badge *ngIf="organizacion.activo" type="success">
-                                    {{organizacionService.getEstado(organizacion)}} </plex-badge>
-                                <plex-badge *ngIf="!organizacion.activo" type="danger">
-                                    {{organizacionService.getEstado(organizacion)}} </plex-badge>
-                            </td>
-                            <td width="20%" class="text-center">
-                                <plex-button *ngIf="checkAuth('editBasico') || checkAuth('editCompleto')" type="primary"
-                                             label="Editar" (click)="onEdit(organizacion)"></plex-button>
-                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary"
-                                             label="Ver sectores" (click)="routeSectores(organizacion)">
-                                </plex-button>
-                                <plex-button *ngIf="checkAuth('prestaciones', organizacion.id)" type="primary"
-                                             label="Ofertas Prestacionales"
-                                             (click)="routePrestaciones(organizacion.id)"></plex-button>
-                                <plex-button type="primary" label="Configuracion"
-                                             (click)="routerConfiguracion(organizacion.id)"></plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <plex-loader *ngIf="loader"></plex-loader>
-                <div *ngIf="finScroll" class="alert alert-warning">
-                    <p style="text-align: center;"> No se encontraron resultados </p>
+
+<plex-layout *ngIf="!showcreate">
+    <plex-layout-main>
+        <header>
+            <plex-grid class="align-items-center" size="sm" type="full" cols="2" >
+                <plex-text class="pb-2" [(ngModel)]="filtros.nombre" label="Nombre" name="nombre" placeholder="Ingresar nombre..."
+                            (change)="filtrar()">
+                </plex-text>
+                <div justify="between">
+                    <plex-bool class="pl-4 pt-3" [(ngModel)]="filtros.soloNoActivo" label="Mostrar solo {{organizacionService.getEstado(false)}}"
+                            name="activo" (change)="filtrar()">
+                    </plex-bool>
+                    <plex-button class="pt-4" type="success" label="Nueva Organización" (click)="nuevaOrganizacion()"
+                                *ngIf="checkAuth('create')">
+                    </plex-button>
                 </div>
-            </plex-box>
+            </plex-grid>
+        </header>
+
+        <plex-table [columns]="columns" #table="plTable" [offset]="(listado$ | async)?.length ? 0 : null" (scroll)="onScroll()">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let organizacion of (listado$ | plSort:table | async)" class='selectable'>
+                <td *plTableCol="'codigoSisa'">
+                    {{ organizacion.codigo?.sisa || '' }}
+                </td>
+                <td *plTableCol="'nombre'">
+                    {{organizacion.nombre}}
+                </td>
+                <td *plTableCol="'Complejidad'">
+                    <p>{{organizacion.nivelComplejidad}}</p>
+                </td>
+                <td *plTableCol="'Estado'">
+                    <plex-badge *ngIf="organizacion.activo" type="success">
+                        {{organizacionService.getEstado(organizacion)}} </plex-badge>
+                    <plex-badge *ngIf="!organizacion.activo" type="danger">
+                        {{organizacionService.getEstado(organizacion)}} </plex-badge>
+                </td>
+                <td *plTableCol="'Acciones'">
+                    <plex-button *ngIf="checkAuth('editBasico') || checkAuth('editCompleto')" size="sm" type="primary"
+                                label="Editar" (click)="onEdit(organizacion)">
+                    </plex-button>
+                    <plex-button *ngIf="checkAuth('sectores', organizacion.id)" size="sm" type="primary" label="Ver sectores"
+                                (click)="routeSectores(organizacion)" class="pl-1">
+                    </plex-button>
+                    <plex-button *ngIf="checkAuth('prestaciones', organizacion.id)" size="sm" type="primary"
+                                label="Ofertas Prestacionales" (click)="routePrestaciones(organizacion.id)" class="pl-1">
+                    </plex-button>
+                    <plex-button size="sm" type="primary" label="Configuracion" (click)="routerConfiguracion(organizacion.id)" class="pl-1">
+                    </plex-button>
+                </td>
+            </tr>
+        </plex-table>
+
+        <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+        <div *ngIf="!loader && !(listado$ | async)?.length" class="alert alert-warning" justify="center">
+             No se encontraron resultados 
         </div>
-    </div>
-</section>
+    </plex-layout-main>
+</plex-layout>
 
 <!--Componente de Alta/Modificación-->
 <organizacion-create-update *ngIf="showcreate" [seleccion]="seleccion" (data)='onReturn()'>
