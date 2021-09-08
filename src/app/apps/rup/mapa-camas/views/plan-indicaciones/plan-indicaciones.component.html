@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <td rowspan="2">
-                        Indicacion
+                        Indicaciones
                         <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
                                      (click)="onDetenerClick()" tooltip="Suspender"></plex-button>
                         <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
@@ -39,19 +39,30 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let indicacion of indicaciones">
+                <ng-container *ngFor="let indicacion of indicaciones; let $index = index; let $first = first">
+
+                    <tr style="background-color: grey;"
+                        *ngIf="$first || indicaciones[$index -1 ] .seccion.term !== indicacion.seccion.term">
+                        <td colspan="25">
+                            <plex-icon name="documento"></plex-icon>
+                            {{ indicacion.seccion.term }}
+                        </td>
+                    </tr>
+
                     <tr [ngClass]="indicacion.estado.tipo">
-                        <td justify>
+                        <td justify (click)="onSelectIndicacion(indicacion)" class="pointer">
                             <span>
                                 <plex-bool type="checkbox" [(ngModel)]="selectedIndicacion[indicacion.id]"
                                            (change)="onSelectedChange()"> </plex-bool>
                                 {{ indicacion.nombre }}
                             </span>
-                            <plex-button type="info" size="sm" (click)="onSelectIndicacion(indicacion)">
+                            <!-- <plex-button type="info" size="sm" >
                                 <plex-icon name="eye"></plex-icon>
-                            </plex-button>
+                            </plex-button> -->
                             <plex-icon name="alert" *ngIf="indicacion.estado.tipo === 'pending'"
                                        tooltip="Pendiente de validar"></plex-icon>
+
+                            <div in-plan-indicacion-botonera [indicacion]="indicacion" (refresh)="actualizar()"></div>
                         </td>
                         <td *ngFor="let hora of horas" class="pointer"
                             [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"

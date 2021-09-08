@@ -39,8 +39,17 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                         }
                         return {
                             ...ind,
-                            estado
+                            estado,
+                            seccion: ind.seccion || { term: ' - sin sección -' }
                         };
+                    }).sort((a, b) => {
+                        if (!a.seccion) {
+                            return -1;
+                        }
+                        if (!b.seccion) {
+                            return 1;
+                        }
+                        return (a.seccion.term as string).localeCompare(b.seccion.term);
                     });
             })
         );

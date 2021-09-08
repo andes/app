@@ -8,6 +8,7 @@ import { IndicacionDetalleComponent } from './indicacion-detalle/indicacion-deta
 import { IndicacionColorPipe } from './indicacion-estado-color.pipes';
 import { IndicacionLabelPipe } from './indicacion-estado-nombre.pipe';
 import { PlanIndicacionEventoComponent } from './indicacion-eventos/indicacion-eventos.component';
+import { PlanIndicacionesBotoneraComponent } from './indicaciones-botonera/indicaciones-botonera.component';
 import { PlanIndicacionesComponent } from './plan-indicaciones.component';
 
 @NgModule({
@@ -25,7 +26,8 @@ import { PlanIndicacionesComponent } from './plan-indicaciones.component';
         IndicacionDetalleComponent,
         IndicacionColorPipe,
         IndicacionLabelPipe,
-        PlanIndicacionesResumenComponent
+        PlanIndicacionesResumenComponent,
+        PlanIndicacionesBotoneraComponent
     ],
     exports: [
         IndicacionColorPipe,
