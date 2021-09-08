@@ -185,9 +185,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         };
         this.seguimientoPacientesService.asignarProfesional(data).subscribe(res => {
             this.plex.toast('success', 'Profesional asignado con éxito');
-            this.closeSideBar();
             this.anyChecked = false;
             this.checkedSeguimientos = {};
+            this.reload();
         });
     }
 }
