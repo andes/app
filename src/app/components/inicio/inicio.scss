@@ -71,16 +71,23 @@ main {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-
+    
     .modulo {
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
         flex-direction: column;
-
+        
         box-sizing: border-box;
         width: 300px;
         margin-bottom: 1rem;
+        
+        &.auto-height {
+            height: auto !important;
+            .submodulos {
+                height: auto;
+            }
+        }
 
         .principal {
             width: 220px;
@@ -114,7 +121,7 @@ main {
         opacity: 0;
         @for $child from 1 through 10 {
             &:nth-child(#{$child}) {
-                animation: submodulos #{$child/2}s ease-in-out 0.15s 1 forwards;
+                animation: submodulos #{$child/4}s ease-in-out 0.05s 1 forwards;
             }
         }
 
@@ -398,9 +405,9 @@ main {
             width: 80vw;
             margin-top: 6rem;
             .seccion {
-                display: block;
+                display: flex;
                 text-decoration: none;
-                min-width: 225px;
+                min-width: 265px;
                 padding-right: 0;
                 margin-bottom: 0.5rem;
             }
