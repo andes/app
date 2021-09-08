@@ -33,7 +33,7 @@
                 <ng-container *ngFor="let modulo of modulos">
 
                     <!-- Módulo principal -->
-                    <div *ngIf="modulo.activo" class="modulo" [class.auto-height]="modulo.submodulos.main.length >= 4">
+                    <div *ngIf="modulo.activo" class="modulo" [class.auto-height]="modulo.submodulos?.main?.length >= 4">
                         <div class="principal" [style.color]="modulo.color">
                             <b class="titulo">{{ modulo.nombre }}
                                 <a href="#" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
