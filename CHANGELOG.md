@@ -1,3 +1,20 @@
+# [5.63.0](https://github.com/andes/app/compare/v5.62.0...v5.63.0) (2021-09-08)
+
+
+### Bug Fixes
+
+* **BI:** arreglar dashboard TOP ([#2422](https://github.com/andes/app/issues/2422)) ([e1da1c2](https://github.com/andes/app/commit/e1da1c239d5c86522e16f0e05707cceb45203914))
+* **checkEditPipe:** uso de auth ([#2429](https://github.com/andes/app/issues/2429)) ([ee59233](https://github.com/andes/app/commit/ee59233638e939942425e0aa603522459d4d413a))
+* **home:** corrige altura pantallas chicas ([#2427](https://github.com/andes/app/issues/2427)) ([5d467e2](https://github.com/andes/app/commit/5d467e25f215c2d0bbbfe2c62a6cdcff694bdc04))
+* **RUP:** seleccion de dosis despues de romper validacion ([#2425](https://github.com/andes/app/issues/2425)) ([b572ad8](https://github.com/andes/app/commit/b572ad874b9cd7702952caf38c1e9739d0fbb4e4))
+* **vacuna:** compara vacuna por código ([#2433](https://github.com/andes/app/issues/2433)) ([3aa73c0](https://github.com/andes/app/commit/3aa73c033c5b38ae48016b4a682b8d101ff07d0d))
+
+
+### Features
+
+* **EP:** modo auditor ([#2416](https://github.com/andes/app/issues/2416)) ([690ce99](https://github.com/andes/app/commit/690ce99c3f18871aa4529902fe7086d3376ba66e))
+* **VAC:** agrega control de reglas al editar grupos poblacionales ([#2413](https://github.com/andes/app/issues/2413)) ([21cd301](https://github.com/andes/app/commit/21cd301ae0f5071f2898d7c7537e17bf1788a5af))
+
 # [5.62.0](https://github.com/andes/app/compare/v5.61.0...v5.62.0) (2021-09-01)
 
 
