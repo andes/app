@@ -3,7 +3,8 @@
         <pdp-titulo></pdp-titulo>
         <pdp-menu>
             <plex-title size="sm" titulo="Mis turnos">
-                <plex-button (click)="goTo()" type="info" size="sm" class="mr-2">historial de turnos</plex-button>
+                <plex-button (click)="goTo(); filtrarTurnos()" type="info" size="sm" class="mr-2">historial de turnos</plex-button>
+                <plex-button (click)="goTo(); filtrarTurnos(true)" type="info" size="sm" class="mr-2">próximos turnos</plex-button>
                 <plex-button (click)="darTurnos()" type="success" size="sm">obtener turno</plex-button>
             </plex-title>
             <ng-container *ngIf="showTurnosDisponibles">
@@ -13,12 +14,20 @@
                 <plex-list>
                     <plex-item *ngFor="let turno of turnos$ | async" (click)="goTo(turno._id)"
                                [selected]="turno.selected">
-                        <plex-label size="lg" icon="turno-bold" titulo="{{ turno.tipoPrestacion.term }}"
+                        <plex-label size="lg" titulo="{{ turno.tipoPrestacion.term }}"
                                     subtitulo="{{ turno.horaInicio | date :'HH:mm' }} hs.">
+                                    <plex-icon type="info" name="turno-bold"></plex-icon>
                         </plex-label>
-                        <plex-label *mobile="false" icon="hospital" size="md" titulo="{{ turno.organizacion.nombre }}"
-                                    subtitulo="Te atendió: {{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}">
-                        </plex-label>
+                        <ng-container *mobile="false">
+                            <plex-label *ngIf="!showProximos" size="md" titulo="{{ turno.organizacion.nombre }}"
+                                        subtitulo="Te atendió: {{ (turno.profesionales[0]?.nombre + turno.profesionales[0]?.apellido ) || 'Profesional no asignado' }}">
+                                        <plex-icon type="info" name="hospital"></plex-icon>
+                            </plex-label>
+                            <plex-label *ngIf="showProximos" size="md" titulo="{{ turno.organizacion.nombre }}"
+                                        subtitulo="Te atenderá: {{ (turno.profesionales[0]?.nombre + turno.profesionales[0]?.apellido) || 'Profesional no asignado' }}">
+                                <plex-icon type="info" name="hospital"></plex-icon>
+                            </plex-label>
+                        </ng-container>
                         <plex-badge *ngIf="turno.asistencia"
                                     type="{{turno.asistencia==='asistio' ? 'success' : 'warning' }}">{{
                             turno.asistencia }}
@@ -27,6 +36,18 @@
                         <plex-button type="info" icon="eye" size="sm" (click)="goTo(turno.id)"></plex-button>
                     </plex-item>
                 </plex-list>
+                
+                <plex-label *ngIf="!(turnos$ | async)?.length && !showProximos" size="lg" icon="turno-menos" direction="column" type="info"
+                            justify="center" class="mt-4" titulo="Todavia no tienes turnos en tu historial" subtitulo="">
+                </plex-label>
+
+                <plex-item *ngIf="!(turnos$ | async)?.length && showProximos" >
+                    <plex-label justify="center" direction="column" size="lg" icon="turno-menos" type="info" class="mt-4" titulo="No tienes próximos turnos" 
+                                subtitulo=''>
+                    </plex-label>
+                    <plex-label justify="center">Puedes tomar un turno presionando el botón "Obtener turno"</plex-label>
+                    <plex-button class="mt-3" justify="center" (click)="darTurnos()" type="success">tomar turno</plex-button>
+                </plex-item>
             </ng-container>
         </pdp-menu>
     </plex-layout-main>
