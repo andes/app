@@ -17,9 +17,10 @@ import { NgForm } from '@angular/forms';
 export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
     public inscripcion: any;
     public estados = [
-        { id: 'pendiente', nombre: 'pendiente' },
-        { id: 'inhabilitado', nombre: 'inhabilitado' },
-        { id: 'fallecido', nombre: 'fallecido' }
+        { id: 'pendiente', nombre: 'Pendiente' },
+        { id: 'inhabilitado', nombre: 'Inhabilitado' },
+        { id: 'fallecido', nombre: 'Fallecido' },
+        { id: 'noCompletaEsquema', nombre: 'No completa esquema'}
     ];
     public fechaMinimaNacimiento = moment('1900-01-01').toDate();
     public fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();
@@ -57,7 +58,7 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
         }
         if (this.inscripcion.paciente || validadoDomicilio) {
             this.estados.push(
-                { id: 'habilitado', nombre: 'habilitado' });
+                { id: 'habilitado', nombre: 'Habilitado' });
         }
         this.inscripcion.morbilidades = this.inscripcion.morbilidades.map(morbilidad => {
             return { id: morbilidad, label: morbilidad };
