@@ -14,4 +14,7 @@ export class LogPacienteService {
         return this.server.get(this.logUrl, { params: params, showError: true });
     }
 
+    post(params: any): Observable<any> {
+        return this.server.post(this.logUrl, params);
+    }
 }

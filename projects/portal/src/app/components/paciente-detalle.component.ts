@@ -2,11 +2,11 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
-import { LaboratorioService } from '../services/laboratorio.service';
-import { VacunaService } from '../services/vacuna.service';
 import { Router } from '@angular/router';
 import { PacientePortalService } from '../services/paciente-portal.service';
 import { CARDS } from '../enums';
+import { LogPacienteService } from 'src/app/services/logPaciente.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'pdp-paciente-detalle',
@@ -39,13 +39,12 @@ export class PacienteDetalleComponent implements OnInit {
         private pacienteService: PacientePortalService,
         private el: ElementRef,
         private auth: Auth,
-        private laboratorioService: LaboratorioService,
         private router: Router,
-        private vacunaService: VacunaService
+        private logPacienteService: LogPacienteService,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
-        const idPaciente = this.auth.mobileUser.pacientes[0].id;
         this.pacienteService.me().subscribe(resp => this.paciente = resp);
         this.alertas = CARDS.filter(card => this.filtroCards.includes(card.nombre));
 
@@ -53,14 +52,17 @@ export class PacienteDetalleComponent implements OnInit {
             {
                 id: 1,
                 nombre: 'Error en mis registros de salud',
+                operacion: 'portal:error:registrosSalud'
             },
             {
                 id: 2,
                 nombre: 'Error en mis datos personales',
+                operacion: 'portal:error:datosPersonales'
             },
             {
                 id: 3,
                 nombre: 'Otro error',
+                operacion: 'portal:error:otro'
             }
         ];
     }
@@ -77,4 +79,18 @@ export class PacienteDetalleComponent implements OnInit {
         return this.width >= 980;
     }
 
+    guardar(){
+        const data = {
+            paciente: this.auth.mobileUser.pacientes[0].id,
+            operacion: this.motivoError.select.operacion,
+            descripcion: this.descripcionError
+        };
+        this.logPacienteService.post(data).subscribe(resp => {
+            if(resp){
+                this.plex.toast('success', 'Reporte emitido exitosamente');
+            }
+        }, error => {
+            this.plex.toast('danger', 'Ha ocurrido un error enviando el reporte');
+        });
+    }
 }
