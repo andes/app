@@ -20,6 +20,9 @@
                                  labelField="nombre">
                     </plex-select>
                     <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
+                    <plex-bool type="slide" name="asignados" label="Ocultar Asignados" [(ngModel)]="asignados"
+                               (change)="ocultarAsignados($event)">
+                    </plex-bool>
                 </plex-wrapper>
             </plex-grid>
             <div *ngIf='(seguimientos$ | async)?.length'>

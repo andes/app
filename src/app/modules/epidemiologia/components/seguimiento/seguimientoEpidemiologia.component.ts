@@ -38,6 +38,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     esAuditor;
     estadosSeguimiento = estados;
     anyChecked;
+    public seguimientosAux;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -197,5 +198,17 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             this.checkedSeguimientos = {};
             this.reload();
         });
+    }
+    ocultarAsignados(event) {
+        if (event.value) {
+            this.seguimientosAux = this.seguimientos$;
+            this.seguimientos$ = this.seguimientos$.pipe(
+                map((seguimientos: any) => {
+                    return seguimientos.filter(seguimiento => seguimiento.asignaciones.length === 0);
+                })
+            );
+        } else {
+            this.seguimientos$ = this.seguimientosAux;
+        }
     }
 }
