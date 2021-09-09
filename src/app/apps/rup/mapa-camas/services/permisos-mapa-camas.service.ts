@@ -18,7 +18,7 @@ export class PermisosMapaCamasService {
     public bloqueo = false;
     public censo = false;
     public descargarListado = false;
-
+    public registros = false
     constructor(
         private auth: Auth,
     ) { }
@@ -41,5 +41,6 @@ export class PermisosMapaCamasService {
         this.bloqueo = this.auth.check(`${this.ambito}:bloqueo`);
         this.censo = this.auth.check(`${this.ambito}:censo`);
         this.descargarListado = this.auth.check(`${this.ambito}:descargarListado`);
+        this.registros = this.auth.check('internacion:registros');
     }
 }

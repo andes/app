@@ -112,7 +112,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                         const orgPermisos = user.organizaciones.find(org => org.id === this.organizacionId);
                         if (orgPermisos) {
                             this.orgName = orgPermisos.nombre;
-                            this.permisoaRegistros(orgPermisos.permisos);
                             this.permisos = orgPermisos.permisos;
                         }
                     })
@@ -120,13 +119,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 this.permisosService.get().pipe(tap(permisos => this.arbolPermisos = permisos))
             ).pipe(takeUntil(this.destroy$)).subscribe(() => { });
         });
-    }
-
-    private permisoaRegistros(permisosOrg) {
-        const permi = permisosOrg.find(permiso => permiso === 'internacion:mapaDeCamas');
-        if (permi) {
-            permisosOrg.push('internacion:registros');
-        }
     }
 
     tooglePerfil(perfil, enabled) {
