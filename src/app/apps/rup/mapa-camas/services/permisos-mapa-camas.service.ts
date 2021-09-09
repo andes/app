@@ -18,7 +18,7 @@ export class PermisosMapaCamasService {
     public bloqueo = false;
     public censo = false;
     public descargarListado = false;
-    public registros = false
+    public registros = false;
     constructor(
         private auth: Auth,
     ) { }
