@@ -1,19 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { ISnapshot } from '../../interfaces/ISnapshot';
-import { map, switchMap, pluck, filter, first } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
-import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
-import { notNull } from '@andes/shared';
 import { Plex } from '@andes/plex';
-import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { notNull } from '@andes/shared';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, first, map, pluck, switchMap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
-import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 
 @Component({
@@ -231,6 +231,14 @@ export class CamaDetalleComponent implements OnInit {
             const capa = this.mapaCamasService.capa;
             const ambito = this.mapaCamasService.ambito;
             this.router.navigate([`/mapa-camas/${ambito}/${capa}/resumen/${cama.idInternacion}`]);
+        });
+    }
+
+    onVerIndicaciones(cama: ISnapshot) {
+        this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
+            const capa = this.mapaCamasService.capa;
+            const ambito = this.mapaCamasService.ambito;
+            this.router.navigate([`/mapa-camas/${ambito}/${capa}/plan-indicaciones/${cama.idInternacion}`]);
         });
     }
 }
