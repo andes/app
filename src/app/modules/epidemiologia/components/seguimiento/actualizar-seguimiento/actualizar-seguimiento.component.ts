@@ -29,7 +29,8 @@ export class ActualizarSeguimientoComponent implements OnInit {
     guardar() {
         const data: any = {
             organizacionSeguimiento: this.seguimiento.organizacionSeguimiento,
-            contactosEstrechos: this.seguimiento.contactosEstrechos
+            contactosEstrechos: this.seguimiento.contactosEstrechos,
+            internacion: this.seguimiento.internacion
         };
 
         if (this.scoreValue !== this.seguimiento.score.value) {

@@ -16,6 +16,7 @@ import { FichaEpidemiologicaCrudComponent } from './components/ficha-epidemiolog
 import { FichaEpidemiologicaComponent } from './components/ficha-epidemiologica/ficha-epidemiologica.component';
 import { HistorialFichaComponent } from './components/historial-ficha/historial-ficha.component';
 import { ActualizarSeguimientoComponent } from './components/seguimiento/actualizar-seguimiento/actualizar-seguimiento.component';
+import { AsignarSeguimientosComponent } from './components/seguimiento/asignar-seguimientos/asignar-seguimientos.component';
 import { DetalleSeguimientoComponent } from './components/seguimiento/detalle-seguimiento/detalle-seguimiento.component';
 import { SeguimientoEpidemiologiaComponent } from './components/seguimiento/seguimientoEpidemiologia.component';
 import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
@@ -36,6 +37,7 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
         CodigSisaPipe,
         CheckEditPipe,
         ActualizarSeguimientoComponent,
+        AsignarSeguimientosComponent
     ],
     imports: [
         CommonModule,

@@ -1,0 +1,22 @@
+<plex-title main titulo="Asignar Seguimientos">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+    </plex-button>
+</plex-title>
+<form #formEstado="ngForm">
+    <ng-container>
+        <plex-wrapper>
+            <div class="w-100" justify>
+                <plex-select tmProfesionales label="Profesional" name="profesional" [(ngModel)]='profesional'>
+                </plex-select>
+            </div>
+        </plex-wrapper>
+    </ng-container>
+    <div class="w-100" justify>
+        <plex-button type="danger" (click)="cerrar()">
+            Cancelar
+        </plex-button>
+        <plex-button type="success" [disabled]="!profesional" (click)="guardar()">
+            Asignar
+        </plex-button>
+    </div>
+</form>

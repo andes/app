@@ -8,4 +8,8 @@ export class SeguimientoPacientesService extends ResourceBaseHttp {
     constructor(protected server: Server) {
         super(server);
     }
+
+    asignarProfesional(data) {
+        return this.server.post(`${this.url}/asignaciones`, data);
+    }
 }

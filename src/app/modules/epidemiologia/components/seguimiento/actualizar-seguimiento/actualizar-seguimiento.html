@@ -16,6 +16,8 @@
             </div>
         </plex-wrapper>
     </ng-container>
+
+    <plex-bool label="Paciente Internado" [(ngModel)]="seguimiento.internacion" name="activo" type="slide"></plex-bool>
     <semaforo-priorizacion *ngIf="esAuditor" [name]="'seguimiento-epidemiologico'" [prioridad]="seguimiento.score?.value || 0" (change)="changePriority($event)"></semaforo-priorizacion>
         
     <app-ficha-epidemiologica-contactos [editMode]="true" [contactos]="seguimiento.contactosEstrechos" (onEditEmit)="hideSubmit($event)">

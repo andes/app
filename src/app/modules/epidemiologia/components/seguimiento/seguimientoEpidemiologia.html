@@ -1,7 +1,10 @@
-<plex-layout [main]="!seguimiento ? 12 : 8">
+<plex-layout [main]="seguimiento || showAsingar ? 8 : 12">
     <plex-layout-main>
         <ng-container *ngIf="!selectedLlamado">
             <plex-title titulo="Seguimiento de Pacientes">
+                <plex-button *ngIf="anyChecked" class="mr-1" type="warning" size="md" label="Asignar"
+                             (click)="displayAsignar()">
+                </plex-button>
                 <plex-button type="success" size="md" label="Buscar" (click)="buscar()">
                 </plex-button>
             </plex-title>
@@ -13,9 +16,6 @@
                     <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
                                    [min]="fechaDesde">
                     </plex-datetime>
-                    <plex-select grow="1" tmOrganizaciones name="organizacion" label="Organización" [disabled]="!esAuditor"
-                                 [(ngModel)]="organizacion">
-                    </plex-select>
                     <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
                                  labelField="nombre">
                     </plex-select>
@@ -25,64 +25,77 @@
             <div *ngIf='(seguimientos$ | async)?.length'>
                 <plex-list [striped]="false" height="calc(100vh - 233px)" (scrolled)="onScroll()">
                     <plex-item>
+                        <plex-bool *ngIf="esAuditor" name="all" (change)="selectAll($event)" [(ngModel)]="allSelected">
+                        </plex-bool>
                         <b label> Paciente </b>
                         <b label> Teléfono </b>
+                        <b *ngIf="esAuditor" label> Asignado a </b>
                         <b label> Estado </b>
                         <b label> Acción </b>
                     </plex-item>
                     <ng-container *ngFor="let seguimiento of seguimientos$ | async">
-                        <ng-container *ngIf="seguimiento | seguimientoFields as alarmas">
+                        <ng-container *ngIf="seguimiento | seguimientoFields as fields">
                             <plex-item [colors]="getColorPrioridad(seguimiento.score.value)"
-                                       (click)="selectSeguimiento(seguimiento)">
+                                       (click)="!anyChecked ? selectSeguimiento(seguimiento) : $event.preventDefault()">
+                                <plex-bool *ngIf="esAuditor" name="all" (change)="onCheck($event)"
+                                           [(ngModel)]="checkedSeguimientos[seguimiento.id]">
+                                </plex-bool>
                                 <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
                                             subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
                                 <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente.telefonoActual }}">
                                 </plex-label>
+                                <plex-label *ngIf="esAuditor" [tituloBold]="true"
+                                            titulo="{{ fields.profesionalAsignado }}">
+                                </plex-label>
                                 <div>
                                     <!-- mejorar esta parte -->
                                     <plex-badge *ngIf="seguimiento.score.value >=6" type="danger"
-                                                tooltip="Persona de riesgo" class="mr-2">
+                                                tooltip="Persona de riesgo">
                                         <plex-icon type="danger" name="bell"></plex-icon>
                                     </plex-badge>
-                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'" type="warning">
+                                    <plex-badge *ngIf="seguimiento.internacion" type="danger"
+                                                tooltip="Paciente Internado">
+                                        <plex-icon type="danger" name="camilla"></plex-icon>
+                                    </plex-badge>
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'" type="warning"
+                                                class="ml-1">
                                         Pendiente
                                     </plex-badge>
                                     <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="info"
-                                                icon="phone" class="mr-2">
+                                                icon="phone" class="ml-1">
                                         {{ seguimiento.ultimoEstado.valor | date:"dd/MM/yyy HH:mm" }} <plex-icon
                                                    size="sm" name="phone" type="info">
                                         </plex-icon>
                                     </plex-badge>
                                     <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="warning"
-                                                icon="phone">
+                                                icon="phone" class="ml-1">
                                         {{ seguimiento.llamados.length }} <plex-icon size="sm" name="phone"
                                                    type="warning">
                                         </plex-icon>
                                     </plex-badge>
-                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success">De
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success"
+                                                class="ml-1">De
                                         alta
                                     </plex-badge>
-                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'fallecido'" type="danger">
+                                    <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'fallecido'" type="danger"
+                                                class="ml-1">
                                         Fallecido
                                     </plex-badge>
                                 </div>
                                 <div>
-                                    <div>
-                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'"
-                                                     type="success" size="sm" tooltip="Iniciar Seguimiento"
-                                                     label="Iniciar Seguimiento"
-                                                     (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
-                                        </plex-button>
-                                        <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'"
-                                                     type="success" size="sm" tooltip="Continuar Seguimiento"
-                                                     label="Continuar Seguimiento"
-                                                     (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
-                                        </plex-button>
-                                        <plex-button type="info" size="sm" class="ml-2" tooltip="Actualizar Datos"
-                                                     icon="pencil"
-                                                     (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
-                                        </plex-button>
-                                    </div>
+                                    <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'" type="success"
+                                                 size="sm" tooltip="Iniciar Seguimiento" label="Iniciar" class="ml-4"
+                                                 (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                    </plex-button>
+                                    <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="success"
+                                                 size="sm" tooltip="Continuar Seguimiento" label="Continuar"
+                                                 class="ml-4"
+                                                 (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                    </plex-button>
+                                    <plex-button type="info" size="sm" tooltip="Actualizar Datos" class="ml-1"
+                                                 icon="pencil" [disabled]="anyChecked"
+                                                 (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
+                                    </plex-button>
                                 </div>
                             </plex-item>
                         </ng-container>
@@ -93,7 +106,7 @@
             <div *ngIf="!(seguimientos$ | async)?.length && !inProgress" class="h-50" justify="center">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                             [titulo]="query ? 'No hay resultados' : 'Realice una búsqueda'"
-                            subtitulo="Complete los filtros deseados y/o busque por paciente en el panel lateral y presione Buscar Fichas">
+                            subtitulo="Complete los filtros deseados y presione Buscar Seguimientos">
                 </plex-label>
             </div>
         </ng-container>
@@ -106,6 +119,9 @@
         <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()">
         </detalle-seguimiento>
         <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
-            (save)="reload()"></actualizar-seguimiento>
+                                (save)="reload()"></actualizar-seguimiento>
+    </plex-layout-sidebar>
+    <plex-layout-sidebar *ngIf="showAsingar" type="invert">
+        <asignar-seguimientos (close)="closeSideBar()" (save)="asignarProfesional($event)"></asignar-seguimientos>
     </plex-layout-sidebar>
 </plex-layout>
