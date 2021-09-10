@@ -3,6 +3,7 @@ import { TurnoService } from '../../services/turno.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'pdp-mis-turnos',
@@ -23,7 +24,8 @@ export class PDPMisTurnosComponent implements OnInit {
 
     ngOnInit(): void {
         this.turnos$ = this.turnoService.turnosFiltrados$.pipe(
-            map(turnos => this.sortTurnos(turnos))
+            map(turnos => this.sortTurnos(turnos)),
+            cache()
         );
     }
 

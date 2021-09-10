@@ -20,11 +20,11 @@
                         </plex-label>
                         <ng-container *mobile="false">
                             <plex-label *ngIf="!showProximos" size="md" titulo="{{ turno.organizacion.nombre }}"
-                                        subtitulo="Te atendió: {{ (turno.profesionales[0]?.nombre + turno.profesionales[0]?.apellido ) || 'Profesional no asignado' }}">
+                                        subtitulo="Te atendió: {{ (turno.profesionales | enumerar : ['apellido','nombre'] ) || 'Profesional no asignado' }}">
                                         <plex-icon type="info" name="hospital"></plex-icon>
                             </plex-label>
                             <plex-label *ngIf="showProximos" size="md" titulo="{{ turno.organizacion.nombre }}"
-                                        subtitulo="Te atenderá: {{ (turno.profesionales[0]?.nombre + turno.profesionales[0]?.apellido) || 'Profesional no asignado' }}">
+                                        subtitulo="Te atenderá: {{ (turno.profesionales | enumerar : ['apellido','nombre']) || 'Profesional no asignado' }}">
                                 <plex-icon type="info" name="hospital"></plex-icon>
                             </plex-label>
                         </ng-container>
