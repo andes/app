@@ -36,7 +36,7 @@
                     <ng-container *ngFor="let seguimiento of seguimientos$ | async">
                         <ng-container *ngIf="seguimiento | seguimientoFields as fields">
                             <plex-item [colors]="getColorPrioridad(seguimiento.score.value)"
-                                       (click)="!anyChecked ? selectSeguimiento(seguimiento) : void(0)">
+                                       (click)="!anyChecked ? selectSeguimiento(seguimiento) : $event.preventDefault()">
                                 <plex-bool *ngIf="esAuditor" name="all" (change)="onCheck($event)"
                                            [(ngModel)]="checkedSeguimientos[seguimiento.id]">
                                 </plex-bool>
