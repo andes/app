@@ -15,12 +15,12 @@
 
     <form #formulario="ngForm" justify="center">
         <div class="m-4">
-            <div justify="center" class="mb-3">
+            <div justify="center">
                 <div class="andes"></div>
-                <h1>{{ activacion ? 'Activar cuenta' : 'Ingreso a Mi Portal'}}</h1>
+                <h1>{{ activacion ? 'Activar cuenta' : 'Ingreso a Mi Portal' }}</h1>
             </div>
             <div justify="center">
-                <div justify="center" class="mb-3">
+                <div justify="center" class="pt-3 mb-3">
                     <div justify="end" class="label-container">
                         <plex-label titulo="E-MAIL" [tituloBold]="false" subtitulo="" class="mr-3"></plex-label>
                     </div>
@@ -31,57 +31,63 @@
                     </div>
                 </div>
             </div>
-            <div justify="center">
-                <div justify="center" class="mb-4">
-                    <div justify="end" class="label-container">
-                        <plex-label titulo="{{activacion?'CÓDIGO DE ACTIVACIÓN':'CONTRASEÑA'}}" [tituloBold]="false"
-                                    subtitulo="" class="mr-3">
-                        </plex-label>
-                    </div>
-                    <div justify="left">
-                        <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
-                                   placeholder="{{activacion?'Código de activación':'password'}}">
-                        </plex-text>
-                    </div>
-                </div>
-            </div>
-            <div justify="end">
-                <div *ngIf="!activacion" justify="center" class="forgot-pass-container mb-3">
-                    <div class="label-container">
-                    </div>
-                    <div class="forgot-pass">
-                        <a href="#" class="hover">
-                            OLVIDÉ MI CONTRASEÑA
-                        </a>
+
+            <!-- INGRESO, REGISTRO O ACTIVACION POR CODIGO -->
+            <ng-container>
+                <div justify="center">
+                    <div justify="center" class="mb-4">
+                        <div justify="end" class="label-container">
+                            <plex-label titulo="{{activacion?'CÓDIGO DE ACTIVACIÓN':'CONTRASEÑA'}}" [tituloBold]="false"
+                                        subtitulo="" class="mr-3">
+                            </plex-label>
+                        </div>
+                        <div justify="left">
+                            <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
+                                    placeholder="{{activacion?'Código de activación':'password'}}">
+                            </plex-text>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div justify="center">
-                <div justify="center" class="button-container w-100">
-                    <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar"
-                                 [disabled]="formInvalid" (click)="login()" size="md" class="mb-3">
-                        {{ activacion ? 'Activar' : 'Ingreso'}}
+                <div justify="end">
+                    <div *ngIf="!activacion" justify="center" class="forgot-pass-container mb-3">
+                        <div class="label-container">
+                        </div>
+                        <div class="forgot-pass">
+                            <plex-button type="link" size="sm" (click)="goTo('recuperar-contraseña')">
+                                OLVIDÉ MI CONTRASEÑA
+                            </plex-button>
+                        </div>
+                    </div>
+                </div>
+                <div justify="center">
+                    <div *ngIf="activacion" justify="center" class="button-container w-100">
+                        <plex-button justify="center" type="danger" name="volver" (click)="activar()" size="md"
+                                        class="mb-3">
+                            Volver
+                        </plex-button>
+                    </div>
+                    <div justify="center" class="button-container w-100">
+                        <plex-button justify="center" type="info" [validateForm]="formulario" name="enviar"
+                                        [disabled]="formInvalid" (click)="login()" size="md" class="mb-3">
+                            {{ activacion ? 'Activar' : 'Ingreso'}}
+                        </plex-button>
+                    </div>
+                </div>
+                <div justify="center" *ngIf="!activacion">
+                    ¿No tenés usuario?
+                    <plex-button type="link" size="sm" (click)="irRegistro()">
+                        Solicitá una Cuenta
                     </plex-button>
                 </div>
-                <div *ngIf="activacion" justify="center" class="button-container w-100">
-                    <plex-button justify="center" type="danger" name="volver" (click)="activar()" size="md"
-                                 class="mb-3">
-                        Volver
+                
+                <div justify="center" *ngIf="!activacion">
+                    <plex-button type="link" size="sm" (click)="activar()">
+                        Ingresar código de activación
                     </plex-button>
                 </div>
-            </div>
-            <div justify="center" *ngIf="!activacion">
-                ¿No tenés usuario?
-                <plex-button type="link" size="sm" (click)="irRegistro()">
-                    Solicitá una Cuenta
-                </plex-button>
-            </div>
-            <div justify="center" *ngIf="!activacion">
-                <plex-button type="link" size="sm" (click)="activar()">
-                    Ingresar código de activación
-                </plex-button>
-            </div>
+            </ng-container>
         </div>
-        <plex-loader *ngIf="!loading" type="linear"></plex-loader>
+        
+        <plex-loader *ngIf="loading" type="linear"></plex-loader>
     </form>
 </main>

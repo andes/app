@@ -67,4 +67,10 @@ export class LoginComponent implements OnInit {
         this.formulario.form.markAsPristine();
         this.activacion = !this.activacion;
     }
+
+    goTo(id?) {
+        if (id) {
+            this.router.navigate([id]);
+        }
+    }
 }

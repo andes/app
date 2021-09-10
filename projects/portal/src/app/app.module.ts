@@ -48,7 +48,7 @@ import { CertificadoService } from './services/certificado.service';
 import { PrestacionService } from './services/prestacion.service';
 import { LogPacienteService } from 'src/app/services/logPaciente.service';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
-
+import { RecuperarContraseñaComponent } from './pages/recuperar-contraseña/recuperar-contraseña.component';
 
 @NgModule({
     declarations: [
@@ -76,7 +76,8 @@ import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
         RegistroCuentaComponent,
         ActivarCuentaComponent,
         PDPMisDatosPersonalesComponent,
-        PDPMiInicioComponent
+        PDPMiInicioComponent,
+        RecuperarContraseñaComponent
     ],
     imports: [
         BrowserModule,

@@ -18,6 +18,7 @@ import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta
 import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
+import { RecuperarContraseñaComponent } from './pages/recuperar-contraseña/recuperar-contraseña.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
     { path: 'registro', component: RegistroCuentaComponent },
     { path: 'activar-cuenta', component: ActivarCuentaComponent },
     { path: 'mi-inicio', component: PDPMiInicioComponent, canActivate: [RoutingGuard] },
+    { path: 'recuperar-contraseña', component: RecuperarContraseñaComponent },
     {
         path: 'mis-turnos',
         component: PDPMisTurnosComponent,

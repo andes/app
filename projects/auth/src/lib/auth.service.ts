@@ -166,6 +166,17 @@ export class Auth {
         return this.server.post('/auth/resetPassword', data, { showError: false });
     }
 
+    /**
+     * Generar un codigo para reestablecer contraseña y luego
+     * enviar un email con el codigo generado
+     *
+     * @param email Email de la cuenta
+     * @returns Promise
+     */
+    resetMobilePassword(email): Observable<any> {
+        return this.server.post('/modules/mobileApp/olvide-password', { email, showError: false });
+    }
+
     featureFlag(name: string): boolean {
         return !!this.feature[name];
     }
