@@ -41,6 +41,7 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalMasculino = 0;
     public totalFemenino = 0;
     public totalOtro = 0;
+    public totalOrganizaciones = true;
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
@@ -55,25 +56,18 @@ export class EncabezadoReportesComponent implements OnInit {
         if (!this.auth.check('visualizacionInformacion:reportes')) {
             this.router.navigate(['./inicio']);
         }
+        this.totalOrganizaciones = !this.auth.check('visualizacionInformacion:totalOrganizaciones');
         this.parametros = {
             horaInicio: this.horaInicio,
             horaFin: this.horaFin,
             organizacion: this.auth.organizacion.id
         };
-        this.organizacion = this.auth.organizacion.nombre;
+        this.organizacion = this.auth.organizacion;
         this.opciones = [{
             id: 1,
             nombre: 'Reporte C2'
-        },
-                         {
-                             id: 2,
-                             nombre: 'Diagnósticos'
-                         },
-                         {
-                             id: 3,
-                             nombre: 'Consultas por prestación'
-                         },
-        ];
+        }];
+        this.tipoReportes = this.opciones[0];
     }
 
     refreshSelection(value, tipo) {
@@ -91,7 +85,7 @@ export class EncabezadoReportesComponent implements OnInit {
         }
         if (tipo === 'organizacion') {
             if (value.value !== null) {
-                this.parametros['organizacion'] = this.auth.organizacion.id;
+                this.parametros['organizacion'] = this.organizacion.id;
             } else {
                 this.parametros['organizacion'] = '';
             }
