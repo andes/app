@@ -4,6 +4,10 @@ import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
+import { gtag } from '../../../shared/services/analytics.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
+import { Plex } from '@andes/plex';
 @Component({
     selector: 'visualizacion-reglas',
     templateUrl: './visualizacionReglas.html'
@@ -46,7 +50,10 @@ export class VisualizacionReglasComponent implements OnInit {
 
     constructor(
         private servicioReglas: ReglaService,
-        private auth: Auth
+        private auth: Auth,
+        public servicioPrestacion: PrestacionesService,
+        private ejecucionService: RupEjecucionService,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -129,6 +136,42 @@ export class VisualizacionReglasComponent implements OnInit {
                 return 0;
             });
         }
+    }
+
+    public seleccionarConcepto(concepto) {
+        concepto['esSolicitud'] = true;
+
+        const params: any = {
+            estados: [
+                'auditoria',
+                'pendiente',
+                'ejecucion'
+            ],
+            idPaciente: this.ejecucionService.paciente.id,
+            prestacionDestino: concepto.conceptId
+        };
+        this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            if (resultado.length) {
+                this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
+                    if (confirmar) {
+                        this.agregarConcepto(concepto);
+                    }
+                });
+                this.plex.toast('danger', `El paciente ya tiene una solicitud en curso para ${concepto.term}`);
+            } else {
+                this.agregarConcepto(concepto);
+            }
+        });
+
+    }
+
+    private agregarConcepto(concepto) {
+        this.ejecucionService.agregarConcepto({
+            term: concepto.term,
+            fsn: concepto.fsn,
+            conceptId: concepto.conceptId,
+            semanticTag: concepto.semanticTag
+        }, concepto.esSolicitud);
     }
 }
 
