@@ -52,17 +52,17 @@ export class PacienteDetalleComponent implements OnInit {
             {
                 id: 1,
                 nombre: 'Error en mis registros de salud',
-                operacion: 'portal:error:registrosSalud'
+                operacion: 'error:registrosSalud'
             },
             {
                 id: 2,
                 nombre: 'Error en mis datos personales',
-                operacion: 'portal:error:datosPersonales'
+                operacion: 'error:datosPersonales'
             },
             {
                 id: 3,
                 nombre: 'Otro error',
-                operacion: 'portal:error:otro'
+                operacion: 'error:otro'
             }
         ];
     }
