@@ -11,7 +11,7 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
     public esRequerido: boolean;
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = 0;
+            this.registro.valor = (this.params.isNull) ? null : 0;
         }
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'valor' en otro elemento RUP
