@@ -95,6 +95,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
                 return this.seguimientoPacientesService.search(this.query).pipe(
                     map(resultados => {
                         this.listado = lastResults ? lastResults.concat(resultados) : resultados;
+                        this.clearChecked();
                         this.query.skip = this.listado.length;
                         this.inProgress = false;
                         this.closeSideBar();
@@ -104,6 +105,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             }),
             cache()
         );
+    }
+
+    private clearChecked() {
+        this.checkedSeguimientos = {};
+        this.allSelected = false;
+        this.anyChecked = false;
     }
 
     onScroll() {
