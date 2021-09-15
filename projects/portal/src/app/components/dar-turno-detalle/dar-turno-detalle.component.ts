@@ -8,7 +8,12 @@ import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'pdp-dar-turno-detalle',
-    templateUrl: './dar-turno-detalle.component.html'
+    templateUrl: './dar-turno-detalle.component.html',
+    styles: [`
+        .fix-height {
+            height: 190px;
+        }
+    `]
 })
 
 export class DarTurnoDetalleComponent implements OnInit {

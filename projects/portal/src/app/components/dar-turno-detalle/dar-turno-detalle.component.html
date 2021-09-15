@@ -19,24 +19,28 @@
     <plex-label *ngIf="!inProgress && !turnosDisponibles?.length" titulo="No hay turnos disponibles en este momento">
     </plex-label>
     <ng-container *ngIf="turnoDado">
-        <section class="d-flex flex-column mt-4 h-25" aligned="center" justify="center">
+
+        <section class="d-flex flex-column pt-2 pb-2" aligned="center" justify="center">
             <plex-label type="success" size="xl" case="capitalize-first" direction="column" titulo="Turno asignado
             exitosamente!" subtitulo="Corrobora los datos de tu turno" icon="check"></plex-label>
         </section>
+
         <plex-title size="sm" titulo="Datos de tu turno"></plex-title>
-        <plex-grid cols="2" class="h-25 mb-4 mr-2">
-            <plex-detail direction="column" size="sm">
+        <plex-grid type="full" cols="2" size="sm">
+            <plex-detail direction="column" size="md" class="fix-height mt-2">
                 <img [mpiFotoPaciente]="paciente">
                 <div title case="capitalize" title>{{paciente.nombreCompleto }}</div>
                 <div subtitle>{{paciente.documento }}</div>
             </plex-detail>
-            <plex-detail direction="column" size="md">
+
+            <plex-detail direction="column" size="md" class="fix-height mt-2">
                 <plex-icon size="md" name="turno-bold" type="success"></plex-icon>
                 <div title case="capitalize" title>{{turnoSelected.horaInicio | date:'dd/MM/yyyy' }} |
                     {{turnoSelected.horaInicio | date:'HH:mm'}}</div>
             </plex-detail>
         </plex-grid>
-        <plex-grid type="full" size="lg" class="mt-4 h-25 mr-2">
+       
+        <plex-grid type="full" size="lg" class="mr-2">
             <plex-label icon="mano-corazon" titulo="{{ prestacion.term  }}" subtitulo="Prestación"></plex-label>
             <plex-label icon="centro-salud" titulo="{{ agenda.organizacion.nombre}}" subtitulo="Organización">
             </plex-label>
