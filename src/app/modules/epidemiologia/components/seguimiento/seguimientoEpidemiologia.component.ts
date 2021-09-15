@@ -192,16 +192,4 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             this.reload();
         });
     }
-
-    ocultarAsignados(event) {
-        if (event.value) {
-            this.seguimientos$ = this.seguimientos$.pipe(
-                map((seguimientos: any) => {
-                    return seguimientos.filter(seguimiento => seguimiento.asignaciones.length === 0);
-                })
-            );
-        } else {
-            this.buscar();
-        }
-    }
 }

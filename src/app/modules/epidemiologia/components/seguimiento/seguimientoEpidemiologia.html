@@ -21,7 +21,7 @@
                     </plex-select>
                     <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
                     <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
-                               [(ngModel)]="asignados" (change)="ocultarAsignados($event)">
+                               [(ngModel)]="asignados" (change)="buscar()">
                     </plex-bool>
                 </plex-wrapper>
             </plex-grid>
