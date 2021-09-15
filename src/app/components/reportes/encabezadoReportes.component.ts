@@ -16,9 +16,7 @@ export class EncabezadoReportesComponent implements OnInit {
 
 
     // Propiedades diagnostico
-    public showConsultaDiagnostico = false;
     public showReporteC2 = false;
-    public showCantidadConsultaXPrestacion = false;
     public opciones: any = [];
     public parametros;
     public horaInicio: any;
@@ -95,18 +93,8 @@ export class EncabezadoReportesComponent implements OnInit {
 
     public imprimir() {
         switch (this.tipoReportes.nombre) {
-            case 'Diagnósticos':
-                this.showConsultaDiagnostico = true;
-                this.showReporteC2 = false;
-                this.showCantidadConsultaXPrestacion = false;
-                this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
-                    this.diagnosticos = diagnosticos;
-                });
-                break;
             case 'Reporte C2':
                 this.showReporteC2 = true;
-                this.showConsultaDiagnostico = false;
-                this.showCantidadConsultaXPrestacion = false;
                 this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
                     this.totalConsultas = this.diagnosticos.map(elem => {
@@ -151,14 +139,6 @@ export class EncabezadoReportesComponent implements OnInit {
                     this.totalOtro = this.diagnosticos.map(elem => {
                         return elem.sumaOtro;
                     }).reduce(this.add, 0);
-                });
-                break;
-            case 'Consultas por prestación':
-                this.showCantidadConsultaXPrestacion = true;
-                this.showConsultaDiagnostico = false;
-                this.showReporteC2 = false;
-                this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
-                    this.diagnosticos = diagnosticos;
                 });
                 break;
             default:

@@ -80,8 +80,6 @@ import { ProfesionalCreateUpdateComponent } from './components/profesional/profe
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
-import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
-import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -272,8 +270,6 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent,
         ActivarAppComponent,
         ReporteC2Component,
-        ConsultaDiagnosticoComponent,
-        CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,

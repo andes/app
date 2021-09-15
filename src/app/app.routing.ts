@@ -18,9 +18,7 @@ import { ProfesionalCreateUpdateComponent } from './components/profesional/profe
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
-import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 // REPORTES
-import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
@@ -141,9 +139,6 @@ const appRoutes: Routes = [
 
     // Reportes
     { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'consultaDiagnostico', component: ConsultaDiagnosticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'encabezadoReportes', component: EncabezadoReportesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // ReportesDiarios
 
