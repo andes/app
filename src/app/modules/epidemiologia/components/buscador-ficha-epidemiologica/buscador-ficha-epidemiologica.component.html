@@ -66,11 +66,14 @@
                 <td *plTableCol="'pcr'">{{ficha.idPcr }}</td>
                 <td *plTableCol="'clasificacion'">{{ficha.secciones[2]?.fields[0]?.clasificacion.nombre}}</td>
                 <td *plTableCol="'acciones'">
-                    <plex-button *ngIf="ficha | checkEdit | async" type="warning" icon="pencil" size="sm"
+                    <plex-button *ngIf="ficha | checkEdit:'edit' | async" type="warning" icon="pencil" size="sm"
                                  tooltip="Editar" (click)="editarVerFicha(ficha,true)">
                     </plex-button>
                     <plex-button *ngIf="puedeVer" type="success" icon="eye" size="sm" tooltip="Ver"
                                  (click)="editarVerFicha(ficha,false)">
+                    </plex-button>
+                    <plex-button *ngIf="ficha | checkEdit:'delete' | async" type="danger" icon="delete" size="sm"
+                                 tooltip="Eliminar" (click)="eliminar(ficha)">
                     </plex-button>
                     <plex-button *ngIf="puedeVerHistorial" type="info" icon="history" size="sm" tooltip="Ver Historial"
                                  (click)="verHistorial(ficha)">

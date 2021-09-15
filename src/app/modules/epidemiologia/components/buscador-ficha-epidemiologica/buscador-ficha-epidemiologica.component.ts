@@ -337,4 +337,18 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     changeCollapse(event) {
         this.collapse = event;
     }
+
+    eliminar(ficha) {
+        this.plex.confirm('¿ Está seguro que desea eliminar una ficha ?', 'ESTA ACCIÓN ES IRREVERSIBLE').then((resultado) => {
+            if (resultado) {
+                this.formEpidemiologiaService.delete(ficha.id).subscribe(
+                    () => {
+                        this.plex.toast('success', 'Su ficha fue eliminada correctamente');
+                        this.searchFichas();
+                    },
+                    () => { this.plex.toast('error', 'Su ficha no pudo ser eliminada'); }
+                );
+            }
+        });
+    }
 }
