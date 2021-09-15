@@ -14,4 +14,15 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
         const clasificacionfinal = seccionClasificacion?.fields.find(f => f.clasificacionfinal)?.clasificacionfinal;
         return clasificacionfinal ? clasificacionfinal : 'Sin clasificación';
     }
+
+    // Devuelve una seccion entera de una ficha o un campo especifico
+    getField(ficha, seccionName: string, fieldName?: string) {
+        const seccionBuscada = ficha.secciones.find(s => s.name === seccionName);
+        if (fieldName) {
+            const fieldBuscado = seccionBuscada?.fields.find(field => field[fieldName]);
+            return fieldBuscado ? fieldBuscado[fieldName] : null;
+        } else {
+            return seccionBuscada;
+        }
+    }
 }
