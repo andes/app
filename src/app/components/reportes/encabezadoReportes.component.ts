@@ -26,6 +26,7 @@ export class EncabezadoReportesComponent implements OnInit {
     public organizacion;
     public tipoReportes;
     public diagnosticos = [];
+    public diagnostico;
     // Propiedades reporteC2
     public totalConsultas = 0;
     public totalMenor1 = 0;
@@ -43,8 +44,6 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalOtro = 0;
     public totalOrganizaciones = true;
 
-    // Eventos
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private router: Router,

@@ -13,6 +13,7 @@ import * as moment from 'moment';
 })
 
 export class ReporteC2Component implements OnInit {
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     private _diagnosticos;
     private diagnostico;
     public seleccionada = [];
@@ -102,7 +103,7 @@ export class ReporteC2Component implements OnInit {
     }
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private plex: Plex,
@@ -122,6 +123,7 @@ export class ReporteC2Component implements OnInit {
 
     datosPacientes(indice) {
         this.diagnostico = this.diagnosticos[indice];
+        this.select.emit(this.diagnostico);
         for (let i = 0; i < this.seleccionada.length; i++) {
             this.seleccionada[i] = false;
         }

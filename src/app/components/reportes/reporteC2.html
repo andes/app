@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-8">
+    <div class="col">
         <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
             <thead>
                 <th>Código</th>
@@ -139,37 +139,5 @@
         </table>
 
     </div>
-    <!--Panel Pacientes-->
-    <div class="col-4" *ngIf="listaPacientes">
-        <plex-box>
-            <fieldset>
-                <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <th>Documento</th>
-                        <th>Nombre Completo</th>
-                        <th>Sexo</th>
-                        <th>Edad</th>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let paciente of diagnostico.pacientes" class="hover"
-                            [ngClass]="{'bg-inverse text-white': false}">
-                            <td>
-                                {{ paciente.documento}}
-                            </td>
-                            <td>
-                                {{ paciente | nombre}}
-                            </td>
-                            <td>
-                                {{ paciente.sexo}}
-                            </td>
-                            <td>
-                                {{ paciente | edad}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-        </plex-box>
-    </div>
+   
 </div>
