@@ -3,6 +3,9 @@ import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/c
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 import { AgendaService } from '../../services/turnos/agenda.service';
+import { ZonaSanitariaService } from '../../../../src/app/services/zonaSanitaria.service';
+import { Observable } from 'rxjs';
+import { cache } from '@andes/shared';
 
 
 
@@ -43,11 +46,14 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalFemenino = 0;
     public totalOtro = 0;
     public totalOrganizaciones = true;
+    public zonaSanitaria$: Observable<any>;
+    public zonaSanitaria;
 
 
     constructor(
         private router: Router,
         private agendaService: AgendaService,
+        private zonaSanitariaService: ZonaSanitariaService,
         private auth: Auth,
     ) { }
 
@@ -70,9 +76,11 @@ export class EncabezadoReportesComponent implements OnInit {
             nombre: 'Consultas por prestación'
         }];
         this.tipoReportes = this.opciones[0];
+        this.zonaSanitaria$ = this.zonaSanitariaService.search().pipe(cache());
     }
 
     refreshSelection(value, tipo) {
+        this.diagnosticos.length = 0; // al modificar un filtro, se limpia el reporte anterior
         if (tipo === 'horaInicio') {
             const horaInicio = moment(this.horaInicio).startOf('day');
             if (horaInicio.isValid()) {
@@ -89,7 +97,15 @@ export class EncabezadoReportesComponent implements OnInit {
             if (value.value !== null) {
                 this.parametros['organizacion'] = this.organizacion.id;
             } else {
-                this.parametros['organizacion'] = '';
+                this.parametros['organizacion'] = null;
+            }
+        }
+        if (tipo === 'zonaSanitaria') {
+            if (value.value) {
+                this.organizacion = null;
+                this.parametros['zonaSanitaria'] = this.zonaSanitaria.id;
+            } else {
+                this.parametros['zonaSanitaria'] = null;
             }
         }
     }
