@@ -1,3 +1,16 @@
+# [5.64.0](https://github.com/andes/app/compare/v5.63.0...v5.64.0) (2021-09-15)
+
+
+### Bug Fixes
+
+* **inicio:** agrega control ([#2435](https://github.com/andes/app/issues/2435)) ([c6608ac](https://github.com/andes/app/commit/c6608ace7aba7c1754a7c79e78de18db0ffbdc6e))
+* **PORTAL:** arreglo en formato de imágen ([#2444](https://github.com/andes/app/issues/2444)) ([91ccf63](https://github.com/andes/app/commit/91ccf63d849c233a8300c138b81db1b453c1094f))
+
+
+### Features
+
+* **VAC:** cambia formato imagenes dni ([#2443](https://github.com/andes/app/issues/2443)) ([31a946d](https://github.com/andes/app/commit/31a946d2ea64a9ac8548d650dc871747968f5f4e))
+
 # [5.63.0](https://github.com/andes/app/compare/v5.62.0...v5.63.0) (2021-09-08)
 
 
