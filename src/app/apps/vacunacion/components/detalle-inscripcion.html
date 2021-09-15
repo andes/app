@@ -53,4 +53,16 @@
 
     <!-- inscripcion -->
     <plex-label titulo="Plasma" subtitulo="{{ inscripcion.plasma ? 'Si' : 'No' }}"></plex-label>
+
+    <!-- factores de riesgo -->
+    <ng-container *ngIf="inscripcion.grupo.nombre === 'factores-riesgo' && !inscripcion.factorRiesgoEdad">
+        <plex-label titulo="Tiene certificado" subtitulo="{{ inscripcion.idPrestacionCertificado ? 'Si' : 'No' }}">
+        </plex-label>
+        <plex-label *ngIf="inscripcion.idPrestacionCertificado" titulo="Fecha de certificado"
+                    subtitulo="{{ inscripcion.fechaCertificado | fecha}}">
+        </plex-label>
+        <plex-label *ngIf="inscripcion.idPrestacionCertificado" titulo="Emitido por"
+                    subtitulo="{{ profesionalCertificado | nombre }}">
+        </plex-label>
+    </ng-container>
 </plex-grid>
