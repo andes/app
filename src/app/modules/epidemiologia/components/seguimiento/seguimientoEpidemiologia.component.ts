@@ -72,9 +72,10 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     }
 
     buscar() {
+        const estadosActivo = ['pendiente','seguimiento'];
         this.query = {
             fechaInicio: this.seguimientoPacientesService.queryDateParams(this.fechaDesde, this.fechaHasta),
-            estado: this.estado?.id,
+            estado: this.estado?.id || estadosActivo,
             organizacionSeguimiento: this.auth.organizacion.id,
             paciente: this.documento,
             sort: '-score.value score.fecha',
