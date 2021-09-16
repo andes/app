@@ -101,7 +101,9 @@
                     <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT==='dinamica'">
                         <!--Header agenda-->
                         <div class="pt-3 text-center">
-                            <div>Agenda seleccionada</div>
+                            <div>Agenda seleccionada
+                                <plex-icon *ngIf="agenda.link" tooltip="Agenda Virtual" name="monitor"></plex-icon>
+                            </div>
                             <!-- Botones para ver más agendas -->
                             <plex-button *ngIf="agendasDelDia && agendasDelDia[indice-1]" type="info" size="sm"
                                          icon="chevron-left" class="text-lg" title="Agenda anterior"
@@ -405,6 +407,10 @@
                                 </div>
                                 <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
                                 </plex-text>
+                                <plex-text *ngIf="agenda.link" tooltip="Puede cambiar link de turno virtual"
+                                           label="Link" name="link" [(ngModel)]="link">
+                                </plex-text>
+
                             </div>
                         </div>
                         <br>

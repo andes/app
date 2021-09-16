@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
-import { Directive, TemplateRef, ViewContainerRef, OnDestroy, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { Subscription, merge, interval, NEVER } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { combineLatest, Subscription } from 'rxjs';
+import { OrganizacionService } from '../services/organizacion.service';
 
 
 @Directive({
@@ -21,7 +21,8 @@ export class FeatureFlagDirective<T> implements OnDestroy, OnInit {
         private view: ViewContainerRef,
         private nextRef: TemplateRef<ObserveContext<T>>,
         private changes: ChangeDetectorRef,
-        private auth: Auth
+        private auth: Auth,
+        private organizacionService: OrganizacionService
     ) { }
 
 
@@ -30,8 +31,13 @@ export class FeatureFlagDirective<T> implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this.openSubscription = this.auth.session().subscribe((sesion) => {
-            if (sesion && sesion.feature && sesion.feature[this.feature]) {
+        this.openSubscription = combineLatest([
+            this.auth.session(),
+            this.organizacionService.configuracion(this.auth.organizacion.id)
+        ]).subscribe(([sesion, configuracion]) => {
+            const flagSession = sesion && sesion.feature && sesion.feature[this.feature];
+            const flagOrganizacion = configuracion && configuracion[this.feature];
+            if (flagSession || flagOrganizacion) {
                 if (!this.viewRef) {
                     this.viewRef = this.view.createEmbeddedView(this.nextRef);
                     this.changes.markForCheck();

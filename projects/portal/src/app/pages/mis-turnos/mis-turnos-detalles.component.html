@@ -15,6 +15,9 @@
         <plex-label titulo="Equipo de Salud"
                     subtitulo="{{ (turno.profesionales | enumerar : ['apellido','nombre'] ) || 'No asignado' }}"> </plex-label>
     </plex-detail>
+    <plex-button *ngIf="turno.link && turno.horaInicio > fecha" justify="center" type="info" icon="monitor" size="lg"
+                 tooltip="Consultorio Virtual" (click)="linkVideollamada(turno.link)">
+    </plex-button>
     <plex-title size="sm" titulo="nota"></plex-title>
     <p>{{ turno.nota }} {{ turno.motivoSuspension }}</p>
 </ng-container>

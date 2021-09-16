@@ -152,6 +152,11 @@
                 <plex-button *ngIf="agendaSeleccionada && agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)"
                              label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
                 </plex-button>
+                <plex-button *ngIf="agendaSeleccionada?.link" type="primary" name="link" size="sm"
+                             (click)="linkVideollamada(agendaSeleccionada.link)">
+                    <plex-icon name="monitor"></plex-icon>
+                </plex-button>
+
             </plex-title>
         </header>
         <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">

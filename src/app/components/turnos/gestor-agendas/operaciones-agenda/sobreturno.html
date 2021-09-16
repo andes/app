@@ -48,6 +48,11 @@
                                        name="horaTurno" label="Hora Turno">
                         </plex-datetime>
                     </div>
+                    <div *ngIf="agenda.link" class="col">
+                        <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
+                                   name="turno_link" label="Link">
+                        </plex-text>
+                    </div>
                 </div>
             </span>
         </form>
@@ -67,10 +72,15 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title size="md" titulo="Agenda seleccionada"></plex-title>
+        <plex-title size="md" titulo="Agenda seleccionada">
+
+        </plex-title>
         <!--Agenda seleccionada-->
         <div class="text-center mt-4" *ngIf="agenda">
-
+            <h4 *ngIf="agenda.link" class="pt-4">
+                <span class="mdi mdi-monitor"> Agenda Virtual</span>
+            </h4>
+            <br>
             <h4>
                 <span class="mdi mdi-calendar-today"> Hora Agenda </span>
             </h4>
@@ -92,6 +102,7 @@
             <div *ngFor="let profesional of agenda.profesionales let i = index">
                 {{profesional | nombre}}
             </div>
+
         </div>
     </plex-layout-sidebar>
     <plex-layout-footer>

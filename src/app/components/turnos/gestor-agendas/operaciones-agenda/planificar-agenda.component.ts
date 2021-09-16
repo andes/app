@@ -52,6 +52,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public autorizado = false;
     public today = new Date();
     public mobileEnabled: null;
+    public virtual = false;
     showClonar = false;
     showAgenda = true;
     espacioFisicoPropios = true;
@@ -94,6 +95,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
+        if (this.modelo.link) {
+            this.virtual = true;
+        }
         // se carga el tipo de espacio Fisico
         if (this.modelo.espacioFisico && !this.modelo.espacioFisico.organizacion) {
             this.espacioFisicoPropios = false;
