@@ -12,7 +12,7 @@
         </plex-badge>
 
         <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
-            {{ paciente.fechaFallecimiento | fecha:'utc'}}
+            {{ paciente.fechaFallecimiento | fecha}}
         </plex-badge>
 
         <div title>{{ paciente | nombre }}</div>
@@ -47,7 +47,7 @@
         </plex-label>
 
         <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
-                    subtitulo="{{ (paciente.fechaNacimiento | fecha:'utc') || 'Desconocida' }}"
+                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
                     justify="{{ justificado }}"></plex-label>
 
         <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"

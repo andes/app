@@ -18,7 +18,7 @@
                             - {{ (paciente.relaciones[0] | nombre)}}">
         </plex-label>
 
-        <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
+        <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha }}">
         </plex-label>
 
         <plex-badge *ngIf="showDatosTutor(paciente)" type="warning">
@@ -34,7 +34,7 @@
         </plex-badge>
 
         <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
-            {{ paciente.fechaFallecimiento | fecha:'utc'}}
+            {{ paciente.fechaFallecimiento | fecha}}
         </plex-badge>
 
         <plex-button *ngIf="editing" type="warning" size="sm" icon="pencil" title="Editar paciente"
