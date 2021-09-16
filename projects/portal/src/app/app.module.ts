@@ -46,6 +46,7 @@ import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta
 import { CategoriasService } from './services/categoria.service';
 import { CertificadoService } from './services/certificado.service';
 import { PrestacionService } from './services/prestacion.service';
+import { LogPacienteService } from 'src/app/services/logPaciente.service';
 
 
 @NgModule({
@@ -111,7 +112,8 @@ import { PrestacionService } from './services/prestacion.service';
             useValue: {
                 siteKey: environment.SITE_KEY,
             } as RecaptchaSettings,
-        }
+        },
+        LogPacienteService
     ],
     bootstrap: [AppComponent]
 })
