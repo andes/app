@@ -13,7 +13,7 @@
         </plex-badge>
         <plex-label titulo="Lugar" subtitulo="{{ turno.organizacion.nombre }}"></plex-label>
         <plex-label titulo="Equipo de Salud"
-                    subtitulo="{{ turno.profesionales[0]?.nombre}} {{ turno.profesionales[0]?.apellido}}"> </plex-label>
+                    subtitulo="{{ (turno.profesionales | enumerar : ['apellido','nombre'] ) || 'No asignado' }}"> </plex-label>
     </plex-detail>
     <plex-title size="sm" titulo="nota"></plex-title>
     <p>{{ turno.nota }} {{ turno.motivoSuspension }}</p>
