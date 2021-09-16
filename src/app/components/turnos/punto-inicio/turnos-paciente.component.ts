@@ -79,8 +79,8 @@ export class TurnosPacienteComponent implements OnInit {
                 public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
-        this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
-        this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
+        this.puedeRegistrarAsistencia = this.auth.check('turnos:turnos:registrarAsistencia');
+        this.puedeLiberarTurno = this.auth.check('turnos:turnos:liberarTurno');
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
         this.loadObraSocial();
