@@ -66,6 +66,9 @@ export class EncabezadoReportesComponent implements OnInit {
         this.opciones = [{
             id: 1,
             nombre: 'Reporte C2'
+        }, {
+            id: 3,
+            nombre: 'Consultas por prestación'
         }];
         this.tipoReportes = this.opciones[0];
     }
