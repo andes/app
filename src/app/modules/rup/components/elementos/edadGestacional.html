@@ -1,0 +1,46 @@
+<div *ngIf="!soloValores">
+    <ng-container *ngIf="elementoRUP.requeridos?.length">
+        <div class="row">
+            <ng-container *ngIf="registro?.registros?.length">
+                <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                    <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
+                        <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="calculoEdadGestacional()">
+                        </rup>
+                    </div>
+                </ng-container>
+            </ng-container>
+            
+            <div class="col">
+                <plex-float label="{{ termCapitalized }}" [(ngModel)]="registro.valor" required="true" name="valorEdad" [disabled]="true" [suffix]="params?.unit || ''">
+                </plex-float>
+            </div>
+        </div>
+    </ng-container>
+
+    <p *ngIf="alerta">
+        <span>
+            {{ alerta }}
+        </span>
+    </p>
+</div>
+
+<ng-container *ngIf="soloValores">
+    <ng-container *ngIf="elementoRUP.requeridos?.length">
+        <div class="row">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <p [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}"
+                    class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style : '0' }}">
+                    <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
+                        [registro]="registro.registros[i]" [soloValores]="true" [paciente]="paciente">
+                    </rup>
+                </p>
+            </ng-container>
+        </div>
+    </ng-container>
+    
+    <p>
+        <label class="text-capitalize">{{ termCapitalized }}</label>
+        {{ registro.valor }} {{ params.unit }}
+    </p>
+</ng-container>
