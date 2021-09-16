@@ -22,13 +22,16 @@
                 <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
                 <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
                 <td *plTableCol="'estado'">
-                    <plex-badge
-                                type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
-                        {{ paciente.estado }}
-                    </plex-badge>
-                    <span class="pl-1" *ngIf="paciente.nota">
-                        <i title="{{ paciente.nota }}" class="mdi mdi-comment-outline"></i>
-                    </span>
+                    <div class="d-flex flex-row">
+                        <plex-badge
+                                    type="{{paciente.estado === 'habilitado' ? 'success' : (paciente.estado === 'pendiente' ? 'warning' : 'danger')}}">
+                            {{ paciente.estado }}
+                        </plex-badge>
+
+                        <plex-badge *ngIf="paciente.nota" size="sm" type="info" class="ml-1">
+                            <plex-icon name="documento" type="info"></plex-icon>
+                        </plex-badge>
+                    </div>
                 </td>
                 <td *plTableCol="'turno'">
                     <plex-label type="{{ paciente.turno ? 'success' : 'danger' }}" titulo="" subtitulo=""
@@ -167,21 +170,18 @@
             <!-- formulario para editar inscripción -->
             <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected"
                                 (returnEdicion)="returnEdicion($event)"></editar-inscripcion>
-            <notas *ngIf="showAgregarNota" [inscripcion]="pacienteSelected" (returnNotas)="returnEdicion($event)">
-            </notas>
             <!-- datos de inscripción -->
-            <ng-container *ngIf="!editando && !showAgregarNota">
+            <ng-container *ngIf="!editando">
                 <plex-title titulo="Datos de la inscripción" size="sm">
                     <plex-button type="warning" size="sm" (click)="editPaciente()" class='mr-1' icon="pencil"
                                  *ngIf="permisosEdicion.length && !editando">
                     </plex-button>
-                    <plex-button type="info" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}"
-                                 size="sm" (click)="showAgregarNota = true"
-                                 title="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}">
-                    </plex-button>
                 </plex-title>
+
                 <detalle-inscripcion [inscripcion]=" pacienteSelected">
                 </detalle-inscripcion>
+                <notas [inscripcion]="pacienteSelected" (returnNotas)="returnEdicion($event)">
+                </notas>
             </ng-container>
         </ng-container>
     </plex-layout-sidebar>

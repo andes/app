@@ -9,6 +9,7 @@ import { Plex } from '@andes/plex';
 
 export class NotasComponent {
     public inscripcion: any;
+    public showForm = false;
     public notasPredefinidas = [
         { id: 'turno-asignado', nombre: 'Turno asignado' },
         { id: 'no-quiere', nombre: 'No quiere vacunarse' },
@@ -18,9 +19,24 @@ export class NotasComponent {
     ];
     public notaPredefinida;
     public notaPersonalizada = '';
+
     @Input('inscripcion')
     set _inscripcion(value) {
         this.inscripcion = { ...value };
+        this.showForm = false;
+        this.uploadNota();
+    }
+    @Output() returnNotas: EventEmitter<any> = new EventEmitter<any>();
+
+    constructor(
+        private inscripcionService: InscripcionService,
+        public plex: Plex,
+    ) { }
+
+    uploadNota() {
+        this.notaPredefinida = '';
+        this.notaPersonalizada = '';
+
         if (this.inscripcion.nota) {
             const opcionNota = this.notasPredefinidas.find(n => n.nombre === this.inscripcion.nota);
             if (opcionNota) {
@@ -31,16 +47,20 @@ export class NotasComponent {
             }
         }
     }
-    @Output() returnNotas: EventEmitter<any> = new EventEmitter<any>();
-
-    constructor(
-        private inscripcionService: InscripcionService,
-        public plex: Plex,
-    ) {
-    }
 
     cerrar() {
         this.returnNotas.emit(null);
+        this.showForm = false;
+        this.uploadNota();
+    }
+
+    editarNota() {
+        this.showForm = true;
+        this.uploadNota();
+    }
+
+    agregarNota() {
+        this.showForm = true;
     }
 
     guardar() {
@@ -51,9 +71,21 @@ export class NotasComponent {
         }
         this.inscripcionService.update(this.inscripcion.id, this.inscripcion).subscribe(resultado => {
             this.returnNotas.emit(resultado);
+            this.showForm = false;
             this.plex.toast('success', 'Nota agregada con éxito');
         }, error => {
             this.plex.toast('danger', 'La inscripción no pudo ser actualizada');
+        });
+    }
+
+    eliminar() {
+        this.inscripcion.nota = '';
+        this.inscripcionService.update(this.inscripcion.id, this.inscripcion).subscribe(resultado => {
+            this.returnNotas.emit(resultado);
+            this.plex.toast('success', 'Nota eliminada con éxito');
+            this.showForm = false;
+        }, error => {
+            this.plex.toast('danger', 'La nota no pudo ser eliminada');
         });
     }
 
