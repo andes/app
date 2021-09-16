@@ -18,8 +18,6 @@ export class EncabezadoReportesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
 
-    // Propiedades diagnostico
-    public showConsultaDiagnostico = false;
     public showReporteC2 = false;
     public showCantidadConsultaXPrestacion = false;
     public opciones: any = [];
@@ -72,7 +70,7 @@ export class EncabezadoReportesComponent implements OnInit {
             id: 1,
             nombre: 'Reporte C2'
         }, {
-            id: 3,
+            id: 2,
             nombre: 'Consultas por prestación'
         }];
         this.tipoReportes = this.opciones[0];
@@ -113,17 +111,8 @@ export class EncabezadoReportesComponent implements OnInit {
 
     public imprimir() {
         switch (this.tipoReportes.nombre) {
-            case 'Diagnósticos':
-                this.showConsultaDiagnostico = true;
-                this.showReporteC2 = false;
-                this.showCantidadConsultaXPrestacion = false;
-                this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
-                    this.diagnosticos = diagnosticos;
-                });
-                break;
             case 'Reporte C2':
                 this.showReporteC2 = true;
-                this.showConsultaDiagnostico = false;
                 this.showCantidadConsultaXPrestacion = false;
                 this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
@@ -173,7 +162,6 @@ export class EncabezadoReportesComponent implements OnInit {
                 break;
             case 'Consultas por prestación':
                 this.showCantidadConsultaXPrestacion = true;
-                this.showConsultaDiagnostico = false;
                 this.showReporteC2 = false;
                 this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;

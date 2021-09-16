@@ -29,6 +29,9 @@
             </plex-grid>
         </form>
         <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos" (select)="diagnostico = $event"></reporteC2>
+        <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion"
+                                        [diagnosticos]="diagnosticos">
+        </cantidadConsultaXPrestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="showReporteC2 && diagnostico" type="invert">
         <plex-title titulo="Listado de Pacientes {{diagnostico.reporteC2}}">
