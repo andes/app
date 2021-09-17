@@ -35,16 +35,16 @@ export class RevisionFueraAgendaComponent implements OnInit {
     ngOnInit() {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        this.fechaDesde = moment(this.fechaDesde).utc().startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).utc().endOf('day');
         this.cargarPrestaciones();
     }
 
     cargarPrestaciones() {
         if (this.fechaDesde && this.fechaHasta) {
             const params = {
-                fechaDesde: moment(this.fechaDesde).startOf('day').toDate(),
-                fechaHasta: moment(this.fechaHasta).endOf('day').toDate(),
+                fechaDesde: moment(this.fechaDesde).utc().startOf('day'),
+                fechaHasta: moment(this.fechaHasta).utc().endOf('day'),
                 auditadas: this.auditadas
             };
             this.serviceCodificacion.get(params).subscribe(datos => {
@@ -58,7 +58,6 @@ export class RevisionFueraAgendaComponent implements OnInit {
 
     estaSeleccionada(prestacion: ICodificacionPrestacion) {
         return (this.prestacionSeleccionada === prestacion);
-        this.showRegistros = true;
     }
 
     seleccionarPrestacion(prestacion: ICodificacionPrestacion) {
