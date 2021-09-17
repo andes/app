@@ -104,6 +104,7 @@ export class GraficosComponent implements OnInit {
     cargarResultados(data) {
         if (data && data.length > 0 && data[0].count > 0 && this.filtros) {
             if (this.type === 'bar') {
+                this.leyenda = '';
                 if (data.length > this.DATA_MAX) {
                     this.leyenda = `(Se muestran ${this.DATA_MAX} de ${data.length})`;
                     data = data.slice(0, this.DATA_MAX);
