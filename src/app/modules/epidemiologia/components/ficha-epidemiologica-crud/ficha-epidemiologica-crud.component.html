@@ -433,7 +433,8 @@
                                              [required]="field.required" [data]="selectGral" [readonly]="!editFicha"
                                              (change)="getInstituciones(true); clearDependencias($event,'antecedentesEpidemiologicos',['nombreestablecimiento'])">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='nombreestablecimiento' && seccion.fields['asisteestablecimiento']?.id==='si'"
+                                <plex-select [multiple]="true"
+                                             *ngIf="field.key==='nombreestablecimiento' && seccion.fields['asisteestablecimiento']?.id==='si'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [data]="institucionesEducativas$ | async" [required]="field.required"
