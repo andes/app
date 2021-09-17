@@ -24,8 +24,8 @@
         <!-- loader -->
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}" class="h-100">
-
             <plex-tabs (change)="setMainSize($event)">
+
 
                 <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
@@ -53,6 +53,7 @@
                 <plex-tab label="Documentos" icon="file-multiple" *ngIf="documentacionPermiso">
                     <documentos-paciente [paciente]="pacienteModel"></documentos-paciente>
                 </plex-tab>
+
 
             </plex-tabs>
         </form>

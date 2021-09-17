@@ -1,0 +1,49 @@
+<ng-container *ngIf="ips">
+    <plex-title [titulo]="composition.title"></plex-title>
+
+
+    <ng-container *ngIf="problemas.length">
+        <plex-title size="sm" titulo="Lista de problemas"></plex-title>
+        <plex-grid cols="3">
+            <ng-container *ngFor="let problema of problemas">
+                <rup-card [titulo]="problema.code.coding[0].display" icono="trastorno" semantic="trastorno"
+                          [estado]="problema.clinicalStatus?.coding[0]?.code" [fecha]="problema.recordedDate">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="alergias.length">
+        <plex-title size="sm" titulo="Alergias"></plex-title>
+        <plex-grid cols="3">
+            <ng-container *ngFor="let alergia of alergias">
+                <rup-card [titulo]="alergia.code.coding[0].display" icono="trastorno" semantic="trastorno"
+                          estado="Activo" [fecha]="alergia.onsetDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="alergias.length">
+        <plex-title size="sm" titulo="Vacunas"></plex-title>
+        <plex-grid cols="2">
+            <ng-container *ngFor="let vacuna of vacunas">
+                <rup-card [titulo]="vacuna.vaccineCode.coding[0].display" icono="vacuna" semantic="vacuna"
+                          [estado]="vacuna.status" [fecha]="vacuna.occurrenceDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+    <ng-container *ngIf="medicamentos.length">
+        <plex-title size="sm" titulo="Medicamentos"></plex-title>
+        <plex-grid cols="2">
+            <ng-container *ngFor="let medicamento of medicamentos">
+                <rup-card [titulo]="medicamento.medicationCodeableConcept.coding[0].display" icono="pildoras"
+                          semantic="producto" [estado]="medicamento.status" [fecha]="medicamento.effectiveDateTime">
+                </rup-card>
+            </ng-container>
+        </plex-grid>
+    </ng-container>
+
+</ng-container>

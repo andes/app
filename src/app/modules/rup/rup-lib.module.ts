@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlexModule } from '@andes/plex';
+import { SharedModule } from '@andes/shared';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@andes/shared';
 import { ModalMotivoAccesoHudsComponent } from './components/huds/modal-motivo-acceso-huds.component';
-import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
+import { RUPCardComponent } from './components/huds/rup-card/rup-card.component';
 
 @NgModule({
     imports: [
@@ -18,16 +18,15 @@ import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
         SharedModule,
     ],
     declarations: [
-        ModalMotivoAccesoHudsComponent
-    ],
-    providers: [
-
+        ModalMotivoAccesoHudsComponent,
+        RUPCardComponent
     ],
     entryComponents: [
         ModalMotivoAccesoHudsComponent
     ],
     exports: [
-        ModalMotivoAccesoHudsComponent
+        ModalMotivoAccesoHudsComponent,
+        RUPCardComponent
     ],
 })
 export class RUPLibModule {

@@ -9,6 +9,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TOPLibModule } from 'src/app/components/top/top.module';
+import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { HudsBusquedaComponent } from './components/ejecucion/hudsBusqueda.component';
 import { ChartComponent } from './components/ejecucion/resumen-paciente/chart.component';
@@ -16,6 +17,7 @@ import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/res
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { VistaAccesosHudsComponent } from './components/huds/vista-accesos-huds.component';
+import { VistaIPSComponent } from './components/huds/vista-ips.component';
 import { VistaCDAComponent } from './components/huds/vistaCDA.component';
 import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './components/huds/vistaDetalleRegistro';
@@ -40,11 +42,13 @@ import { RUPLibModule } from './rup-lib.module';
         TOPLibModule,
         NgDragDropModule,
         RUPLibModule,
-        SharedModule
+        SharedModule,
+        DirectiveLibModule
 
     ],
     declarations: [
         VistaCDAComponent,
+        VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
@@ -59,6 +63,7 @@ import { RUPLibModule } from './rup-lib.module';
     ],
     exports: [
         VistaCDAComponent,
+        VistaIPSComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,

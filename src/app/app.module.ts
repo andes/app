@@ -213,8 +213,6 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
-
-
 registerLocaleData(localeEs, 'es');
 
 // Main module
