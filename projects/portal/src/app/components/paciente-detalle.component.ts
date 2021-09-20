@@ -79,14 +79,14 @@ export class PacienteDetalleComponent implements OnInit {
         return this.width >= 980;
     }
 
-    guardar(){
+    guardar() {
         const data = {
             paciente: this.auth.mobileUser.pacientes[0].id,
             operacion: this.motivoError.select.operacion,
             descripcion: this.descripcionError
         };
         this.logPacienteService.post(data).subscribe(resp => {
-            if(resp){
+            if (resp) {
                 this.plex.toast('success', 'Reporte emitido exitosamente');
             }
         }, error => {

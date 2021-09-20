@@ -1,13 +1,12 @@
 
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Auth } from '@andes/auth';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
+import { IProfe } from '../../interfaces/IProfe';
+import { DocumentosService } from '../../services/documentos.service';
+import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
-import { SugerenciasService } from '../../services/sendmailsugerencias.service';
-import { IProfe } from '../../interfaces/IProfe';
-import { forkJoin as observableForkJoin } from 'rxjs';
-import { DocumentosService } from '../../services/documentos.service';
-import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'puco',
@@ -171,13 +170,13 @@ export class PucoComponent implements OnInit, OnDestroy {
 
                         if ((this.resPuco.length > 0) || (this.resProfe.length > 0)) {
                             if (this.resPuco.length > 0) {
-                                this.usuarios = <any>this.resPuco;
+                                this.usuarios = <any> this.resPuco;
                             }
                             if (this.resProfe.length > 0) {
                                 if (this.resPuco) {
                                     this.usuarios = this.resPuco.concat(this.resProfe);
                                 } else {
-                                    this.usuarios = <any>this.resProfe;
+                                    this.usuarios = <any> this.resProfe;
                                 }
                             }
                         } else if (this.resSumar.length > 0) {
