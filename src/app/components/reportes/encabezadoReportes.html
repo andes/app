@@ -1,59 +1,51 @@
-<plex-layout>
+<plex-layout [main]="showReporteC2 && diagnostico ? 7 : 12">
     <plex-layout-main>
-        <section>
-            <div class="row">
-                <div class="col">
-                    <plex-box>
-                        <header>
-                            <plex-title titulo="reportes"></plex-title>
-                            <form #formularioValidacion="ngForm">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <plex-datetime type="date" [(ngModel)]="horaInicio"
-                                                       (change)="refreshSelection($event,'horaInicio')"
-                                                       name="horaInicio" label="Desde" class="fechas" [required]="true">
-                                        </plex-datetime>
-                                    </div>
-                                    <div class="col-2">
-                                        <plex-datetime type="date" [(ngModel)]="horaFin"
-                                                       (change)="refreshSelection($event,'horaFin')" name="horaFin"
-                                                       label="Hasta" class="fechas" [required]="true">
-                                        </plex-datetime>
-                                    </div>
-                                    <br>
-                                    <div class="col-4">
-                                        <plex-select tmOrganizaciones label="Organización" (change)="refreshSelection($event,'organizacion')"  
-                                        [(ngModel)]="organizacion" name="organizacion" [readonly]="totalOrganizaciones" >
-                                        </plex-select>
-                                    </div>
-                                    <br>
-                                    <div class="col-4">
-                                        <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
-                                                     label-field="Tipo de reportes" label="Seleccione reporte"
-                                                     [required]="true">
-                                        </plex-select>
-                                    </div>
-                                    <br>
 
-                                </div>
-                            </form>
-                            <br>
-                        </header>
-                        <consultaDiagnostico *ngIf="showConsultaDiagnostico" [diagnosticos]="diagnosticos">
-                        </consultaDiagnostico>
-                        <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos"></reporteC2>
-                        <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion"
-                                                     [diagnosticos]="diagnosticos">
-                        </cantidadConsultaXPrestacion>
-                    </plex-box>
-                </div>
-            </div>
-
-        </section>
+        <plex-title titulo="reportes">
+            <plex-button [disabled]="formularioValidacion.invalid" type="success" label="Generar Reporte"
+                (click)="imprimir()" position="right" class="ml-2"></plex-button>
+        </plex-title>
+        <form #formularioValidacion="ngForm">
+            <plex-grid size="lg" type="full">
+                <plex-wrapper>
+                    <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')"
+                        name="horaInicio" label="Desde" class="fechas" [required]="true">
+                    </plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')"
+                        name="horaFin" label="Hasta" class="fechas" [required]="true">
+                    </plex-datetime>
+                    <!-- <plex-select label="Zona" [data]="zonaSanitaria$ | async"
+                        (change)="refreshSelection($event,'zonaSanitaria')" [(ngModel)]="zonaSanitaria" name="zona"
+                        [readonly]="totalOrganizaciones">
+                    </plex-select> -->
+                    <plex-select tmOrganizaciones label="Organización"
+                        (change)="refreshSelection($event,'organizacion')" [(ngModel)]="organizacion"
+                        name="organizacion" [readonly]="totalOrganizaciones">
+                    </plex-select>
+                    <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
+                        label-field="Tipo de reportes" label="Seleccione reporte" [required]="true">
+                    </plex-select>
+                </plex-wrapper>
+            </plex-grid>
+        </form>
+        <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos" (select)="diagnostico = $event"></reporteC2>
     </plex-layout-main>
-    <plex-layout-footer>
-        <plex-button [disabled]="formularioValidacion.invalid" type="success" label="Generar Reporte"
-                     (click)="imprimir()" position="right" class="ml-2"></plex-button>
-    </plex-layout-footer>
+    <plex-layout-sidebar *ngIf="showReporteC2 && diagnostico" type="invert">
+        <plex-title titulo="Listado de Pacientes {{diagnostico.reporteC2}}">
+            <plex-button size="sm" type="danger" [icon]="'close'" (click)="diagnostico = null">
+            </plex-button>
+        </plex-title>
+        <plex-list>
+            <plex-item *ngFor="let paciente of diagnostico.pacientes;" class="">
+                <plex-label titulo="{{ paciente | nombre }}" subtitulo="{{ (paciente.documento | number) || 'Sin DNI'}}">
+                </plex-label>
+                <plex-label titulo="{{paciente.sexo}}">
+                </plex-label>
+                <plex-label titulo="{{paciente | edad}}">
+                </plex-label>
+            </plex-item>
+        </plex-list>
+    </plex-layout-sidebar>
+
 
 </plex-layout>
