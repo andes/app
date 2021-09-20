@@ -258,11 +258,20 @@ export class ElementosRUPService {
         };
     }
 
-    getConceptoConfirmadoPCR() {
+    getConceptoEnfermedadCovid() {
         return {
             conceptId: '840539006',
             term: 'enfermedad causada por COVID-19',
             fsn: 'enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (trastorno)',
+            semanticTag: 'trastorno'
+        };
+    }
+
+    getConceptoConfirmadoPcr() {
+        return {
+            term: 'covid-19 confirmado por PCR',
+            fsn: 'covid-19 confirmado por PCR (trastorno)',
+            conceptId: '821000246102',
             semanticTag: 'trastorno'
         };
     }

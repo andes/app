@@ -258,7 +258,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-    // Pregunta por el permiso de huds para el caso en el que se visualiza una ficha desde la huds y no tiene permisos de epidemiologia
+        // Pregunta por el permiso de huds para el caso en el que se visualiza una ficha desde la huds y no tiene permisos de epidemiologia
         if (!this.auth.getPermissions('epidemiologia:?').length && !this.auth.check('huds:visualizacionHuds')) {
             this.router.navigate(['inicio']);
         }
@@ -486,13 +486,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     private registrarPrestacion(ficha) {
         const concepto = this.elementoRupService.getConceptoSeguimientoCOVID();
         const registrosEjecucion = this.formEpidemiologiaService.getConceptosCovidConfirmado(ficha).map((c: any) => ({
-                concepto: c,
-                elementoRUP: '594aa21a884431c25d9a0266',
-                nombre: c.term,
-                esSolicitud: false
-            })
+            concepto: c,
+            elementoRUP: '594aa21a884431c25d9a0266',
+            nombre: c.term,
+            esSolicitud: false
+        })
         );
-    
+
         const nuevaPrestacion = this.prestacionesService.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'ambulatorio', new Date(), null, null, registrosEjecucion);
         this.prestacionesService.post(nuevaPrestacion).subscribe(prestacion => {
             this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
@@ -611,13 +611,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
     setDireccion(nuevaDir) {
         return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0]?.valor ||
-      nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
-      nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
+            nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
+            nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
     }
 
     pacienteInternado(event) {
         this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
-      event.value.id === 'ut' || event.value.id === 'uti';
+            event.value.id === 'ut' || event.value.id === 'uti';
         if (this.estaInternado) {
             this.organizacionesInternacion$ = this.organizacionService.get({ aceptaDerivacion: true });
         }

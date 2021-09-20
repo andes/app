@@ -485,7 +485,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
         let pacientePrestacion;
         if (!paciente) {
             pacientePrestacion = undefined;

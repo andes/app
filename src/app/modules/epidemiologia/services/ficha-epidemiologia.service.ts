@@ -31,23 +31,37 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
     }
 
     getConceptosCovidConfirmado(ficha) {
-        let conceptos = [];
+        const conceptos = [];
 
         const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === this.SECCION_CLASIFICACION_FINAL);
-        const segundaClasificacion = seccionClasificacion?.fields.find(f => f.segundaclasificacion)?.segundaclasificacion;
 
-        if (segundaClasificacion.id === 'confirmado') {
-            conceptos.push(this.elementoRupService.getConceptoCovidConfirmadoNexo());
-        } else if (segundaClasificacion.id === 'antigeno') {
-            const antigeno = seccionClasificacion?.fields.find(f => f.antigeno)?.antigeno;
-            if (antigeno.id === 'confirmado') {
-                conceptos.push(this.elementoRupService.getConceptoConfirmadoTestRapido());
-            } else if (antigeno.id === 'muestra') {
-                conceptos.push(this.elementoRupService.getConceptoDescartadoTestRapido());
-                conceptos.push(this.elementoRupService.getConceptoConfirmadoPCR());
+        seccionClasificacion.fields.forEach(field => {
+            const key = Object.keys(field)[0];
+            switch (key) {
+                case 'segundaclasificacion':
+                    if (field.segundaclasificacion.id === 'confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoCovidConfirmadoNexo());
+                    }
+                    break;
+                case 'pcr':
+                    if (field.pcr.id === 'confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoConfirmadoPcr());
+                    };
+                    break;
+                case 'antigeno':
+                    if (field.antigeno.id === 'confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoConfirmadoTestRapido());
+                    } else if (field.antigeno.id === 'muestra') {
+                        conceptos.push(this.elementoRupService.getConceptoDescartadoTestRapido());
+                    }
+                    break;
+                case 'lamp':
+                    if (field.lamp.id === 'confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
+                    };
+                    break;
             }
-        }
-
+        });
         return conceptos;
     }
 }
