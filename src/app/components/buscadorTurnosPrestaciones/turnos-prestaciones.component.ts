@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
 import { combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -139,7 +140,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }]);
 
 
-        this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$;
+        this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
+            cache()
+        );
 
         combineLatest([
             this.accion$,
