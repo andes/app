@@ -65,7 +65,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     }
 
     buscar() {
-        const estadosActivo = ['pendiente','seguimiento'];
+        const estadosActivo = ['pendiente', 'seguimiento'];
         this.query = {
             fechaInicio: this.seguimientoPacientesService.queryDateParams(this.fechaDesde, this.fechaHasta),
             estado: this.estado?.id || estadosActivo,
@@ -73,7 +73,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             paciente: this.documento,
             sort: '-score.value score.fecha',
             limit: 20,
-            asignados: this.asignados ? this.asignados : undefined
+            asignados: this.asignados ? !this.asignados : undefined
         };
 
         if (!this.esAuditor) {
