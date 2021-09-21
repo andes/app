@@ -38,9 +38,4 @@ export class VistaSolicitudTopComponent implements OnInit {
         }
     }
 
-    getPrestacion() {
-        const tipo = 'rup';
-        this.huds.toogle(this.registro, tipo);
-    }
-
 }
