@@ -1,6 +1,7 @@
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { SnomedService } from 'src/app/apps/mitos';
@@ -12,6 +13,9 @@ import { ReglaService } from 'src/app/services/top/reglas.service';
     templateUrl: './servicio-intermedio-crud.component.html'
 })
 export class ServicioIntermedioCRUDComponent implements OnInit {
+
+    @ViewChild('formOrigen', { read: NgForm }) formOrigen: NgForm;
+    @ViewChild('formDestino', { read: NgForm }) formDestino: NgForm;
 
     public origenTodas = false;
     public origenDescendientes = false;
@@ -66,55 +70,60 @@ export class ServicioIntermedioCRUDComponent implements OnInit {
     }
 
     onSave() {
+        if (this.formDestino.valid && this.formOrigen.valid) {
+            const requestOrigen = !this.origenTodas && this.origenDescendientes
+                ? this.snomedService.getQuery({ expression: `<<${this.regla.origen.prestaciones.conceptId}` })
+                : of([this.regla.origen.prestaciones]);
+            const requestDestino = this.destinoDescendientes
+                ? this.snomedService.getQuery({ expression: `<<${this.regla.destino.prestaciones.conceptId}` })
+                : of([this.regla.destino.prestaciones]);
 
-        const requestOrigen = !this.origenTodas && this.origenDescendientes
-            ? this.snomedService.getQuery({ expression: `<<${this.regla.origen.prestaciones.conceptId}` })
-            : of([this.regla.origen.prestaciones]);
-        const requestDestino = this.destinoDescendientes
-            ? this.snomedService.getQuery({ expression: `<<${this.regla.destino.prestaciones.conceptId}` })
-            : of([this.regla.destino.prestaciones]);
+            forkJoin([
+                requestOrigen,
+                requestDestino
+            ]).subscribe(([prestacionesOrigen, prestacionesDestino]) => {
+                const modelo: any = {
+                    id: this.regla.id,
+                    origen: {},
+                    destino: {}
+                };
 
-        forkJoin([
-            requestOrigen,
-            requestDestino
-        ]).subscribe(([prestacionesOrigen, prestacionesDestino]) => {
-            const modelo: any = {
-                id: this.regla.id,
-                origen: {},
-                destino: {}
-            };
+                modelo.origen.organizacion = this.regla.origen.organizacion;
+                if (!this.origenTodas) {
+                    if (this.origenDescendientes) {
+                        modelo.origen.query = `<<${this.regla.origen.prestaciones.conceptId}`;
+                    }
+                    modelo.origen.prestaciones = prestacionesOrigen.map(p => ({
+                        auditable: false,
+                        prestacion: p
+                    }));
 
-            modelo.origen.organizacion = this.regla.origen.organizacion;
-            if (!this.origenTodas) {
-                if (this.origenDescendientes) {
-                    modelo.origen.query = `<<${this.regla.origen.prestaciones.conceptId}`;
+                } else {
+                    modelo.origen.prestaciones = null;
                 }
-                modelo.origen.prestaciones = prestacionesOrigen.map(p => ({
-                    auditable: false,
-                    prestacion: p
-                }));
 
-            } else {
-                modelo.origen.prestaciones = null;
-            }
+                modelo.destino.organizacion = this.regla.destino.organizacion;
+                modelo.destino.prestacion = prestacionesDestino;
+                modelo.destino.inicio = 'servicio-intermedio';
+                modelo.destino.servicioIntermedioId = this.regla.destino.servicioIntermedio.id;
+                modelo.destino.turneable = false;
+                if (this.destinoDescendientes) {
+                    modelo.destino.query = `<<${this.regla.destino.prestaciones.conceptId}`;
+                }
+                modelo.destino.informe = 'none';
+                modelo.destino.agendas = this.regla.destino.agendas;
 
-            modelo.destino.organizacion = this.regla.destino.organizacion;
-            modelo.destino.prestacion = prestacionesDestino;
-            modelo.destino.inicio = 'servicio-intermedio';
-            modelo.destino.servicioIntermedioId = this.regla.destino.servicioIntermedio.id;
-            modelo.destino.turneable = false;
-            if (this.destinoDescendientes) {
-                modelo.destino.query = `<<${this.regla.destino.prestaciones.conceptId}`;
-            }
-            modelo.destino.informe = 'none';
-            modelo.destino.agendas = this.regla.destino.agendas;
+                this.reglasService.saveRaw(modelo).subscribe(() => {
+                    this.plex.toast('success', 'Regla creada exitosamente!');
+                    this.location.back();
+                });
 
-            this.reglasService.saveRaw(modelo).subscribe(() => {
-                this.plex.toast('success', 'Regla creada exitosamente!');
-                this.location.back();
             });
-
-        });
+        } else {
+            this.formOrigen.form.markAllAsTouched();
+            this.formDestino.form.markAllAsTouched();
+            this.plex.toast('danger', 'Revise los campos requeridos!');
+        }
 
     }
 

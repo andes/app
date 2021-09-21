@@ -1,58 +1,53 @@
 <plex-layout [main]="6">
     <plex-layout-main>
         <!-- <plex-title main titulo="Nueva regla servicio intermedio"></plex-title> -->
-
         <plex-title size="sm" titulo="Origen">
             <plex-button type="danger" size="sm" (click)="onVolverClick()">Volver</plex-button>
         </plex-title>
-
-        <plex-select label="Organizacion Origen" name="orgOrigen" [(ngModel)]="regla.origen.organizacion"
-                     tmOrganizaciones>
-        </plex-select>
-
-        <plex-bool [(ngModel)]="origenTodas" type="slide" label="Todas las prestaciones" name="todas"></plex-bool>
-
-        <div class="grow">
-            <plex-select label="Prestaciones Origen" name="prestacionOrigen" [(ngModel)]="regla.origen.prestaciones"
-                         tmPrestaciones [disabled]="origenTodas">
+        <form #formOrigen="ngForm">
+            <plex-select label="Organizacion Origen" name="orgOrigen" [(ngModel)]="regla.origen.organizacion"
+                         tmOrganizaciones [required]="true">
             </plex-select>
-            <!-- <plex-bool [(ngModel)]="origenDescendientes" type="checkbox" label="Descendientes" name="descendientes"
-                       class="align-self-end" [readonly]="origenTodas">
-            </plex-bool> -->
 
-        </div>
+            <plex-bool [(ngModel)]="origenTodas" type="slide" label="Todas las prestaciones" name="todas"></plex-bool>
 
+            <div class="grow">
+                <plex-select label="Prestaciones Origen" name="prestacionOrigen" [(ngModel)]="regla.origen.prestaciones"
+                             tmPrestaciones [disabled]="origenTodas" [required]="!origenTodas">
+                </plex-select>
+            </div>
+        </form>
     </plex-layout-main>
     <plex-layout-sidebar>
         <plex-title size="sm" titulo="Destino"></plex-title>
-
-        <plex-select label="Servicio Intermedio Destino" name="servicio-intermedio"
-                     [(ngModel)]="regla.destino.servicioIntermedio" tmServicioIntermedio>
-        </plex-select>
-
-        <plex-select label="Organizacion Destino" name="orgDestino" [(ngModel)]="regla.destino.organizacion"
-                     tmOrganizaciones>
-        </plex-select>
-
-        <div class="grow">
-            <plex-select label="Conceptos Solicitados" name="prestacionDestino" [(ngModel)]="regla.destino.prestaciones"
-                         [snomedSemantic]="'procedimiento'">
+        <form #formDestino="ngForm">
+            <plex-select label="Servicio Intermedio Destino" name="servicio-intermedio"
+                         [(ngModel)]="regla.destino.servicioIntermedio" tmServicioIntermedio [required]="true">
             </plex-select>
-            <plex-bool [(ngModel)]="destinoDescendientes" type="checkbox" label="Descendientes" name="descendientes"
-                       class="align-self-end">
-            </plex-bool>
 
-        </div>
+            <plex-select label="Organizacion Destino" name="orgDestino" [(ngModel)]="regla.destino.organizacion"
+                         tmOrganizaciones [required]="true">
+            </plex-select>
 
-        <plex-select label="Agendas" name="agendas" [(ngModel)]="regla.destino.agendas" tmPrestaciones
-                     [multiple]="true">
-        </plex-select>
+            <div class="grow">
+                <plex-select label="Conceptos Solicitados" name="prestacionDestino"
+                             [(ngModel)]="regla.destino.prestaciones" [snomedSemantic]="'procedimiento'"
+                             [required]="true">
+                </plex-select>
+                <plex-bool [(ngModel)]="destinoDescendientes" type="checkbox" label="Descendientes" name="descendientes"
+                           class="align-self-end">
+                </plex-bool>
 
-        <div justify="end">
-            <plex-button class="mt-2" type="success" (click)="onSave()">GUARDAR</plex-button>
-        </div>
+            </div>
 
+            <plex-select label="Agendas" name="agendas" [(ngModel)]="regla.destino.agendas" tmPrestaciones
+                         [multiple]="true" [required]="true">
+            </plex-select>
+
+            <div justify="end">
+                <plex-button class="mt-2" type="success" (click)="onSave()"
+                             [disabled]="!formOrigen.valid || !formDestino.valid">GUARDAR</plex-button>
+            </div>
+        </form>
     </plex-layout-sidebar>
-
-
 </plex-layout>
