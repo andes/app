@@ -66,6 +66,8 @@ module.exports = {
                 "accessibility": "explicit"
             }
         ],
+        "keyword-spacing": ["error", { "after": true, "before": true }],
+        "space-before-blocks": ["error", { "functions": "always", "keywords": "always", "classes": "always" }],
         "@typescript-eslint/indent": [
             "error",
             4,
