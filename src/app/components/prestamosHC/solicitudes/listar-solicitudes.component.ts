@@ -364,7 +364,7 @@ export class ListarSolicitudesComponent implements OnInit {
             const metadata = {
                 id: _id,
                 tipoPrestacion: conceptSnomed.conceptId,
-                fecha: new Date(),
+                fecha: moment().toDate(),
                 paciente: carpeta.paciente,
                 profesional: profesional,
                 file: `id:${id}`,
