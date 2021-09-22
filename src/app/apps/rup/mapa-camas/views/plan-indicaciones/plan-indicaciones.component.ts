@@ -18,52 +18,9 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
     templateUrl: './plan-indicaciones.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: [
-        '../../../../../modules/rup/components/core/_rup.scss'
+        '../../../../../modules/rup/components/core/_rup.scss',
+        './plan-indicaciones.scss'
     ],
-    styles: [`
-        .pointer {
-            cursor: pointer;
-        }
-
-        .selected {
-            border: 2px solid #5bc0de!important;
-        }
-
-        .punto {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: block;
-        }
-
-        .punto.realizado {
-            background-color: #638e2a;
-        }
-
-        .punto.no-realizado {
-            background-color: #ac2d1e;
-        }
-
-        .punto.incompleto {
-            background-color: #c9bd2c;
-        }
-
-        tr.on-hold {
-            background-color: #ff8d2233;
-            border: 2px solid #ff8d22;
-        }
-
-        tr.completed {
-            background-color: #8cc63f33;
-            border: 2px solid #8cc63f;
-        }
-
-        tr.stopped, tr.cancelled  {
-            background-color: #dd4b3933;
-            border: 2px solid #dd4b39;
-        }
-
-    `]
 })
 export class PlanIndicacionesComponent implements OnInit {
     private capa: string;
@@ -77,6 +34,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public selectedIndicacion = {};
     private selectedBuffer = new BehaviorSubject({});
 
+    private seccion = true;
 
     private internacion;
     private botones$ = this.selectedBuffer.pipe(
