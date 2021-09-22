@@ -82,7 +82,7 @@
             <vista-contexto-prestacion [prestacion]="prestacion" [registro]="registro"></vista-contexto-prestacion>
         </ng-container>
     </div>
-    <ng-container *ngIf="registro.estadoActual.tipo === 'validada'">
+    <ng-container *ngIf="registro.esSolicitud && registro.estadoActual.tipo === 'validada'">
         <vista-prestacion [prestacion]="prestacion" [paciente]="paciente">
         </vista-prestacion>
     </ng-container>
