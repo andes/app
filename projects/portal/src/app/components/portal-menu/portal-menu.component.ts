@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CARDS } from '../../enums';
 
@@ -6,18 +6,21 @@ import { CARDS } from '../../enums';
     selector: 'pdp-menu',
     templateUrl: './portal-menu.component.html'
 })
-export class PDPMenuComponent {
+export class PDPMenuComponent implements OnInit {
     public width = 0;
     public cards = CARDS;
+    public inicio: boolean;
+    public resizable = true;
+    public expanded: Boolean = false;
 
     constructor(
         private el: ElementRef,
         private router: Router
     ) { }
 
-    isResponsive() {
-        this.width = this.el.nativeElement.clientWidth;
-        return this.width >= 780;
+    ngOnInit() {
+        // oculta paciente detalle según ruteo
+        this.inicio = this.router.url === '/mi-inicio';
     }
 
     goTo(path) {
@@ -26,4 +29,8 @@ export class PDPMenuComponent {
         }
     }
 
+    // Resize
+    expandir() {
+        this.expanded = !this.expanded;
+    }
 }

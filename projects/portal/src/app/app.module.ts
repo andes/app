@@ -47,6 +47,7 @@ import { CategoriasService } from './services/categoria.service';
 import { CertificadoService } from './services/certificado.service';
 import { PrestacionService } from './services/prestacion.service';
 import { LogPacienteService } from 'src/app/services/logPaciente.service';
+import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { LogPacienteService } from 'src/app/services/logPaciente.service';
         DarTurnoDetalleComponent,
         RegistroCuentaComponent,
         ActivarCuentaComponent,
-        PDPMisDatosPersonalesComponent
+        PDPMisDatosPersonalesComponent,
+        PDPMiInicioComponent
     ],
     imports: [
         BrowserModule,

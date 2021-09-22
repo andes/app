@@ -18,7 +18,7 @@ export class PacienteDetalleComponent implements OnInit {
     public width: number;
     public datosSecundarios = true;
     public registros$: Observable<any>;
-    public paciente: IPaciente;
+    public paciente$: Observable<IPaciente>;
 
     // modal
     public motivoError = {
@@ -27,13 +27,28 @@ export class PacienteDetalleComponent implements OnInit {
         selectMultiple: null
     };
     public descripcionError = '';
-    public errores: any[];
+    public errores = [
+        {
+            id: 1,
+            nombre: 'Error en mis registros de salud',
+            operacion: 'error:registrosSalud'
+        },
+        {
+            id: 2,
+            nombre: 'Error en mis datos personales',
+            operacion: 'error:datosPersonales'
+        },
+        {
+            id: 3,
+            nombre: 'Otro error',
+            operacion: 'error:otro'
+        }
+    ];;
 
     // cards
-    private filtroCards = ['problemas', 'alergias', 'prescripciones', 'laboratorios', 'vacunas'];
     public alertas = [];
     public cardSelected;
-
+    public inicio; // true si se está en el menu inicio
 
     constructor(
         private pacienteService: PacientePortalService,
@@ -45,26 +60,9 @@ export class PacienteDetalleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.pacienteService.me().subscribe(resp => this.paciente = resp);
-        this.alertas = CARDS.filter(card => this.filtroCards.includes(card.nombre));
-
-        this.errores = [
-            {
-                id: 1,
-                nombre: 'Error en mis registros de salud',
-                operacion: 'error:registrosSalud'
-            },
-            {
-                id: 2,
-                nombre: 'Error en mis datos personales',
-                operacion: 'error:datosPersonales'
-            },
-            {
-                id: 3,
-                nombre: 'Otro error',
-                operacion: 'error:otro'
-            }
-        ];
+        this.paciente$ = this.pacienteService.me();
+        this.alertas = CARDS;
+        this.inicio = this.router.url === '/mi-inicio';
     }
 
     goTo(path) {
@@ -76,7 +74,11 @@ export class PacienteDetalleComponent implements OnInit {
 
     isResponsive() {
         this.width = this.el.nativeElement.clientWidth;
-        return this.width >= 980;
+        return this.width < 780;
+    }
+
+    ocultarDatos() {
+        this.datosSecundarios = !this.datosSecundarios;
     }
 
     guardar() {

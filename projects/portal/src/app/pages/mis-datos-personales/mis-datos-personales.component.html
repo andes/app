@@ -41,8 +41,8 @@
                                          [disabled]="editarContacto" ariaLabel="Crear contacto">
                             </plex-button>
                         </plex-title>
-                        <plex-list size="sm" *ngIf="listadoContacto">
-                            <plex-item *ngFor="let c of contactos;let i = index">
+                        <plex-list size="md" *ngIf="listadoContacto">
+                            <plex-item *ngFor="let c of contactos;let i = index" >
                                 <plex-label icon="{{(c.tipo !== 'fijo')?c.tipo:'phone'}}" size="md" titulo="{{c.tipo}}"
                                             subtitulo="{{c.valor}}"></plex-label>
                                 <plex-button type="warning" size="sm" icon="pencil" (click)="edicionContacto(c, i)"

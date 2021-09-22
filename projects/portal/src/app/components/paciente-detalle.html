@@ -1,37 +1,41 @@
-<plex-grid *ngIf="paciente" size="md" type="full" class="mb-4">
-    <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
-        <plex-badge></plex-badge>
-        <img [mpiFotoPaciente]="paciente">
-        <div title>
-            {{ paciente.nombre }} <br> {{ paciente.apellido }}
-        </div>
-        <div subtitle>
-            {{ paciente.documento }}
-            <br>
-            <plex-button class="mr-2" size="sm" type="danger"
-                         label="{{ isResponsive() ? 'reportar error en mis datos' : 'reportar error' }}"
-                         (click)="modal.show()">
-            </plex-button>
-            <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios"
-                         (click)="datosSecundarios = !datosSecundarios">
-            </plex-button>
-            <plex-button class="ml-2" size="sm" type="warning" icon="pencil" tooltip="Editar mis datos"
-                         (click)="goTo('mis-datos-personales')">
-            </plex-button>
-        </div>
+<plex-grid size="md" type="full" class="mb-4">
+    <ng-container *ngIf="paciente$ | async as paciente">
+        <plex-detail size="{{ isResponsive() ? 'sm' : 'md' }}" [ngClass]="isResponsive() ? 'no-margin' : 'no-margin' ">
+            <plex-badge size="success">titular de la cuenta</plex-badge>
+            <img [mpiFotoPaciente]="paciente">
+            <div title>
+                {{ paciente.nombre }} <br> {{ paciente.apellido }}
+            </div>
+            <div subtitle>
+                {{ paciente.documento }}
+                <br>
+                <plex-button size="sm" type="danger" (click)="modal.show()"
+                             label="{{ isResponsive() ? 'reportar error' : 'reportar error en mis datos' }}" class="mt-4 mr-2">
+                </plex-button>
+                <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios" (click)="ocultarDatos()">
+                </plex-button>
+                <plex-button size="sm" type="warning" class="ml-2" icon="pencil" tooltip="editar mis datos" (click)="goTo('mis-datos-personales')">
+                </plex-button>
+                </div>
+                <plex-label id="datosSecundarios" [style.display]="datosSecundarios ? 'block' : 'none'"
+                            *ngFor="let registro of registros$ | async" titulo="{{ registro.valor }}"
+                            subtitulo="{{ registro.dato }} {{ registro.fecha }}">
+                </plex-label>
+        </plex-detail>
+    </ng-container>
 
-    </plex-detail>
-
-    <!-- Alertas -->
-    <plex-grid type="auto" size="md" *mobile="false" responsive>
-        <plex-card *ngFor="let alerta of alertas" type="custom" mode="filled" color="{{ alerta.color }}"
-                   [selected]="alerta.id === cardSelected?.id" selectable="true" (click)="goTo(alerta.path)">
-            <plex-label direction="column" case="capitalize" titulo="{{ alerta.id }}" subtitulo="{{alerta.nombre}}"
-                        icon="{{ alerta.icono }}">
-            </plex-label>
-        </plex-card>
-    </plex-grid>
-</plex-grid>
+        <!-- Alertas -->
+        <ng-container *ngIf="!inicio">
+            <plex-grid type="auto" size="md" *mobile="false" responsive>
+                <plex-card *ngFor="let alerta of alertas" type="custom" mode="filled" color="{{ alerta.color }}"
+                        [selected]="alerta.id === cardSelected?.id" selectable="true" (click)="goTo(alerta.path)">
+                    <plex-label direction="column" case="capitalize" titulo="{{ alerta.titulo }}" subtitulo=""
+                                icon="{{ alerta.icono }}">
+                    </plex-label>
+                </plex-card>
+            </plex-grid>
+        </ng-container>
+</plex-grid> 
 
 
 <!-- MODAL: Reporte de errores -->
@@ -47,7 +51,7 @@
             <plex-title titulo="Indique y describa el error" size="sm"></plex-title>
             <form #formulario="ngForm">
                 <div>
-                    <plex-select placeholder="Seleccione un motivo" grow="2" [(ngModel)]="motivoError.select"
+                    <plex-select [ngModelOptions]="{standalone: true}" placeholder="Seleccione un motivo" grow="2" [(ngModel)]="motivoError.select"
                                  name="motivoError" [data]="errores" label-field="nombre + ' (' + continente + ')'">
                     </plex-select>
                 </div>
@@ -65,6 +69,5 @@
     <plex-button modal right type="success" (click)="guardar(); modal.close()">
         ACEPTAR
     </plex-button>
-
 </plex-modal>
 <!-- FIN MODAL -->

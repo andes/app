@@ -1,6 +1,7 @@
 export interface ICard {
     id: number;
-    nombre: string;
+    titulo: string;
+    subtitulo: string;
     tipo: string;
     semanticTag: String;
     icono: string;

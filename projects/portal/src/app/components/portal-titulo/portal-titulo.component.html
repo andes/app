@@ -17,17 +17,27 @@
         <plex-button *mobile="false" size="sm" class="mx-2" type="danger" label="cerrar sesión" routerLink="/">
         </plex-button>
 
+        <!-- Buscador -->
+        <plex-button icon="zoom" type="info" size="sm" (click)="showSearch()"></plex-button>
+        <ng-container ngProjectAs="plex-button">
+            <plex-text *ngIf="searchInput" size="{{ isResponsive() ? 'sm' : 'md' }}"
+                       placeholder="busque por diagnósticos, médicos, organizaciones, medicamentos, etc."
+                       (ngModel)="searchTerm"></plex-text>
+        </ng-container>
+
         <!-- Menu hamburguesa -->
         <plex-help *mobile size="sm" class="ml-2" type="info" icon="menu">
             <div info id="menuHelp">
-                <plex-grid size="xs">
+                <plex-grid size="md" type="full">
                     <ng-container *ngFor="let card of cards">
-                        <plex-label icon="{{ card.icono }}" size="md" class="mb-2 color-{{ card.semanticTag}}"
-                                    titulo="{{ card.nombre }}" subtitulo="" (click)="goTo(card.path)">
+                        <plex-label icon="{{ card.icono }}" size="md" class="mb-2" titulo="{{ card.titulo }}"
+                                    subtitulo="" [color]="card.color"
+                                    case="capitalize" (click)="goTo(card.path)">
                         </plex-label>
                     </ng-container>
                 </plex-grid>
-                <plex-label size="block" class="ml-2" type="danger" icon="logout" titulo="cerrar sesión" routerLink="/">
+                <plex-label size="block" case="capitalize" class="ml-2" type="danger" icon="logout" titulo="cerrar sesión"
+                            routerLink="/">
                 </plex-label>
             </div>
         </plex-help>

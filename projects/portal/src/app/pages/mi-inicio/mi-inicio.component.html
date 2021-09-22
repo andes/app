@@ -1,0 +1,31 @@
+<plex-layout [aspect]="9">
+    <plex-layout-main type="invert">
+            <pdp-titulo></pdp-titulo>
+            <plex-grid type="full" size="md">
+                <ng-container *ngFor="let card of cards; let i = index">
+
+                    <plex-card span="{{ isResponsive() ? '1' : '3' }}" size="{{ isResponsive() ? 'sm' : 'md' }}"
+                               mode="outlined" type="custom" selectable="true" [color]=card.color [selected]="true"
+                                (click)="goTo(card.path)">
+
+                        <plex-label direction="{{ isResponsive() ? 'column' : 'row' }}" align="start"
+                                    size="{{ isResponsive() ? 'md' : 'lg' }}" icon="{{ card.icono }}" case="capitalize"
+                                    titulo="{{ card.titulo }}" class="text-white"
+                                    [subtitulo]="isResponsive() ? ' ' : card.subtitulo" tooltip="{{ card.titulo }}"
+                                    type="custom" [color]=card.color>
+                        </plex-label>
+                     
+                        <!-- acciones & notificaciones -->
+                        <plex-button *mobile="false" type="info" size="sm" label="ir a {{ card.titulo }}">
+                        </plex-button>
+                    </plex-card>
+
+                    <plex-card *ngIf="i === 2 && paciente$ | async as paciente" type="custom" color="#016890" mode="filled" size="md"
+                               span="{{ isResponsive() ? '2' : '5' }}">
+                        <pdp-paciente-detalle></pdp-paciente-detalle>
+                    </plex-card>
+
+                </ng-container>
+            </plex-grid>
+    </plex-layout-main>
+</plex-layout>

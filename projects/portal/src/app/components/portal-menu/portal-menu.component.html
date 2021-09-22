@@ -1,18 +1,35 @@
-<plex-wrapper>
+<plex-wrapper >
     <!-- Menu Lateral -->
-    <plex-grid id="menu-vertical" *mobile="false" class="d-flex align-self-start mr-2 flex-column" size="xs">
-        <ng-container *ngFor="let card of cards">
-            <plex-label icon="{{ card.icono }}" size="md" direction="column" class="mb-2 color-{{ card.semanticTag}}"
-                        titulo="" subtitulo="" (click)="goTo(card.path)" tooltip="{{ card.path }}" class="mb-2"
-                        tooltipPosition="right">
-            </plex-label>
-        </ng-container>
-    </plex-grid>
+    <ng-container *ngIf="!inicio">
+        <section id="menu-vertical" *mobile="false" #miniNav [class.expanded]="expanded">
+            <nav class="plex-mininav-container">
+                <ul superiores>
+                    <ng-container *ngFor="let card of cards">
+                        <li class="plex-mininav-item">
+                            <plex-label icon="{{ card.icono }}" size="md" direction="row" titulo="{{ card.titulo }}"
+                                        subtitulo="{{ card.subtitulo }}" (click)="goTo(card.path)" [color]="card.color"
+                                        case="capitalize">
+                            </plex-label>
+                        </li>
+                    </ng-container>
+                </ul>
+            </nav>
+
+            <!-- expand button -->
+            <span *ngIf="resizable" class="nav-resizable-btn-wrapper" [class.resizable]="resizable" draggable="true">
+                <hr class="divisor">
+                <plex-button size="sm" (click)="expandir()" type="link" icon="{{expanded ? 'pico-izquierda' : 'pico-derecha'}}">
+                </plex-button>
+            </span>
+        </section>
+    </ng-container>
 
     <plex-grid class="mr-2 align-self-start">
         <!-- Listado -->
         <section>
-            <pdp-paciente-detalle></pdp-paciente-detalle>
+            <ng-container *ngIf="!inicio">
+                <pdp-paciente-detalle *mobile="false"></pdp-paciente-detalle>
+            </ng-container>
             <ng-content></ng-content>
         </section>
     </plex-grid>
