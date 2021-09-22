@@ -1,3 +1,24 @@
+# [5.65.0](https://github.com/andes/app/compare/v5.64.0...v5.65.0) (2021-09-22)
+
+
+### Bug Fixes
+
+* **BI:** reset de leyenda al 'se muestran..' cambiar de filtros ([#2458](https://github.com/andes/app/issues/2458)) ([548ef21](https://github.com/andes/app/commit/548ef21ec42935e5ac98d10a644182516bca9303))
+* **citas:** check permisos ([#2452](https://github.com/andes/app/issues/2452)) ([1b7f58c](https://github.com/andes/app/commit/1b7f58c6d95495a4068ec6205b39058f91216e85))
+* **EP:** fixes mergeo asignacion ([#2440](https://github.com/andes/app/issues/2440)) ([cca5d9e](https://github.com/andes/app/commit/cca5d9e4b7853e9854c5043e7e754f60354f02eb))
+* **reporte:** agrega reporte por prestación ([#2450](https://github.com/andes/app/issues/2450)) ([d880579](https://github.com/andes/app/commit/d880579f9b645b0a8682e672fe7c82f9f925dc64))
+* **rup:** corrige error al seleccionar una organizacion en solicitudes ([#2460](https://github.com/andes/app/issues/2460)) ([6f527bf](https://github.com/andes/app/commit/6f527bf501f7d94ad37412ce3a45af1bd235ca6e))
+
+
+### Features
+
+* **BI:** mejora visual reportes c2 ([#2449](https://github.com/andes/app/issues/2449)) ([243138d](https://github.com/andes/app/commit/243138d77b8cca6d86a30008432edc7a6d493317))
+* **CIT:** consultorio virtual ([#2399](https://github.com/andes/app/issues/2399)) ([81f5e5d](https://github.com/andes/app/commit/81f5e5dfe1071a04a95aa7ac664264cd01fd3d38))
+* **EP:** filtrar seguimientos activos ([#2442](https://github.com/andes/app/issues/2442)) ([68e369a](https://github.com/andes/app/commit/68e369af34acc2049299aca6d6180c5587bbf9ec))
+* **ficha:** select multiple instituciones ([#2459](https://github.com/andes/app/issues/2459)) ([b7ee06a](https://github.com/andes/app/commit/b7ee06a1e554e0e8bd5a3c178e7a5074d9bb7a40))
+* **turnos-prestaciones:** muestra label sin resultados ([#2451](https://github.com/andes/app/issues/2451)) ([9dd66fd](https://github.com/andes/app/commit/9dd66fd1249b67594bed16f056a5143034e3b16c))
+* **vac:** datos de certificado en detalle inscripción ([#2446](https://github.com/andes/app/issues/2446)) ([9d7fd06](https://github.com/andes/app/commit/9d7fd068a25ef6d3107cf0e379c98b0c1a0f6dad))
+
 # [5.64.0](https://github.com/andes/app/compare/v5.63.0...v5.64.0) (2021-09-15)
 
 
