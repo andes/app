@@ -54,9 +54,4 @@ export class VistaContextoPrestacionComponent implements OnInit {
 
     }
 
-    getPrestacion() {
-        const tipo = 'rup';
-        this.huds.toogle(this.prestacion, tipo);
-    }
-
 }

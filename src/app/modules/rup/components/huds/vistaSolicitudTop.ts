@@ -9,6 +9,7 @@ import { HUDSService } from '../../services/huds.service';
 export class VistaSolicitudTopComponent implements OnInit {
 
     @Input() registro: any;
+    @Input() paciente: any;
     turno: any;
     estado: string;
     observaciones = '';

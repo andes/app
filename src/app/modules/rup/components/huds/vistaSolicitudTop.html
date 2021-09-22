@@ -59,3 +59,7 @@
         </ng-container>
     </div>
 </ng-container>
+<ng-container *ngIf="registro.estadoActual.tipo === 'validada'">
+    <vista-prestacion [prestacion]="registro" [paciente]="paciente">
+    </vista-prestacion>
+</ng-container>

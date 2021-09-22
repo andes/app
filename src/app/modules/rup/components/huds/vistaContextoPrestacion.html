@@ -15,8 +15,6 @@
             <b>Prestación: </b>
             <span class="text-capitalize">
                 {{ prestacion.solicitud.tipoPrestacion.term }}
-                <plex-button size="sm" icon="eye" type="info" (click)="getPrestacion()" tooltip="Ver prestacion">
-                </plex-button>
             </span>
         </div>
         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
