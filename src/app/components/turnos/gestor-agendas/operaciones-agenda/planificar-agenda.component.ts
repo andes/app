@@ -491,6 +491,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 case 'accesoDirectoProgramado':
                     this.elementoActivo.accesoDirectoProgramado = Math.floor
                     ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    if (this.elementoActivo.accesoDirectoProgramado === 0) {
+                        this.elementoActivo.turnosMobile = false;
+                        this.elementoActivo.cupoMobile = 0;
+                    }
                     break;
                 case 'reservadoGestion':
                     this.elementoActivo.reservadoGestion = Math.floor
