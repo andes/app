@@ -89,6 +89,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     { key: 'egreso', label: 'EGRESO' }
                 ];
             }
+
+            const registro = this.items.findIndex(item => item.key === 'registros');
+            if (registro !== -1 && !this.permisosMapaCamasService.registros) {
+                this.items.splice(registro, 1);
+            }
         });
 
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
