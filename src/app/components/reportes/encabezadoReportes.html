@@ -14,13 +14,13 @@
                     <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')"
                         name="horaFin" label="Hasta" class="fechas" [required]="true">
                     </plex-datetime>
-                    <!-- <plex-select label="Zona" [data]="zonaSanitaria$ | async"
+                    <plex-select label="Zona" [data]="zonaSanitaria$ | async"
                         (change)="refreshSelection($event,'zonaSanitaria')" [(ngModel)]="zonaSanitaria" name="zona"
                         [readonly]="totalOrganizaciones">
-                    </plex-select> -->
+                    </plex-select>
                     <plex-select tmOrganizaciones label="Organización"
                         (change)="refreshSelection($event,'organizacion')" [(ngModel)]="organizacion"
-                        name="organizacion" [readonly]="totalOrganizaciones">
+                        name="organizacion" [readonly]="totalOrganizaciones || zonaSanitaria">
                     </plex-select>
                     <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
                         label-field="Tipo de reportes" label="Seleccione reporte" [required]="true">
