@@ -1,7 +1,7 @@
 <form *ngIf="condition$ | async" #form>
     <ng-container *ngIf="elemento.type === 'seccion'">
 
-        <plex-title [titulo]="elemento.title"></plex-title>
+        <plex-title *ngIf="elemento.title" [titulo]="elemento.title"></plex-title>
 
         <plex-grid type="auto" size="md" [cols]="elemento.cols">
 
@@ -27,8 +27,22 @@
         <ng-container *ngIf="elemento.type === 'input'">
 
             <plex-text [label]="elemento.label" [placeholder]="elemento.placeholder || ''"
-                       [required]="required$ | async" [(ngModel)]="_valor" [name]="elemento.key"
-                       (change)="onInputChange($event)"></plex-text>
+                       [suffix]="elemento.suffix || null" [required]="required$ | async" [(ngModel)]="_valor"
+                       [name]="elemento.key" (change)="onInputChange($event)"></plex-text>
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'number'">
+
+            <plex-int *ngIf="elemento.numericType === 'integer'" [label]="elemento.label"
+                      [placeholder]="elemento.placeholder || ''" [suffix]="elemento.suffix || null"
+                      [required]="required$ | async" [(ngModel)]="_valor" [min]="elemento.min" [max]="elemento.max"
+                      [name]="elemento.key" (change)="onInputChange($event)"></plex-int>
+
+            <plex-float *ngIf="elemento.numericType === 'float'" [label]="elemento.label"
+                        [placeholder]="elemento.placeholder || ''" [suffix]="elemento.suffix || null"
+                        [required]="required$ | async" [(ngModel)]="_valor" [min]="elemento.min" [max]="elemento.max"
+                        [name]="elemento.key" (change)="onInputChange($event)"></plex-float>
 
         </ng-container>
 
@@ -85,7 +99,13 @@
 
         <ng-container *ngIf="elemento.type === 'input'">
 
-            <plex-label [titulo]="elemento.label" [subtitulo]="_valor"></plex-label>
+            <plex-label [titulo]="elemento.label" [subtitulo]="_valor + ' ' + (elemento.suffix || '')"></plex-label>
+
+        </ng-container>
+
+        <ng-container *ngIf="elemento.type === 'number'">
+
+            <plex-label [titulo]="elemento.label" [subtitulo]="_valor + ' ' + (elemento.suffix || '')"></plex-label>
 
         </ng-container>
 
