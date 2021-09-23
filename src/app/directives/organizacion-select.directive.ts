@@ -37,7 +37,7 @@ export class SelectOrganizacionDirective implements OnInit, OnDestroy {
                 const inputText: string = $event.query;
                 if (inputText && inputText.length > 2) {
                     if (this.lastCallSubscription) {
-                        this.lastCallSubscription.unsubscribe();
+                        this.lastCallSubscription = null;
                     }
                     this.lastCallSubscription = this.organizacionService.get({ nombre: inputText, fields: 'nombre' }).subscribe(result => {
                         $event.callback(result);
