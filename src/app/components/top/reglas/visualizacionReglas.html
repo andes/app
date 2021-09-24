@@ -39,13 +39,19 @@
                         </plex-label>
                     </div>
                     <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionDestino.term }}"></plex-label>
-                    <plex-button *ngIf="esEjecucion" type="primary" size="sm" icon="plus"
-                                 tooltip="agregar a la consulta" (click)="seleccionarConcepto(fila.prestacionDestino)"
-                                 tooltipPosition="left">
+
+
+                    <plex-button *ngIf="prestacion"
+                                 [disabled]="prestacion?.conceptId !== fila.prestacionOrigen.prestacion.conceptId"
+                                 type="primary" size="sm" icon="plus" tooltip="Agregar a la consulta"
+                                 (click)="seleccionarConcepto(fila.prestacionDestino)" tooltipPosition="left">
                     </plex-button>
-                    <plex-badge *ngIf="fila.prestacionOrigen.auditable && !esParametrizado" type="success">auditable
+
+                    <plex-badge *ngIf="fila.prestacionOrigen.auditable && !esParametrizado" type="success">
+                        auditable
                     </plex-badge>
-                    <plex-badge *ngIf="!fila.prestacionOrigen.auditable && !esParametrizado" type="warning">no auditable
+                    <plex-badge *ngIf="!fila.prestacionOrigen.auditable && !esParametrizado" type="warning">
+                        no auditable
                     </plex-badge>
                 </plex-item>
             </plex-list>

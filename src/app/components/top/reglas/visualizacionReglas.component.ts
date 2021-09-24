@@ -1,22 +1,20 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ReglaService } from '../../../services/top/reglas.service';
-import { IRegla } from '../../../interfaces/IRegla';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
-import { Plex } from '@andes/plex';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { IRegla } from '../../../interfaces/IRegla';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
+import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
     selector: 'visualizacion-reglas',
     templateUrl: './visualizacionReglas.html'
 })
 export class VisualizacionReglasComponent implements OnInit {
-    @Input()
-    esParametrizado = false;
-    @Input() esEjecucion = false;
+    @Input() esParametrizado = false;
+    @Input() prestacion: ISnomedConcept = null;
+
     @Output() addSolicitud = new EventEmitter<any>();
     /**
      * Organización ingresada en el filtro de organización origen
@@ -54,9 +52,7 @@ export class VisualizacionReglasComponent implements OnInit {
     constructor(
         private servicioReglas: ReglaService,
         private auth: Auth,
-        public servicioPrestacion: PrestacionesService,
-        private ejecucionService: RupEjecucionService,
-        private plex: Plex
+        public servicioPrestacion: PrestacionesService
     ) { }
 
     ngOnInit() {
@@ -113,7 +109,7 @@ export class VisualizacionReglasComponent implements OnInit {
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];
         for (const regla of reglas) {
-            regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
+            regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
                      * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre

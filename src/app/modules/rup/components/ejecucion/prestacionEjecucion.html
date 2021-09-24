@@ -10,10 +10,11 @@
                     </plex-button>
 
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
-                        <plex-help class="text-left" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes"
-                                   size="sm">
-                            <visualizacion-reglas info [esParametrizado]="true" [esEjecucion]="true" *plHelp
-                                                  (addSolicitud)="agregarConcepto($event)">
+                        <plex-help #helpSolicitudes class="text-left" titulo="Reglas Solicitudes"
+                                   tituloBoton="Reglas Solicitudes" size="sm">
+                            <visualizacion-reglas info [esParametrizado]="true"
+                                                  [prestacion]="prestacion.solicitud.tipoPrestacion" *plHelp
+                                                  (addSolicitud)="agregarSolicitud($event, helpSolicitudes)">
                             </visualizacion-reglas>
                         </plex-help>
                     </ng-container>
