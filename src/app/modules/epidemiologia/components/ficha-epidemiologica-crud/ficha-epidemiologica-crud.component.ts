@@ -437,21 +437,23 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 if (clasificaciones.antigeno === 'confirmado') {
                     seccion.fields['lamp'] = null;
                 }
-                switch (clasificaciones[key]) {
-                    case 'confirmado':
-                        seccion.fields['clasificacionfinal'] = 'Confirmado';
-                        break;
-                    case 'descartado':
-                        seccion.fields['clasificacionfinal'] = 'Descartado';
-                        break;
-                    case 'muestra':
-                        seccion.fields['clasificacionfinal'] = clasificaciones.antigeno === 'confirmado' ? 'Confirmado' : 'Sospechoso';
-                        break;
-                    default:
-                        if (!clasificaciones.antigeno && !clasificaciones.pcr && !clasificaciones.lamp) {
-                            seccion.fields['clasificacionfinal'] = '';
-                        }
-                        break;
+                if (!this.asintomatico) {
+                    switch (clasificaciones[key]) {
+                        case 'confirmado':
+                            seccion.fields['clasificacionfinal'] = 'Confirmado';
+                            break;
+                        case 'descartado':
+                            seccion.fields['clasificacionfinal'] = 'Descartado';
+                            break;
+                        case 'muestra':
+                            seccion.fields['clasificacionfinal'] = clasificaciones.antigeno === 'confirmado' ? 'Confirmado' : 'Sospechoso';
+                            break;
+                        default:
+                            if (!clasificaciones.antigeno && !clasificaciones.pcr && !clasificaciones.lamp) {
+                                seccion.fields['clasificacionfinal'] = '';
+                            }
+                            break;
+                    }
                 }
             }
         });
@@ -675,7 +677,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     setCasoAsintomatico(event) {
+        this.clearDependencias({ value: false }, 'clasificacionFinal', []);
         if (event.value.id === 'casoAsintomatico') {
+            if (!this.showFichaParcial) {
+                const seccionFinal = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
+                seccionFinal.fields['clasificacionfinal'] = 'Caso asintomático';
+                seccionFinal.fields['segundaclasificacion'] = { id: 'pcr', nombre: 'PCR-RT' };
+            }
             this.asintomatico = true;
             this.clearDependencias({ value: false }, 'signosSintomas', []);
             this.clearDependencias({ value: false }, 'antecedentesEpidemiologicos', ['sospechosoconantecedente',
