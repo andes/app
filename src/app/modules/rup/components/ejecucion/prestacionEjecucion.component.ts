@@ -264,6 +264,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.huds.clear();
     }
 
+    agregarConcepto(concepto) {
+        this.ejecucionService.agregarConcepto(concepto, true);
+    }
+
     public onCloseTab(index) {
         this.huds.remove(index - 2);
         if (this.detalleRegistrosHUDS && this.detalleConceptoHUDS) {

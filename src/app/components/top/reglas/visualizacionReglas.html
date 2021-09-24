@@ -39,8 +39,9 @@
                         </plex-label>
                     </div>
                     <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionDestino.term }}"></plex-label>
-                    <plex-button type="primary" size="sm" icon="plus" tooltip="agregar a la consulta"
-                                 (click)="seleccionarConcepto(fila.prestacionDestino)" tooltipPosition="left">
+                    <plex-button *ngIf="esEjecucion" type="primary" size="sm" icon="plus"
+                                 tooltip="agregar a la consulta" (click)="seleccionarConcepto(fila.prestacionDestino)"
+                                 tooltipPosition="left">
                     </plex-button>
                     <plex-badge *ngIf="fila.prestacionOrigen.auditable && !esParametrizado" type="success">auditable
                     </plex-badge>

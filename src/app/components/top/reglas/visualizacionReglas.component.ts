@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
-import { gtag } from '../../../shared/services/analytics.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
 import { Plex } from '@andes/plex';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 @Component({
     selector: 'visualizacion-reglas',
     templateUrl: './visualizacionReglas.html'
@@ -15,6 +16,8 @@ import { Plex } from '@andes/plex';
 export class VisualizacionReglasComponent implements OnInit {
     @Input()
     esParametrizado = false;
+    @Input() esEjecucion = false;
+    @Output() addSolicitud = new EventEmitter<any>();
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}
@@ -139,39 +142,7 @@ export class VisualizacionReglasComponent implements OnInit {
     }
 
     public seleccionarConcepto(concepto) {
-        concepto['esSolicitud'] = true;
-
-        const params: any = {
-            estados: [
-                'auditoria',
-                'pendiente',
-                'ejecucion'
-            ],
-            idPaciente: this.ejecucionService.paciente.id,
-            prestacionDestino: concepto.conceptId
-        };
-        this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
-            if (resultado.length) {
-                this.plex.confirm(`El paciente ya tiene una solicitud en curso para ${concepto.term}. ¿Desea continuar?`, 'Paciente con solicitud en curso').then(confirmar => {
-                    if (confirmar) {
-                        this.agregarConcepto(concepto);
-                    }
-                });
-                this.plex.toast('danger', `El paciente ya tiene una solicitud en curso para ${concepto.term}`);
-            } else {
-                this.agregarConcepto(concepto);
-            }
-        });
-
-    }
-
-    private agregarConcepto(concepto) {
-        this.ejecucionService.agregarConcepto({
-            term: concepto.term,
-            fsn: concepto.fsn,
-            conceptId: concepto.conceptId,
-            semanticTag: concepto.semanticTag
-        }, concepto.esSolicitud);
+        this.addSolicitud.emit(concepto);
     }
 }
 

@@ -12,7 +12,9 @@
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
                         <plex-help class="text-left" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes"
                                    size="sm">
-                            <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
+                            <visualizacion-reglas info [esParametrizado]="true" [esEjecucion]="true" *plHelp
+                                                  (addSolicitud)="agregarConcepto($event)">
+                            </visualizacion-reglas>
                         </plex-help>
                     </ng-container>
 
@@ -287,9 +289,12 @@
                             <vista-cda [registro]="registro"></vista-cda>
                         </plex-tab>
 
-                        <plex-tab [allowClose]="true" label="Ficha Epidemilógica" *ngIf="registro.tipo === 'ficha-epidemiologica'">
-                            <app-ficha-epidemiologica-crud [fichaPaciente]="registro.data" [fichaName]="registro.data.type.name"
-                                [paciente]="paciente" [editFicha]="false" [hideVolver]="true"></app-ficha-epidemiologica-crud>
+                        <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
+                                  *ngIf="registro.tipo === 'ficha-epidemiologica'">
+                            <app-ficha-epidemiologica-crud [fichaPaciente]="registro.data"
+                                                           [fichaName]="registro.data.type.name" [paciente]="paciente"
+                                                           [editFicha]="false" [hideVolver]="true">
+                            </app-ficha-epidemiologica-crud>
                         </plex-tab>
 
                     </ng-container>
@@ -356,12 +361,12 @@
 
     <!-- Footer -->
     <plex-layout-footer>
- 
-        <plex-button *ngIf="prestacion && !rutaVolver" position="left"
-                     label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
+
+        <plex-button *ngIf="prestacion && !rutaVolver" position="left" label="Punto de Inicio"
+                     (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info">
         </plex-button>
-        <plex-button *ngIf="prestacion && rutaVolver" position="left"
-                     label="{{btnVolver}}" (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
+        <plex-button *ngIf="prestacion && rutaVolver" position="left" label="{{btnVolver}}"
+                     (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info">
         </plex-button>
 
         <plex-button position="right" label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}"
