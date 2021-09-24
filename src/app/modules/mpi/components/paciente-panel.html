@@ -21,10 +21,10 @@
     </div>
     
     <plex-label *ngIf="paciente.fechaNacimiento" titulo="Fecha de Nacimiento"
-                subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}" justify="{{ justificado }}"></plex-label>
+                subtitulo="{{ paciente.fechaNacimiento | fecha }}" justify="{{ justificado }}"></plex-label>
 
     <plex-label *ngIf="paciente.fechaFallecimiento" titulo="Fecha de Fallecimiento"
-                subtitulo="{{ paciente.fechaFallecimiento | fecha:'utc' }}" justify="{{ justificado }}">
+                subtitulo="{{ paciente.fechaFallecimiento | fecha }}" justify="{{ justificado }}">
     </plex-label>
 
     <plex-label *ngIf="paciente.cuil" titulo="CUIL" subtitulo="{{ paciente.cuil}}" justify="{{ justificado }}">
