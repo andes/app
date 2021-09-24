@@ -17,27 +17,28 @@ import { Plex } from '@andes/plex';
     encapsulation: ViewEncapsulation.None
 })
 export class SeguimientoEpidemiologiaComponent implements OnInit {
-    checkedSeguimientos = {};
-    seguimientos$: Observable<any[]> = new Observable<any[]>();
-    showAsingar;
-    allSelected;
-    showSideBar;
-    listado;
-    seguimiento;
-    fechaDesde;
-    fechaHasta;
-    estado;
-    inProgress;
-    documento;
-    query;
-    lastResults = new BehaviorSubject<any[]>(null);
-    selectedLlamado;
-    actualizacionSeguimiento;
-    organizacion;
-    opcionesSemaforo;
-    esAuditor;
-    estadosSeguimiento = estados;
-    anyChecked;
+    public checkedSeguimientos = {};
+    public seguimientos$: Observable<any[]> = new Observable<any[]>();
+    public showAsingar: boolean;
+    public allSelected: boolean;
+    public showSideBar;
+    public listado;
+    public seguimiento;
+    public fechaDesde: Date;
+    public fechaHasta: Date;
+    public estado;
+    public inProgress: boolean;
+    public documento: string;
+    public query;
+    public lastResults = new BehaviorSubject<any[]>(null);
+    public selectedLlamado;
+    public actualizacionSeguimiento;
+    public organizacion;
+    public opcionesSemaforo;
+    public esAuditor: boolean;
+    public estadosSeguimiento = estados;
+    public anyChecked;
+    public asignados = false;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -55,14 +56,6 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
         this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
-
-        this.estadosSeguimiento = [
-            { id: 'pendiente', nombre: 'Pendiente' },
-            { id: 'seguimiento', nombre: 'Seguimiento' },
-            { id: 'alta', nombre: 'De Alta' },
-            { id: 'fallecido', nombre: 'Fallecido' }
-        ];
-
         this.organizacion = this.auth.organizacion;
         this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res => this.opcionesSemaforo = res.options);
     }
@@ -72,14 +65,15 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     }
 
     buscar() {
-        const estadosActivo = ['pendiente','seguimiento'];
+        const estadosActivo = ['pendiente', 'seguimiento'];
         this.query = {
             fechaInicio: this.seguimientoPacientesService.queryDateParams(this.fechaDesde, this.fechaHasta),
             estado: this.estado?.id || estadosActivo,
             organizacionSeguimiento: this.auth.organizacion.id,
             paciente: this.documento,
             sort: '-score.value score.fecha',
-            limit: 20
+            limit: 20,
+            asignados: this.asignados ? !this.asignados : undefined
         };
 
         if (!this.esAuditor) {
