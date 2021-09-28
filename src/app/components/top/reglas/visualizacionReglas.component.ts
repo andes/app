@@ -1,16 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ReglaService } from '../../../services/top/reglas.service';
-import { IRegla } from '../../../interfaces/IRegla';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { IRegla } from '../../../interfaces/IRegla';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
+import { ReglaService } from '../../../services/top/reglas.service';
+
 @Component({
     selector: 'visualizacion-reglas',
     templateUrl: './visualizacionReglas.html'
 })
 export class VisualizacionReglasComponent implements OnInit {
-    @Input()
-    esParametrizado = false;
+    @Input() esParametrizado = false;
+    @Input() prestacion: ISnomedConcept = null;
+
+    @Output() addSolicitud = new EventEmitter<any>();
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}
@@ -46,7 +51,8 @@ export class VisualizacionReglasComponent implements OnInit {
 
     constructor(
         private servicioReglas: ReglaService,
-        private auth: Auth
+        private auth: Auth,
+        public servicioPrestacion: PrestacionesService
     ) { }
 
     ngOnInit() {
@@ -103,7 +109,7 @@ export class VisualizacionReglasComponent implements OnInit {
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];
         for (const regla of reglas) {
-            regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
+            regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
                      * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
@@ -129,6 +135,10 @@ export class VisualizacionReglasComponent implements OnInit {
                 return 0;
             });
         }
+    }
+
+    public seleccionarConcepto(concepto) {
+        this.addSolicitud.emit(concepto);
     }
 }
 

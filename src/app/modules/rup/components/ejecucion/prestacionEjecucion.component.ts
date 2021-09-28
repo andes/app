@@ -1,5 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -262,6 +263,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.onDestroy$.next();
         this.huds.clear();
+    }
+
+    agregarSolicitud(concepto, helpSolicitudes: PlexHelpComponent) {
+        helpSolicitudes.toggle();
+        this.ejecucionService.agregarConcepto(concepto, true);
     }
 
     public onCloseTab(index) {
