@@ -1,5 +1,5 @@
-import { IUbicacion} from './IUbicacion';
-import { IMatricula} from './IMatricula';
+import { IUbicacion } from './IUbicacion';
+import { IMatricula } from './IMatricula';
 import { Sexo, Genero, EstadoCivil, tipoComunicacion } from './../utils/enumerados';
 
 export interface IProfesional {
@@ -44,7 +44,38 @@ export interface IProfesional {
         fechaInicio: Date;
         fechaVencimiento: Date;
         activo: Boolean;
-
+    }];
+    formacionGrado: [{
+        exportadoSisa?: Boolean;
+        profesion: {
+            nombre: string;
+            codigo: number;
+            tipoDeFormacion: String;
+        };
+        entidadFormadora: {
+            nombre: string;
+            codigo: number;
+        };
+        titulo: string;
+        fechaEgreso: Date;
+        fechaTitulo: Date;
+        renovacion: boolean;
+        papelesVerificados: boolean;
+        matriculacion?: [{
+            matriculaNumero: Number;
+            libro: String;
+            folio: String;
+            inicio: Date;
+            baja: {
+                motivo: String;
+                fecha: any;
+            };
+            notificacionVencimiento: Boolean;
+            fin: Date;
+            revalidacionNumero: Number;
+        }];
+        matriculado: boolean;
+        fechaDeInscripcion?: Date;
     }];
     profesionalMatriculado: Boolean;
 }
