@@ -353,7 +353,7 @@ export class ListarSolicitudesComponent implements OnInit {
             const id = $event.body.id;
             const profesional = this.auth.usuario;
             if (carpeta.tipo === 'Manual') {
-                _id = carpeta.idSolicitud;
+                _id = carpeta.idSolicitud + Date.now();
             } else if (carpeta.tipo === 'Automatica') {
                 _id = carpeta.datosPrestamo.turno.id;
             }
@@ -364,7 +364,7 @@ export class ListarSolicitudesComponent implements OnInit {
             const metadata = {
                 id: _id,
                 tipoPrestacion: conceptSnomed.conceptId,
-                fecha: moment().toDate(),
+                fecha: new Date(),
                 paciente: carpeta.paciente,
                 profesional: profesional,
                 file: `id:${id}`,
