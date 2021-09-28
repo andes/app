@@ -48,62 +48,62 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <ng-container *ngIf="userSelected; else noSelected">
-            <gestor-usuarios-usuario-detalle [usuario]="userSelected"></gestor-usuarios-usuario-detalle>
-            <ng-container *ngIf="{
+        <header *ngIf="userSelected; else noSelected">
+            <gestor-usuarios-usuario-detalle main [usuario]="userSelected"></gestor-usuarios-usuario-detalle>
+        </header>
+        <ng-container *ngIf="userSelected && {
                             orgList: orgList$ | async,
                             organizacionesParaAgregar: organizacionesParaAgregar$ | async
                         } as data">
-                <plex-title titulo="Organizaciones">
-                    <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0 && !readOnly">
-                        <plex-button type="success" size="sm" (click)="toogleAddOrg()" *ngIf="!showNewOrgView">
-                            AGREGAR ORGANIZACION
-                        </plex-button>
-                        <plex-button type="danger" size="sm" (click)="toogleAddOrg()" *ngIf="showNewOrgView">
-                            <plex-icon name="close"></plex-icon>
-                        </plex-button>
-                    </ng-container>
+            <plex-title titulo="Organizaciones">
+                <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0 && !readOnly">
+                    <plex-button type="success" size="sm" (click)="toogleAddOrg()" *ngIf="!showNewOrgView">
+                        AGREGAR ORGANIZACION
+                    </plex-button>
+                    <plex-button type="danger" size="sm" (click)="toogleAddOrg()" *ngIf="showNewOrgView">
+                        <plex-icon name="close"></plex-icon>
+                    </plex-button>
+                </ng-container>
 
-                </plex-title>
-                <div class="list-group mt-2" *ngIf="!showNewOrgView">
-                    <div justify class="list-group-item" *ngFor="let org of data.orgList">
-                        {{ org.nombre }}
-                        <span *ngIf="organizacionesConPermisos.includes(org)">
-                            <ng-container *ngIf="org.activo && !readOnly">
-                                <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
-                                             (click)="toogleActivo(org)">
-                                    <plex-icon name="pause"></plex-icon>
-                                </plex-button>
-                            </ng-container>
-                            <ng-container *ngIf="!org.activo && !readOnly">
-                                <plex-button type="success" size="sm" title="Activar" titlePosition="left"
-                                             (click)="toogleActivo(org)">
-                                    <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
-                                </plex-button>
-                            </ng-container>
-                            <plex-button type="warning" size="sm" title="Editar" titlePosition="left"
-                                         (click)="edit(org)" *ngIf="!readOnly">
-                                <plex-icon name="pencil"></plex-icon>
+            </plex-title>
+            <div class="list-group mt-2" *ngIf="!showNewOrgView">
+                <div justify class="list-group-item" *ngFor="let org of data.orgList">
+                    {{ org.nombre }}
+                    <span *ngIf="organizacionesConPermisos.includes(org)">
+                        <ng-container *ngIf="org.activo && !readOnly">
+                            <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
+                                         (click)="toogleActivo(org)">
+                                <plex-icon name="pause"></plex-icon>
                             </plex-button>
-                        </span>
-                    </div>
-                    <div *ngIf="!data.orgList.length">
-                        No tiene organizaciónes asignadas. Agregue una para continuar.
-                    </div>
-                </div>
-                <div class="row mt-2" *ngIf="showNewOrgView">
-                    <div class="col-10">
-                        <plex-select [(ngModel)]="orgSelected" placeholder="Seleccione una organización"
-                                     [data]="data.organizacionesParaAgregar">
-                        </plex-select>
-                    </div>
-                    <div class="col">
-                        <plex-button type="success" size="sm" (click)="addOrgPermiso()" [disabled]='!orgSelected'>
-                            AGREGAR
+                        </ng-container>
+                        <ng-container *ngIf="!org.activo && !readOnly">
+                            <plex-button type="success" size="sm" title="Activar" titlePosition="left"
+                                         (click)="toogleActivo(org)">
+                                <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
+                            </plex-button>
+                        </ng-container>
+                        <plex-button type="warning" size="sm" title="Editar" titlePosition="left" (click)="edit(org)"
+                                     *ngIf="!readOnly">
+                            <plex-icon name="pencil"></plex-icon>
                         </plex-button>
-                    </div>
+                    </span>
                 </div>
-            </ng-container>
+                <div *ngIf="!data.orgList.length">
+                    No tiene organizaciónes asignadas. Agregue una para continuar.
+                </div>
+            </div>
+            <div class="row mt-2" *ngIf="showNewOrgView">
+                <div class="col-10">
+                    <plex-select [(ngModel)]="orgSelected" placeholder="Seleccione una organización"
+                                 [data]="data.organizacionesParaAgregar">
+                    </plex-select>
+                </div>
+                <div class="col">
+                    <plex-button type="success" size="sm" (click)="addOrgPermiso()" [disabled]='!orgSelected'>
+                        AGREGAR
+                    </plex-button>
+                </div>
+            </div>
         </ng-container>
         <ng-template #noSelected>
             <div class="text-center">
