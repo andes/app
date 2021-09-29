@@ -3,6 +3,7 @@ import { RUPComponent } from '../../core/rup.component';
 import { Unsubscribe } from '@andes/shared';
 import { Observable, of } from 'rxjs';
 import { RupElement } from '..';
+import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 
 /**
  * Params:
@@ -103,6 +104,10 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         if (!this.otherEnabled) {
             if (this.itemSelected) {
                 this.registro.valor = this.itemSelected;
+                if (this.params.addRegister) {
+                    // se agrega un registro por concepto seleccionado
+                    this.addConcepto(this.itemSelected);
+                }
             } else {
                 this.registro.valor = null;
             }
@@ -115,6 +120,10 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         this.emitChange();
         this.addFact('value', this.registro.valor);
 
+    }
+
+    addConcepto(concepto: ISnomedConcept) {
+        this.ejecucionService.agregarConcepto(concepto);
     }
 
     @Unsubscribe()
