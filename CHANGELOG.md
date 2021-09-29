@@ -1,3 +1,20 @@
+# [5.66.0](https://github.com/andes/app/compare/v5.65.0...v5.66.0) (2021-09-29)
+
+
+### Bug Fixes
+
+* **ips:** handler de secciones vacías ([#2468](https://github.com/andes/app/issues/2468)) ([67e238b](https://github.com/andes/app/commit/67e238bbac016444381f56e2e7fa43ffe8a10035))
+* **mpi:** fecha de nacimiento de recien nacidos ([#2456](https://github.com/andes/app/issues/2456)) ([9f940f2](https://github.com/andes/app/commit/9f940f221bcc8af24b01288bb8836f629db3fa1d))
+
+
+### Features
+
+* **BI:** filtro de zona para reportes ([#2445](https://github.com/andes/app/issues/2445)) ([3f26608](https://github.com/andes/app/commit/3f2660894404ce552bd0714c9030ed8284e4cc7e))
+* **gdu:** mostrar en detalle si el profesional esta matriculado ([#2474](https://github.com/andes/app/issues/2474)) ([482ca23](https://github.com/andes/app/commit/482ca23ecf9ab142cee7eba97f901af8a9cd22e5))
+* **mapa-camas:** permisos para ver registros ([#2434](https://github.com/andes/app/issues/2434)) ([bed41c1](https://github.com/andes/app/commit/bed41c153d1ebad98061f6c9095f4d4fbcc5166c))
+* **rup:** acceso rápido a solicitud desde reglas ([#2463](https://github.com/andes/app/issues/2463)) ([634ef72](https://github.com/andes/app/commit/634ef720ece52362a4f6efe22b63bffdb3b9af81))
+* **rup:** separa items por servicio intermedio ([#2431](https://github.com/andes/app/issues/2431)) ([6b2c5ca](https://github.com/andes/app/commit/6b2c5ca140052519d02b41eb9f49f2cbb7886f6e))
+
 # [5.65.0](https://github.com/andes/app/compare/v5.64.0...v5.65.0) (2021-09-22)
 
 
