@@ -211,7 +211,7 @@
         <plex-button *ngIf="validada && prestacion?.solicitud.ambitoOrigen && rutaVolver" label="{{ btnVolver }}"
                      (click)="volverInicio(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info" position="left">
         </plex-button>
-        <plex-button *ngIf="prestacion && prestacion.estados && paciente && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
+        <plex-button *ngIf="prestacion && prestacion.estados && (noNominalizada||paciente)  && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
                      label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"
                      position="right">
         </plex-button>
