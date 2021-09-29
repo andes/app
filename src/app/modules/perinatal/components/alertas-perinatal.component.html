@@ -1,22 +1,20 @@
-<div *ngIf="listado$ | async as listado">
-    <plex-help class="ml-2" type="info" titulo="Alertas" icon="bell" size="sm" cardSize="half" hintType="danger"
-               [hint]="listado.length" hintIcon="star" detach="top">
-        <plex-list>
-            <plex-item *ngFor="let carnet of listado">
-                <plex-badge size="sm" type="info">{{ carnet.fechaProximoControl | fecha }}</plex-badge>
-                <plex-badge type="sm" type="danger">AUSENTE
-                    <plex-button icon="alert-circle-outline" size="sm"></plex-button>
-                </plex-badge>
-                <plex-label [tituloBold]="true" titulo="{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}"
-                            subtitulo="{{carnet.paciente.documento}}">
-                </plex-label>
-                <plex-label [tituloBold]="true"
-                            titulo="{{carnet.controles[carnet.controles.length - 1].organizacion.nombre}}"
-                            subtitulo="Organización">
-                </plex-label>
-            </plex-item>
-            <plex-badge *ngIf="listado.length === 0" type="default" size="block">No hay alertas para mostrar
+<plex-help class="ml-2" type="info" titulo="Alertas" icon="bell" size="sm" cardSize="half" hintType="danger"
+           [hint]="hayItems+' alertas'" hintIcon="star" detach="top">
+    <plex-list>
+        <plex-item *ngFor="let carnet of listado">
+            <plex-badge size="sm" type="info">{{ carnet.fechaProximoControl | fecha }}</plex-badge>
+            <plex-badge type="sm" type="danger">AUSENTE
+                <plex-button icon="alert-circle-outline" size="sm"></plex-button>
             </plex-badge>
-        </plex-list>
-    </plex-help>
-</div>
+            <plex-label [tituloBold]="true" titulo="{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}"
+                        subtitulo="{{carnet.paciente.documento}}">
+            </plex-label>
+            <plex-label [tituloBold]="true"
+                        titulo="{{carnet.controles[carnet.controles.length - 1].organizacion.nombre}}"
+                        subtitulo="Organización">
+            </plex-label>
+        </plex-item>
+        <plex-badge *ngIf="listado.length === 0" type="default" size="block">No hay alertas para mostrar
+        </plex-badge>
+    </plex-list>
+</plex-help>
