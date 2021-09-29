@@ -16,7 +16,9 @@ export class ProfesionalService {
      * @param {any} params Opciones de búsqueda
      */
     get(params: any): Observable<IProfesional[]> {
-        params['fields'] = 'id documento nombre apellido';
+        if (!params['fields']) {
+            params['fields'] = 'id documento nombre apellido';
+        }
         return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 

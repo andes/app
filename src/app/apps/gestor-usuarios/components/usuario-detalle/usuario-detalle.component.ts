@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
 import { IUsuario } from '../../interfaces/IUsuario';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -15,7 +15,7 @@ function elementAt(index = 0) {
     styleUrls: ['usuario-detalle.scss']
 })
 
-export class UsuarioDetalleComponent implements OnInit, OnChanges {
+export class UsuarioDetalleComponent implements OnChanges {
     private usuario$ = new BehaviorSubject<IUsuario>(null);
     public profesional$: Observable<IProfesional>;
     @Input() usuario: IUsuario;
@@ -40,11 +40,8 @@ export class UsuarioDetalleComponent implements OnInit, OnChanges {
     getProfesional(user) {
         return this.profesionalService.get({
             documento: user.usuario,
-            fields: 'nombre'
+            fields: 'id documento nombre apellido profesionalMatriculado formacionGrado'
         });
     }
 
-    ngOnInit() {
-
-    }
 }
