@@ -5,11 +5,11 @@ import { NgForm } from '@angular/forms';
 import { Auth } from '@andes/auth';
 
 @Component({
-    selector: 'pdp-recuperar-contraseña',
-    templateUrl: './recuperar-contraseña.component.html',
+    selector: 'pdp-solicitar-codigo',
+    templateUrl: './solicitar-codigo.component.html',
     styleUrls: ['../login/login-portal-paciente.scss']
 })
-export class RecuperarContraseñaComponent implements OnInit {
+export class SolicitarCodigoComponent implements OnInit {
 
     public usuario: string;
     public loading = false;
@@ -34,10 +34,14 @@ export class RecuperarContraseñaComponent implements OnInit {
     enviarCodigo() {
         if (this.usuario.length) {
             this.loading = true;
-            this.auth.resetMobilePassword(this.usuario).subscribe(resp => {
+            this.auth.sendCode(this.usuario, 'PDP').subscribe(resp => {
                 this.loading = false;
                 if (resp.valid) {
-                    this.plex.toast('success', 'El código fue enviado correctamente a tu correo', 'Confirmación', 5000);
+                    this.router.navigate(['reset-password'], {
+                        queryParams: {
+                            email: this.usuario
+                        }
+                    });
                 }
             }, error => {
                 this.loading = false;

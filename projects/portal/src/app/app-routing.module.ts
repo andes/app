@@ -15,18 +15,18 @@ import { PDPMisRelacionesDetalleComponent } from './pages/mis-relaciones/mis-rel
 import { DarTurnoComponent } from './components/dar-turno/dar-turno.component';
 import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-turno-detalle.component';
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
-import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
-import { RecuperarContraseñaComponent } from './pages/recuperar-contraseña/recuperar-contraseña.component';
+import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-codigo.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'registro', component: RegistroCuentaComponent },
-    { path: 'activar-cuenta', component: ActivarCuentaComponent },
     { path: 'mi-inicio', component: PDPMiInicioComponent, canActivate: [RoutingGuard] },
-    { path: 'recuperar-contraseña', component: RecuperarContraseñaComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'solicitar-codigo', component: SolicitarCodigoComponent },
     {
         path: 'mis-turnos',
         component: PDPMisTurnosComponent,

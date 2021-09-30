@@ -21,7 +21,7 @@
             </div>
             <div justify="center">
                 <div justify="center" class="pt-3 mb-3">
-                    <div justify="end" class="label-container">
+                    <div justify="{{ activacion ? 'center' : 'end'}}" class="label-container">
                         <plex-label titulo="E-MAIL" [tituloBold]="false" subtitulo="" class="mr-3"></plex-label>
                     </div>
                     <div justify="left">
@@ -37,13 +37,13 @@
                 <div justify="center">
                     <div justify="center" class="mb-4">
                         <div justify="end" class="label-container">
-                            <plex-label titulo="{{activacion?'CÓDIGO DE ACTIVACIÓN':'CONTRASEÑA'}}" [tituloBold]="false"
+                            <plex-label titulo="{{ activacion ? 'CÓDIGO DE ACTIVACIÓN' : 'CONTRASEÑA' }}" [tituloBold]="false"
                                         subtitulo="" class="mr-3">
                             </plex-label>
                         </div>
                         <div justify="left">
                             <plex-text type="password" [(ngModel)]="password" name="password" [required]="true"
-                                    placeholder="{{activacion?'Código de activación':'password'}}">
+                                    placeholder="{{ activacion ? 'Código de activación' : 'password' }}">
                             </plex-text>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="label-container">
                         </div>
                         <div class="forgot-pass">
-                            <plex-button type="link" size="sm" (click)="goTo('recuperar-contraseña')">
+                            <plex-button type="link" size="sm" (click)="goTo('solicitar-codigo')">
                                 OLVIDÉ MI CONTRASEÑA
                             </plex-button>
                         </div>
@@ -75,7 +75,7 @@
                 </div>
                 <div justify="center" *ngIf="!activacion">
                     ¿No tenés usuario?
-                    <plex-button type="link" size="sm" (click)="irRegistro()">
+                    <plex-button type="link" size="sm" (click)="goTo('registro')">
                         Solicitá una Cuenta
                     </plex-button>
                 </div>

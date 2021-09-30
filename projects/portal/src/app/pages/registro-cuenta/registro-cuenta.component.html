@@ -68,14 +68,14 @@
             </div>
         </div>
         <div class="info-tramite">
-            <plex-button label="" type="link" (click)="infoNT()">
+            <plex-button type="link" (click)="infoNT()">
                 <plex-icon *ngIf="!infoNrotramite" name="chevron-right" type="info"></plex-icon>
                 <plex-icon *ngIf="infoNrotramite" name="chevron-down" type="info"></plex-icon>
-                Consulta donde encontrar el número de trámite
+                Consulta dónde encontrar el número de trámite
             </plex-button>
             <plex-grid cols="2" *ngIf="infoNrotramite">
-                <img src="assets/img/andes-dni-frente.svg">
-                <img src="assets/img/andes-dni-dorso.svg">
+                <img src="../../../assets/img/andes-dni-frente.jpg">
+                <img src="../../../assets/img/andes-dni-dorso.jpg">
             </plex-grid>
         </div>
         <div class="my-2" justify="center">

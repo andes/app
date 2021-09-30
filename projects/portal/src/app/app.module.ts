@@ -28,7 +28,7 @@ import { PacienteDetalleComponent } from './components/paciente-detalle.componen
 import { PDPMenuComponent } from './components/portal-menu/portal-menu.component';
 import { PDPTituloComponent } from './components/portal-titulo/portal-titulo.component';
 import { LogoPortalPacienteComponent } from './logo-portal-paciente/logo-portal-paciente.component';
-import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 // Declarations
 import { LoginComponent } from './pages/login/login-portal-paciente';
 import { PDPMisCertificadoDetalleComponent } from './pages/mis-certificados/mis-certificados-detalle.component';
@@ -48,7 +48,7 @@ import { CertificadoService } from './services/certificado.service';
 import { PrestacionService } from './services/prestacion.service';
 import { LogPacienteService } from 'src/app/services/logPaciente.service';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
-import { RecuperarContraseñaComponent } from './pages/recuperar-contraseña/recuperar-contraseña.component';
+import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-codigo.component';
 
 @NgModule({
     declarations: [
@@ -74,10 +74,10 @@ import { RecuperarContraseñaComponent } from './pages/recuperar-contraseña/rec
         DarTurnoComponent,
         DarTurnoDetalleComponent,
         RegistroCuentaComponent,
-        ActivarCuentaComponent,
+        ResetPasswordComponent,
         PDPMisDatosPersonalesComponent,
         PDPMiInicioComponent,
-        RecuperarContraseñaComponent
+        SolicitarCodigoComponent
     ],
     imports: [
         BrowserModule,
