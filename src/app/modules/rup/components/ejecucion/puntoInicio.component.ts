@@ -223,7 +223,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 const servicioDefinition = this.servicioIntermedio.find(s => s.id === serId);
                 const servicioItem = acc.find(s => s.id === serId);
                 if (servicioItem) {
-                    servicioItem.total +=1;
+                    servicioItem.total += 1;
                 } else {
                     acc.push({
                         id: servicioDefinition.id,
@@ -667,7 +667,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = false;
     }
 
-
+    goto(link) {
+        window.open(link);
+    }
     ejecutarPrestacion2(prestacion) {
         this.prestacionPendiente = prestacion;
         this.turno = null;
