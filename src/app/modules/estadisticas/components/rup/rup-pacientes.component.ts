@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { EstRupService } from '../../services/rup-estadisticas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { Plex } from '@andes/plex';
@@ -25,10 +25,8 @@ interface IRegistros {
     templateUrl: 'rup-pacientes.html',
     styleUrls: ['rup-pacientes.scss']
 })
-export class RupPacientesComponent implements AfterViewInit, OnInit {
+export class RupPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-
-    showData = false;
 
     // Filtros
     public desde: Date = moment(new Date()).startOf('month').toDate();
@@ -36,12 +34,11 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
     public hoy = new Date();
 
     public detallar = true;
+    public loading = false;
     public prestacion: any;
     public prestaciones = [];
     public prestacionesHijas = [];
-    public filtros = {
-
-    };
+    public filtros = {};
 
     public registros: IRegistros[] = [];
     public tablas: any = [];
@@ -66,8 +63,6 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
         });
     }
 
-    ngAfterViewInit() { }
-
     onPrestacionChange() {
         if (this.prestacion) {
             this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
@@ -81,24 +76,26 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                     this.prestacion.check = true;
                     this.prestacionesHijas[0] = this.prestacion;
                 }
+                this.updateSeleccionDetalle(true);
             });
+        } else {
+            this.prestacionesHijas = [];
+            this.updateSeleccionDetalle(false);
         }
     }
 
-    volver() {
-        this.showData = false;
+    onChange() {
         this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
         this.tableDemografia = this.tableLocalidades = null;
-    }
 
-    onChange() {
         if (this.prestacion) {
             this.tablas = [];
             this.registros = [];
+            this.loading = true;
 
             const prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
             this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
-                this.showData = true;
+                this.loading = false;
                 if (this.detallar) {
                     this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
                 }
@@ -110,7 +107,11 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
                 });
             });
         }
+    }
 
+    updateSeleccionDetalle(value) {
+        this.detallar = value;
+        this.prestacionesHijas?.map(hijo => hijo.check = value);
     }
 
     /*
@@ -167,7 +168,6 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
             prestacion: { term: this.detallar ? 'Totalizado' : this.prestacion.term },
             data: info
         };
-
         this.tablas.push(table);
     }
 

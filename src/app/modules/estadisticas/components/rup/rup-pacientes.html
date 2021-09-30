@@ -1,56 +1,32 @@
 <plex-layout [main]="selectedConcept ? 8 : 12">
     <plex-layout-main>
-        <ng-container *ngIf="!showData">
-            <div class="row">
-                <div class="col-3">
-                    <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde">
-                    </plex-datetime>
-                </div>
-                <div class="col-3">
-                    <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta">
-                    </plex-datetime>
-                </div>
-                <div class="col-4">
-                    <plex-select [data]="prestaciones" idField="conceptId" labelField="term" label="Prestacion"
-                                 [(ngModel)]="prestacion" (change)="onPrestacionChange()"></plex-select>
-                </div>
-                <div class="col-1" *ngIf="prestacionesHijas.length">
-                    <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar" class="vertical-center">
-                    </plex-bool>
-                </div>
-                <div class="col-1">
-                    <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center">
-                    </plex-button>
-                </div>
-            </div>
-            <div *ngIf="detallar && prestacionesHijas.length > 0">
-                <div class="row">
-                    <div class="col">
-                        <h4>Prestaciones descendientes</h4>
-                    </div>
-                </div>
-                <div class="row">
+
+        <plex-wrapper >
+            <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde">
+            </plex-datetime>
+            <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta">
+            </plex-datetime>
+            <plex-select [data]="prestaciones" idField="conceptId" labelField="term" label="Prestacion" [(ngModel)]="prestacion"
+                         (change)="onPrestacionChange()">
+            </plex-select>
+            <plex-button *ngIf="!prestacionesHijas.length" class="pr-3 d-flex align-items-end" type="info" size="md" label="Detalles" disabled="true"></plex-button>
+            <plex-help *ngIf="prestacionesHijas.length" class="pr-3 d-flex align-items-end" size="md"  type="info" tituloBoton="Detalles">
+                <plex-title titulo="Prestaciones descendientes" size="sm">
+                    <plex-bool *ngIf="prestacionesHijas?.length > 1" [(ngModel)]="detallar" type="slide" label="Seleccionar todas" (change)="updateSeleccionDetalle(detallar)"></plex-bool>
+                </plex-title>
+                <plex-grid  size="sm" type="full" cols="4">
                     <ng-container *ngFor="let hijo of prestacionesHijas">
-                        <div class="col-3">
-                            <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
-                        </div>
+                        <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
                     </ng-container>
-                </div>
-            </div>
-        </ng-container>
-        <plex-title *ngIf="showData" titulo="Dashboard rup">
-            <plex-button type="info" label="Filtrar" (click)="volver()"></plex-button>
-        </plex-title>
-        <section *ngIf="showData" justify="around">
-            <plex-label titulo="Desde: {{ desde | date: 'dd/MM/yyyy' }}">
-            </plex-label>
-            <plex-label titulo="Hasta: {{ hasta | date: 'dd/MM/yyyy' }}">
-            </plex-label>
-            <plex-label titulo="Prestación: {{ prestacion.term }}">
-            </plex-label>
-        </section>
-        <hr>
-        <plex-tabs *ngIf="showData">
+                </plex-grid>
+            </plex-help>
+            <plex-button type="success" label="Filtrar" [disabled]="!prestacion" (click)="onChange()">
+            </plex-button>
+        </plex-wrapper>
+
+        <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+
+        <plex-tabs>
             <plex-tab label="Prestaciones">
                 <div class="mt-3" *ngFor="let presta of tablas">
                     <h2> {{presta.prestacion.term}} </h2>
@@ -110,6 +86,7 @@
                 </table>
             </plex-tab>
         </plex-tabs>
+        
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="selectedConcept">
         <div class="page-title text-center text-bold font-weight-bold">
