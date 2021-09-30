@@ -350,8 +350,9 @@
                                                      label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
                                                      (click)="invalidarPrestacion(turno.prestacion, agendaSeleccionada.dinamica ? turno.id : false)">
                                         </plex-button>
-                                        <plex-button size="block" *ngIf="agendaSeleccionada?.link !== turno.link"
-                                                     label="INICIAR TURNO VIRTUAL"
+                                        <plex-button size="block"
+                                                     *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== turno.link"
+                                                     label="ACCESO PLATAFORMA VIRTUAL"
                                                      tooltip="acceso directo a video llamada" type="primary btn-sm"
                                                      icon="monitor" (click)="linkVideollamada(turno.link)">
                                         </plex-button>
@@ -530,8 +531,8 @@
                                                          (click)="invalidarPrestacion(sobreturno.prestacion)">
                                             </plex-button>
                                             <plex-button size="block"
-                                                         *ngIf="agendaSeleccionada?.link !== sobreturno.link"
-                                                         label="INICIAR TURNO VIRTUAL"
+                                                         *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== sobreturno.link"
+                                                         label="ACCESO PLATAFORMA VIRTUAL"
                                                          tooltip="acceso directo a video llamada" type="primary btn-sm"
                                                          icon="monitor" (click)="linkVideollamada(sobreturno.link)">
                                             </plex-button>
