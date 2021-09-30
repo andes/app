@@ -292,11 +292,11 @@
                             </div>
                             <div class="col-4"
                                  *ngIf="elementoActivo.turnosMobile && elementoActivo.accesoDirectoProgramado > 0 && mobileEnabled">
-                                <plex-int [(ngModel)]="elementoActivo.cupoMobile"
+                                <plex-int [(ngModel)]="elementoActivo.cupoMobile" min="1"
                                           [max]="elementoActivo.accesoDirectoProgramado" name="cupoMobile"
                                           suffix="Turnos"
                                           title="Este no es un cupo extra, es parte del cupo de programados"
-                                          titlePosition="top">
+                                          titlePosition="top" [required]="elementoActivo.turnosMobile">
                                 </plex-int>
                             </div>
                         </div>
