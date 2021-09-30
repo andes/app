@@ -82,7 +82,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public title;
 
     public hasPacs: boolean;
-
+    public noNominalizada = true;
     public puedeRomperValidacion = false;
 
     constructor(
@@ -203,6 +203,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 // Carga la información completa del paciente
+                this.noNominalizada = false;
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
