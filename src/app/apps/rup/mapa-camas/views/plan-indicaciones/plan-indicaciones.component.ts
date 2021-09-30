@@ -36,6 +36,10 @@ export class PlanIndicacionesComponent implements OnInit {
 
     private seccion = true;
 
+    public showSecciones = {
+
+    };
+
     private internacion;
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
@@ -116,6 +120,9 @@ export class PlanIndicacionesComponent implements OnInit {
             })
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
+            this.indicaciones.forEach((indicacion) => {
+                this.showSecciones[indicacion.seccion.term] = true;
+            });
 
             const eventosMap = {};
             eventos.forEach(evento => {
@@ -231,7 +238,7 @@ export class PlanIndicacionesComponent implements OnInit {
                 );
             })
         ).subscribe((prestacion) => {
-            this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/${this.ambito}` });
+            this.prestacionService.notificaRuta({ nombre: 'Plan de Indicaciones', ruta: `/mapa-camas/${this.ambito}/${this.capa}/plan-indicaciones/${this.idInternacion}` });
             this.router.navigate(['rup/ejecucion', prestacion.id]);
         });
 
@@ -258,5 +265,9 @@ export class PlanIndicacionesComponent implements OnInit {
         ).pipe(
             tap(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token))
         );
+    }
+
+    tootleSeccion(seccion) {
+        this.showSecciones[seccion.term] = !this.showSecciones[seccion.term];
     }
 }

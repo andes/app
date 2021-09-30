@@ -14,12 +14,12 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <td rowspan="2">
+                    <td rowspan="2" style="min-width: 500px;">
                         <section class="item">
                             <div class="item__container">
                                 <!-- Sin funcionalidad -->
-                                <plex-bool type="checkbox" label="seleccionar todos"> </plex-bool>
-                                <plex-icon name=""></plex-icon>
+                                <!-- <plex-bool type="checkbox" label="seleccionar todos"> </plex-bool> -->
+                                <!-- <plex-icon name=""></plex-icon> -->
                             </div>
                             <div class="item__botonera">
                                 <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
@@ -80,13 +80,15 @@
                                 <h6 class="item__title">{{ indicacion.seccion.term }}</h6>
                             </div>
                             <div class="item__botonera">
-                                <plex-button type="info" icon="chevron-down" size="sm">
+                                <plex-button type="info"
+                                             [icon]="showSecciones[indicacion.seccion.term] ? 'chevron-down' : 'chevron-up'"
+                                             size="sm" (click)="tootleSeccion(indicacion.seccion)">
                                 </plex-button>
                             </div>
                         </td>
                     </tr>
 
-                    <tr [ngClass]="indicacion.estado.tipo">
+                    <tr [ngClass]="indicacion.estado.tipo" *ngIf="showSecciones[indicacion.seccion.term]">
                         <td justify class="item pointer">
                             <div class="item__container" (click)="onSelectIndicacion(indicacion)">
                                 <!-- Debería prescindir del plex-bool para funcionar -->
@@ -118,15 +120,14 @@
                                 </span>
                             </div>
                             <div class="item__botonera">
-                                <span class="item__acciones">
-                                    <!-- Los botones suspender y detener quedan en el dropdown -->
+                                <!-- <span class="item__acciones">
                                     <plex-button type="warning" icon="pause" size="sm" (click)="onPausarClick()"
                                                  tooltip="Pausar"></plex-button>
                                     <plex-button type="success" icon="play" size="sm" (click)="onContinuarClick()"
                                                  tooltip="Continuar"></plex-button>
                                     <plex-button type="info" icon="check" size="sm" (click)="onCompletarClick()"
                                                  tooltip="Completar"></plex-button>
-                                </span>
+                                </span> -->
                                 <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">pendiente de
                                     validación
                                 </plex-badge>
