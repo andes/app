@@ -28,8 +28,6 @@ interface IRegistros {
 export class RupPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
-    showData = false;
-
     // Filtros
     public desde: Date = moment(new Date()).startOf('month').toDate();
     public hasta: Date = new Date();
@@ -87,7 +85,6 @@ export class RupPacientesComponent implements OnInit {
     }
 
     onChange() {
-        this.showData = false;
         this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
         this.tableDemografia = this.tableLocalidades = null;
 
@@ -99,7 +96,6 @@ export class RupPacientesComponent implements OnInit {
             const prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
             this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
                 this.loading = false;
-                this.showData = true;
                 if (this.detallar) {
                     this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
                 }
