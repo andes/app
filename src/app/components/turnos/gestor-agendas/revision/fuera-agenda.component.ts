@@ -58,7 +58,6 @@ export class RevisionFueraAgendaComponent implements OnInit {
 
     estaSeleccionada(prestacion: ICodificacionPrestacion) {
         return (this.prestacionSeleccionada === prestacion);
-        this.showRegistros = true;
     }
 
     seleccionarPrestacion(prestacion: ICodificacionPrestacion) {
