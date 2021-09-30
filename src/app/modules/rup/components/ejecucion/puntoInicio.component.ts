@@ -667,9 +667,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = false;
     }
 
-    goto(link) {
-        window.open(link);
-    }
     ejecutarPrestacion2(prestacion) {
         this.prestacionPendiente = prestacion;
         this.turno = null;

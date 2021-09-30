@@ -353,7 +353,7 @@
                                         <plex-button size="block" *ngIf="agendaSeleccionada?.link !== turno.link"
                                                      label="INICIAR TURNO VIRTUAL"
                                                      tooltip="acceso directo a video llamada" type="primary btn-sm"
-                                                     icon="monitor" (click)="goto(turno.link)">
+                                                     icon="monitor" (click)="linkVideollamada(turno.link)">
                                         </plex-button>
 
 
@@ -533,7 +533,7 @@
                                                          *ngIf="agendaSeleccionada?.link !== sobreturno.link"
                                                          label="INICIAR TURNO VIRTUAL"
                                                          tooltip="acceso directo a video llamada" type="primary btn-sm"
-                                                         icon="monitor" (click)="goto(sobreturno.link)">
+                                                         icon="monitor" (click)="linkVideollamada(sobreturno.link)">
                                             </plex-button>
 
                                         </ng-container>
