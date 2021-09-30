@@ -47,7 +47,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public profesionales;
     public arrayAmbito = [{ id: 'ambulatorio', nombre: 'ambulatorio' }, { id: 'internacion', nombre: 'internación' }];
     public ambito;
-    public prestacionesMax = 50;
+    public prestacionesMax = 500;
     public showHint = false;
 
     public columnas = {
