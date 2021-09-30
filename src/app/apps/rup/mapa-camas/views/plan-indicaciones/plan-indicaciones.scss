@@ -117,189 +117,192 @@ table {
 }    
 
 // Item
-.item {
-    position: relative;
-    padding: .5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: var(--rowHeight);
-    width: 100%;
-    min-width: min-content;
-    align-items: center;
-    box-sizing: border-box;
-    
-    &:hover {
-        .item__acciones {
-            opacity: 1;
-            transition: 900ms opacity ease-in;
-        }
-    }
+in-plan-indicacion{
 
-    .item__icon {
-        margin-right: .25rem;
-    }
-
-    .item__container {  
+    .item {
+        position: relative;
+        padding: .5rem;
         display: flex;
-        align-self: center;
-        //max-width: 50%;
-        margin-right: .5rem;
-        overflow: hidden;
-
-        plex-bool {
-            align-self: center;
-        }
-    }
-
-    .item-title-container {
-
-        display: flex;
-
-        &[center] {
-            text-align: center;
-        }
-    
-        &[left] {
-            text-align: left;
-            justify-content: start;
-        }
+        flex-direction: row;
+        justify-content: space-between;
+        height: var(--rowHeight);
+        width: 100%;
+        min-width: min-content;
+        align-items: center;
+        box-sizing: border-box;
         
-        &--horizontal {
-            flex-direction: row;
-            justify-content: center;
-            
-            .icon {
-                margin-right: .25rem;
+        &:hover {
+            .item__acciones {
+                opacity: 1;
+                transition: 900ms opacity ease-in;
             }
         }
-        
-        &--vertical {
-            flex-direction: column;
-            justify-content: center;
     
-            .icon {
-                margin-bottom: .25rem;
-            }
+        .item__icon {
+            margin-right: .25rem;
         }
-
-        .item__title {
-                font-size: medium;
-                text-align: left;
-                font-weight: 500;
-                text-transform: capitalize;
-                color: darkslategray;
-                
-                &:hover {
-                    font-weight: 600;
-                    color: $blue;
-                }
-            }
     
-        .item__subtitle {
-            font-weight: 200;
-            white-space: nowrap;
-            color: gray;
-        }
-    }
-
-    &.divisor {
-        height: 50px;
-        padding: 0;
-
-        div.title__container {
-            height: 50px;
-            position: absolute;
-            left: 0;
+        .item__container {  
             display: flex;
-            align-items: center;
-
-            .icon__container {
-                display: flex;
-                align-items: center;
+            align-self: center;
+            //max-width: 50%;
+            margin-right: .5rem;
+            overflow: hidden;
+    
+            plex-bool {
+                align-self: center;
+            }
+        }
+    
+        .item-title-container {
+    
+            display: flex;
+    
+            &[center] {
+                text-align: center;
+            }
+        
+            &[left] {
+                text-align: left;
+                justify-content: start;
+            }
+            
+            &--horizontal {
+                flex-direction: row;
                 justify-content: center;
                 
-                color: white;
-                width: 50px;
-                height: 100%;
-                margin-right: .5rem;
-                        
-                // Modificadores cromáticos
-                &--procedimiento {
-                    --iconColor: #92278e;
-                    background-color: var(--iconColor);
-                    + .item__title {
-                        --iconColor: #92278e;
-                        color: var(--iconColor);
-                    }
+                .icon {
+                    margin-right: .25rem;
                 }
-                
-                &--producto {
-                    --iconColor: #00bcb4;
-                    background-color: var(--iconColor);
-                    + .item__title {
-                        --iconColor: #00bcb4;
-                        color: var(--iconColor);
-                    }
-                }
-                
-                &--alimentacion {
-                    --iconColor: #8cc63f;
-                    background-color: var(--iconColor);
-                    + .item__title {
-                        --iconColor: #8cc63f;
-                        color: var(--iconColor);
-                    }
-                }
-                
-                &--hidratacion {
-                    --iconColor: #00a8e0;
-                    background-color: var(--iconColor);
-                    + .item__title {
-                        --iconColor: #00a8e0;
-                        color: var(--iconColor);
-                    }
-                }
-                
-                &--noSeccion {
-                    --iconColor: gray;
-                    background-color: var(--iconColor);
-                    + .item__title {
-                        --iconColor: gray;
-                        color: var(--iconColor);
-                    }
+            }
+            
+            &--vertical {
+                flex-direction: column;
+                justify-content: center;
+        
+                .icon {
+                    margin-bottom: .25rem;
                 }
             }
     
             .item__title {
-                left: 65px;
-                font-weight: bolder;
-                text-transform: capitalize;
-                font-size: normal;
+                    font-size: medium;
+                    text-align: left;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                    color: darkslategray;
+                    
+                    &:hover {
+                        font-weight: 600;
+                        color: $blue;
+                    }
+                }
+        
+            .item__subtitle {
+                font-weight: 200;
+                white-space: nowrap;
+                color: gray;
             }
         }
-
-        .item__botonera {
-            right: 1rem;
-            position: absolute;
+    
+        &.divisor {
+            height: 50px;
+            padding: 0;
+    
+            div.title__container {
+                height: 50px;
+                position: absolute;
+                left: 0;
+                display: flex;
+                align-items: center;
+    
+                .icon__container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    
+                    color: white;
+                    width: 50px;
+                    height: 100%;
+                    margin-right: .5rem;
+                            
+                    // Modificadores cromáticos
+                    &--procedimiento {
+                        --iconColor: #92278e;
+                        background-color: var(--iconColor);
+                        + .item__title {
+                            --iconColor: #92278e;
+                            color: var(--iconColor);
+                        }
+                    }
+                    
+                    &--producto {
+                        --iconColor: #00bcb4;
+                        background-color: var(--iconColor);
+                        + .item__title {
+                            --iconColor: #00bcb4;
+                            color: var(--iconColor);
+                        }
+                    }
+                    
+                    &--alimentacion {
+                        --iconColor: #8cc63f;
+                        background-color: var(--iconColor);
+                        + .item__title {
+                            --iconColor: #8cc63f;
+                            color: var(--iconColor);
+                        }
+                    }
+                    
+                    &--hidratacion {
+                        --iconColor: #00a8e0;
+                        background-color: var(--iconColor);
+                        + .item__title {
+                            --iconColor: #00a8e0;
+                            color: var(--iconColor);
+                        }
+                    }
+                    
+                    &--noSeccion {
+                        --iconColor: gray;
+                        background-color: var(--iconColor);
+                        + .item__title {
+                            --iconColor: gray;
+                            color: var(--iconColor);
+                        }
+                    }
+                }
+        
+                .item__title {
+                    left: 65px;
+                    font-weight: bolder;
+                    text-transform: capitalize;
+                    font-size: normal;
+                }
+            }
+    
+            .item__botonera {
+                right: 1rem;
+                position: absolute;
+            }
         }
-    }
-
-    .item__acciones {
-        // para garantizar accesibilidad
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        opacity: 0;
-    }
-
-    .item__botonera {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        .badge, button {
-            margin-right: 0.25rem;
+    
+        .item__acciones {
+            // para garantizar accesibilidad
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            opacity: 0;
+        }
+    
+        .item__botonera {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+    
+            .badge, button {
+                margin-right: 0.25rem;
+            }
         }
     }
 }
