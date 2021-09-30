@@ -476,18 +476,23 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     postSave(fichaFinal) {
         const seccionClasificacion = this.ficha.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
         const clasificacionFinal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
-        if (this.auth.profesional && clasificacionFinal === 'Confirmado' && clasificacionFinal !== this.clasificacionOriginal) {
+        if (this.puedeRegistrar(clasificacionFinal)) {
             this.registrarPrestacion(fichaFinal);
         } else {
             this.volver.emit();
         }
     }
 
+    private puedeRegistrar(clasificacionFinal) {
+        return this.auth.profesional && clasificacionFinal !== this.clasificacionOriginal && clasificacionFinal !== 'Descartado';
+    }
+
     private registrarPrestacion(ficha) {
         const concepto = this.elementoRupService.getConceptoSeguimientoCOVID();
-        const registrosEjecucion = this.formEpidemiologiaService.getConceptosCovidConfirmado(ficha).map((c: any) => ({
+        const elemento = this.elementoRupService.buscarElemento(concepto, false);
+        const registrosEjecucion = this.formEpidemiologiaService.getConceptosCovid(ficha).map((c: any) => ({
             concepto: c,
-            elementoRUP: '594aa21a884431c25d9a0266',
+            elementoRUP: elemento.id,
             nombre: c.term,
             esSolicitud: false
         })

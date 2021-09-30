@@ -275,4 +275,13 @@ export class ElementosRUPService {
             semanticTag: 'trastorno'
         };
     }
+
+    getConceptosCovidSospechoso() {
+        return {
+            term: 'sospecha de enfermedad causada por COVID-19"',
+            fsn: 'sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)',
+            conceptId: '840544004',
+            semanticTag: 'situación'
+        };
+    }
 }

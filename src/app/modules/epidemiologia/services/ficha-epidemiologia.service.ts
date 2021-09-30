@@ -30,14 +30,18 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
         }
     }
 
-    getConceptosCovidConfirmado(ficha) {
+    getConceptosCovid(ficha) {
         const conceptos = [];
-
         const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === this.SECCION_CLASIFICACION_FINAL);
 
         seccionClasificacion.fields.forEach(field => {
             const key = Object.keys(field)[0];
             switch (key) {
+                case 'clasificacionfinal':
+                    if (field.clasificacionfinal === 'Sospechoso') {
+                        conceptos.push(this.elementoRupService.getConceptosCovidSospechoso());
+                    }
+                    break;
                 case 'segundaclasificacion':
                     if (field.segundaclasificacion.id === 'confirmado') {
                         conceptos.push(this.elementoRupService.getConceptoCovidConfirmadoNexo());
