@@ -26,7 +26,7 @@ export class PDPMiInicioComponent implements OnInit {
 
     ngOnInit() {
         this.paciente$ = this.pacienteService.me();
-        this.cards = CARDS.filter(c => c.path !== 'mi-inicio' && c.path !== 'mis-datos-personales');
+        this.cards = CARDS.filter(c => c.inicio);
     }
 
     ocultarDatos() {

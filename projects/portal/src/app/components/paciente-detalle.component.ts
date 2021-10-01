@@ -43,7 +43,7 @@ export class PacienteDetalleComponent implements OnInit {
             nombre: 'Otro error',
             operacion: 'error:otro'
         }
-    ];;
+    ];
 
     // cards
     public alertas = [];

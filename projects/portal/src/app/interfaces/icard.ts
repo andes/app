@@ -9,4 +9,5 @@ export interface ICard {
     path: string;
     outlet: string;
     valor?: string;
+    inicio: boolean;
 }

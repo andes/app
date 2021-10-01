@@ -11,6 +11,7 @@ export const CARDS: ICard[] = [
         path: 'mi-inicio',
         color: '#0070cc',
         outlet: '',
+        inicio: false
     },
     {
         id: 1,
@@ -22,6 +23,7 @@ export const CARDS: ICard[] = [
         path: 'mis-datos-personales',
         color: '#0070cc',
         outlet: '',
+        inicio: false
     },
     {
         id: 2,
@@ -32,7 +34,8 @@ export const CARDS: ICard[] = [
         icono: 'turno-bold',
         path: 'mis-turnos',
         color: '#00a8e0',
-        outlet: 'listado'
+        outlet: 'listado',
+        inicio: true
     },
     {
         id: 3,
@@ -44,6 +47,7 @@ export const CARDS: ICard[] = [
         path: 'mis-vacunas',
         color: '#aa1daa',
         outlet: 'listado',
+        inicio: true
     },
     {
         id: 4,
@@ -54,7 +58,8 @@ export const CARDS: ICard[] = [
         icono: 'recipiente',
         path: 'mis-laboratorios',
         color: '#a0a0a0',
-        outlet: 'listado'
+        outlet: 'listado',
+        inicio: true
     },
     {
         id: 5,
@@ -65,7 +70,8 @@ export const CARDS: ICard[] = [
         icono: 'documento-cursor',
         path: 'mis-certificados',
         color: '#8bc43f',
-        outlet: 'listado'
+        outlet: 'listado',
+        inicio: true
     },
     {
         id: 6,
@@ -76,6 +82,7 @@ export const CARDS: ICard[] = [
         icono: 'familia',
         path: 'mis-relaciones',
         color: '#027a8a',
-        outlet: 'listado'
+        outlet: 'listado',
+        inicio: true
     }
 ];
