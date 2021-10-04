@@ -1,9 +1,8 @@
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { TurnoService } from '../../services/turno.service';
-
 
 @Component({
     selector: 'pdp-dar-turno',
@@ -24,13 +23,14 @@ export class DarTurnoComponent implements OnInit {
     constructor(
         private agendasService: AgendaService,
         private turnosServicePortal: TurnoService,
+        private activeRoute: ActivatedRoute,
         private plex: Plex,
         private router: Router
     ) { }
 
     ngOnInit(): void {
         this.turnosServicePortal.getTurnos().subscribe(turnos => {
-            this.turnosActuales = turnos.filter(t => moment(t.horaInicio) > moment());
+            this.turnosActuales =turnos.filter(t => moment(t.horaInicio) > moment());
             navigator.geolocation.getCurrentPosition(position => {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
@@ -53,6 +53,12 @@ export class DarTurnoComponent implements OnInit {
                 });
             }
         });
+    }
+
+    goTo(id?) {
+        if (id) {
+            this.router.navigate([id], { relativeTo: this.activeRoute });
+        }
     }
 
     getAgendasDisponibles(userLocation) {
