@@ -155,8 +155,10 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         this.selectedLlamado = $event;
     }
 
-    getColorPrioridad(prioridad) {
-        return prioridad ? this.opcionesSemaforo.find(x => x.id === prioridad)?.itemRowStyle : false;
+    getColorPrioridad(score) {
+        return score ? this.opcionesSemaforo.find(x => {
+            return score >= x.min && (!x.max || score <= x.max);
+        })?.itemRowStyle : false;
     }
 
     selectAll($event) {

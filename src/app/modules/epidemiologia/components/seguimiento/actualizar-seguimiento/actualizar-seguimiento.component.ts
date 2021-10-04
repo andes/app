@@ -41,13 +41,13 @@ export class ActualizarSeguimientoComponent implements OnInit {
         }
 
         this.seguimientoPacientesService.update(this.seguimiento.id, data).subscribe(() => {
-            this.plex.toast('success', 'La derivación fue actualizada exitosamente');
+            this.plex.toast('success', 'La derivación fue actualizada exitosamente', 'Derivacion guardada', 1000);
             this.save.emit(false);
         });
     }
 
     changePriority(event) {
-        this.scoreValue = event?.id;
+        this.scoreValue = event?.value;
     }
 
     cerrar() {
