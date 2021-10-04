@@ -5,22 +5,21 @@
             <div class="col h-100">
                 <plex-box>
                     <header>
-                        <!--Botones / Acciones-->
-                        <div class="clearfix">
-                            <div class="page-title float-left">Gestor de Agendas</div>
-                            <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length"
-                                            class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
-                                            (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()"
-                                            (agregarSobreturnoEmit)="agregarSobreturno($event)"
-                                            (editarAgendaEmit)="editarAgenda($event)"
-                                            (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                                            (listarTurnosEmit)="listarTurnos($event)"
-                                            (listarCarpetasEmit)="listarCarpetas($event)"
-                                            (revisionAgendaEmit)="revisionAgenda($event)"
-                                            (reasignarTurnosEmit)="reasignarTurnos($event)"
-                                            [turnosSuspendidos]="turnosSuspendidos">
-                            </botones-agenda>
-                        </div>
+                        <plex-title titulo="Gestor de Agendas" size="lg">
+                            <!--Botones / Acciones-->
+                                <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length"
+                                                class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
+                                                (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()"
+                                                (agregarSobreturnoEmit)="agregarSobreturno($event)"
+                                                (editarAgendaEmit)="editarAgenda($event)"
+                                                (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                                                (listarTurnosEmit)="listarTurnos($event)"
+                                                (listarCarpetasEmit)="listarCarpetas($event)"
+                                                (revisionAgendaEmit)="revisionAgenda($event)"
+                                                (reasignarTurnosEmit)="reasignarTurnos($event)"
+                                                [turnosSuspendidos]="turnosSuspendidos">
+                                </botones-agenda>
+                        </plex-title>
 
                         <!--Filtros-->
                         <div class="row">
