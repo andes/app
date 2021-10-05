@@ -59,7 +59,7 @@ export class RegistroCuentaComponent implements OnInit {
             email: ['', Validators.compose([Validators.required, Validators.pattern(emailRegex)])],
             tramite: ['', Validators.compose([Validators.required])],
             sexo: ['', Validators.compose([Validators.required])],
-            recaptcha: ['', Validators.compose([Validators.required])]
+            recaptcha: ['', this.captchaEnabled && Validators.compose([Validators.required])]
         });
         this.textoDocumento = 'Debe ingresar su número de documento, sin espacios ni puntos.';
         this.textoTramite = 'Debe ingresar los 11 dígitos de su número de trámite de documento.';
@@ -96,8 +96,12 @@ export class RegistroCuentaComponent implements OnInit {
                 return null;
             }),
         ).subscribe(() => {
-            this.plex.info('success', 'Su cuenta ha sido creada con éxito.');
-            this.router.navigate(['./login']);
+            this.router.navigate(['reset-password'], {
+                queryParams: {
+                    registro: true,
+                    email: this.paciente.email
+                }
+            });
         });
         this.cleanCaptcha();
     }

@@ -92,17 +92,6 @@ export class Auth {
         );
     }
 
-    mobileLogin(email: string, password: string, new_password?: string): Observable<any> {
-        return this.server.post('/modules/mobileApp/login', { email, password, new_password }, { showError: false }).pipe(
-            tap((data) => {
-                window.sessionStorage.setItem('jwt', data.token);
-                window.sessionStorage.setItem('user', JSON.stringify(data.user));
-                this.mobileUser = data.user;
-                this.estado = Estado.active;
-            })
-        );
-    }
-
     logout() {
         this.estado = Estado.logout;
         this.usuario = null;
@@ -168,5 +157,48 @@ export class Auth {
 
     featureFlag(name: string): boolean {
         return !!this.feature[name];
+    }
+
+
+    // #################### -------------- RUTAS MOBILE -------------- ####################
+
+    /**
+     * Resetea el password del portal de pacientes
+     *
+     * @param email Email del usuario al cambiar el password
+     * @param password Password o codigo de verificación enviado por email (En caso de reseteo de password)
+     * @param new_password Nueva password (En caso de reseteo de password)
+     */
+    mobileLogin(email: string, password: string, new_password?: string): Observable<any> {
+        return this.server.post('/modules/mobileApp/login', { email, password, new_password }, { showError: false }).pipe(
+            tap((data) => {
+                window.sessionStorage.setItem('jwt', data.token);
+                window.sessionStorage.setItem('user', JSON.stringify(data.user));
+                this.mobileUser = data.user;
+                this.estado = Estado.active;
+            })
+        );
+    }
+
+    /**
+     * Generar un codigo para reestablecer contraseña y luego
+     * enviar un email con el codigo generado
+     *
+     * @param email Email de la cuenta
+     */
+    sendCode(email, origen?): Observable<any> {
+        return this.server.post('/modules/mobileApp/olvide-password', { email, origen, showError: false });
+    }
+
+    /**
+         * Resetear el password de un usuario
+         *
+         * @param email Email del usuario al cambiar el password
+         * @param codigo Codigo de verificación enviado por email
+         * @param password Nuevo password
+         * @param password2 Re ingreso de nuevo password
+         */
+    resetMobilePassword(email, codigo, password, password2) {
+        return this.server.post('/modules/mobileApp/reestablecer-password', { email, codigo, password, password2 });
     }
 }

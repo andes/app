@@ -16,9 +16,7 @@
                    (deviceChange)="onDeviceChange($event)" (torchCompatible)="onTorchCompatible($event)">
     </zxing-scanner>
     <div class="botones-scan" *ngIf="hasPermission && scanHabilitado">
-        <plex-button *ngIf="torchAvailable$ | async" size="md" ariaLabel="activar o desactivar luz"
-                     (click)="toggleTorch()">{{torchEnabled?'turn off':'turn
-            on'}}
+        <plex-button *ngIf="torchAvailable$ | async" size="md" ariaLabel="activar o desactivar luz" label="{{ torchEnabled ? 'turn off' : 'turn on' }}" (click)="toggleTorch()">
         </plex-button>
         <plex-button *ngIf="hasDevices" type="danger" icon="close" size="md" ariaLabel="cerrar scanner"
                      (click)="clearResult()"></plex-button>
@@ -70,14 +68,14 @@
             </div>
         </div>
         <div class="info-tramite">
-            <a class="" href="javascript:void(0)" (click)="infoNT()">
+            <plex-button type="link" (click)="infoNT()">
                 <plex-icon *ngIf="!infoNrotramite" name="chevron-right" type="info"></plex-icon>
                 <plex-icon *ngIf="infoNrotramite" name="chevron-down" type="info"></plex-icon>
-                Consulta donde encontrar el número de trámite
-            </a>
+                Consulta dónde encontrar el número de trámite
+            </plex-button>
             <plex-grid cols="2" *ngIf="infoNrotramite">
-                <img src="assets/img/andes-dni-frente.svg">
-                <img src="assets/img/andes-dni-dorso.svg">
+                <img src="../../../assets/img/andes-dni-frente.jpg">
+                <img src="../../../assets/img/andes-dni-dorso.jpg">
             </plex-grid>
         </div>
         <div class="my-2" justify="center">
@@ -106,9 +104,12 @@
             <re-captcha name="recaptcha" formControlName="recaptcha" (resolved)="resolved($event)">
             </re-captcha>
         </div>
-        <div class="botones-container my-2" justify="center">
-            <plex-button type="info" name="enviar" size="md" class="mb-3" ariaLabel="registrar cuenta"
-                         [disabled]="formRegistro.invalid" (click)="registrarUsuario()">
+        <div justify="around" class="w-50 pt-3 mb-4">
+            <plex-button type="danger" name="volver" (click)="volverLogin()" size="md">
+                Volver
+            </plex-button>
+            <plex-button type="info" name="enviar" size="md" ariaLabel="registrar cuenta"
+                            [disabled]="formRegistro.invalid" (click)="registrarUsuario()">
                 Registrarme
             </plex-button>
         </div>

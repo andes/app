@@ -11,7 +11,7 @@
                 </plex-button>
             </plex-title>
 
-            <plex-grid cols="8" colsLg="6" colsMd="4" colsSm="2" responsive>
+            <plex-grid cols="6" colsLg="6" colsMd="4" colsSm="2" responsive>
                 <plex-card *ngFor="let familiar of familiares" type="dark" mode="filled" selectable="true" size="md"
                            (click)="goTo(familiar.id)" [selected]="familiar?.id === selectedId">
                     <img [mpiFotoPaciente]="familiar">

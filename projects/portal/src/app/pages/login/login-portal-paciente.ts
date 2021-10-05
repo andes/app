@@ -38,12 +38,7 @@ export class LoginComponent implements OnInit {
             catchError(err => {
                 this.loading = false;
                 if (err === 'new_password_needed') {
-                    this.router.navigate(['/activar-cuenta'], {
-                        queryParams: {
-                            email: this.usuario,
-                            password: this.password
-                        }
-                    });
+                    this.goTo('reset-password');
                 } else {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                 }
@@ -57,14 +52,20 @@ export class LoginComponent implements OnInit {
         return !this.formulario.form.valid || (!this.usuario || !this.password);
     }
 
-    irRegistro() {
-        this.router.navigate(['/registro']);
-    }
-
     activar() {
         this.usuario = '';
         this.password = '';
         this.formulario.form.markAsPristine();
         this.activacion = !this.activacion;
+    }
+
+    goTo(id?) {
+        if (id) {
+            this.router.navigate([id], {
+                queryParams: {
+                    email: this.usuario
+                }
+            });
+        }
     }
 }
