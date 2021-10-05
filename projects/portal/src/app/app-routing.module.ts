@@ -17,12 +17,14 @@ import { DarTurnoDetalleComponent } from './components/dar-turno-detalle/dar-tur
 import { RegistroCuentaComponent } from './pages/registro-cuenta/registro-cuenta.component';
 import { ActivarCuentaComponent } from './pages/activar-cuenta/activar-cuenta.component';
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
+import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'registro', component: RegistroCuentaComponent },
     { path: 'activar-cuenta', component: ActivarCuentaComponent },
+    { path: 'mi-inicio', component: PDPMiInicioComponent, canActivate: [RoutingGuard] },
     {
         path: 'mis-turnos',
         component: PDPMisTurnosComponent,

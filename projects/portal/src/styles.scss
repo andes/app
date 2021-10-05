@@ -3,198 +3,382 @@
  * Faltan algunas tareas de refactor más.
  **/
 
-$problema: #f1930d; // deprecated
-$trastorno: #ff4a1a;
-$hallazgo: #f4a03b;
-$procedimiento: #92278e;
-$solicitud: #0070cc;
-// $productos: #ef0993;
-$producto: #00bcb4;
-$adjunto: #141413;
-$todos: #111;
-$otro: #b9c512;
-$invert: #002738;
-$calificador: #660520;
-$laboratorio: #a0a0a0;
-$registro: #8bc43f; // elemento de registro
-// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
-// la interpolacion del string a una variable directamente
-$plex-tabs-color-extend: (
-    problema: $problema,
-    calificador: $calificador,
-    laboratorio: $laboratorio,
-    trastorno: $trastorno,
-    situación: $problema,
-    hallazgo: $hallazgo,
-    procedimiento: $procedimiento,
-    regimen: $procedimiento,
-    entidad: $procedimiento,
-    solicitud: $solicitud,
-    producto: $producto,
-    adjunto: $adjunto,
-    elementoderegistro: $registro,
-    invert: $invert,
-    todos: $todos,
-    otro: $otro
-);
+ $problema: #f1930d; // deprecated
+ $trastorno: #ff4a1a;
+ $hallazgo: #f4a03b;
+ $procedimiento: #92278e;
+ $solicitud: #0070cc;
+ // $productos: #ef0993;
+ $producto: #00bcb4;
+ $adjunto: #141413;
+ $todos: #111;
+ $otro: #b9c512;
+ $invert: #002738;
+ $calificador: #660520;
+ $laboratorio: #a0a0a0;
+ $registro: #8bc43f; // elemento de registro
+ // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
+ // la interpolacion del string a una variable directamente
+ $plex-tabs-color-extend: (
+     problema: $problema,
+     calificador: $calificador,
+     laboratorio: $laboratorio,
+     trastorno: $trastorno,
+     situación: $problema,
+     hallazgo: $hallazgo,
+     procedimiento: $procedimiento,
+     regimen: $procedimiento,
+     entidad: $procedimiento,
+     solicitud: $solicitud,
+     producto: $producto,
+     adjunto: $adjunto,
+     elementoderegistro: $registro,
+     invert: $invert,
+     todos: $todos,
+     otro: $otro
+ );
+ 
+ .logo-nav {
+     float: left;
+     background-color: var(--nav-bar-icon-color);
+     ;
+     width: 100px;
+     height: 50px;
+     padding: 7px;
+ }
+ nav .actions {
+     position: absolute;
+     right: 0;
+ }
+ 
+ //@import 'app/modules/rup/assets/font.css';
+ 
+ $adi-font-path: '~@andes/icons/fonts/';
+ @import '~@andes/icons/scss/andes-icons';
+ // Plex
+ @import '~@andes/plex/src/lib/styles.scss';
+ 
+ div[collapse] {
+     overflow-x: scroll;
+     overflow-y: hidden;
+     height: 140px;
+ }
+ 
+ 
+ // Eliminar cuando se mergee PLEX-147 en MASTER de PLEX
+     
+ // Mixins estados
+ @mixin mininavItemHover {
+     &:hover, &.selected {
+         cursor: pointer;
+         //box-shadow: inset 0 0 0 2px var(--color-base)!important;
+         background-color: var(--color-baseDark)!important;
+         filter: brightness(0.85);
+     }
+ }
+ 
+ #menu-vertical {
+         --mininavWidth: 65px;
+         --mininavHeight: 100vh;
+         --border-color: gray;
+         
+         display: flex;
+         flex-direction: column;
+         width: var(--mininavWidth);
+         //height: var(--mininavHeight);
+         background-color: var(--nav-color);
+         transition: width 900ms ease;
+         color: white;
+         margin-right: 1rem;
+         
+         nav, ul {
+             display: flex;
+             flex-direction: column;
+         }
+ 
+         & > nav {
+             overflow-x: hidden;
+             
+             > ul {
+                 --vHeight: 200px;
+                 --color-base: var(--nav-color);
+                 
+                 position: fixed;
+                 width: calc(var(--mininavWidth) + 1px);
+                 border-right: solid 1px var(--border-color);
+                 justify-content: space-between;
+                 align-items: flex-start;
+                 margin: 0;
+                 padding: 0;
+                 
+                 background-color: var(--color-base);
+                 overflow-x: hidden;
+                 overflow-y: scroll;
+                 
+                 &[superiores] {
+                     justify-content: flex-start;
+                     max-height: 90vh;
+                 }
+                 
+                 &[inferiores] {
+                     justify-content: flex-end;
+                 }
+                     
+                 & > li.plex-mininav-item {
+                     --color-base: #002738;
+                     --color-baseDark: #4C87A050;
+ 
+                     width: var(--mininavWidth);
+                     padding: .5rem .5rem .5rem 0;
+                     margin: 0;
+                     list-style: none;
+                     background-color: var(--color-base)!important;
+                     
+                     @include mininavItemHover;
+                 }
+             }
+             
+             plex-badge {
+                 opacity: 0;
+             }
+             plex-label > div.plex-label > div {
+                 opacity: 0;
+                 white-space: pre;
+             }
+         }
+ 
+         /* Botonera sidebar expandible */
+         > .nav-resizable-btn-wrapper {
+             display: none;
+             flex-direction: row;
+             justify-content: center;
+             align-items: center;
+             position: absolute;
+             z-index: 1;
+             left: calc(var(--mininavWidth) - .45rem);
+             top: calc(50vh - 5rem);
+             background: $light-grey;
+             box-shadow: 1px 1px 12px 3px $dark-grey;
+             width: 2.5rem;
+             height: 2.5rem;
+             border-top-right-radius: 25%;
+             border-bottom-right-radius: 25%;
+             transform: scale(.6);
+             cursor: col-resize!important;
+             opacity: .4;
+ 
+             &.resizable {
+                 display: flex!important;
+                 transition: all 900ms ease;
+             }
+ 
+             &:hover {
+                 opacity: 1;
+ 
+                 hr.divisor {
+                     height: 100vh;
+                     transition: height 1s ease;
+                     border: solid 2px $blue;
+                     left: 0;
+                 }
+             }
+             
+             hr.divisor {
+                 height: 2.5rem;
+                 position: absolute;
+             }
+         }
+         &.expanded {
+             --mininavWidth: 230px;
+ 
+             width: var(--mininavWidth);
+             > nav {
+                 overflow-x: visible;
+                 plex-badge {
+                     opacity: 1;
+                 }
+                 plex-label > div.plex-label > div {
+                     opacity: 1;
+                     transition: opacity 900ms ease-in;
+                 } 
+                 
+                 > ul > li.plex-mininav-item {
+                     width: var(--mininavWidth);
+                     transition: width 900ms ease-in;
+                 }
+             }
+ 
+             .nav-resizable-btn-wrapper {
+                 left: calc(var(--mininavWidth) - .45rem);
+             }
+         }
+ 
+ 
+     // TODO: Ajustes cards menu lateral desde PLEX
+     plex-card {
+         margin-top: 0!important;
+         > div {
+             padding: 0.5rem 1rem 0 0.5rem!important;
+             //border-bottom: solid 1px white;
+         }
+     }
+ 
+ }
 
-.logo-nav {
-    float: left;
-    background-color: var(--nav-bar-icon-color);
-    ;
-    width: 100px;
-    height: 50px;
-    padding: 7px;
-}
-nav .actions {
-    position: absolute;
-    right: 0;
-}
+ // Override para ajustar visualización de img en una card
+ plex-grid plex-card plex-detail img {
+    object-fit: cover!important;
+ }
 
-//@import 'app/modules/rup/assets/font.css';
+ // Override temporal hasta modificar componente plex-card ------------------------
+ plex-card > div.bg-filled-custom plex-button[modal] > button.btn {
+    color: white!important;
+    background: inherit!important;
+ }
 
-$adi-font-path: '~@andes/icons/fonts/';
-@import '~@andes/icons/scss/andes-icons';
-// Plex
-@import '~@andes/plex/src/lib/styles.scss';
+ plex-card plex-button[modal] {
 
-div[collapse] {
-    overflow-x: scroll;
-    overflow-y: hidden;
-    height: 140px;
-}
-
-#menu-vertical {
-    overflow-y: scroll;
-    height: 100vh;
-    max-width: 100px;
-}
-
-// TODO: Hacer mixins
-.color-producto {
-    color: $producto; 
-}
-
-.color-trastorno {
-    color: $trastorno;
-}
-
-.color-hallazgo {
-    color: $hallazgo; 
-}
-
-.color-procedimiento {
-    color: $procedimiento;
-}
-
-.color-laboratorio {
-    color: $laboratorio;
-}
-
-.color-solicitud {
-    color: $solicitud;
-}
-
-.color-otro {
-    color: $otro;
-}
-
-.color-registro {
-    color: $registro;
-}
-
-// registro
-.border-producto {
-    border: solid 1px $producto;
-    outline: none;;
-    border-collapse: collapse 
-}
-
-.border-trastorno {
-    border: solid 1px $trastorno;
-    outline: none;
-    border-collapse: collapse;
-}
-
-.border-hallazgo {
-    border: solid 1px $hallazgo;
-    outline: none;;
-    border-collapse: collapse 
-}
-
-.border-procedimiento {
-    border: solid 1px $procedimiento;
-    outline: none;
-    border-collapse: collapse;
-}
-
-.border-laboratorio {
-    border: solid 1px $laboratorio;
-    outline: none;
-    border-collapse: collapse;
-}
-
-.border-solicitud {
-    border: solid 1px $solicitud;
-    outline: none;
-    border-collapse: collapse;
-}
-
-.border-otro {
-    border: solid 1px $otro;
-    outline: none;
-    border-collapse: collapse;
-}
-
-.border-registro {
-    border: solid 1px $registro;
-    outline: none;
-    border-collapse: collapse;
-}
-
-// Backgrounds
-.bg-producto {
-    background-color: $producto; 
-}
-
-.bg-trastorno {
-    background-color:  $trastorno;
-}
-
-.bg-hallazgo {
-    background-color: $hallazgo; 
-}
-
-.bg-procedimiento {
-    background-color:  $procedimiento;
-}
-
-.bg-laboratorio {
-    background-color:  $laboratorio;
-}
-
-.bg-solicitud {
-    background-color:  $solicitud;
-}
-
-.bg-otro {
-    background-color:  $otro;
-}
-
-.bg-registro {
-    background-color: $registro;
-}
-
-// Helpers
-.no-margin {
-    margin: 0!important;
-}
-
-// Override
-plex-item section.item.custom-colors.selectable.selected {
-    background-color: #edf8fd!important;
-
-    &:hover {
-        color: black!important;
+    &[type="danger"] {
+        background-color: #dd4b39!important;
     }
-}
+
+    &[type="success"] {
+        background-color: #8cc63f!important;
+    }
+ }
+ // Fin override plex-card --------------------------------------------------------
+ 
+ // TODO: Hacer mixins
+ .color-producto {
+     color: $producto; 
+ }
+ 
+ .color-trastorno {
+     color: $trastorno;
+ }
+ 
+ .color-hallazgo {
+     color: $hallazgo; 
+ }
+ 
+ .color-procedimiento {
+     color: $procedimiento;
+ }
+ 
+ .color-laboratorio {
+     color: $laboratorio;
+ }
+ 
+ .color-solicitud {
+     color: $solicitud;
+ }
+ 
+ .color-otro {
+     color: $otro;
+ }
+ 
+ .color-registro {
+     color: $registro;
+ }
+ 
+ // registro
+ .border-producto {
+     border: solid 1px $producto;
+     outline: none;;
+     border-collapse: collapse 
+ }
+ 
+ .border-trastorno {
+     border: solid 1px $trastorno;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ .border-hallazgo {
+     border: solid 1px $hallazgo;
+     outline: none;;
+     border-collapse: collapse 
+ }
+ 
+ .border-procedimiento {
+     border: solid 1px $procedimiento;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ .border-laboratorio {
+     border: solid 1px $laboratorio;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ .border-solicitud {
+     border: solid 1px $solicitud;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ .border-otro {
+     border: solid 1px $otro;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ .border-registro {
+     border: solid 1px $registro;
+     outline: none;
+     border-collapse: collapse;
+ }
+ 
+ // Backgrounds
+ .bg-producto {
+     background-color: $producto; 
+ }
+ 
+ .bg-trastorno {
+     background-color:  $trastorno;
+ }
+ 
+ .bg-hallazgo {
+     background-color: $hallazgo; 
+ }
+ 
+ .bg-procedimiento {
+     background-color:  $procedimiento;
+ }
+ 
+ .bg-laboratorio {
+     background-color:  $laboratorio;
+ }
+ 
+ .bg-solicitud {
+     background-color:  $solicitud;
+ }
+ 
+ .bg-otro {
+     background-color:  $otro;
+ }
+ 
+ .bg-registro {
+     background-color: $registro;
+ }
+ 
+ // Helpers
+ .no-margin {
+     margin: 0!important;
+ }
+ 
+ // Override
+ plex-item section.item.custom-colors.selectable.selected {
+     background-color: #edf8fd!important;
+ 
+     &:hover {
+         color: black!important;
+     }
+ }
+ 
+ .size-sm {
+     plex-card > .card {
+         padding: .25rem!important;
+     }
+ }
