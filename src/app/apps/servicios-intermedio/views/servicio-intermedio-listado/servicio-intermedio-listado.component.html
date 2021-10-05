@@ -1,0 +1,52 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title main titulo="Reglas Servicio Intermedio">
+            <plex-button type="success" size="sm" (click)="onNuevo()"> NUEVO </plex-button>
+        </plex-title>
+        <plex-table [columns]="columns" #table="plTable" [offset]="0">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let regla of reglas$ | async">
+                <td *plTableCol="'organizacion-origen'">
+                    <plex-label>
+                        {{ regla.origen.organizacion.nombre }}
+                    </plex-label>
+                </td>
+                <td *plTableCol="'prestacion-origen'">
+                    <plex-label *ngIf="regla.origen.prestaciones">
+                        {{ regla.origen.prestaciones[0].prestacion.term }}
+                    </plex-label>
+                    <plex-label *ngIf="!regla.origen.prestaciones">
+                        *
+                    </plex-label>
+                </td>
+                <td *plTableCol="'organizacion-destino'">
+                    <plex-label>
+                        {{ regla.destino.organizacion.nombre }}
+                    </plex-label>
+                </td>
+                <td *plTableCol="'prestacion-destino'">
+                    <plex-label>
+                        {{
+                        (
+                        regla.destino.prestacion.length ?
+                        regla.destino.prestacion[0] :
+                        regla.destino.prestacion
+                        )
+                        .term
+                        }}
+                    </plex-label>
+                </td>
+                <td *plTableCol="'servicio-intermedio'">
+                    <plex-label>
+                        {{ regla.destino.servicioIntermedioId | servicioName | async }}
+                    </plex-label>
+                </td>
+                <td>
+                    <plex-button type="warning" icon="pencil" (click)="OnEdit(regla)"></plex-button>
+                </td>
+            </tr>
+        </plex-table>
+    </plex-layout-main>
+
+</plex-layout>

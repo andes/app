@@ -157,6 +157,8 @@ const appRoutes: Routes = [
         runGuardsAndResolvers: 'always'
     },
 
+
+
     // Principal
     { path: 'auth', loadChildren: () => import('./apps/auth/auth.module').then(m => m.AuthAppModule) },
     { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -179,6 +181,12 @@ const appRoutes: Routes = [
     { path: 'novedades/:modulo/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'vacunacion', loadChildren: () => import('./apps/vacunacion/vacunacion.module').then(m => m.VacunacionModule), canActivate: [] },
+
+    {
+        path: 'servicio-intermedio',
+        loadChildren: () => import('./apps/servicios-intermedio/servicios-intermedio.module').then(m => m.ServicioIntermedioModule),
+        canActivate: [RoutingNavBar, RoutingGuard]
+    },
 
     // Inscripcion de profesionales
     { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar] },

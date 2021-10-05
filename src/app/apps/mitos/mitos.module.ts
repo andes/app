@@ -1,14 +1,15 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { PlexModule } from '@andes/plex';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { PlexModule } from '@andes/plex';
-
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { SelectExpressionDirective } from './directives/select-expression/select-expression.directive';
-
-import { SnomedService } from './services/snomed.service';
+import { SelectSemanticDirective } from './directives/select-semantic/select-semantic.directive';
 import { Cie10Service } from './services/cie10.service';
+import { SnomedService } from './services/snomed.service';
+
+
 
 
 @NgModule({
@@ -20,11 +21,13 @@ import { Cie10Service } from './services/cie10.service';
         HttpClientModule,
     ],
     declarations: [
-        SelectExpressionDirective
+        SelectExpressionDirective,
+        SelectSemanticDirective
     ],
     providers: [],
     exports: [
-        SelectExpressionDirective
+        SelectExpressionDirective,
+        SelectSemanticDirective
     ]
 })
 export class MitosModule {
