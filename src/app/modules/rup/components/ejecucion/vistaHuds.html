@@ -25,6 +25,48 @@
                     <plex-tab label="Accesos a la HUDS" [allowClose]="false">
                         <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
                     </plex-tab>
+                    <plex-tab label="Listado Internacion" [allowClose]="false">
+
+                        <plex-table [columns]="columns" #table="plTable">
+
+                            <plex-table-columns>
+                            </plex-table-columns>
+
+
+                            <tr *ngFor="let internacion of (internacione$ | plSort:table | async)" class="selectable"
+                                [class.selected]="internacion.id === idInternacionSelected"
+                                (click)="seleccionarPrestacion(internacion)">
+                                <td *plTableCol="'organizacion'">{{internacion.ejecucion.organizacion.nombre}}</td>
+                                <td *plTableCol="'unidad_organizativa'">{{internacion.unidadOrganizativa.term}}</td>
+
+                                <td *plTableCol="'fechaIngreso'">
+                                    {{ internacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | fecha }}
+                                    {{ internacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | hora }}
+                                </td>
+                                <td *plTableCol="'fechaEgreso'">
+                                    <span *ngIf="internacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso ">
+                                        {{ internacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso | fecha
+                                        }}
+                                        {{internacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso | hora }}
+                                    </span>
+                                </td>
+                                <td *plTableCol="'razon_alta'">
+                                    <span
+                                          *ngIf="internacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso.nombre ">
+                                        {{internacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso.nombre}}
+                                    </span>
+                                </td>
+                                <td *plTableCol="'accion'">
+                                    <plex-button label="Exploracion" tooltip="Exploracion Visual" type="info" size="sm"
+                                                 (click)="gotoExploracionVisual(internacion.id)">
+                                    </plex-button>
+                                </td>
+
+                            </tr>
+                        </plex-table>
+
+                    </plex-tab>
+
                 </plex-tabs>
             </plex-tab>
             <ng-container *ngFor="let registro of registros">

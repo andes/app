@@ -3,6 +3,8 @@ import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
@@ -25,11 +27,55 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
     public activeIndexResumen = 0;
-
+    public internacione$: Observable<any[]>;
     public registros = [];
-
+    public ambito;
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
+    public columns = [
+        {
+            key: 'organizacion',
+            label: 'Organizacion',
+            sorteable: true,
+            opcional: true,
+
+        },
+        {
+            key: 'unidad_organizativa',
+            label: 'Servicio',
+            sorteable: true,
+            opcional: true,
+
+        },
+        {
+            key: 'fechaIngreso',
+            label: 'Fecha Ingreso',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.fechaIngreso.getTime() - b.fechaIngreso.getTime()
+        },
+        {
+            key: 'fechaEgreso',
+            label: 'Fecha Egreso',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.fechaEgreso.getTime() - b.fechaEgreso.getTime()
+        },
+        {
+            key: 'razon_alta',
+            label: 'razon alta',
+            sorteable: true,
+            opcional: true,
+        },
+        {
+            key: 'accion',
+            label: 'accion',
+            sorteable: true,
+            opcional: true,
+        },
+
+    ];
+
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -42,7 +88,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
-        private location: Location
+        private location: Location,
+        private serviceMapaCamasHTTP: MapaCamasHTTP
     ) { }
 
     /**
@@ -62,6 +109,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             this.redirect('inicio');
         }
 
+        // cargar las internaciones y armar un filtro en api .
+
+        this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
                 this.activeIndexPrestacion = datos.length + 1;
@@ -80,6 +130,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
+                    const filtros = {
+                        idPaciente: id
+                    };
+                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
@@ -133,6 +187,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
     }
 
+
+    gotoExploracionVisual(idInternacion) {
+        this.router.navigate([`/mapa-camas/${this.ambito}/estadistica/resumen/${idInternacion}`]);
+
+    }
 
 
 }
