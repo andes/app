@@ -1,13 +1,26 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, ElementRef } from '@angular/core';
 import { EstAgendasService } from '../../services/agenda.service';
+import { Plex } from '@andes/plex';
 
 
 @Component({
     templateUrl: 'graficos.html',
-    selector: 'graph-table'
+    selector: 'graph-table',
+    styles: [`
+        .graphPadre {
+            position: relative;
+            width: 80%;
+        }
+        .graphHijo {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 45%;
+        }
+    `]
 })
 
-export class GraficosComponent implements OnInit {
+export class GraficosComponent {
     private _data: any;
     @Input() titulo = '';
     @Input() type = 'bar';
@@ -30,6 +43,8 @@ export class GraficosComponent implements OnInit {
     @Input() filtros;
     @Input() dashboard;
 
+    @ViewChildren('extradata') extradata: any;
+
     public leyenda = '';
     private DATA_MAX = 20;
     public dataTable = [];
@@ -37,6 +52,11 @@ export class GraficosComponent implements OnInit {
     public labelsGraph = [];
     public dataTableTotal = 0;
     public requestInProgress: boolean;
+    public showExtras = false;
+    public extras;
+    public extraLabels = [];
+    public extraData = [];
+
     public barOptions = {
         legend: { display: false },
         scales: {
@@ -75,11 +95,7 @@ export class GraficosComponent implements OnInit {
         ]
     }];
 
-    constructor(public estService: EstAgendasService) { }
-
-
-    ngOnInit() {
-    }
+    constructor(public estService: EstAgendasService, private plex: Plex) { }
 
     descargar(value) {
         if (this.filtros) {
@@ -99,6 +115,15 @@ export class GraficosComponent implements OnInit {
         this.dataGraph = [];
         this.labelsGraph = [];
         this.dataTableTotal = 0;
+    }
+
+    changeShowExtras(active: any) {
+        this.extras = this.dataTable.find(item => item.nombre === active[0]._model.label)?.extras;
+        if (this.extras?.length) {
+            this.extraLabels = this.extras.map(item => item.nombre);
+            this.extraData = this.extras.map(item => item.count);
+            this.showExtras = !this.showExtras;
+        }
     }
 
     cargarResultados(data) {
