@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { SolicitudesTopService } from '../../services/top.service';

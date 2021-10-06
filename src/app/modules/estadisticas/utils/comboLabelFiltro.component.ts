@@ -23,7 +23,8 @@ const tipoTurnos = [
     { id: 'gestion', nombre: 'Con llave' },
     { id: 'profesional', nombre: 'Profesional' },
     { id: 'sobreturno', nombre: 'Sobreturno' },
-    { id: 'appMobile', nombre: 'App Mobile' }
+    { id: 'appMobile', nombre: 'App Mobile' },
+    { id: 'Sin asignar', nombre: 'Sin asignar' }
 ];
 
 const labels = estadosAgendas.concat(estadosTurnos).concat(tipoTurnos);
@@ -52,6 +53,7 @@ export function getRefactorNombre(data) {
         Object.keys(data).map(t =>
             data[t].nombre = nuevoArrayLabels[data[t]._id]
         );
+
     }
     return data;
 }
