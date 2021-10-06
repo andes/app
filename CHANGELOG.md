@@ -1,3 +1,20 @@
+# [5.67.0](https://github.com/andes/app/compare/v5.66.0...v5.67.0) (2021-10-06)
+
+
+### Bug Fixes
+
+* **BI:** filtro organizacion ([#2470](https://github.com/andes/app/issues/2470)) ([b6111d4](https://github.com/andes/app/commit/b6111d4cc92fe149191280809dc08cb49c8047f8))
+* **cit:** validaciones de turnos ventanilla virtual ([#2465](https://github.com/andes/app/issues/2465)) ([fc7b6de](https://github.com/andes/app/commit/fc7b6de620dde57e2a108651ca8f478cd0a8e872))
+* **CIT:** evita traer registros de internacion ([#2484](https://github.com/andes/app/issues/2484)) ([26ed6c4](https://github.com/andes/app/commit/26ed6c4f42320a19f7634de2ce825b4d4f7fcdd7))
+* **RUP:** error,propiedad id indefinida ([#2475](https://github.com/andes/app/issues/2475)) ([29e0b5c](https://github.com/andes/app/commit/29e0b5c45e805ba54b0a704f98ec2dbaaebe36dc))
+
+
+### Features
+
+* **EP:** habilitar priorizacion a seguimiento ([#2476](https://github.com/andes/app/issues/2476)) ([8c877b9](https://github.com/andes/app/commit/8c877b99233267731307d058d85711c3705ab3e7))
+* **RUP:** agrega concepto en select ([#2469](https://github.com/andes/app/issues/2469)) ([d8c934d](https://github.com/andes/app/commit/d8c934da78706f7c9da9bb7badfe59ca8cf3d9d9))
+* **top:** abm de servicio intermedios ([#2430](https://github.com/andes/app/issues/2430)) ([05cb7cb](https://github.com/andes/app/commit/05cb7cb72779558e99f282331cf995c51eafb551))
+
 # [5.66.0](https://github.com/andes/app/compare/v5.65.0...v5.66.0) (2021-09-29)
 
 
