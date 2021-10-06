@@ -1,29 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 
 @Component({
     selector: 'app-mapa-camas-main',
-    template: '',
+    templateUrl: './mapa-camas-main.component.html'
 })
 
 export class MapaCamasMainComponent implements OnInit {
+    public perfiles = [
+        { id: 'medica', label: 'Médico' },
+        { id: 'enfermeria', label: 'Enfermero' },
+        { id: 'estadistica', label: 'Estadístico' }
+    ];
     constructor(
         public auth: Auth,
         private router: Router,
-        private elementosRUP: ElementosRUPService,
         private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
         const ambito = this.route.snapshot.paramMap.get('ambito');
-
         const permisosInternacion = this.auth.getPermissions(`${ambito}:rol:?`);
-        if (permisosInternacion.length === 1 && permisosInternacion[0] !== '*') {
-            this.router.navigate([this.router.url, permisosInternacion[0]], { replaceUrl: true });
+        if (permisosInternacion[0] === '*' || permisosInternacion.length) {
+            if (permisosInternacion.length === 1 && permisosInternacion[0] !== '*') {
+                this.router.navigate([this.router.url, permisosInternacion[0]], { replaceUrl: true });
+            } else {
+                if (permisosInternacion[0] !== '*') {
+                    this.perfiles = this.perfiles.filter(perfil => permisosInternacion.indexOf(perfil.id) !== -1);
+                }
+            }
         } else {
             this.router.navigate(['/inicio']);
         }
+    }
+
+    volver() {
+        this.router.navigate(['/inicio']);
+    }
+
+    ingresar(perfil) {
+        this.router.navigate([this.router.url, perfil], { replaceUrl: true });
     }
 }

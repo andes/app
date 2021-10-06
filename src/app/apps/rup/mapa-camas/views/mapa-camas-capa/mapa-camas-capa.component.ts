@@ -123,7 +123,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         const capa = this.route.snapshot.paramMap.get('capa');
         const permisosInternacion = this.auth.getPermissions(`${ambito}:rol:?`);
-        if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
+        if (permisosInternacion.length >= 1 && permisosInternacion.indexOf(capa) !== -1) {
             this.mapaCamasService.setCapa(capa);
         } else {
             this.router.navigate(['/inicio']);
