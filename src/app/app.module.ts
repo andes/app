@@ -21,7 +21,7 @@ import { Plex, PlexModule } from '@andes/plex';
 import { AuthContext, Server, ServerErrorHandler, SharedModule } from '@andes/shared';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import localeEs from '@angular/common/locales/es';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -193,6 +193,7 @@ import { SugerenciasService } from './services/sendmailsugerencias.service';
 import { SIISAService } from './services/siisa.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
+import { TokenExpiredInterceptor } from './services/token-expired.interceptor';
 import { ReglaService } from './services/top/reglas.service';
 import { AgendaService } from './services/turnos/agenda.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
@@ -409,7 +410,14 @@ registerLocaleData(localeEs, 'es');
             useValue: {
                 siteKey: environment.SITE_KEY,
             } as RecaptchaSettings,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenExpiredInterceptor,
+            multi: true,
         }
+
+
     ]
 })
 
