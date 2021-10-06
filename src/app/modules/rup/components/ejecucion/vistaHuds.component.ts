@@ -37,35 +37,34 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             key: 'organizacion',
             label: 'Organizacion',
             sorteable: true,
-            opcional: true,
+            opcional: true
+
 
         },
         {
             key: 'unidad_organizativa',
             label: 'Servicio',
             sorteable: true,
-            opcional: true,
+            opcional: true
 
         },
         {
             key: 'fechaIngreso',
             label: 'Fecha Ingreso',
             sorteable: true,
-            opcional: true,
-            sort: (a: any, b: any) => a.fechaIngreso.getTime() - b.fechaIngreso.getTime()
+            opcional: true
         },
         {
             key: 'fechaEgreso',
             label: 'Fecha Egreso',
             sorteable: true,
-            opcional: true,
-            sort: (a: any, b: any) => a.fechaEgreso.getTime() - b.fechaEgreso.getTime()
+            opcional: true
         },
         {
             key: 'razon_alta',
             label: 'razon alta',
             sorteable: true,
-            opcional: true,
+            opcional: true
         },
         {
             key: 'accion',
@@ -130,7 +129,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
+                    // carga todas las internaciones del paciente
                     const filtros = {
+                        fechaIngresoDesde: moment('2016-01-01').toDate(),
                         idPaciente: id
                     };
                     this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
