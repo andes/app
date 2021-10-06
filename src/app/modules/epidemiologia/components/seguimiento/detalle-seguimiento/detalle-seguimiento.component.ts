@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 export class DetalleSeguimientoComponent {
     @Input() seguimiento;
     @Output() close: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selectLlamado = new EventEmitter<any>();
 
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 

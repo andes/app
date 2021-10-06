@@ -119,10 +119,11 @@
         </vista-prestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
-        <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()">
+        <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
+            (selectLlamado)="verLlamado($event)">
         </detalle-seguimiento>
         <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
-                                (save)="reload()"></actualizar-seguimiento>
+            (save)="reload()"></actualizar-seguimiento>
     </plex-layout-sidebar>
     <plex-layout-sidebar *ngIf="showAsingar" type="invert">
         <asignar-seguimientos (close)="closeSideBar()" (save)="asignarProfesional($event)"></asignar-seguimientos>
