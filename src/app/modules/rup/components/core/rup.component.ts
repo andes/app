@@ -1,37 +1,36 @@
 import { Auth } from '@andes/auth';
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
-import { Plex } from '@andes/plex';
-import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2, Optional, OnDestroy } from '@angular/core';
-import { ConceptObserverService } from './../../services/conceptObserver.service';
-import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
+import { Plex, PlexVisualizadorService } from '@andes/plex';
+import { calcularEdad } from '@andes/shared';
+import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, QueryList, Renderer2, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Engine } from 'json-rules-engine';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { DriveService } from 'src/app/services/drive.service';
+import { SnomedService } from '../../../../apps/mitos';
+import { Cie10Service } from '../../../../apps/mitos/services/cie10.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { ReglaService } from '../../../../services/top/reglas.service';
+import { VacunasService } from '../../../../services/vacunas.service';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { AdjuntosService } from '../../services/adjuntos.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SnomedService } from '../../../../apps/mitos';
-import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
-import { FinanciadorService } from '../../../../services/financiador.service';
-import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
-import { Cie10Service } from '../../../../apps/mitos/services/cie10.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { ElementosRUPRegister } from '../elementos';
-import { ActivatedRoute } from '@angular/router';
-import { ReglaService } from '../../../../services/top/reglas.service';
-import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
-import { PlantillasService } from '../../services/plantillas.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
-import { VacunasService } from '../../../../services/vacunas.service';
-import { Engine } from 'json-rules-engine';
-import { calcularEdad } from '@andes/shared';
-import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
-import { DriveService } from 'src/app/services/drive.service';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { PlexVisualizadorService } from '@andes/plex';
+import { PlantillasService } from '../../services/plantillas.service';
+import { ElementosRUPRegister } from '../elementos';
+import { ProfesionalService } from './../../../../services/profesional.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
     selector: 'rup',
@@ -284,7 +283,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get isValid() {
         if (this.rupInstance) {
-            return !this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid);
+            return (!this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid) ) && this.rupInstance.onValidate();
         }
         return true;
     }
