@@ -10,7 +10,6 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { LogService } from '../../../../services/log.service';
 import { HUDSService } from '../../services/huds.service';
-import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 
@@ -29,51 +28,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public activeIndexResumen = 0;
     public internacione$: Observable<any[]>;
     public registros = [];
-    public ambito;
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
-    public columns = [
-        {
-            key: 'organizacion',
-            label: 'Organizacion',
-            sorteable: true,
-            opcional: true
 
-
-        },
-        {
-            key: 'unidad_organizativa',
-            label: 'Servicio',
-            sorteable: true,
-            opcional: true
-
-        },
-        {
-            key: 'fechaIngreso',
-            label: 'Fecha Ingreso',
-            sorteable: true,
-            opcional: true
-        },
-        {
-            key: 'fechaEgreso',
-            label: 'Fecha Egreso',
-            sorteable: true,
-            opcional: true
-        },
-        {
-            key: 'razon_alta',
-            label: 'razon alta',
-            sorteable: true,
-            opcional: true
-        },
-        {
-            key: 'accion',
-            label: 'accion',
-            sorteable: true,
-            opcional: true,
-        },
-
-    ];
 
 
     constructor(
@@ -84,7 +41,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
         private location: Location,
@@ -109,8 +65,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         }
 
         // cargar las internaciones y armar un filtro en api .
-
-        this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
                 this.activeIndexPrestacion = datos.length + 1;
@@ -186,12 +140,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     onExploracionClick() {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
-    }
-
-
-    gotoExploracionVisual(idInternacion) {
-        this.router.navigate([`/mapa-camas/${this.ambito}/estadistica/resumen/${idInternacion}`]);
-
     }
 
 
