@@ -15,7 +15,7 @@
                     </plex-button>
                 </div>
             </plex-detail>
-            <plex-wrapper span="{{ pacienteSelected ? '2' : 'null' }}" (change)="changeCollapse($event)">
+            <plex-wrapper span="{{ pacienteSelected ? '2' : '3' }}" (change)="changeCollapse($event)">
                 <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
                                [max]="fechaHasta">
                 </plex-datetime>
