@@ -18,7 +18,7 @@
                     <td *plTableCol="'fecha'">{{llamado.fecha | date:"dd/MM/yyy HH:mm"}}</td>
                     <td *plTableCol="'registro'">{{llamado.tipoPrestacion}}</td>
                     <td *plTableCol="'acciones'">
-                        <plex-button size="sm" type="info" icon="eye" (click)="verLlamado.emit(llamado.idPrestacion)">
+                        <plex-button size="sm" type="info" icon="eye" (click)="selectLlamado.emit(llamado.idPrestacion)">
                         </plex-button>
                     </td>
                 </tr>
