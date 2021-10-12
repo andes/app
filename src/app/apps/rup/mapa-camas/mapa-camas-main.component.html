@@ -1,0 +1,17 @@
+<!-- MODAL: Selección de capa de mapa de camas -->
+<plex-modal size="sm" #modal [startOpen]="true" [allowEscClose]="false" [allowBackdropClose]="false">
+    <plex-icon name="account-circle" type="warning mt-5 mb-2"></plex-icon>
+    <plex-modal-title type="default">Selección de perfil</plex-modal-title>
+    <plex-modal-subtitle center class="font-subtitle text-muted text-center">
+        Debe elegir un perfil para ingresar
+    </plex-modal-subtitle>
+    <main>
+        <section class="w-100 h-100">
+            <plex-button *ngFor="let perfil of perfiles" type="info mb-2" size="block" (click)="ingresar(perfil.id)">
+                {{perfil.label}}</plex-button>
+        </section>
+    </main>
+    <plex-button modal right type="danger" (click)="volver()">
+        CANCELAR
+    </plex-button>
+</plex-modal>
