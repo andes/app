@@ -17,6 +17,7 @@ import { ResumenPacienteDinamicoNinoComponent } from './components/ejecucion/res
 import { ResumenPacienteDinamicoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteEstaticoComponent } from './components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { VistaAccesosHudsComponent } from './components/huds/vista-accesos-huds.component';
+import { ListadoInternacionHudsComponent } from './components/huds/listado-internacion-huds.component';
 import { VistaIPSComponent } from './components/huds/vista-ips.component';
 import { VistaCDAComponent } from './components/huds/vistaCDA.component';
 import { VistaContextoPrestacionComponent } from './components/huds/vistaContextoPrestacion';
@@ -59,7 +60,8 @@ import { RUPLibModule } from './rup-lib.module';
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
-        HudsBusquedaComponent
+        HudsBusquedaComponent,
+        ListadoInternacionHudsComponent
     ],
     exports: [
         VistaCDAComponent,
@@ -74,7 +76,8 @@ import { RUPLibModule } from './rup-lib.module';
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
-        HudsBusquedaComponent
+        HudsBusquedaComponent,
+        ListadoInternacionHudsComponent
     ],
 })
 export class HUDSLibModule {

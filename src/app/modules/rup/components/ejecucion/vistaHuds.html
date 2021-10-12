@@ -25,6 +25,15 @@
                     <plex-tab label="Accesos a la HUDS" [allowClose]="false">
                         <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
                     </plex-tab>
+                    <ng-container *ngIf="internacione$ | async as internaciones">
+                        <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
+
+                            <listado-internacion-huds [internaciones]="internaciones">
+                            </listado-internacion-huds>
+
+                        </plex-tab>
+                    </ng-container>
+
                 </plex-tabs>
             </plex-tab>
             <ng-container *ngFor="let registro of registros">

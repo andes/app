@@ -3,12 +3,13 @@ import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { MapaCamasHTTP } from 'src/app/apps/rup/mapa-camas/services/mapa-camas.http';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { LogService } from '../../../../services/log.service';
 import { HUDSService } from '../../services/huds.service';
-import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 
@@ -25,11 +26,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     paciente: IPaciente = null;
     public activeIndexPrestacion = 0;
     public activeIndexResumen = 0;
-
+    public internacione$: Observable<any[]>;
     public registros = [];
-
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
+
+
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -39,10 +41,10 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
         public huds: HUDSService,
-        private location: Location
+        private location: Location,
+        private serviceMapaCamasHTTP: MapaCamasHTTP
     ) { }
 
     /**
@@ -62,6 +64,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             this.redirect('inicio');
         }
 
+        // cargar las internaciones y armar un filtro en api .
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
                 this.activeIndexPrestacion = datos.length + 1;
@@ -80,6 +83,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
+                    // carga todas las internaciones del paciente
+                    const filtros = {
+                        fechaIngresoDesde: moment('2016-01-01').toDate(),
+                        idPaciente: id
+                    };
+                    this.internacione$ = this.serviceMapaCamasHTTP.getPrestacionesInternacion(filtros);
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
             });
@@ -132,7 +141,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     onExploracionClick() {
         this.router.navigate(['huds', 'timeline', this.paciente.id]);
     }
-
 
 
 }
