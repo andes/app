@@ -154,7 +154,7 @@
                              label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
                 </plex-button>
                 <plex-button *ngIf="agendaSeleccionada?.link" type="primary" name="link" size="sm"
-                             (click)="linkVideollamada(agendaSeleccionada.link)">
+                             (click)="linkVideollamada(agendaSeleccionada.link)" tooltip="sala virtual">
                     <plex-icon name="monitor"></plex-icon>
                 </plex-button>
 
@@ -350,6 +350,13 @@
                                                      label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
                                                      (click)="invalidarPrestacion(turno.prestacion, agendaSeleccionada.dinamica ? turno.id : false)">
                                         </plex-button>
+                                        <plex-button size="block"
+                                                     *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== turno.link"
+                                                     label="ACCESO PLATAFORMA VIRTUAL"
+                                                     tooltip="acceso directo a video llamada" type="primary btn-sm"
+                                                     icon="monitor" (click)="linkVideollamada(turno.link)">
+                                        </plex-button>
+
 
                                     </ng-container>
                                     <ng-container *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
@@ -522,6 +529,12 @@
                                                          *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
                                                          label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
                                                          (click)="invalidarPrestacion(sobreturno.prestacion)">
+                                            </plex-button>
+                                            <plex-button size="block"
+                                                         *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== sobreturno.link"
+                                                         label="ACCESO PLATAFORMA VIRTUAL"
+                                                         tooltip="acceso directo a video llamada" type="primary btn-sm"
+                                                         icon="monitor" (click)="linkVideollamada(sobreturno.link)">
                                             </plex-button>
 
                                         </ng-container>
