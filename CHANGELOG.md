@@ -1,3 +1,19 @@
+# [5.68.0](https://github.com/andes/app/compare/v5.67.0...v5.68.0) (2021-10-13)
+
+
+### Bug Fixes
+
+* **EP:** bug plex grid buscador ([#2494](https://github.com/andes/app/issues/2494)) ([3b64a58](https://github.com/andes/app/commit/3b64a58d4eb991663e2dff5fe47f27634faec45f))
+* **EP:** bug ver llamado ([#2493](https://github.com/andes/app/issues/2493)) ([c5a3918](https://github.com/andes/app/commit/c5a39184d10bfe1cfe7e3e7be9850412e3d377ff))
+* **rup:** validacion de seccion ([#2489](https://github.com/andes/app/issues/2489)) ([5c2115c](https://github.com/andes/app/commit/5c2115c2cbf5ff305131df263894050e2f094b3c))
+
+
+### Features
+
+* **auth:** catch fin de session ([#2485](https://github.com/andes/app/issues/2485)) ([0e5d14a](https://github.com/andes/app/commit/0e5d14a135266cc7cd61f49b2076bc7137cde074))
+* **citas:** consultorio virtual, links especificos en punto inicio rup ([#2481](https://github.com/andes/app/issues/2481)) ([c84d70d](https://github.com/andes/app/commit/c84d70daba80a5ba73dd390468365ecdef047dc7))
+* **mapa-camas:** en caso de tener más de un rol en mis permisos, elegir como entrar a mapa de camas ([#2492](https://github.com/andes/app/issues/2492)) ([e968ac6](https://github.com/andes/app/commit/e968ac69433494095530dd20ff404b14aff0b518))
+
 # [5.67.0](https://github.com/andes/app/compare/v5.66.0...v5.67.0) (2021-10-06)
 
 
