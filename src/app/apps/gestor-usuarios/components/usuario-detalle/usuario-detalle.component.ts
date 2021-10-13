@@ -40,7 +40,7 @@ export class UsuarioDetalleComponent implements OnChanges {
     getProfesional(user) {
         return this.profesionalService.get({
             documento: user.usuario,
-            fields: 'id documento nombre apellido profesionalMatriculado formacionGrado'
+            fields: 'id documento nombre apellido profesionalMatriculado formacionGrado matriculaExterna profesionExterna'
         });
     }
 

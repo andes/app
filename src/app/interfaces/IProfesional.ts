@@ -78,4 +78,6 @@ export interface IProfesional {
         fechaDeInscripcion?: Date;
     }];
     profesionalMatriculado: Boolean;
+    profesionExterna: any;
+    matriculaExterna: String;
 }
