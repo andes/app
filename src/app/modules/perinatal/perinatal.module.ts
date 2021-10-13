@@ -14,6 +14,7 @@ import { HistorialPerinatalComponent } from './components/historial-perinatal.co
 import { AlertasPerinatalComponent } from './components/alertas-perinatal.component';
 import { DetallePerinatalComponent } from './components/detalle-perinatal.component';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { NotasEmbarazoComponent } from './components/notas-embarazo.component';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         ListadoPerinatalComponent,
         HistorialPerinatalComponent,
         AlertasPerinatalComponent,
-        DetallePerinatalComponent
+        DetallePerinatalComponent,
+        NotasEmbarazoComponent
     ],
     providers: [
         CarnetPerinatalService

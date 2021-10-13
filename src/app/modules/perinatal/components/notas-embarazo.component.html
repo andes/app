@@ -1,0 +1,37 @@
+<plex-title titulo="Notas" size="sm">
+    <plex-button *ngIf="showForm" label="Cancelar" size="sm mr-1" type="danger" (click)="cerrar()">
+    </plex-button>
+    <plex-button *ngIf="showForm" label="Guardar" type="success" size="sm" (click)="guardar()"
+                 [disabled]="!formularioNota?.valid">
+    </plex-button>
+    <plex-button *ngIf="!showForm && !carnet.nota" label="Agregar nota" type="success" size="sm" class='mr-1'
+                 (click)="agregarNota()"></plex-button>
+</plex-title>
+<form #formularioNota="ngForm" class="mr-1">
+    <plex-table *ngIf="carnet.nota && !showForm">
+        <tr>
+            <td>
+                <plex-label icon="documento" size="md" titulo="{{carnet.nota}}"></plex-label>
+            </td>
+            <td>
+                <plex-button size="sm" type="danger" icon="cesto" class="float-right" tooltip="Eliminar"
+                             (click)="eliminar()">
+                </plex-button>
+                <plex-button size="sm" type="warning" icon="pencil" class="float-right" tooltip="Editar"
+                             (click)="editarNota()">
+                </plex-button>
+            </td>
+        </tr>
+    </plex-table>
+    <plex-grid *ngIf="!carnet.nota && !showForm">
+        <section>
+            <div class="d-flex justify-content-start align-items-center">
+                <plex-label icon="informacion" type="warning" size="md" direction="row" titulo="No hay ninguna nota aún"
+                            subtitulo="Para agregar una nota presioná el botón AGREGAR NOTA"></plex-label>
+            </div>
+        </section>
+    </plex-grid>
+    <plex-text label="Ingrese nota" *ngIf="showForm" [(ngModel)]="nota" name="notaText" grow="full" [required]="true"
+               multiline="true" (change)="cleanSpaces()">
+    </plex-text>
+</form>
