@@ -52,7 +52,7 @@ export class GraficosComponent {
     public labelsGraph = [];
     public dataTableTotal = 0;
     public requestInProgress: boolean;
-    public showExtras = false;
+    public extraTitle = '';
     public extras;
     public extraLabels = [];
     public extraData = [];
@@ -118,16 +118,18 @@ export class GraficosComponent {
     }
 
     changeShowExtras(active: any) {
-        this.extras = this.dataTable.find(item => item.nombre === active[0]._model.label)?.extras;
+        this.extras = this.dataTable.find(item => item.nombre === active[0]?._model.label)?.extras;
         if (this.extras?.length) {
             this.extraLabels = this.extras.map(item => item.nombre);
             this.extraData = this.extras.map(item => item.count);
-            this.showExtras = !this.showExtras;
+            this.extraTitle = this.extraTitle === active[0]._model.label ? '' : active[0]._model.label;
         }
     }
 
     cargarResultados(data) {
         if (data && data.length > 0 && data[0].count > 0 && this.filtros) {
+            this.extras = null;
+            this.extraTitle = '';
             if (this.type === 'bar') {
                 this.leyenda = '';
                 if (data.length > this.DATA_MAX) {
