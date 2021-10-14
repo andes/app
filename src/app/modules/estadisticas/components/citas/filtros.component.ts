@@ -1,6 +1,5 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
-import { Plex } from '@andes/plex';
+import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, OnInit } from '@angular/core';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import * as loadCombos from '../../utils/comboLabelFiltro.component';
@@ -8,55 +7,33 @@ import * as loadCombos from '../../utils/comboLabelFiltro.component';
 @Component({
     selector: 'turnos-filtros',
     template: `
-    <div class="row">
-        <div class="col-2">
-            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" [required]="true"></plex-select>
-        </div>
-        <div class="col-2">
-            <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
-        </div>
-        <div class="col-2">
-            <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
-        </div>
-        <div class="col-2 d-flex align-items-end">
-            <plex-button type="success mb-1" label="Buscar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
-        </div>
-        <div class="col-1 offset-2 d-flex align-items-end">
-            <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'chart-pie' : 'table-large'"
-                class="m-1" (click)="changeTablaGrafico()"></plex-button>
-            <plex-button class="m-1" [title]="mostrarMasOpciones ? 'Ocultar filtros' : 'Ver más filtros'" type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-                (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
-        </div>
-    </div>
-    <div class="row" *ngIf="mostrarMasOpciones">
-        <div class="col-3">
+    <plex-wrapper>
+        <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" [required]="true"></plex-select>
+        <plex-datetime label="Desde" [max]="hasta" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
+        <plex-datetime label="Hasta" [min]="desde" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
+        <plex-button type="success" label="Buscar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
+        <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'chart-pie' : 'table-large'"
+                (click)="changeTablaGrafico()"></plex-button>
+        <div collapse>
             <plex-select [multiple]="true"
                          [(ngModel)]="seleccion.prestacion"
                          tmPrestaciones="visualizacionInformacion:dashboard:citas:tipoPrestacion:?" preload="true" name="prestaciones"
                             label="Prestación" >
             </plex-select>
-        </div>
-        <div class="col-3" *ngIf="verProfesionales">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesional" name="profesional" (getData)="loadProfesionales($event)"
+            <plex-select *ngIf="verProfesionales" [multiple]="true" [(ngModel)]="seleccion.profesional" name="profesional" (getData)="loadProfesionales($event)"
                 label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
             </plex-select>
-        </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
-            <plex-select [multiple]="true" [data]="estadoTurnos" [(ngModel)]="seleccion.estado_turno" placeholder="Seleccione..." label="Estado">
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true" [data]="estadoTurnos" [(ngModel)]="seleccion.estado_turno" placeholder="Seleccione..." label="Estado">
+            </plex-select>
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true" [data]="tipoTurno" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
+            </plex-select>
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'" [multiple]="true" [data]="estadosAgendas" [(ngModel)]="seleccion.estado_agenda" placeholder="Seleccione..." label="Estado">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
-            <plex-select [multiple]="true" [data]="tipoTurno" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
-            </plex-select>
-        </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'">
-            <plex-select [multiple]="true" [data]="estadosAgendas" [(ngModel)]="seleccion.estado_agenda" placeholder="Seleccione..." label="Estado">
-            </plex-select>
-        </div>
-    </div>
+    </plex-wrapper>
     `
 })
-export class FiltrosComponent implements AfterViewInit, OnChanges {
+export class FiltrosComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
 
     // Filtros
@@ -65,13 +42,12 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public hoy = new Date();
     public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
     public esTablaGrafico = false;
-    public mostrarMasOpciones = false;
     public tipoTurno = [];
     public estadoTurnos = [];
     public estadosAgendas = [];
 
     // Permisos
-    public verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
+    public verProfesionales;
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
 
@@ -85,13 +61,12 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     };
 
     constructor(
-        private plex: Plex,
-        public auth: Auth,
-        public servicioProfesional: ProfesionalService
-    ) {
-    }
+        private auth: Auth,
+        private servicioProfesional: ProfesionalService
+    ) { }
 
-    ngAfterViewInit() {
+    ngOnInit() {
+        this.verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
         if (!this.verProfesionales) {
             this.servicioProfesional.get({ id: this.auth.profesional }).subscribe(resultado => {
                 this.seleccion.profesional = resultado;

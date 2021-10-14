@@ -7,41 +7,40 @@
             <div class="row">
                 <div class="col">
                     <graph-table type="bar" titulo="Prestación" [data]="prestaciones" [table]="esTabla"
-                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
+                                 [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla"
-                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
+                                 [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
                 <div class="col-6" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
-                    <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla"
-                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
+                    <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla" [filtros]="this.params"
+                                 dashboard="Dashboard Citas"></graph-table>
                 </div>
                 <div class="col-6" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla"
-                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
+                                 [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla"
-                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
+                                 [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row" *ngIf="tipoDeFiltro === 'Turnos'">
                 <div class="col">
-                    <tabla-2d [filtros]="this.params" [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
+                    <tabla-2d [filtros]="this.params" [data]="dataGeolocalizacion" titulo="Turnos por Localidad">
+                    </tabla-2d>
                 </div>
             </div>
         </div>
-        <div class="row" *ngIf="mensajeInicial">
-            <div class="col">
-                <div class="alert alert-info text-center" role="alert">
-                    Elija las opciones de filtrados y luego click en el botón "Buscar"
-                </div>
-            </div>
+        <div *ngIf="mensajeInicial" justify="center" class="h-75">
+            <plex-label titulo="Comience seleccionando los filtros" direction="column"
+                        subtitulo="Elija las opciones de filtrados y luego click en el botón 'Buscar'" type="info"
+                        size="xl" icon="arrow-up"></plex-label>
         </div>
     </plex-layout-main>
 </plex-layout>
