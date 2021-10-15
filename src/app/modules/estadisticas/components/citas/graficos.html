@@ -18,12 +18,18 @@
             <canvas baseChart [colors]="barColors" [datasets]="dataGraph" [options]="barOptions" [labels]="labelsGraph"
                     chartType="bar"></canvas>
         </div>
-        <div *ngIf="type === 'pie'">
+        <div *ngIf="type === 'pie'" [ngClass]="{ 'graphPadre': extraTitle.length }">
             <canvas baseChart [colors]="chartColors" [data]="dataGraph" [labels]="labelsGraph"
-                    chartType="doughnut"></canvas>
+                    chartType="doughnut" (chartClick)="changeShowExtras($event.active)"></canvas>
         </div>
+        <ng-container *ngIf="extraTitle.length">
+            <div class="graphHijo">
+                <plex-label justify="center" name="extraTitle" size="md" type="default" titulo="{{ titulo + ': ' + extraTitle }}" subtitulo=""></plex-label>
+                <canvas baseChart [colors]="chartColors" [data]="extraData" [labels]="extraLabels"
+                        chartType="doughnut"></canvas>
+            </div>
+        </ng-container>
     </div>
-
     <div class="col-12" *ngIf="table">
         <table class="table table-striped table-responsive table-bordered" *ngIf="dataTable.length > 0">
             <thead>
