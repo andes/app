@@ -20,7 +20,7 @@ export class TokenExpiredInterceptor implements HttpInterceptor {
             catchError((err) => {
                 if (err.status === 401 && err.error === 'Unauthorized') {
                     // Falta un feature de plex para mejorar la UI
-                    this.plex.info('danger','', 'La sesión a finalizado!').then((a) => {
+                    this.plex.info('danger', '', 'La sesión ha finalizado!').then((a) => {
                         this.auth.logout();
                         this.router.navigate(['login']).then(() => {
                             window.location.reload();

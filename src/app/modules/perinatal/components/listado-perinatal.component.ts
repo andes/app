@@ -155,4 +155,13 @@ export class ListadoPerinatalComponent implements OnInit {
 
         this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
+
+    returnEdicion(carnetActualizado) {
+        if (carnetActualizado) {
+            this.carnetSelected = carnetActualizado;
+            this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
+                map(resp => this.listadoActual = resp)
+            );
+        }
+    }
 }
