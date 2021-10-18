@@ -64,8 +64,8 @@ export class VisualizacionReglasComponent implements OnInit {
         }
     }
 
-    get disabledDescargar() {
-        return !this.organizacionOrigen || !this.organizacionDestino;
+    get hayFiltro() {
+        return this.organizacionOrigen || this.organizacionDestino || this.prestacionOrigen || this.prestacionDestino;
     }
 
     /**
@@ -148,8 +148,8 @@ export class VisualizacionReglasComponent implements OnInit {
 
     descargarReglas() {
         const params = {
-            organizacionOrigen: this.organizacionOrigen.id,
-            organizacionDestino: this.organizacionDestino.id,
+            organizacionOrigen: this.organizacionOrigen?.id,
+            organizacionDestino: this.organizacionDestino?.id,
             prestacionOrigen: this.prestacionOrigen?.conceptId,
             prestacionDestino: this.prestacionDestino?.conceptId
         };

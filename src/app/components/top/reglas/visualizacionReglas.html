@@ -11,9 +11,9 @@
     <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" tmPrestaciones preload="true"
                  label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
     </plex-select>
-    <plex-button type="success" label="Descargar" [disabled]="disabledDescargar" (click)="descargarReglas()"></plex-button>
+    <plex-button type="success" label="Descargar" [disabled]="!hayFiltro || !filas?.length" (click)="descargarReglas()"></plex-button>
 </plex-wrapper>
-<div *ngIf="!filtroIngresado() || !filas?.length" class="alert alert-default">
+<div *ngIf="hayFiltro && !filas?.length" class="alert alert-danger">
     No hay resultados que coincidan con los filtros de búsqueda
 </div>
 <div class="row">
