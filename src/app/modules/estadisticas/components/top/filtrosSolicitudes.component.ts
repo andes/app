@@ -1,61 +1,12 @@
 import * as moment from 'moment';
-import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
+import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'solicitudes-filtros',
-    template: `
-    <div class="row">
-        <div class="col-2">
-            <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
-        </div>
-        <div class="col-2">
-            <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
-        </div>
-        <div class="col-4 d-flex align-items-end">
-            <plex-button type="success mb-1" label="Buscar" (click)="onChange()" ></plex-button>
-        </div>
-        <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
-            <plex-button title="Visualizar de gráficos" *ngIf="esTablaGrafico" icon="chart-pie"></plex-button>
-            <plex-button title="Visualizar tablas" *ngIf="!esTablaGrafico" icon="table-large"></plex-button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.organizaciones" name="organizaciones" tmOrganizaciones
-                label="Organización" placeholder="Seleccione la organización">
-            </plex-select>
-        </div>
-        <div class="col-4">
-            <plex-select [multiple]="true" [data]="estados" [(ngModel)]="seleccion.estados" placeholder="Seleccione..." label="Estado">
-            </plex-select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesOrigen" tmPrestaciones preload="true" name="prestacionOrigen"
-                label="Prestación Origen" ngModelOptions="{standalone: true}">
-            </plex-select>
-        </div>
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesDestino" tmPrestaciones preload="true" name="prestacionDestino"
-                label="Prestación Destino" ngModelOptions="{standalone: true}">
-            </plex-select>
-        </div>
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesionalesOrigen" name="profesionalOrigen" (getData)="loadProfesionales($event)"
-                label="Profesional Origen" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-        </div>
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesionalesDestino" name="profesionalDestino" (getData)="loadProfesionales($event)"
-                label="Profesional Destino" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-        </div>
-    </div>
-    `
+    templateUrl: 'filtrosSolicitudes.component.html',
 })
 export class FiltrosSolicitudesComponent implements OnChanges {
     @HostBinding('class.plex-layout') layout = true;
@@ -71,11 +22,13 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
-        { id: 'anulada', nombre: 'ANULADA' }
+        { id: 'anulada', nombre: 'ANULADA' },
+        { id: 'validada', nombre: 'REGISTRO EN HUDS' }
     ];
 
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
+    @Input() activeTab: any;
 
     public seleccion: any = {
         organizaciones: undefined,
