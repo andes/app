@@ -6,6 +6,7 @@ import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IRegla } from '../../../interfaces/IRegla';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'visualizacion-reglas',
@@ -52,7 +53,8 @@ export class VisualizacionReglasComponent implements OnInit {
     constructor(
         private servicioReglas: ReglaService,
         private auth: Auth,
-        public servicioPrestacion: PrestacionesService
+        public servicioPrestacion: PrestacionesService,
+        private documentosService: DocumentosService
     ) { }
 
     ngOnInit() {
@@ -62,6 +64,9 @@ export class VisualizacionReglasComponent implements OnInit {
         }
     }
 
+    get hayFiltro() {
+        return this.organizacionOrigen || this.organizacionDestino || this.prestacionOrigen || this.prestacionDestino;
+    }
 
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
@@ -139,6 +144,17 @@ export class VisualizacionReglasComponent implements OnInit {
 
     public seleccionarConcepto(concepto) {
         this.addSolicitud.emit(concepto);
+    }
+
+    descargarReglas() {
+        const params = {
+            organizacionOrigen: this.organizacionOrigen?.id,
+            organizacionDestino: this.organizacionDestino?.id,
+            prestacionOrigen: this.prestacionOrigen?.conceptId,
+            prestacionDestino: this.prestacionDestino?.conceptId
+        };
+
+        this.documentosService.descargarReglasGlobales(params, `reglasGlobales ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 }
 
