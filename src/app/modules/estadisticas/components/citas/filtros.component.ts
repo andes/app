@@ -1,3 +1,5 @@
+import { OrganizacionService } from './../../../../services/organizacion.service';
+import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import * as moment from 'moment';
 import { Component, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges, OnInit } from '@angular/core';
 import { ProfesionalService } from '../../../../services/profesional.service';
@@ -6,32 +8,7 @@ import * as loadCombos from '../../utils/comboLabelFiltro.component';
 
 @Component({
     selector: 'turnos-filtros',
-    template: `
-    <plex-wrapper>
-        <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" [required]="true"></plex-select>
-        <plex-datetime label="Desde" [max]="hasta" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
-        <plex-datetime label="Hasta" [min]="desde" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
-        <plex-button type="success" label="Buscar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
-        <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'chart-pie' : 'table-large'"
-                (click)="changeTablaGrafico()"></plex-button>
-        <div collapse>
-            <plex-select [multiple]="true"
-                         [(ngModel)]="seleccion.prestacion"
-                         tmPrestaciones="visualizacionInformacion:dashboard:citas:tipoPrestacion:?" preload="true" name="prestaciones"
-                            label="Prestación" >
-            </plex-select>
-            <plex-select *ngIf="verProfesionales" [multiple]="true" [(ngModel)]="seleccion.profesional" name="profesional" (getData)="loadProfesionales($event)"
-                label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true" [data]="estadoTurnos" [(ngModel)]="seleccion.estado_turno" placeholder="Seleccione..." label="Estado">
-            </plex-select>
-            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true" [data]="tipoTurno" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
-            </plex-select>
-            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'" [multiple]="true" [data]="estadosAgendas" [(ngModel)]="seleccion.estado_agenda" placeholder="Seleccione..." label="Estado">
-            </plex-select>
-        </div>
-    </plex-wrapper>
-    `
+    templateUrl: 'filtros.html'
 })
 export class FiltrosComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
@@ -45,6 +22,14 @@ export class FiltrosComponent implements OnInit, OnChanges {
     public tipoTurno = [];
     public estadoTurnos = [];
     public estadosAgendas = [];
+    public zonasSanitarias = [];
+    public organizaciones = [];
+    public zonaSanitaria;
+    public organizacion;
+    public showFiltroOrganizaciones = false;
+    public showFiltroZonasSanitarias = false;
+    private permisosZonas: any;
+    private permisosOrganizaciones: any;
 
     // Permisos
     public verProfesionales;
@@ -62,11 +47,15 @@ export class FiltrosComponent implements OnInit, OnChanges {
 
     constructor(
         private auth: Auth,
-        private servicioProfesional: ProfesionalService
+        private servicioProfesional: ProfesionalService,
+        private zonaSanitariaService: ZonaSanitariaService,
+        private organizacionService: OrganizacionService
     ) { }
 
     ngOnInit() {
         this.verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
+        this.permisosOrganizaciones = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:organizaciones:?');
+        this.permisosZonas = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:zonasSanitarias:?');
         if (!this.verProfesionales) {
             this.servicioProfesional.get({ id: this.auth.profesional }).subscribe(resultado => {
                 this.seleccion.profesional = resultado;
@@ -75,6 +64,11 @@ export class FiltrosComponent implements OnInit, OnChanges {
         this.tipoTurno = loadCombos.getTipoTurnos();
         this.estadoTurnos = loadCombos.getEstadosTurnos();
         this.estadosAgendas = loadCombos.getEstadosAgendas();
+        if (this.permisosZonas.length > 0 && this.auth.getPermissions('visualizacionInformacion:?')[0] !== '*') {
+            this.showFiltroZonasSanitarias = true;
+            this.loadZonas();
+        }
+        this.loadOrganizaciones();
     }
 
     changeTablaGrafico() {
@@ -97,6 +91,30 @@ export class FiltrosComponent implements OnInit, OnChanges {
         }
     }
 
+    loadOrganizaciones() {
+        const params = {};
+        if (this.zonaSanitaria) {
+            this.organizacion = null;
+            params['idsZonasSanitarias'] = [this.zonaSanitaria.id];
+            this.organizacionService.get(params).subscribe(resultado => {
+                this.organizaciones = resultado;
+            });
+        } else {
+            this.organizaciones = [this.auth.organizacion];
+            this.organizacion = this.auth.organizacion;
+        }
+    }
+
+    loadZonas() {
+        const params = {};
+        if (this.permisosZonas[0] !== '*') {
+            params['ids'] = this.permisosZonas;
+        }
+        this.zonaSanitariaService.search(params).subscribe(resultado => {
+            this.zonasSanitarias = resultado;
+        });
+    }
+
     onChange() {
         const filtrosParams = {
             fechaDesde: this.desde,
@@ -110,7 +128,8 @@ export class FiltrosComponent implements OnInit, OnChanges {
             }) : undefined,
             estado_turno: this.seleccion.estado_turno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.estado_turno.map(et => et.id) : undefined,
             tipoTurno: this.seleccion.tipoTurno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined,
-            estado_agenda: this.seleccion.estado_agenda && this.seleccion.tipoDeFiltro.id === 'agendas' ? this.seleccion.estado_agenda.map(et => et.id) : undefined
+            estado_agenda: this.seleccion.estado_agenda && this.seleccion.tipoDeFiltro.id === 'agendas' ? this.seleccion.estado_agenda.map(et => et.id) : undefined,
+            organizacion: this.organizacion.id
         };
         this.filter.emit(filtrosParams);
     }

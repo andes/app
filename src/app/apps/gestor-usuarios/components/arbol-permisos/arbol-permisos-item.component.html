@@ -55,6 +55,11 @@
                          placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
                          (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>
+            <plex-select *ngIf="item.type === 'zona-sanitaria'" [multiple]="true" [readonly]="all"
+                         [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
+                         placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
+                         (change)="parseSelecionados()" (paste)="onPaste($event);">
+            </plex-select>
             <plex-select *ngIf="item.type === 'unidad-organizativa'" idField='conceptId' labelField="term"
                          [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados"
                          (getData)="loadData(item.type, $event)" placeholder=" Seleccione los elementos con permisos"
