@@ -16,6 +16,8 @@ import { VacunasService } from 'src/app/services/vacunas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 
 @Component({
@@ -172,6 +174,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     public asintomatico = false;
     public showFichaParcial = false;
     public patronPCR = '([A-Za-z])*([0-9]+$)+';
+    private clasificacionOriginal;
 
     constructor(
         private formsService: FormsService,
@@ -186,8 +189,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         public servicePaciente: PacienteService,
         public serviceInstitucion: InstitucionService,
         private paisService: PaisService,
-        private vacunasService: VacunasService
-
+        private vacunasService: VacunasService,
+        private prestacionesService: PrestacionesService,
+        private elementoRupService: ElementosRUPService
     ) { }
 
     ngOnChanges(): void {
@@ -195,7 +199,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         this.operaciones = [];
         this.formsService.search({ name: this.fichaName }).subscribe((ficha: any) => {
             this.secciones = ficha[0].sections;
+
             if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
+                const seccionClasificacion = this.fichaPaciente.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+                this.clasificacionOriginal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
+
                 this.fichaPaciente.secciones.map(sec => {
                     if (sec.name !== 'Contactos Estrechos' && sec.name !== 'Operaciones') {
                         const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
@@ -250,7 +258,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-    // Pregunta por el permiso de huds para el caso en el que se visualiza una ficha desde la huds y no tiene permisos de epidemiologia
+        // Pregunta por el permiso de huds para el caso en el que se visualiza una ficha desde la huds y no tiene permisos de epidemiologia
         if (!this.auth.getPermissions('epidemiologia:?').length && !this.auth.check('huds:visualizacionHuds')) {
             this.router.navigate(['inicio']);
         }
@@ -359,7 +367,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.formEpidemiologiaService.update(this.fichaPaciente._id, fichaFinal).subscribe(
                 () => {
                     this.plex.toast('success', 'Su ficha fue actualizada correctamente');
-                    this.toBack();
+                    this.postSave(fichaFinal);
                 },
                 () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser actualizada')
             );
@@ -367,7 +375,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.formEpidemiologiaService.save(fichaFinal).subscribe(
                 () => {
                     this.plex.toast('success', 'Su ficha fue registrada correctamente');
-                    this.toBack();
+                    this.postSave(fichaFinal);
                 },
                 () => this.plex.toast('danger', 'ERROR: La ficha no pudo ser registrada')
             );
@@ -462,6 +470,38 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 nombre: res.direccion.ubicacion.provincia.nombre
             };
             this.zonaSanitaria = res.zonaSanitaria;
+        });
+    }
+
+    postSave(fichaFinal) {
+        const seccionClasificacion = this.ficha.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+        const clasificacionFinal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
+        if (this.puedeRegistrar(clasificacionFinal)) {
+            this.registrarPrestacion(fichaFinal);
+        } else {
+            this.volver.emit();
+        }
+    }
+
+    private puedeRegistrar(clasificacionFinal) {
+        return this.auth.profesional && clasificacionFinal !== this.clasificacionOriginal && clasificacionFinal !== 'Descartado';
+    }
+
+    private registrarPrestacion(ficha) {
+        const concepto = this.elementoRupService.getConceptoSeguimientoCOVID();
+        const elemento = this.elementoRupService.buscarElemento(concepto, false);
+        const registrosEjecucion = this.formEpidemiologiaService.getConceptosCovid(ficha).map((c: any) => ({
+            concepto: c,
+            elementoRUP: elemento.id,
+            nombre: c.term,
+            esSolicitud: false
+        })
+        );
+
+        const nuevaPrestacion = this.prestacionesService.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'ambulatorio', new Date(), null, null, registrosEjecucion);
+        this.prestacionesService.post(nuevaPrestacion).subscribe(prestacion => {
+            this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
+            this.router.navigate(['rup/ejecucion', prestacion.id]);
         });
     }
 
@@ -576,13 +616,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
     setDireccion(nuevaDir) {
         return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0]?.valor ||
-      nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
-      nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
+            nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
+            nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
     }
 
     pacienteInternado(event) {
         this.estaInternado = event.value.id === 'salaGeneral' || event.value.id === 'uce' ||
-      event.value.id === 'ut' || event.value.id === 'uti';
+            event.value.id === 'ut' || event.value.id === 'uti';
         if (this.estaInternado) {
             this.organizacionesInternacion$ = this.organizacionService.get({ aceptaDerivacion: true });
         }

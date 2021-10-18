@@ -485,7 +485,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null): IPrestacion {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
         let pacientePrestacion;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -560,7 +560,7 @@ export class PrestacionesService {
 
             prestacion['ejecucion'] = {
                 fecha: fecha,
-                registros: [],
+                registros: registrosEjecucion,
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
             };
