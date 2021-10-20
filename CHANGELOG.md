@@ -1,3 +1,12 @@
+# [5.69.0](https://github.com/andes/app/compare/v5.68.0...v5.69.0) (2021-10-20)
+
+
+### Features
+
+* **BI:** agrega un estado y nombre en filtro organizacion ([#2499](https://github.com/andes/app/issues/2499)) ([b39cfef](https://github.com/andes/app/commit/b39cfeff0d2f40d895ef21871e0e52f2fa48f7f7))
+* **dashboard:** poder filtrar agendas/turnos hacia adelante ([#2488](https://github.com/andes/app/issues/2488)) ([10697b6](https://github.com/andes/app/commit/10697b63fa3a17100b875c84d355dcb12fdfe70e))
+* **per:** permitir sumar nota a un carnet perinatal ([#2495](https://github.com/andes/app/issues/2495)) ([3a4deee](https://github.com/andes/app/commit/3a4deeebc9b2020465c3bbcdba55681193a57943))
+
 # [5.68.0](https://github.com/andes/app/compare/v5.67.0...v5.68.0) (2021-10-13)
 
 
