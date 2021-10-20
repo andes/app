@@ -20,7 +20,6 @@
                     <div class="row">
                         <div class="col">
                             <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion"
-                                         tmPrestaciones="turnos:planificarAgenda:prestacion:?"
                                          label="Prestación Destino" placeholder="Tipos de Prestación Destino"
                                          [required]="true" (change)="cargarReglas()">
                             </plex-select>
@@ -91,7 +90,6 @@
                     <div class="row">
                         <div class="col-10">
                             <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen"
-                                         tmPrestaciones="turnos:planificarAgenda:prestacion:?"
                                          placeholder="prestacionOrigen">
                             </plex-select>
                         </div>
