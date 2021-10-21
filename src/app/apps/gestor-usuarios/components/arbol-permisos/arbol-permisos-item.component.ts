@@ -1,3 +1,4 @@
+import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { GrupoPoblacionalService } from './../../../../services/grupo-poblacional.service';
 import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Inject, Optional, InjectionToken } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
@@ -43,6 +44,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         private queryService: QueriesService,
         private grupoPoblacionalService: GrupoPoblacionalService,
         private servicioIntermedio: ServicioIntermedioService,
+        private zonaSanitariaService: ZonaSanitariaService,
         private auth: Auth,
         public plex: Plex
     ) { }
@@ -149,6 +151,13 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                     this.parseSelecionados();
                                 });
                                 break;
+                            case 'zona-sanitaria':
+                                this.zonaSanitariaService.search({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
+                                    this.seleccionados = [...data];
+                                    this.parseSelecionados();
+                                });
+                                break;
                             case 'grupo-poblacional':
                                 this.grupoPoblacionalService.search({ ids: items }).subscribe((data) => {
                                     this.loading = false;
@@ -209,6 +218,12 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 break;
             case 'organizacion':
                 this.organizacionService.get({ nombre: event.query }).subscribe((data) => {
+                    event.callback(data);
+                });
+                break;
+            case 'zona-sanitaria':
+                query.nombre = '^' + event.query;
+                this.zonaSanitariaService.search(query).subscribe((data) => {
                     event.callback(data);
                 });
                 break;

@@ -1,0 +1,44 @@
+<form #formulario="ngForm">
+    <plex-wrapper>
+        <plex-select label="Tipo de filtro" [data]="opciones" name="tipoDeFiltro" [(ngModel)]="seleccion.tipoDeFiltro"
+                     [required]="true"></plex-select>
+        <plex-datetime label="Desde" [max]="hasta" type="date" name="desde" [(ngModel)]="desde" name="desde">
+        </plex-datetime>
+        <plex-datetime label="Hasta" [min]="desde" type="date" name="hasta" [(ngModel)]="hasta" name="hasta">
+        </plex-datetime>
+        <plex-button type="success" label="Buscar" (click)="onChange()" [validateForm]="formulario"
+                     [disabled]="formulario.invalid"
+                     [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true" align="end"></plex-button>
+        <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'"
+                     [icon]="esTablaGrafico ? 'chart-pie' : 'table-large'" (click)="changeTablaGrafico()" align="end">
+        </plex-button>
+        <div collapse>
+            <plex-select label="Zona sanitaria" [data]="zonasSanitarias" name="zona" [(ngModel)]="zonaSanitaria"
+                         name="zona" *ngIf="showFiltroZonasSanitarias" (change)="loadOrganizaciones()">
+            </plex-select>
+            <plex-select label="Organización" [data]="organizaciones" name="organizacion" [(ngModel)]="organizacion"
+                         name="organizacion" [required]="zonaSanitaria" [disabled]="!zonaSanitaria">
+            </plex-select>
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.prestacion"
+                         tmPrestaciones="visualizacionInformacion:dashboard:citas:tipoPrestacion:?" preload="true"
+                         name="prestaciones" label="Prestación">
+            </plex-select>
+            <plex-select *ngIf="verProfesionales" [multiple]="true" [(ngModel)]="seleccion.profesional"
+                         name="profesional" (getData)="loadProfesionales($event)" label="Profesional"
+                         placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+            </plex-select>
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true"
+                         [data]="estadoTurnos" name="estado" [(ngModel)]="seleccion.estado_turno"
+                         placeholder="Seleccione..." label="Estado">
+            </plex-select>
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'" [multiple]="true"
+                         [data]="tipoTurno" name="tipoTurno" [(ngModel)]="seleccion.tipoTurno"
+                         placeholder="Seleccione..." label="Tipo de turno">
+            </plex-select>
+            <plex-select *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'" [multiple]="true"
+                         [data]="estadosAgendas" name="estadoAgenda" [(ngModel)]="seleccion.estado_agenda"
+                         placeholder="Seleccione..." label="Estado">
+            </plex-select>
+        </div>
+    </plex-wrapper>
+</form>

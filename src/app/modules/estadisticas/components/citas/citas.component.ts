@@ -2,7 +2,6 @@ import * as moment from 'moment';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
 import { EstAgendasService } from '../../services/agenda.service';
 import { getRefactorNombre } from '../../utils/comboLabelFiltro.component';
 
@@ -50,10 +49,7 @@ export class CitasComponent implements OnInit {
     }
 
     filter($event) {
-        this.params = {
-            organizacion: this.auth.organizacion.id,
-            ...$event
-        };
+        this.params = $event;
         this.estService.post(this.params).subscribe((data) => {
             this.mensajeInicial = false;
             this.data = data;
