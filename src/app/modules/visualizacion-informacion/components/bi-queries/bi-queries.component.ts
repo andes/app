@@ -1,3 +1,4 @@
+import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { Component, OnInit } from '@angular/core';
 import { QueriesService } from '../../../../services/query.service';
 import { Observable } from 'rxjs';
@@ -5,6 +6,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
 
 
 @Component({
@@ -24,10 +26,13 @@ export class BiQueriesComponent implements OnInit {
     public mostrarSalida = false;
     public tipoPrestaciones;
     public totalOrganizaciones = false;
+    public permisosZonas: any[];
+    public zonasSanitarias: IZonaSanitaria[] = [];
 
     constructor(
         private queryService: QueriesService,
         private profesionalService: ProfesionalService,
+        private zonaSanitariaService: ZonaSanitariaService,
         private formsService: FormsService,
         private auth: Auth,
         private router: Router
@@ -36,6 +41,10 @@ export class BiQueriesComponent implements OnInit {
     ngOnInit() {
         const permisos = this.auth.getPermissions('visualizacionInformacion:biQueries:?');
         this.totalOrganizaciones = !this.auth.check('visualizacionInformacion:totalOrganizaciones');
+        this.permisosZonas = this.auth.getPermissions('visualizacionInformacion:zonasSanitarias:?');
+        if (this.permisosZonas.length > 0) {
+            this.loadZonasSanitarias();
+        }
         if (permisos.length) {
             if (permisos[0] === '*') {
                 this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
@@ -68,6 +77,16 @@ export class BiQueriesComponent implements OnInit {
         } else {
             event.callback(listaProfesionales);
         }
+    }
+
+    loadZonasSanitarias() {
+        const params = {};
+        if (this.permisosZonas[0] !== '*') {
+            params['ids'] = this.permisosZonas;
+        }
+        this.zonaSanitariaService.search(params).subscribe(resultado => {
+            this.zonasSanitarias = resultado;
+        });
     }
 
     loadFomTypes(event) {
