@@ -5,9 +5,10 @@
                 *ngIf="(profesional$ | async) as profesional;else notProfesional">
         Profesional
         <span dato>{{profesional.formacionGrado.length > 0 ?
-        profesional.formacionGrado[0].profesion.nombre + ': MATRÍCULA N° '
-        + profesional.formacionGrado[0].matriculacion[profesional.formacionGrado[0].matriculacion.length -
-                1].matriculaNumero:'NO MATRICULADO'}}</span>
+            profesional.formacionGrado[0].profesion.nombre +' '+(profesional.formacionGrado[0].matriculacion?.length?
+            'MATRÍCULA N° '
+            +profesional.formacionGrado[0].matriculacion[profesional.formacionGrado[0].matriculacion?.length
+            -1].matriculaNumero:''):'NO MATRICULADO'}}</span>
 
     </plex-badge>
     <ng-template #notProfesional>
