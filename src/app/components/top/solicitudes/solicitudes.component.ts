@@ -1,14 +1,14 @@
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Unsubscribe } from '@andes/shared';
+import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { concat } from 'rxjs';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { Unsubscribe } from '@andes/shared';
-import { HUDSService } from '../../../modules/rup/services/huds.service';
-import { concat } from 'rxjs';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'solicitudes',
@@ -43,7 +43,6 @@ export class SolicitudesComponent implements OnInit {
     public showSidebar = false;
     public prestacionesPermisos = [];
     public permisosReglas;
-    public permisoReglasABM;
     public permisoAnular = false;
     public showAnular = false;
     public showCitar = false;
@@ -125,7 +124,6 @@ export class SolicitudesComponent implements OnInit {
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
-        this.permisoReglasABM = this.auth.check('solicitudes:reglasABM');
         this.showCargarSolicitud = false;
         const currentUrl = this.router.url;
         if (currentUrl === '/solicitudes/asignadas') {
