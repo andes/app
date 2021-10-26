@@ -6,9 +6,7 @@
                 <plex-box>
                     <header>
                         <!-- Títulos / Botones -->
-                        <div class="clearfix">
-                            <div class="page-title float-left">REASIGNACIÓN MANUAL DE TURNOS</div>
-                        </div>
+                        <plex-title titulo="REASIGNACIÓN MANUAL DE TURNOS"></plex-title>
                     </header>
 
                     <!--Resultados-->
@@ -28,7 +26,7 @@
                     <span *ngIf="agendaAReasignar.profesionales?.length === 0">Sin profesionales asignados</span>
                     <br>
                     <b>Envío de SMS:</b>
-                    <plex-bool type="slide" [(ngModel)]="smsActivo" name="smsActivo"></plex-bool>
+                    <plex-bool class="pl-2 pr-2" type="slide" [(ngModel)]="smsActivo" name="smsActivo"></plex-bool>
                     <plex-badge *ngIf="smsActivo" type="success">
                         Activo
                     </plex-badge>
@@ -36,10 +34,10 @@
                         Inactivo
                     </plex-badge>
                     <br>
-                    <fieldset>
+                    <fieldset class="pt-2">
                         <!--Turnos-->
 
-                        <legend>TURNOS</legend>
+                        <plex-title titulo="TURNOS" size="sm"></plex-title>
                         <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques"
                                class="table table-striped">
                             <thead *ngIf="bloque.descripcion">

@@ -284,10 +284,9 @@
 <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
             (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"
-            [solicitudPrestacion]="solicitudTurno"></dar-turnos>
-<!-- <nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud"
-                 (newSolicitudEmitter)=afterNewSolicitud($event)>
-</nueva-solicitud> -->
+            [solicitudPrestacion]="solicitudTurno">
+</dar-turnos>
+
 <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
 </modal-motivo-acceso-huds>
 
