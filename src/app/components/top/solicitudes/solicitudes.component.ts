@@ -43,6 +43,7 @@ export class SolicitudesComponent implements OnInit {
     public showSidebar = false;
     public prestacionesPermisos = [];
     public permisosReglas;
+    public permisoReglasABM;
     public permisoAnular = false;
     public showAnular = false;
     public showCitar = false;
@@ -124,6 +125,7 @@ export class SolicitudesComponent implements OnInit {
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
+        this.permisoReglasABM = this.auth.check('solicitudes:reglasABM');
         this.showCargarSolicitud = false;
         const currentUrl = this.router.url;
         if (currentUrl === '/solicitudes/asignadas') {
@@ -645,9 +647,11 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
-                    this.devolver(prestacion);
-                } };
+                this.itemsDropdown[0] = {
+                    icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
+                        this.devolver(prestacion);
+                    }
+                };
                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {

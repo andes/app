@@ -12,14 +12,14 @@
                 <plex-button *ngIf="!asignadas && tipoSolicitud === 'entrada'" type="success"
                              label="Nueva Solicitud de Entrada" (click)="nuevaSolicitud()">
                 </plex-button>
-                <plex-button *ngIf="permisosReglas && !asignadas && tipoSolicitud === 'entrada'" type="warning"
-                             label="Reglas de entrada" (click)="editarReglas()">
+                <plex-button *ngIf="permisosReglas && permisoReglasABM  && !asignadas && tipoSolicitud === 'entrada'"
+                             type="warning" label="Reglas de entrada" (click)="editarReglas()">
                 </plex-button>
                 <plex-button *ngIf="!asignadas && tipoSolicitud === 'salida'" type="success"
                              label="Nueva Solicitud de Salida" (click)="nuevaSolicitud()">
                 </plex-button>
-                <plex-button *ngIf="permisosReglas && !asignadas && tipoSolicitud === 'salida'" type="warning"
-                             label="Reglas de entrada" (click)="editarReglas()">
+                <plex-button *ngIf="permisosReglas && permisoReglasABM && !asignadas && tipoSolicitud === 'salida'"
+                             type="warning" label="Reglas de entrada" (click)="editarReglas()">
                 </plex-button>
                 <plex-tab label="Entrada" (click)="panelIndex = 0">
                     <form #formEntrada="ngForm">
