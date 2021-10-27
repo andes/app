@@ -1,14 +1,14 @@
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Unsubscribe } from '@andes/shared';
+import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { concat } from 'rxjs';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { Unsubscribe } from '@andes/shared';
-import { HUDSService } from '../../../modules/rup/services/huds.service';
-import { concat } from 'rxjs';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 
 @Component({
     selector: 'solicitudes',
@@ -645,9 +645,11 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = { icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
-                    this.devolver(prestacion);
-                } };
+                this.itemsDropdown[0] = {
+                    icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
+                        this.devolver(prestacion);
+                    }
+                };
                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
                     this.itemsDropdown[1] = {
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
