@@ -1,3 +1,17 @@
+# [5.70.0](https://github.com/andes/app/compare/v5.69.0...v5.70.0) (2021-10-27)
+
+
+### Bug Fixes
+
+* **novedades:** se alinean títulos de items ([#2501](https://github.com/andes/app/issues/2501)) ([f8f7127](https://github.com/andes/app/commit/f8f71270a439c91ef36a4edf8de7dc189de582ec))
+
+
+### Features
+
+* **bi:** filtros por organización y zona en dashboard de citas ([#2502](https://github.com/andes/app/issues/2502)) ([c2d6d3e](https://github.com/andes/app/commit/c2d6d3ef8f1cc97e26acdd195173f85b73ffe015))
+* **ficha:** caso asintomatico ([#2482](https://github.com/andes/app/issues/2482)) ([710f636](https://github.com/andes/app/commit/710f636754b37b90f0fa89f9fda88637f2bb1293))
+* **GDU:** control para cuando el profesional no tiene numero de matricula ([#2496](https://github.com/andes/app/issues/2496)) ([4013e33](https://github.com/andes/app/commit/4013e33fb1ada6f9b95afa09730a73a0f0e9cf13))
+
 # [5.69.0](https://github.com/andes/app/compare/v5.68.0...v5.69.0) (2021-10-20)
 
 
