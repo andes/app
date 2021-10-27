@@ -11,6 +11,51 @@ export class Tabla2DComponent implements OnInit, OnChanges {
     @Input() titulo: any;
     @Input() filtros: any;
 
+    public columns = [
+        {
+            key: '#',
+            label: '#',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'deldia',
+            label: 'Del día',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'programado',
+            label: 'Programado',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'conllave',
+            label: 'Con llave',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'profesional',
+            label: 'Profesional',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'sobreturno',
+            label: 'Sobreturno',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'appmobile',
+            label: 'App Mobile',
+            sorteable: false,
+            opcional: false
+        },
+    ];
+
     constructor(public estService: EstAgendasService) { }
     public requestInProgress: boolean;
     public columnas: any[];

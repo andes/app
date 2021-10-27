@@ -6,7 +6,7 @@
                                  [activeTab]="activeTab">
             </solicitudes-filtros>
         </div>
-        <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
+        <plex-tabs *ngIf="!mensajeInicial" (change)="cambio($event)" [activeIndex]="panelIndex">
 
             <!-- Seccion de gráficos y tablas de SOLICITUDES DE ENTRADA  -->
             <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box" (click)="panelIndex = 0">
@@ -96,5 +96,10 @@
                 </fieldset>
             </plex-tab>
         </plex-tabs>
+        <div *ngIf="mensajeInicial" justify="center" class="h-75">
+            <plex-label titulo="Comience seleccionando los filtros" direction="column"
+                        subtitulo="Elija las opciones de filtrado y luego click en el botón 'Buscar'" type="info"
+                        size="xl" icon="arrow-up"></plex-label>
+        </div>
     </plex-layout-main>
 </plex-layout>

@@ -1,29 +1,11 @@
-<div class="row m-2" *ngIf="columnas && columnas.length && data">
-    <div class="col-12 d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-            <span class="h3">{{titulo}}</span>
-        </div>
-        <div class="d-flex align-items-end mb-1">
-            <plex-badge type="info" class="mr-1">CSV</plex-badge>
-            <plex-button type="info" size="sm" icon="download mdi-18px">
-                <!-- (click)="descargar(this.data)" -->
-            </plex-button>
-        </div>
-    </div>
-    <div class="col">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th *ngFor="let title of columnas[0]" scope="col">{{ tipoTurno[title] }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let ciudad of data | keyvalue">
-                    <th scope="row">{{ciudad.key}}</th>
-                    <td *ngFor="let title of columnas[0], let i = index">{{ciudad.value[columnas[0][i]]}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<plex-table *ngIf="columnas && columnas.length && data" [columns]="columns">
+    <plex-title titulo="{{titulo}}" size="md">
+        <plex-badge type="info" class="mr-1">CSV</plex-badge>
+        <plex-button type="info" size="sm" icon="download mdi-18px"></plex-button>
+    </plex-title>
+    <plex-table-columns></plex-table-columns>
+    <tr *ngFor="let ciudad of data | keyvalue">
+        <td>{{ciudad.key}}</td>
+        <td *ngFor="let title of columnas[0], let i = index">{{ciudad.value[columnas[0][i]]}}</td>
+    </tr>
+</plex-table>

@@ -39,7 +39,6 @@ export class CitasComponent implements OnInit {
     ngOnInit() {
         this.plex.updateTitle([
             { route: '/', name: 'ANDES' },
-            { name: 'Dashboard', route: '/dashboard' },
             { name: 'Citas' }
         ]);
     }
