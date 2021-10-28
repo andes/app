@@ -2,18 +2,18 @@
 <plex-layout *ngIf="!showcreate">
     <plex-layout-main>
         <header>
-            <plex-grid class="align-items-center" size="sm" type="full" cols="2" >
-                <plex-text class="pb-2" [(ngModel)]="filtros.nombre" label="Nombre" name="nombre" placeholder="Ingresar nombre..."
+            <plex-title titulo="Listado de organizaciones">
+                <plex-button type="success" label="Nueva Organización" (click)="nuevaOrganizacion()"
+                             *ngIf="checkAuth('create')">
+                </plex-button>
+            </plex-title>
+            <plex-grid class="align-items-end pb-1" size="sm" type="full" cols="2" >
+                <plex-text [(ngModel)]="filtros.nombre" label="Nombre" name="nombre" placeholder="Ingresar nombre..."
                             (change)="filtrar()">
                 </plex-text>
-                <div justify="between">
-                    <plex-bool class="pl-4 pt-3" [(ngModel)]="filtros.soloNoActivo" label="Mostrar solo {{organizacionService.getEstado(false)}}"
-                            name="activo" (change)="filtrar()">
-                    </plex-bool>
-                    <plex-button class="pt-4" type="success" label="Nueva Organización" (click)="nuevaOrganizacion()"
-                                *ngIf="checkAuth('create')">
-                    </plex-button>
-                </div>
+                <plex-bool class="pl-4 mb-2" [(ngModel)]="filtros.soloNoActivo" label="Mostrar solo {{organizacionService.getEstado(false)}}"
+                        name="activo" (change)="filtrar()">
+                </plex-bool>
             </plex-grid>
         </header>
 
