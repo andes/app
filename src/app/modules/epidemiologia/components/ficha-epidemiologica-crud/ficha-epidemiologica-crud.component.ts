@@ -486,7 +486,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     private puedeRegistrar(clasificacionFinal) {
-        return this.auth.profesional && clasificacionFinal !== this.clasificacionOriginal && clasificacionFinal !== 'Descartado';
+        return this.auth.profesional && clasificacionFinal !== this.clasificacionOriginal && clasificacionFinal !== 'Descartado' && clasificacionFinal !== 'Caso asintomático';
     }
 
     private registrarPrestacion(ficha) {
@@ -679,9 +679,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     setCasoAsintomatico(event) {
         this.clearDependencias({ value: false }, 'clasificacionFinal', []);
         if (event.value.id === 'casoAsintomatico') {
+            const seccionFinal = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
+            seccionFinal.fields['clasificacionfinal'] = 'Caso asintomático';
             if (!this.showFichaParcial) {
-                const seccionFinal = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
-                seccionFinal.fields['clasificacionfinal'] = 'Caso asintomático';
                 seccionFinal.fields['segundaclasificacion'] = { id: 'pcr', nombre: 'PCR-RT' };
             }
             this.asintomatico = true;
