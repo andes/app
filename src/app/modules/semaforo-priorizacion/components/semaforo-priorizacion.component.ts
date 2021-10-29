@@ -24,8 +24,18 @@ export class SemaforoPriorizacionComponent implements OnInit {
         this.semaforoService.findByName(this.name).subscribe(res => this.semaforo = res);
     }
 
+    isSelected(opt, prioridad) {
+        if (typeof prioridad === 'string') {
+            return opt.label === prioridad || opt.priority === prioridad;
+        } else if (opt.min >= 0) {
+            return prioridad >= opt.min && (!opt.max || prioridad <= opt.max);
+        }
+
+        return false;
+    }
+
     select(e) {
-        this.prioridad = e.label;
+        this.prioridad = e.value;
         this.change.emit(e);
     }
 }
