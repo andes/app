@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server, ResourceBaseHttp } from '@andes/shared';
 import { BehaviorSubject, combineLatest, Observable, EMPTY } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class CarnetPerinatalService extends ResourceBaseHttp {

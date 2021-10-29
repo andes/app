@@ -7,20 +7,22 @@
         </plex-title>
         <plex-wrapper>
 
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" label="Fecha Desde"
-                           class="fechas" [max]="fechaHastaEntrada" (change)="filtrar()"></plex-datetime>
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" label="Fecha Hasta"
-                           class="fechas" [min]="fechaDesdeEntrada" (change)="filtrar()"></plex-datetime>
-
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaCita" name="fechaCita" label="Fecha de cita"
-                           class="fechas" (change)="filtrar()">
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" [debounce]="200"
+                           label="Fecha Desde" class="fechas" [max]="fechaHastaEntrada" (change)="filtrar()">
+            </plex-datetime>
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaHastaEntrada" name="fechaHasta" [debounce]="200"
+                           label="Fecha Hasta" class="fechas" [min]="fechaDesdeEntrada" (change)="filtrar()">
             </plex-datetime>
 
-            <plex-datetime grow="1" type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl"
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaCita" name="fechaCita" [debounce]="200"
+                           label="Fecha de cita" class="fechas" (change)="filtrar()">
+            </plex-datetime>
+
+            <plex-datetime grow="1" type="date" [(ngModel)]="fechaUltimoControl" name="fechaControl" [debounce]="200"
                            label="Último control" class="fechas" (change)="filtrar()">
             </plex-datetime>
 
-            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" debounce="400"
+            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" [debounce]="500"
                        (change)="filtrar()"></plex-text>
 
             <div collapse>
