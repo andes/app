@@ -13,7 +13,7 @@
     </plex-badge>
     <ng-template #notProfesional>
         <plex-badge type="default">
-            No profesional
+            Sin datos
         </plex-badge>
     </ng-template>
 
@@ -23,6 +23,12 @@
 
     <div subtitle>
         <plex-copy *ngIf="usuario.documento" [value]="usuario.documento">{{ usuario.documento | number }}</plex-copy>
+        <div *ngIf="(profesional$ | async) as profesional">
+            <plex-label titulo="Observaciones"
+                        *ngIf="!profesional.profesionalMatriculado && profesional.matriculaExterna" subtitulo="{{ profesional.profesionExterna?
+                        profesional.profesionExterna.nombre + ' MAT. N° '+ profesional.matriculaExterna : profesional.matriculaExterna
+                         }}">
+            </plex-label>
+        </div>
     </div>
-
 </plex-detail>
