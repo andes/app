@@ -55,7 +55,7 @@ export class FiltrosComponent implements OnInit, OnChanges {
     ngOnInit() {
         this.verProfesionales = this.auth.check('visualizacionInformacion:dashboard:citas:verProfesionales');
         this.permisosOrganizaciones = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:organizaciones:?');
-        this.permisosZonas = this.auth.getPermissions('visualizacionInformacion:dashboard:citas:zonasSanitarias:?');
+        this.permisosZonas = this.auth.getPermissions('visualizacionInformacion:zonasSanitarias:?');
         if (!this.verProfesionales) {
             this.servicioProfesional.get({ id: this.auth.profesional }).subscribe(resultado => {
                 this.seleccion.profesional = resultado;
