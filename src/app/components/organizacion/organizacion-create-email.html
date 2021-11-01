@@ -1,27 +1,35 @@
 <plex-layout>
     <plex-layout-main>
-
-        <plex-title titulo="Configuracion">
-            <plex-button label="Guardar" type="success" (click)="save()"> </plex-button>
-            <plex-button type="info" (click)="addEmail()" title="Agregar" icon="plus"></plex-button>
+        <form #formulario="ngForm">
+        <plex-title titulo="Configuración de servicios">
+            <plex-button class="pr-1" type="danger" label="Volver" (click)="volver()"></plex-button>
+            <plex-button class="pr-1" type="info" label="Agregar nuevo" (click)="addEmail()"></plex-button>
+            <plex-button label="Guardar" type="success" [disabled]="formulario.invalid" (click)="save()"> </plex-button>
         </plex-title>
-
-        <plex-wrapper *ngFor="let configuracion of configuraciones.emails; let i = index">
-            <ng-container>
-                <plex-text label="Nombre" placeholder="Ingrese nombre" [(ngModel)]="configuracion.nombre" name="nombre"
-                           required>
+            <plex-wrapper *ngFor="let email of configuraciones?.emails; let i = index">
+                <plex-text label="Nombre" placeholder="Ingrese nombre" [(ngModel)]="email.nombre" name="nombre-{{i}}"
+                        required [readonly]="edit !== i">
                     <plex-icon name="barcode" left></plex-icon>
                 </plex-text>
 
-                <plex-text email type="email" label="Ingrese su email" [(ngModel)]="configuracion.email" name="email"
-                           required>
+                <plex-text email label="Ingrese un email" [(ngModel)]="email.email" name="email-{{i}}"
+                        required [readonly]="edit !== i">
                     <plex-icon name="email" left></plex-icon>
                 </plex-text>
 
-                <plex-button type="danger" size="sm" icon="delete" (click)="remove(i)">
+                <plex-button *ngIf="edit !== i" class="pr-1" type="warning" icon="pencil" (click)="onEdit(i, true)">
                 </plex-button>
-            </ng-container>
-        </plex-wrapper>
-
+                <plex-button *ngIf="edit === i" class="pr-1" type="success" icon="check" [disabled]="!email.nombre || !email.email" (click)="onEdit(i, false)">
+                </plex-button>
+                <plex-button type="danger" icon="delete" (click)="remove(i)">
+                </plex-button>
+            </plex-wrapper>
+        </form>
+        <div *ngIf="!configuraciones?.emails?.length" class="h-50" justify="center">
+            <plex-label class="flex-column" icon="playlist-plus" type="info" size="xl" direction="column"
+                        titulo="No existen servicios configurados"
+                        subtitulo="Presione el botón 'Agregar nuevo' para comenzar">
+            </plex-label>
+        </div>
     </plex-layout-main>
 </plex-layout>
