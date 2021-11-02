@@ -18,6 +18,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { SECCION_CLASIFICACION } from '../../constantes';
 
 
 @Component({
@@ -201,7 +202,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.secciones = ficha[0].sections;
 
             if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
-                const seccionClasificacion = this.fichaPaciente.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+                const seccionClasificacion = this.formEpidemiologiaService.getSeccionClasifacionFinal(this.fichaPaciente);
                 this.clasificacionOriginal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
 
                 this.fichaPaciente.secciones.map(sec => {
@@ -476,7 +477,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     postSave(fichaFinal) {
-        const seccionClasificacion = this.ficha.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+        const seccionClasificacion = this.ficha.find(seccion => seccion.name === SECCION_CLASIFICACION);
         const clasificacionFinal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
         if (this.puedeRegistrar(clasificacionFinal)) {
             this.registrarPrestacion(fichaFinal);

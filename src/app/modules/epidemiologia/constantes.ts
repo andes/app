@@ -11,3 +11,6 @@ export const estadosSeguimiento = [
     { id: 'alta', nombre: 'De Alta' },
     { id: 'fallecido', nombre: 'Fallecido' }
 ];
+
+export const SECCION_CLASIFICACION = 'Tipo de confirmación y Clasificación Final';
+

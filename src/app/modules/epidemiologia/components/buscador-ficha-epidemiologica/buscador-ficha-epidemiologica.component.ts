@@ -206,7 +206,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                 return this.formEpidemiologiaService.search(this.query).pipe(
                     map(resultados => {
                         resultados.forEach(ficha => {
-                            const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+                            const seccionClasificacion = this.formEpidemiologiaService.getSeccionClasifacionFinal(ficha);
                             const idPcr = seccionClasificacion?.fields.find(field => field.identificadorpcr)?.identificadorpcr;
                             ficha.idPcr = idPcr ? idPcr : 'Sin PCR';
                         });
