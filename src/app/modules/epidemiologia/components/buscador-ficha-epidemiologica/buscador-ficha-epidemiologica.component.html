@@ -59,7 +59,7 @@
                 </plex-table-columns>
             </plex-title>
             <tr *ngFor="let ficha of (fichas$| plSort:table| async )">
-                <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}}</td>
+                <td *plTableCol="'fecha'">{{ficha.createdAt | fecha}} {{ficha.createdAt | hora}}</td>
                 <td *plTableCol="'documento'">{{ficha.paciente.documento}}</td>
                 <td *plTableCol="'paciente'">{{ficha.paciente.apellido}} {{ficha.paciente.nombre}}</td>
                 <td *plTableCol="'tipo'">{{ficha.type.name}}</td>

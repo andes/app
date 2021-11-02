@@ -69,7 +69,8 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     public clasificacionFinal = [
         { id: 'Confirmado', nombre: 'Confirmado' },
         { id: 'Sospechoso', nombre: 'Sospechoso' },
-        { id: 'Descartado', nombre: 'Descartado' }
+        { id: 'Descartado', nombre: 'Descartado' },
+        { id: 'false', nombre: 'Sin Clasificación' }
     ];
     public filtrarSISA;
     public permisoHuds = false;
