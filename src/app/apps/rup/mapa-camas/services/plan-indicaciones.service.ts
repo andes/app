@@ -1,12 +1,17 @@
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PlanIndicacionesServices extends ResourceBaseHttp {
     protected url = '/modules/rup/internacion/plan-indicaciones';
-    constructor(protected server: Server) {
+    constructor(
+        protected server: Server
+    ) {
         super(server);
+
     }
 
 
@@ -34,7 +39,7 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                             },
                             null
                         );
-                        if (moment(estado.fecha).isBefore(fecha, 'd')) {
+                        if (estado.tipo !== 'draft' && moment(estado.fecha).isBefore(fecha, 'd')) {
                             estado.tipo = 'pending';
                         }
                         return {
@@ -54,5 +59,20 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
             })
         );
     }
+
+    getSeccion() {
+        return of(null);
+    }
+
+    agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null, extras: any = {}) {
+
+    }
+
+    getSugeridos() {
+        return of([]);
+    }
+
+
+
 
 }

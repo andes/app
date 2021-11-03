@@ -869,4 +869,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         );
     }
 
+    onSelectConcepto(concepto) {
+        this.ejecucionService.agregarConcepto({
+            term: concepto.term,
+            fsn: concepto.fsn,
+            conceptId: concepto.conceptId,
+            semanticTag: concepto.semanticTag
+        }, concepto.esSolicitud);
+    }
+
 }

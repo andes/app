@@ -4,12 +4,12 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, S
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
-import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 
 
@@ -21,9 +21,12 @@ import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.inter
 
 export class BuscadorComponent implements OnInit, OnChanges {
     @Input() conceptoFrecuente;
-    @Input() prestacion: IPrestacion;
+    // @Input() prestacion: IPrestacion;
+    @Input() tipoPrestacion: ITipoPrestacion;
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
+    @Output() select: EventEmitter<any> = new EventEmitter<any>();
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
@@ -149,7 +152,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     private inicializarFrecuentesTP() {
         const queryFTP = {
-            'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+            'tipoPrestacion': this.tipoPrestacion.conceptId
         };
         return this.frecuentesProfesionalService.get(queryFTP);
     }
@@ -265,7 +268,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.resultadosSnomedAux = resultadosSnomed.items;
         if (resultadosSnomed.items.length) {
 
-            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.prestacion.solicitud.tipoPrestacion.conceptId);
+            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.tipoPrestacion.conceptId);
 
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
 
@@ -389,7 +392,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
         concepto.esSolicitud = concepto.esSolicitud || this.filtroActual === 'planes';
-        if (concepto.esSolicitud) {
+        if (this.ejecucionService.paciente && concepto.esSolicitud) {
             const params: any = {
                 estados: [
                     'auditoria',
@@ -417,12 +420,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     private agregarConcepto(concepto) {
-        this.ejecucionService.agregarConcepto({
-            term: concepto.term,
-            fsn: concepto.fsn,
-            conceptId: concepto.conceptId,
-            semanticTag: concepto.semanticTag
-        }, concepto.esSolicitud);
+        this.select.emit(concepto);
     }
 
     public esSolicitud(concepto: any) {

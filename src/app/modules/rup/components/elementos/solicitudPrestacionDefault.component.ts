@@ -1,6 +1,6 @@
-import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-solicitudPrestacionDefault',
@@ -54,13 +54,11 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
-
                 if (this.registro !== data && this.registro.valor !== data.valor) {
                     this.registro.valor.solicitudPrestacion.indicaciones = data.valor;
                     this.emitChange(false);
                 }
             });
-
         }
     }
 
