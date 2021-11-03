@@ -1,3 +1,19 @@
+# [5.71.0](https://github.com/andes/app/compare/v5.70.0...v5.71.0) (2021-11-03)
+
+
+### Bug Fixes
+
+* **ficha:** caso asintomatico ([#2508](https://github.com/andes/app/issues/2508)) ([3cde678](https://github.com/andes/app/commit/3cde678ae015bd347ff19aca0faf1c4d5d69706a))
+
+
+### Features
+
+* **bi:** filtros por zonas ([#2504](https://github.com/andes/app/issues/2504)) ([d9678c1](https://github.com/andes/app/commit/d9678c1dae6105b9636b78130368c09ca1882524))
+* **EP:** priorizacion seguimiento ([#2486](https://github.com/andes/app/issues/2486)) ([53cebad](https://github.com/andes/app/commit/53cebad90d44ae71032b201bf3e0b6b4d3f119d8))
+* **gdu:** suma datos de matricula externa a detalle de usuario ([#2497](https://github.com/andes/app/issues/2497)) ([2445dce](https://github.com/andes/app/commit/2445dce0c34d9d2b99288c38f17cee48a3167e60))
+* **per:** control para que en alertas solo traiga las correspondientes al efector logueado ([#2477](https://github.com/andes/app/issues/2477)) ([1a64a9b](https://github.com/andes/app/commit/1a64a9b2addd4022a21e9677a27e85ce386310f8))
+* **top:** permisos crear reglas ([#2503](https://github.com/andes/app/issues/2503)) ([b917cc0](https://github.com/andes/app/commit/b917cc044e6c0b5510ba77811eaade88aab23025))
+
 # [5.70.0](https://github.com/andes/app/compare/v5.69.0...v5.70.0) (2021-10-27)
 
 
