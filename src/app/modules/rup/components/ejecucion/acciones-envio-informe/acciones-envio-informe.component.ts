@@ -111,34 +111,38 @@ export class RUPAccionesEnvioInformeComponent {
     }
 
     enviarPDF(data) {
-        const { email, adjuntos } = data;
-        const documentos = this.getAdjuntos();
+        if (data) {
+            const { email, adjuntos } = data;
+            const documentos = this.getAdjuntos();
 
-        this.showModalEmails = false;
-        if (email) {
-            this.requestInProgress = true;
-            const datos: any = {
-                idPrestacion: this.prestacion.id,
-                email: email,
-                idOrganizacion: this.auth.organizacion.id,
-                adjuntos: adjuntos ? documentos : undefined
-            };
-            if (this.registro) {
-                datos.idRegistro = this.registro.id;
+            this.showModalEmails = false;
+            if (email) {
+                this.requestInProgress = true;
+                const datos: any = {
+                    idPrestacion: this.prestacion.id,
+                    email: email,
+                    idOrganizacion: this.auth.organizacion.id,
+                    adjuntos: adjuntos ? documentos : undefined
+                };
+                if (this.registro) {
+                    datos.idRegistro = this.registro.id;
+                }
+                this.servicioDocumentos.enviarInformeRUP(datos).subscribe(
+                    result => {
+                        this.requestInProgress = false;
+                        this.showModalEmails = false;
+
+                        if (result.status === 'OK') {
+                            this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
+                        } else {
+                            this.plex.info('danger', result.mensaje, 'Error');
+                        }
+                    },
+                    () => this.requestInProgress = false
+                );
             }
-            this.servicioDocumentos.enviarInformeRUP(datos).subscribe(
-                result => {
-                    this.requestInProgress = false;
-                    this.showModalEmails = false;
-
-                    if (result.status === 'OK') {
-                        this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
-                    } else {
-                        this.plex.info('danger', result.mensaje, 'Error');
-                    }
-                },
-                () => this.requestInProgress = false
-            );
+        } else {
+            this.showModalEmails = false;
         }
     }
 
