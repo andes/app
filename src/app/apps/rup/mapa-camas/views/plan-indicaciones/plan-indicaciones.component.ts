@@ -1,14 +1,14 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 import { PlanIndicacionesEventosServices } from '../../services/plan-indicaciones-eventos.service';
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
@@ -26,6 +26,8 @@ export class PlanIndicacionesComponent implements OnInit {
     private capa: string;
     private ambito: string;
     private idInternacion: string;
+    private paciente: any;
+    private maquinaEsados: any[];
 
     public fecha = new Date();
 
@@ -69,13 +71,24 @@ export class PlanIndicacionesComponent implements OnInit {
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
     );
 
+    public hayDraft = 0;
+
 
     eventos = {};
 
     indicacionView = null;
 
+    nuevaIndicacion = false;
+
     indicacionEventoSelected = null;
     horaSelected: Date;
+
+    tipoPrestacion = {
+        'conceptId' : '4981000013105',
+        'term' : 'plan de indicaciones médicas',
+        'fsn' : 'plan de indicaciones médicas (procedimiento)',
+        'semanticTag' : 'procedimiento'
+    };
 
     constructor(
         private prestacionService: PrestacionesService,
@@ -86,9 +99,8 @@ export class PlanIndicacionesComponent implements OnInit {
         private planIndicacionesServices: PlanIndicacionesServices,
         private indicacionEventosService: PlanIndicacionesEventosServices,
         private hudsService: HUDSService,
-        private router: Router,
         private auth: Auth,
-        private elementoRUPService: ElementosRUPService
+        private maquinaEstadoService: MaquinaEstadosHTTP
     ) { }
 
 
@@ -100,6 +112,7 @@ export class PlanIndicacionesComponent implements OnInit {
         this.getInternacion().subscribe((resumen) => {
             this.internacion = resumen;
             this.pacienteService.getById(resumen.paciente.id).subscribe(paciente => {
+                this.paciente = paciente;
                 this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
             });
             this.actualizar();
@@ -132,6 +145,9 @@ export class PlanIndicacionesComponent implements OnInit {
             });
 
             this.eventos = eventosMap;
+
+            this.hayDraft = this.indicaciones.filter(i => i.estado.tipo === 'draft').length;
+
         });
     }
 
@@ -224,24 +240,38 @@ export class PlanIndicacionesComponent implements OnInit {
 
 
     onNuevaIndicacion() {
-        const concepto = {
-            'conceptId': '4981000013105',
-            'term': 'plan de indicaciones médicas',
-            'fsn': 'plan de indicaciones médicas (procedimiento)',
-            'semanticTag': 'procedimiento'
-        };
+        this.nuevaIndicacion = true;
+        // const concepto = {
+        //     'conceptId': '4981000013105',
+        //     'term': 'plan de indicaciones médicas',
+        //     'fsn': 'plan de indicaciones médicas (procedimiento)',
+        //     'semanticTag': 'procedimiento'
+        // };
 
-        this.crearPrestacion(this.internacion.paciente, concepto, new Date()).pipe(
-            switchMap(prestacion => {
-                return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
-                    map(() => prestacion)
-                );
-            })
-        ).subscribe((prestacion) => {
-            this.prestacionService.notificaRuta({ nombre: 'Plan de Indicaciones', ruta: `/mapa-camas/${this.ambito}/${this.capa}/plan-indicaciones/${this.idInternacion}` });
-            this.router.navigate(['rup/ejecucion', prestacion.id]);
-        });
+        // this.crearPrestacion(this.internacion.paciente, concepto, new Date()).pipe(
+        //     switchMap(prestacion => {
+        //         return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
+        //             map(() => prestacion)
+        //         );
+        //     })
+        // ).subscribe((prestacion) => {
+        //     this.prestacionService.notificaRuta({ nombre: 'Plan de Indicaciones', ruta: `/mapa-camas/${this.ambito}/${this.capa}/plan-indicaciones/${this.idInternacion}` });
+        //     this.router.navigate(['rup/ejecucion', prestacion.id]);
+        // });
 
+    }
+
+    onSaveIndicacion(indicacion) {
+        if (!indicacion) {
+            this.nuevaIndicacion = false;
+        } else {
+            indicacion.paciente = this.paciente;
+            this.planIndicacionesServices.create(indicacion).subscribe(() => {
+                this.actualizar();
+                this.nuevaIndicacion = false;
+
+            });
+        }
     }
 
     crearPrestacion(paciente, concepto, fecha: Date) {
@@ -269,5 +299,38 @@ export class PlanIndicacionesComponent implements OnInit {
 
     tootleSeccion(seccion) {
         this.showSecciones[seccion.term] = !this.showSecciones[seccion.term];
+    }
+
+    onValidar() {
+        const registros = this.indicaciones.filter(indicacion => indicacion.estado.tipo === 'draft').map((indicacion) => {
+            return {
+                _id: indicacion.idRegistro,
+                id: indicacion.idRegistro,
+                nombre: indicacion.nombre,
+                concepto: indicacion.concepto,
+                elementoRUP: indicacion.elementoRUP,
+                esSolicitud: true,
+                valor: indicacion.valor
+            };
+        });
+
+        const prestacion = this.prestacionService.inicializarPrestacion(
+            this.paciente,
+            this.tipoPrestacion,
+            'ejecucion',
+            this.ambito,
+            new Date(),
+            null,
+            null,
+            registros
+        );
+        prestacion.trackId = this.idInternacion;
+        this.prestacionService.post(prestacion).subscribe((prestacion) => {
+            this.prestacionService.validarPrestacion(prestacion).subscribe(() => {
+                this.plex.info('info', 'tod bien').then(() => {
+                    this.actualizar();
+                });
+            });
+        });
     }
 }

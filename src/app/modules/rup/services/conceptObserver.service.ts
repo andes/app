@@ -1,9 +1,9 @@
 
-import { filter } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
+import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 
 @Injectable()
 export class ConceptObserverService {

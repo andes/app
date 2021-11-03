@@ -13,6 +13,8 @@ export class IndicacionLabelPipe implements PipeTransform {
             case 'stopped':
             case 'cancelled':
                 return 'suspendido';
+            case 'draft':
+                return 'borrador';
             default:
                 return 'activo';
         }

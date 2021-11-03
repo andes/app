@@ -1,4 +1,4 @@
-<plex-layout [main]="indicacionView || indicacionEventoSelected ? 8 : 12" resizable="true" min="2" max="6" [steps]="2">
+<plex-layout [main]="indicacionView || indicacionEventoSelected || nuevaIndicacion ? 8 : 12">
     <plex-layout-main>
         <plex-title titulo="Plan de indicaciones" main>
             <plex-datetime [(ngModel)]="fecha" skipBy="d" size="sm" type="date" (change)="onDateChange()">
@@ -6,6 +6,8 @@
             <plex-button type="success" size="sm" class="ml-2" (click)="onNuevaIndicacion()">
                 Nueva indicación
             </plex-button>
+
+
             <plex-button type="danger" label="volver" size="sm" class="ml-2"
                          routerLink="/mapa-camas/internacion/medica">
             </plex-button>
@@ -30,6 +32,10 @@
                                              (click)="onContinuarClick()" tooltip="Continuar"></plex-button>
                                 <plex-button *ngIf="completar$ | async" type="info" icon="check" size="sm"
                                              (click)="onCompletarClick()" tooltip="Completar"></plex-button>
+                                <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
+                                             (click)="onValidar()">
+                                    Validar Pendientes
+                                </plex-button>
                             </div>
                         </section>
                     </td>
@@ -128,8 +134,12 @@
                                     <plex-button type="info" icon="check" size="sm" (click)="onCompletarClick()"
                                                  tooltip="Completar"></plex-button>
                                 </span> -->
-                                <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">pendiente de
-                                    validación
+                                <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">
+                                    pendiente de validación
+                                </plex-badge>
+
+                                <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">
+                                    borrador
                                 </plex-badge>
 
                                 <div in-plan-indicacion-botonera [indicacion]="indicacion" (refresh)="actualizar()">
@@ -149,7 +159,14 @@
         </table>
 
     </plex-layout-main>
-    <plex-layout-sidebar type="invert">
+    <plex-layout-sidebar [type]="!nuevaIndicacion ? 'invert': null">
+
+        <ng-container *ngIf="nuevaIndicacion">
+            <plan-indicaciones-nueva-indicacion [tipoPrestacion]="tipoPrestacion" (save)="onSaveIndicacion($event)">
+            </plan-indicaciones-nueva-indicacion>
+        </ng-container>
+
+
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
                 <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>

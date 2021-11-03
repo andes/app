@@ -11,7 +11,6 @@ import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MapaCamasPlanIndicacionModule } from 'src/app/apps/rup/mapa-camas/views/plan-indicaciones/plan-indicaciones.module';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
-import { SnomedBuscarComponent } from '../../components/snomed/snomed-buscar.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
 import { DinamicaFormComponent } from '../../components/turnos/autocitar/dinamica.component';
@@ -19,7 +18,6 @@ import { CITASLibModule } from '../../components/turnos/citas.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { EpidemiologiaModule } from '../epidemiologia/epidemiologia.module';
 import { MPILibModule } from '../mpi/mpi-lib.module';
-import { BuscadorComponent } from './components/ejecucion/buscador.component';
 import { HelpSolicitudComponent } from './components/ejecucion/help-solicitud.component';
 import { PrestacionCrearComponent } from './components/ejecucion/prestacionCrear.component';
 import { PrestacionEjecucionComponent } from './components/ejecucion/prestacionEjecucion.component';
@@ -27,8 +25,6 @@ import { PrestacionValidacionComponent } from './components/ejecucion/prestacion
 import { PuntoInicioComponent } from './components/ejecucion/puntoInicio.component';
 import { RupRelacionesComponent } from './components/huds/relaciones-rup.component';
 import { RUPServicioIntermedioAltaComponent } from './components/servicio-intermedio/servicio-intermedio-alta.component';
-import { SnomedLinkComponent } from './directives/snomed-link';
-import { SnomedSinonimoComponent } from './directives/snomed-sinonimo';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
@@ -40,13 +36,9 @@ export const RUP_COMPONENTS = [
     PrestacionValidacionComponent,
     PlantillasRUPComponent,
     HelpSolicitudComponent,
-    SnomedBuscarComponent,
     DinamicaFormComponent,
     AutocitarTurnoAgendasComponent,
-    SnomedLinkComponent,
-    BuscadorComponent,
     RupRelacionesComponent,
-    SnomedSinonimoComponent,
     RUPServicioIntermedioAltaComponent
 ];
 
@@ -79,13 +71,14 @@ export const RUP_PROVIDERS = [
             { path: 'crear/:opcion', component: PrestacionCrearComponent },
             { path: 'ejecucion/:id', component: PrestacionEjecucionComponent },
             { path: 'validacion/:id', component: PrestacionValidacionComponent },
-            { path: 'plantillas', component: PlantillasRUPComponent }
+            { path: 'plantillas', component: PlantillasRUPComponent, pathMatch: 'full' }
         ])
     ],
     declarations: [
         ...RUP_COMPONENTS
     ],
-    exports: [],
+    exports: [
+    ],
 })
 export class RUPModule {
 
