@@ -13,4 +13,7 @@ export const estadosSeguimiento = [
 ];
 
 export const SECCION_CLASIFICACION = 'Tipo de confirmación y Clasificación Final';
-
+export const SECCION_OPERACIONES = 'Operaciones';
+export const SECCION_MPI = 'Mpi';
+export const SECCION_CONTACTOS_ESTRECHOS = 'Contactos Estrechos';
+export const SECCION_USUARIO = 'Usuario';
