@@ -40,6 +40,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     public resultadoBusqueda = [];
     public showBusquedaPaciente = false;
     public editFicha = false;
+    public puedeEliminar: boolean;
     public puedeVer: boolean;
     public puedeVerHistorial: boolean;
     public pacienteSelected: IPaciente;
@@ -164,6 +165,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
         this.permisoHuds = this.auth.check('huds:visualizacionHuds');
+        this.puedeEliminar = this.auth.check('epidemiologia:delete');
         this.puedeVer = this.auth.check('epidemiologia:read');
         this.puedeVerHistorial = this.auth.check('epidemiologia:historial');
         this.plex.updateTitle([
@@ -341,5 +343,16 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
     }
     changeCollapse(event) {
         this.collapse = event;
+    }
+
+    eliminar(ficha) {
+        this.plex.confirm('¿Desea eliminar esta ficha?', 'Eliminar ficha epidemiológica').then((confirmar) => {
+            if (confirmar) {
+                this.formEpidemiologiaService.update(ficha.id, { active: false }).subscribe(() => {
+                    this.plex.toast('success', 'Ficha eliminada exitosamente', 'Ficha eliminada', 1000);
+                    this.searchFichas();
+                });
+            }
+        });
     }
 }

@@ -75,6 +75,9 @@
                     <plex-button *ngIf="puedeVerHistorial" type="info" icon="history" size="sm" tooltip="Ver Historial"
                                  (click)="verHistorial(ficha)">
                     </plex-button>
+                    <plex-button *ngIf="puedeEliminar" type="danger" icon="trash-can" size="sm" tooltip="Eliminar ficha"
+                                 (click)="eliminar(ficha)">
+                    </plex-button>
                 </td>
                 <td *plTableCol="'sisa'">
                     <ng-container *ngIf="ficha | codigoSisaField as sisaField">
