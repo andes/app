@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { SECCION_OPERACIONES } from '../../constantes';
+import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
 
 @Component({
     selector: 'app-buscador-ficha-epidemiologica',
@@ -20,6 +21,7 @@ import { SECCION_OPERACIONES } from '../../constantes';
 })
 
 export class BuscadorFichaEpidemiologicaComponent implements OnInit {
+    @ViewChild('wrapper') wrapper: PlexWrapperComponent;
     public fechaDesde: Date;
     public fechaHasta: Date;
     public typeFicha = null;
@@ -214,6 +216,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                         this.listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.query.skip = this.listado.length;
                         this.inProgress = false;
+                        this.wrapper.desplegado = this.collapse;
                         return this.listado;
                     })
                 );
