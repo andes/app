@@ -1,11 +1,11 @@
-import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
-import { Component, OnInit } from '@angular/core';
+import { Auth } from '@andes/auth';
 import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Auth } from '@andes/auth';
 import { DocumentosService } from 'src/app/services/documentos.service';
+import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
 
 @Component({
     selector: 'listado-perinatal',
@@ -27,6 +27,8 @@ export class ListadoPerinatalComponent implements OnInit {
     public carnetSelected;
     public profesional;
     public organizacion;
+    public sortBy: string;
+    public sortOrder = 'desc';
     public columns = [
         {
             key: 'fechaInicio',
@@ -62,8 +64,9 @@ export class ListadoPerinatalComponent implements OnInit {
         },
         {
             key: 'ausente',
-            label: '',
-            sorteable: false
+            label: 'Estado',
+            sorteable: false,
+            opcional: true,
         },
         {
             key: 'fechaCita',
