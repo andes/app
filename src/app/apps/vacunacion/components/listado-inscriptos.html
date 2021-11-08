@@ -178,9 +178,10 @@
                     </plex-button>
                 </plex-title>
 
-                <detalle-inscripcion [inscripcion]=" pacienteSelected">
+                <detalle-inscripcion [inscripcion]="pacienteSelected">
                 </detalle-inscripcion>
-                <notas [inscripcion]="pacienteSelected" (returnNotas)="returnEdicion($event)">
+                <notas [nota]="pacienteSelected.nota" [notasPredefinidas]="this.notasPredefinidas"
+                       (guardar)="returnNotas($event)">
                 </notas>
             </ng-container>
         </ng-container>

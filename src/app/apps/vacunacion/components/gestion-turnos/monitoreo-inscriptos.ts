@@ -34,7 +34,6 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public localidadAsignadasSelected;
     public grupoAsignadasSelected;
     private idNeuquenProv = '57f3f3aacebd681cc2014c53';
-    public showAgregarNota = false;
     public permisosEdicion;
     public editando = false;
     public dacionTurno = false;
@@ -44,6 +43,13 @@ export class MonitoreoInscriptosComponent implements OnInit {
     public inscriptosSinturno = [];
     public showDarTurnos = false;
     public solicitudTurno: any;
+    public notasPredefinidas = [
+        { id: 'turno-asignado', nombre: 'Turno asignado' },
+        { id: 'no-quiere', nombre: 'No quiere vacunarse' },
+        { id: 'vacunado', nombre: 'Ya se vacunó' },
+        { id: 'no-contesta', nombre: 'No contesta' },
+        { id: 'otra', nombre: 'Otra' }
+    ];
     public columns = [
         {
             key: 'grupo',
@@ -241,18 +247,23 @@ export class MonitoreoInscriptosComponent implements OnInit {
     }
 
 
-    returnNotas(inscripcionActualizada) {
-        if (inscripcionActualizada) {
-            this.pacienteSelected = inscripcionActualizada;
+    returnNotas(nota) {
+        this.pacienteSelected.nota = nota;
+        this.inscripcionService.update(this.pacienteSelected.id, this.pacienteSelected).subscribe(resultado => {
+            if (nota) {
+                this.plex.toast('success', 'Nota editada con éxito');
+            } else {
+                this.plex.toast('success', 'Nota eliminada con éxito');
+            }
             if (this.activeTab === 1) {
-                this.pacienteSelected = inscripcionActualizada;
                 this.cargarAsignadas();
             } else {
-                this.pacienteLlamado = inscripcionActualizada;
+                this.pacienteLlamado = this.pacienteSelected;
                 this.pacienteProcesado = true;
             }
-        }
-        this.showAgregarNota = false;
+        }, error => {
+            this.plex.toast('danger', 'La inscripción no pudo ser actualizada');
+        });
     }
 
     cargarAsignadas() {

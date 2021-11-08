@@ -155,7 +155,7 @@
             </plex-button>
         </plex-title>
         <hr class="mb-2">
-        <plex-title titulo="Inscripción" size="sm" *ngIf="!editando && !dacionTurno && !showAgregarNota">
+        <plex-title titulo="Inscripción" size="sm" *ngIf="!editando && !dacionTurno">
 
             <plex-button type="success" size="sm" title="{{ pacienteSelected.turno ? 'Modificar turno' : 'Dar turno' }}"
                          icon="calendar-plus" (click)="darTurno()">
@@ -176,21 +176,15 @@
                     <plex-button *ngIf="permisosEdicion.length" type="link" label="Editar inscripción" size="sm"
                                  icon="pencil" (click)="editPaciente()">
                     </plex-button>
-                    <plex-button type="link" label="{{ pacienteSelected.nota ? 'Modificar nota' : 'Agregar nota' }}"
-                                 size="sm" icon="{{ pacienteSelected.nota ? 'comment' : 'comment-outline' }}"
-                                 (click)="showAgregarNota = true">
-                    </plex-button>
                 </div>
             </plex-dropdown>
 
         </plex-title>
-        <notas *ngIf="showAgregarNota" [inscripcion]="pacienteSelected" (returnNotas)="returnNotas($event)">
-        </notas>
 
         <!-- formulario para editar inscripción -->
         <editar-inscripcion *ngIf="editando" [inscripcion]="pacienteSelected" (returnEdicion)="returnEdicion($event)">
         </editar-inscripcion>
-        <detalle-inscripcion *ngIf="!editando && !dacionTurno && !showAgregarNota" [inscripcion]="pacienteSelected">
+        <detalle-inscripcion *ngIf="!editando && !dacionTurno" [inscripcion]="pacienteSelected">
         </detalle-inscripcion>
 
         <!-- formulario para seleccion de organizacion, paso previo a dar un turno -->
@@ -209,7 +203,9 @@
                 </plex-button>
             </plex-wrapper>
         </ng-container>
-
+        <notas [nota]="pacienteSelected.nota" [notasPredefinidas]="this.notasPredefinidas"
+               (guardar)="returnNotas($event)">
+        </notas>
     </plex-layout-sidebar>
 </plex-layout>
 

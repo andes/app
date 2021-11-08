@@ -1,4 +1,5 @@
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -93,7 +94,8 @@ export class ListadoPerinatalComponent implements OnInit {
         private router: Router,
         private location: Location,
         private carnetPerinatalService: CarnetPerinatalService,
-        private documentosService: DocumentosService
+        private documentosService: DocumentosService,
+        private plex: Plex
     ) { }
 
     ngOnInit(): void {
@@ -166,5 +168,21 @@ export class ListadoPerinatalComponent implements OnInit {
                 map(resp => this.listadoActual = resp)
             );
         }
+    }
+
+    returnNotas(nota) {
+        this.carnetSelected.nota = nota;
+        this.carnetPerinatalService.update(this.carnetSelected.id, this.carnetSelected).subscribe(resultado => {
+            this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
+                map(resp => this.listadoActual = resp)
+            );
+            if (nota) {
+                this.plex.toast('success', 'Nota editada con éxito');
+            } else {
+                this.plex.toast('success', 'Nota eliminada con éxito');
+            }
+        }, error => {
+            this.plex.toast('danger', 'El carnet no pudo ser actualizado');
+        });
     }
 }

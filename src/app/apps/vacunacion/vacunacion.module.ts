@@ -21,7 +21,6 @@ import { EditarInscripcionComponent } from './components/editar-inscripcion.comp
 import { InscripcionBusquedaPacienteComponent } from './components/nueva-inscripcion/busqueda-paciente.component';
 import { NuevaInscripcionComponent } from './components/nueva-inscripcion/nueva-inscripcion.component';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
-import { NotasComponent } from './components/notas.component';
 import { LoteComponent } from './components/lote/lote.component';
 import { CITASLibModule } from 'src/app/components/turnos/citas.module';
 import { LoteEsquemasComponent } from './components/lote/lote-esquemas.component';
@@ -51,7 +50,6 @@ import { LoteEsquemasComponent } from './components/lote/lote-esquemas.component
         InscripcionBusquedaPacienteComponent,
         NuevaInscripcionComponent,
         MonitoreoInscriptosComponent,
-        NotasComponent,
         LoteComponent,
         LoteEsquemasComponent,
     ],
