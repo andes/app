@@ -109,12 +109,6 @@ export class ListadoPerinatalComponent implements OnInit {
     }
 
     filtrar() {
-        if (this.fechaUltimoControl) {
-            this.fechaUltimoControl = moment(this.fechaUltimoControl).startOf('day').toDate();
-        }
-        if (this.fechaCita) {
-            this.fechaCita = moment(this.fechaCita).startOf('day').toDate();
-        }
         this.carnetPerinatalService.lastResults.next(null);
         this.carnetPerinatalService.paciente.next(this.paciente);
         this.carnetPerinatalService.fechaDesde.next(this.fechaDesdeEntrada);

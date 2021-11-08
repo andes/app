@@ -1,8 +1,7 @@
+import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Server, ResourceBaseHttp } from '@andes/shared';
-import { BehaviorSubject, combineLatest, Observable, EMPTY } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
+import { auditTime, map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class CarnetPerinatalService extends ResourceBaseHttp {
@@ -32,6 +31,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
             this.fechaUltimoControl,
             this.lastResults
         ).pipe(
+            auditTime(0),
             switchMap(([fechaDesde, fechaHasta, organizacion, profesional, paciente, fechaProximoControl, fechaUltimoControl, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
@@ -48,10 +48,10 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.paciente = '^' + paciente.toUpperCase();
                 }
                 if (fechaProximoControl) {
-                    params.fechaProximoControl = fechaProximoControl;
+                    params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');;
                 }
                 if (fechaUltimoControl) {
-                    params.fechaUltimoControl = fechaUltimoControl;
+                    params.fechaUltimoControl = moment(fechaUltimoControl).format('YYYY-MM-DD');
                 }
                 if (organizacion) {
                     params.organizacion = organizacion.id;
