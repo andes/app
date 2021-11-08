@@ -36,7 +36,7 @@
                     <plex-badge *ngIf="!organizacion.activo" type="danger">
                         {{organizacionService.getEstado(organizacion)}} </plex-badge>
                 </td>
-                <td *plTableCol="'Acciones'">
+                <td *plTableCol="'Acciones'" justify="start">
                     <plex-button *ngIf="checkAuth('editBasico') || checkAuth('editCompleto')" size="sm" type="primary"
                                 label="Editar" (click)="onEdit(organizacion)">
                     </plex-button>
@@ -46,8 +46,12 @@
                     <plex-button *ngIf="checkAuth('prestaciones', organizacion.id)" size="sm" type="primary"
                                 label="Ofertas Prestacionales" (click)="routePrestaciones(organizacion.id)" class="pl-1">
                     </plex-button>
-                    <plex-button size="sm" type="primary" label="Servicios" (click)="routerConfiguracion(organizacion.id)" class="pl-1">
-                    </plex-button>
+                    <plex-dropdown class="pl-1" type="info" right="true" icon="dots-vertical" size="sm" tooltip="Configuración">
+                        <plex-button type="link" label="Servicios" (click)="routerConfiguracion(organizacion.id)" class="pl-1">
+                        </plex-button>
+                        <plex-button type="link" label="Internacion" (click)="routerConfiguracionInternacion(organizacion.id)" class="pl-1">
+                        </plex-button>
+                    </plex-dropdown>
                 </td>
             </tr>
         </plex-table>

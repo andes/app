@@ -1,0 +1,50 @@
+<plex-layout>
+    <plex-layout-main>
+        <form #form="ngForm">
+            <plex-title titulo="Configuración de internación">
+                <plex-button class="pr-1" type="danger" label="Volver" (click)="volver()"></plex-button>
+                <plex-button type="success" label="Guardar" [validateForm]="true" (click)="guardar(form.valid)"></plex-button>
+            </plex-title>
+        
+            <plex-select label="Capa" placeholder="Seleccione..." name="capa" [(ngModel)]="capaSelected" [data]="capas" [required]="true" (change)="changeCapa()"></plex-select>
+            <plex-bool *ngIf="configuracionDefaultCapa" type="slide" name="historial" label="Historial médico (Si está activo se podrán visualizar internaciones de la capa médica)" [(ngModel)]="configuracionDefaultCapa.historialMedico"></plex-bool>
+            
+            <div class="pt-2" *ngIf="configuracionDefaultCapa?.estados[1]?.acciones as acciones">
+                <plex-title titulo="Acciones" size="sm">
+                    <plex-button type="info" size="sm" label="Agregar acción" (click)="nuevaAccion()"></plex-button>
+                </plex-title>
+                <plex-table [columns]="columns" #table="plTable" *ngIf="acciones.length">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let accion of acciones; let i = index">
+                        <td *plTableCol="'registro'">
+                            <plex-text name="nombre-{{i}}" label="" [(ngModel)]="accion.label" [required]="true"></plex-text>
+                        </td>
+                        <td *plTableCol="'unidadOrganizativa'">
+                            <plex-grid cols="3">
+                                <plex-bool name="boolUnidad{{i}}" type="slide" label="Exceptuar UO" [(ngModel)]="accion?.parametros.unidadExceptuada"></plex-bool>
+                                <plex-select name="unidadOrganizativa-{{i}}" idField="conceptId" labelField="term"
+                                            placeholder="Seleccione..." (getData)="loadListadoUO($event)"
+                                            [(ngModel)]="accion?.parametros?.unidadOrganizativa[0]" [required]="true" span="2"></plex-select>
+                            </plex-grid>
+                        </td>
+                        <td *plTableCol="'concepto'">
+                            <plex-select name="concepto-{{i}}" placeholder="Seleccione..." idField="conceptId" labelField="term"
+                                    (getData)="loadConceptos($event)" [(ngModel)]="accion.parametros.concepto" [required]="true"></plex-select>
+                        </td>
+                        <td *plTableCol="'acciones'">
+                            <plex-button class="w-10" label="" size="sm" type="danger" icon="delete" (click)="deleteAccion(i)"></plex-button>
+                        </td>
+                    </tr>
+                </plex-table>
+
+                <div *ngIf="!acciones.length" justify="center" class="mt-5">
+                    <plex-label icon="playlist-plus" type="info" size="xl" direction="column"
+                                titulo='Aún no hay acciones configuradas'
+                                subtitulo="Presione el botón 'Agregar acción' para configurar una nueva">
+                    </plex-label>
+                </div>
+            </div>
+        </form>
+    </plex-layout-main>
+</plex-layout>

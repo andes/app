@@ -140,4 +140,8 @@ export class OrganizacionComponent implements OnInit {
     routerConfiguracion(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/configuracion']);
     }
+
+    routerConfiguracionInternacion(id) {
+        this.router.navigate(['/tm/organizacion/' + id + '/configuracion_internacion']);
+    }
 }
