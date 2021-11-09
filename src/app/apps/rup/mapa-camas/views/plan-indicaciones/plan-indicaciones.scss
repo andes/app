@@ -225,6 +225,12 @@ in-plan-indicacion{
                     width: 50px;
                     height: 100%;
                     margin-right: .5rem;
+
+                    --iconColor: #00bcb4;
+                    background-color: var(--iconColor);
+                    + .item__title { 
+                        color: var(--iconColor);
+                    }
                             
                     // Modificadores cromáticos
                     &--procedimiento {

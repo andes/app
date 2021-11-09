@@ -49,18 +49,29 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
                     this.crearItem('Finalizar', 'completed')
                 ];
                 break;
+            case 'draft':
+                this.items = [
+                    this.crearItem('Eliminar', 'deleted'),
+                ];
         }
     }
 
     cambiarEstado(estado: string) {
-        const estadoParams = {
-            tipo: estado,
-            fecha: new Date()
-        };
-        this.planIndicacionesServices.updateEstado(this.indicacion.id, estadoParams).subscribe(() => {
-            this.refresh.emit();
-            this.plex.toast('success', 'Indicaciones actualizadas');
-        });
+        if (estado === 'deleted') {
+            this.planIndicacionesServices.delete(this.indicacion.id).subscribe(() => {
+                this.refresh.emit();
+                this.plex.toast('success', 'La indicación ha sido borrada');
+            });
+        } else {
+            const estadoParams = {
+                tipo: estado,
+                fecha: new Date()
+            };
+            this.planIndicacionesServices.updateEstado(this.indicacion.id, estadoParams).subscribe(() => {
+                this.refresh.emit();
+                this.plex.toast('success', 'Indicaciones actualizadas');
+            });
+        }
     }
 
     crearItem(label: string, state: string) {

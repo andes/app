@@ -31,6 +31,8 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         'semanticTag' : 'procedimiento'
     };
 
+    @Input() seccion = null;
+
     prestacion: IPrestacion = {
         solicitud: {
             tipoPrestacion: {
@@ -56,6 +58,13 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
+
+        if (this.seccion && this.seccion.registro) {
+            this.onConceptoSelect({
+                ...this.seccion.registro,
+                esSolicitud: true
+            });
+        }
     }
 
     onConceptoSelect(concepto) {
@@ -69,13 +78,13 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
 
     onSave() {
         const nombre = this.registro.valor?.medicamento?.term || this.registro.concepto.term;
-
         const indicacion = {
             idInternacion: this.idInternacion,
             idPrestacion: null,
             idRegistro: this.registro.id,
             fechaInicio: new Date(),
             ambito: this.ambito,
+            capa: this.capa,
             organizacion: this.auth.organizacion,
             profesional: {
                 id: this.auth.profesional,
@@ -87,7 +96,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
             concepto: this.registro.concepto,
             valor: this.registro.valor,
             elementoRUP: this.elementoRUP.id,
-            seccion: null,
+            seccion: this.seccion.concepto,
             estados: [{
                 tipo: 'draft',
                 fecha: new Date()

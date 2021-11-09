@@ -19,7 +19,7 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
         return this.server.patch(`${this.url}/${idIndicacion}/estado`, estado);
     }
 
-    getIndicaciones(idInternacion: string, fecha: Date) {
+    getIndicaciones(idInternacion: string, fecha: Date, capa: string) {
         return this.search({
             internacion: idInternacion,
             fechaInicio: `<${moment(fecha).endOf('day').format()}`
@@ -45,9 +45,12 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                         return {
                             ...ind,
                             estado,
-                            seccion: ind.seccion || { term: ' - sin sección -' }
+                            seccion: ind.seccion || { term: ' - sin sección -' },
+                            readonly: capa !== ind.capa
                         };
-                    }).sort((a, b) => {
+                    })
+                    .filter(ind => ind.estado.tipo !== 'draft' || ind.capa === capa)
+                    .sort((a, b) => {
                         if (!a.seccion) {
                             return -1;
                         }

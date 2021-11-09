@@ -6,6 +6,7 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
@@ -71,6 +72,10 @@ export class PlanIndicacionesComponent implements OnInit {
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
     );
 
+    public deleted$ = this.botones$.pipe(
+        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'draft'))
+    );
+
     public hayDraft = 0;
 
 
@@ -79,6 +84,7 @@ export class PlanIndicacionesComponent implements OnInit {
     indicacionView = null;
 
     nuevaIndicacion = false;
+    seccionSelected = null;
 
     indicacionEventoSelected = null;
     horaSelected: Date;
@@ -90,6 +96,9 @@ export class PlanIndicacionesComponent implements OnInit {
         'semanticTag' : 'procedimiento'
     };
 
+    secciones: any[] = [];
+    seccionesActivas: any[] = [];
+
     constructor(
         private prestacionService: PrestacionesService,
         private route: ActivatedRoute,
@@ -100,7 +109,8 @@ export class PlanIndicacionesComponent implements OnInit {
         private indicacionEventosService: PlanIndicacionesEventosServices,
         private hudsService: HUDSService,
         private auth: Auth,
-        private maquinaEstadoService: MaquinaEstadosHTTP
+        private maquinaEstadoService: MaquinaEstadosHTTP,
+        private elementoRUPService: ElementosRUPService
     ) { }
 
 
@@ -118,11 +128,36 @@ export class PlanIndicacionesComponent implements OnInit {
             this.actualizar();
 
         });
+
+        this.maquinaEstadoService.getAll(
+            this.auth.organizacion.id,
+            this.ambito
+        ).subscribe((maquinas: any[]) => {
+            const capa = maquinas.find(m => m.capa === this.capa);
+            if (capa) {
+                this.tipoPrestacion = capa.planIndicaciones?.tipoPrestacion || this.tipoPrestacion;
+            }
+            maquinas.forEach(m => {
+                if (m.planIndicaciones?.secciones) {
+                    this.secciones.push(
+                        ...m.planIndicaciones?.secciones.map(s => ({
+                            ...s,
+                            capa: m.capa
+                        }))
+                    );
+                }
+            });
+
+        });
+    }
+
+    getItems(seccion) {
+        return this.indicaciones.filter(i => i.seccion.conceptId === seccion.concepto.conceptId);
     }
 
     actualizar() {
         forkJoin([
-            this.planIndicacionesServices.getIndicaciones(this.idInternacion, this.fecha),
+            this.planIndicacionesServices.getIndicaciones(this.idInternacion, this.fecha, this.capa),
             this.indicacionEventosService.search({
                 internacion: this.idInternacion,
                 fecha: this.indicacionEventosService.queryDateParams(
@@ -133,7 +168,14 @@ export class PlanIndicacionesComponent implements OnInit {
             })
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
+            this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
             this.indicaciones.forEach((indicacion) => {
+                const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
+                if (!seccion) {
+                    this.seccionesActivas.push(
+                        this.secciones.find(s => s.concepto.conceptId === indicacion.seccion.conceptId)
+                    );
+                }
                 this.showSecciones[indicacion.seccion.term] = true;
             });
 
@@ -185,17 +227,31 @@ export class PlanIndicacionesComponent implements OnInit {
 
     cambiarEstado(estado: string) {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
-        const estadoParams = {
-            tipo: estado,
-            fecha: new Date()
-        };
-        const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
-        forkJoin(
-            datos
-        ).subscribe(() => {
-            this.actualizar();
-            this.plex.toast('success', 'Indicaciones actualizadas');
-        });
+        if (estado === 'deleted') {
+            const datos = indicaciones.map(ind => this.planIndicacionesServices.delete(ind.id));
+            forkJoin(
+                datos
+            ).subscribe(() => {
+                this.actualizar();
+                this.plex.toast('success', 'Indicaciones actualizadas');
+            });
+        } else {
+            const estadoParams = {
+                tipo: estado,
+                fecha: new Date()
+            };
+            const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
+            forkJoin(
+                datos
+            ).subscribe(() => {
+                this.actualizar();
+                this.plex.toast('success', 'Indicaciones actualizadas');
+            });
+        }
+    }
+
+    onDeletedClick() {
+        this.cambiarEstado('deleted');
     }
 
     onPausarClick() {
@@ -215,19 +271,23 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onSelectIndicacion(indicacion) {
-        this.indicacionEventoSelected = null;
-        if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
-            this.indicacionView = indicacion;
-        } else {
-            this.indicacionView = null;
+        if (!this.nuevaIndicacion) {
+            this.indicacionEventoSelected = null;
+            if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
+                this.indicacionView = indicacion;
+            } else {
+                this.indicacionView = null;
+            }
         }
     }
 
 
     onIndicacionesCellClick(indicacion, hora) {
-        this.indicacionEventoSelected = indicacion;
-        this.horaSelected = hora;
-        this.indicacionView = null;
+        if (indicacion.estado.tipo !== 'draft') {
+            this.indicacionEventoSelected = indicacion;
+            this.horaSelected = hora;
+            this.indicacionView = null;
+        }
     }
 
     onEventos(debeActualizar: boolean) {
@@ -239,8 +299,15 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
 
-    onNuevaIndicacion() {
+    onNuevaIndicacion(seccion) {
+        this.indicacionEventoSelected = null;
+        this.indicacionView = null;
         this.nuevaIndicacion = true;
+        this.seccionSelected = seccion;
+        if (!seccion) {
+            this.seccionSelected = this.secciones.find(s => s.concepto.conceptId === '6381000013101');
+        }
+
         // const concepto = {
         //     'conceptId': '4981000013105',
         //     'term': 'plan de indicaciones médicas',
@@ -327,7 +394,7 @@ export class PlanIndicacionesComponent implements OnInit {
         prestacion.trackId = this.idInternacion;
         this.prestacionService.post(prestacion).subscribe((prestacion) => {
             this.prestacionService.validarPrestacion(prestacion).subscribe(() => {
-                this.plex.info('info', 'tod bien').then(() => {
+                this.plex.info('info', 'Indicaciones validadas').then(() => {
                     this.actualizar();
                 });
             });
