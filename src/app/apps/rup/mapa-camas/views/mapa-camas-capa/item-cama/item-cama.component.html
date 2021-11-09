@@ -77,9 +77,11 @@
             </span>
         </td>
         <td class="d-flex align-items-center">
-            <plex-badge [type]="estadoCama?.color">
+            <ng-container *ngIf="estadoCama$ | async as estadoCama">
+                <plex-badge [type]="estadoCama?.color">
                 {{estadoCama?.label}}
-            </plex-badge>
+                </plex-badge>
+            </ng-container>
             <plex-badge *ngIf="cama.sala" type="info" class="ml-1" tooltip="Sala común con varios pacientes">
                 <plex-icon name="paciente-medico"></plex-icon>
             </plex-badge>
@@ -96,9 +98,9 @@
         </td>
         <td>
             <ng-container *ngIf="permisosMapaCamasService.movimientos">
-                <ng-container *ngFor="let relacion of relacionesPosibles">
-                    <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
-                                  || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
+                <ng-container *ngFor="let relacion of mapaCamasService.getRelacionesPosibles(cama) | async">
+                    <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisosMapaCamasService.ingreso)
+                                  || (relacion.nombre === 'Bloquear' && permisosMapaCamasService.bloqueo)">
                         <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                      size="sm" (click)="accion(relacion, $event)">
                         </plex-button>

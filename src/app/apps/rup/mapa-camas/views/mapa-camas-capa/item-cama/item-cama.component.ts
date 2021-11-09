@@ -1,10 +1,11 @@
 import { Auth } from '@andes/auth';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { aporteOxigeno, monitorFisiologico, monitorTelemetrico, respirador } from '../../../constantes-internacion';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -12,16 +13,12 @@ import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ItemCamaComponent implements OnChanges {
+export class ItemCamaComponent implements OnChanges, OnInit {
     @Input() cama: any;
-    @Input() permisoIngreso: boolean;
-    @Input() permisoBloqueo: boolean;
-    @Input() relacionesPosibles: any;
-    @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
 
     canEdit = false;
-
+    estadoCama$: Observable<any>;
     columns$ = this.mapaCamasService.columnsMapa.pipe(
         map((columns) => {
             return columns;
@@ -45,6 +42,11 @@ export class ItemCamaComponent implements OnChanges {
         private mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
+    }
+    ngOnInit() {
+        this.mapaCamasService.setAmbito(this.cama.ambito);
+        this.permisosMapaCamasService.setAmbito(this.cama.ambito);
+        this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
     }
 
     ngOnChanges() {
