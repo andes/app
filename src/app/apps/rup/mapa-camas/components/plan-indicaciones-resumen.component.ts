@@ -23,7 +23,7 @@ export class PlanIndicacionesResumenComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.indicaciones$ = this.planIndicacionesServices.getIndicaciones(this.prestacion.trackId, new Date());
+        this.indicaciones$ = this.planIndicacionesServices.getIndicaciones(this.prestacion.trackId, new Date(), null);
     }
 
     onEdit(indicacion) {

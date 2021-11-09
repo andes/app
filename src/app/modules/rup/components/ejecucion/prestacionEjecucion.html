@@ -344,7 +344,7 @@
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
                     <rup-buscador [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"
                                   [conceptoFrecuente]="conceptoFrecuente" (_onDragStart)="arrastrandoConcepto(true)"
-                                  (_onDragEnd)="arrastrandoConcepto(false)" (select)="onSelectConcepto($event)">
+                                  (_onDragEnd)="arrastrandoConcepto(false)" (selected)="onSelectConcepto($event)">
                     </rup-buscador>
                 </plex-tab>
                 <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">

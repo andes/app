@@ -77,9 +77,11 @@
                              (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
 
-                <plex-button *ngIf="capa !== 'enfermeria'" label="INDICACIONES" size="sm" type="info"
-                             (click)="onVerIndicaciones(cama)" class="mr-1">
-                </plex-button>
+                <ng-container *feature="'planIndicaciones'">
+                    <plex-button *ngIf="capa !== 'estadistica'" label="INDICACIONES" size="sm" type="info"
+                                 (click)="onVerIndicaciones(cama)" class="mr-1">
+                    </plex-button>
+                </ng-container>
 
                 <ng-container *ngIf="turnero$ | async as pantalla">
                     <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">

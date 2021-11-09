@@ -235,10 +235,10 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     onVerIndicaciones(cama: ISnapshot) {
-        this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
-            const capa = this.mapaCamasService.capa;
-            const ambito = this.mapaCamasService.ambito;
-            this.router.navigate([`/mapa-camas/${ambito}/${capa}/plan-indicaciones/${cama.idInternacion}`]);
-        });
+        // this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
+        const capa = this.mapaCamasService.capa;
+        const ambito = this.mapaCamasService.ambito;
+        this.router.navigate([`/mapa-camas/${ambito}/${capa}/plan-indicaciones/${cama.idInternacion}`]);
+        // });
     }
 }

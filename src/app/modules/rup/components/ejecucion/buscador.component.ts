@@ -26,7 +26,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() select: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+
+    @Input() semanticTags: string[] = null;
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
@@ -262,7 +264,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} resultadosSnomed
      */
     recibeResultados(resultadosSnomed: any) {
-
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         this.resultadosSnomedAux = resultadosSnomed.items;
@@ -300,13 +301,15 @@ export class BuscadorComponent implements OnInit, OnChanges {
         const resultados = this.results[busquedaActual]['todos'];
 
         if (this.conceptos && resultados) {
-            Object.keys(this.conceptos).forEach(concepto => {
-                if (concepto === 'planes' && this.resultadosSnomedAux) {
-                    this.results[busquedaActual][concepto] = this.resultadosSnomedAux.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-                } else {
-                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-                }
-            });
+            Object.keys(this.conceptos)
+                .filter(semantic => !this.semanticTags || this.semanticTags.includes(semantic))
+                .forEach(concepto => {
+                    if (concepto === 'planes' && this.resultadosSnomedAux) {
+                        this.results[busquedaActual][concepto] = this.resultadosSnomedAux.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                    } else {
+                        this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                    }
+                });
         }
 
         if (this.results && this.results[busquedaActual]) {
@@ -336,6 +339,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 // agregamos los planes
                 this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos'], ...planes];
                 // ordenamos los resultados
+            }
+
+            if (this.semanticTags) {
+                this.results[busquedaActual]['todos'] = [];
+                this.filtroActual =this.semanticTags[0] as any;
             }
         }
     }
@@ -420,7 +428,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     private agregarConcepto(concepto) {
-        this.select.emit(concepto);
+        this.selected.emit(concepto);
     }
 
     public esSolicitud(concepto: any) {

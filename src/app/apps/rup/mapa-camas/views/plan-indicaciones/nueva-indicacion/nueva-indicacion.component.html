@@ -1,8 +1,9 @@
 <rup-buscador *ngIf="!selectedConcept" [tipoPrestacion]="tipoPrestacion" [conceptoFrecuente]="tipoPrestacion"
-              (select)="onConceptoSelect($event)"></rup-buscador>
+              (selected)="onConceptoSelect($event)" [semanticTags]="['planes']"></rup-buscador>
 
 
 <ng-container *ngIf="selectedConcept">
+    <plex-title [titulo]="selectedConcept.term"></plex-title>
     <ng-container *ngIf="(ps.plantillas(selectedConcept.conceptId, true) | async) as plantillas">
         <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="playlist-plus" [items]="plantillas"
                        title="Seleccionar plantilla" titlePosition="left" *ngIf="plantillas.length > 0">
@@ -10,9 +11,9 @@
     </ng-container>
     <rup [elementoRUP]="elementoRUP" [registro]="registro" [prestacion]="prestacion">
     </rup>
-    <div justify>
+    <div justify class="mt-2">
         <plex-button type="danger" (click)="onCancel()">CANCELAR</plex-button>
-        <plex-button type="success" (click)="onSave()">GUARDAR</plex-button>
+        <plex-button type="success" (click)="onSave()">ACEPTAR</plex-button>
     </div>
 
 </ng-container>
