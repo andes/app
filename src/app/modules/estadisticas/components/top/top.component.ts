@@ -50,6 +50,7 @@ export class TopComponent implements OnInit {
     public params = {};
     public panelIndex = 0;
     public activeTab = 0;
+    public mensajeInicial = true;
 
     constructor(
         private plex: Plex,
@@ -61,7 +62,6 @@ export class TopComponent implements OnInit {
     ngOnInit() {
         this.plex.updateTitle([
             { route: '/', name: 'ANDES' },
-            { name: 'Dashboard', route: '/dashboard' },
             { name: 'Top' }
         ]);
     }
@@ -76,6 +76,7 @@ export class TopComponent implements OnInit {
         };
 
         this.servicioTOP.post($event).subscribe((data) => {
+            this.mensajeInicial = false;
             this.dataEntrada = data.entrada;
             this.dataSalida = data.salida;
         });

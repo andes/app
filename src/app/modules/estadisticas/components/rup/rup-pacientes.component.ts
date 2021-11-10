@@ -44,6 +44,203 @@ export class RupPacientesComponent implements OnInit {
     public tablas: any = [];
     public conceptos: { [key: string]: ISnomedConcept } = {};
 
+    public mensajeInicial = true;
+
+    // Permite :hover y click()
+    public selectable = true;
+
+    public conceptosColumns = [
+        {
+            key: 'conceptoTerm',
+            label: 'Concepto',
+            sorteable: false,
+            opcional: true
+        },
+        {
+            key: 'conceptoSemanticTag',
+            label: 'Semantic Tag',
+            sorteable: false,
+            opcional: true
+        },
+        {
+            key: 'cantidad',
+            label: 'Cantidad',
+            sorteable: false,
+            opcional: true
+        },
+        {
+            key: 'cantidadRelacionados',
+            label: 'Cant. Rel.',
+            sorteable: false,
+            opcional: true
+        },
+        {
+            key: 'relaciones',
+            label: 'Relaciones',
+            sorteable: false,
+            opcional: true
+        },
+    ];
+
+    public columns = [
+        {
+            key: 'sexoedad',
+            label: 'Sexo/Edad',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '0',
+            label: '0',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '10',
+            label: '10',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '20',
+            label: '20',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '30',
+            label: '30',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '40',
+            label: '40',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '50',
+            label: '50',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '60',
+            label: '60',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '70',
+            label: '70',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '80',
+            label: '80',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '90',
+            label: '90',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'total',
+            label: 'Total',
+            sorteable: false,
+            opcional: false
+        },
+    ];
+
+    public estadisticasColumns = [
+        {
+            key: 'sexodecada',
+            label: 'Sexo/Decada',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '0',
+            label: '0',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '10',
+            label: '10',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '20',
+            label: '20',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '30',
+            label: '30',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '40',
+            label: '40',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '50',
+            label: '50',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '60',
+            label: '60',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '70',
+            label: '70',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '80',
+            label: '80',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: '90',
+            label: '90',
+            sorteable: false,
+            opcional: false
+        },
+    ];
+
+    public localidadesColumns = [
+        {
+            key: 'localidad',
+            label: 'Localidad',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'cantidad',
+            label: 'Cantidad',
+            sorteable: false,
+            opcional: true
+        },
+    ];
+
     constructor(
         public estService: EstRupService,
         public snomed: SnomedService,
@@ -55,7 +252,6 @@ export class RupPacientesComponent implements OnInit {
     ngOnInit() {
         this.plex.updateTitle([
             { route: '/', name: 'ANDES' },
-            { name: 'Dashboard', route: '/dashboard' },
             { name: 'RUP' }
         ]);
         this.conceptosTurneablesService.getAll().subscribe(result => {
@@ -95,6 +291,7 @@ export class RupPacientesComponent implements OnInit {
 
             const prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
             this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
+                this.mensajeInicial = false;
                 this.loading = false;
                 if (this.detallar) {
                     this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
