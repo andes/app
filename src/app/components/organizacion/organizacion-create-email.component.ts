@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Plex } from '@andes/plex';
+import { NgForm } from '@angular/forms';
+import { take, tap, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'organizacion-create-email',
     templateUrl: 'organizacion-create-email.html'
 })
 export class OrganizacionCreateEmailComponent implements OnInit {
+    @ViewChild('formulario', { static: true }) form: NgForm;
+
     public idOrganizacion;
     public edit = -1;
     public configuraciones;
+    public formHasChanges = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -20,12 +25,17 @@ export class OrganizacionCreateEmailComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.idOrganizacion = params['id'];
-            this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
-                this.configuraciones = org.configuraciones || {};
-            });
-        });
+        this.route.params.pipe(
+            switchMap(params => {
+                this.idOrganizacion = params['id'];
+                return this.organizacionService.getById(this.idOrganizacion);
+            }),
+            tap((org: any) => this.configuraciones = org.configuraciones || { emails: []})
+        ).subscribe();
+    }
+
+    formChanges() {
+        this.formHasChanges = true;
     }
 
     addEmail() {
@@ -65,5 +75,7 @@ export class OrganizacionCreateEmailComponent implements OnInit {
 
     remove(i) {
         this.configuraciones.emails.splice(i, 1);
+        this.edit = -1;
+        this.formChanges();
     }
 }

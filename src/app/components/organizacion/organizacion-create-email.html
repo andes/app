@@ -4,16 +4,16 @@
         <plex-title titulo="Configuración de servicios">
             <plex-button class="pr-1" type="danger" label="Volver" (click)="volver()"></plex-button>
             <plex-button class="pr-1" type="info" label="Agregar nuevo" (click)="addEmail()"></plex-button>
-            <plex-button label="Guardar" type="success" [disabled]="formulario.invalid" (click)="save()"> </plex-button>
+            <plex-button label="Guardar" type="success" [disabled]="!formHasChanges || formulario.invalid" (click)="save()"> </plex-button>
         </plex-title>
             <plex-wrapper *ngFor="let email of configuraciones?.emails; let i = index">
                 <plex-text label="Nombre" placeholder="Ingrese nombre" [(ngModel)]="email.nombre" name="nombre-{{i}}"
-                        required [readonly]="edit !== i">
+                        required [readonly]="edit !== i" (change)="formChanges()">
                     <plex-icon name="barcode" left></plex-icon>
                 </plex-text>
 
                 <plex-text email label="Ingrese un email" [(ngModel)]="email.email" name="email-{{i}}"
-                        required [readonly]="edit !== i">
+                        required [readonly]="edit !== i" (change)="formChanges()">
                     <plex-icon name="email" left></plex-icon>
                 </plex-text>
 
