@@ -1,3 +1,15 @@
+# [5.72.0](https://github.com/andes/app/compare/v5.71.0...v5.72.0) (2021-11-10)
+
+
+### Bug Fixes
+
+* **RUP-293:** Error en la consola al abrir modal de envio de PDF ([#2513](https://github.com/andes/app/issues/2513)) ([6561487](https://github.com/andes/app/commit/6561487b3f2640d3d11c589742ca4b5d5b150adf))
+
+
+### Features
+
+* **PER-55:** Se agrega un delay para evitar que se haga una query por cada caracter que se escribe ([#2509](https://github.com/andes/app/issues/2509)) ([3e88263](https://github.com/andes/app/commit/3e882637349653a9a609fc1a74edc76b5a62fa60))
+
 # [5.71.0](https://github.com/andes/app/compare/v5.70.0...v5.71.0) (2021-11-03)
 
 
