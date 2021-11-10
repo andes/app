@@ -18,6 +18,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { SECCION_CLASIFICACION, SECCION_CONTACTOS_ESTRECHOS, SECCION_MPI, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
 
 
 @Component({
@@ -201,14 +202,14 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.secciones = ficha[0].sections;
 
             if (this.fichaPaciente) { // caso en el que es una ficha a editar/visualizar
-                const seccionClasificacion = this.fichaPaciente.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+                const seccionClasificacion = this.formEpidemiologiaService.getSeccionClasifacionFinal(this.fichaPaciente);
                 this.clasificacionOriginal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
 
                 this.fichaPaciente.secciones.map(sec => {
-                    if (sec.name !== 'Contactos Estrechos' && sec.name !== 'Operaciones') {
+                    if (sec.name !== SECCION_CONTACTOS_ESTRECHOS && sec.name !== SECCION_OPERACIONES) {
                         const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
                         if (buscado !== -1) {
-                            if (sec.name === 'Usuario' && this.editFicha) {
+                            if (sec.name === SECCION_USUARIO && this.editFicha) {
                                 this.organizaciones$ = this.auth.organizaciones();
                                 sec.fields.map(field => {
                                     switch (Object.keys(field)[0]) {
@@ -244,7 +245,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                             }
                         }
                     } else {
-                        if (sec.name === 'Operaciones') {
+                        if (sec.name === SECCION_OPERACIONES) {
                             this.operaciones = sec.fields;
                         } else {
                             this.contactosEstrechos = sec.fields;
@@ -283,9 +284,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     getValues() {
         this.secciones.map(seccion => {
             let campos = [];
-            if (seccion.name === 'Contactos Estrechos') {
+            if (seccion.name === SECCION_CONTACTOS_ESTRECHOS) {
                 campos = this.contactosEstrechos;
-            } else if (seccion.name === 'Operaciones') {
+            } else if (seccion.name === SECCION_OPERACIONES) {
                 campos = this.operaciones;
             } else {
                 seccion.fields.forEach(arg => {
@@ -358,7 +359,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             },
             zonaSanitaria: this.zonaSanitaria
         };
-        const contactosPaciente = fichaFinal.secciones.find(elem => elem.name === 'Mpi');
+        const contactosPaciente = fichaFinal.secciones.find(elem => elem.name === SECCION_MPI);
         if (contactosPaciente) {
             this.setMpiPaciente(contactosPaciente.fields);
         }
@@ -476,7 +477,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     postSave(fichaFinal) {
-        const seccionClasificacion = this.ficha.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+        const seccionClasificacion = this.ficha.find(seccion => seccion.name === SECCION_CLASIFICACION);
         const clasificacionFinal = seccionClasificacion?.fields?.find(f => f.clasificacionfinal)?.clasificacionfinal;
         if (this.puedeRegistrar(clasificacionFinal)) {
             this.registrarPrestacion(fichaFinal);

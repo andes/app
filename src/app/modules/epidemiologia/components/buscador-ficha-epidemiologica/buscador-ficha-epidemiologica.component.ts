@@ -12,6 +12,7 @@ import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { SECCION_OPERACIONES } from '../../constantes';
 
 @Component({
     selector: 'app-buscador-ficha-epidemiologica',
@@ -206,7 +207,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                 return this.formEpidemiologiaService.search(this.query).pipe(
                     map(resultados => {
                         resultados.forEach(ficha => {
-                            const seccionClasificacion = ficha.secciones.find(seccion => seccion.name === 'Tipo de confirmación y Clasificación Final');
+                            const seccionClasificacion = this.formEpidemiologiaService.getSeccionClasifacionFinal(ficha);
                             const idPcr = seccionClasificacion?.fields.find(field => field.identificadorpcr)?.identificadorpcr;
                             ficha.idPcr = idPcr ? idPcr : 'Sin PCR';
                         });
@@ -294,11 +295,11 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
 
     private guardarSisa() {
         const secciones = this.fichaPaciente.secciones;
-        let seccionOperaciones = secciones.find(s => s.name === 'Operaciones');
+        let seccionOperaciones = secciones.find(s => s.name === SECCION_OPERACIONES);
 
         if (!seccionOperaciones) {
             seccionOperaciones = {
-                name: 'Operaciones',
+                name: SECCION_OPERACIONES,
                 fields: []
             };
             secciones.push(seccionOperaciones);

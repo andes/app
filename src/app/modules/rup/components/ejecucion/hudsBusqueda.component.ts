@@ -4,6 +4,7 @@ import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, Vie
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { gtag } from '../../../../shared/services/analytics.service';
@@ -423,8 +424,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.formEpidemiologiaService.search({ paciente: this.paciente.id }).subscribe(fichas => {
             if (fichas.length) {
                 const fichasEpidemiologia = fichas.map(f => {
-                    const usuarioConfirma = this.formEpidemiologiaService.getField(f, 'Tipo de confirmación y Clasificación Final', 'usuarioconfirma');
-                    const usuarioPcr = this.formEpidemiologiaService.getField(f, 'Tipo de confirmación y Clasificación Final', 'usuariopcr');
+                    const usuarioConfirma = this.formEpidemiologiaService.getField(f, SECCION_CLASIFICACION, 'usuarioconfirma');
+                    const usuarioPcr = this.formEpidemiologiaService.getField(f, SECCION_CLASIFICACION, 'usuariopcr');
                     return {
                         data: f,
                         tipo: 'ficha-epidemiologica',

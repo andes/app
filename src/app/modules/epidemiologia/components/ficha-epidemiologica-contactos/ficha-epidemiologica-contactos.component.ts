@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { tipoContactos as _tipoContactos } from '../../contantes';
+import { tipoContactos as _tipoContactos } from '../../constantes';
 
 @Component({
     selector: 'app-ficha-epidemiologica-contactos',

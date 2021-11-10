@@ -8,7 +8,7 @@ import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.s
 import { SeguimientoPacientesService } from '../../services/seguimiento-pacientes.service';
 import { Auth } from '@andes/auth';
 import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/semaforo.service';
-import { estadosSeguimiento as estados } from '../../contantes';
+import { estadosSeguimiento as estados } from '../../constantes';
 import { Plex } from '@andes/plex';
 
 @Component({
