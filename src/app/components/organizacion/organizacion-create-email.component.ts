@@ -1,64 +1,81 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Plex } from '@andes/plex';
+import { NgForm } from '@angular/forms';
+import { take, tap, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'organizacion-create-email',
     templateUrl: 'organizacion-create-email.html'
 })
 export class OrganizacionCreateEmailComponent implements OnInit {
-    public idOrganizacion;
-    public organizacion;
-    public configuraciones: { emails: { nombre: string; email: string }[] } = {
-        emails: [
+    @ViewChild('formulario', { static: true }) form: NgForm;
 
-            { nombre: null, email: null }
-        ]
-    };
+    public idOrganizacion;
+    public edit = -1;
+    public configuraciones;
+    public formHasChanges = false;
 
     constructor(
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
-        public plex: Plex
+        public plex: Plex,
+        private router: Router
     ) { }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.idOrganizacion = params['id'];
-            this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
-                this.organizacion = org;
-                if (!this.organizacion.configuraciones) {
-                    this.organizacion['configuraciones'] = this.configuraciones;
-                } else {
-                    this.configuraciones = this.organizacion.configuraciones;
-                }
-            });
-        });
+        this.route.params.pipe(
+            switchMap(params => {
+                this.idOrganizacion = params['id'];
+                return this.organizacionService.getById(this.idOrganizacion);
+            }),
+            tap((org: any) => this.configuraciones = org.configuraciones || { emails: []})
+        ).subscribe();
+    }
+
+    formChanges() {
+        this.formHasChanges = true;
     }
 
     addEmail() {
-        this.organizacion.configuraciones.emails.push({ nombre: null, email: null });
+        if (this.edit < 0) {
+            this.configuraciones.emails.push({ nombre: '', email: '' });
+            this.edit = this.configuraciones.emails.length - 1;
+        }
     }
 
     save() {
-        const flag = this.organizacion.configuraciones.emails.some(e => e.nombre === null || e.email === null);
+        const flag = this.configuraciones.emails.some(e => e.nombre === null || e.email === null);
         if (flag) {
-            this.plex.info('warning', 'no se completaron todos los campos');
+            this.plex.info('warning', 'Debe completar todos los campos');
         } else {
-            this.organizacionService.save(this.organizacion).subscribe(result => {
+            const params = {
+                id: this.idOrganizacion,
+                configuraciones: this.configuraciones
+            };
+            this.organizacionService.save(params).subscribe(result => {
                 if (result) {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.volver();
                 } else {
                     this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
-
         }
+    }
 
+    volver() {
+        this.router.navigate(['/tm/organizacion/']);
+    }
+
+    onEdit(i, active) {
+        this.edit = active ? i : -1;
     }
 
     remove(i) {
-        this.organizacion.configuraciones.emails.splice(i, 1);
+        this.configuraciones.emails.splice(i, 1);
+        this.edit = -1;
+        this.formChanges();
     }
 }

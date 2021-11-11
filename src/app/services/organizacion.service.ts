@@ -81,7 +81,7 @@ export class OrganizacionService {
      *
      * @memberof OrganizacionService
      */
-    save(organizacion: IOrganizacion): Observable<IOrganizacion> {
+    save(organizacion: any): Observable<IOrganizacion> {
         if (organizacion.id) {
             return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion);
         } else {
