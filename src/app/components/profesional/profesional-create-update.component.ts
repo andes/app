@@ -2,7 +2,7 @@
 import { Matching } from '@andes/match';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidacionService } from '../../services/fuentesAutenticas/validacion.service';
@@ -16,7 +16,6 @@ import { IPais } from './../../interfaces/IPais';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ISiisa } from './../../interfaces/ISiisa';
-import { EspecialidadService } from './../../services/especialidad.service';
 import { LocalidadService } from './../../services/localidad.service';
 import { PaisService } from './../../services/pais.service';
 // import { FORM_DIRECTIVES } from '@angular/common';
@@ -77,6 +76,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         nombreAutopercibido: '',
         profesionExterna: null,
         matriculaExterna: '',
+        observaciones: ''
     };
     match = new Matching();
     weights = {
@@ -92,15 +92,13 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     public profesiones: ISiisa[] = [];
     public firmaProfesional = null;
 
-    constructor(private formBuilder: FormBuilder,
-                private profesionalService: ProfesionalService,
+    constructor(private profesionalService: ProfesionalService,
                 private paisService: PaisService,
                 private plex: Plex,
                 private router: Router,
                 private route: ActivatedRoute,
                 private provinciaService: ProvinciaService,
                 private localidadService: LocalidadService,
-                private especialidadService: EspecialidadService,
                 private validacionService: ValidacionService,
                 private siisaService: SIISAService,
                 public sanitizer: DomSanitizer) { }
