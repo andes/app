@@ -357,11 +357,12 @@
                         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
                     </div>
                 </plex-tab>
-                <plex-tab label="Indicaciones" *ngIf="elementoRUP.tabs?.includes('plan-indicacion')"
+                <!-- Queda deshabilitado por ahora -->
+                <!-- <plex-tab label="Indicaciones" *ngIf="elementoRUP.tabs?.includes('plan-indicacion')"
                           (click)="panelIndex = 2">
                     <in-plan-indicaciones-resumen [prestacion]="prestacion" (edit)="onEditIndicacion($event)">
                     </in-plan-indicaciones-resumen>
-                </plex-tab>
+                </plex-tab> -->
             </plex-tabs>
         </div>
     </plex-layout-sidebar>

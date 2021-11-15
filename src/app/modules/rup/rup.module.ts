@@ -9,7 +9,6 @@ import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { ChartsModule } from 'ng2-charts';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { MapaCamasPlanIndicacionModule } from 'src/app/apps/rup/mapa-camas/views/plan-indicaciones/plan-indicaciones.module';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
@@ -65,7 +64,6 @@ export const RUP_PROVIDERS = [
         InfiniteScrollModule,
         HUDSLibModule,
         EpidemiologiaModule,
-        MapaCamasPlanIndicacionModule,
         RouterModule.forChild([
             { path: '', component: PuntoInicioComponent, pathMatch: 'full' },
             { path: 'crear/:opcion', component: PrestacionCrearComponent },

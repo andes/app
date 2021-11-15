@@ -25,15 +25,20 @@
                             </div>
                             <div class="item__botonera">
                                 <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
-                                             (click)="onDetenerClick()" tooltip="Suspender"></plex-button>
+                                             (click)="onDetenerClick()" tooltip="Suspender" tooltipPosition="bottom">
+                                </plex-button>
                                 <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
-                                             (click)="onPausarClick()" tooltip="Pausar"></plex-button>
+                                             (click)="onPausarClick()" tooltip="Pausar" tooltipPosition="bottom">
+                                </plex-button>
                                 <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
-                                             (click)="onContinuarClick()" tooltip="Continuar"></plex-button>
+                                             (click)="onContinuarClick()" tooltip="Continuar" tooltipPosition="bottom">
+                                </plex-button>
                                 <plex-button *ngIf="completar$ | async" type="info" icon="check" size="sm"
-                                             (click)="onCompletarClick()" tooltip="Completar"></plex-button>
+                                             (click)="onCompletarClick()" tooltip="Completar" tooltipPosition="bottom">
+                                </plex-button>
                                 <plex-button *ngIf="deleted$ | async" type="danger" icon="delete" size="sm"
-                                             (click)="onDeletedClick()" tooltip="Completar"></plex-button>
+                                             (click)="onDeletedClick()" tooltip="Completar" tooltipPosition="bottom">
+                                </plex-button>
                                 <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
                                              (click)="onValidar()">
                                     Validar Pendientes
@@ -134,7 +139,7 @@
                                                          tooltip="Completar"></plex-button>
                                         </span> -->
                                         <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">
-                                            pendiente de validación
+                                            pendiente de revisión
                                         </plex-badge>
 
                                         <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">

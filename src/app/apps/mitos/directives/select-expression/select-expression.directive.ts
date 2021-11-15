@@ -47,7 +47,7 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
                         this.lastCallSubscription.unsubscribe();
                     }
 
-                    this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query }).subscribe(result => {
+                    this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query, type: 'inferred' }).subscribe(result => {
                         $event.callback(result);
                     });
 
@@ -62,7 +62,7 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
     }
 
     preloadData() {
-        this.snomed.getQuery({ expression: this.snomedExpression }).pipe(
+        this.snomed.getQuery({ expression: this.snomedExpression, type: 'inferred' }).pipe(
             cacheStorage({ key: this.snomedExpression, ttl: 60 * 24 })
         ).subscribe(result => {
             this.plexSelect.data = result;

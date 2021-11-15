@@ -2,11 +2,11 @@ import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { DocumentosService } from 'src/app/services/documentos.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IRegla } from '../../../interfaces/IRegla';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
-import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'visualizacion-reglas',
@@ -119,13 +119,15 @@ export class VisualizacionReglasComponent implements OnInit {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
                      * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
                      * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización
-                     * y una sola prestación por lo que no es necesario más validaciones. */
-                    this.filas.push({
-                        organizacionOrigen: regla.origen.organizacion,
-                        prestacionOrigen: prestacionAux,
-                        organizacionDestino: regla.destino.organizacion,
-                        prestacionDestino: regla.destino.prestacion
-                    });
+                     * y una sola prestación por lo que no< es necesario más validaciones. */
+                    if (!this.prestacion || prestacionAux.prestacion.conceptId === this.prestacion.conceptId) {
+                        this.filas.push({
+                            organizacionOrigen: regla.origen.organizacion,
+                            prestacionOrigen: prestacionAux,
+                            organizacionDestino: regla.destino.organizacion,
+                            prestacionDestino: regla.destino.prestacion
+                        });
+                    }
                 }
             });
         }
