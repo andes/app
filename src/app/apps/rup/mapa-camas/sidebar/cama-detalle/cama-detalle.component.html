@@ -86,16 +86,36 @@
                     <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">
                         <plex-icon name="bell-ring-outline"></plex-icon>
                     </plex-button>
+                
+                <ng-container *ngIf="pacienteResumen$ | async as pacienteResumen">
+                    <plex-badge *ngIf="registraRespirador(pacienteResumen.registros?.valor)" class="pr-1" type="info">
+                        Respirador
+                        <plex-icon name="{{ pacienteResumen.registros.valor.dispositivo?.icono }}"> </plex-icon>
+                    </plex-badge>
                 </ng-container>
 
-                <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
-                    <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
-                </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
+                    <plex-dropdown class="pr-1" right="true" size="sm" icon="account-off" type="danger"
                                    tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>
                 </ng-container>
+
+                <plex-dropdown right="true" size="sm" type="primary" icon='chevron-down' tooltip="Opciones">
+                    <div class="text-right">
+                        <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)">
+                        </plex-button>
+                        
+                        <ng-container *ngIf="turnero$ | async as pantalla">
+                            <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info">
+                                <plex-icon name="bell-ring-outline"></plex-icon>
+                            </plex-button>
+                        </ng-container>
+                        
+                        <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
+                            <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                        </ng-container>
+                    </div>
+                </plex-dropdown>
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">

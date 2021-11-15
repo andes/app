@@ -621,7 +621,7 @@ export class MapaCamasService {
                     if (unidadOrganizativa.length === 0) {
                         return true;
                     }
-                    const isExclude = unidadOrganizativa[0].startsWith('!');
+                    const isExclude = unidadOrganizativa[0]?.startsWith('!');
                     if (!isExclude) {
                         return unidadOrganizativa.includes(uo.conceptId);
                     } else {

@@ -63,6 +63,7 @@ import { ResumenInternacionComponent } from './views/resumen-internacion/resumen
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { DispositivoService } from '../../../services/dispositivo/dispositivo.service';
 
 
 
@@ -117,7 +118,8 @@ export const INTERNACION_PROVIDERS = [
     ScrollDispatcher,
     IntegridadService,
     PermisosMapaCamasService,
-    PlanIndicacionesEventosServices
+    PlanIndicacionesEventosServices,
+    DispositivoService
 ];
 
 @NgModule({

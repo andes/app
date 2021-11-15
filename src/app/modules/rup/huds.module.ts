@@ -15,6 +15,7 @@ import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
 import { HUDSTimelineComponent } from './views/huds-timeline/huds-timeline.component';
+import { DispositivoService } from '../../services/dispositivo/dispositivo.service';
 
 @NgModule({
     imports: [
@@ -40,6 +41,9 @@ import { HUDSTimelineComponent } from './views/huds-timeline/huds-timeline.compo
         HudsBusquedaPacienteComponent,
         VistaHudsComponent,
         HUDSTimelineComponent
+    ],
+    providers: [
+        DispositivoService
     ]
 })
 export class HUDSModule {

@@ -31,6 +31,7 @@ import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/element
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { DispositivoService } from '../../../../services/dispositivo/dispositivo.service';
 
 @Component({
     selector: 'rup',
@@ -149,7 +150,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public driveService: DriveService,
         @Optional() public ejecucionService: RupEjecucionService,
         public pacienteService: PacienteService,
-        public plexVisualizador: PlexVisualizadorService
+        public plexVisualizador: PlexVisualizadorService,
+        public dispositivoService: DispositivoService
     ) {
     }
 
