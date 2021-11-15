@@ -1,9 +1,10 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ejecutar consultas">
-            <plex-button size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
+            <plex-button *ngIf="!cargaMasiva" size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
                 Descargar CSV
             </plex-button>
+            <ng-content></ng-content>
         </plex-title>
         <form #form="ngForm">
             <plex-grid type="full" size="sm">

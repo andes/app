@@ -21,6 +21,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
     @Output() revisionAgendaEmit = new EventEmitter<boolean>();
     @Output() reasignarTurnosEmit = new EventEmitter<boolean>();
+    @Output() cargarPacientesEmit = new EventEmitter<boolean>();
 
 
     private _agendasSeleccionadas: Array<any>;
@@ -138,6 +139,7 @@ export class BotonesAgendaComponent implements OnInit {
         const puedeBorrar = this.auth.getPermissions('turnos:agenda:puedeBorrar:').length > 0;
         const puedeRevisar = this.auth.getPermissions('turnos:agenda:puedeRevision:').length > 0;
         const puedeNota = this.auth.getPermissions('turnos:agenda:puedeNota:').length > 0;
+        const puedeCargar = true;
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
@@ -170,6 +172,8 @@ export class BotonesAgendaComponent implements OnInit {
             listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
             listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
+            // Hablita carga de pacientes masivos
+            cargaMasiva: this.cantidadSeleccionadas > 0 && puedeCargar
         };
     }
 
@@ -344,6 +348,10 @@ export class BotonesAgendaComponent implements OnInit {
     cancelar() {
         this.showEditarAgenda = false;
         this.showBotonesAgenda = true;
+    }
+
+    cargarPacientes() {
+        this.cargarPacientesEmit.emit(true);
     }
 
 }

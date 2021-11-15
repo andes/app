@@ -156,6 +156,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 import { PlantillasService } from './modules/rup/services/plantillas.service';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
+import { VisualizacionInformacionModule } from './modules/visualizacion-informacion/visualizacion-informacion.module';
 import { AppMobileService } from './services/appMobile.service';
 import { BarrioService } from './services/barrio.service';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
@@ -245,7 +246,9 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        Ng2ImgMaxModule
+        Ng2ImgMaxModule,
+        VisualizacionInformacionModule
+
     ],
     declarations: [
         AppComponent,

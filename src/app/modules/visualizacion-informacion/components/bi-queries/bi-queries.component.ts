@@ -1,5 +1,5 @@
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { QueriesService } from '../../../../services/query.service';
 import { Observable } from 'rxjs';
 import { ProfesionalService } from '../../../../services/profesional.service';
@@ -15,6 +15,7 @@ import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
     styleUrls: ['./bi-queries.component.scss']
 })
 export class BiQueriesComponent implements OnInit {
+    @Input() cargaMasiva = false;
 
     public consultaSeleccionada;
     public opciones = [];

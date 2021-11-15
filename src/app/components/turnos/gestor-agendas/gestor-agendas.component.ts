@@ -1,10 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { QueriesService } from 'src/app/services/query.service';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { InstitucionService } from '../../../services/turnos/institucion.service';
 import { enumToArray } from '../../../utils/enums';
@@ -28,6 +30,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     @ViewChild('guardarAgendaPanel', { static: false }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
         this.guardarAgendaPanel = theElementRef;
     }
+    @ViewChildren(BiQueriesComponent) biQuery: QueryList<any>;
+
 
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
@@ -72,6 +76,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
     private scrollEnd = false;
+    public enableQueries = false;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -97,7 +102,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         public serviceAgenda: AgendaService,
         public serviceInstitucion: InstitucionService,
         private router: Router,
-        public auth: Auth) { }
+        public auth: Auth,
+        private queryService: QueriesService,
+    ) { }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -693,4 +700,23 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showRevisionFueraAgenda = true;
     }
 
+    cargarPacientes() {
+        this.enableQueries = !this.enableQueries;
+    }
+
+    getPacientes(event) {
+        const params = {
+            fechaDesde: '2021-08-01T03:00:00.000Z',
+            fechaHasta: '2021-09-02T03:00:00.000Z'
+        };
+        this.queryService.getQuery('inscriptos-pendientes-primera-dosis', params).subscribe(res=>{
+            // Retorna un array con el resultado de la consulta
+        });
+        this.biQuery.forEach(item => {
+            console.log('desde ', item.argumentos.fechaDesde);
+            console.log('hasta ', item.argumentos.fechaHasta);
+            console.log('nombre ', item.consultaSeleccionada.nombre);
+        });
+
+    }
 }

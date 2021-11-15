@@ -16,12 +16,11 @@ import { DescargasPendientesComponent } from './components/exportar-huds/descarg
 @NgModule({
     declarations: [
         VisualizacionInformacionComponent,
-        BiQueriesComponent,
         ExportarHudsComponent,
         BiQueriesComponent,
         DescargasPendientesComponent
     ],
-    exports: [DescargasPendientesComponent],
+    exports: [BiQueriesComponent, DescargasPendientesComponent],
 
     imports: [
         CommonModule,
