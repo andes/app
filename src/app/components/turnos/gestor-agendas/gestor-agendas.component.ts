@@ -76,7 +76,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
     private scrollEnd = false;
-    public enableQueries = false;
+    public typeQuery: String;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -701,22 +701,20 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     cargarPacientes() {
-        this.enableQueries = !this.enableQueries;
+        this.typeQuery = this.typeQuery ? null : 'inscriptos-vacunacion';
     }
 
-    getPacientes(event) {
-        const params = {
-            fechaDesde: '2021-08-01T03:00:00.000Z',
-            fechaHasta: '2021-09-02T03:00:00.000Z'
-        };
-        this.queryService.getQuery('inscriptos-pendientes-primera-dosis', params).subscribe(res=>{
-            // Retorna un array con el resultado de la consulta
-        });
+    getPacientes() {
+        let query;
+        const params = {};
         this.biQuery.forEach(item => {
-            console.log('desde ', item.argumentos.fechaDesde);
-            console.log('hasta ', item.argumentos.fechaHasta);
-            console.log('nombre ', item.consultaSeleccionada.nombre);
+            query = item.consultaSeleccionada.nombre;
+            item.argumentos.forEach(arg => {
+                const key = arg.key;
+                const value = item.argumentos[key]?.id ? item.argumentos[key].id : item.argumentos[key];
+                params[key] = value;
+            });
         });
-
+        this.queryService.getQuery(query, params).subscribe();
     }
 }

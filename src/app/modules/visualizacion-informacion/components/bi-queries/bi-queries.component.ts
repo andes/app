@@ -15,7 +15,7 @@ import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
     styleUrls: ['./bi-queries.component.scss']
 })
 export class BiQueriesComponent implements OnInit {
-    @Input() cargaMasiva = false;
+    @Input() type: string = null;
 
     public consultaSeleccionada;
     public opciones = [];
@@ -46,14 +46,18 @@ export class BiQueriesComponent implements OnInit {
         if (this.permisosZonas.length > 0) {
             this.loadZonasSanitarias();
         }
-        if (permisos.length) {
+        if (permisos.length && !this.type) {
             if (permisos[0] === '*') {
                 this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
             } else {
                 this.queries$ = this.queryService.getAllQueries({ _id: permisos });
             }
         } else {
-            this.router.navigate(['./inicio']);
+            if (this.type) {
+                this.queries$ = this.queryService.getAllQueries({ type: this.type });
+            } else {
+                this.router.navigate(['./inicio']);
+            }
         }
 
     }

@@ -167,7 +167,7 @@
 
             <!-- Panel derecho -->
             <div *ngIf="agendasSeleccionadas?.length > 0" class="h-100 col-4">
-                <plex-box *ngIf="!enableQueries">
+                <plex-box *ngIf="!typeQuery">
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
                                 (recargarAgendas)="loadAgendas($event)"></turnos>
@@ -191,8 +191,8 @@
                         </suspender-agenda>
                     </div>
                 </plex-box>
-                <plex-box *ngIf="enableQueries">
-                    <app-bi-queries [cargaMasiva]="enableQueries">
+                <plex-box *ngIf="typeQuery">
+                    <app-bi-queries [type]="typeQuery">
                         <plex-button size="sm" type="success" (click)="getPacientes($event)">Importar</plex-button>
                         <plex-button size="sm" type="danger" (click)="cargarPacientes()">Cerrar</plex-button>
                     </app-bi-queries>

@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <plex-title titulo="Ejecutar consultas">
-            <plex-button *ngIf="!cargaMasiva" size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
+            <plex-button *ngIf="!type" size="sm" type="success" (click)="descargar()" [disabled]="form.invalid">
                 Descargar CSV
             </plex-button>
             <ng-content></ng-content>
@@ -67,7 +67,7 @@
                 </plex-wrapper>
             </ng-container>
         </form>
-        <div justify="center" class="h-75">
+        <div *ngIf="!type" justify="center" class="h-75">
             <plex-label titulo="Comience seleccionando una consulta" direction="column"
                         subtitulo="Complete los filtros requeridos y presione en el boton Descargar CSV para obtener su reporte "
                         type="default" size="xl" icon="arrow-up"></plex-label>
