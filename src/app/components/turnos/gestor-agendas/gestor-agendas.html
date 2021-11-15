@@ -7,18 +7,19 @@
                     <header>
                         <plex-title titulo="Gestor de Agendas" size="lg">
                             <!--Botones / Acciones-->
-                                <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length"
-                                                class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
-                                                (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()"
-                                                (agregarSobreturnoEmit)="agregarSobreturno($event)"
-                                                (editarAgendaEmit)="editarAgenda($event)"
-                                                (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                                                (listarTurnosEmit)="listarTurnos($event)"
-                                                (listarCarpetasEmit)="listarCarpetas($event)"
-                                                (revisionAgendaEmit)="revisionAgenda($event)"
-                                                (reasignarTurnosEmit)="reasignarTurnos($event)"
-                                                [turnosSuspendidos]="turnosSuspendidos">
-                                </botones-agenda>
+                            <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length"
+                                            class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
+                                            (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()"
+                                            (agregarSobreturnoEmit)="agregarSobreturno($event)"
+                                            (editarAgendaEmit)="editarAgenda($event)"
+                                            (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                                            (listarTurnosEmit)="listarTurnos($event)"
+                                            (listarCarpetasEmit)="listarCarpetas($event)"
+                                            (revisionAgendaEmit)="revisionAgenda($event)"
+                                            (reasignarTurnosEmit)="reasignarTurnos($event)"
+                                            (cargarPacientesEmit)="cargarPacientes()"
+                                            [turnosSuspendidos]="turnosSuspendidos">
+                            </botones-agenda>
                         </plex-title>
 
                         <!--Filtros-->
@@ -166,7 +167,7 @@
 
             <!-- Panel derecho -->
             <div *ngIf="agendasSeleccionadas?.length > 0" class="h-100 col-4">
-                <plex-box>
+                <plex-box *ngIf="!enableQueries">
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
                                 (recargarAgendas)="loadAgendas($event)"></turnos>
@@ -189,6 +190,12 @@
                         <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)">
                         </suspender-agenda>
                     </div>
+                </plex-box>
+                <plex-box *ngIf="enableQueries">
+                    <app-bi-queries [queries]="queries">
+                        <plex-button size="sm" type="danger" (click)="cerrarCargarPacientes()">Cerrar</plex-button>
+                        <plex-button size="sm" type="success" (click)="asignarPacientesPorConsulta()">Importar</plex-button>
+                    </app-bi-queries>
                 </plex-box>
             </div>
 

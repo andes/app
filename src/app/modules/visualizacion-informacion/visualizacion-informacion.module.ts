@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlexModule } from '@andes/plex';
 import { VisualizacioninfromacionRounting } from './visualizacion-informacion.routing';
 import { VisualizacionInformacionComponent } from './components/visualizacion-informacion.component';
+import { BiQueriesPageComponent } from './components/bi-queries/bi-queriesPage.component';
 import { BiQueriesComponent } from './components/bi-queries/bi-queries.component';
 import { ExportarHudsComponent } from './components/exportar-huds/exportar-huds.component';
 import { MPILibModule } from '../mpi/mpi-lib.module';
@@ -16,12 +17,12 @@ import { DescargasPendientesComponent } from './components/exportar-huds/descarg
 @NgModule({
     declarations: [
         VisualizacionInformacionComponent,
-        BiQueriesComponent,
         ExportarHudsComponent,
         BiQueriesComponent,
+        BiQueriesPageComponent,
         DescargasPendientesComponent
     ],
-    exports: [DescargasPendientesComponent],
+    exports: [BiQueriesComponent, BiQueriesPageComponent, DescargasPendientesComponent],
 
     imports: [
         CommonModule,
