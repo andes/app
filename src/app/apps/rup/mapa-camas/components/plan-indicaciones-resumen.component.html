@@ -1,0 +1,26 @@
+<plex-title titulo="Indicaciones Activas"></plex-title>
+
+<ng-container *ngIf="indicaciones$ | async as indicaciones">
+
+    <plex-accordion>
+
+        <plex-panel *ngFor="let indicacion of indicaciones">
+            <div plex-accordion-title>
+                {{ indicacion.nombre }}
+                <span>
+                    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">
+                        {{ indicacion.estado.tipo | indicacionLabel }}
+                    </plex-badge>
+                    <plex-button icon="pencil" size="sm" type="info" (click)="onEdit(indicacion)"></plex-button>
+                </span>
+            </div>
+            <div>
+                <rup [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
+                     [soloValores]="true">
+                </rup>
+            </div>
+        </plex-panel>
+
+    </plex-accordion>
+
+</ng-container>

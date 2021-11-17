@@ -1,15 +1,15 @@
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
+import { RouterModule } from '@angular/router';
 import { MapaCamasMainComponent } from './mapa-camas-main.component';
 import { CamaMainComponent } from './views/cama/cama.component';
 import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario.component';
 import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-mensual.component';
-import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
-import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
+import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
+import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
 
 export const INTERNACION_ROUTES = [
@@ -39,7 +39,13 @@ export const INTERNACION_ROUTES = [
 
     { path: ':ambito/:capa/resumen/:idInternacion', component: ResumenInternacionComponent },
 
-    { path: ':ambito/:capa', component: MapaCamasCapaComponent },
+    // { path: ':ambito/:capa/plan-indicaciones/:idInternacion', component: PlanIndicacionesComponent },
+    {
+        path: ':ambito/:capa/plan-indicaciones',
+        loadChildren: () => import('./views/plan-indicaciones/plan-indicaciones.module').then(m => m.MapaCamasPlanIndicacionModule),
+    },
+
+    { path: ':ambito/:capa', component: MapaCamasCapaComponent, pathMatch: 'full' },
 
     { path: '', redirectTo: 'internacion', pathMatch: 'full' }
 

@@ -1,5 +1,6 @@
 import { PlexSelectComponent } from '@andes/plex/src/lib/select/select.component';
-import { OnInit, Input, ViewContainerRef, Directive } from '@angular/core';
+import { cacheStorage } from '@andes/shared';
+import { Directive, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SnomedService } from '../../services/snomed.service';
 
@@ -11,7 +12,7 @@ import { SnomedService } from '../../services/snomed.service';
     selector: '[snomedExpression]'
 })
 
-export class SelectExpressionDirective implements OnInit {
+export class SelectExpressionDirective implements OnInit, OnChanges {
 
     @Input() snomedExpression = '';
     @Input() preload = true;
@@ -26,16 +27,18 @@ export class SelectExpressionDirective implements OnInit {
         this.plexSelect.labelField = 'term';
     }
 
-    ngOnInit() {
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.preload && changes['snomedExpression']) {
+            this.preloadData();
+        }
+    }
 
+    ngOnInit() {
         if (this.preload) {
             this.plexSelect.data = [];
-            this.snomed.getQuery({ expression: this.snomedExpression }).subscribe(result => {
-                this.plexSelect.data = result;
-            });
+            this.preloadData();
         } else {
             this.plexSelect.getData.subscribe(($event) => {
-
 
                 const inputText: string = $event.query;
 
@@ -44,7 +47,7 @@ export class SelectExpressionDirective implements OnInit {
                         this.lastCallSubscription.unsubscribe();
                     }
 
-                    this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query }).subscribe(result => {
+                    this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: $event.query, type: 'inferred' }).subscribe(result => {
                         $event.callback(result);
                     });
 
@@ -56,6 +59,14 @@ export class SelectExpressionDirective implements OnInit {
             });
 
         }
+    }
+
+    preloadData() {
+        this.snomed.getQuery({ expression: this.snomedExpression, type: 'inferred' }).pipe(
+            cacheStorage({ key: this.snomedExpression, ttl: 60 * 24 })
+        ).subscribe(result => {
+            this.plexSelect.data = result;
+        });
     }
 }
 

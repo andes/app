@@ -253,9 +253,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         ).subscribe((registro) => {
             const dientesOdontograma = this.servicioPrestacion.getRefSetData();
             if (dientesOdontograma && dientesOdontograma.refsetId) {
-                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, dientesOdontograma.conceptos);
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, dientesOdontograma.conceptos, registro.idEvolucion);
             } else {
-                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
+                this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null, registro.idEvolucion);
             }
         });
     }
@@ -455,7 +455,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.confirmarEliminar = true;
     }
 
-    cargarNuevoRegistro(snomedConcept, esSolicitud: boolean, valor = null, relaciones) {
+    cargarNuevoRegistro(snomedConcept, esSolicitud: boolean, valor = null, relaciones, idEvolucion) {
         const elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
@@ -467,6 +467,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         const nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept, this.prestacion);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
+
+        nuevoRegistro.idEvolucion = idEvolucion;
 
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
@@ -855,5 +857,25 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.servicioPrestacion.visualizarImagen(this.prestacion);
     }
 
+    onEditIndicacion(indicacion) {
+        this.ejecucionService.agregarConcepto(
+            indicacion.concepto,
+            true,
+            null,
+            indicacion.valor,
+            {
+                idEvolucion: indicacion.idRegistro
+            }
+        );
+    }
+
+    onSelectConcepto(concepto) {
+        this.ejecucionService.agregarConcepto({
+            term: concepto.term,
+            fsn: concepto.fsn,
+            conceptId: concepto.conceptId,
+            semanticTag: concepto.semanticTag
+        }, concepto.esSolicitud);
+    }
 
 }

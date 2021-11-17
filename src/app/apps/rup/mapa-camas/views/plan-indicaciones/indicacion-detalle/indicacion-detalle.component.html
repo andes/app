@@ -1,0 +1,44 @@
+<plex-title titulo="Detalle Indicacion">
+    <ng-content></ng-content>
+</plex-title>
+
+<plex-detail>
+    <plex-icon *ngIf="indicacion.seccion.term === ' - sin sección -'" name="documento" class="icon--noSeccion">
+    </plex-icon>
+    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
+               name="docuemento-manzana" class="icon--alimentacion"></plex-icon>
+    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'" name="mano-gota"
+               class="icon--hidratacion"></plex-icon>
+    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'" name="pildoras"
+               class="icon--producto"></plex-icon>
+    <plex-icon *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'" name="documento-termometro"
+               class="icon--procedimiento">
+    </plex-icon>
+    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">
+        {{ indicacion.estado.tipo | indicacionLabel }}
+    </plex-badge>
+    <plex-badge type="info" tooltip="Fecha de inicio">
+        {{ indicacion.fechaInicio | fecha }}
+    </plex-badge>
+    <div title case="capitalize">
+        {{ indicacion.nombre }}
+    </div>
+</plex-detail>
+
+<rup *ngIf="init" [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
+     [soloValores]="true">
+</rup>
+
+<plex-title titulo="historial de estados" size="sm"></plex-title>
+
+<plex-list>
+    <plex-item *ngFor="let estado of indicacion.estados">
+        <plex-label size="lg" case="capitalize" titulo="fecha" subtitulo="{{ estado.fecha | fecha }}"></plex-label>
+        <plex-label size="lg" case="capitalize" titulo="hora" subtitulo="{{ estado.fecha | hora }}"></plex-label>
+        <plex-label size="lg" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}">
+        </plex-label>
+        <plex-badge [color]="estado.tipo | indicacionColor">
+            {{ estado.tipo | indicacionLabel }}
+        </plex-badge>
+    </plex-item>
+</plex-list>

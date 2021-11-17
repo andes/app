@@ -342,8 +342,9 @@
             <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
-                    <rup-buscador [prestacion]="prestacion" [conceptoFrecuente]="conceptoFrecuente"
-                                  (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
+                    <rup-buscador [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"
+                                  [conceptoFrecuente]="conceptoFrecuente" (_onDragStart)="arrastrandoConcepto(true)"
+                                  (_onDragEnd)="arrastrandoConcepto(false)" (selected)="onSelectConcepto($event)">
                     </rup-buscador>
                 </plex-tab>
                 <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
@@ -356,6 +357,12 @@
                         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
                     </div>
                 </plex-tab>
+                <!-- Queda deshabilitado por ahora -->
+                <!-- <plex-tab label="Indicaciones" *ngIf="elementoRUP.tabs?.includes('plan-indicacion')"
+                          (click)="panelIndex = 2">
+                    <in-plan-indicaciones-resumen [prestacion]="prestacion" (edit)="onEditIndicacion($event)">
+                    </in-plan-indicaciones-resumen>
+                </plex-tab> -->
             </plex-tabs>
         </div>
     </plex-layout-sidebar>

@@ -13,6 +13,7 @@ import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { RUPComponent } from './components/core/rup.component';
 import { RUPAccionesEnvioInformeComponent } from './components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
+import { RUPMedicamentosBusquedaDetalleComponent } from './components/ejecucion/medicamentos-busqueda-detalle/medicamentos-busqueda-detalle.component';
 import { ModalSeleccionEmailComponent } from './components/ejecucion/modal-seleccion-email.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
 import { AutocitadoComponent } from './components/elementos/autocitado.component';
@@ -44,6 +45,7 @@ import { RecetaMedicaComponent } from './components/elementos/recetaMedica.compo
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { ResumenHistoriaClinicaComponent } from './components/elementos/resumenHistoriaClinica.component';
 import { ChecklistComponent } from './components/elementos/rupers/check-list/checklist.component';
+import { SolicitudPrescripcionMedicamentoComponent } from './components/elementos/rupers/prescripcion-medicamento/prescripcion-medicamento.component';
 import { SeccionComponent } from './components/elementos/rupers/seccionado/seccion.component';
 import { SeccionadoComponent } from './components/elementos/rupers/seccionado/seccionado.component';
 import { SelectBaseComponent } from './components/elementos/rupers/select-base.component';
@@ -66,6 +68,7 @@ import { VacunasComponent } from './components/elementos/vacunas.component';
 import { ValorFechaComponent } from './components/elementos/valorFecha.component';
 import { ValorNumericoComponent } from './components/elementos/valorNumerico.component';
 import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
+import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 
@@ -126,7 +129,8 @@ const RUPComponentsArray = [
     InternacionEgresoComponent,
     InternacionIngresoComponent,
     ChecklistComponent,
-    VacunasComponent
+    VacunasComponent,
+    SolicitudPrescripcionMedicamentoComponent
 ];
 
 @NgModule({
@@ -151,8 +155,9 @@ const RUPComponentsArray = [
         RelacionRUPPipe,
         RUPObservacionesModalComponent,
         SemanticIconPipe,
-        SemanticClassPipe
-
+        SemanticClassPipe,
+        ElementoRUPByIdPipes,
+        RUPMedicamentosBusquedaDetalleComponent
     ],
     entryComponents: [
         ...RUPComponentsArray
@@ -164,7 +169,8 @@ const RUPComponentsArray = [
         VistaPrestacionComponent,
         RelacionRUPPipe,
         SemanticIconPipe,
-        SemanticClassPipe
+        SemanticClassPipe,
+        ElementoRUPByIdPipes
     ],
 })
 export class ElementosRUPModule {

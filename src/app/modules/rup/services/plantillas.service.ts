@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
 import { ConceptObserverService } from './conceptObserver.service';
 
 @Injectable()
@@ -17,7 +16,10 @@ export class PlantillasService {
         private server: Server,
         public auth: Auth,
         public cos: ConceptObserverService
-    ) { }
+    ) {
+
+
+    }
 
     get(conceptId: string, esSolicitud: Boolean, force = false): Observable<any> {
 
@@ -77,7 +79,6 @@ export class PlantillasService {
     }
 
     handlerDropDown(conceptId, plantilla) {
-
         const ctid = plantilla.target?.conceptId || conceptId;
 
         if (plantilla.link) {

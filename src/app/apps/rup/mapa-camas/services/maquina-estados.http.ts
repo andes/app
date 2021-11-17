@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
 
 
 @Injectable()
@@ -29,6 +29,13 @@ export class MaquinaEstadosHTTP {
                 throwError('NO HAY MAQUINA DE ESTADO');
             })
         );
+    }
+
+    getAll(organizacion: string, ambito: string) {
+        return this.server.get(`${this.url}/estados`, {
+            params: { organizacion, ambito },
+            showError: true
+        });
     }
 
 

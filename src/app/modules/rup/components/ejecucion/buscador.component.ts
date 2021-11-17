@@ -4,12 +4,12 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, S
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 import { RupEjecucionService } from '../../services/ejecucion.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
-import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 
 
@@ -21,9 +21,14 @@ import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.inter
 
 export class BuscadorComponent implements OnInit, OnChanges {
     @Input() conceptoFrecuente;
-    @Input() prestacion: IPrestacion;
+    // @Input() prestacion: IPrestacion;
+    @Input() tipoPrestacion: ITipoPrestacion;
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+
+    @Input() semanticTags: string[] = null;
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
@@ -149,7 +154,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     private inicializarFrecuentesTP() {
         const queryFTP = {
-            'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+            'tipoPrestacion': this.tipoPrestacion.conceptId
         };
         return this.frecuentesProfesionalService.get(queryFTP);
     }
@@ -259,13 +264,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} resultadosSnomed
      */
     recibeResultados(resultadosSnomed: any) {
-
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         this.resultadosSnomedAux = resultadosSnomed.items;
         if (resultadosSnomed.items.length) {
 
-            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.prestacion.solicitud.tipoPrestacion.conceptId);
+            resultadosSnomed.items = resultadosSnomed.items.filter(i => i.conceptId !== this.tipoPrestacion.conceptId);
 
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
 
@@ -297,13 +301,15 @@ export class BuscadorComponent implements OnInit, OnChanges {
         const resultados = this.results[busquedaActual]['todos'];
 
         if (this.conceptos && resultados) {
-            Object.keys(this.conceptos).forEach(concepto => {
-                if (concepto === 'planes' && this.resultadosSnomedAux) {
-                    this.results[busquedaActual][concepto] = this.resultadosSnomedAux.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-                } else {
-                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-                }
-            });
+            Object.keys(this.conceptos)
+                .filter(semantic => !this.semanticTags || this.semanticTags.includes(semantic))
+                .forEach(concepto => {
+                    if (concepto === 'planes' && this.resultadosSnomedAux) {
+                        this.results[busquedaActual][concepto] = this.resultadosSnomedAux.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                    } else {
+                        this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                    }
+                });
         }
 
         if (this.results && this.results[busquedaActual]) {
@@ -333,6 +339,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 // agregamos los planes
                 this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos'], ...planes];
                 // ordenamos los resultados
+            }
+
+            if (this.semanticTags) {
+                this.results[busquedaActual]['todos'] = [];
+                this.filtroActual =this.semanticTags[0] as any;
             }
         }
     }
@@ -389,7 +400,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public seleccionarConcepto(concepto, index) {
         gtag('add-concept', this.busquedaActual, this.search, index);
         concepto.esSolicitud = concepto.esSolicitud || this.filtroActual === 'planes';
-        if (concepto.esSolicitud) {
+        if (this.ejecucionService.paciente && concepto.esSolicitud) {
             const params: any = {
                 estados: [
                     'auditoria',
@@ -417,12 +428,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     private agregarConcepto(concepto) {
-        this.ejecucionService.agregarConcepto({
-            term: concepto.term,
-            fsn: concepto.fsn,
-            conceptId: concepto.conceptId,
-            semanticTag: concepto.semanticTag
-        }, concepto.esSolicitud);
+        this.selected.emit(concepto);
     }
 
     public esSolicitud(concepto: any) {
