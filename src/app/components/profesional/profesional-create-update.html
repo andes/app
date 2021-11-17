@@ -81,6 +81,13 @@
                                        (onFileUploaded)="setFirma($event)">
                 </app-firma-profesional>
             </plex-wrapper>
+
+            <plex-title size="md" titulo="Otros"> </plex-title>
+            <plex-wrapper justify="around">
+                <plex-text [(ngModel)]="profesional.observaciones" name="observaciones" label="Observaciones"
+                           [required]="false" grow="full">
+                </plex-text>
+            </plex-wrapper>
         </form>
     </plex-layout-main>
 
