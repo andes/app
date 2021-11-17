@@ -40,6 +40,13 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
     public sexoCorregido;
     public dniCorregido;
     public fechaNacimientoCorregida;
+    public notasPredefinidas = [
+        { id: 'turno-asignado', nombre: 'Turno asignado' },
+        { id: 'no-quiere', nombre: 'No quiere vacunarse' },
+        { id: 'vacunado', nombre: 'Ya se vacunó' },
+        { id: 'no-contesta', nombre: 'No contesta' },
+        { id: 'otra', nombre: 'Otra' }
+    ];
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     public columns = [
         {
@@ -293,6 +300,22 @@ export class ListadoInscriptosVacunacionComponent implements OnInit {
         }
         this.editando = false;
         this.showAgregarNota = false;
+    }
+
+    returnNotas(nota) {
+        this.pacienteSelected.nota = nota;
+        this.inscripcionService.update(this.pacienteSelected.id, this.pacienteSelected).subscribe(resultado => {
+            this.listado$ = this.inscripcionService.inscriptosFiltrados$.pipe(
+                map(resp => this.listadoActual = resp)
+            );
+            if (nota) {
+                this.plex.toast('success', 'Nota editada con éxito');
+            } else {
+                this.plex.toast('success', 'Nota eliminada con éxito');
+            }
+        }, error => {
+            this.plex.toast('danger', 'La inscripción no pudo ser actualizada');
+        });
     }
 
     validarDomicilio(inscripcion) {

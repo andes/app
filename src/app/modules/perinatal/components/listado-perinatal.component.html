@@ -84,8 +84,8 @@
             </paciente-detalle>
             <detalle-perinatal [carnet]="carnetSelected"></detalle-perinatal>
             <historial-perinatal [controles]="controles"></historial-perinatal>
-            <notas-embarazo [carnet]="carnetSelected" (returnNotas)="returnEdicion($event)">
-            </notas-embarazo>
+            <notas [nota]="carnetSelected.nota" (guardar)="returnNotas($event)">
+            </notas>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

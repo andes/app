@@ -1,17 +1,17 @@
 <plex-title titulo="Notas" size="sm">
-    <plex-button *ngIf="showForm" label="Cancelar" size="sm mr-1" type="danger" (click)="cerrar()">
+    <plex-button *ngIf="showForm" label="Cancelar" size="sm mr-1" type="danger" (click)="cancelarNota()">
     </plex-button>
-    <plex-button *ngIf="showForm" label="Guardar" type="success" size="sm" (click)="guardar()"
+    <plex-button *ngIf="showForm" label="Guardar" type="success" size="sm" (click)="guardarNota()"
                  [disabled]="!formularioNota?.valid">
     </plex-button>
-    <plex-button *ngIf="!showForm && !inscripcion.nota" label="Agregar nota" type="success" size="sm" class='mr-1'
+    <plex-button *ngIf="!showForm && !_nota" label="Agregar nota" type="success" size="sm" class='mr-1'
                  (click)="agregarNota()"></plex-button>
 </plex-title>
 <form #formularioNota="ngForm" class="mr-1">
-    <plex-table *ngIf="inscripcion.nota && !showForm">
+    <plex-table *ngIf="_nota && !showForm">
         <tr>
             <td>
-                <plex-label icon="documento" size="md" titulo="{{inscripcion.nota}}"></plex-label>
+                <plex-label icon="documento" size="md" titulo="{{_nota}}"></plex-label>
             </td>
             <td>
                 <plex-button size="sm" type="danger" icon="cesto" class="float-right" tooltip="Eliminar"
@@ -23,7 +23,7 @@
             </td>
         </tr>
     </plex-table>
-    <plex-grid *ngIf="!inscripcion.nota && !showForm">
+    <plex-grid *ngIf="!_nota && !showForm">
         <section>
             <div class="d-flex justify-content-start align-items-center">
                 <plex-label icon="informacion" type="warning" size="md" direction="row" titulo="No hay ninguna nota aún"
@@ -31,12 +31,13 @@
             </div>
         </section>
     </plex-grid>
-
-    <plex-select *ngIf="showForm" name="nota" [data]="notasPredefinidas"
-                 label="{{ inscripcion.nota ? 'Seleccione una nueva opción' : 'Seleccione una opción' }}"
-                 [(ngModel)]="notaPredefinida" grow="full" [required]="true">
+    <plex-select *ngIf="_notasPredefinidas?.length && showForm" name="nota" [data]="_notasPredefinidas"
+                 label="{{ nota ? 'Seleccione una nueva opción' : 'Seleccione una opción' }}"
+                 (change)="notaEditada = ''" [(ngModel)]="notaPredefinida" grow="full" [required]="true">
     </plex-select>
-    <plex-text label="Ingrese nota" *ngIf="notaPredefinida?.id === 'otra' && showForm" [(ngModel)]="notaPersonalizada"
-               name="notaText" grow="full" [required]="true" multiline="true">
+    <plex-text label="Ingrese nota"
+               *ngIf="showForm && (_notasPredefinidas?.length === 0 || notaPredefinida?.id === 'otra')"
+               [(ngModel)]="notaEditada" name="notaText" grow="full" [required]="true" multiline="true"
+               (change)="cleanSpaces()">
     </plex-text>
 </form>
