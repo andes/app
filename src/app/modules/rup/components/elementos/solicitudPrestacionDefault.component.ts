@@ -1,6 +1,6 @@
-import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RupElement } from '.';
+import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-solicitudPrestacionDefault',
@@ -11,9 +11,12 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     public reglasMatch = [];
     public reglaSelected = null;
+    public formulario = null;
 
     public organizaciones: any[] = [];
     afterInit = false;
+
+    data = {};
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -77,6 +80,9 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 }
 
                 this.registro.valor.solicitudPrestacion.reglaID = this.reglaSelected.id;
+                if (this.reglaSelected.destino.formulario) {
+                    this.registro.valor.template = this.reglaSelected.destino.formulario;
+                }
             }
         }
     }

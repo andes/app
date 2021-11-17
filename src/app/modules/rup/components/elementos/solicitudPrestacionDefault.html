@@ -25,6 +25,11 @@
 
     </plex-bool>
 
+    <ng-container *ngIf="registro.valor.template">
+        <lib-form-builder #template [template]="registro.valor.template" [initial]="registro.valor.solicitudPrestacion">
+        </lib-form-builder>
+    </ng-container>
+
 </ng-container>
 <div class="row" *ngIf="soloValores">
     <div class="col-12 readonly">
@@ -52,5 +57,10 @@
                 </ng-container>
             </ng-container>
         </div>
+        <ng-container *ngIf="registro.valor.template">
+            <lib-form-builder #template [template]="registro.valor.template"
+                              [initial]="registro.valor.solicitudPrestacion" [readonly]="true">
+            </lib-form-builder>
+        </ng-container>
     </div>
 </div>

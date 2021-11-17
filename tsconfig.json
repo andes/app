@@ -22,6 +22,9 @@
       ],
       "@andes/shared": [
         "projects/shared/src/public-api.ts"
+      ],
+      "@andes/form-builder": [
+        "projects/form-builder/src/public-api.ts"
       ]
     }
   },
