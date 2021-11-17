@@ -54,20 +54,20 @@
                 <td *plTableCol="'ausente'">
                     <plex-badge *ngIf="esAusente(carnet.fechaProximoControl,carnet.fechaFinEmbarazo)" size="sm"
                                 type="danger">AUSENTE
-                        <plex-button icon="alert-circle-outline" size="sm"></plex-button>
+                        <plex-icon name="alert-circle" type="danger" size="sm"></plex-icon>
                     </plex-badge>
                 </td>
                 <td *plTableCol="'fechaCita'">
                     <plex-badge *ngIf="carnet.fechaProximoControl" size="sm" type="success">
                         {{ carnet.fechaProximoControl | fecha }}
-                        <plex-button icon="calendar-today" size="sm"></plex-button>
+                        <plex-icon name="calendar-today" type="success" size="sm"></plex-icon>
                     </plex-badge>
                     <plex-badge *ngIf="!carnet.fechaProximoControl" size="sm" type="warning">No indica
                     </plex-badge>
                 </td>
                 <td *plTableCol="'ultimoControl'">
                     <plex-badge size="sm" type="info">{{ carnet.fechaUltimoControl | fecha }}
-                        <plex-button icon="calendar-today" size="sm"></plex-button>
+                        <plex-icon name="calendar-today" type="info" size="sm"></plex-icon>
                     </plex-badge>
                 </td>
             </tr>
