@@ -1,3 +1,17 @@
+# [5.73.0](https://github.com/andes/app/compare/v5.72.0...v5.73.0) (2021-11-17)
+
+
+### Bug Fixes
+
+* **buscador-epidemio:** collapse ([#2515](https://github.com/andes/app/issues/2515)) ([6d35032](https://github.com/andes/app/commit/6d35032b2fc1e5bdab6127a5dd0a60d5ee0fef62))
+* **per:** evitar ordenar por estado y control hint de alertas ([#2517](https://github.com/andes/app/issues/2517)) ([68371e9](https://github.com/andes/app/commit/68371e9d804e59625517f5429bc505a959b77398))
+
+
+### Features
+
+* **BI:** actualizacion plex en dashboard ([#2507](https://github.com/andes/app/issues/2507)) ([e40f448](https://github.com/andes/app/commit/e40f448dc1b969dbc50cac11908bd3e5d7d29455))
+* **EPP:** eliminar ficha ([#2514](https://github.com/andes/app/issues/2514)) ([034185b](https://github.com/andes/app/commit/034185bd487ce304ea97a3698d001c48452a6646))
+
 # [5.72.0](https://github.com/andes/app/compare/v5.71.0...v5.72.0) (2021-11-10)
 
 
