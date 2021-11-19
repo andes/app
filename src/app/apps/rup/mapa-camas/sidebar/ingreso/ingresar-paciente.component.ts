@@ -59,7 +59,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public inProgress = false;
     public prepagas$: Observable<any[]>;
     private backupObraSocial;
-
+    public resumenPacienteInternacion$: Observable<any>;;
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
     }
@@ -162,6 +162,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
+            const desde = moment().subtract(12, 'hours').toDate();
+            const hasta = moment().add(12, 'hours').toDate();
+
+            this.resumenPacienteInternacion$ = this.internacionResumenService.search({
+                organizacion: this.auth.organizacion.id,
+                paciente: this.paciente.id,
+                ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+            });
 
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];

@@ -48,12 +48,24 @@ export class ListadoInternacionCapasComponent implements OnInit {
             sort: (a: any, b: any) => a.paciente.documento.localeCompare(b.paciente.documento)
         },
         {
+            key: 'diagnostico',
+            label: 'diagnostico',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => {
+                const nameA = `${a.diagnostico.principal?.nombre}`;
+                const nameB = `${b.diagnostico.principal?.nombre}`;
+                return nameA.localeCompare(nameB);
+            }
+        },
+        {
             key: 'fechaIngreso',
             label: 'Fecha Ingreso',
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.fechaIngreso.getTime() - b.fechaIngreso.getTime()
         },
+
         {
             key: 'fechaEgreso',
             label: 'Fecha Egreso',

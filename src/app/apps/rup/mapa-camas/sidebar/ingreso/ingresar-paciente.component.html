@@ -112,6 +112,18 @@
                              idField="nombre" labelField="nombre">
                 </plex-select>
             </plex-wrapper>
+            <ng-container *ngIf="resumenPacienteInternacion$ | async as resumenes">
+                <plex-title size="sm" justify titulo="CONCEPTOS"></plex-title>
+                <plex-list *ngIf="resumenes.length>0" size="sm" [selectable]="false">
+                    <ng-container *ngFor="let registro of resumenes[resumenes.length-1].diagnostico.registros">
+                        <plex-item>
+                            <plex-label titulo="{{registro.concepto.term}}"></plex-label>
+                            <plex-badge *ngIf="registro.esDiagnosticoPrincipal" type="success">diagnostico</plex-badge>
+                        </plex-item>
+                    </ng-container>
+                </plex-list>
+            </ng-container>
+
         </ng-container>
     </form>
 </ng-container>

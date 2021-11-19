@@ -18,6 +18,10 @@
                 (click)="seleccionarPrestacion(internacion)">
                 <td *plTableCol="'nombre'">{{internacion.paciente | nombre }}</td>
                 <td *plTableCol="'documento'">{{ internacion.paciente.documento }}</td>
+                <td *plTableCol="'diagnostico'"> <span *ngIf="internacion.diagnostico.principal">
+                        {{ internacion.diagnostico.principal.nombre}}
+
+                    </span></td>
                 <td *plTableCol="'fechaIngreso'">
                     {{ internacion.fechaIngreso | fecha }}
                     {{ internacion.fechaIngreso | hora }}
