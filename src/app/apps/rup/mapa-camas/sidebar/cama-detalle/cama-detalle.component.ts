@@ -64,7 +64,7 @@ export class CamaDetalleComponent implements OnInit {
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
     public turnero$: Observable<string>;
-    public pacienteResumen$: Observable<any>;
+    public hayRespirador$: Observable<any>;
 
     items = [
         {
@@ -139,7 +139,12 @@ export class CamaDetalleComponent implements OnInit {
             })
         );
 
-        this.pacienteResumen$ = this.mapaCamasService.resumenInternacion$;
+        this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
+            map(resumen => {
+                const respirador = resumen.registros.reverse().find(r => r.tipo === 'respirador');
+                return respirador?.valor.fechaHasta ? null : respirador;
+            })
+        );
     }
 
     sector(cama: ISnapshot) {
@@ -244,6 +249,6 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     registraRespirador(respirador) {
-        return respirador?.fechaDesde;
+        return respirador?.fechaDesde && !respirador.fechaHasta;
     }
 }

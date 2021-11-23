@@ -1,7 +1,7 @@
 <plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)" *ngIf="cama$ | async as cama">
     <plex-tab label="CAMA">
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
-            <plex-title titulo="DATOS DE CAMA">
+            <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
                         <ng-container
@@ -73,6 +73,7 @@
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
 
+
                 <plex-button label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
 
@@ -86,44 +87,29 @@
                     <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info" class="mr-2">
                         <plex-icon name="bell-ring-outline"></plex-icon>
                     </plex-button>
-                
-                <ng-container *ngIf="pacienteResumen$ | async as pacienteResumen">
-                    <plex-badge *ngIf="registraRespirador(pacienteResumen.registros?.valor)" class="pr-1" type="info">
-                        Respirador
-                        <plex-icon name="{{ pacienteResumen.registros.valor.dispositivo?.icono }}"> </plex-icon>
-                    </plex-badge>
                 </ng-container>
 
+                <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
+                    <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <plex-dropdown class="pr-1" right="true" size="sm" icon="account-off" type="danger"
+                    <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
                                    tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>
                 </ng-container>
 
-                <plex-dropdown right="true" size="sm" type="primary" icon='chevron-down' tooltip="Opciones">
-                    <div class="text-right">
-                        <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)">
-                        </plex-button>
-                        
-                        <ng-container *ngIf="turnero$ | async as pantalla">
-                            <plex-button (click)="llamarTurnero(pantalla, cama)" size="sm" type="info">
-                                <plex-icon name="bell-ring-outline"></plex-icon>
-                            </plex-button>
-                        </ng-container>
-                        
-                        <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
-                            <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
-                        </ng-container>
-                    </div>
-                </plex-dropdown>
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
+                    <plex-badge class="pr-1" type="warning" *ngIf="hayRespirador$ | async as respirador"
+                                tooltip="Desde {{ respirador.valor.fechaDesde | fecha }}">
+                        Respirador
+                    </plex-badge>
                 </paciente-detalle>
             </fieldset>
         </ng-container>
         <ng-container *ngIf="cama.estado === 'ocupada' && !cama.sala">
-            <plex-title titulo="Nota">
+            <plex-title titulo="Nota" size="md">
                 <plex-button *ngIf="!editNota" size="sm" title="Editar nota" type="warning" icon="documento"
                              (click)="toggleEditNota(true, cama.nota)"></plex-button>
             </plex-title>

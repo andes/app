@@ -27,7 +27,6 @@ import { RUPServicioIntermedioAltaComponent } from './components/servicio-interm
 import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
-import { DispositivoService } from '../../services/dispositivo/dispositivo.service';
 
 
 export const RUP_COMPONENTS = [
@@ -41,10 +40,6 @@ export const RUP_COMPONENTS = [
     AutocitarTurnoAgendasComponent,
     RupRelacionesComponent,
     RUPServicioIntermedioAltaComponent
-];
-
-export const RUP_PROVIDERS = [
-    DispositivoService
 ];
 
 @NgModule({
@@ -78,8 +73,7 @@ export const RUP_PROVIDERS = [
     declarations: [
         ...RUP_COMPONENTS
     ],
-    exports: [],
-    providers: RUP_PROVIDERS
+    exports: []
 })
 export class RUPModule {
 

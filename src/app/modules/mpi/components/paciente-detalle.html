@@ -11,9 +11,12 @@
             Sin DNI
         </plex-badge>
 
-        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">
+            Fallecido:
             {{ paciente.fechaFallecimiento | fecha}}
         </plex-badge>
+
+        <ng-content select="plex-badge" ngProjectAs="plex-badge"></ng-content>
 
         <div title>{{ paciente | nombre }}</div>
 
@@ -47,8 +50,8 @@
         </plex-label>
 
         <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
-                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
-                    justify="{{ justificado }}"></plex-label>
+                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}" justify="{{ justificado }}">
+        </plex-label>
 
         <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"
                     justify="{{ justificado }}"></plex-label>

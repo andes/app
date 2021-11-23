@@ -72,8 +72,6 @@ import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
 import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
-import { RespiracionAsistidaComponent } from './components/elementos/respiracionAsistida.component';
-import { DesteteVentilacionMecanicaComponent } from './components/elementos/desteteVentilacionMecanica.component';
 
 
 const RUPComponentsArray = [
@@ -129,9 +127,7 @@ const RUPComponentsArray = [
     ChecklistComponent,
     VacunasComponent,
     SolicitudPrescripcionMedicamentoComponent,
-    SolicitudPrescripcionMedicamentoInternacionComponent,
-    RespiracionAsistidaComponent,
-    DesteteVentilacionMecanicaComponent
+    SolicitudPrescripcionMedicamentoInternacionComponent
 ];
 
 @NgModule({

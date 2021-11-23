@@ -1,9 +1,0 @@
-<plex-datetime *ngIf="!soloValores" type="datetime" name="fechaHasta" label="Fecha hasta" [(ngModel)]="fechaDestete"
-                [required]="true" [max]="hoy" (change)="changeValue()">
-</plex-datetime>
-
-<ng-container *ngIf="soloValores">
-    <p class="readonly">
-        <plex-label><b>Fecha hasta: &nbsp;</b> {{ registro.valor.fecha | date:'dd/MM/yyyy HH:mm' }}</plex-label>
-    </p>
-</ng-container>
