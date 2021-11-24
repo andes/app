@@ -17,7 +17,6 @@ import { ProfeService } from './../../services/profe.service';
 export class PucoComponent implements OnInit, OnDestroy {
 
     public loading = false;
-    public errorSearchTerm = false; // true si se ingresan caracteres alfabeticos
     public periodos = []; // select
     public periodoSelect;
     public listaPeriodosPuco = ''; // solo para sidebar
@@ -35,7 +34,38 @@ export class PucoComponent implements OnInit, OnDestroy {
     private resProfe: IProfe[];
     private timeoutHandle: number;
     public requestInProgress: boolean;
-
+    public columns = [
+        {
+            key: 'dni',
+            label: 'DNI',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'apellido-nombre',
+            label: 'Apellido y Nombre',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'padron',
+            label: 'Padrón',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'otra-informacion',
+            label: 'Otra información',
+            sorteable: false,
+            opcional: false
+        },
+        {
+            key: 'constatacion',
+            label: 'Constatación',
+            sorteable: false,
+            opcional: false
+        }
+    ];
     @Input() autofocus: Boolean = true;
 
     // termino a buscar ..
@@ -58,14 +88,11 @@ export class PucoComponent implements OnInit, OnDestroy {
         }
     }
     ngOnInit() {
-
         observableForkJoin([
             this.obraSocialService.getPadrones({}),
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
-
             const periodoMasActual = new Date(); // fecha actual para configurar el select a continuacion ..
-
             // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
             for (let i = 0; i < this.cantidadPeriodos; i++) {
                 const periodoAux = moment(periodoMasActual).subtract(i, 'month');
@@ -102,7 +129,6 @@ export class PucoComponent implements OnInit, OnDestroy {
                 }
                 this.ultimaActualizacionProfe = padrones[1][0].version;
             }
-
         });
     }
 
@@ -113,7 +139,6 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.searchTerm = '';
         } else {
             this.periodoSelect = periodo;
-
             if (this.searchTerm) {
                 this.buscar();
             }
@@ -137,7 +162,6 @@ export class PucoComponent implements OnInit, OnDestroy {
     }
 
     buscar(): void {
-
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
@@ -146,11 +170,10 @@ export class PucoComponent implements OnInit, OnDestroy {
         // Se limpian los resultados de la busqueda anterior
         this.usuarios = [];
 
-        if (this.searchTerm && /^([0-9])*$/.test(this.searchTerm.toString())) {
+        if (this.searchTerm) {
 
             this.loading = true;
-            this.errorSearchTerm = false;
-            const search = this.searchTerm.trim();
+            const search = this.searchTerm.toString().trim();
 
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
@@ -158,7 +181,6 @@ export class PucoComponent implements OnInit, OnDestroy {
                     // se verifica que el periodo seleccionado corresponda a un padrón existente.
                     const periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
                     const periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
-
                     observableForkJoin([
                         this.obraSocialService.getSumar({ dni: search }),
                         this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
@@ -193,11 +215,6 @@ export class PucoComponent implements OnInit, OnDestroy {
                     this.loading = false;
                 }
             }, 400);
-        } else {
-            if (this.searchTerm) {
-                this.errorSearchTerm = true;
-                // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
-            }
         }
     }
 
@@ -205,7 +222,6 @@ export class PucoComponent implements OnInit, OnDestroy {
     sugerencias() {
         this.sugerenciasService.post();
     }
-
 
     checkLog() {
         return this.auth.loggedIn();

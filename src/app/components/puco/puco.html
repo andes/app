@@ -1,107 +1,76 @@
 <plex-layout main="9" *ngIf="!showPrintForm">
     <plex-layout-main>
-        <header>
-            <h3>Padrón de cobertura social</h3>
-            <div class="row">
-                <div class="col-8">
-                    <div class="buscador">
-                        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()"
-                                   placeholder="Ingrese DNI" [autoFocus]="autofocus" prefix="account-search">
-                        </plex-text>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <plex-select *ngIf="periodos.length" [(ngModel)]="periodoSelect" name="periodoPadron"
-                                 [data]="periodos" placeholder="Seleccione un periodo"
-                                 (change)="setPeriodo($event.value)" [required]="true"></plex-select>
-                </div>
-            </div>
-        </header>
+        <plex-title titulo="Padrón de cobertura social"></plex-title>
+        <plex-wrapper>
+            <plex-int [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholdtitler="Ingrese DNI"
+                      [autoFocus]="autofocus" prefix="🔍">
 
-        <!-- Error paciente no encontrado -->
-        <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading && !errorSearchTerm && periodoSelect"
-             class="alert alert-danger">
-            <i class="mdi mdi-account-alert"></i> Paciente no encontrado en este padrón.
-        </div>
-        <!-- Error por ingreso de caracteres -->
-        <div *ngIf="errorSearchTerm && searchTerm && !loading" class="alert alert-danger">
-            <i class="mdi mdi-account-alert"></i> Este campo sólo admite caracteres numéricos.
-        </div>
+            </plex-int>
+            <plex-select *ngIf="periodos.length" [(ngModel)]="periodoSelect" name="periodoPadron" [data]="periodos"
+                         placeholder="Seleccione un periodo" (change)="setPeriodo($event.value)" [required]="true">
+            </plex-select>
+        </plex-wrapper>
+        <plex-label *ngIf="!searchTerm" direction="column" type="info" size="xl" icon="magnify"
+                    titulo="Complete los campos para realizar su búsqueda">
+        </plex-label>
+        <!-- Error por paciente no encontrado -->
+        <plex-label *ngIf="usuarios && !usuarios.length && searchTerm && !loading && periodoSelect" type="warning"
+                    size="xl" direction="column" titulo='Sin resultados'
+                    subtitulo="No se encontró ningún profesional que coincida con los criterios de búsqueda">
+        </plex-label>
         <!--Loader-->
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-        <!--Tabla de resultados por SimpleQuery -->
-        <table *ngIf="usuarios && usuarios.length && !errorSearchTerm && searchTerm" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>DNI</th>
-                    <th>Apellido y nombre</th>
-                    <th>Padrón</th>
-                    <th>Otra información</th>
-                    <th>Constatación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let usuario of usuarios">
-                    <td *ngIf="usuario.dni; else sinDatos">
-                        {{usuario.dni}}
-                    </td>
-                    <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
-                    <td *ngIf="usuario.financiador; else programaIC">
-                        {{usuario.financiador}}
-                    </td>
-                    <td *ngIf="usuario.fechaAlta; else sinDatos">
-                        Fecha de alta: {{usuario.fechaAlta | fecha}}
-                    </td>
-                    <td>
-                        <plex-button label="Imprimir" type="success" [disabled]="requestInProgress"
-                                     (click)="imprimirConstatacion(usuario)">
-                        </plex-button>
-                    </td>
-                    <ng-template #sinDatos>
-                        <td>SIN DATOS</td>
-                    </ng-template>
-                    <ng-template #programaIC>
-                        <td>Programa Incluir Salud</td>
-                    </ng-template>
-                    <ng-template #noTransmite>
-                        <td>No</td>
-                    </ng-template>
-                </tr>
-            </tbody>
-        </table>
-
+        <plex-table *ngIf="usuarios && usuarios.length && searchTerm" [columns]="columns" #table="plTable" [offset]="0">
+            <plex-table-columns>
+            </plex-table-columns>
+            <tr *ngFor="let usuario of usuarios">
+                <td *ngIf="usuario.dni; else sinDatos">
+                    {{usuario.dni}}
+                </td>
+                <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
+                <td *ngIf="usuario.financiador; else programaIC">
+                    {{usuario.financiador}}
+                </td>
+                <td *ngIf="usuario.fechaAlta; else sinDatos">
+                    Fecha de alta: {{usuario.fechaAlta | fecha}}
+                </td>
+                <td>
+                    <plex-button label="Imprimir" type="success" [disabled]="requestInProgress"
+                                 (click)="imprimirConstatacion(usuario)">
+                    </plex-button>
+                </td>
+                <ng-template #sinDatos>
+                    <td>SIN DATOS</td>
+                </ng-template>
+                <ng-template #programaIC>
+                    <td>Programa Incluir Salud</td>
+                </ng-template>
+                <ng-template #noTransmite>
+                    <td>No</td>
+                </ng-template>
+            </tr>
+        </plex-table>
     </plex-layout-main>
-    <plex-layout-sidebar>
-        <header>
-            <h3>Información</h3>
-        </header>
-        <div class="row">
-            <div class="col">
-                <h5>PUCO</h5>
-                <p>Última actualización: {{ultimaActualizacionPuco | fecha}}</p>
-                <p>Padrones disponibles: {{listaPeriodosPuco}}</p>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col">
-                <h5>Incluir Salud</h5>
-                <p>Última actualización: {{ultimaActualizacionProfe | fecha}}</p>
-                <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <h5>Programa Sumar</h5>
-                <!-- <p>Última actualización: {{ultimaActualizacionProfe | fecha}}</p>
-                <p>Padrones disponibles: {{listaPeriodosProfe}}</p> -->
-            </div>
-        </div>
-        <div class="row" *ngIf="checkLog()">
-            <div class="col">
-                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias"
-                             (click)="sugerencias($event)"></plex-button>
-            </div>
-        </div>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="Información" size="md">
+            <plex-button label='Errores/Sugerencias' type='warning' (click)="sugerencias($event)" size="sm">
+            </plex-button>
+        </plex-title>
+        <plex-detail>
+            <div title case="capitalize" title>PUCO</div>
+            <plex-label titulo="Última actualización" subtitulo="{{ultimaActualizacionPuco | fecha}}"></plex-label>
+            <plex-label titulo="Padrones disponibles" subtitulo="{{listaPeriodosPuco}}"></plex-label>
+        </plex-detail>
+        <plex-detail>
+            <div title case="capitalize" title>Incluir Salud</div>
+            <plex-label titulo="Última actualización" subtitulo="{{ultimaActualizacionProfe | fecha}}"></plex-label>
+            <plex-label titulo="Padrones disponibles" subtitulo="{{listaPeriodosProfe}}"></plex-label>
+        </plex-detail>
+
+        <plex-detail>
+            <div title case="capitalize" title>Programa Sumar</div>
+            <plex-label titulo="Última actualización" subtitulo="Sin información"></plex-label>
+            <plex-label titulo="Padrones disponibles" subtitulo="Sin información"></plex-label>
+        </plex-detail>
     </plex-layout-sidebar>
 </plex-layout>
