@@ -1,3 +1,19 @@
+# [5.74.0](https://github.com/andes/app/compare/v5.73.0...v5.74.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* **inicio:** corrige altura de módulos reducidos ([#2524](https://github.com/andes/app/issues/2524)) ([bcd3fda](https://github.com/andes/app/commit/bcd3fda1eeb2389b3d497b6c44c695b0c2473683))
+* **per:** Arreglando filtros en perinatal ([#2518](https://github.com/andes/app/issues/2518)) ([7bf5904](https://github.com/andes/app/commit/7bf59048022a5bd469f0e0033e5c2f9caa28bbe4))
+* **rup:** avisa al usuario acerca de dosis ya aplicadas ([#2505](https://github.com/andes/app/issues/2505)) ([14d08f9](https://github.com/andes/app/commit/14d08f9d87224cf267777b0a4da58a79cee253b6))
+
+
+### Features
+
+* **mapa-camas:** plan de indicaciones ([#2483](https://github.com/andes/app/issues/2483)) ([e3a8fa1](https://github.com/andes/app/commit/e3a8fa1fea5651e1a5a69f550261f3315e3afb90))
+* **rup:** formularios dinamicos en solicitudes ([#2478](https://github.com/andes/app/issues/2478)) ([cd5703d](https://github.com/andes/app/commit/cd5703dca2b11aa76894bcab7bab116c08e27515))
+* **tm:** nuevo campo observaciones en profesional ([#2523](https://github.com/andes/app/issues/2523)) ([4639abe](https://github.com/andes/app/commit/4639abe7b3ddf6bcbd362037c53d021291eb2d1a))
+
 # [5.73.0](https://github.com/andes/app/compare/v5.72.0...v5.73.0) (2021-11-17)
 
 
