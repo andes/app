@@ -64,6 +64,22 @@ export class CampaniaSaludComponent implements OnInit {
      *
      * @memberof CampaniaSaludComponent
      */
+    public columns = [
+        {
+            'key': 'asunto',
+            'label': 'Asunto'
+        }, {
+            'key': 'desde',
+            'label': 'Desde'
+
+        }, {
+            'key': 'hasta',
+            'label': 'Hasta'
+        }, {
+            'key': 'estado',
+            'label': 'Estado'
+        }
+    ];
     ngOnInit() {
         if (!this.auth.getPermissions('campania:?').length) {
             this.router.navigate(['inicio']);
@@ -172,5 +188,10 @@ export class CampaniaSaludComponent implements OnInit {
         if (!cancelaCreacion) {
             this.seleccionada = null;
         }
+    }
+
+    cerrarCampania() {
+        this.mostrarVisualizacionCampania = false;
+        this.seleccionada = null;
     }
 }

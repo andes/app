@@ -19,6 +19,7 @@ export class CampaniaVisualizacionComponent implements OnInit {
         this.imagen = this.sanitizer.bypassSecurityTrustHtml(this.campaniaVis.imagen);
     }
     @Output() modificarOutput = new EventEmitter();
+    @Output() cerrar = new EventEmitter();
     public puedeEditar: boolean;
     imagen: SafeHtml;
     campaniaVis: ICampaniaSalud;
@@ -37,5 +38,9 @@ export class CampaniaVisualizacionComponent implements OnInit {
      */
     modificar() {
         this.modificarOutput.emit();
+    }
+
+    cancelar() {
+        this.cerrar.emit();
     }
 }

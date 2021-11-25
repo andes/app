@@ -1,85 +1,29 @@
-<ng-container *ngIf="!campania">
-    <h4 class="text-center">
-        Seleccione una campaña de salud para visualizarla
-    </h4>
-</ng-container>
-<ng-container *ngIf="campania">
-    <fieldset>
-        <div class="text-center" [innerHTML]="imagen"></div>
-    </fieldset>
-    <fieldset>
-        <legend>{{campania.asunto}}</legend>
-        <div class="row">
-            <div class="col-md">
-                <div [innerHtml]="campania.cuerpo"></div>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <legend>Perfil Demográfico Destino</legend>
-        <div class="row">
-            <div class="col-md-4">
-                <label>Sexo</label>
-                <span>{{(campania.target?.sexo | titlecase) || "Indistinto"}}</span>
-            </div>
-            <div class="col-md">
-                <label>Edad Desde</label>
-                <span>{{(campania.target?.grupoEtario?.desde) || "Indistinto"}}</span>
-            </div>
-            <div class="col-md">
-                <label>Edad Hasta</label>
-                <span>{{(campania.target?.grupoEtario?.hasta)|| "Indistinto"}}</span>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <div class="row">
-            <div class="col-md-8">
-                <fieldset>
-                    <legend>Vigencia</legend>
-                    <div class="row">
-                        <div class="col-md">
-                            <label>Fecha desde</label>
-                            <span>{{campania.vigencia?.desde | fecha}}</span>
-                        </div>
-                        <div class="col-md">
-                            <label>Fecha hasta</label>
-                            <span>{{campania.vigencia.hasta | fecha}}</span>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-md-4">
-                <fieldset>
-                    <legend>Estado</legend>
-                    <div class="row">
-                        <div class="col-md mt-md-4">
-                            <plex-badge *ngIf="campania.activo" type="success">{{campaniaSaludService.getEstado(campania)}}</plex-badge>
-                            <plex-badge *ngIf="!campania.activo" type="danger">{{campaniaSaludService.getEstado(campania)}}</plex-badge>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <legend>Datos del acceso</legend>
-        <div class="row">
-            <div class="col-md-4">
-                <label>Texto acción</label>
-                <span>{{campania.textoAccion | uppercase}}</span>
-            </div>
-            <div class="col-md-8">
-                <label>Link</label>
-                <a href="{{campania.link}}">{{campania.link}}</a>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <div class="row">
-            <div class="col text-right" *ngIf="puedeEditar">
-                <plex-button label="Modificar" type="success" (click)="modificar()"></plex-button>
-            </div>
-        </div>
-    </fieldset>
-</ng-container>
+<plex-title titulo="Detalle de campaña" size="md">
+    <plex-button size="sm" label="Modificar" type="success" (click)="modificar()"></plex-button>
+    <plex-button size="sm" label="Cerrar" type="danger" (click)="cancelar()"></plex-button>
+</plex-title>
+<div class="text-center" [innerHTML]="imagen"></div>
+<plex-label titulo="Asunto"></plex-label>
+<div [innerHtml]="campania.cuerpo"></div>
+<plex-title titulo="Perfil Demográfico Destino" size="sm"></plex-title>
+<plex-label titulo="Sexo" subtitulo="{{(campania.target?.sexo | titlecase) || 'Indistinto'}}">
+</plex-label>
+<plex-label titulo="Edad desde" subtitulo="{{(campania.target?.grupoEtario?.desde) || 'Indistinto'}}">
+</plex-label>
+<plex-label titulo="Edad hasta" subtitulo="{{(campania.target?.grupoEtario?.hasta)|| 'Indistinto'}}">
+</plex-label>
+<plex-title titulo="Vigencia" size="sm">
+    <plex-badge *ngIf="campania.activo" type="success">
+        {{campaniaSaludService.getEstado(campania)}}</plex-badge>
+    <plex-badge *ngIf="!campania.activo" type="danger">
+        {{campaniaSaludService.getEstado(campania)}}</plex-badge>
+</plex-title>
+<plex-label titulo="Fecha desde" subtitulo="{{campania.vigencia?.desde | fecha}}">
+</plex-label>
+<plex-label titulo="Fecha hasta" subtitulo="{{campania.vigencia?.hasta | fecha}}">
+</plex-label>
+<plex-title titulo="Datos del acceso" size="sm"></plex-title>
+<plex-label titulo="Texto acción" subtitulo="{{campania.textoAccion | uppercase}}"></plex-label>
+<a href="{{campania.link}}">
+    <plex-label titulo="Link" subtitulo="{{campania.link}}"></plex-label>
+</a>
