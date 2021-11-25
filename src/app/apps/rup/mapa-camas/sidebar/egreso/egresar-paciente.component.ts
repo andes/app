@@ -488,16 +488,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             switch (this.registro.valor.InformeEgreso.causaExterna.producidaPor.id) {
                 case 'Accidente':
-                    filtro = [{ desde: 'V01', hasta: 'X59' }, { desde: 'Y35', hasta: 'Y98' }];
+                    filtro = [{ desde: 'V01', hasta: 'X60' }];
                     break;
                 case 'lesionAutoinfligida':
-                    filtro = [{ desde: 'X60', hasta: 'X84' }];
+                    filtro = [{ desde: 'X60', hasta: 'X85' }];
                     break;
                 case 'agresion':
-                    filtro = [{ desde: 'X85', hasta: 'Y09' }];
+                    filtro = [{ desde: 'X85', hasta: 'Y10' }];
                     break;
                 case 'seIgnora': {
-                    filtro = [{ desde: 'Y10', hasta: 'Y34' }];
+                    filtro = [{ desde: 'Y10', hasta: 'Y36' }];
                     break;
                 }
             }
