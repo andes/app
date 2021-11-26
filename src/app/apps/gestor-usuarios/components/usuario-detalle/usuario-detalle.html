@@ -24,8 +24,8 @@
     <div subtitle>
         <plex-copy *ngIf="usuario.documento" [value]="usuario.documento">{{ usuario.documento | number }}</plex-copy>
         <div *ngIf="(profesional$ | async) as profesional">
-            <plex-label titulo="Observaciones"
-                        *ngIf="!profesional.profesionalMatriculado && profesional.matriculaExterna" subtitulo="{{ profesional.profesionExterna?
+            <plex-label titulo="Profesión" *ngIf="!profesional.profesionalMatriculado && profesional.matriculaExterna"
+                        subtitulo="{{ profesional.profesionExterna?
                         profesional.profesionExterna.nombre + ' MAT. N° '+ profesional.matriculaExterna : profesional.matriculaExterna
                          }}">
             </plex-label>
