@@ -147,21 +147,34 @@ export class ReglasComponent {
     }
 
     verificarRegla() {
-        if (this.reglas?.length) {
-            this.reglaCorrecta = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion && regla.origen.organizacion && regla.origen.prestaciones?.length);
+        this.reglaCorrecta = this.reglas?.every(regla => regla.destino?.organizacion && regla.destino?.prestacion);
+    }
+
+    preSave() {
+        const reglasSinPrestacion = this.reglas?.some(regla => regla.origen.organizacion && !regla.origen.prestaciones?.length);
+        if (reglasSinPrestacion) {
+            this.plex.confirm('Existen reglas sin prestación origen. Si continúa serán eliminadas.', '¿Desea continuar?').then(respuesta => {
+                if (respuesta) {
+                    this.reglas = this.reglas?.filter(regla => regla.origen.organizacion && regla.origen.prestaciones?.length);
+                    this.verificarRegla();
+                    this.save();
+                } else {
+                    return;
+                }
+            });
         } else {
-            this.reglaCorrecta = false;
+            this.save();
         }
     }
 
-    onSave($event) {
-        if (this.reglas?.length) {
+    save() {
+        if (this.reglas.length) {
             if (this.reglaCorrecta) {
                 const data = {
                     reglas: this.reglas
                 };
                 const operation = this.servicioReglas.save(data);
-                operation.subscribe((resultado) => {
+                operation.subscribe(() => {
                     this.plex.toast('success', 'Las reglas se guardaron correctamente');
                     this.limpiarForm();
                     this.prestacionDestino = {};
@@ -175,5 +188,4 @@ export class ReglasComponent {
             });
         }
     }
-
 }
