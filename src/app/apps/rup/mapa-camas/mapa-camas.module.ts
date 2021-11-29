@@ -29,6 +29,7 @@ import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.comp
 import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { InformeEgresoComponent } from './sidebar/egreso/informe-egreso.component';
+import { InformeIngresoCargaComponent } from './sidebar/ingreso/informe-ingreso-carga.component';
 import { EstadoServicioComponent } from './sidebar/estado-servicio/estado-servicio.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
 import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
@@ -84,6 +85,7 @@ export const INTERNACION_COMPONENTS = [
     InternacionDetalleComponent,
     InformeIngresoComponent,
     InformeEgresoComponent,
+    InformeIngresoCargaComponent,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,

@@ -12,7 +12,8 @@ export class MapaCamasMainComponent implements OnInit {
         { id: 'medica', label: 'Médico' },
         { id: 'enfermeria', label: 'Enfermero' },
         { id: 'estadistica', label: 'Estadístico' },
-        { id: 'interconsultores', label: 'Interconsultores' }
+        { id: 'interconsultores', label: 'Interconsultores' },
+        { id: 'carga', label: 'Carga' }
     ];
     constructor(
         public auth: Auth,

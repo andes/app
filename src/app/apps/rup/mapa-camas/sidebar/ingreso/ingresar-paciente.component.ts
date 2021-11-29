@@ -418,7 +418,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.capa === 'estadistica') {
                 this.ingresoExtendido(dtoPaciente);
             } else {
-                this.ingresoSimplificado('ocupada', dtoPaciente, null);
+                if (this.capa === 'carga') {
+                    this.completarIngreso();
+                } else {
+                    this.ingresoSimplificado('ocupada', dtoPaciente, null);
+                }
             }
         }
     }
@@ -575,6 +579,42 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.plex.info('warning', 'Paciente ingresado a lista de espera');
             }
 
+        }, (err) => {
+            this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
+        });
+    }
+
+    completarIngreso() {
+        // armamos el elemento data a agregar al array de registros
+        const nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
+
+        nuevoRegistro.valor = {
+            informeIngreso: this.informeIngreso
+        };
+
+        // armamos dto con datos principales del profesional
+        const dtoProfesional = {
+            id: this.informeIngreso.profesional.id,
+            documento: this.informeIngreso.profesional.documento,
+            nombre: this.informeIngreso.profesional.nombre,
+            apellido: this.informeIngreso.profesional.apellido
+        };
+
+        // creamos la prestacion de internacion y agregamos el registro de ingreso
+        const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', this.mapaCamasService.ambito, this.informeIngreso.fechaIngreso, null, dtoProfesional);
+        nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
+        nuevaPrestacion.unidadOrganizativa = this.cama.unidadOrganizativa;
+        nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
+        this.servicioPrestacion.post(nuevaPrestacion).subscribe((prestacion) => {
+            this.internacionResumenService.update(this.cama.idInternacion, {
+                idPrestacion: prestacion.id
+            }).subscribe(() => {
+                this.onSave.emit();
+                this.disableButton = false;
+                this.mapaCamasService.select(this.cama);
+                this.plex.info('success', 'Registro completado con éxito');
+            });
         }, (err) => {
             this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
         });

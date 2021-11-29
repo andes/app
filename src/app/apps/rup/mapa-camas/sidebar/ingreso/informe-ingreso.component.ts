@@ -26,14 +26,12 @@ export class InformeIngresoComponent implements OnInit {
 
     ngOnInit() {
         this.prestacion$ = this.mapaCamasService.prestacion$;
-
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
                 return prestacion.ejecucion.registros[0].valor.informeIngreso;
             })
         );
-
         this.paciente$ = this.prestacion$.pipe(
             notNull(),
             switchMap(prestacion => this.mapaCamasService.getPaciente(prestacion.paciente))

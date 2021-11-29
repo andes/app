@@ -7,7 +7,7 @@
             <ng-content></ng-content>
         </plex-title>
         <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-        <ng-container *ngIf="capa === 'estadistica'">
+        <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
             <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
                               (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
             </carpeta-paciente>
@@ -39,7 +39,7 @@
                        [(ngModel)]="cama.nombre">
             </plex-text>
 
-            <ng-container *ngIf="capa === 'estadistica'">
+            <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
                 <plex-select grow="2" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
                              [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
                              idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
@@ -90,8 +90,7 @@
                 </plex-list>
             </ng-container>
         </ng-container>
-
-        <ng-container *ngIf="capa === 'estadistica'">
+        <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
             <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
             <plex-wrapper>
                 <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"

@@ -11,7 +11,7 @@
 
 
         <ng-container *ngIf="mostrar === 'ingreso'">
-            <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
+            <app-informe-ingreso *ngIf="!editar && capa !== 'carga'" (cancel)="activatedOption('ingreso')">
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" title="editar ingreso" icon="pencil"
                              type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
@@ -21,6 +21,11 @@
                     </plex-button>
                 </ng-container>
             </app-informe-ingreso>
+            <app-informe-ingreso-carga *ngIf="!editar && capa === 'carga'" (cancel)="activatedOption('ingreso')">
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" title="Completar informe" icon="pencil"
+                             type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
+                </plex-button>
+            </app-informe-ingreso-carga>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
                 <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
                 </plex-button>

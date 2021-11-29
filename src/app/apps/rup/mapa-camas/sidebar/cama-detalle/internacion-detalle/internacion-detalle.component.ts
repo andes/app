@@ -31,6 +31,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public mostrar;
     public hayMovimientosAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
+    public capa;
 
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
@@ -66,7 +67,8 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.resumenInternacion$
         ).subscribe(([capa, resumen]) => {
-            if (capa !== 'estadistica') {
+            this.capa = capa;
+            if (capa !== 'estadistica' && capa !== 'carga') {
                 if (resumen.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },
@@ -82,12 +84,20 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     this.mostrar = 'movimientos';
                 }
             } else {
-                this.items = [
-                    { key: 'ingreso', label: 'INGRESO' },
-                    { key: 'movimientos', label: 'MOVIMIENTOS' },
-                    { key: 'registros', label: 'REGISTROS' },
-                    { key: 'egreso', label: 'EGRESO' }
-                ];
+                if (capa === 'estadistica') {
+                    this.items = [
+                        { key: 'ingreso', label: 'INGRESO' },
+                        { key: 'movimientos', label: 'MOVIMIENTOS' },
+                        { key: 'registros', label: 'REGISTROS' },
+                        { key: 'egreso', label: 'EGRESO' }
+                    ];
+                } else {
+                    this.items = [
+                        { key: 'ingreso', label: 'INGRESO' },
+                        { key: 'movimientos', label: 'MOVIMIENTOS' },
+                        { key: 'registros', label: 'REGISTROS' }
+                    ];
+                }
             }
 
             const registro = this.items.findIndex(item => item.key === 'registros');
