@@ -71,8 +71,6 @@ import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
 import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
-import { CalculoEdadGestacionalComponent } from './components/elementos/edadGestacional.component';
-
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -126,8 +124,7 @@ const RUPComponentsArray = [
     InternacionIngresoComponent,
     ChecklistComponent,
     VacunasComponent,
-    SolicitudPrescripcionMedicamentoComponent,
-    CalculoEdadGestacionalComponent
+    SolicitudPrescripcionMedicamentoComponent
 ];
 
 @NgModule({
