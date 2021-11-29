@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -303,7 +303,7 @@ export class ResumenInternacionComponent implements OnInit {
                     });
                 }
 
-                if (movimientos[movimientos.length - 1].estado === 'ocupada') {
+                if (movimientos.length >= 1 && movimientos[movimientos.length - 1].estado === 'ocupada') {
                     const prev = movimientos[movimientos.length - 1];
                     const sectorName = [...prev.sectores].map(s => s.nombre).join(', ');
                     dataSetMovimientos.push({
@@ -454,6 +454,11 @@ export class ResumenInternacionComponent implements OnInit {
         });
     }
 
+    @HostListener('window:keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+        this.navigateItems(event);
+    }
+
     setView(inicio, fin) {
         this.timeline.setWindow(inicio, fin);
     }
@@ -516,6 +521,20 @@ export class ResumenInternacionComponent implements OnInit {
         this.dataSetVisible$.next(dataSetVisible);
     }
 
+    navigateItems(event: KeyboardEvent ) {
+        if (this.groupSelected === 'prestaciones' && this.datoIdSelected != null) {
+            const key = event.key;
+            const pos = this.prestaciones.map((e) => { return e.id; }).indexOf(this.datoIdSelected);
+
+            if (key === 'Up' || key === 'ArrowUp' && this.prestaciones[pos-1]) {
+                this.datoIdSelected = this.prestaciones[pos-1].id;
+                this.prestacionSelected = this.prestaciones[pos-1];
+            } else if ( key === 'Down' || key === 'ArrowDown' && this.prestaciones[pos+1]) {
+                this.datoIdSelected = this.prestaciones[pos+1].id;
+                this.prestacionSelected = this.prestaciones[pos+1];
+            }
+        }
+    }
 
     onItemSelect(data) {
         if (data.id === this.datoIdSelected) {
