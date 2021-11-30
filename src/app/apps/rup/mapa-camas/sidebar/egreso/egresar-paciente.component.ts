@@ -373,9 +373,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
 
     setDiasEstada() {
-        const fechaIngreso = this.informeIngreso.fechaIngreso;
-        const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
-        this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
+        if (this.capa === 'estadistica') {
+            const fechaIngreso = this.informeIngreso.fechaIngreso;
+            const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
+            this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
+        }
     }
 
     loadOrganizacion(event) {
