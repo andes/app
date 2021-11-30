@@ -1263,8 +1263,8 @@ export class DarTurnosComponent implements OnInit {
             id: this.organizacion.id,
             nombre: this.organizacion.nombre
         };
-        const listaEspera: any = !this.agenda ? null : {
-            fecha: this.agenda.horaInicio,
+        const listaEspera: any = !this.opciones.tipoPrestacion && !this.opciones.profesional ? null : {
+            fecha: new Date(),
             estado: 'Demanda Rechazada',
             tipoPrestacion: datosPrestacion,
             profesional: datosProfesional,
