@@ -144,9 +144,13 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     }
 
     borrar() {
-        return this.usuariosHttp.deleteOrganizacion(this.userId, this.organizacionId).subscribe(() => {
-            this.plex.toast('success', 'Permisos eliminados exitosamente!');
-            this.location.back();
+        this.plex.confirm(' Ud. está por eliminar todos los permisos del usuario en la organización ' + this.orgName + ', está seguro?').then((resultado) => {
+            if (resultado) {
+                return this.usuariosHttp.deleteOrganizacion(this.userId, this.organizacionId).subscribe(() => {
+                    this.plex.toast('success', 'Permisos eliminados exitosamente!');
+                    this.location.back();
+                });
+            }
         });
     }
 
