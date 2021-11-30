@@ -72,12 +72,6 @@ import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 
-
-
-
-
-
-
 const RUPComponentsArray = [
     RUPComponent,
     SelectPorRefsetComponent,

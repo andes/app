@@ -25,4 +25,10 @@ export class ValorFechaComponent extends RUPComponent implements OnInit {
             this.registro.valor = null;
         }
     }
+
+    onChange() {
+        this.emitChange();
+        this.mensaje = {};
+        this.addFact('value', this.registro.valor);
+    }
 }
