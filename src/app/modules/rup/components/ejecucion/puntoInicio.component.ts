@@ -174,6 +174,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             }),
             // Prestaciones
             this.getPrestaciones(),
+
         ];
         if (this.permisoServicioIntermedio.length > 0) {
             requests.push(
@@ -183,7 +184,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             );
         }
 
-        this.lastRequest = observableForkJoin(requests).subscribe(data => {
+        this.lastRequest = observableForkJoin(requests).subscribe((data: any[]) => {
             this.agendas = data[0];
             this.prestaciones = data[1];
             this.servicioIntermedioItems = data[2] || [];
@@ -192,6 +193,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => this.cargarPrestacionesTurnos(agenda));
+
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
@@ -207,7 +209,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     && (creadaPorMi || puedeValidar)
                     && (estadoActual.tipo === 'ejecucion' || estadoActual.tipo === 'validada'));
             });
-
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
             this.prestacionesOriginales = JSON.parse(JSON.stringify(this.fueraDeAgenda));
@@ -233,7 +234,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 }
                 return acc;
             }, []);
-
         });
     }
 
