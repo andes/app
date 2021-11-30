@@ -183,18 +183,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 })
             );
         }
-        // Solicitudes
-        const params = {
-            ordenFechaDesc: true,
-            estados: ['ejecucion'],
-            idProfesional: this.auth.profesional
-        };
-        requests.push(this.servicioPrestacion.getSolicitudes(params));
 
         this.lastRequest = observableForkJoin(requests).subscribe((data: any[]) => {
             this.agendas = data[0];
-            this.prestaciones = data[1].concat(data[2]);
-            this.servicioIntermedioItems = data[3] || [];
+            this.prestaciones = data[1];
+            this.servicioIntermedioItems = data[2] || [];
 
             if (this.agendas.length) {
 

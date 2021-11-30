@@ -151,6 +151,14 @@
                                                  *ngIf="botones.anular && permisoAnular"
                                                  (click)="$event.stopPropagation();anular(prestacion)" title="Anular">
                                     </plex-button>
+                                    <plex-button *ngIf="prestacion.estadoActual.tipo === 'ejecucion'" type="success"
+                                                 size="sm" (click)="setRouteToParams(['ejecucion', prestacion.id]); 
+                                                 prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;
+                                                 accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; 
+                                                 accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; 
+                                                 preAccesoHuds(motivoVerContinuarPrestacion)">
+                                        CONTINUAR REGISTRO
+                                    </plex-button>
                                 </ng-container>
                                 <plex-dropdown #drop *ngIf="estado === 'asignada'" class="pl-2 mr-0" [right]="true"
                                                [items]="itemsDropdown" size="sm" icon="dots-vertical" label=""
@@ -243,6 +251,14 @@
                             <plex-button size="sm" type="danger" icon="delete" (click)="cancelar(prestacion)"
                                          title="Cancelar"
                                          *ngIf="prestacion.estadoActual.tipo == 'pendiente' && !prestacion.solicitud.turno">
+                            </plex-button>
+                            <plex-button *ngIf="prestacion.estadoActual.tipo === 'ejecucion'" type="success" size="sm"
+                                         (click)="setRouteToParams(['ejecucion', prestacion.id]); 
+                                                 prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;
+                                                 accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; 
+                                                 accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; 
+                                                 preAccesoHuds(motivoVerContinuarPrestacion)">
+                                CONTINUAR REGISTRO
                             </plex-button>
                         </plex-item>
                     </plex-list>
