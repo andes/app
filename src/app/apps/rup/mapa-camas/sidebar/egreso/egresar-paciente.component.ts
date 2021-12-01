@@ -1,19 +1,19 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { Cie10Service } from '../../../../mitos';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
-import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
-import { ISnapshot } from '../../interfaces/ISnapshot';
-import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { combineLatest, Subscription, Observable, of } from 'rxjs';
-import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
+import { Cie10Service } from '../../../../mitos';
+import { causaExterna, listaTipoEgreso, opcionesCondicionAlNacer, opcionesSexo, opcionesTerminacion, opcionesTipoParto } from '../../constantes-internacion';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -46,6 +46,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public estadoDestino;
     public checkTraslado = false;
     private informeIngreso;
+    public resumenPacienteInternacion$: Observable<any>;
     public registro: any = {
         destacado: false,
         esSolicitud: false,
@@ -126,6 +127,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.inProgress = true;
         this.fecha = this.mapaCamasService.fecha;
 
+
         this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => {
                 this.inProgress = false;
@@ -142,12 +144,41 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.subscription = combineLatest(
+        this.resumenPacienteInternacion$ = combineLatest([
+            this.mapaCamasService.capa2,
+            this.mapaCamasService.prestacion$
+        ]).pipe(
+            switchMap(([capa, prestacion]) => {
+                if (capa !== 'estadistica'|| !prestacion) {
+                    return of(null);
+                }
+                const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                const paciente = prestacion.paciente.id;
+
+                const desde = moment(fecha).subtract(12, 'hours').toDate();
+                const hasta = moment(fecha).add(12, 'hours').toDate();
+
+                return this.internacionResumenService.search({
+                    organizacion: this.auth.organizacion.id,
+                    paciente: paciente,
+                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                });
+
+            }),
+            map(resumenes => resumenes && resumenes[0]),
+            tap(resumen => {
+                if (resumen) {
+                    resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
+                }
+            })
+        );
+
+        this.subscription = combineLatest([
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ).subscribe(([view, capa, cama, prestacion]) => {
+        ]).subscribe(([view, capa, cama, prestacion]) => {
             this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             if (view === 'listado-internacion' && prestacion) {
@@ -164,6 +195,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (!prestacion) {
                     return;
                 }
+                const pacienteId = prestacion.paciente.id;
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
 
