@@ -216,18 +216,30 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     }
 
     checkDosis() {
-        if (this.registro.valor.vacuna.dosis && this.vacunasEncontradas && this.vacunasEncontradas.length) {
-            const ultimoRegistro = this.vacunasEncontradas[0];
-            const tiempoInterdosis = this.registro.valor.vacuna.dosis.tiempoInterdosis;
-            if (tiempoInterdosis > 0) {
-                const diasdiferencia = this.registro.valor.vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
-                const contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
-                if (contdias < tiempoInterdosis) {
-                    this.plex.info('danger', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
-                    this.registro.valor.vacuna.dosis = Object.assign({}, null);
+        if (this.registro.valor.vacuna.dosis) {
+            const vacuna = this.registro.valor.vacuna;
+            if (!this.controlEtareo(vacuna.dosis.limiteMinimoReal, vacuna.dosis.limiteMaximoReal)) {
+                this.plex.info('warning', 'No se cumple el rango etáreo', 'Problemas con la dosis seleccionada');
+                vacuna.dosis = {};
+                return;
+            }
+            if (this.vacunasEncontradas && this.vacunasEncontradas.length) {
+                const ultimoRegistro = this.vacunasEncontradas[0];
+                const tiempoInterdosis = vacuna.dosis.tiempoInterdosis;
+                if (tiempoInterdosis > 0) {
+                    const diasdiferencia = vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
+                    const contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
+                    if (contdias < tiempoInterdosis) {
+                        this.plex.info('warning', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
+                        vacuna.dosis = {};
+                    }
                 }
             }
         }
+    }
+
+    controlEtareo(edadMinima, edadMaxima) {
+        return this.paciente.edad > edadMinima && (edadMaxima === 0 || this.paciente.edad < edadMaxima);
     }
 
     onValidate() {
