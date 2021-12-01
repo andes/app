@@ -1,3 +1,21 @@
+# [5.75.0](https://github.com/andes/app/compare/v5.74.0...v5.75.0) (2021-12-01)
+
+
+### Bug Fixes
+
+* **citas:** guardar prestación en demanda rechazada ([#2536](https://github.com/andes/app/issues/2536)) ([8982b48](https://github.com/andes/app/commit/8982b485681bac04ed5a01ea62802fc571238c37))
+* **in:** códigos de causa externa en egreso ([#2531](https://github.com/andes/app/issues/2531)) ([23fc749](https://github.com/andes/app/commit/23fc749287081915e32ce2eabb8fa22d1299a51a))
+* **mapa-camas:** conteo dia de estada en capa medica ([#2533](https://github.com/andes/app/issues/2533)) ([5dabf1c](https://github.com/andes/app/commit/5dabf1c435e9f30c8348ca8c6153bf3e23397a87))
+* **top:** visualizacion de solicitudes en ejecucion en RUP ([#2521](https://github.com/andes/app/issues/2521)) ([944acb0](https://github.com/andes/app/commit/944acb039ee0664d77ca9de554041ab59e4e57a5))
+
+
+### Features
+
+* **gestor-usuarios:** confirmación al eliminar los permisos de una organización ([#2534](https://github.com/andes/app/issues/2534)) ([44018a6](https://github.com/andes/app/commit/44018a698edd8f98decacb0e8c7df80ffa9ad90a))
+* **mapa-camas:** navegación con flechas en resumen de internación ([#2535](https://github.com/andes/app/issues/2535)) ([ea171cf](https://github.com/andes/app/commit/ea171cfa3b1e08f1af6ba6ff93ae37ab4869c032))
+* **PER:** Se agrega filtro por paciente en descarga CSV ([#2527](https://github.com/andes/app/issues/2527)) ([5d348a6](https://github.com/andes/app/commit/5d348a6628afed1a108f1877dc6ad9577f24a09e))
+* **tup:** molecula edad gestacional ([#2453](https://github.com/andes/app/issues/2453)) ([db84376](https://github.com/andes/app/commit/db8437682f6fd087570949448d61ea96c1a3b29f))
+
 # [5.74.0](https://github.com/andes/app/compare/v5.73.0...v5.74.0) (2021-11-24)
 
 
