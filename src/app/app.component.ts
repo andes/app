@@ -11,14 +11,22 @@ import { HotjarService } from './shared/services/hotJar.service';
 import { GoogleTagManagerService } from './shared/services/analytics.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
+import { ProfesionalService } from './services/profesional.service';
 import { Observable } from 'rxjs';
-
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
 })
 
 export class AppComponent {
+    public profesional$: Observable<any>;
+    public formacionGrado;
+    public profesional;
+    public hoy = new Date();
+    public foto: any;
+    public tieneFoto = false;
+    private listadoActual: any[];
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
@@ -33,6 +41,25 @@ export class AppComponent {
             this.plex.updateAppStatus({ API: 'OK' });
         }
     }
+
+    public columns = [
+        {
+            key: 'profesion',
+            label: 'Profesión',
+        },
+        {
+            key: 'matricula',
+            label: 'Matrícula',
+        },
+        {
+            key: 'vencimiento',
+            label: 'Vencimiento',
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+        }
+    ];
 
     private menuList = [];
     private modulos$: Observable<any[]>;
@@ -50,8 +77,9 @@ export class AppComponent {
         private commonNovedadesService: CommonNovedadesService,
         public adjuntos: AdjuntosService,
         private modulosService: ModulosService,
+        private profesionalService: ProfesionalService,
+        public sanitizer: DomSanitizer,
     ) {
-
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps de Salud');
 
@@ -67,6 +95,17 @@ export class AppComponent {
             if (sesion.permisos) {
                 this.checkPermissions();
             }
+            this.profesionalService.getProfesional({ id: this.auth.profesional }).subscribe(
+                profesional => {
+                    this.formacionGrado = profesional[0].formacionGrado;
+                    this.profesional = profesional;
+                });
+            this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
+                if (resp) {
+                    this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                    this.tieneFoto = true;
+                }
+            });
         });
 
         const token = this.auth.getToken();
@@ -160,5 +199,17 @@ export class AppComponent {
 
     public getModulos() {
         return this.modulos$;
+    }
+
+    verificarEstado(formacionGrado) {
+        if (!formacionGrado.matriculado && this.hoy < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+            return 'suspendida';
+        } else {
+            if (this.hoy > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                return 'vencida';
+            } else {
+                return 'vigente';
+            }
+        }
     }
 }
