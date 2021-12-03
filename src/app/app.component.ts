@@ -20,13 +20,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class AppComponent {
-    public profesional$: Observable<any>;
     public formacionGrado;
     public profesional;
+    public estado: [];
     public hoy = new Date();
     public foto: any;
     public tieneFoto = false;
-    private listadoActual: any[];
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
@@ -95,17 +94,24 @@ export class AppComponent {
             if (sesion.permisos) {
                 this.checkPermissions();
             }
-            this.profesionalService.getProfesional({ id: this.auth.profesional }).subscribe(
-                profesional => {
-                    this.formacionGrado = profesional[0].formacionGrado;
-                    this.profesional = profesional;
+            if (this.auth.profesional) {
+                this.profesionalService.getProfesional({ id: this.auth.profesional }).subscribe(profesional => {
+                    if (profesional) {
+                        this.profesional = profesional;
+                        this.profesional = profesional;
+                        this.formacionGrado = profesional[0].formacionGrado;
+                        this.formacionGrado.forEach(item => {
+                            item['estado'] = this.verificarEstado(item);
+                        });
+                    }
                 });
-            this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
-                if (resp) {
-                    this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
-                    this.tieneFoto = true;
-                }
-            });
+                this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
+                    if (resp) {
+                        this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                        this.tieneFoto = true;
+                    }
+                });
+            }
         });
 
         const token = this.auth.getToken();
@@ -202,13 +208,24 @@ export class AppComponent {
     }
 
     verificarEstado(formacionGrado) {
-        if (!formacionGrado.matriculado && this.hoy < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
-            return 'suspendida';
-        } else {
-            if (this.hoy > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
-                return 'vencida';
+        if (formacionGrado.matriculacion) {
+            if (!formacionGrado.matriculado && this.hoy < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                return {
+                    nombre: 'suspendida',
+                    tipo: 'warning'
+                };
             } else {
-                return 'vigente';
+                if (this.hoy > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                    return {
+                        nombre: 'vencida',
+                        tipo: 'danger'
+                    };
+                } else {
+                    return {
+                        nombre: 'vigente',
+                        tipo: 'success'
+                    };
+                }
             }
         }
     }

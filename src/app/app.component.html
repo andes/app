@@ -19,21 +19,21 @@
         <plex-table [columns]="columns" #table="plTable">
             <tr *ngFor="let item of formacionGrado">
                 <td>
-                    <plex-label [titulo]="item.profesion.nombre"></plex-label>
+                    <plex-label *ngIf="item.profesion" [titulo]="item.profesion.nombre"></plex-label>
                 </td>
                 <td>
-                    <plex-label [titulo]="item.matriculacion[item.matriculacion.length-1].matriculaNumero">
+                    <plex-label *ngIf="item.matriculacion"
+                                [titulo]="item.matriculacion[item.matriculacion?.length-1]?.matriculaNumero">
                     </plex-label>
+                    <plex-badge *ngIf="!item.matriculacion" type="danger">NO POSEE MATRICULA</plex-badge>
                 </td>
                 <td>
-                    <plex-badge type="info" size="sm">{{ item.matriculacion[item.matriculacion.length-1].fin | date:
+                    <plex-badge *ngIf="item.matriculacion" type="info" size="sm">{{
+                        item.matriculacion[item.matriculacion?.length-1]?.fin | date:
                         'dd/MM/yyyy'}}</plex-badge>
                 </td>
                 <td>
-                    <plex-badge *ngIf="verificarEstado(item) === 'vigente'" type="success"> VIGENTE</plex-badge>
-                    <plex-badge *ngIf="verificarEstado(item) === 'vencida'" type="danger"> VENCIDA</plex-badge>
-                    <plex-badge *ngIf="verificarEstado(item) === 'suspendida'" type="warning"> SUSPENDIDA
-                    </plex-badge>
+                    <plex-badge *ngIf="item.estado" type="{{item.estado.tipo}}"> {{item.estado.nombre}}</plex-badge>
                 </td>
             </tr>
         </plex-table>
