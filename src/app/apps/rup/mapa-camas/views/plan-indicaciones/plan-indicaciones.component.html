@@ -178,6 +178,7 @@
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
+                <plex-button type="success" size="sm" icon="pencil" (click)="editar(indicacionView)"></plex-button>
                 <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
             </in-indicacion-detalle>
         </ng-container>

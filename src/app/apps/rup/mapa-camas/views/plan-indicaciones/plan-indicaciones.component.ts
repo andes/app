@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { ignoreElements, map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
@@ -92,10 +92,10 @@ export class PlanIndicacionesComponent implements OnInit {
     horaSelected: Date;
 
     tipoPrestacion = {
-        'conceptId' : '4981000013105',
-        'term' : 'plan de indicaciones médicas',
-        'fsn' : 'plan de indicaciones médicas (procedimiento)',
-        'semanticTag' : 'procedimiento'
+        'conceptId': '4981000013105',
+        'term': 'plan de indicaciones médicas',
+        'fsn': 'plan de indicaciones médicas (procedimiento)',
+        'semanticTag': 'procedimiento'
     };
 
     secciones: any[] = [];
@@ -402,5 +402,17 @@ export class PlanIndicacionesComponent implements OnInit {
                 });
             });
         });
+    }
+
+    editar(indicacion) {
+
+        if (indicacion.estado.tipo === 'draft') {
+            this.indicacionEventoSelected = null;
+            this.indicacionView = null;
+            this.nuevaIndicacion = true;
+            console.log(this.seccionSelected);
+        }
+        console.log(indicacion);
+
     }
 }
