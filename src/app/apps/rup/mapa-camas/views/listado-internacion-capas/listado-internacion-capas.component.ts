@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { Plex } from '@andes/plex';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
+import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
 
 @Component({
     selector: 'app-listado-internacion-capas',
@@ -49,12 +49,12 @@ export class ListadoInternacionCapasComponent implements OnInit {
         },
         {
             key: 'diagnostico',
-            label: 'diagnostico',
+            label: 'Motivo Ingreso',
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const nameA = `${a.diagnostico.principal?.nombre}`;
-                const nameB = `${b.diagnostico.principal?.nombre}`;
+                const nameA = a.diagnostico?.term || '';
+                const nameB = b.diagnostico?.term || '';
                 return nameA.localeCompare(nameB);
             }
         },

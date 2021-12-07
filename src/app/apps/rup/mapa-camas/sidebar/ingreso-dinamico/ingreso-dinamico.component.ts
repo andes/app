@@ -20,7 +20,7 @@ export class IngresoDinamicoComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.resumen) {
-            if (this.resumen.ingreso) {
+            if (this.resumen.ingreso && this.resumen.ingreso.registros?.length > 0) {
                 this.prestacion = {
                     paciente: this.resumen.paciente,
                     solicitud: {
