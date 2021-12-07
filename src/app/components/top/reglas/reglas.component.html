@@ -49,12 +49,10 @@
         </div>
 
         <plex-list *ngFor="let prestacion of regla.origen.prestaciones; let i=index" size="sm" (click)="activarPrestacion(i)">
-            <plex-item>
-                <plex-grid cols="2" size="sm" justify="around" class="mt-0 pt-0">
-                    <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}" [tituloBold]="false" subtitulo=""></plex-label>
-                    <plex-bool [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}" label="Auditable">
-                    </plex-bool>
-                </plex-grid>
+            <plex-item case="capitalize">
+                <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}" [tituloBold]="false" subtitulo=""></plex-label>
+                <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}" label="Auditable">
+                </plex-bool>
                 <plex-button icon="delete" type="danger" size="sm"  (click)="deletePrestacion(i)">
                 </plex-button>
             </plex-item>
@@ -65,7 +63,7 @@
         <plex-button position="left" type="danger" label="Volver" (click)="cancelar()">
         </plex-button>
         <plex-button position="right" type="success" label="Guardar" (click)="preSave()"
-                    [disabled]="form.invalid || !reglaCorrecta">
+                    [disabled]="form.invalid || !reglaCorrecta()">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
