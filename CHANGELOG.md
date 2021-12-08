@@ -1,3 +1,17 @@
+# [5.76.0](https://github.com/andes/app/compare/v5.75.0...v5.76.0) (2021-12-08)
+
+
+### Bug Fixes
+
+* **epidemiologia:** no borrar clasificacion final caso asintomatico ([#2542](https://github.com/andes/app/issues/2542)) ([19f07ce](https://github.com/andes/app/commit/19f07ce73d8d7f1738ab19e1fec27a2ad127cc54))
+
+
+### Features
+
+* **misc:**  refactor de componentes de campaña de salud ([#2532](https://github.com/andes/app/issues/2532)) ([42fee20](https://github.com/andes/app/commit/42fee20fd266fec214b45cacad83ac30da6050c0))
+* **misc:** refactor de pantalla de padrones ([#2530](https://github.com/andes/app/issues/2530)) ([a7b47ea](https://github.com/andes/app/commit/a7b47eaf3df98714d07dc7143a842323d9322548))
+* **rup:** agrega control etareo segun dosis ([#2500](https://github.com/andes/app/issues/2500)) ([f4eb3bb](https://github.com/andes/app/commit/f4eb3bb6aedc8e1974259df619dac198fa0a2301))
+
 # [5.75.0](https://github.com/andes/app/compare/v5.74.0...v5.75.0) (2021-12-01)
 
 
