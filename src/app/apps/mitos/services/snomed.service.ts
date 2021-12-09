@@ -1,4 +1,4 @@
-import { Server } from '@andes/shared';
+import { Server, Cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -19,6 +19,7 @@ export class SnomedService {
         return this.server.post(this.snomedURL + '/map', body);
     }
 
+    @Cache({ key: null})
     getQuery(params: any): Observable<any[]> {
         return this.server.get(this.snomedURLexpression, { params: params, showError: true });
     }

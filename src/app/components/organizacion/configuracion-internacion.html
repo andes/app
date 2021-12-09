@@ -29,7 +29,7 @@
                             </plex-grid>
                         </td>
                         <td *plTableCol="'concepto'">
-                            <plex-select name="concepto-{{i}}" placeholder="Seleccione..." idField="conceptId" labelField="term"
+                            <plex-select name="concepto-{{i}}" placeholder="Ingrese un concepto..." idField="conceptId" labelField="term"
                                     (getData)="loadConceptos($event)" [(ngModel)]="accion.parametros.concepto" [required]="true"></plex-select>
                         </td>
                         <td *plTableCol="'acciones'">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina-estados.http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SnomedService } from 'src/app/apps/mitos';
@@ -6,6 +6,7 @@ import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { switchMap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import { Plex } from '@andes/plex';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'configuracion-internacion',
@@ -13,6 +14,7 @@ import { Plex } from '@andes/plex';
 })
 export class ConfiguracionInternacionComponent implements OnInit {
 
+    @ViewChild('form', { static: true }) form: NgForm;
     private idOrgReferencia = '57e9670e52df311059bc8964'; /* id de castro rendon. Se usa como referencia para
                                                     la carga por defecto de acciones y otras propiedades   */
     private organizacionActual: any = {};
@@ -82,7 +84,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
 
     changeCapa() {
         if (this.configuracionDefaultCapa) {
-            this.organizacionActual[this.configuracionDefaultCapa] = this.configuracionDefaultCapa;
+            this.organizacionActual[this.configuracionDefaultCapa.capa] = this.configuracionDefaultCapa;
         }
         this.configuracionDefaultCapa = this.organizacionActual[this.capaSelected?.id];
         this.configuracionDefaultCapa.historialMedico = this.configuracionDefaultCapa.historialMedico || false;
@@ -97,9 +99,19 @@ export class ConfiguracionInternacionComponent implements OnInit {
         });
     }
 
+    // retorna true si existe algún campo sin completar
+    campoFaltante() {
+        return this.capas.some(capa => {
+            return this.organizacionActual[capa.id].estados[1].acciones.some(accion => !accion.label || !accion.parametros.concepto || !accion.parametros.unidadOrganizativa[0]);
+        });
+    }
+
     loadListadoUO(event) {
         if (event) {
-            this.snomed.getQuery({ expression: this.expression }).subscribe(result => event.callback(result));
+            this.snomed.getQuery({ expression: this.expression }).subscribe(result => {
+                this.form.control.markAllAsTouched(); // De otra forma no marca erróneos los campos que ya estaban vacíos.
+                event.callback(result);
+            });
         }
     }
 
@@ -135,7 +147,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
     }
 
     guardar(formValid) {
-        if (formValid) {
+        if (!this.campoFaltante() && formValid) {
             const saveArray = [];
             // se recorre cada capa del efector ...
             this.capas.map((c: any) => {
@@ -160,6 +172,8 @@ export class ConfiguracionInternacionComponent implements OnInit {
             }, error => {
                 this.plex.info('danger', 'Ocurrió un error guardando los cambios');
             });
+        } else {
+            this.plex.info('warning', 'Existen campos incompletos. Revise todas las capas.');
         }
     }
 }
