@@ -284,7 +284,10 @@
             </anular-solicitud>
         </div>
         <ng-container *ngIf="showNuevaSolicitud">
-            <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)"></top-busqueda-paciente>
+            <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)">
+                <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+                </plex-button>
+            </top-busqueda-paciente>
         </ng-container>
         <div *ngIf="showCitar">
             <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"

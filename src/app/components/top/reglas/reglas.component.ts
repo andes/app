@@ -1,4 +1,3 @@
-import { OrganizacionService } from './../../../services/organizacion.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 import { Component, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
@@ -23,7 +22,8 @@ export class ReglasComponent {
     prestacionActiva = -1;
     prestacion = {};
     organizacion;
-    reglaCorrecta = false;
+    reglasIniciales: any = []; // reglas antes de de hacer cualquier modificación
+
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -32,7 +32,6 @@ export class ReglasComponent {
     ) { }
 
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
-
 
     loadProfesionales(event) {
         if (event.query) {
@@ -48,12 +47,14 @@ export class ReglasComponent {
 
     cargarReglas() {
         const query: any = {};
+        this.reglasIniciales = [];
         this.limpiarForm();
         query.organizacionDestino = this.organizacionDestino.id;
         if (this.prestacionDestino && this.prestacionDestino.conceptId) {
             query.prestacionDestino = this.prestacionDestino.conceptId;
             this.servicioReglas.get(query).subscribe((reglas: any) => {
                 this.reglas = reglas.filter(r => !r.pacs); // Hasta tener ABM pacs
+                this.reglasIniciales = reglas.filter(r => !r.pacs);
             });
         }
     }
@@ -94,7 +95,6 @@ export class ReglasComponent {
     deleteOrganizacion(indice) {
         this.reglas.splice(indice, 1);
         this.reglaActiva = -1;
-        this.verificarRegla();
     }
 
     addPrestacion() {
@@ -112,7 +112,6 @@ export class ReglasComponent {
                 this.prestaciones.push({ prestacion: this.prestacionOrigen, auditable: this.auditable });
                 this.regla.origen.prestaciones = this.prestaciones;
                 this.prestacionOrigen = null;
-                this.verificarRegla();
             }
         } else {
             this.plex.info('info', 'Debe seleccionar la prestación origen');
@@ -121,13 +120,15 @@ export class ReglasComponent {
 
     deletePrestacion(indice) {
         this.regla.origen.prestaciones.splice(indice, 1);
-        this.verificarRegla();
     }
 
     activarRegla(indice) {
         this.reglaActiva = indice;
         this.regla = this.reglas[indice];
-        this.verificarRegla();
+    }
+
+    reglaCorrecta() {
+        return this.reglas?.every(regla => regla.destino?.organizacion && regla.destino?.prestacion);
     }
 
     activarPrestacion(indice) {
@@ -139,29 +140,44 @@ export class ReglasComponent {
         this.reglas = [];
         this.reglaActiva = -1;
         this.regla = {};
-        this.reglaCorrecta = false;
     }
 
     cancelar() {
         this.cancel.emit();
     }
 
-    verificarRegla() {
-        if (this.reglas?.length) {
-            this.reglaCorrecta = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion && regla.origen.organizacion && regla.origen.prestaciones?.length);
+    preSave() {
+        const reglasSinOrganizacion = this.reglasIniciales?.length && !this.reglas?.length; // si se borraron las organizaciones origen existentes anteriormente
+        const reglasSinPrestacion = this.reglas?.some(regla => regla.origen.organizacion && !regla.origen.prestaciones?.length);
+        let mensaje = '';
+        if (reglasSinOrganizacion) {
+            mensaje += 'Existen reglas sin organización origen. Si continúa serán eliminadas.';
+        }
+        if (reglasSinPrestacion) {
+            mensaje += 'Existen reglas sin prestación origen. Si continúa serán eliminadas.';
+        }
+        if (reglasSinOrganizacion || reglasSinPrestacion) {
+            this.plex.confirm(mensaje, '¿Desea continuar?').then(respuesta => {
+                if (respuesta) {
+                    this.reglas = this.reglas?.filter(regla => regla.origen.organizacion && regla.origen.prestaciones?.length);
+                    this.save();
+                } else {
+                    return;
+                }
+            });
         } else {
-            this.reglaCorrecta = false;
+            this.save();
         }
     }
 
-    onSave($event) {
-        if (this.reglas?.length) {
-            if (this.reglaCorrecta) {
+    save() {
+        if (this.reglas.length) {
+            if (this.reglaCorrecta()) {
                 const data = {
                     reglas: this.reglas
                 };
                 const operation = this.servicioReglas.save(data);
-                operation.subscribe((resultado) => {
+                operation.subscribe(() => {
                     this.plex.toast('success', 'Las reglas se guardaron correctamente');
                     this.limpiarForm();
                     this.prestacionDestino = {};
@@ -175,5 +191,4 @@ export class ReglasComponent {
             });
         }
     }
-
 }
