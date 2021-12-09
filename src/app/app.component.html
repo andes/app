@@ -8,34 +8,40 @@
         <plex-title titulo="Novedades"></plex-title>
         <header-novedades></header-novedades>
     </div>
-    <div *ngIf="profesional" class="user-profile">
+    <div *ngIf="usuario" class="user-profile">
         <plex-detail size="sm">
             <img *ngIf='tieneFoto' [src]="foto" class="img-circle" />
-            <div title>{{ profesional[0].apellido }}, {{ profesional[0].nombre }}</div>
-            <div subtitle>{{ profesional[0].documento }}</div>
-            <plex-badge *ngFor="let item of formacionGrado" type="info">{{item.profesion.nombre}}</plex-badge>
+            <div title>{{ usuario.apellido }}, {{ usuario.nombre }}</div>
+            <div subtitle>{{ usuario.documento }}</div>
+            <div *ngIf="profesional">
+                <plex-badge *ngFor="let item of profesional.formacionGrado" type="info">{{item.profesion.nombre}}
+                </plex-badge>
+            </div>
         </plex-detail>
-        <plex-title titulo="Matrículas" size="sm"></plex-title>
-        <plex-table [columns]="columns" #table="plTable">
-            <tr *ngFor="let item of formacionGrado">
-                <td>
-                    <plex-label *ngIf="item.profesion" [titulo]="item.profesion.nombre"></plex-label>
-                </td>
-                <td>
-                    <plex-label *ngIf="item.matriculacion"
-                                [titulo]="item.matriculacion[item.matriculacion?.length-1]?.matriculaNumero">
-                    </plex-label>
-                    <plex-badge *ngIf="!item.matriculacion" type="danger">NO POSEE MATRICULA</plex-badge>
-                </td>
-                <td>
-                    <plex-badge *ngIf="item.matriculacion" type="info" size="sm">{{
-                        item.matriculacion[item.matriculacion?.length-1]?.fin | date:
-                        'dd/MM/yyyy'}}</plex-badge>
-                </td>
-                <td>
-                    <plex-badge *ngIf="item.estado" type="{{item.estado.tipo}}"> {{item.estado.nombre}}</plex-badge>
-                </td>
-            </tr>
-        </plex-table>
+        <div *ngIf="profesional">
+            <plex-title titulo="Matrículas" size="sm"></plex-title>
+            <plex-table [columns]="columns" #table="plTable">
+                <tr *ngFor="let item of profesional.formacionGrado">
+                    <td>
+                        <plex-label *ngIf="item.profesion" [titulo]="item.profesion.nombre"></plex-label>
+                    </td>
+                    <td>
+                        <plex-label *ngIf="item.matriculacion"
+                                    [titulo]="item.matriculacion[item.matriculacion?.length-1]?.matriculaNumero">
+                        </plex-label>
+                        <plex-badge *ngIf="!item.matriculacion" type="danger">NO POSEE MATRICULA</plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.matriculacion" type="info" size="sm">{{
+                            item.matriculacion[item.matriculacion?.length-1]?.fin | date:
+                            'dd/MM/yyyy'}}</plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.estado" type="{{item.estado.tipo}}"> {{item.estado.nombre}}</plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </div>
     </div>
+
 </plex-app>

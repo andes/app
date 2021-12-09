@@ -1,7 +1,7 @@
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server, cacheStorage } from '@andes/shared';
 import { Auth } from '@andes/auth';
@@ -19,13 +19,14 @@ import { DomSanitizer } from '@angular/platform-browser';
     templateUrl: './app.component.html',
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
     public formacionGrado;
     public profesional;
     public estado: [];
     public hoy = new Date();
     public foto: any;
     public tieneFoto = false;
+    public usuario;
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
@@ -91,16 +92,15 @@ export class AppComponent {
         });
 
         this.auth.session().subscribe((sesion) => {
+            this.usuario = sesion.usuario;
             if (sesion.permisos) {
                 this.checkPermissions();
             }
             if (this.auth.profesional) {
-                this.profesionalService.getProfesional({ id: this.auth.profesional }).subscribe(profesional => {
+                this.profesionalService.getByID(this.auth.profesional).subscribe(profesional => {
                     if (profesional) {
                         this.profesional = profesional;
-                        this.profesional = profesional;
-                        this.formacionGrado = profesional[0].formacionGrado;
-                        this.formacionGrado.forEach(item => {
+                        this.profesional.formacionGrado.forEach(item => {
                             item['estado'] = this.verificarEstado(item);
                         });
                     }
@@ -119,6 +119,10 @@ export class AppComponent {
             this.ws.setToken(token);
             this.auth.setToken(token);
         }
+    }
+
+    ngOnInit() {
+
     }
 
     public loggedIn() {
@@ -145,7 +149,6 @@ export class AppComponent {
                 return 'info';
         }
     }
-
 
     public checkPermissions() {
         const modulos = [];
