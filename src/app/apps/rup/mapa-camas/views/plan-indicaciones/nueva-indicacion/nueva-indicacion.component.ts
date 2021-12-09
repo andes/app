@@ -1,5 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { INITIAL_CONFIG } from '@angular/platform-server';
 import { ActivatedRoute } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IPrestacionRegistro } from 'src/app/modules/rup/interfaces/prestacion.registro.interface';
@@ -14,7 +15,7 @@ import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.se
 export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
 
     @Output() save = new EventEmitter();
-
+    @Output() edit = new EventEmitter();
     private capa: string;
     private ambito: string;
     private idInternacion: string;
@@ -25,21 +26,23 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     registro = null;
 
     @Input() tipoPrestacion = {
-        'conceptId' : '4981000013105',
-        'term' : 'plan de indicaciones médicas',
-        'fsn' : 'plan de indicaciones médicas (procedimiento)',
-        'semanticTag' : 'procedimiento'
+        'conceptId': '4981000013105',
+        'term': 'plan de indicaciones médicas',
+        'fsn': 'plan de indicaciones médicas (procedimiento)',
+        'semanticTag': 'procedimiento'
     };
 
     @Input() seccion = null;
+    @Input() indicacion = null;
+
 
     prestacion: IPrestacion = {
         solicitud: {
             tipoPrestacion: {
-                'conceptId' : '4981000013105',
-                'term' : 'plan de indicaciones médicas',
-                'fsn' : 'plan de indicaciones médicas (procedimiento)',
-                'semanticTag' : 'procedimiento'
+                'conceptId': '4981000013105',
+                'term': 'plan de indicaciones médicas',
+                'fsn': 'plan de indicaciones médicas (procedimiento)',
+                'semanticTag': 'procedimiento'
             }
         }
     } as any;
@@ -71,12 +74,13 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         this.selectedConcept = concepto;
         this.elementoRUP = this.elementoRUPService.buscarElemento(concepto, concepto.esSolicitud);
         this.ps.get(concepto.conceptId, true).subscribe(() => { });
-        this.registro = new IPrestacionRegistro(this.elementoRUP, concepto);
+        this.registro = this.indicacion ? { valor: this.indicacion.valor } : new IPrestacionRegistro(this.elementoRUP, concepto);
 
 
     }
 
     onSave() {
+
         const nombre = this.registro.valor?.medicamento?.term || this.registro.concepto.term;
         const indicacion = {
             idInternacion: this.idInternacion,
@@ -102,7 +106,23 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
                 fecha: new Date()
             }]
         };
-        this.save.emit(indicacion);
+        if (this.indicacion) {
+            this.indicacion.fechaInicio = indicacion.fechaInicio;
+            this.indicacion.ambito = indicacion.ambito;
+            this.indicacion.capa = indicacion.capa;
+            this.indicacion.organizacion = indicacion.organizacion;
+            this.indicacion.profesional = indicacion.profesional;
+            this.indicacion.nombre = indicacion.nombre;
+            this.indicacion.concepto = indicacion.concepto;
+            this.indicacion.valor = indicacion.valor;
+            this.indicacion.elementoRup = indicacion.elementoRUP;
+            this.indicacion.seccion = indicacion.seccion;
+            this.indicacion.estados = indicacion.estados;
+            this.edit.emit(this.indicacion);
+        } else {
+            this.save.emit(indicacion);
+        }
+
         // this.planIndicacionesServices.create(indicacion);
     }
 

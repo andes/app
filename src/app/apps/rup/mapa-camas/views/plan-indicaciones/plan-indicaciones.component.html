@@ -171,7 +171,8 @@
 
         <ng-container *ngIf="nuevaIndicacion">
             <plan-indicaciones-nueva-indicacion [seccion]="seccionSelected" [tipoPrestacion]="tipoPrestacion"
-                                                (save)="onSaveIndicacion($event)">
+                                                [indicacion]="indicacion" (save)="onSaveIndicacion($event)"
+                                                (edit)="onEditIndicacion($event)">
             </plan-indicaciones-nueva-indicacion>
         </ng-container>
 
