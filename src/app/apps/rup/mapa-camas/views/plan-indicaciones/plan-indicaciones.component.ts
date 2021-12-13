@@ -335,13 +335,14 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onSaveIndicacion(indicacion) {
-        if (this.suspenderAnterior) {
+        if (this.suspenderAnterior && indicacion) {
             const estadoParams = {
                 tipo: 'cancelled',
                 fecha: new Date()
             };
             this.planIndicacionesServices.updateEstado(this.indicacionAnterior.id, estadoParams).subscribe(() =>
                 this.actualizar());
+            this.nuevaIndicacion = false;
         }
         if (!indicacion) {
             this.nuevaIndicacion = false;
@@ -424,11 +425,15 @@ export class PlanIndicacionesComponent implements OnInit {
             this.nuevaIndicacion = true;
             this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
         }
-        if (indicacion.estado.tipo === 'active') {
+        if (indicacion.estado.tipo === 'active' || indicacion.estado.tipo === 'pending') {
+            this.indicacion = indicacion;
             this.indicacionAnterior = indicacion;
             this.suspenderAnterior = true;
-            const seccion = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
-            this.onNuevaIndicacion(seccion);
+            this.indicacionEventoSelected = null;
+            this.indicacionView = null;
+            this.nuevaIndicacion = true;
+            this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
+
         }
 
     }

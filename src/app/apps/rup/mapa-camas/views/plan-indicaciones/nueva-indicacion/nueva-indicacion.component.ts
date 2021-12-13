@@ -106,7 +106,8 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
                 fecha: new Date()
             }]
         };
-        if (this.indicacion) {
+
+        if (this.indicacion?.estadoActual.tipo === 'draft') {
             this.indicacion.fechaInicio = indicacion.fechaInicio;
             this.indicacion.ambito = indicacion.ambito;
             this.indicacion.capa = indicacion.capa;
