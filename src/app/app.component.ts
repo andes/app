@@ -1,25 +1,25 @@
-import { CommonNovedadesService } from './components/novedades/common-novedades.service';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { cacheStorage, Server } from '@andes/shared';
+import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
-import { Component, OnInit } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { Server, cacheStorage } from '@andes/shared';
-import { Auth } from '@andes/auth';
-import { PROPERTIES } from './styles/properties';
-import { WebSocketService } from './services/websocket.service';
-import { HotjarService } from './shared/services/hotJar.service';
-import { GoogleTagManagerService } from './shared/services/analytics.service';
+import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
 import { ProfesionalService } from './services/profesional.service';
-import { Observable } from 'rxjs';
-import { DomSanitizer } from '@angular/platform-browser';
+import { WebSocketService } from './services/websocket.service';
+import { GoogleTagManagerService } from './shared/services/analytics.service';
+import { HotjarService } from './shared/services/hotJar.service';
+import { PROPERTIES } from './styles/properties';
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
     public formacionGrado;
     public profesional;
     public estado: [];
@@ -100,15 +100,15 @@ export class AppComponent implements OnInit {
                 this.profesionalService.getByID(this.auth.profesional).subscribe(profesional => {
                     if (profesional) {
                         this.profesional = profesional;
-                        this.profesional.formacionGrado.forEach(item => {
+                        this.profesional.formacionGrado?.forEach(item => {
                             item['estado'] = this.verificarEstado(item);
                         });
-                    }
-                });
-                this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
-                    if (resp) {
-                        this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
-                        this.tieneFoto = true;
+                        this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
+                            if (resp) {
+                                this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                                this.tieneFoto = true;
+                            }
+                        });
                     }
                 });
             }
@@ -119,10 +119,6 @@ export class AppComponent implements OnInit {
             this.ws.setToken(token);
             this.auth.setToken(token);
         }
-    }
-
-    ngOnInit() {
-
     }
 
     public loggedIn() {

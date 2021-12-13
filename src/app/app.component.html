@@ -18,7 +18,7 @@
                 </plex-badge>
             </div>
         </plex-detail>
-        <div *ngIf="profesional">
+        <div *ngIf="profesional?.formacionGrado?.length">
             <plex-title titulo="Matrículas" size="sm"></plex-title>
             <plex-table [columns]="columns" #table="plTable">
                 <tr *ngFor="let item of profesional.formacionGrado">
