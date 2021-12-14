@@ -176,12 +176,7 @@ export class DarTurnosComponent implements OnInit {
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
     // Muestra/Oculta los días de fin de semana (sábado y domingo)
-    ocultarFinesDeSemana = false;
-
-    // Opciones para modificar la grilla/calendario
-    opcionesCalendario = {
-        mostrarFinesDeSemana: true
-    };
+    mostrarFinesDeSemana = true;
 
     private bloques: IBloque[];
     private indiceTurno: number;
@@ -472,9 +467,6 @@ export class DarTurnosComponent implements OnInit {
 
                     });
                 }
-
-                // Por defecto se muestras los días de fines de semana (sab y dom)
-                this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
 
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
