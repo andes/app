@@ -187,7 +187,7 @@ export class DarTurnosComponent implements OnInit {
     private indiceTurno: number;
     private indiceBloque: number;
     private cacheBusquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
-    private busquedas = this.cacheBusquedas;
+    private busquedas = [...this.cacheBusquedas];
     private eventoProfesional: any = null;
     public mostrarCalendario = false;
     public condicionLlaveAgenda: any;
