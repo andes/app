@@ -1,26 +1,26 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy, Optional, QueryList, ViewChildren } from '@angular/core';
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { ProfesionalService } from '../../../../../services/profesional.service';
+import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { auditTime, filter, map, switchMap, tap } from 'rxjs/operators';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { IPrestacionRegistro } from '../../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { ProfesionalService } from '../../../../../services/profesional.service';
 import { SnomedExpression } from '../../../../mitos';
-import { IPrestacionRegistro } from '../../../../../modules/rup/interfaces/prestacion.registro.interface';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
+import { nivelesInstruccion, origenHospitalizacion, pacienteAsociado, situacionesLaborales, snomedIngreso } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { combineLatest, Subscription, Observable, of } from 'rxjs';
-import { map, switchMap, filter, auditTime } from 'rxjs/operators';
-import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-import { Auth } from '@andes/auth';
-import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
-import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
-import { ConceptObserverService } from '../../../../../modules/rup/services/conceptObserver.service';
-import { RUPComponent } from '../../../../../modules/rup/components/core/rup.component';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
-import { ObraSocialService } from 'src/app/services/obraSocial.service';
+import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -59,7 +59,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public inProgress = false;
     public prepagas$: Observable<any[]>;
     private backupObraSocial;
-
+    public resumenPacienteInternacion$: Observable<any>;;
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
     }
@@ -145,6 +145,33 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         const pacienteID$ = this.handlerPacienteID();
 
         this.inProgress = true;
+
+        this.resumenPacienteInternacion$ = combineLatest([
+            this.mapaCamasService.capa2,
+            this.mapaCamasService.fecha2,
+            pacienteID$
+        ]).pipe(
+            switchMap(([capa, fecha, paciente]) => {
+                if (capa !== 'estadistica') {
+                    return of(null);
+                }
+                const desde = moment(fecha).subtract(12, 'hours').toDate();
+                const hasta = moment(fecha).add(12, 'hours').toDate();
+                return this.internacionResumenService.search({
+                    organizacion: this.auth.organizacion.id,
+                    paciente: paciente,
+                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                });
+            }),
+            map(resumenes => resumenes && resumenes[0]),
+            tap(resumen => {
+                if (resumen) {
+                    resumen.registros = resumen.registros.filter(r => r.tipo === 'valoracion-inicial');
+                }
+            })
+        );
+
+
         this.subscription = combineLatest(
             this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
@@ -162,6 +189,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
+
+
 
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];

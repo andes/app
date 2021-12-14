@@ -16,8 +16,17 @@
             <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
                 [class.selected]="internacion.id === idInternacionSelected"
                 (click)="seleccionarPrestacion(internacion)">
-                <td *plTableCol="'nombre'">{{internacion.paciente | nombre }}</td>
-                <td *plTableCol="'documento'">{{ internacion.paciente.documento }}</td>
+                <td *plTableCol="'nombre'">
+                    {{internacion.paciente | nombre }}
+                </td>
+                <td *plTableCol="'documento'">
+                    {{ internacion.paciente.documento }}
+                </td>
+                <td *plTableCol="'diagnostico'">
+                    <span *ngIf="internacion.diagnostico?.term">
+                        {{ internacion.diagnostico?.term}}
+                    </span>
+                </td>
                 <td *plTableCol="'fechaIngreso'">
                     {{ internacion.fechaIngreso | fecha }}
                     {{ internacion.fechaIngreso | hora }}

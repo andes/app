@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
-import { switchMap, map, auditTime } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { auditTime, map, switchMap } from 'rxjs/operators';
 import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
 
 @Injectable({ providedIn: 'root' })
@@ -23,12 +22,12 @@ export class ListadoInternacionCapasService {
         private resumenHTTP: InternacionResumenHTTP,
         private auth: Auth
     ) {
-        this.listaInternacion$ = combineLatest(
+        this.listaInternacion$ = combineLatest([
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
-        ).pipe(
+        ]).pipe(
             auditTime(0),
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
@@ -38,6 +37,15 @@ export class ListadoInternacionCapasService {
                         egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta)
                     });
                 }
+            }),
+            map(internaciones => {
+                internaciones.forEach(internacion => {
+                    if (internacion.registros) {
+                        (internacion as any).diagnostico =
+                            internacion.registros.find(r => r.esDiagnosticoPrincipal && r.tipo === 'valoracion-inicial')?.concepto;
+                    }
+                });
+                return internaciones;
             })
         );
 
