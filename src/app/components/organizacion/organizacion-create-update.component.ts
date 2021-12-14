@@ -32,7 +32,11 @@ import { IZonaSanitaria} from './../../interfaces/IZonaSanitaria';
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
-    styleUrls: ['organizacion.scss']
+    styles: [`
+        .map-container {
+            width: 50vw;
+        }
+    `]
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
@@ -371,7 +375,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarContacto() {
         if (this.noPoseeContacto) {
             this.contactosCache = this.organizacionModel.contacto;
-        } else if (this.contactosCache && this.contactosCache.length) {
+            this.organizacionModel.contacto = [this.contacto];
+        } else if (this.contactosCache?.length) {
             this.organizacionModel.contacto = this.contactosCache;
         } else {
             this.addContacto();
@@ -384,7 +389,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarEdificio() {
         if (this.noPoseeEdificio) {
             this.edificiosCache = this.organizacionModel.edificio;
-        } else if (this.edificiosCache && this.edificiosCache.length) {
+            this.organizacionModel.edificio = [this.edificio];
+        } else if (this.edificiosCache?.length) {
             this.organizacionModel.edificio = this.edificiosCache;
         } else {
             this.addEdificio();
