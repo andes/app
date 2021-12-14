@@ -14,6 +14,7 @@ import { combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
+import { ObraSocialService } from '../../services/obraSocial.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -24,6 +25,8 @@ import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busqueda$: Observable<any[]>;
+    public obraSocialPaciente: any[] = [];
+    public prepagas: any[] = [];
     public lastSelect$ = new BehaviorSubject<string>(null);
     public descargasPendientes = false;
     public prestacionesExport = [];
@@ -39,6 +42,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public documento;
     public financiadores: IFinanciador[];
     prestacion: any;
+    public obraSocial: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
     public estado;
@@ -51,6 +55,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public ambito;
     public prestacionesMax = 500;
     public showHint = false;
+    public prestacionIniciada;
+    public showListaPrepagas: Boolean = false;
+    public modelo: any = {
+        obraSocial: '',
+        prepaga: ''
+    };
 
     public columnas = {
         fecha: true,
@@ -83,6 +93,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private hudsService: HUDSService,
         private router: Router,
         private exportHudsService: ExportHudsService,
+        public obraSocialService: ObraSocialService
 
     ) { }
 
@@ -188,6 +199,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         );
 
         this.initialize();
+        this.obraSocialService.getPrepagas().subscribe(prepagas => {
+            this.prepagas = prepagas;
+        });
     }
 
     initialize() {
@@ -286,7 +300,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     mostrarPrestacion(datos) {
+        this.modelo.prepaga = null;
         this.descargasPendientes = false;
+        this.prestacionIniciada = datos.idPrestacion;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
@@ -297,9 +313,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             this.lastSelect$.next(datos);
             datos.seleccionada = true;
             this.showPrestacion = true;
+            this.showListaPrepagas = false;
             this.prestacion = datos;
-
+            this.loadObraSocial(datos);
         });
+        if (datos.financiador) {
+            this.modelo.prepaga = '';
+        };
     }
 
     recupero() {
@@ -308,6 +328,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
+        if (this.modelo.prepaga !== '') {
+            this.prestacion.prepaga = this.modelo.prepaga;
+        }
         this.facturacionAutomaticaService.post(this.prestacion).subscribe(respuesta => {
             if (respuesta.message) {
                 this.plex.info('info', respuesta.message);
@@ -377,5 +400,50 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (aux._value) {
             aux._value.seleccionada = false;
         }
+    }
+
+    loadObraSocial(datos) {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        this.obraSocial = [];
+        if ((datos.financiador)) {
+            this.obraSocial.push(datos.financiador);
+        }
+        if (this.obraSocial.length) {
+            this.obraSocialPaciente = this.obraSocial.map((os: any) => {
+                let osPaciente;
+                if (os.nombre) {
+                    osPaciente = {
+                        'id': os.nombre,
+                        'label': os.nombre
+                    };
+                } else {
+                    osPaciente = {
+                        'id': os.financiador,
+                        'label': os.financiador
+                    };
+                }
+                return osPaciente;
+            });
+            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+        }
+        this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+    }
+
+    seleccionarObraSocial(event) {
+        if (event.value === 'prepaga') {
+            this.modelo.prepaga = null;
+            this.obraSocialService.getPrepagas().subscribe(prepagas => {
+                this.prepagas = prepagas;
+            });
+            this.showListaPrepagas = true;
+        } else {
+            this.showListaPrepagas = false;
+            this.modelo.prepaga = '';
+        }
+        this.modelo.obraSocial = event.value;
+    }
+
+    generarComprobante() {
+        return this.prestacionIniciada && this.puedeEmitirComprobante && this.modelo.prepaga !== null && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
     }
 }

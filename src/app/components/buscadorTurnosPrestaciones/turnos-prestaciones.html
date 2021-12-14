@@ -178,8 +178,8 @@
                                     {{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}
                                 </td>
                                 <td *ngIf="sumarB">
-                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin
-                                    Comprobante'}}
+                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado:
+                                    'Sin Comprobante'}}
                                 </td>
                             </tr>
                         </tbody>
@@ -205,8 +205,8 @@
                 </div>
                 <div class="col d-flex justify-content-end">
                     <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
-                    <plex-button *ngIf="puedeEmitirComprobante && (permisos!==0) && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
-                                 label="Comprobante" type="success" (click)="recupero()"></plex-button>
+                    <plex-button class="ml-1" *ngIf="generarComprobante()" label="Comprobante" type="success"
+                                 (click)="recupero()"></plex-button>
                 </div>
             </div>
         </header>
@@ -313,17 +313,15 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div *ngIf="prestacion.financiador?.financiador">
-                        <label>Obra social</label>
-                        <span>{{prestacion.financiador.financiador}}</span>
-                    </div>
-                    <div *ngIf="!prestacion.financiador">
-                        <label>Obra social</label>
-                        <span>No posee</span>
-                    </div>
-                </div>
+            <div class="col-md-12">
+                <plex-radio *ngIf="prestacion.financiador" [(ngModel)]="modelo.obraSocial" name="os"
+                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
+                            [data]="obraSocialPaciente">
+                </plex-radio>
+                <plex-select *ngIf="showListaPrepagas || !prestacion.financiador" [(ngModel)]="modelo.prepaga"
+                             name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
+                             labelField="nombre">
+                </plex-select>
             </div>
         </div>
 
