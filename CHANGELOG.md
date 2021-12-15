@@ -1,3 +1,19 @@
+# [5.77.0](https://github.com/andes/app/compare/v5.76.0...v5.77.0) (2021-12-15)
+
+
+### Bug Fixes
+
+* **citas:** frecuentes duplicados ([#2547](https://github.com/andes/app/issues/2547)) ([ca84c09](https://github.com/andes/app/commit/ca84c09290182943a67622ca02dd19a84d0fe6bd))
+* **top:** eliminacion de ultima regla ([#2537](https://github.com/andes/app/issues/2537)) ([ddb2104](https://github.com/andes/app/commit/ddb21044af2828c911a26e733edd753ece228123))
+
+
+### Features
+
+* **CIT:** refactor visual header dar turno ([#2543](https://github.com/andes/app/issues/2543)) ([b274c33](https://github.com/andes/app/commit/b274c3365216d97a48f3399a0545a2c5ad50a42c))
+* **mapa-camas:** mostrar registro de diagnostico al ingreso ([#2529](https://github.com/andes/app/issues/2529)) ([fb02b8c](https://github.com/andes/app/commit/fb02b8cbb21e65a86595ec147707008147550826))
+* **misc:** visualizacion de las matriculas de un profesional ([#2540](https://github.com/andes/app/issues/2540)) ([c0c6de1](https://github.com/andes/app/commit/c0c6de177b1f98699555a9bfdb38b78aa64bdddc))
+* **tm:** refactor pantalla organizaciones ([#2528](https://github.com/andes/app/issues/2528)) ([33e05e8](https://github.com/andes/app/commit/33e05e82a18bf5cedf8db0ed349ac2db5bfae49a))
+
 # [5.76.0](https://github.com/andes/app/compare/v5.75.0...v5.76.0) (2021-12-08)
 
 
