@@ -13,8 +13,10 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;
     public hasRules = false;
+    public valorManual: Boolean = false;
 
     ngOnInit() {
+        this.valorManual = this.registro.valorManual;
         const provider = ReflectiveInjector.resolveAndCreate(FormularRegister.list());
         if (this.elementoRUP.formulaImplementation) {
             const formulaName = this.elementoRUP.formulaImplementation;
@@ -25,24 +27,19 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.formulaProvider = provider.get(formulaService.service);
             this.formulaProvider.formula = this.params.formula;
         }
-
         this.hasRules = this.elementoRUP.rules?.length > 0;
-        this.emitChange2(null);
+        this.emitChange2();
 
         this.addFact('value', this.registro.valor);
 
         this.onRule('alert').subscribe(evento => {
-
             const { params } = evento;
             this.mensaje = {
                 texto: params.message,
                 type: params.type,
                 add: params.add
             };
-
-
         });
-
     }
 
     addConcepto(concepto: ISnomedConcept) {
@@ -51,9 +48,11 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
         );
     }
 
-    emitChange2(event) {
-        this.resultado = this.formulaProvider.calcular(this.paciente, this.prestacion, this.registro.registros);
-        this.registro.valor = this.resultado.value;
+    emitChange2() {
+        if (!this.valorManual) {
+            this.resultado = this.formulaProvider.calcular(this.paciente, this.prestacion, this.registro.registros);
+            this.registro.valor = this.resultado.value;
+        }
         this.onChange();
     }
 
@@ -63,8 +62,15 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
         this.addFact('value', this.registro.valor);
     }
 
-
-
+    changeValorManual() {
+        if (this.valorManual) {
+            this.registro.valorManual = true;
+            this.registro.registros.map(reg => reg.valor = null);
+        } else {
+            delete this.registro.valorManual;
+            this.registro.valor = 0;
+        }
+    }
 }
 
 
