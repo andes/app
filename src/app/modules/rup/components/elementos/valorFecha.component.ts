@@ -9,19 +9,21 @@ import { RupElement } from '.';
 @RupElement('ValorFechaComponent')
 export class ValorFechaComponent extends RUPComponent implements OnInit {
     get DateFormat() {
-        switch (this.params.type) {
-            case 'date':
-                return moment(this.registro.valor).format('DD/MM/YYYY');
-            case 'datetime':
-                return moment(this.registro.valor).format('DD/MM/YYYY hh:mm');
-            case 'time':
-                return moment(this.registro.valor).format('hh:mm');
-            default:
-                break;
+        if (this.registro) {
+            switch (this.params.type) {
+                case 'date':
+                    return moment(this.registro.valor).format('DD/MM/YYYY');
+                case 'datetime':
+                    return moment(this.registro.valor).format('DD/MM/YYYY hh:mm');
+                case 'time':
+                    return moment(this.registro.valor).format('hh:mm');
+                default:
+                    break;
+            }
         }
     }
     ngOnInit() {
-        if (!this.registro.valor) {
+        if (this.registro && !this.registro.valor) {
             this.registro.valor = null;
         }
     }
