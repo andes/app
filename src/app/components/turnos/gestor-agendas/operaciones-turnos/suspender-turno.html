@@ -1,5 +1,5 @@
 <fieldset *ngIf="showSuspenderTurno">
-    <legend>Suspender Turno</legend>
+    <plex-title titulo="Suspender turno" size="sm"></plex-title>
     <!--<div class="alert alert-default small">-->
     <div class="row">
         <div class="col-2 text-center">
@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-12">
             <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                         label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
+                        label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
             </plex-select>
         </div>
     </div>
@@ -53,32 +53,13 @@
         </div>
     </div>
 
-    <!--<div class="row">
-      <div class="col-md-8">
-        <label>Enviar paciente a Lista de Espera</label>
-      </div>
-      <div class="col-md-4">
-        <plex-button icon="key" (click)="agregarPacienteListaEspera()" title="Enviar a Lista de Espera">
-        </plex-button>
-      </div>
-    </div>-->
-    <!--<div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-      <div class="col-md-8">
-        <label>Reprogramar Turno de {{turno.paciente.nombre}} {{turno.paciente.apellido}}</label>
-      </div>
-      <div class="col-md-4">
-        <plex-button icon="backup-restore" (click)="reasignarTurno(paciente)" title="Reprogramar Turno">
-        </plex-button>
-      </div>
-    </div>-->
-
     <div class="mt-3 float-right">
         <plex-button *ngIf="!suspendio" type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
         <plex-button *ngIf="!suspendio" type="success" label="Confirmar" (click)="suspenderTurno()"
-                     title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
+                    title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
         </plex-button>
-        <!--TODO: cheuquear que todos los mensajes a enviar tuvieron una respuesta-->
+        <!--TODO: chequear que todos los mensajes a enviar tuvieron una respuesta-->
         <plex-button *ngIf="suspendio" type="info" label="Cerrar" (click)="cerrar()" title="Cerrar">
         </plex-button>
     </div>

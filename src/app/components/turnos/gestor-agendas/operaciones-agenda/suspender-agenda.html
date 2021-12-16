@@ -69,8 +69,8 @@
                 <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
             </div>
         </div>
+        <hr>
     </div>
-    <hr>
 </header>
 
 <div class="row lista-turnos" *ngIf="showData">
@@ -215,27 +215,20 @@
     </div>
 </div>
 
-<fieldset *ngIf="showConfirmar">
-    <legend>Suspender Agenda</legend>
+<ng-container *ngIf="showConfirmar">
+    <plex-title titulo="Suspender Agenda" size="sm"></plex-title>
 
-    <div class="row">
-        <div class="col-12">
-            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                         label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
-            </plex-select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="bg-warning p-3 text-white" *ngIf="!motivoSuspensionSelect.select?.nombre">
-                Seleccione un motivo de suspensión
-            </div>
-        </div>
-    </div>
+    <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
+                    label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
+    </plex-select>
+    <ng-container class="bg-warning p-3 text-white" *ngIf="!motivoSuspensionSelect.select?.nombre">
+        Seleccione un motivo de suspensión
+    </ng-container>
+      
     <div class="mt-3 float-right">
         <plex-button type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
         <plex-button type="success" label="Confirmar" (click)="suspenderAgenda()" title="Confirmar">
         </plex-button>
     </div>
-</fieldset>
+</ng-container>
