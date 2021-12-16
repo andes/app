@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { INITIAL_CONFIG } from '@angular/platform-server';
 import { ActivatedRoute } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IPrestacionRegistro } from 'src/app/modules/rup/interfaces/prestacion.registro.interface';
@@ -80,8 +79,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     }
 
     onSave() {
-
-        const nombre = this.registro.valor?.medicamento?.term || this.registro.concepto.term;
+        const nombre = this.registro.valor?.nombre || this.registro.concepto.term;
         const indicacion = {
             idInternacion: this.idInternacion,
             idPrestacion: null,
