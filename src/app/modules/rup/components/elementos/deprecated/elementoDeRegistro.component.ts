@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { RUPComponent } from '../../core/rup.component';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { RupElement } from '..';
-import { filter, takeUntil } from 'rxjs/operators';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { RupElement } from '..';
+import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
+import { RUPComponent } from '../../core/rup.component';
 
 /**
  * DEPRECADO
@@ -59,6 +59,8 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
             });
         }
         this.params.required = this.params.required ? this.params.required : false;
+        this.params.conceptsRequired = this.params.conceptsRequired || false;
+
         // buscamos si existe por parametro alguna restriccion en los conceptos.
         if (this.params.refsetId) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
@@ -92,8 +94,15 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
                 this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null);
             });
         }
-
     }
+
+    onValidate() {
+        if (this.params.conceptsRequired) {
+            return this.registro.registros.length > 0;
+        }
+        return true;
+    }
+
     ngAfterViewInit() {
         setTimeout(() => {
             this.afterInit = true;
