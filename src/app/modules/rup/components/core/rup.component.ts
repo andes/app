@@ -316,7 +316,9 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         for (let i = 0; i < this.registro.registros.length; i++) {
             const concepto = this.registro.registros[i].concepto;
             const requerido = requeridos[i];
+            const elementoRUP = this.registro.registros[i].elementoRUP ? this.elementosRUPService.getById(this.registro.registros[i].elementoRUP): null;
             if (requerido && requerido.concepto.conceptId === concepto.conceptId) {
+                requerido.elementoRUP = elementoRUP || requerido.elementoRUP;
                 response.push(requerido);
             }
         }
