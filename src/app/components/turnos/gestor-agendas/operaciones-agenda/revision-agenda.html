@@ -1,7 +1,7 @@
 <plex-layout main="6">
     <plex-layout-main>
         <plex-title size="lg" titulo="Revisión de agenda">
-            <plex-button position="right" type="danger" label="Volver" (click)="volver()"></plex-button>
+            <plex-button class="mr-1" position="right" type="danger" label="" icon="arrow-left" (click)="volver()"></plex-button>
         </plex-title>
 
         <ng-container *ngIf="agenda">
@@ -180,295 +180,301 @@
         </ng-container>
     </plex-layout-main>
 
-    <plex-layout-sidebar *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
+    <plex-layout-sidebar>
             <!--REGISTRO DE ASISTENCIA-->
+            
             <plex-title size="md" titulo="REGISTROS DEL TURNO"></plex-title>
-            <ng-container *ngIf="pacienteDetalle">
-                <paciente-detalle [paciente]="pacienteDetalle" orientacion="horizontal"></paciente-detalle>
-            </ng-container>
-        
-            <ng-container *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
-                <ng-container *ngIf="!paciente?.id && !turnoSeleccionado.paciente && !pacientesSearch">
-                    <plex-icon class="mt-5" justify="center" name="account" size="xxl" type="info"></plex-icon>
-                    <plex-label justify="center" direction="column" size="lg" titulo="{{ agenda.nominalizada ? 'No existe un paciente asociado al turno' : 'Actividad no nominalizada, no se dan turnos' }}" subtitulo="" [tituloBold]="false">
-                    </plex-label>
+            <ng-container *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
+                <ng-container *ngIf="pacienteDetalle">
+                    <paciente-detalle [paciente]="pacienteDetalle" orientacion="horizontal"></paciente-detalle>
+                </ng-container>
+            
+                <ng-container *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
+                    <ng-container *ngIf="!paciente?.id && !turnoSeleccionado.paciente && !pacientesSearch">
+                        <plex-icon class="mt-5" justify="center" name="account" size="xxl" type="info"></plex-icon>
+                        <plex-label justify="center" direction="column" size="lg" titulo="{{ agenda.nominalizada ? 'No existe un paciente asociado al turno' : 'Actividad no nominalizada, no se dan turnos' }}" subtitulo="" [tituloBold]="false">
+                        </plex-label>
+                    </ng-container>
                     <ng-container *ngIf="!pacientesSearch && agenda.nominalizada">
-                        <plex-button justify="center" class="mt-2" *ngIf="!paciente?.id" type="primary" label="Buscar Paciente"
+                        <plex-button *ngIf="!paciente?.id" justify="center" class="mt-2" type="primary" label="Buscar Paciente"
                                     (click)="buscarPaciente()">
                         </plex-button>
-                        <plex-button justify="center" class="mt-2" *ngIf="paciente?.id" type="primary" label="Cambiar Paciente"
-                                    (click)="buscarPaciente()">
-                        </plex-button>
+                        <ng-container *ngIf="paciente?.id">
+                            <plex-button class="mt-2" type="primary" label="Cambiar Paciente"
+                                        (click)="buscarPaciente()">
+                            </plex-button>
+                            <hr>
+                        </ng-container>
                     </ng-container>
                 </ng-container>
-            </ng-container>
-        
-            <ng-container *ngIf="pacientesSearch">
-                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event.pacientes,$event.scan)"
-                                    (searchClear)="onSearchClear()">
-                </paciente-buscar>
-        
-                <plex-loader *ngIf="loading"></plex-loader>
-        
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="150"
-                                    [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
-                </paciente-listado>
-                <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                    No se encontró ningún paciente..
-                </div>
-            </ng-container>
-        
-            <ng-container *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
-                <plex-label class="mt-4">Prestación: </plex-label>
-                <plex-select *ngIf="bloqueSeleccionado.tipoPrestaciones.length > 1" [(ngModel)]="turnoTipoPrestacion"
-                                name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
-                </plex-select>
-                <plex-label *ngIf="bloqueSeleccionado.tipoPrestaciones.length === 1">{{ turnoTipoPrestacion.nombre }}
-                </plex-label>
-            </ng-container>
-        
-            <ng-container *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
-                <!--ASISTENCIA-->
-                <ng-container *ngIf="!existeCodificacionProfesional">
-                    <plex-select class="mt-4" label="Asistencia" [(ngModel)]="turnoSeleccionado.asistencia" name="localidad"
-                                    [data]="estadosAsistencia" placeholder="Seleccione..."
-                                    (change)="seleccionarAsistencia(turnoSeleccionado.asistencia)">
-                    </plex-select>
-                </ng-container>
-        
-                <!--CODIFICACION-->
-                <ng-container *ngIf="turnoSeleccionado?.asistencia == 'asistio'">
-                    <div *ngIf="!showReparo" class="mt-4">
-                        <plex-title titulo="Codificación" size="sm"></plex-title>
-                        <!-- Buscador de prestaciones cie10 -->
-                        <div class="row">
-                            <div class="col-10">
-                                <Label>Agregar diagnóstico</Label>
-                                <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)">
-                                </buscador-cie10>
-                            </div>
-                        </div>
-                        <br>
-                        <!-- Listado de codificaciones seleccionadas para agendas no-odontológicas -->
-                        <ng-container *ngIf="!esAgendaOdonto" class="row">
-                            <table class="table table-striped">
-                                <thead>
-                                    <th>Operaciones</th>
-                                    <th class="text-left">Primera vez</th>
-                                    <th class="text-center">Estado</th>
-                                    <th class="text-left">Diagnóstico Snomed</th>
-                                    <th class="text-left">Diagnóstico CIE10</th>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
-                                        <td>
-                                            <!-- Boton aprobar diagnostico profesional -->
-                                            <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="success" icon="check" tooltip="Aprobar"
-                                                            (click)="aprobar(i)"></plex-button>
-                                            <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
-                                            <plex-button *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
-                                                            icon="delete" tooltip="Eliminar" class="btn btn-sm" type="danger"
-                                                            (click)="borrarDiagnostico(i)">
-                                            </plex-button>
-        
-                                            <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="danger" icon="pencil" tooltip="Reparar"
-                                                            (click)="mostrarReparo(i)">
-                                            </plex-button>
-                                            <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="info" icon="refresh" tooltip="Reestablecer"
-                                                            (click)="borrarReparo(i)">
-                                            </plex-button>
-                                        </td>
-                                        <td>
-                                            <plex-bool *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
-                                                        (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'></plex-bool>
-                                            <!-- Muestro primera vez solo para diagnosticos de profesional -->
-                                            <plex-badge type="success" *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo
-                                                            || diagnostico.codificacionProfesional?.cie10?.codigo) &&
-                                                            diagnostico.primeraVez">
-                                                Si
-                                            </plex-badge>
-                                        </td>
-                                        <td>
-                                            <plex-badge type="success" *ngIf="diagnostico.codificacionAuditoria?.codigo
-                                                            ===
-                                                            diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                Aprobado
-                                            </plex-badge>
-        
-                                            <plex-badge type="warning" *ngIf="diagnostico.codificacionAuditoria?.codigo &&
-                                                            diagnostico.codificacionProfesional?.snomed?.term &&
-                                                            diagnostico.codificacionAuditoria?.codigo
-                                                            !=
-                                                            diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                Reparado</plex-badge>
-                                            <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
-                                            <plex-badge *ngIf="i==0" type="info">Principal</plex-badge>
-        
-                                            <plex-badge *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
-                                                        type="danger">C2</plex-badge>
-                                        </td>
-                                        <td>
-                                            <!-- Mostramos la codificación snomed hecha por profesional -->
-                                            <div>
-                                                <span
-                                                        *ngIf="diagnostico.codificacionProfesional?.snomed?.term">{{diagnostico.codificacionProfesional.snomed.term}}
-                                                </span>
-                                                <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term">
-                                                    -
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <!-- Si no mapea a cie10 -->
-                                                <span
-                                                        *ngIf="!diagnostico.codificacionProfesional?.snomed?.term &&!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo">
-                                                    No encontrado
-                                                </span>
-                                                <!-- Mostramos el mapeo de la codificación snomed -->
-                                                <span
-                                                        *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
-                                                    ({{diagnostico.codificacionProfesional.cie10.codigo}})
-                                                    {{diagnostico.codificacionProfesional.cie10.nombre}}
-                                                </span>
-                                                <!-- Mostramos la codificación reparada -->
-                                                <span
-                                                        *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                    ({{diagnostico.codificacionAuditoria.codigo}})
-                                                    {{diagnostico.codificacionAuditoria.nombre}}
-                                                </span>
-                                                <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
-                                                <span
-                                                        *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
-                                                    {{diagnostico.codificacionAuditoria.nombre}}
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ng-container>
-        
-                        <!-- Listado de codificaciones seleccionadas para agendas odontológicas -->
-                        <ng-container *ngIf="esAgendaOdonto">
-                            <table class="table table-striped">
-                                <thead>
-                                    <th>Operaciones</th>
-                                    <th class="text-left">Primera vez</th>
-                                    <th class="text-center">Estado</th>
-                                    <th class="text-left">Diagnóstico</th>
-                                    <th class="text-left">Diente</th>
-                                    <th class="text-left">Caras</th>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
-                                        <td>
-                                            <!-- Boton aprobar diagnostico profesional -->
-                                            <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="success" icon="check" tooltip="Aprobar"
-                                                            (click)="aprobar(i)"></plex-button>
-                                            <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
-                                            <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo"
-                                                            icon="delete" tooltip="Eliminar" class="btn btn-sm" type="danger"
-                                                            (click)="borrarDiagnostico(i)">
-                                            </plex-button>
-        
-                                            <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="danger" icon="pencil" tooltip="Reparar"
-                                                            (click)="mostrarReparo(i)">
-                                            </plex-button>
-                                            <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.codificacionAuditoria?.codigo"
-                                                            class="btn btn-sm" type="info" icon="refresh" tooltip="Reestablecer"
-                                                            (click)="borrarReparo(i)">
-                                            </plex-button>
-                                        </td>
-                                        <td>
-                                            <plex-bool *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo"
-                                                        (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'></plex-bool>
-                                            <!-- Muestro primera vez solo para diagnosticos de profesional -->
-                                            <plex-badge type="success"
-                                                        *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.primeraVez">
-                                                Si
-                                            </plex-badge>
-                                        </td>
-                                        <td>
-                                            <plex-badge type="success"
-                                                        *ngIf="diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                Aprobado</plex-badge>
-        
-                                            <plex-badge type="warning" *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo
-                                                        != diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                Reparado</plex-badge>
-                                            <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
-                                            <span *ngIf="i==0" type="info">Principal</span>
-        
-                                            <span *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
-                                                    type="danger">C2</span>
-                                        </td>
-                                        <td>
-                                            <div>
-        
-                                                <!-- Mostramos el código de la prestación -->
-                                                <span
-                                                        *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
-                                                    ({{diagnostico.codificacionProfesional.cie10.codigo}})
-                                                    {{diagnostico.codificacionProfesional.cie10.nombre}}
-                                                </span>
-                                                <!-- Mostramos la codificación reparada -->
-                                                <span
-                                                        *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                    ({{diagnostico.codificacionAuditoria.codigo}})
-                                                    {{diagnostico.codificacionAuditoria.nombre}}
-                                                </span>
-                                                <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
-                                                <span
-                                                        *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
-                                                    {{diagnostico.codificacionAuditoria.nombre}}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span
-                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed && diagnostico.codificacionProfesional?.cie10?.causa">
-                                                {{diagnostico.codificacionProfesional.cie10.causa}}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span
-                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed && diagnostico.codificacionProfesional?.cie10?.subcausa">
-                                                {{diagnostico.codificacionProfesional.cie10.subcausa}}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </ng-container>
+            
+                <ng-container *ngIf="pacientesSearch">
+                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event.pacientes,$event.scan)"
+                                        (searchClear)="onSearchClear()">
+                    </paciente-buscar>
+            
+                    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+            
+                    <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="150"
+                                        [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
+                    </paciente-listado>
+                    <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !loading" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
                     </div>
-        
-                    <!-- Reparo -->
-                    <ng-container
-                                    *ngIf="turnoSeleccionado && diagnosticos[indiceReparo]?.codificacionProfesional && showReparo">
-                        <h3>Codificación del Profesional</h3>
-                        <h5>
-                            <label> Codificación Snomed: </label>
-                            {{diagnosticos[indiceReparo].codificacionProfesional.snomed.term}}
-                        </h5>
-                        <h5>
-                            <label> Mapeo a Cie10: </label>
-                            <span *ngIf="diagnosticos[indiceReparo].codificacionProfesional.cie10?.nombre">
-                                {{diagnosticos[indiceReparo].codificacionProfesional.cie10.nombre}}</span>
-        
-                        </h5>
-                        <hr>
-                        <!-- Búsqueda de prestaciones cie10 -->
-                        <plex-label>Seleccionar código reparo Cie10</plex-label>
-                        <buscador-cie10 (seleccionEmit)="repararDiagnostico($event)"></buscador-cie10>
-                    </ng-container>
                 </ng-container>
-                <!--/ CODIFICACION-->
+            
+                <ng-container *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
+                    <plex-label class="mt-4" titulo="Prestación: " subtitulo=""></plex-label>
+                    <plex-select *ngIf="bloqueSeleccionado.tipoPrestaciones.length > 1" [(ngModel)]="turnoTipoPrestacion"
+                                    name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
+                    </plex-select>
+                    <plex-label *ngIf="bloqueSeleccionado.tipoPrestaciones.length === 1">{{ turnoTipoPrestacion.nombre }}
+                    </plex-label>
+                </ng-container>
+            
+                <ng-container *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
+                    <!--ASISTENCIA-->
+                    <ng-container *ngIf="!existeCodificacionProfesional">
+                        <plex-select class="mt-4" label="Asistencia" [(ngModel)]="turnoSeleccionado.asistencia" name="localidad"
+                                        [data]="estadosAsistencia" placeholder="Seleccione..."
+                                        (change)="seleccionarAsistencia(turnoSeleccionado.asistencia)">
+                        </plex-select>
+                    </ng-container>
+            
+                    <!--CODIFICACION-->
+                    <ng-container *ngIf="turnoSeleccionado?.asistencia == 'asistio'">
+                        <div *ngIf="!showReparo" class="mt-4">
+                            <plex-title titulo="Codificación" size="sm"></plex-title>
+                            <!-- Buscador de prestaciones cie10 -->
+                            <div class="row">
+                                <div class="col-10">
+                                    <Label>Agregar diagnóstico</Label>
+                                    <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)">
+                                    </buscador-cie10>
+                                </div>
+                            </div>
+                            <br>
+                            <!-- Listado de codificaciones seleccionadas para agendas no-odontológicas -->
+                            <ng-container *ngIf="!esAgendaOdonto" class="row">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th>Operaciones</th>
+                                        <th class="text-left">Primera vez</th>
+                                        <th class="text-center">Estado</th>
+                                        <th class="text-left">Diagnóstico Snomed</th>
+                                        <th class="text-left">Diagnóstico CIE10</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
+                                            <td>
+                                                <!-- Boton aprobar diagnostico profesional -->
+                                                <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="success" icon="check" tooltip="Aprobar"
+                                                                (click)="aprobar(i)"></plex-button>
+                                                <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
+                                                <plex-button *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
+                                                                icon="delete" tooltip="Eliminar" class="btn btn-sm" type="danger"
+                                                                (click)="borrarDiagnostico(i)">
+                                                </plex-button>
+            
+                                                <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="danger" icon="pencil" tooltip="Reparar"
+                                                                (click)="mostrarReparo(i)">
+                                                </plex-button>
+                                                <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="info" icon="refresh" tooltip="Reestablecer"
+                                                                (click)="borrarReparo(i)">
+                                                </plex-button>
+                                            </td>
+                                            <td>
+                                                <plex-bool *ngIf="!(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo)"
+                                                            (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'></plex-bool>
+                                                <!-- Muestro primera vez solo para diagnosticos de profesional -->
+                                                <plex-badge type="success" *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo
+                                                                || diagnostico.codificacionProfesional?.cie10?.codigo) &&
+                                                                diagnostico.primeraVez">
+                                                    Si
+                                                </plex-badge>
+                                            </td>
+                                            <td>
+                                                <plex-badge type="success" *ngIf="diagnostico.codificacionAuditoria?.codigo
+                                                                ===
+                                                                diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                    Aprobado
+                                                </plex-badge>
+            
+                                                <plex-badge type="warning" *ngIf="diagnostico.codificacionAuditoria?.codigo &&
+                                                                diagnostico.codificacionProfesional?.snomed?.term &&
+                                                                diagnostico.codificacionAuditoria?.codigo
+                                                                !=
+                                                                diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                    Reparado</plex-badge>
+                                                <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
+                                                <plex-badge *ngIf="i==0" type="info">Principal</plex-badge>
+            
+                                                <plex-badge *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
+                                                            type="danger">C2</plex-badge>
+                                            </td>
+                                            <td>
+                                                <!-- Mostramos la codificación snomed hecha por profesional -->
+                                                <div>
+                                                    <span
+                                                            *ngIf="diagnostico.codificacionProfesional?.snomed?.term">{{diagnostico.codificacionProfesional.snomed.term}}
+                                                    </span>
+                                                    <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term">
+                                                        -
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <!-- Si no mapea a cie10 -->
+                                                    <span
+                                                            *ngIf="!diagnostico.codificacionProfesional?.snomed?.term &&!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo">
+                                                        No encontrado
+                                                    </span>
+                                                    <!-- Mostramos el mapeo de la codificación snomed -->
+                                                    <span
+                                                            *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
+                                                        ({{diagnostico.codificacionProfesional.cie10.codigo}})
+                                                        {{diagnostico.codificacionProfesional.cie10.nombre}}
+                                                    </span>
+                                                    <!-- Mostramos la codificación reparada -->
+                                                    <span
+                                                            *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                        ({{diagnostico.codificacionAuditoria.codigo}})
+                                                        {{diagnostico.codificacionAuditoria.nombre}}
+                                                    </span>
+                                                    <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
+                                                    <span
+                                                            *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
+                                                        {{diagnostico.codificacionAuditoria.nombre}}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </ng-container>
+            
+                            <!-- Listado de codificaciones seleccionadas para agendas odontológicas -->
+                            <ng-container *ngIf="esAgendaOdonto">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th>Operaciones</th>
+                                        <th class="text-left">Primera vez</th>
+                                        <th class="text-center">Estado</th>
+                                        <th class="text-left">Diagnóstico</th>
+                                        <th class="text-left">Diente</th>
+                                        <th class="text-left">Caras</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
+                                            <td>
+                                                <!-- Boton aprobar diagnostico profesional -->
+                                                <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="success" icon="check" tooltip="Aprobar"
+                                                                (click)="aprobar(i)"></plex-button>
+                                                <!-- Boton eliminar diagnostico (para diagnosticos de auditoría) -->
+                                                <plex-button *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo"
+                                                                icon="delete" tooltip="Eliminar" class="btn btn-sm" type="danger"
+                                                                (click)="borrarDiagnostico(i)">
+                                                </plex-button>
+            
+                                                <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="danger" icon="pencil" tooltip="Reparar"
+                                                                (click)="mostrarReparo(i)">
+                                                </plex-button>
+                                                <plex-button *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.codificacionAuditoria?.codigo"
+                                                                class="btn btn-sm" type="info" icon="refresh" tooltip="Reestablecer"
+                                                                (click)="borrarReparo(i)">
+                                                </plex-button>
+                                            </td>
+                                            <td>
+                                                <plex-bool *ngIf="!diagnostico.codificacionProfesional?.cie10?.codigo"
+                                                            (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'></plex-bool>
+                                                <!-- Muestro primera vez solo para diagnosticos de profesional -->
+                                                <plex-badge type="success"
+                                                            *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.primeraVez">
+                                                    Si
+                                                </plex-badge>
+                                            </td>
+                                            <td>
+                                                <plex-badge type="success"
+                                                            *ngIf="diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                    Aprobado</plex-badge>
+            
+                                                <plex-badge type="warning" *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo
+                                                            != diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                    Reparado</plex-badge>
+                                                <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
+                                                <span *ngIf="i==0" type="info">Principal</span>
+            
+                                                <span *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
+                                                        type="danger">C2</span>
+                                            </td>
+                                            <td>
+                                                <div>
+            
+                                                    <!-- Mostramos el código de la prestación -->
+                                                    <span
+                                                            *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
+                                                        ({{diagnostico.codificacionProfesional.cie10.codigo}})
+                                                        {{diagnostico.codificacionProfesional.cie10.nombre}}
+                                                    </span>
+                                                    <!-- Mostramos la codificación reparada -->
+                                                    <span
+                                                            *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                        ({{diagnostico.codificacionAuditoria.codigo}})
+                                                        {{diagnostico.codificacionAuditoria.nombre}}
+                                                    </span>
+                                                    <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
+                                                    <span
+                                                            *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
+                                                        {{diagnostico.codificacionAuditoria.nombre}}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        *ngIf="!diagnostico.codificacionProfesional?.snomed && diagnostico.codificacionProfesional?.cie10?.causa">
+                                                    {{diagnostico.codificacionProfesional.cie10.causa}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        *ngIf="!diagnostico.codificacionProfesional?.snomed && diagnostico.codificacionProfesional?.cie10?.subcausa">
+                                                    {{diagnostico.codificacionProfesional.cie10.subcausa}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </ng-container>
+                        </div>
+            
+                        <!-- Reparo -->
+                        <ng-container
+                                        *ngIf="turnoSeleccionado && diagnosticos[indiceReparo]?.codificacionProfesional && showReparo">
+                            <h3>Codificación del Profesional</h3>
+                            <h5>
+                                <label> Codificación Snomed: </label>
+                                {{diagnosticos[indiceReparo].codificacionProfesional.snomed.term}}
+                            </h5>
+                            <h5>
+                                <label> Mapeo a Cie10: </label>
+                                <span *ngIf="diagnosticos[indiceReparo].codificacionProfesional.cie10?.nombre">
+                                    {{diagnosticos[indiceReparo].codificacionProfesional.cie10.nombre}}</span>
+            
+                            </h5>
+                            <hr>
+                            <!-- Búsqueda de prestaciones cie10 -->
+                            <plex-label>Seleccionar código reparo Cie10</plex-label>
+                            <buscador-cie10 (seleccionEmit)="repararDiagnostico($event)"></buscador-cie10>
+                        </ng-container>
+                    </ng-container>
+                    <!--/ CODIFICACION-->
+                </ng-container>
             </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
