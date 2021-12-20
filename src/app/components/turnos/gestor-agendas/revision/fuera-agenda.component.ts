@@ -59,26 +59,7 @@ export class RevisionFueraAgendaComponent implements OnInit {
             };
             this.serviceCodificacion.get(params).subscribe(datos => {
                 this.prestaciones = datos;
-            }, err => {
-                this.plex.info('danger', 'Ocurrió un error cargando las prestaciones.');
             });
-        }
-    }
-
-    loadProfesionales(event) {
-        // cancelamos ultimo request
-        if (this.lastRequest) {
-            this.lastRequest = null;
-        }
-        if (event.query && event.query.length > 2) {
-            const query = {
-                nombreCompleto: event.query
-            };
-            this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            event.callback([]);
         }
     }
 

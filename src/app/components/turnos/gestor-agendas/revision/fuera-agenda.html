@@ -262,7 +262,7 @@
                             name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
             </plex-datetime>            
             <plex-select [(ngModel)]="profesional" label="Profesional"
-                         (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre"
+                         tmProfesionales labelField="apellido + ' ' + nombre"
                          [closeAfterSelect]="true" (change)="cargarPrestaciones()" span="2">
             </plex-select>
             <plex-bool [(ngModel)]="auditadas" label="Ver prestaciones ya auditadas"
