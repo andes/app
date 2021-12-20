@@ -3,16 +3,14 @@
         <header *ngIf="mainView === 'principal'">
             <ng-container *ngIf="fecha$ | async as fecha">
                 <plex-title titulo="Mapa de camas - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
-                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
-                                 label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
+                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica' || mapaCamasService.capa==='carga'" class="mr-1" size="sm"
+                                label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
                     </plex-button>
-                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica' && puedeVerHistorial$ | async"
-                                 class="mr-1" size="sm" label="HISTORIAL" type="primary"
-                                 (click)="verListadoInternacionMedico()">
+                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica' && puedeVerHistorial$ | async" class="mr-1" size="sm"
+                                label="HISTORIAL" type="primary" (click)="verListadoInternacionMedico()">
                     </plex-button>
-                    <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
-                                   size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
-                                   [items]="itemsCensoDropdown">
+                    <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo" size="sm"
+                                label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true" [items]="itemsCensoDropdown">
                     </plex-dropdown>
                     <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
                         <plex-icon name="atom"></plex-icon>
@@ -24,30 +22,30 @@
 
             <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" class="mr-1" label="ADMITIR PACIENTE"
-                             type="success" size="sm"
-                             (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
+                            type="success" size="sm"
+                            (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
 
                 <plex-dropdown *ngIf="itemsCrearDropdown.length > 0" size="sm" label="NUEVO RECURSO" type="info"
-                               class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
+                            class="d-inline-block mr-1" [right]="true" [items]="itemsCrearDropdown">
                 </plex-dropdown>
                 <plex-dropdown *ngIf="!listadoRecursos" tooltip="Agregar columnas" icon="format-list-checks" type="info"
-                               size="sm" class="d-inline-block mr-1" [right]="true">
+                            size="sm" class="d-inline-block mr-1" [right]="true">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha Movimiento" [(ngModel)]="columns.fechaMovimiento"
-                                   (change)="toggleColumns()"></plex-bool>
+                                (change)="toggleColumns()"></plex-bool>
                         <plex-bool label="Usuario Movimiento" [(ngModel)]="columns.usuarioMovimiento"
-                                   (change)="toggleColumns()"></plex-bool>
+                                (change)="toggleColumns()"></plex-bool>
                         <plex-bool label="Dias estada" [(ngModel)]="columns.diasEstada" (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool label="Documento" [(ngModel)]="columns.documento" (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool label="Sexo" [(ngModel)]="columns.sexo" (change)="toggleColumns()"></plex-bool>
                         <plex-bool *ngIf="(ambito$ | async) === 'guardia'" label="Prioridad"
-                                   [(ngModel)]="columns.prioridad" (change)="toggleColumns()">
+                                [(ngModel)]="columns.prioridad" (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool *ngIf="(ambito$ | async) === 'guardia'" label="Guardia" [(ngModel)]="columns.guardia"
-                                   (change)="toggleColumns()">
+                                (change)="toggleColumns()">
                         </plex-bool>
                         <plex-bool label="Sector" [(ngModel)]="columns.sector" (change)="toggleColumns()">
                         </plex-bool>
@@ -56,7 +54,7 @@
                     </plex-grid>
                 </plex-dropdown>
                 <plex-button size="sm" type="primary" (click)="verListadoRecursos()"
-                             [title]="!listadoRecursos ? 'Agrupar por sector' : 'Ver listado de camas'">
+                            [title]="!listadoRecursos ? 'Agrupar por sector' : 'Ver listado de camas'">
                     <plex-icon [name]="!listadoRecursos ? 'file-tree' : 'format-list-bulleted'"></plex-icon>
                 </plex-button>
             </plex-title>
@@ -65,8 +63,8 @@
         <!-- Listado de recursos (Agrupación por sector) -->
         <ng-container *ngIf="mainView === 'principal' && listadoRecursos">
             <app-recursos-listado [permisoIngreso]="permisosMapaCamasService.ingreso"
-                                  [permisoBloqueo]="permisosMapaCamasService.bloqueo"
-                                  (accionRecurso)='accionListadoRecurso($event)'>
+                                [permisoBloqueo]="permisosMapaCamasService.bloqueo"
+                                (accionRecurso)='accionListadoRecurso($event)'>
             </app-recursos-listado>
         </ng-container>
 
@@ -204,7 +202,7 @@
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
 
         <app-ingreso-paciente-workflow *ngIf="accion === 'internarPaciente'" (cancel)="volverADetalle()"
-                                       (save)="volverAResumen()">
+                                    (save)="volverAResumen()">
         </app-ingreso-paciente-workflow>
         <app-desocupar-cama *ngIf="accion === 'desocuparCama'" (accionDesocupar)="accionDesocupar($event)">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
@@ -212,28 +210,28 @@
         </app-desocupar-cama>
         <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"
-                         [autodisabled]="true">
+                        [autodisabled]="true">
             </plex-button>
         </app-cambiar-cama>
         <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" (onSave)="volverAResumen()"
-                              (cancel)="volverAResumen()">
+                            (cancel)="volverAResumen()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()"
-                         [autodisabled]="true">
+                        [autodisabled]="true">
             </plex-button>
         </app-egresar-paciente>
         <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [relacion]="estadoRelacion"
-                                   (onSave)="volverAResumen()">
+                                (onSave)="volverAResumen()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-cama-destino-generico>
         <app-prestar-devolver-recurso *ngIf="accion === 'prestar' || accion === 'devolver'" [accion]="accion"
-                                      (onSave)="volverAResumen()">
+                                    (onSave)="volverAResumen()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-prestar-devolver-recurso>
         <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
             <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()"
-                              (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
+                            (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
             </app-cama-detalle>
         </ng-container>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">

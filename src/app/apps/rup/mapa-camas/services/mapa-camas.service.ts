@@ -177,6 +177,18 @@ export class MapaCamasService {
                         );
                     }
                 }
+                if (capa === 'carga') {
+                    // tengo cama.idInternacion
+                    if (idInternacion) {
+                        return this.internacionResumenHTTP.get(idInternacion).pipe(
+                            switchMap(
+                                internacionResumen => {
+                                    return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false }).pipe(
+                                        catchError(() => of(null))
+                                    );
+                                }));
+                    }
+                }
                 return of(null);
             }),
             cache()
@@ -350,7 +362,7 @@ export class MapaCamasService {
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
