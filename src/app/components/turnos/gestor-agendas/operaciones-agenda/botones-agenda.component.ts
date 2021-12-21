@@ -222,7 +222,8 @@ export class BotonesAgendaComponent implements OnInit {
         const turnosEspeciales = this.agendasSeleccionadas.some(agenda => {
             return agenda.bloques.some(b => b.reservadoGestion > 0 || b.reservadoProfesional > 0);
         });
-        return enPlanificacion && turnosEspeciales;
+        const nominalizada = !this.agendasSeleccionadas.some((agenda: any) => (agenda.nominalizada === true));
+        return (enPlanificacion && turnosEspeciales) || nominalizada;
     }
 
     puedoPublicar() {
