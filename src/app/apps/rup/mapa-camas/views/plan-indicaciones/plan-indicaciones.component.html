@@ -171,13 +171,15 @@
 
         <ng-container *ngIf="nuevaIndicacion">
             <plan-indicaciones-nueva-indicacion [seccion]="seccionSelected" [tipoPrestacion]="tipoPrestacion"
-                                                (save)="onSaveIndicacion($event)">
+                                                [indicacion]="indicacion" (save)="onSaveIndicacion($event)"
+                                                (edit)="onEditIndicacion($event)">
             </plan-indicaciones-nueva-indicacion>
         </ng-container>
 
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
+                <plex-button type="success" size="sm" icon="pencil" (click)="editar(indicacionView)"></plex-button>
                 <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
             </in-indicacion-detalle>
         </ng-container>
