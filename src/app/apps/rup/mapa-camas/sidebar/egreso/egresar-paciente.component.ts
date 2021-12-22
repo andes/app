@@ -298,7 +298,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     egresoSimplificado(estado) {
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion || this.capa === 'carga') {
             let estadoPatch = {};
-            if (!this.cama.sala) {
+            if (!this.cama.sala) {// si no es sala comun
                 estadoPatch = {
                     _id: this.cama.id,
                     estado: estado,
@@ -335,7 +335,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             saveInternacion().pipe(
                 switchMap(() => this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso))
-            ).subscribe((S) => {
+            ).subscribe(() => {
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);

@@ -531,7 +531,7 @@ export class MapaCamasService {
             data.esMovimiento = esMovimiento;
             let capaSave = this.capa;
             if (capaSave === 'carga') {
-                capaSave = 'estadistica';
+                capaSave = 'medica';
             };
             return this.camasHTTP.save(this.ambito, capaSave, fecha, data);
         } else {
