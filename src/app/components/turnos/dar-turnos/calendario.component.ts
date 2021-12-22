@@ -121,7 +121,7 @@ export class CalendarioComponent implements OnInit {
 
     public seleccionar(dia: CalendarioDia) {
         // Sólo permite seleccionar días con agenda
-        if (dia && dia.agendasDisponibles && dia.agendasDisponibles.length && (dia.turnosDisponibles > 0 || dia.dinamica)) {
+        if (dia && dia.agenda) {
             if (this.diaSeleccionado) {
                 this.diaSeleccionado.seleccionado = false;
             }
@@ -129,7 +129,7 @@ export class CalendarioComponent implements OnInit {
             this.diaSeleccionado = dia;
             this.agenda = dia.agenda;
             this.estado = 'seleccionada';
-            this.agendaChanged.emit(dia.agendasDisponibles);
+            this.agendaChanged.emit(dia.agendasDisponibles.length ? dia.agendasDisponibles : [dia.agenda] );
         }
     }
 }

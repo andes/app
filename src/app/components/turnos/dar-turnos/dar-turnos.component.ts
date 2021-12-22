@@ -51,6 +51,7 @@ export class DarTurnosComponent implements OnInit {
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     autocitado = false;
+    puedeDarSobreturno;
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
@@ -208,6 +209,7 @@ export class DarTurnosComponent implements OnInit {
     ngOnInit() {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.puedeDarSobreturno = this.auth.check('turnos:puntoInicio:darSobreturno');
         this.opciones.fecha = moment().toDate();
 
         this.carpetaEfector = {
@@ -1314,5 +1316,9 @@ export class DarTurnosComponent implements OnInit {
         return (this.organizacion.id === idCMI && !puco);
     }
 
+    agregarSobreturno() {
+        localStorage.setItem('revision', 'true');
+        this.router.navigate(['citas/sobreturnos', this.agenda.id], { queryParams: { paciente: this.paciente.id } });
+    }
 
 }
