@@ -5,7 +5,8 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
-
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { Router } from '@angular/router';
@@ -25,6 +26,7 @@ import { ObraSocialService } from '../../services/obraSocial.service';
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busqueda$: Observable<any[]>;
+    public paciente$: Observable<any>;
     public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
     public lastSelect$ = new BehaviorSubject<string>(null);
@@ -42,6 +44,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public documento;
     public financiadores: IFinanciador[];
     prestacion: any;
+    paciente: any;
     public obraSocial: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
@@ -93,7 +96,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private hudsService: HUDSService,
         private router: Router,
         private exportHudsService: ExportHudsService,
-        public obraSocialService: ObraSocialService
+        public obraSocialService: ObraSocialService,
+        private pacienteService: PacienteService,
 
     ) { }
 
@@ -320,6 +324,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (datos.financiador) {
             this.modelo.prepaga = '';
         };
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
+            this.paciente = paciente;;
+        });
     }
 
     recupero() {
@@ -329,6 +336,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
         if (this.modelo.prepaga !== '') {
+            this.prestacion.obraSocial = 'prepaga';
             this.prestacion.prepaga = this.modelo.prepaga;
         }
         this.facturacionAutomaticaService.post(this.prestacion).subscribe(respuesta => {
@@ -414,6 +422,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                         };
                         return osPaciente;
                     });
+                    this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                } else {
+                    this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
                     this.modelo.obraSocial = this.obraSocialPaciente[0].label;
                 }
                 this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });

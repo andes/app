@@ -196,69 +196,12 @@
     </plex-layout-main>
     <!-- Prestacion -->
     <plex-layout-sidebar *ngIf="showPrestacion">
-        <header>
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="clearfix">
-                        <div class="page-title float-left">Datos de la prestación</div>
-                    </div>
-                </div>
-                <div class="col d-flex justify-content-end">
-                    <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
-                    <plex-button class="ml-1" *ngIf="generarComprobante()" label="Comprobante" type="success"
-                                 (click)="recupero()"></plex-button>
-                </div>
-            </div>
-        </header>
-        <div class="clearfix">
-            <div class="page-subtitle float-left">Paciente</div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-
-                <div *ngIf="prestacion.paciente.apellido">
-                    <label class="block">Apellido y nombre</label>
-                    <span>{{prestacion.paciente | nombre}}</span>
-                </div>
-            </div>
-
-            <div class="col-md">
-                <div *ngIf="prestacion.paciente.documento !== ''">
-                    <label class="block">Documento</label>
-                    <span>{{ prestacion.paciente.documento }}</span>
-                </div>
-                <div *ngIf="prestacion.paciente.documento === ''">
-                    <label class="block">Documento</label>
-                    <span class="text-danger">Sin documento</span>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-md">
-                <div *ngIf="prestacion.paciente.fechaNacimiento !== null">
-                    <label>Fecha de Nacimiento</label>
-                    <span>{{ prestacion.paciente.fechaNacimiento | date: "dd/MM/yyyy " }}</span>
-                </div>
-                <div *ngIf="prestacion.paciente.fechaNacimiento === null">
-                    <label>Fecha de Nacimiento</label>
-                    <span class="text-danger">Sin fecha de nacimiento</span>
-                </div>
-            </div>
-            <div class="col-md">
-                <div>
-                    <label>Edad</label>
-                    <span>{{ prestacion.paciente | edad }}</span>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="full-col" *ngIf="prestacion.paciente.sexo">
-                    <label>Sexo / Género</label>
-                    <span>{{ prestacion.paciente | sexo }}</span>
-                </div>
-            </div>
-        </div>
+        <plex-title titulo="Datos de la prestación" size="md">
+            <plex-button label="Cerrar" type="danger" (click)="onClose()" size="md"></plex-button>
+            <plex-button class="ml-1" *ngIf="generarComprobante()" label="Comprobante" type="success"
+                         (click)="recupero()"></plex-button>
+        </plex-title>
+        <paciente-detalle *ngIf="paciente" [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
         <div class="row">
             <div class="col-md">
                 <div *ngIf="prestacion.paciente.estado">
@@ -272,12 +215,10 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="clearfix">
-            <div class="page-subtitle float-left">Prestación</div>
-        </div>
-        <div *ngIf="!prestacion.idPrestacion" class="col">
-            <span class="text-danger">La prestación no ha sido iniciada</span>
+
+        <plex-title titulo="Prestación" size="md"></plex-title>
+        <div *ngIf="!prestacion.idPrestacion">
+            <plex-badge size="md" type="danger">La prestación no ha sido iniciada</plex-badge>
         </div>
 
         <div *ngIf="prestacion.idPrestacion">
@@ -313,7 +254,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div *ngIf="modelo.obraSocial !== 'SUMAR'">
                 <plex-radio *ngIf="prestacion.financiador" [(ngModel)]="modelo.obraSocial" name="os"
                             (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
                             [data]="obraSocialPaciente">
@@ -322,7 +263,13 @@
                              name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
                              labelField="nombre">
                 </plex-select>
+                <br>
             </div>
+            <div *ngIf="modelo.obraSocial === 'SUMAR'">
+                <label>Obra social</label>
+                <div>{{modelo.obraSocial}}</div>
+            </div>
+            <br>
         </div>
 
         <div *ngIf="prestacion.idPrestacion">
