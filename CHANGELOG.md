@@ -1,3 +1,21 @@
+# [5.78.0](https://github.com/andes/app/compare/v5.77.0...v5.78.0) (2021-12-22)
+
+
+### Bug Fixes
+
+* **citas:** turno en agenda no nominalizada ya auditada ([#2544](https://github.com/andes/app/issues/2544)) ([7efa76e](https://github.com/andes/app/commit/7efa76e2c0e8d9786344ceabea1a2bcbb243dfc3))
+* **perinatal:** Cambiar mensaje del toast al crear una nueva nota ([#2552](https://github.com/andes/app/issues/2552)) ([ca22246](https://github.com/andes/app/commit/ca22246703945b570c0f63765834d83b47133e42))
+* **rup:** busqueda de elementoRUP por id en molecula ([#2553](https://github.com/andes/app/issues/2553)) ([f6b6dae](https://github.com/andes/app/commit/f6b6daedefc6b760d6b1ba32c795ab58297892b4))
+
+
+### Features
+
+* **CIT:** dar sobreturno desde punto inicio ([#2541](https://github.com/andes/app/issues/2541)) ([4ccf7b0](https://github.com/andes/app/commit/4ccf7b02fd2c45f891cd7119db99b334a4b9b608))
+* **mapa-camas:** agregar diagnostico al egresar en capa estadistica ([#2538](https://github.com/andes/app/issues/2538)) ([a1690e8](https://github.com/andes/app/commit/a1690e8b8066417a313e878bc7cf19174b30c2fd))
+* **mapa-camas:** plan-indicaciones, editar una indicación ([#2545](https://github.com/andes/app/issues/2545)) ([597e7f0](https://github.com/andes/app/commit/597e7f089c581548cf91dde4cbc4388546f2396a))
+* **mapa-camas:** prescripcion de medicamentos internacion ([#2555](https://github.com/andes/app/issues/2555)) ([4d9b6c9](https://github.com/andes/app/commit/4d9b6c97b283c5f6c4695f13ab0fd119e86602c6))
+* **top:** libera solicitud al suspender turno ([#2506](https://github.com/andes/app/issues/2506)) ([d04492e](https://github.com/andes/app/commit/d04492e6bf7975eb9ff2f73d1706ab4a5c2cd1d2))
+
 # [5.77.0](https://github.com/andes/app/compare/v5.76.0...v5.77.0) (2021-12-15)
 
 
