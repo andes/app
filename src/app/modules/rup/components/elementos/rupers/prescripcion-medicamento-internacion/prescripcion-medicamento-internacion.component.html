@@ -1,0 +1,144 @@
+<ng-container *ngIf="!soloValores">
+    <plex-title size="sm" titulo="Sustancias">
+        <plex-button size="sm" icon="mas" type="success" (click)="addSustancia()" tooltip="Agregar nuevo item"
+                     tooltipPosition="left">
+        </plex-button>
+        <plex-button size="sm" icon="cruz" type="danger" (click)="deleteSustancia()" tooltip="Eliminar último item"
+                     tooltipPosition="left" class="ml-1">
+        </plex-button>
+
+    </plex-title>
+    <ng-container *ngFor="let sustancia of registro.valor.sustancias">
+        <plex-grid cols="5">
+            <plex-select [(ngModel)]="sustancia.ingrediente" name="conceptos2" [snomedExpression]="'<<312415009'"
+                         (change)="valuesChange()" label="Ingrediente" [preload]="false" span="2">
+            </plex-select>
+
+            <plex-float [(ngModel)]="sustancia.cantidad" name="conceptos" (change)="valuesChange()" label="Potencia">
+            </plex-float>
+
+            <plex-select [(ngModel)]="sustancia.numerador" name="conceptos2" [snomedExpression]="unidadesSnomed"
+                         (change)="valuesChange()" label="Numerador" [preload]="true">
+            </plex-select>
+
+            <plex-select [(ngModel)]="sustancia.denominador" name="conceptos2" [snomedExpression]="unidadesSnomed"
+                         (change)="valuesChange()" label="Denominador" [preload]="true">
+            </plex-select>
+        </plex-grid>
+    </ng-container>
+
+    <plex-wrapper>
+        <plex-select [(ngModel)]="registro.valor.via" name="conceptos2" [snomedExpression]="'<<736479009'"
+                     (change)="valuesChange()" label="Vía de aministración" [preload]="true">
+        </plex-select>
+
+        <plex-select [(ngModel)]="registro.valor.presentacion" name="conceptos2" [snomedExpression]="'<732935002'"
+                     (change)="valuesChange()" label="Unidad de presentación" [preload]="true">
+        </plex-select>
+
+    </plex-wrapper>
+
+
+
+    <plex-title size="sm" titulo="Frecuencia">
+        <plex-button size="sm" icon="mas" type="success" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
+                     tooltipPosition="left">
+        </plex-button>
+        <plex-button size="sm" icon="cruz" type="danger" (click)="deleteFrecuencia()" tooltip="Eliminar último item"
+                     tooltipPosition="left" class="ml-1">
+        </plex-button>
+    </plex-title>
+
+    <ng-container *ngFor="let frecuencia of registro.valor.frecuencias">
+        <plex-grid cols="3">
+
+            <plex-float [(ngModel)]="frecuencia.cantidad" name="conceptos" (change)="valuesChange()" label="Cantidad">
+            </plex-float>
+
+            <plex-select [(ngModel)]="frecuencia.frecuencia" name="conceptos2" [snomedExpression]="frecuenciaSnomed"
+                         (change)="valuesChange()" label="Frecuencia" [preload]="true"
+                         [disabled]="registro.valor.unicaVez">
+            </plex-select>
+
+            <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
+                           (change)="valuesChange()">
+            </plex-datetime>
+
+            <!-- <plex-icon name="cruz"></plex-icon> -->
+        </plex-grid>
+    </ng-container>
+    <plex-bool type="slide" label="Unica Vez" [(ngModel)]="registro.valor.unicaVez"></plex-bool>
+
+
+
+
+    <plex-title size="sm" titulo="Observaciones"></plex-title>
+
+    <plex-text [html]="true" height=100 [(ngModel)]="registro.valor.indicaciones" name="indicaciones" *ngIf="afterInit">
+    </plex-text>
+
+</ng-container>
+<ng-container *ngIf="soloValores">
+    <plex-grid cols="3">
+        <plex-label titulo="Medicamento" [subtitulo]="registro.valor.nombre || '(no definido)'">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.via" titulo="Via de Administración" [subtitulo]="registro.valor.via.term ">
+        </plex-label>
+        <plex-label *ngIf="registro.valor.presentacion" titulo="Unidad de presentación"
+                    [subtitulo]="registro.valor.presentacion.term">
+        </plex-label>
+    </plex-grid>
+    <plex-label titulo="Observaciones" *ngIf="registro.valor.indicaciones">
+    </plex-label>
+    <span [innerHTML]="registro.valor.indicaciones"></span>
+
+
+    <plex-grid cols="3" *ngFor="let frecuencia of registro.valor.frecuencias">
+        <plex-label titulo="Cantidad" [subtitulo]="frecuencia.cantidad">
+        </plex-label>
+        <plex-label titulo="Frecuencia" [subtitulo]="frecuencia.frecuencia?.term || ''">
+        </plex-label>
+        <plex-label titulo="Horario" [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : ''">
+        </plex-label>
+    </plex-grid>
+</ng-container>
+
+<!-- <div class="row" *ngIf="soloValores">
+    <div class="col-12 readonly">
+        <div>
+            <span>Medicamento</span>
+            {{registro.valor.nombre || '(no definido)' }}
+        </div>
+
+        <div *ngIf="registro.valor.via">
+            <span>Via de Administración</span>
+            {{ registro.valor.via.term }}
+        </div>
+
+        <div *ngIf="registro.valor.presentacion">
+            <span>Unidad de presentación</span>
+            {{ registro.valor.presentacion.term }}
+        </div>
+
+        <div *ngIf="registro.valor.indicaciones">
+            <span>Indicaciones</span>
+            <span [innerHTML]="registro.valor.indicaciones"></span>
+        </div>
+    </div>
+    <div class="col-12 readonly" *ngFor="let frecuencia of registro.valor.frecuencias">
+        <div>
+            <span>Cantidad</span>
+            {{ frecuencia.cantidad }}
+        </div>
+
+        <div *ngIf="frecuencia.frecuencia">
+            <span>Frecuencia</span>
+            {{ frecuencia.frecuencia.term }}
+        </div>
+
+        <div *ngIf="frecuencia.horario">
+            <span>Horario</span>
+            {{ frecuencia.horario }}
+        </div>
+    </div>
+</div> -->
