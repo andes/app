@@ -1,7 +1,13 @@
 <plex-layout main="8">
     <plex-layout-main>
         <form #form="ngForm" class="h-100">
-            <plex-title titulo="Agregar Paciente"></plex-title>
+            <plex-title titulo="Agregar Paciente">
+                <plex-button class="mr-1" position="left" type="danger" label="Cancelar" (click)="volver()">
+                </plex-button>
+                <plex-button position="right" [disabled]="!paciente" [validateForm]="form" label="Guardar" type="success"
+                             (click)="guardar($event)">
+                </plex-button>
+            </plex-title>
 
             <span *ngIf="showPaciente && paciente">
                 <div *ngIf="paciente?.id" class="row">
@@ -53,12 +59,10 @@
         </form>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <header>
-            <div class="page-title">Agenda seleccionada</div>
-        </header>
-        <!--Agenda seleccionada-->
-        <div class="text-center" *ngIf="agenda">
+        <plex-title titulo="Agenda seleccionada" size="md"></plex-title>
 
+        <!--Agenda seleccionada-->
+        <div class="text-center mt-4" *ngIf="agenda">
             <h4>
                 <span class="mdi mdi-calendar-today"> Hora Agenda </span>
             </h4>
@@ -66,27 +70,19 @@
                 {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
                 {{ agenda.horaFin | date: 'HH:mm' }}
             </span>
-            <br>
-            <h4>
+            <h4 class="mt-3">
                 <span class="mdi mdi-hospital">Prestación </span>
             </h4>
             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                 {{ tipoPrestacion.nombre }}
             </div>
-            <br>
-            <h4>
+            <h4 class="mt-3">
                 <span class="mdi mdi-account">Equipo de Salud </span>
             </h4>
             <div *ngFor="let profesional of agenda.profesionales let i = index">
                 {{profesional | nombre}}
             </div>
+            <div *ngIf="!agenda.profesionales?.length" justify="center">Equipo de Salud no asignado</div>
         </div>
     </plex-layout-sidebar>
-    <plex-layout-footer>
-        <plex-button position="left" type="danger" label="Cancelar" (click)="volver()">
-        </plex-button>
-        <plex-button position="right" *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
-                     (click)="guardar($event)">
-        </plex-button>
-    </plex-layout-footer>
 </plex-layout>
