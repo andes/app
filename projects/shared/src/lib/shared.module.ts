@@ -58,7 +58,7 @@ import { FormsModule } from '@angular/forms';
     ]
 })
 export class SharedModule {
-    static forRoot(host: string): ModuleWithProviders {
+    static forRoot(host: string): ModuleWithProviders<SharedModule> {
         return {
             ngModule: SharedModule,
             providers: [
