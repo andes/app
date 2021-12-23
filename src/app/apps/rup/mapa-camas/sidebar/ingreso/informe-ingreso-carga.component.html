@@ -30,7 +30,7 @@
                     </plex-label>
                     <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
                     </plex-label>
-                    <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen }}">
+                    <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen.nombre }}">
                     </plex-label>
                     <plex-label titulo="Especialidad/es"
                                 subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
@@ -45,7 +45,7 @@
                 </plex-title>
                 <div class="row">
                     <div class="col-6">
-                        <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
+                        <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado.nombre">
                         </plex-label>
                     </div>
                     <div class="col-6">

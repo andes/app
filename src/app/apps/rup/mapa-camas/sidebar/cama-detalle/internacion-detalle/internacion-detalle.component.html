@@ -21,9 +21,9 @@
                     </plex-button>
                 </ng-container>
             </app-informe-ingreso>
-            <app-informe-ingreso-carga *ngIf="!editar && capa === 'carga'" (cancel)="activatedOption('ingreso')">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso" title="Completar informe" icon="pencil"
-                             type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
+            <app-informe-ingreso-carga *ngIf="!editar " (cancel)="activatedOption('ingreso')">
+                <plex-button *ngIf=" capa === 'carga' && permisosMapaCamasService.ingreso" title="Completar informe"
+                             icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
             </app-informe-ingreso-carga>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
