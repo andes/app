@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RUPComponent } from '../core/rup.component';
 import * as moment from 'moment';
-import { isNumber } from 'util';
 import { RupElement } from '.';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-grafico-lineal',
@@ -39,13 +38,13 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                     });
 
                     this.barChartDates.push(
-                        prestaciones.filter(y => y.registro.valor !== null && isNumber(y.registro.valor)).map(p => ({ fecha: p.fecha })),
+                        prestaciones.filter(y => y.registro.valor !== null && typeof y.registro.valor === 'number' ).map(p => ({ fecha: p.fecha })),
 
                     );
 
                     // asignamos los datosLineales al data para el chart
                     this.barChartData.push(
-                        { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && isNumber(y)), label: param.label, fill: false },
+                        { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && typeof y === 'number' ), label: param.label, fill: false },
                     );
 
                     // agregamos las leyendas del eje x

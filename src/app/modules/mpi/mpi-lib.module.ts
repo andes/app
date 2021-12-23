@@ -29,7 +29,6 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         HttpClientModule,
         SharedModule,
         DirectiveLibModule
-
     ],
     declarations: [
         PacienteBuscarComponent,
@@ -40,9 +39,6 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
         FotoDirective
-
-    ],
-    entryComponents: [
     ],
     exports: [
         PacienteBuscarComponent,
@@ -53,7 +49,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
         FotoDirective
-    ],
+    ]
 })
 export class MPILibModule {
 }

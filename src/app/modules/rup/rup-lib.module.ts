@@ -32,10 +32,6 @@ import { ElementosRUPModule } from './elementos-rup.module';
         SnomedBuscarComponent,
         SnomedLinkComponent,
         SnomedSinonimoComponent
-
-    ],
-    entryComponents: [
-        ModalMotivoAccesoHudsComponent
     ],
     exports: [
         ModalMotivoAccesoHudsComponent,
@@ -45,7 +41,7 @@ import { ElementosRUPModule } from './elementos-rup.module';
         ScrollingModule,
         SnomedLinkComponent,
         SnomedSinonimoComponent
-    ],
+    ]
 })
 export class RUPLibModule {
 

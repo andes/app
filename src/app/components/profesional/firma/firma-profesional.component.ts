@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IProfesional } from '../../../interfaces/IProfesional';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ProfesionalService } from '../../../services/profesional.service';
-import { Ng2ImgMaxService } from 'ng2-img-max';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { IMAGENES_EXT } from '@andes/shared';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgxPicaService } from '@digitalascetic/ngx-pica';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { IProfesional } from '../../../interfaces/IProfesional';
+import { ProfesionalService } from '../../../services/profesional.service';
 
 @Component({
     selector: 'app-firma-profesional',
@@ -35,7 +35,7 @@ export class FirmaProfesionalComponent {
     public disabledCargar = false;
 
     constructor(
-        private ng2ImgMax: Ng2ImgMaxService,
+        private ng2ImgMax: NgxPicaService,
         public sanitizer: DomSanitizer,
         private plex: Plex,
         private profesionalService: ProfesionalService

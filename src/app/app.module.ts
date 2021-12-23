@@ -27,11 +27,11 @@ import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxPicaModule } from '@digitalascetic/ngx-pica';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
 import { ChartsModule } from 'ng2-charts';
-import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -213,6 +213,7 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
+
 registerLocaleData(localeEs, 'es');
 
 // Main module
@@ -245,7 +246,7 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        Ng2ImgMaxModule
+        NgxPicaModule
     ],
     declarations: [
         AppComponent,
@@ -278,7 +279,6 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
-
         // Solicitudes
         PrestamosHcComponent,
         ListarSolicitudesComponent,
@@ -293,7 +293,6 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         PucoComponent,
-
         // MPI
         NotaComponent,
         RelacionesPacientesComponent,
@@ -302,25 +301,18 @@ registerLocaleData(localeEs, 'es');
         DatosBasicosComponent,
         DatosContactoComponent,
         DocumentosPacienteComponent,
-
         // form Terapeutico
         FormTerapeuticoComponent,
         ArbolItemComponent,
         FormTerapeuticoDetallePageComponent,
         AddformTerapeuticoComponent,
         PucoComponent,
-
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
         CampaniaFormComponent,
-
         LogoSvgComponent,
         AcronimoSvgComponent,
-
-    ],
-    entryComponents: [
-        HeaderPacienteComponent
     ],
     bootstrap: [
         AppComponent
@@ -416,8 +408,6 @@ registerLocaleData(localeEs, 'es');
             useClass: TokenExpiredInterceptor,
             multi: true,
         }
-
-
     ]
 })
 

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
 import swal from 'sweetalert2';
 
 
@@ -27,7 +27,7 @@ export class SugerenciasService {
                                     type: 'success',
                                     title: 'Se envió con éxito!',
                                     html: 'Muchas gracias.'
-                                }).then(() => resolve());
+                                }).then(() => resolve(null));
                             } else {
                                 swal({
                                     type: 'error',

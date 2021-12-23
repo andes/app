@@ -155,9 +155,6 @@ const RUPComponentsArray = [
         ElementoRUPByIdPipes,
         RUPMedicamentosBusquedaDetalleComponent
     ],
-    entryComponents: [
-        ...RUPComponentsArray
-    ],
     exports: [
         ...RUPComponentsArray,
         RUPAccionesEnvioInformeComponent,
@@ -167,7 +164,7 @@ const RUPComponentsArray = [
         SemanticIconPipe,
         SemanticClassPipe,
         ElementoRUPByIdPipes
-    ],
+    ]
 })
 export class ElementosRUPModule {
 
