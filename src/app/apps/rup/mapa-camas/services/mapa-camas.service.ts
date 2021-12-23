@@ -15,7 +15,8 @@ import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
-
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { Auth } from '@andes/auth';
 @Injectable()
 export class MapaCamasService {
     public timer$;
@@ -82,7 +83,9 @@ export class MapaCamasService {
         private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private salaComunService: SalaComunService,
-        private internacionResumenHTTP: InternacionResumenHTTP
+        private internacionResumenHTTP: InternacionResumenHTTP,
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        public auth: Auth,
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -598,6 +601,17 @@ export class MapaCamasService {
 
 
     prestacionesPermitidas(cama: Observable<ISnapshot>) {
+        const tipoPrestacionPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+
+        const conceptosTurneables$ = this.conceptosTurneablesService.getAll()
+            .pipe(
+                map((ct) => {
+                    ct = ct.filter(c => {
+                        return c?.ambito?.includes('internacion') && tipoPrestacionPermisos.includes(c.id as string);
+                    });
+                    return ct;
+                })
+            );
         const unidadOrganizativa$ = cama.pipe(
             pluck('unidadOrganizativa')
         );
@@ -608,17 +622,18 @@ export class MapaCamasService {
         );
 
         return combineLatest(
+            conceptosTurneables$,
             unidadOrganizativa$,
             accionesCapa$
         ).pipe(
-            map(([uo, acciones]) => {
+            map(([conceptosTurneables, uo, acciones]) => {
                 if (!uo) {
                     return [];
                 }
                 const registros = acciones.filter(acc => acc.tipo === 'nuevo-registro');
-                return registros.filter((registro) => {
+                const filteredRegistros = registros.filter((registro) => {
                     const { unidadOrganizativa } = registro.parametros;
-                    if (unidadOrganizativa.length === 0) {
+                    if (unidadOrganizativa.length === 0 || unidadOrganizativa[0] === null) {
                         return true;
                     }
                     const isExclude = unidadOrganizativa[0]?.startsWith('!');
@@ -629,6 +644,17 @@ export class MapaCamasService {
                     }
                 });
 
+                const ct = conceptosTurneables.map((ct) => {
+                    return {
+                        tipo: 'nuevo-registro',
+                        label: ct.fsn,
+                        parametros: {
+                            concepto: ct,
+                        }
+                    };
+                });
+
+                return [...filteredRegistros, ...ct];
             })
         );
     }
