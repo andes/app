@@ -1,9 +1,8 @@
 import { Plex } from '@andes/plex';
-import { notNull } from '@andes/shared';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
-import { filter, first, map, pluck, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -123,11 +122,7 @@ export class CamaDetalleComponent implements OnInit {
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
 
-        this.accionesEstado$ = this.estadoCama$.pipe(
-            notNull(),
-            pluck('acciones'),
-            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
-        );
+        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
