@@ -96,11 +96,6 @@
                                    tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>
                 </ng-container>
-                <ng-container *ngIf="cama.sala && hayMovimientosAt$ | async">
-                    <plex-dropdown right="true" size="sm" icon="account-off" type="info" tooltip="Deshacer Internacion"
-                                   [items]="items">
-                    </plex-dropdown>
-                </ng-container>
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
