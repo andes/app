@@ -1,3 +1,11 @@
+## [5.78.1](https://github.com/andes/app/compare/v5.78.0...v5.78.1) (2021-12-29)
+
+
+### Bug Fixes
+
+* **int:** botón deshacer internacion ([#2558](https://github.com/andes/app/issues/2558)) ([6aa3af2](https://github.com/andes/app/commit/6aa3af2cec8db5a07d60365c62c3384bcc3a8a15))
+* **mapa-camas:** enfermeros no ven exploracion visual ([#2556](https://github.com/andes/app/issues/2556)) ([c9c5823](https://github.com/andes/app/commit/c9c5823ec35c35a2058ee6117a93a1b58d4a3fc0))
+
 # [5.78.0](https://github.com/andes/app/compare/v5.77.0...v5.78.0) (2021-12-22)
 
 
