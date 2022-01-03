@@ -1265,7 +1265,7 @@ export class DarTurnosComponent implements OnInit {
             paciente: datosPaciente,
             organizacion: organizacion
         };
-        if (listaEspera !== null) {
+        if (listaEspera?.tipoPrestacion) {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
