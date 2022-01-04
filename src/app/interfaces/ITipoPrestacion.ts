@@ -3,6 +3,7 @@ export interface ITipoPrestacion {
     conceptId: String;
     term: String;
     fsn: String;
+    refsetIds: [];
     semanticTag: String;
     noNominalizada?: Boolean;
 }

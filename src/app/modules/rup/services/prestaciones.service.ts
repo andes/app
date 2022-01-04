@@ -596,6 +596,9 @@ export class PrestacionesService {
             prestacion.paciente['_id'] = paciente.id;
             prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
         }
+        if (snomedConcept.esMultiprestacion) {
+            prestacion['groupId'] = turno;
+        }
 
         return prestacion as IPrestacion;
     }

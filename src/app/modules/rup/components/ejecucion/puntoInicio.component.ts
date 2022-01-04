@@ -237,6 +237,17 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
+    chequearMultiprestacion(id) {
+        const prestacion = this.tiposPrestacion.find(p => p.id === id);
+        if (prestacion.multiprestacion?.length >= 1) {
+            const prestacionHijo = this.tiposPrestacion.find(p => prestacion.multiprestacion.find(concepto => concepto.conceptId === p.conceptId));
+            if (prestacionHijo) {
+                prestacionHijo['esMultiprestacion'] = true;
+            }
+            return prestacionHijo;
+        }
+        return prestacion;
+    }
     /**
      * Filtra el listado de agendas y prestaciones
      */
@@ -380,7 +391,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     iniciarPrestacion(turno) {
         const paciente = turno.paciente;
-        const snomedConcept = turno.tipoPrestacion;
+        const snomedConcept = this.chequearMultiprestacion(turno.tipoPrestacion.id); // llamar a metodo y recorrer prestaciones;
         this.servicioPrestacion.get({
             organizacion: this.auth.organizacion.id,
             turnos: [turno.id],
@@ -516,6 +527,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      */
     tienePermisos(turno) {
         const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
+        if (existe) {
+            return this.chequearMultiprestacion(existe);
+        }
         if (turno.prestacion) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestacion.solicitud.tipoPrestacion.id);
 
@@ -566,8 +580,45 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             sinEstado: ['modificada', 'anulada'],
             ambitoOrigen: 'ambulatorio',
-            tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
+            tipoPrestaciones: this.cargarTiposPrestacion()
         });
+    }
+
+    cargarTiposPrestacion() {
+        const tiposPrestaciones: string[] = this.tiposPrestacion.map(t => t.conceptId);
+        const prestacionMultiple = this.tiposPrestacion.filter(tipo => tipo.multiprestacion?.length > 0);
+        return tiposPrestaciones.concat(
+            ...prestacionMultiple.map(t => t.multiprestacion.map(c => c.conceptId))
+        );
+    }
+
+    chequearPrestacion(turno) {
+
+        const prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === turno.tipoPrestacion?.conceptId);
+
+        if (prestacion.multiprestacion) {
+            const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.id);
+            if (!prestacionHijo) {
+                return false;
+            }
+            if (!(turno.prestacion?.length === prestacion.multiprestacion?.length)) {
+                return turno.prestaciones?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
+            }
+            return turno.prestaciones.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
+
+        }
+        return turno.prestaciones ? turno.prestaciones[0] : null;
+    }
+
+    chequearEstados(turno, estado) {
+
+        const prestacion = this.chequearPrestacion(turno);
+
+        if (prestacion) {
+
+            return prestacion.estados[prestacion.estados.length - 1].tipo === estado;
+        }
+
     }
 
     cargarPrestacionesTurnos(agenda) {
@@ -578,14 +629,28 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             agenda['cantidadTurnos'] += bloques.turnos.length;
             // loopeamos los turnos dentro de los bloques
             bloques.turnos.forEach(turno => {
-                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const prestaciones = this.prestaciones.filter(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
                 });
-                // asignamos la prestacion al turno
-                turno['prestacion'] = this.prestaciones[indexPrestacion];
+                // asignamos la prestaciones al turno
+                turno['prestaciones'] = prestaciones;
                 if (turno.paciente && turno.paciente.carpetaEfectores) {
                     (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }
+
+                if (turno.estado === 'asignado' || agenda.tipoPrestaciones[0].noNominalizada) {
+
+                    turno.botonera = {
+                        huds: turno.paciente?.id && this.tieneAccesoHUDS,
+                        iniciar: !this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && !this.chequearPrestacion(turno) && this.tienePermisos(turno) && this.verificarAsistencia(turno),
+                        iniciarDisabled: this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && !this.chequearPrestacion(turno) && this.verificarAsistencia(turno),
+                        continuar: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno),
+                        resumen: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'validada') && this.tienePermisos(turno),
+                        inasistencia: !turno.asistencia && !this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!this.chequearPrestacion(turno) || this.chequearEstados(turno, 'ejecucion')),
+                        anular: turno.paciente && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno)
+                    };
+                }
+
 
             });
         });
@@ -593,14 +658,24 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
         if (agenda.sobreturnos) {
             agenda.sobreturnos.forEach(sobreturno => {
-                const indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                const prestaciones = this.prestaciones.filter(prestacion => {
                     return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
                 });
                 // asignamos la prestacion al turno
-                sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                sobreturno['prestaciones'] = prestaciones;
                 if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
                     (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }
+
+                sobreturno.botonera = {
+                    huds: sobreturno.paciente.id && this.tieneAccesoHUDS,
+                    iniciar: !this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !this.chequearPrestacion(sobreturno) && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno),
+                    iniciarDisabled: this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !this.chequearPrestacion(sobreturno) && this.verificarAsistencia(sobreturno),
+                    continuar: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno),
+                    resumen: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'validada') && this.tienePermisos(sobreturno),
+                    inasistencia: !sobreturno.asistencia && !this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!this.chequearPrestacion(sobreturno) || this.chequearEstados(sobreturno, 'ejecucion')),
+                    anular: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno)
+                };
             });
         }
         // }

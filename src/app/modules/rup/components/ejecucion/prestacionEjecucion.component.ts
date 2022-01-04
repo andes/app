@@ -39,7 +39,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public prestacion: IPrestacion;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
-
+    public prestacionesValidadas = [];
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
 
@@ -180,9 +180,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
-                                    this.ejecucionService.paciente = paciente;
-
-                                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                                    if (this.prestacion.groupId) {
+                                        this.cargarPrestacionAsociada();
+                                    }
+                                    this.ejecucionService.paciente = paciente; this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
@@ -257,6 +258,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             } else {
                 this.cargarNuevoRegistro(registro.concepto, registro.esSolicitud, registro.valor, null, registro.idEvolucion);
             }
+        });
+    }
+
+    cargarPrestacionAsociada() {
+        this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
+            const validadas = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            this.prestacionesValidadas = validadas.filter(validada => validada.groupId === this.prestacion.groupId);
         });
     }
 
