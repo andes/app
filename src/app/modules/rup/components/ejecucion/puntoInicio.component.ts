@@ -596,7 +596,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         const prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === turno.tipoPrestacion?.conceptId);
 
-        if (prestacion.multiprestacion) {
+        if (prestacion && prestacion.multiprestacion) {
             const prestacionHijo = this.chequearMultiprestacion(turno.tipoPrestacion.id);
             if (!prestacionHijo) {
                 return false;
