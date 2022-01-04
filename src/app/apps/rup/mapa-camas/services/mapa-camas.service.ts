@@ -361,7 +361,7 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
@@ -529,11 +529,7 @@ export class MapaCamasService {
     save(data, fecha, esMovimiento = true): Observable<any> {
         if (!data.sala) {
             data.esMovimiento = esMovimiento;
-            let capaSave = this.capa;
-            if (capaSave === 'carga') {
-                capaSave = 'medica';
-            };
-            return this.camasHTTP.save(this.ambito, capaSave, fecha, data);
+            return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
         } else {
             if (data.estado === 'ocupada') {
                 return this.salaComunService.ingresarPaciente(data, fecha);
