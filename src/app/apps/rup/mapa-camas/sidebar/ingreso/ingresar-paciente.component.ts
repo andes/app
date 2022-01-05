@@ -419,7 +419,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.ingresoExtendido(dtoPaciente);
             } else {
                 if (this.capa === 'carga') {
-                    this.completarIngreso();
+                    this.completarIngreso(dtoPaciente);
                 } else {
                     this.ingresoSimplificado('ocupada', dtoPaciente, null);
                 }
@@ -592,21 +592,25 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     }
 
-    completarIngreso() {
-        // creamos la prestacion de internacion y agregamos el registro de ingreso
-        const nuevaPrestacion = this.datosBasicosPrestacion();
-        this.servicioPrestacion.post(nuevaPrestacion).subscribe((prestacion) => {
-            this.internacionResumenService.update(this.cama.idInternacion, {
-                idPrestacion: prestacion.id
-            }).subscribe(() => {
-                this.onSave.emit();
-                this.disableButton = false;
-                this.mapaCamasService.select(this.cama);
-                this.plex.info('success', 'Registro completado con éxito');
+    completarIngreso(paciente) {
+        if (!this.prestacion) {
+            // creamos la prestacion de internacion y agregamos el registro de ingreso
+            const nuevaPrestacion = this.datosBasicosPrestacion();
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe((prestacion) => {
+                this.internacionResumenService.update(this.cama.idInternacion, {
+                    idPrestacion: prestacion.id
+                }).subscribe(() => {
+                    this.onSave.emit();
+                    this.disableButton = false;
+                    this.mapaCamasService.select(this.cama);
+                    this.plex.info('success', 'Registro completado con éxito');
+                });
+            }, (err) => {
+                this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
             });
-        }, (err) => {
-            this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
-        });
+        } else {
+            this.actualizarPrestacion(paciente);
+        }
     }
 
     setFecha() {

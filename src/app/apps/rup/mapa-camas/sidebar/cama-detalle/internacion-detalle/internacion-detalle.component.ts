@@ -78,8 +78,10 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     this.mostrar = 'ingreso-dinamico';
                 } else {
                     this.items = [
+
                         { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' }
+                        { key: 'registros', label: 'REGISTROS' },
+                        { key: 'ingreso', label: 'INGRESO' },
                     ];
                     this.mostrar = 'movimientos';
                 }

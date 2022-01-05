@@ -2,8 +2,11 @@
     <div *ngIf="prestacion">
         <plex-title titulo="INGRESO">
             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                <ng-content></ng-content>
+                <plex-button *ngIf="capa==='carga' && ingreso" title="Completar informe" icon="pencil" type="warning"
+                             size="sm" class="mr-1" (click)="toggleEdit()">
+                </plex-button>
             </ng-container>
+
         </plex-title>
         <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
             <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
@@ -62,7 +65,9 @@
 <ng-template #sinInforme>
     <plex-title titulo="INGRESO">
         <ng-container>
-            <ng-content></ng-content>
+            <plex-button *ngIf="capa==='carga' && ingreso" title="Completar informe" icon="pencil" type="warning"
+                         size="sm" class="mr-1" (click)="toggleEdit()">
+            </plex-button>
         </ng-container>
     </plex-title>
     <div *ngIf="paciente$ | async as paciente;">

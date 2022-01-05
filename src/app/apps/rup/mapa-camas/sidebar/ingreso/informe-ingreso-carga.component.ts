@@ -1,11 +1,12 @@
 import { PrestacionesService } from './../../../../../modules/rup/services/prestaciones.service';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, filter, isEmpty } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
+import { emit } from 'process';
 
 @Component({
     selector: 'app-informe-ingreso-carga',
@@ -22,6 +23,8 @@ export class InformeIngresoCargaComponent implements OnInit {
     // EVENTOS
     @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
+    @Input() capa;
+    @Input() ingreso;
 
     constructor(
         private mapaCamasService: MapaCamasService,
@@ -59,5 +62,11 @@ export class InformeIngresoCargaComponent implements OnInit {
                     }));
             })
         );
+    }
+
+    toggleEdit() {
+
+        this.toggleEditar.emit();
+
     }
 }
