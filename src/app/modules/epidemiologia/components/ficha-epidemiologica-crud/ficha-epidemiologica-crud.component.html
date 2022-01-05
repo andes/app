@@ -232,7 +232,7 @@
                                                [label]="field.label?field.label:field.key" grow="auto" type="date"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha"
-                                               (change)="setSemanaEpidemiologica($event)">
+                                               (change)="setSemanaEpidemiologica($event)" [debounce]="600">
                                 </plex-datetime>
                                 <plex-int *ngIf="field.key==='semanaepidemiologica' && !asintomatico"
                                           [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"

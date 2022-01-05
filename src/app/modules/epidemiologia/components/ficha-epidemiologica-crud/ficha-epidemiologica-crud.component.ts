@@ -651,11 +651,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     setSemanaEpidemiologica(event) {
-        const primerDomingo = moment().startOf('year').startOf('week').weekday(-1);
+        const primerSintoma = moment(event.value);
+        const primerDomingo = moment(primerSintoma).startOf('year').startOf('week').weekday(-1);
         if (primerDomingo.format('YYYY') < moment().format('YYYY')) {
             primerDomingo.add(7, 'days');
         }
-        const primerSintoma = moment(event.value);
         this.secciones.map(seccion => {
             if (seccion.id === 'informacionClinica') {
                 const resultado = Math.trunc((primerSintoma.diff(primerDomingo, 'days') / 7)) + 1;
