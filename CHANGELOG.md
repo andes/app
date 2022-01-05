@@ -1,3 +1,15 @@
+# [5.79.0](https://github.com/andes/app/compare/v5.78.1...v5.79.0) (2022-01-05)
+
+
+### Bug Fixes
+
+* **rup:** agendas con varias prestaciones y permisos ([655e8bc](https://github.com/andes/app/commit/655e8bcd946b940b4e938c16f1e496771ea79971))
+
+
+### Features
+
+* **rup:** turno multiprestacion ([#2428](https://github.com/andes/app/issues/2428)) ([37d00de](https://github.com/andes/app/commit/37d00de50b808a8485ec3bd16db73155de33031a))
+
 ## [5.78.1](https://github.com/andes/app/compare/v5.78.0...v5.78.1) (2021-12-29)
 
 
