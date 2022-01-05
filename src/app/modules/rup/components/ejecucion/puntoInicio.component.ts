@@ -526,14 +526,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     tienePermisos(turno) {
-        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
-        if (existe) {
-            return this.chequearMultiprestacion(existe);
-        }
-        if (turno.prestacion) {
-            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestacion.solicitud.tipoPrestacion.id);
+        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion?._id));
+        // if (existe) {
+        //     return this.chequearMultiprestacion(existe);
+        // }
+        if (turno.prestaciones[0]) {
+            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
 
-            const estado = turno.prestacion.estados[turno.prestacion.estados.length - 1];
+            const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
             if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
             }
