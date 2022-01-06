@@ -273,11 +273,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.ngForm.control.markAllAsTouched();
         } else {
             this.getValues();
-            if (this.checkClasificacionFinal()) {
-                this.setFicha();
-            } else {
-                this.plex.info('warning', 'Si el resultado del antigeno es NO REACTIVO debe completar el campo LAMP o PCR', 'Atención');
-            }
+            this.setFicha();
         }
     }
 
@@ -630,15 +626,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.organizacionesInternacion$ = this.organizacionService.get({ aceptaDerivacion: true });
         }
         return this.estaInternado;
-    }
-
-    checkClasificacionFinal() {
-        const seccionClasificacion = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
-        if (seccionClasificacion?.fields['antigeno']?.id === 'muestra' && !this.asintomatico) {
-            return (seccionClasificacion.fields['lamp']?.id || seccionClasificacion.fields['pcrM']);
-        } else {
-            return true;
-        }
     }
 
     getInstituciones(educativas) {
