@@ -344,7 +344,7 @@
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
-                                             [readonly]="!editFicha">
+                                             readonly=true>
                                 </plex-select>
                                 <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
