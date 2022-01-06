@@ -45,6 +45,7 @@ import { RecetaMedicaComponent } from './components/elementos/recetaMedica.compo
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { ResumenHistoriaClinicaComponent } from './components/elementos/resumenHistoriaClinica.component';
 import { ChecklistComponent } from './components/elementos/rupers/check-list/checklist.component';
+import { SolicitudPrescripcionMedicamentoInternacionComponent } from './components/elementos/rupers/prescripcion-medicamento-internacion/prescripcion-medicamento-internacion.component';
 import { SolicitudPrescripcionMedicamentoComponent } from './components/elementos/rupers/prescripcion-medicamento/prescripcion-medicamento.component';
 import { SeccionComponent } from './components/elementos/rupers/seccionado/seccion.component';
 import { SeccionadoComponent } from './components/elementos/rupers/seccionado/seccionado.component';
@@ -124,7 +125,8 @@ const RUPComponentsArray = [
     InternacionIngresoComponent,
     ChecklistComponent,
     VacunasComponent,
-    SolicitudPrescripcionMedicamentoComponent
+    SolicitudPrescripcionMedicamentoComponent,
+    SolicitudPrescripcionMedicamentoInternacionComponent
 ];
 
 @NgModule({

@@ -76,6 +76,22 @@
             </ng-container>
         </plex-wrapper>
         <ng-container *ngIf="capa === 'estadistica'">
+            <ng-container *ngIf="resumenPacienteInternacion$ | async as resumenes">
+                <plex-title size="sm" justify titulo="Motivo Ingreso"></plex-title>
+                <plex-list *ngIf="resumenes" size="sm" [selectable]="false">
+                    <ng-container *ngFor="let registro of resumenes.registros || []">
+                        <plex-item>
+                            <plex-label [titulo]="registro.concepto.term"></plex-label>
+                            <plex-badge *ngIf="registro.esDiagnosticoPrincipal" type="success" ngProjectAs="plex-label">
+                                Principal
+                            </plex-badge>
+                        </plex-item>
+                    </ng-container>
+                </plex-list>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="capa === 'estadistica'">
             <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
             <plex-wrapper>
                 <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
@@ -112,6 +128,8 @@
                              idField="nombre" labelField="nombre">
                 </plex-select>
             </plex-wrapper>
+
+
         </ng-container>
     </form>
 </ng-container>

@@ -16,6 +16,12 @@ table {
     td {
         padding: 0.75rem;
         vertical-align: top;
+        max-width: 40px;
+        max-height: 40px;
+        small {
+            display: block;
+            height: 0;
+        }
     }
 
     // Día

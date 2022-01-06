@@ -51,6 +51,7 @@ export class DarTurnosComponent implements OnInit {
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     autocitado = false;
+    puedeDarSobreturno;
 
     tipoPrestacionesPermitidas: ITipoPrestacion[];
 
@@ -176,18 +177,13 @@ export class DarTurnosComponent implements OnInit {
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
     // Muestra/Oculta los días de fin de semana (sábado y domingo)
-    ocultarFinesDeSemana = false;
-
-    // Opciones para modificar la grilla/calendario
-    opcionesCalendario = {
-        mostrarFinesDeSemana: true
-    };
+    mostrarFinesDeSemana = true;
 
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
     private cacheBusquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
-    private busquedas = this.cacheBusquedas;
+    private busquedas = [...this.cacheBusquedas];
     private eventoProfesional: any = null;
     public mostrarCalendario = false;
     public condicionLlaveAgenda: any;
@@ -213,6 +209,7 @@ export class DarTurnosComponent implements OnInit {
     ngOnInit() {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.puedeDarSobreturno = this.auth.check('turnos:puntoInicio:darSobreturno');
         this.opciones.fecha = moment().toDate();
 
         this.carpetaEfector = {
@@ -472,9 +469,6 @@ export class DarTurnosComponent implements OnInit {
 
                     });
                 }
-
-                // Por defecto se muestras los días de fines de semana (sab y dom)
-                this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
 
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
@@ -1322,5 +1316,9 @@ export class DarTurnosComponent implements OnInit {
         return (this.organizacion.id === idCMI && !puco);
     }
 
+    agregarSobreturno() {
+        localStorage.setItem('revision', 'true');
+        this.router.navigate(['citas/sobreturnos', this.agenda.id], { queryParams: { paciente: this.paciente.id } });
+    }
 
 }

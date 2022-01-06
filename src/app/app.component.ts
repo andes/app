@@ -1,24 +1,32 @@
-import { CommonNovedadesService } from './components/novedades/common-novedades.service';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { cacheStorage, Server } from '@andes/shared';
+import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
-import { Component } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { Server, cacheStorage } from '@andes/shared';
-import { Auth } from '@andes/auth';
-import { PROPERTIES } from './styles/properties';
-import { WebSocketService } from './services/websocket.service';
-import { HotjarService } from './shared/services/hotJar.service';
-import { GoogleTagManagerService } from './shared/services/analytics.service';
+import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
-import { Observable } from 'rxjs';
-
+import { ProfesionalService } from './services/profesional.service';
+import { WebSocketService } from './services/websocket.service';
+import { GoogleTagManagerService } from './shared/services/analytics.service';
+import { HotjarService } from './shared/services/hotJar.service';
+import { PROPERTIES } from './styles/properties';
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
 })
 
 export class AppComponent {
+    public formacionGrado;
+    public profesional;
+    public estado: [];
+    public hoy = new Date();
+    public foto: any;
+    public tieneFoto = false;
+    public usuario;
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
@@ -33,6 +41,25 @@ export class AppComponent {
             this.plex.updateAppStatus({ API: 'OK' });
         }
     }
+
+    public columns = [
+        {
+            key: 'profesion',
+            label: 'Profesión',
+        },
+        {
+            key: 'matricula',
+            label: 'Matrícula',
+        },
+        {
+            key: 'vencimiento',
+            label: 'Vencimiento',
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+        }
+    ];
 
     private menuList = [];
     private modulos$: Observable<any[]>;
@@ -50,8 +77,9 @@ export class AppComponent {
         private commonNovedadesService: CommonNovedadesService,
         public adjuntos: AdjuntosService,
         private modulosService: ModulosService,
+        private profesionalService: ProfesionalService,
+        public sanitizer: DomSanitizer,
     ) {
-
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps de Salud');
 
@@ -64,8 +92,25 @@ export class AppComponent {
         });
 
         this.auth.session().subscribe((sesion) => {
+            this.usuario = sesion.usuario;
             if (sesion.permisos) {
                 this.checkPermissions();
+            }
+            if (this.auth.profesional) {
+                this.profesionalService.getByID(this.auth.profesional).subscribe(profesional => {
+                    if (profesional) {
+                        this.profesional = profesional;
+                        this.profesional.formacionGrado?.forEach(item => {
+                            item['estado'] = this.verificarEstado(item);
+                        });
+                        this.profesionalService.getFoto({ id: this.auth.profesional }).subscribe(resp => {
+                            if (resp) {
+                                this.foto = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+                                this.tieneFoto = true;
+                            }
+                        });
+                    }
+                });
             }
         });
 
@@ -100,7 +145,6 @@ export class AppComponent {
                 return 'info';
         }
     }
-
 
     public checkPermissions() {
         const modulos = [];
@@ -160,5 +204,28 @@ export class AppComponent {
 
     public getModulos() {
         return this.modulos$;
+    }
+
+    verificarEstado(formacionGrado) {
+        if (formacionGrado.matriculacion) {
+            if (!formacionGrado.matriculado && this.hoy < formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                return {
+                    nombre: 'suspendida',
+                    tipo: 'warning'
+                };
+            } else {
+                if (this.hoy > formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].fin) {
+                    return {
+                        nombre: 'vencida',
+                        tipo: 'danger'
+                    };
+                } else {
+                    return {
+                        nombre: 'vigente',
+                        tipo: 'success'
+                    };
+                }
+            }
+        }
     }
 }

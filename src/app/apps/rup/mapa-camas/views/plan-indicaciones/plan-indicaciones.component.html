@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <td rowspan="2" style="min-width: 500px;">
-                        <section class="item">
+                        <section class="item-indicacion">
                             <div class="item__container">
                                 <!-- Sin funcionalidad -->
                                 <!-- <plex-bool type="checkbox" label="seleccionar todos"> </plex-bool> -->
@@ -66,7 +66,7 @@
 
                 <ng-container *ngFor="let seccion of seccionesActivas">
                     <tr class="separador">
-                        <td class="item divisor" colspan="25">
+                        <td class="item-indicacion divisor" colspan="25">
 
                             <div class="title__container">
                                 <span class="icon__container">
@@ -96,7 +96,7 @@
 
                         <ng-container *ngIf="showSecciones[seccion.concepto.term]">
                             <tr [ngClass]="indicacion.estado.tipo" *ngFor="let indicacion of indicaciones$">
-                                <td justify class="item pointer">
+                                <td justify class="item-indicacion pointer">
                                     <div class="item__container" (click)="onSelectIndicacion(indicacion)">
                                         <plex-bool *ngIf="!indicacion.readonly" type="checkbox"
                                                    [(ngModel)]="selectedIndicacion[indicacion.id]"
@@ -171,7 +171,8 @@
 
         <ng-container *ngIf="nuevaIndicacion">
             <plan-indicaciones-nueva-indicacion [seccion]="seccionSelected" [tipoPrestacion]="tipoPrestacion"
-                                                (save)="onSaveIndicacion($event)">
+                                                [indicacion]="indicacion" (save)="onSaveIndicacion($event)"
+                                                (edit)="onEditIndicacion($event)">
             </plan-indicaciones-nueva-indicacion>
         </ng-container>
 

@@ -1,5 +1,6 @@
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
+import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 
 @Injectable({ providedIn: 'root' })
 export class InternacionResumenHTTP extends ResourceBaseHttp<IResumenInternacion> {
@@ -29,4 +30,11 @@ export interface IResumenInternacion {
         registros: any[];
         elementoRUP: any;
     };
+    registros: {
+        tipo: string;
+        idPrestacion: string;
+        concepto: ISnomedConcept;
+        valor: any;
+        esDiagnosticoPrincipal: boolean;
+    }[];
 }

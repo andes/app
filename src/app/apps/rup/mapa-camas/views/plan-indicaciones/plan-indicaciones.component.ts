@@ -6,6 +6,7 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { ignoreElements, map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -29,11 +30,11 @@ export class PlanIndicacionesComponent implements OnInit {
     private idInternacion: string;
     private paciente: any;
     private maquinaEsados: any[];
-
+    public indicacion;
     public fecha = new Date();
-
     public hoy = new Date();
-
+    public suspenderAnterior = false;
+    public indicacionAnterior;
     public horas = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5];
     public indicaciones = [];
     public selectedIndicacion = {};
@@ -112,7 +113,8 @@ export class PlanIndicacionesComponent implements OnInit {
         private hudsService: HUDSService,
         private auth: Auth,
         private maquinaEstadoService: MaquinaEstadosHTTP,
-        private elementoRUPService: ElementosRUPService
+        private elementoRUPService: ElementosRUPService,
+        public ejecucionService: RupEjecucionService
     ) { }
 
 
@@ -307,6 +309,7 @@ export class PlanIndicacionesComponent implements OnInit {
         this.indicacionView = null;
         this.nuevaIndicacion = true;
         this.seccionSelected = seccion;
+        this.indicacion = null;
         if (!seccion) {
             this.seccionSelected = this.secciones.find(s => s.concepto.conceptId === '6381000013101');
         }
@@ -332,6 +335,15 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onSaveIndicacion(indicacion) {
+        if (this.suspenderAnterior && indicacion) {
+            const estadoParams = {
+                tipo: 'cancelled',
+                fecha: new Date()
+            };
+            this.planIndicacionesServices.updateEstado(this.indicacionAnterior.id, estadoParams).subscribe(() =>
+                this.actualizar());
+            this.nuevaIndicacion = false;
+        }
         if (!indicacion) {
             this.nuevaIndicacion = false;
         } else {
@@ -407,12 +419,31 @@ export class PlanIndicacionesComponent implements OnInit {
     editar(indicacion) {
 
         if (indicacion.estado.tipo === 'draft') {
+            this.indicacion = indicacion;
             this.indicacionEventoSelected = null;
             this.indicacionView = null;
             this.nuevaIndicacion = true;
-            console.log(this.seccionSelected);
+            this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
         }
-        console.log(indicacion);
+        if (indicacion.estado.tipo === 'active' || indicacion.estado.tipo === 'pending') {
+            this.indicacion = indicacion;
+            this.indicacionAnterior = indicacion;
+            this.suspenderAnterior = true;
+            this.indicacionEventoSelected = null;
+            this.indicacionView = null;
+            this.nuevaIndicacion = true;
+            this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
 
+        }
+
+    }
+
+    onEditIndicacion(indicacion) {
+        if (indicacion) {
+            this.planIndicacionesServices.update(indicacion._id, indicacion).subscribe(s => {
+                this.actualizar();
+                this.nuevaIndicacion = false;
+            });
+        }
     }
 }

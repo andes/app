@@ -217,8 +217,13 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoDisponer() {
-        const disponer = this.agendasSeleccionadas.filter((agenda: any) => (agenda.estado !== 'planificacion')).length <= 0;
-        return disponer;
+        // enPlanificacion resulta true sssi todas las agendas seleccionadas estan en planificación
+        const enPlanificacion = !this.agendasSeleccionadas.some((agenda: any) => (agenda.estado !== 'planificacion'));
+        const turnosEspeciales = this.agendasSeleccionadas.some(agenda => {
+            return agenda.bloques.some(b => b.reservadoGestion > 0 || b.reservadoProfesional > 0);
+        });
+        const nominalizada = !this.agendasSeleccionadas.some((agenda: any) => (agenda.nominalizada === true));
+        return (enPlanificacion && turnosEspeciales) || nominalizada;
     }
 
     puedoPublicar() {

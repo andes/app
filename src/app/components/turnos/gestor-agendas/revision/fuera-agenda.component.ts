@@ -2,6 +2,9 @@ import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/c
 import { Plex } from '@andes/plex';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
+import { Subscription } from 'rxjs';
+import { ProfesionalService } from 'src/app/services/profesional.service';
+import { IProfesional } from 'src/app/interfaces/IProfesional';
 
 
 @Component({
@@ -15,21 +18,27 @@ export class RevisionFueraAgendaComponent implements OnInit {
     // Propiedades públicas
     public prestaciones: ICodificacionPrestacion[];
     public prestacionSeleccionada: ICodificacionPrestacion;
+    public profesional: IProfesional;
     public showRegistros;
     public showReparo = false;
     public indiceReparo: number;
     public esAgendaOdonto = false;
     public auditadas = false;
     public diagnosticos = [];
-    fechaDesde: Date;
-    fechaHasta: Date;
+    private lastRequest: Subscription;
+    public fechaDesde: Date;
+    public fechaHasta: Date;
 
     // Eventos
     @Output() save: EventEmitter<ICodificacionPrestacion[]> = new EventEmitter<ICodificacionPrestacion[]>();
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
     // Constructor
-    constructor(private plex: Plex, private serviceCodificacion: CodificacionService) { }
+    constructor(
+        private servicioProfesional: ProfesionalService,
+        private serviceCodificacion: CodificacionService,
+        private plex: Plex
+    ) { }
 
     // Métodos
     ngOnInit() {
@@ -45,13 +54,11 @@ export class RevisionFueraAgendaComponent implements OnInit {
             const params = {
                 fechaDesde: moment(this.fechaDesde).startOf('day').toDate(),
                 fechaHasta: moment(this.fechaHasta).endOf('day').toDate(),
+                idProfesional: this.profesional?.id,
                 auditadas: this.auditadas
             };
             this.serviceCodificacion.get(params).subscribe(datos => {
                 this.prestaciones = datos;
-            }, err => {
-                if (err) {
-                }
             });
         }
     }

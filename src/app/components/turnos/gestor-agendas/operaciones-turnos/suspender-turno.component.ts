@@ -45,17 +45,19 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.turnos = this.turnosSeleccionados;
 
-        this.motivoSuspension = [{
-            id: 1,
-            nombre: 'edilicia'
-        }, {
-            id: 2,
-            nombre: 'profesional'
-        },
-                                 {
-                                     id: 3,
-                                     nombre: 'organizacion'
-                                 }];
+        this.motivoSuspension = [
+            {
+                id: 1,
+                nombre: 'edilicia'
+            }, {
+                id: 2,
+                nombre: 'profesional'
+            },
+            {
+                id: 3,
+                nombre: 'organizacion'
+            }
+        ];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
         // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA

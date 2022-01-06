@@ -48,6 +48,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         obraSocial: '',
         prepaga: ''
     };
+    private volverVentanillaCitas;
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -75,6 +76,19 @@ export class AgregarSobreturnoComponent implements OnInit {
                         this.turno_link = agenda.link;
                     }
                 });
+
+                this.route.queryParams.subscribe(params => {
+                    if (params.paciente) {
+                        this.servicePaciente.getById(params.paciente).subscribe(res => {
+                            this.paciente = res;
+                            this.pacientesSearch = false;
+                            this.showSobreturno = true;
+                            this.volverVentanillaCitas = true;
+                            this.loadObraSocial(this.paciente);
+                        });
+                    }
+                });
+
             }
         });
 
@@ -354,7 +368,9 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     volver() {
-        if (this._revision) {
+        if (this.volverVentanillaCitas) {
+            this.router.navigate(['citas/punto-inicio']);
+        } else if (this._revision) {
             this.router.navigate(['citas/revision_agenda', this.agenda.id]);
         } else {
             this.router.navigate(['citas/gestor_agendas']);

@@ -1,3 +1,57 @@
+# [5.79.0](https://github.com/andes/app/compare/v5.78.1...v5.79.0) (2022-01-05)
+
+
+### Bug Fixes
+
+* **rup:** agendas con varias prestaciones y permisos ([655e8bc](https://github.com/andes/app/commit/655e8bcd946b940b4e938c16f1e496771ea79971))
+
+
+### Features
+
+* **rup:** turno multiprestacion ([#2428](https://github.com/andes/app/issues/2428)) ([37d00de](https://github.com/andes/app/commit/37d00de50b808a8485ec3bd16db73155de33031a))
+
+## [5.78.1](https://github.com/andes/app/compare/v5.78.0...v5.78.1) (2021-12-29)
+
+
+### Bug Fixes
+
+* **int:** botón deshacer internacion ([#2558](https://github.com/andes/app/issues/2558)) ([6aa3af2](https://github.com/andes/app/commit/6aa3af2cec8db5a07d60365c62c3384bcc3a8a15))
+* **mapa-camas:** enfermeros no ven exploracion visual ([#2556](https://github.com/andes/app/issues/2556)) ([c9c5823](https://github.com/andes/app/commit/c9c5823ec35c35a2058ee6117a93a1b58d4a3fc0))
+
+# [5.78.0](https://github.com/andes/app/compare/v5.77.0...v5.78.0) (2021-12-22)
+
+
+### Bug Fixes
+
+* **citas:** turno en agenda no nominalizada ya auditada ([#2544](https://github.com/andes/app/issues/2544)) ([7efa76e](https://github.com/andes/app/commit/7efa76e2c0e8d9786344ceabea1a2bcbb243dfc3))
+* **perinatal:** Cambiar mensaje del toast al crear una nueva nota ([#2552](https://github.com/andes/app/issues/2552)) ([ca22246](https://github.com/andes/app/commit/ca22246703945b570c0f63765834d83b47133e42))
+* **rup:** busqueda de elementoRUP por id en molecula ([#2553](https://github.com/andes/app/issues/2553)) ([f6b6dae](https://github.com/andes/app/commit/f6b6daedefc6b760d6b1ba32c795ab58297892b4))
+
+
+### Features
+
+* **CIT:** dar sobreturno desde punto inicio ([#2541](https://github.com/andes/app/issues/2541)) ([4ccf7b0](https://github.com/andes/app/commit/4ccf7b02fd2c45f891cd7119db99b334a4b9b608))
+* **mapa-camas:** agregar diagnostico al egresar en capa estadistica ([#2538](https://github.com/andes/app/issues/2538)) ([a1690e8](https://github.com/andes/app/commit/a1690e8b8066417a313e878bc7cf19174b30c2fd))
+* **mapa-camas:** plan-indicaciones, editar una indicación ([#2545](https://github.com/andes/app/issues/2545)) ([597e7f0](https://github.com/andes/app/commit/597e7f089c581548cf91dde4cbc4388546f2396a))
+* **mapa-camas:** prescripcion de medicamentos internacion ([#2555](https://github.com/andes/app/issues/2555)) ([4d9b6c9](https://github.com/andes/app/commit/4d9b6c97b283c5f6c4695f13ab0fd119e86602c6))
+* **top:** libera solicitud al suspender turno ([#2506](https://github.com/andes/app/issues/2506)) ([d04492e](https://github.com/andes/app/commit/d04492e6bf7975eb9ff2f73d1706ab4a5c2cd1d2))
+
+# [5.77.0](https://github.com/andes/app/compare/v5.76.0...v5.77.0) (2021-12-15)
+
+
+### Bug Fixes
+
+* **citas:** frecuentes duplicados ([#2547](https://github.com/andes/app/issues/2547)) ([ca84c09](https://github.com/andes/app/commit/ca84c09290182943a67622ca02dd19a84d0fe6bd))
+* **top:** eliminacion de ultima regla ([#2537](https://github.com/andes/app/issues/2537)) ([ddb2104](https://github.com/andes/app/commit/ddb21044af2828c911a26e733edd753ece228123))
+
+
+### Features
+
+* **CIT:** refactor visual header dar turno ([#2543](https://github.com/andes/app/issues/2543)) ([b274c33](https://github.com/andes/app/commit/b274c3365216d97a48f3399a0545a2c5ad50a42c))
+* **mapa-camas:** mostrar registro de diagnostico al ingreso ([#2529](https://github.com/andes/app/issues/2529)) ([fb02b8c](https://github.com/andes/app/commit/fb02b8cbb21e65a86595ec147707008147550826))
+* **misc:** visualizacion de las matriculas de un profesional ([#2540](https://github.com/andes/app/issues/2540)) ([c0c6de1](https://github.com/andes/app/commit/c0c6de177b1f98699555a9bfdb38b78aa64bdddc))
+* **tm:** refactor pantalla organizaciones ([#2528](https://github.com/andes/app/issues/2528)) ([33e05e8](https://github.com/andes/app/commit/33e05e82a18bf5cedf8db0ed349ac2db5bfae49a))
+
 # [5.76.0](https://github.com/andes/app/compare/v5.75.0...v5.76.0) (2021-12-08)
 
 

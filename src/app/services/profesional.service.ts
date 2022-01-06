@@ -26,6 +26,10 @@ export class ProfesionalService {
         return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 
+    getByID(id: String): Observable<IProfesional[]> {
+        return this.server.get(`${this.profesionalUrl}/${id}`);
+    }
+
     getFirma(params: any): Observable<any> {
         return this.server.get(this.profesionalUrl + '/firma', { params: params });
     }

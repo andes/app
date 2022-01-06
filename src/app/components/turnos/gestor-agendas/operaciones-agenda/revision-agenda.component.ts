@@ -98,6 +98,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     buscarPaciente() {
+        this.onSearchClear();
         this.showRegistrosTurno = false;
         this.pacientesSearch = true;
     }
@@ -433,7 +434,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
+        this.resultadoBusqueda = null;
         this.paciente = null;
     }
 
@@ -442,13 +443,15 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     // Componente paciente-listado
     @Unsubscribe()
     onSelect(paciente: IPaciente) {
-        this.resultadoBusqueda = [];
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
+            this.loading = true;
+            this.resultadoBusqueda = null;
             // Si se seleccionó por error un paciente fallecido
             this.servicePaciente.checkFallecido(paciente);
             return this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMongo => {
+                    this.loading = false;
                     this.paciente = pacienteMongo;
                     this.pacienteDetalle = pacienteMongo;
                     delete this.pacienteDetalle.cuil;

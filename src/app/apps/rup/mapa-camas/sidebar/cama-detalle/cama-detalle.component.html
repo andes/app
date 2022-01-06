@@ -73,8 +73,7 @@
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
 
-                <plex-button *ngIf="capa !== 'enfermeria'" label="EXPLORACIÓN VISUAL" size="sm" type="info"
-                             (click)="onVerResumen(cama)" class="mr-1">
+                <plex-button label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
 
                 <ng-container *feature="'planIndicaciones'">
@@ -93,9 +92,6 @@
                     <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <!-- <plex-button tooltip="Deshacer Internacion" icon="account-off" type="danger" size="sm"
-                                 (click)="deshacerInternacion(cama)">
-                    </plex-button> -->
                     <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
                                    tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>

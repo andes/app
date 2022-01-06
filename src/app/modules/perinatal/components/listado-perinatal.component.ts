@@ -166,13 +166,15 @@ export class ListadoPerinatalComponent implements OnInit {
     }
 
     returnNotas(nota) {
+        const nuevaNota = this.carnetSelected.nota?.length ? false : true;
         this.carnetSelected.nota = nota;
         this.carnetPerinatalService.update(this.carnetSelected.id, this.carnetSelected).subscribe(resultado => {
             this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
                 map(resp => this.listadoActual = resp)
             );
             if (nota) {
-                this.plex.toast('success', 'Nota editada con éxito');
+                const mensaje = nuevaNota ? 'Nota agregada con éxito' : 'Nota editada con éxito';
+                this.plex.toast('success', mensaje);
             } else {
                 this.plex.toast('success', 'Nota eliminada con éxito');
             }
