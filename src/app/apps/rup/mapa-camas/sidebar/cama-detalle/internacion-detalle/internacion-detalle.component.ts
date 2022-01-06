@@ -58,11 +58,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
-
         this.prestacion$ = this.mapaCamasService.prestacion$.pipe(
             tap(() => this.editar = false)
         );
-
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
             this.mapaCamasService.resumenInternacion$
@@ -78,12 +76,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     this.mostrar = 'ingreso-dinamico';
                 } else {
                     this.items = [
-
+                        { key: 'ingreso', label: 'INGRESO' },
                         { key: 'movimientos', label: 'MOVIMIENTOS' },
                         { key: 'registros', label: 'REGISTROS' },
-                        { key: 'ingreso', label: 'INGRESO' },
+                        { key: 'egreso', label: 'EGRESO' }
                     ];
-                    this.mostrar = 'movimientos';
                 }
             } else {
                 if (capa === 'estadistica') {

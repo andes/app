@@ -64,6 +64,7 @@ import { ResumenInternacionComponent } from './views/resumen-internacion/resumen
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { InformeIngresoResumenComponent } from './sidebar/ingreso/informe-ingreso-resumen.component';
 
 
 
@@ -86,6 +87,7 @@ export const INTERNACION_COMPONENTS = [
     InformeIngresoComponent,
     InformeEgresoComponent,
     InformeIngresoCargaComponent,
+    InformeIngresoResumenComponent,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,

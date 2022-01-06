@@ -168,25 +168,24 @@ export class MapaCamasService {
             this.capa2
         ).pipe(
             switchMap(([prestacion, cama, view, capa]) => {
-                const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
-                if (capa === 'estadistica') {
-                    if (idInternacion) {
+                if (prestacion.id) {
+                    const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
+                    if (capa === 'estadistica') {
                         return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
                             // No todas las capas tienen un ID de internacion real.
                             catchError(() => of(null))
                         );
                     }
-                }
-                if (capa === 'carga') {
+                    if (capa === 'carga') {
                     // tengo cama.idInternacion
-                    if (idInternacion) {
                         return this.internacionResumenHTTP.get(idInternacion).pipe(
                             switchMap(
                                 internacionResumen => {
                                     return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false }).pipe(
                                         catchError(() => of(null))
                                     );
-                                }));
+                                })
+                        );
                     }
                 }
                 return of(null);

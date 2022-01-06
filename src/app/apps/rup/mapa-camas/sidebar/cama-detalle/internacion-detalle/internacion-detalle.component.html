@@ -4,28 +4,31 @@
             <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
         </ng-container>
 
-
-        <ng-container *ngIf="mostrar === 'ingreso-dinamico'">
-            <!-- <in-ingreso-dinamico [resumen]="resumen"></in-ingreso-dinamico> -->
-        </ng-container>
-
-
         <ng-container *ngIf="mostrar === 'ingreso'">
-            <app-informe-ingreso *ngIf="!editar && capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso" title="editar ingreso" icon="pencil"
-                             type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
-                </plex-button>
-                <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
-                                 (click)="onAnularInternacion()">
+            <ng-container *ngIf="!editar">
+                <!-- CARGA -->
+                <app-informe-ingreso-carga *ngIf="capa === 'carga'" (cancel)="activatedOption('ingreso')" [capa]='capa'
+                            [ingreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
+                </app-informe-ingreso-carga>
+                <!-- ESTADISTICA -->
+                <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
+                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
+                                (click)="toggleEdit()" class="mr-1">
                     </plex-button>
-                </ng-container>
-            </app-informe-ingreso>
-            <app-informe-ingreso-carga *ngIf="!editar && capa!==estadistica" (cancel)="activatedOption('ingreso')"
-                                       [capa]='capa' [ingreso]='permisosMapaCamasService.ingreso'
-                                       (toggleEditar)="toggleEdit()">
+                    <ng-container *ngIf="anular$ | async">
+                        <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                    (click)="onAnularInternacion()">
+                        </plex-button>
+                    </ng-container>
+                </app-informe-ingreso>
+                <!-- MEDICA / ENFERMERIA -->
+                <app-informe-ingreso-resumen *ngIf="capa === 'medica' || capa === 'enfermeria'" (cancel)="activatedOption('ingreso')">
+                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
+                                 (click)="toggleEdit()" class="mr-1">
+                    </plex-button>
+                </app-informe-ingreso-resumen>
+            </ng-container>
 
-            </app-informe-ingreso-carga>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
                 <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
                 </plex-button>

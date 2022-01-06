@@ -190,21 +190,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.prestacion = prestacion;
             this.paciente = paciente;
 
-
-
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
                 this.backupObraSocial = os;
             }
 
             if (this.prestacion) {
-                // this.paciente = this.prestacion.paciente;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 this.fechaIngresoOriginal = this.informeIngreso.fechaIngreso;
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
             } else {
                 if (paciente.id) {
-
+                    this.fechaIngresoOriginal = cama.fechaIngreso;
                     if (this.backupObraSocial) {
                         this.paciente.obraSocial = {
                             nombre: this.backupObraSocial.financiador,
@@ -216,9 +213,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                             nombre: 'Plan o Seguro público'
                         };
                         this.esPrepaga = false;
-
                     }
-
                     let indiceCarpeta = -1;
                     if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
                         indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
@@ -226,13 +221,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                             this.informeIngreso.nroCarpeta = paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
                         }
                     }
-
                 }
-
                 if (capa === 'estadistica') {
                     this.cargarUltimaInternacion(paciente);
                 }
-
             }
 
             if (cama.id && cama.id !== ' ') {
@@ -250,7 +242,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, prestacion.id).subscribe((snapshot) => {
                     this.cama = snapshot[0];
-                    // this.paciente = this.cama.paciente;
                 });
             } else {
                 this.cama = null;
@@ -458,42 +449,54 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.onSave.emit();
             }
         } else {
-            delete this.cama['sectorName'];
-            delete this.cama['diaEstada'];
-            delete this.cama['_key'];
-            this.cama.extras = {
-                ingreso: true
-            };
-            const ingreso = this.elementoRUP ? {
-                elementoRUP: this.elementoRUP,
-                registros: this.prestacionFake.ejecucion.registros
-            } : null;
-
-            const createAction: Observable<any> = idInternacion ? of({ id: idInternacion }) :
-
-                this.internacionResumenService.create({
-                    ambito: this.mapaCamasService.ambito,
-                    fechaIngreso: this.informeIngreso.fechaIngreso,
-                    paciente: this.cama.paciente,
-                    organizacion: { ...this.auth.organizacion },
-                    ingreso
+            if (this.cama.idInternacion) {
+                // Paciente ingresado previamente por capa médica
+                this.internacionResumenService.update(this.cama.idInternacion, {
+                    fechaIngreso: this.cama.fechaIngreso
+                }).subscribe(() => {
+                    this.onSave.emit();
+                    this.disableButton = false;
+                    this.mapaCamasService.select(this.cama);
+                    this.plex.info('success', 'Registro modificado con éxito');
                 });
+            } else {
+                delete this.cama['sectorName'];
+                delete this.cama['diaEstada'];
+                delete this.cama['_key'];
+                this.cama.extras = {
+                    ingreso: true
+                };
+                const ingreso = this.elementoRUP ? {
+                    elementoRUP: this.elementoRUP,
+                    registros: this.prestacionFake.ejecucion.registros
+                } : null;
 
-            createAction.pipe(
-                switchMap(internacion => {
-                    this.cama.idInternacion = internacion.id;
-                    return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
-                })
-            ).subscribe(() => {
-                this.plex.info('success', 'Paciente internado');
-                this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                this.onSave.emit();
-                this.disableButton = false;
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al ingresar paciente');
-                this.disableButton = false;
+                const createAction: Observable<any> = idInternacion ? of({ id: idInternacion }) :
 
-            });
+                    this.internacionResumenService.create({
+                        ambito: this.mapaCamasService.ambito,
+                        fechaIngreso: this.informeIngreso.fechaIngreso,
+                        paciente: this.cama.paciente,
+                        organizacion: { ...this.auth.organizacion },
+                        ingreso
+                    });
+
+                createAction.pipe(
+                    switchMap(internacion => {
+                        this.cama.idInternacion = internacion.id;
+                        return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
+                    })
+                ).subscribe(() => {
+                    this.plex.info('success', 'Paciente internado');
+                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.onSave.emit();
+                    this.disableButton = false;
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al ingresar paciente');
+                    this.disableButton = false;
+
+                });
+            }
         }
 
     }
@@ -614,12 +617,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        if (!this.prestacion) {
-            this.mapaCamasService.select(null);
-        } else {
-            this.checkEstadoCama();
-            this.checkMovimientos();
-        }
+        // if (!this.prestacion) {
+        //     this.mapaCamasService.select(null);
+        // } else {
+        this.checkEstadoCama();
+        this.checkMovimientos();
+        // }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 
@@ -651,7 +654,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.checkMovimientos();
         this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
-                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
+                if (!cama.idInternacion || (cama.idInternacion && this.prestacion?.id && cama.idInternacion !== this.prestacion.id)) {
                     this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
                     this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
                         'Cama no dosponible');

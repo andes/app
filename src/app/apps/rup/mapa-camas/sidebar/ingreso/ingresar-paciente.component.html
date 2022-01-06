@@ -30,15 +30,15 @@
                            label="Fecha Ingreso" [debounce]="600" (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
-                <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama" [data]="camas"
-                             placeholder="Elija cama" label="Cama" idField="id"
-                             labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)" grow="full">
+                <plex-select *ngIf="!prestacion" [required]="true" [readonly]="capa !== 'estadistica' && capa !== 'carga'" [(ngModel)]="cama" name="cama" [data]="camas"
+                                placeholder="Elija cama" label="Cama" idField="id"
+                                labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)" grow="full">
                 </plex-select>
             </ng-container>
             <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama" name="cama"
                        [(ngModel)]="cama.nombre">
             </plex-text>
-
+            
             <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
                 <plex-select grow="2" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
                              [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
