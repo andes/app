@@ -638,7 +638,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }
 
-                if (turno.estado === 'asignado' || agenda.tipoPrestaciones[0].noNominalizada) {
+                if (turno.estado === 'asignado' || turno.estado === 'suspendido' || agenda.tipoPrestaciones[0].noNominalizada) {
 
                     turno.botonera = {
                         huds: turno.paciente?.id && this.tieneAccesoHUDS,
