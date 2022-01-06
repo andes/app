@@ -357,7 +357,7 @@
                                         <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
                                         <plex-button size="block" *ngIf="turno.botonera.iniciar"
                                                      label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                     (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno.id)">
+                                                     (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.iniciarDisabled"
