@@ -45,7 +45,7 @@ export class ClonarAgendaComponent implements OnInit {
     private original = true;
     private inicioAgenda: Date;
 
-    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
+    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router,) { }
     ngOnInit() {
         moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
@@ -271,6 +271,7 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
                 if (conf) {
+                    const elem = this.seleccionados[0];
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                     this.seleccionados = [...this.seleccionados];
                     const data = {
@@ -287,6 +288,7 @@ export class ClonarAgendaComponent implements OnInit {
 
                         }
                     });
+                    this.seleccionados.splice(0, 0, elem);
                 }
             }).catch(() => {
             });
