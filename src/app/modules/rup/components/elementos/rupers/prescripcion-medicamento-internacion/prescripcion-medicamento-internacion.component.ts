@@ -74,7 +74,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
 
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
-            return `${item.ingrediente?.term || ''} ${item.cantidad || ''} ${item.numerador?.term || ''}${ item.denominador ? '/' : '' }${item.denominador?.term || ''}`;
+            return `${item.ingrediente?.term || ''} ${item.dosis || ''}`;
+            // return `${item.ingrediente?.term || ''} ${item.cantidad || ''} ${item.numerador?.term || ''}${ item.denominador ? '/' : '' }${item.denominador?.term || ''}`;
         }).join(' y ');
         this.registro.valor.nombre = nombre;
     }
