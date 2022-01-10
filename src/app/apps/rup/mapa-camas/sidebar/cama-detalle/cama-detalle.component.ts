@@ -64,6 +64,7 @@ export class CamaDetalleComponent implements OnInit {
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
     public turnero$: Observable<string>;
+    public hayRespirador$: Observable<any>;
 
     items = [
         {
@@ -135,6 +136,13 @@ export class CamaDetalleComponent implements OnInit {
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento
                 );
                 return historial.length > 0 && tieneIDMov && !egreso;
+            })
+        );
+
+        this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
+            map(resumen => {
+                const respirador = resumen.registros.reverse().find(r => r.tipo === 'respirador');
+                return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
     }
@@ -235,10 +243,12 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     onVerIndicaciones(cama: ISnapshot) {
-        // this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
         const capa = this.mapaCamasService.capa;
         const ambito = this.mapaCamasService.ambito;
         this.router.navigate([`/mapa-camas/${ambito}/${capa}/plan-indicaciones/${cama.idInternacion}`]);
-        // });
+    }
+
+    registraRespirador(respirador) {
+        return respirador?.fechaDesde && !respirador.fechaHasta;
     }
 }
