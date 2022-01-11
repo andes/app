@@ -115,8 +115,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
 
     loadDosis() {
         this.registro.valor.vacuna.dosis = null;
-        if (this.registro.valor.vacuna.esquema) {
-            this.dosis$ = this.vacunasService.getNomivacDosis({ habilitado: true, esquema: this.registro.valor.vacuna.esquema._id, sort: 'orden' }).pipe(
+        const registroVacuna = this.registro.valor.vacuna;
+        if (registroVacuna.esquema) {
+            this.dosis$ = this.vacunasService.getNomivacDosis({ habilitado: true, esquema: registroVacuna.esquema._id, sort: 'orden' }).pipe(
                 map(dosis => {
                     if (this.vacunasEncontradas && this.vacunasEncontradas.length) {
                         const dosisAplicables = dosis.filter(d => !(this.vacunasEncontradas.find(v => d.nombre === v.dosis)));
@@ -125,7 +126,9 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                         }
                         return dosisAplicables;
                     } else {
-                        return dosis.slice(0, 1);
+                        const esquemaExcep = registroVacuna.condicion.nombre.replace(/ó/g, 'o').toLowerCase().includes('excepcion');
+                        dosis = dosis.filter(d => d.vacuna.codigo === registroVacuna.vacuna.codigo);
+                        return (esquemaExcep) ? dosis : dosis.slice(0, 1);
                     }
                 })
             );
