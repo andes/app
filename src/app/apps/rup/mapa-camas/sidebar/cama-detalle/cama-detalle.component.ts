@@ -141,7 +141,7 @@ export class CamaDetalleComponent implements OnInit {
 
         this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
-                const respirador = resumen.registros.reverse().find(r => r.tipo === 'respirador');
+                const respirador = resumen.registros?.reverse().find(r => r.tipo === 'respirador');
                 return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
