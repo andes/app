@@ -18,7 +18,7 @@ import { SnomedExpression } from '../../../../mitos';
 import { nivelesInstruccion, origenHospitalizacion, pacienteAsociado, situacionesLaborales, snomedIngreso } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 
@@ -48,6 +48,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public cama: ISnapshot;
     public snapshot: ISnapshot[];
     public prestacion: IPrestacion;
+    public resumen: IResumenInternacion;
     public capa: string;
     public fechaValida = true;
     public pacientes = [];
@@ -138,10 +139,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
         this.prepagas$ = this.obraSocialService.getPrepagas();
-
         const pacienteID$ = this.handlerPacienteID();
 
         this.inProgress = true;
@@ -171,24 +170,25 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             })
         );
 
-
         this.subscription = combineLatest(
             this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
+            this.mapaCamasService.resumenInternacion$,
             pacienteID$.pipe(
                 filter(pacID => !!pacID),
                 switchMap((pacID) => {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )
-        ).subscribe(([estado, view, capa, cama, prestacion, paciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]) => {
             this.view = view;
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
+            this.resumen = resumen;
 
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
@@ -202,6 +202,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             } else {
                 if (paciente.id) {
                     this.fechaIngresoOriginal = cama.fechaIngreso;
+                    this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
                     if (this.backupObraSocial) {
                         this.paciente.obraSocial = {
                             nombre: this.backupObraSocial.financiador,
@@ -408,12 +409,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             if (this.capa === 'estadistica') {
                 this.ingresoExtendido(dtoPaciente);
+            } else if (this.capa === 'estadistica-v2') {
+                this.completarIngreso(dtoPaciente);
+            } else if (this.prestacion) {
+                this.actualizarPrestacion(dtoPaciente);
             } else {
-                if (this.capa === 'carga') {
-                    this.completarIngreso(dtoPaciente);
-                } else {
-                    this.ingresoSimplificado('ocupada', dtoPaciente, null);
-                }
+                this.ingresoSimplificado('ocupada', dtoPaciente, this.resumen?.id);
             }
         }
     }
@@ -423,23 +424,35 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.cama.estado = estado;
         this.cama.paciente = paciente;
         this.cama.fechaIngreso = this.informeIngreso.fechaIngreso;
+        const sincronizarCamaResumen = this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).pipe(
+            switchMap(snapshot => {
+                const primeraCama = snapshot[0];
+                return this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion);
+            }),
+            switchMap(cama => {
+                this.cama = cama;
+                if (this.capa === 'estadistica') {
+                    return of(null);
+                }
+                // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
+                return this.internacionResumenService.update(this.cama.idInternacion, { fechaIngreso: this.informeIngreso.fechaIngreso });
+            })
+        );
 
-        if (this.prestacion) { // SOY CAPA ESTADISTICA
+        if (this.prestacion) {
+            // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
-                // recuperamos snapshot inicial, por si hay un cambio de cama
-                this.mapaCamasService.snapshot(this.fechaIngresoOriginal, idInternacion).subscribe((snapshot) => {
-                    const primeraCama = snapshot[0];
-                    this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-                        this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                        this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
-                        this.disableButton = false;
-                        this.onSave.emit();
-                    }, (err1) => {
-                        this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
-                        this.disableButton = false;
-                    });
+                // Recuperamos snapshot inicial, por si hay un cambio de cama
+                sincronizarCamaResumen.subscribe(() => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
+                    this.disableButton = false;
+                    this.onSave.emit();
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                    this.disableButton = false;
                 });
             } else {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -450,16 +463,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         } else {
             if (this.cama.idInternacion) {
-                // Paciente ingresado previamente por capa médica
-                this.internacionResumenService.update(this.cama.idInternacion, {
-                    fechaIngreso: this.cama.fechaIngreso
-                }).subscribe(() => {
+                // Edición de internación existente por capa medica/enfermeria
+                sincronizarCamaResumen.subscribe(() => {
                     this.onSave.emit();
                     this.disableButton = false;
                     this.mapaCamasService.select(this.cama);
-                    this.plex.info('success', 'Registro modificado con éxito');
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
                 });
             } else {
+                // Nueva internacion por capa medica/enfermería
                 delete this.cama['sectorName'];
                 delete this.cama['diaEstada'];
                 delete this.cama['_key'];
@@ -494,11 +506,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al ingresar paciente');
                     this.disableButton = false;
-
                 });
             }
         }
-
     }
 
     ingresoExtendido(paciente) {
@@ -509,8 +519,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 nombre: this.informeIngreso.organizacionOrigen.nombre
             };
         }
-
-
         // construimos el informe de ingreso
         this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
         this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
@@ -518,13 +526,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
         this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
         this.informeIngreso.obraSocial = this.paciente.obraSocial;
-        // this.prestacion.paciente.obraSocial = this.paciente.obraSocial;
 
         if (this.paciente.fechaNacimiento) {
             this.informeIngreso.edadAlIngreso = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
-
         }
-
         if (this.prestacion) {
             this.actualizarPrestacion(paciente);
         } else {
@@ -543,7 +548,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.ingresoSimplificado('ocupada', paciente, prestacion._id);
+            const idInternacion = this.capa === 'estadistica' ? prestacion._id : this.resumen?.id;
+            this.ingresoSimplificado('ocupada', paciente, idInternacion);
         }, (err) => {
             this.plex.info('danger', err);
         });
@@ -563,20 +569,18 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.plex.info('warning', 'Paciente ingresado a lista de espera');
             }
 
-        }, (err) => {
+        }, () => {
             this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
         });
     }
 
+    // Inicializa una prestación con todos sus datos básicos
     datosBasicosPrestacion() {
-
         // armamos el elemento data a agregar al array de registros
         const nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
-
         nuevoRegistro.valor = {
             informeIngreso: this.informeIngreso
         };
-
         // armamos dto con datos principales del profesional
         const dtoProfesional = {
             id: this.informeIngreso.profesional.id,
@@ -584,7 +588,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             nombre: this.informeIngreso.profesional.nombre,
             apellido: this.informeIngreso.profesional.apellido
         };
-
         // creamos la prestacion de internacion y agregamos el registro de ingreso
         const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', this.mapaCamasService.ambito, this.informeIngreso.fechaIngreso, null, dtoProfesional);
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
@@ -592,23 +595,23 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
         return nuevaPrestacion;
-
     }
 
+    // Crea o actualiza una prestación de internación
     completarIngreso(paciente) {
         if (!this.prestacion) {
             // creamos la prestacion de internacion y agregamos el registro de ingreso
             const nuevaPrestacion = this.datosBasicosPrestacion();
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe((prestacion) => {
-                this.internacionResumenService.update(this.cama.idInternacion, {
-                    idPrestacion: prestacion.id
-                }).subscribe(() => {
-                    this.onSave.emit();
-                    this.disableButton = false;
-                    this.mapaCamasService.select(this.cama);
-                    this.plex.info('success', 'Registro completado con éxito');
-                });
-            }, (err) => {
+            this.servicioPrestacion.post(nuevaPrestacion).pipe(
+                switchMap(prestacion => {
+                    return this.internacionResumenService.update(this.cama.idInternacion, { idPrestacion: prestacion.id });
+                })
+            ).subscribe(() => {
+                this.onSave.emit();
+                this.disableButton = false;
+                this.mapaCamasService.select(this.cama);
+                this.plex.info('success', 'Registro completado con éxito');
+            }, () => {
                 this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
             });
         } else {
@@ -617,12 +620,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        // if (!this.prestacion) {
-        //     this.mapaCamasService.select(null);
-        // } else {
-        this.checkEstadoCama();
-        this.checkMovimientos();
-        // }
+        if (!this.prestacion && this.capa === 'estadistica') {
+            this.mapaCamasService.select(null);
+        } else {
+            this.checkEstadoCama();
+            this.checkMovimientos();
+        }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 
@@ -654,12 +657,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.checkMovimientos();
         this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
-                if (!cama.idInternacion || (cama.idInternacion && this.prestacion?.id && cama.idInternacion !== this.prestacion.id)) {
+                const controlEstadistica = this.capa === 'estadistica' && cama.idInternacion !== this.prestacion.id;
+                const controlEstadisticaV2 = this.resumen && cama.idInternacion !== this.resumen.id;
+                // como la cama esta ocupada, se controla que sea por la misma internación
+                if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
                     this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
                     this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
                         'Cama no dosponible');
                 }
-
             }
         });
     }

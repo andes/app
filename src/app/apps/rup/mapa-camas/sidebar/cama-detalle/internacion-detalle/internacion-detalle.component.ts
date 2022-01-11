@@ -59,14 +59,14 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.prestacion$ = this.mapaCamasService.prestacion$.pipe(
-            tap(() => this.editar = false)
+            tap(p => this.editar = false)
         );
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
             this.mapaCamasService.resumenInternacion$
         ).subscribe(([capa, resumen]) => {
             this.capa = capa;
-            if (capa !== 'estadistica' && capa !== 'carga') {
+            if (capa !== 'estadistica' && capa !== 'estadistica-v2') {
                 if (resumen.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },
@@ -75,11 +75,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     ];
                     this.mostrar = 'ingreso-dinamico';
                 } else {
+                    // medico / enfermero
                     this.items = [
                         { key: 'ingreso', label: 'INGRESO' },
                         { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' },
-                        { key: 'egreso', label: 'EGRESO' }
+                        { key: 'registros', label: 'REGISTROS' }
                     ];
                 }
             } else {
@@ -91,6 +91,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                         { key: 'egreso', label: 'EGRESO' }
                     ];
                 } else {
+                    // estadistica-v2
                     this.items = [
                         { key: 'ingreso', label: 'INGRESO' },
                         { key: 'movimientos', label: 'MOVIMIENTOS' },

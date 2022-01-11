@@ -1,25 +1,29 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, of } from 'rxjs';
-import { switchMap, isEmpty, filter } from 'rxjs/operators';
+import { map, switchMap, filter, isEmpty } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
-import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { IResumenInternacion } from '../../services/resumen-internacion.http';
 
 @Component({
-    selector: 'app-informe-ingreso-resumen',
-    templateUrl: './informe-ingreso-resumen.html',
+    selector: 'app-informe-ingreso-estadistica-v2',
+    templateUrl: './informe-ingreso-estadistica-v2.html',
 })
 
-export class InformeIngresoResumenComponent implements OnInit {
-    resumenInternacion$: Observable<any>;
+export class InformeIngresoEstadisticaV2Component implements OnInit {
+    resumenInternacion$: Observable<IResumenInternacion>;
     prestacion$: Observable<IPrestacion>;
+    informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     // EVENTOS
     @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
+    @Input() capa;
+    @Input() permisosIngreso;
 
     constructor(
         private mapaCamasService: MapaCamasService,
@@ -37,7 +41,18 @@ export class InformeIngresoResumenComponent implements OnInit {
                 return of(null);
             })
         );
+        this.informeIngreso$ = this.prestacion$.pipe(
+            notNull(),
+            map((prestacion) => {
+                return prestacion.ejecucion.registros[0].valor.informeIngreso;
+            })
+        );
         this.paciente$ = this.prestacion$.pipe(
+            notNull(),
+            switchMap(prestacion => this.mapaCamasService.getPaciente(prestacion.paciente))
+        );
+        this.paciente$ = this.prestacion$.pipe(
+            isEmpty(),
             switchMap(() => {
                 return this.mapaCamasService.selectedCama.pipe(
                     filter(cama => !!cama.paciente),
@@ -46,5 +61,9 @@ export class InformeIngresoResumenComponent implements OnInit {
                     }));
             })
         );
+    }
+
+    toggleEdit() {
+        this.toggleEditar.emit();
     }
 }

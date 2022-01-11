@@ -2,14 +2,14 @@
     <div *ngIf="prestacion">
         <plex-title titulo="INGRESO">
             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                <plex-button *ngIf="capa==='carga' && ingreso" title="Completar informe" icon="pencil" type="warning"
-                             size="sm" class="mr-1" (click)="toggleEdit()">
+                <plex-button *ngIf="permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning"
+                             size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
             </ng-container>
 
         </plex-title>
         <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-            <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
+            <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
                 <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
                             [subtitulo]="informeIngreso.situacionLaboral">
                 </plex-label>
@@ -64,14 +64,16 @@
 
 <ng-template #sinInforme>
     <plex-title titulo="INGRESO">
-        <ng-container>
-            <plex-button *ngIf="capa==='carga' && ingreso" title="Completar informe" icon="lapiz-documento" type="warning"
-                         size="sm" class="mr-1" (click)="toggleEdit()">
-            </plex-button>
-        </ng-container>
+        <plex-button *ngIf="capa === 'estadistica-v2' && permisosIngreso" tooltip="Completar informe" icon="lapiz-documento" type="warning"
+                        size="sm" class="mr-1" (click)="toggleEdit()">
+        </plex-button>
+        <plex-button *ngIf="capa !== 'estadistica-v2' && permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning" size="sm"
+                     (click)="toggleEdit()" class="mr-1">
+        </plex-button>
     </plex-title>
-    <div *ngIf="paciente$ | async as paciente;">
-        <paciente-detalle [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
-        </paciente-detalle>
-    </div>
+    <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
+    </paciente-detalle>
+    <plex-title size="sm" titulo="DATOS DE INTERNACION"></plex-title>
+    <plex-label *ngIf="resumenInternacion$ | async as resumen" titulo="Fecha ingreso" subtitulo="{{ resumen.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+        </plex-label>
 </ng-template>

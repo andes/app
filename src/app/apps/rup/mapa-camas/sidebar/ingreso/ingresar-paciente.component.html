@@ -7,7 +7,7 @@
             <ng-content></ng-content>
         </plex-title>
         <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-        <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
+        <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
                               (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
             </carpeta-paciente>
@@ -30,7 +30,7 @@
                            label="Fecha Ingreso" [debounce]="600" (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
-                <plex-select *ngIf="!prestacion" [required]="true" [readonly]="capa !== 'estadistica' && capa !== 'carga'" [(ngModel)]="cama" name="cama" [data]="camas"
+                <plex-select *ngIf="!prestacion" [required]="true" [readonly]="capa !== 'estadistica' && capa !== 'estadistica-v2' && resumen?.id" [(ngModel)]="cama" name="cama" [data]="camas"
                                 placeholder="Elija cama" label="Cama" idField="id"
                                 labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)" grow="full">
                 </plex-select>
@@ -39,7 +39,7 @@
                        [(ngModel)]="cama.nombre">
             </plex-text>
             
-            <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
+            <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
                 <plex-select grow="2" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen"
                              [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
                              idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
@@ -90,7 +90,7 @@
                 </plex-list>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="capa === 'estadistica' || capa === 'carga'">
+        <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
             <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
             <plex-wrapper>
                 <plex-select [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
@@ -127,18 +127,14 @@
                              idField="nombre" labelField="nombre">
                 </plex-select>
             </plex-wrapper>
-
-
         </ng-container>
     </form>
 </ng-container>
 <ng-container *ngIf="prestacionFake">
     <ng-container *ngFor="let registro of prestacionFake.ejecucion.registros">
-
         <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)" [prestacion]="prestacionFake"
              [paciente]="paciente" [registro]="registro" [soloValores]="false"
              [params]="elementosRUPService.getParams(registro)">
         </rup>
-
     </ng-container>
 </ng-container>

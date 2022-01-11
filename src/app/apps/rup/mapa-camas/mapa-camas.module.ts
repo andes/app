@@ -29,7 +29,7 @@ import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.comp
 import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { InformeEgresoComponent } from './sidebar/egreso/informe-egreso.component';
-import { InformeIngresoCargaComponent } from './sidebar/ingreso/informe-ingreso-carga.component';
+import { InformeIngresoEstadisticaV2Component } from './sidebar/ingreso/informe-ingreso-estadistica-v2.component';
 import { EstadoServicioComponent } from './sidebar/estado-servicio/estado-servicio.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
 import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
@@ -64,7 +64,6 @@ import { ResumenInternacionComponent } from './views/resumen-internacion/resumen
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
-import { InformeIngresoResumenComponent } from './sidebar/ingreso/informe-ingreso-resumen.component';
 
 
 
@@ -86,8 +85,7 @@ export const INTERNACION_COMPONENTS = [
     InternacionDetalleComponent,
     InformeIngresoComponent,
     InformeEgresoComponent,
-    InformeIngresoCargaComponent,
-    InformeIngresoResumenComponent,
+    InformeIngresoEstadisticaV2Component,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,

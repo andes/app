@@ -6,10 +6,10 @@
 
         <ng-container *ngIf="mostrar === 'ingreso'">
             <ng-container *ngIf="!editar">
-                <!-- CARGA -->
-                <app-informe-ingreso-carga *ngIf="capa === 'carga'" (cancel)="activatedOption('ingreso')" [capa]='capa'
-                            [ingreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
-                </app-informe-ingreso-carga>
+                <!-- ESTADISTICA-V2 -->
+                <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')" [capa]='capa'
+                            [permisosIngreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
+                </app-informe-ingreso-estadistica-v2>
                 <!-- ESTADISTICA -->
                 <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
                     <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
@@ -21,12 +21,6 @@
                         </plex-button>
                     </ng-container>
                 </app-informe-ingreso>
-                <!-- MEDICA / ENFERMERIA -->
-                <app-informe-ingreso-resumen *ngIf="capa === 'medica' || capa === 'enfermeria'" (cancel)="activatedOption('ingreso')">
-                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
-                                 (click)="toggleEdit()" class="mr-1">
-                    </plex-button>
-                </app-informe-ingreso-resumen>
             </ng-container>
 
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">

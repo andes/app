@@ -162,33 +162,30 @@ export class MapaCamasService {
 
 
         this.prestacion$ = combineLatest(
-            this.selectedPrestacion,
             this.selectedCama,
             this.view,
             this.capa2
         ).pipe(
-            switchMap(([prestacion, cama, view, capa]) => {
-                if (prestacion.id) {
-                    const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
-                    if (capa === 'estadistica') {
-                        return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
-                            // No todas las capas tienen un ID de internacion real.
-                            catchError(() => of(null))
-                        );
-                    }
-                    if (capa === 'carga') {
-                    // tengo cama.idInternacion
-                        return this.internacionResumenHTTP.get(idInternacion).pipe(
-                            switchMap(
-                                internacionResumen => {
-                                    return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false }).pipe(
-                                        catchError(() => of(null))
-                                    );
-                                })
-                        );
-                    }
+            switchMap(([cama, view, capa]) => {
+                const idInternacion = (view === 'listado-internacion') ? cama.id : cama.idInternacion;
+                if (!idInternacion) {
+                    return of(null);
                 }
-                return of(null);
+                if (capa === 'estadistica') {
+                    return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
+                        // No todas las capas tienen un ID de internacion real.
+                        catchError(() => of(null))
+                    );
+                } else {
+                    return this.internacionResumenHTTP.get(idInternacion).pipe(
+                        switchMap(
+                            internacionResumen => {
+                                return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false }).pipe(
+                                    catchError(() => of(null))
+                                );
+                            })
+                    );
+                }
             }),
             cache()
         );
@@ -239,7 +236,7 @@ export class MapaCamasService {
                 if (cama.idInternacion && capa !== 'estadistica') {
                     return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
                         catchError((err) => {
-                            return of({});
+                            return of(null);
                         })
                     );
                 }

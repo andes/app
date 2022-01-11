@@ -197,7 +197,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             this.view = view;
             this.capa = capa;
-            if (capa === 'estadistica' || capa === 'carga') {
+            if (capa === 'estadistica' || capa === 'estadistica-v2') {
                 if (!prestacion) {
                     return;
                 }
@@ -267,7 +267,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     setFecha() {
         this.mapaCamasService.setFecha(this.fecha);
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
-        if (this.capa === 'estadistica' || this.capa === 'carga') {
+        if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
             this.setDiasEstada();
             this.checkEstadoCama();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
@@ -281,7 +281,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             if (this.capa === 'estadistica') {
                 this.egresoExtendido();
             } else {
-                if (this.capa === 'carga') {
+                if (this.capa === 'estadistica-v2') {
                     this.egresoExtendido();
                 } else {
                     this.egresoSimplificado(this.estadoDestino);
@@ -296,7 +296,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     egresoSimplificado(estado) {
-        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion || this.capa === 'carga') {
+        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion || this.capa === 'estadistica-v2') {
             let estadoPatch = {};
             if (!this.cama.sala) {// si no es sala comun
                 estadoPatch = {
@@ -414,7 +414,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
 
     setDiasEstada() {
-        if (this.capa === 'estadistica' || this.capa === 'carga') {
+        if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
             const fechaIngreso = this.informeIngreso.fechaIngreso;
             const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
             this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
@@ -620,7 +620,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     checkEstadoCama() {
         this.mapaCamasService.get(this.fecha, this.cama?.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
-                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id) && this.capa !== 'carga') {
+                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id) && this.capa !== 'estadistica-v2') {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
                     this.fecha = this.fechaEgresoOriginal;
                     this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
