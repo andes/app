@@ -201,8 +201,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
             } else {
                 if (paciente.id) {
-                    this.fechaIngresoOriginal = cama.fechaIngreso;
-                    this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                    this.fechaIngresoOriginal = this.mapaCamasService.fecha;
                     if (this.backupObraSocial) {
                         this.paciente.obraSocial = {
                             nombre: this.backupObraSocial.financiador,

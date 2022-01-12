@@ -2,7 +2,7 @@
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'">
             <plex-title titulo="Mapa de Camas">
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2'"
+                <plex-button *ngIf="(puedeVerListado$ | async) && (mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2')"
                              class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
                              (click)="verListadoInternacion()">
                 </plex-button>

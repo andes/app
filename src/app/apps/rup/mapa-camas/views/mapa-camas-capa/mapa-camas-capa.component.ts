@@ -44,6 +44,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     fecha$: Observable<Date>;
 
     puedeVerHistorial$: Observable<boolean>;
+    puedeVerListado$: Observable<boolean>;
 
     mainView$ = this.mapaCamasService.mainView;
 
@@ -148,6 +149,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.puedeVerHistorial$ = this.mapaCamasService.maquinaDeEstado$.pipe(
             map(estado => estado.historialMedico)
+        );
+        this.puedeVerListado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
+            map(estado => estado.listadoInternacion)
         );
 
         this.getSnapshot();
