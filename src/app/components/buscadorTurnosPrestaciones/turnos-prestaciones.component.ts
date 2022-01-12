@@ -13,6 +13,7 @@ import { ExportHudsService } from '../../modules/visualizacion-informacion/servi
 import { combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
+import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -36,6 +37,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public sumarB = false;
     public arrayEstadosFacturacion;
     public documento;
+    public financiadores: IFinanciador[];
     prestacion: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
@@ -112,7 +114,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             organizacion: '',
             idPrestacion: '',
             idProfesional: '',
-            financiadores: '',
+            financiadores: [],
             estado: '',
             estadoFacturacion: ''
         };
@@ -195,7 +197,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             idPrestacion: '',
             idProfesional: '',
-            financiadores: '',
+            financiadores: [],
             estado: '',
             estadoFacturacion: '',
         };
@@ -260,7 +262,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.parametros['estado'] = data ? data.id : '';
             }
             if (tipo === 'financiador') {
-                this.parametros['financiador'] = data ? data.nombre : '';
+                this.parametros['financiador'] = this.financiadores?.map(f => f.nombre) || [];
             }
             if (tipo === 'sumar') {
                 this.parametros['financiador'] = data ? 'SUMAR' : '';
@@ -281,7 +283,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.buscar(this.parametros);
             }
         }
-
     }
 
     mostrarPrestacion(datos) {

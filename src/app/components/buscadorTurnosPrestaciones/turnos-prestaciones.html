@@ -34,7 +34,7 @@
                 <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="arrayEstados"
                              label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
                 </plex-select>
-                <plex-select *ngIf="!sumarB && !sinOS" [(ngModel)]="financiadores"
+                <plex-select *ngIf="!sumarB && !sinOS" [(ngModel)]="financiadores" [multiple]="true"
                              (change)="refreshSelection($event,'financiador')" tmFinanciador label="Financiador"
                              placeholder="Buscar por financiador">
                 </plex-select>
