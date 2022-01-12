@@ -1,3 +1,21 @@
+# [5.80.0](https://github.com/andes/app/compare/v5.79.0...v5.80.0) (2022-01-12)
+
+
+### Bug Fixes
+
+* **ficha:** semana epidemiologica ([#2561](https://github.com/andes/app/issues/2561)) ([83186a1](https://github.com/andes/app/commit/83186a1d795ac8df038cf018716c5fd0ace1aeed))
+* **mapa-camas:** estadistica no tiene resumen ([d4a3715](https://github.com/andes/app/commit/d4a3715e416eee2e50496e4083c29c7ee1542913))
+* **rup:** controles de permisos ([#2565](https://github.com/andes/app/issues/2565)) ([9426c43](https://github.com/andes/app/commit/9426c43b256db167aa5a47534d2c4a4b7009f375))
+* **rup:** huds en turno suspendido ([d856bc9](https://github.com/andes/app/commit/d856bc960f8621d396b9540700ae6daa083e45e6))
+* **rup:** permisos turnos ([#2562](https://github.com/andes/app/issues/2562)) ([d472df3](https://github.com/andes/app/commit/d472df3e564efe8574d3fb8c41990de7a85d9e74))
+* **RUP:** continuar registro no nominalizada ([#2560](https://github.com/andes/app/issues/2560)) ([1c9de8a](https://github.com/andes/app/commit/1c9de8ad275731e82ab91d3cc3ea5f6315f6aa97))
+
+
+### Features
+
+* **in:** registro de respiracion asistida para internacion ([#2525](https://github.com/andes/app/issues/2525)) ([8a8badc](https://github.com/andes/app/commit/8a8badc86a67a0f74842c90462ac7f9d24f40427))
+* **VAC:** se visualizan todas las dosis de una vacunas con excepciones ([#2567](https://github.com/andes/app/issues/2567)) ([5b0f398](https://github.com/andes/app/commit/5b0f39815db923cd26b08c7f81481bbeaa23a189))
+
 # [5.79.0](https://github.com/andes/app/compare/v5.78.1...v5.79.0) (2022-01-05)
 
 
