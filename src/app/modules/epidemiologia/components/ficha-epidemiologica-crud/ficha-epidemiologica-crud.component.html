@@ -455,7 +455,7 @@
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [readonly]="!editFicha"
-                                           (change)="getVacunas(); clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
+                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
                                 </plex-bool>
                                 <plex-select *ngIf="field.key==='vacunacionestado' && seccion.fields['vacunacioncovid']"
                                              [label]="field.label?field.label:field.key" grow="auto"

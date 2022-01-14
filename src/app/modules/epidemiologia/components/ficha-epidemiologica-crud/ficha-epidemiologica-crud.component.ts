@@ -19,6 +19,7 @@ import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.se
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { SECCION_CLASIFICACION, SECCION_CONTACTOS_ESTRECHOS, SECCION_MPI, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
+import { PacientesVacunasService } from 'src/app/services/pacientes-vacunas.service';
 
 
 @Component({
@@ -192,7 +193,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         private paisService: PaisService,
         private vacunasService: VacunasService,
         private prestacionesService: PrestacionesService,
-        private elementoRupService: ElementosRUPService
+        private elementoRupService: ElementosRUPService,
+        private pacientesVacunasService: PacientesVacunasService
     ) { }
 
     ngOnChanges(): void {
@@ -408,6 +410,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                     seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
                     seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
                     this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
+                    break;
+                case 'antecedentesEpidemiologicos':
+                    this.setEstadoVacunacion(seccion.fields);
                     break;
             }
         });
@@ -636,10 +641,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         }
     }
 
-    getVacunas() {
-        this.vacunas$ = this.vacunasService.getNomivacVacunas({});
-    }
-
     setPcr(event) {
         if (event.value) {
             this.secciones.map(seccion => {
@@ -681,5 +682,19 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.asintomatico = false;
             this.clearDependencias({ value: false }, 'clasificacion', ['situacionespecial']);
         }
+    }
+
+    setEstadoVacunacion(fields) {
+        this.vacunas$ = this.vacunasService.getNomivacVacunas({});
+        this.pacientesVacunasService.search({ paciente: this.paciente.id }).subscribe(res => {
+            if (res.length) {
+                const vacunas = res[0];
+                const ultimaDosis = vacunas.aplicaciones[vacunas.aplicaciones.length - 1];
+                fields['vacunacioncovid'] = true;
+                fields['vacunacionestado'] = vacunas.cantDosis >= 2 ? { id: 'completa', nombre: 'Completa' } : { id: 'incompleta', nombre: 'Incompleta' };
+                fields['fechadosis'] = ultimaDosis.fechaAplicacion;
+                fields['nombrevacunacovid'] = { _id: ultimaDosis.vacuna.id, nombre: ultimaDosis.vacuna.nombre };
+            }
+        });
     }
 }
