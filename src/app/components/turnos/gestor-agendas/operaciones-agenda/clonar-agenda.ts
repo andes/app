@@ -1,10 +1,10 @@
-import { Router } from '@angular/router';
-import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
     selector: 'clonar-agenda',
@@ -45,7 +45,13 @@ export class ClonarAgendaComponent implements OnInit {
     private original = true;
     private inicioAgenda: Date;
 
-    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router,) { }
+    constructor(
+        private serviceAgenda: AgendaService,
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router
+    ) { }
+
     ngOnInit() {
         moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
@@ -275,10 +281,9 @@ export class ClonarAgendaComponent implements OnInit {
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                     this.seleccionados = [...this.seleccionados];
                     const data = {
-                        idAgenda: this.agenda.id,
                         clones: this.seleccionados
                     };
-                    this.serviceAgenda.clonar(data).subscribe(resultado => {
+                    this.serviceAgenda.clonar(this.agenda.id, data).subscribe(resultado => {
                         this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
                             this.volverAlGestor.emit(true);
                         });
