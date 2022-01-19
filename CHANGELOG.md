@@ -1,3 +1,10 @@
+# [5.81.0](https://github.com/andes/app/compare/v5.80.0...v5.81.0) (2022-01-19)
+
+
+### Features
+
+* **rup:** ingresar valor manualmente en formulaBase ([#2550](https://github.com/andes/app/issues/2550)) ([a817f1a](https://github.com/andes/app/commit/a817f1a52be4362d9f4682ccaca5e3526050a330))
+
 # [5.80.0](https://github.com/andes/app/compare/v5.79.0...v5.80.0) (2022-01-12)
 
 
