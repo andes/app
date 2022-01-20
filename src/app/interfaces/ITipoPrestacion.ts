@@ -6,4 +6,5 @@ export interface ITipoPrestacion {
     refsetIds: [];
     semanticTag: String;
     noNominalizada?: Boolean;
+    ambito?: Array<string>;
 }
