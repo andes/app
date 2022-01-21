@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { Router } from '@angular/router';
@@ -335,11 +334,23 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
-        if (this.modelo.prepaga !== '') {
-            this.prestacion.obraSocial = 'prepaga';
-            this.prestacion.prepaga = this.modelo.prepaga;
+        let turno;
+
+        // Para facturar desde recupero es necesario enviar el turno
+        if (this.prestacion.turno) {
+            turno = this.prestacion.turno;
+            turno.organizacion = this.prestacion.organizacion;
+            if (!turno.profesionales || turno.profesionales.length) {
+                turno.profesionales = this.prestacion.profesionales;
+            }
+        } else {
+            turno = this.prestacion;
         }
-        this.facturacionAutomaticaService.post(this.prestacion).subscribe(respuesta => {
+        if (this.modelo.prepaga !== '') {
+            turno.obraSocial = 'prepaga';
+            turno.prepaga = this.modelo.prepaga;
+        }
+        this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
             if (respuesta.message) {
                 this.plex.info('info', respuesta.message);
             }
@@ -424,8 +435,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     });
                     this.modelo.obraSocial = this.obraSocialPaciente[0].label;
                 } else {
-                    this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
-                    this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                    if (datos.paciente.obraSocial) {
+                        this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+                        this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                    }
+
+
                 }
                 this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
             });
