@@ -1,6 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -24,10 +25,13 @@ export class ClonarAgendaComponent implements OnInit {
     }
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
     public autorizado = false;
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
+    public datos;
+    public showModal = false;
     private _agenda: any;
     private estado: Estado = 'noSeleccionado';
     /**
@@ -283,16 +287,18 @@ export class ClonarAgendaComponent implements OnInit {
                     const data = {
                         clones: this.seleccionados
                     };
-                    this.serviceAgenda.clonar(this.agenda.id, data).subscribe(resultado => {
-                        this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
-                            this.volverAlGestor.emit(true);
+                    this.serviceAgenda.clonar(this.agenda.id, data).subscribe(
+                        resultado => {
+                            if ((resultado as any).tipoError) {
+                                this.datos = resultado;
+                                this.showModal = true;
+                                this.datos.clonarOguardar = 'clonar';
+                            } else {
+                                this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
+                                    this.volverAlGestor.emit(true);
+                                });
+                            }
                         });
-                    },
-                    err => {
-                        if (err) {
-
-                        }
-                    });
                     this.seleccionados.splice(0, 0, elem);
                 }
             }).catch(() => {
@@ -304,5 +310,8 @@ export class ClonarAgendaComponent implements OnInit {
 
     cancelar() {
         this.volverAlGestor.emit(true);
+    }
+    cerrarModal() {
+        this.showModal = false;
     }
 }
