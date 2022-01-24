@@ -19,6 +19,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { PDPMisDatosPersonalesComponent } from './pages/mis-datos-personales/mis-datos-personales.component';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
 import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-codigo.component';
+import { PDPNotificarNecesidadComponent } from './pages/mis-turnos/notificar-necesidad.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -33,6 +34,7 @@ const routes: Routes = [
         canActivate: [RoutingGuard],
         children: [
             { path: 'dar-turno-detalle/:idAgenda/:idPrestacion', component: DarTurnoDetalleComponent },
+            { path: 'notificar-necesidad', component: PDPNotificarNecesidadComponent },
             { path: ':id', component: PDPMisTurnosDetallesComponent }
         ]
     },

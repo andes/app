@@ -1,0 +1,45 @@
+<plex-title titulo="Solicitud de turno" size="sm">
+    <plex-button label="" icon="close" type="danger" size="sm" (click)="goTo()"></plex-button>
+</plex-title>
+
+<div class="pt-3 pb-2">
+    <plex-label class="pt-3" size="md" icon="informacion" type="warning" 
+            titulo="Recordá que no estás sacando un turno" subtitulo='Sólo estás dejando constancia que necesitás un turno'>
+    </plex-label>
+</div>
+<form #formulario="ngForm" [ngClass]="!notificacionEnviada ? 'elements-container' : ''">
+    <ng-container *ngIf="!notificacionEnviada">
+        <plex-select label="Quiero un turno para" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" [closeAfterSelect]="true" [required]="true" placeholder="Prestación en la que necesito un turno" (getData)="loadTipoPrestacion($event)"></plex-select>
+        <plex-select class="pt-2" label="El hospital o centro de salud mas cercano es" name="organizacion" [(ngModel)]="organizacion" [closeAfterSelect]="true" [required]="true" placeholder="Centro en el que me quiero atender" (getData)="loadOrganizacion($event)"></plex-select>
+            <plex-text class="pt-2" label="También quiero decirles que..." multiline="true" name="textoLibre" [(ngModel)]="textoLibre"></plex-text>
+    </ng-container>
+</form>
+<div *ngIf="!notificacionEnviada" class="button-container">
+    <plex-button label="Confirmar solicitud" type="success" [disabled]="formulario.invalid"
+            (click)="enviar(formulario.valid)">
+    </plex-button>
+</div>
+
+<ng-container *ngIf="notificacionEnviada">
+    <div class="h-25 pt-2 pb-4" align="center">
+        <plex-label justify="center" direction="column" size="lg" icon="turno-menos" type="info"
+                    titulo="Tu solicitud para disponibilidad de turno fue enviada"
+                    subtitulo="A continuación los datos de tu solicitud">
+        </plex-label>
+    </div>
+
+    <plex-title titulo="Datos de tu solicitud" size="sm"></plex-title>
+    <plex-label case="capitalize" justify="start" size="md" [color]="iconsColor" icon="mano-corazon" type="default"
+                class="mt-4" titulo="{{ tipoPrestacion.term }}" subtitulo="Prestación solicitada">
+    </plex-label>
+    <plex-label justify="start" size="md" [color]="iconsColor" icon="paciente" type="default"
+                titulo="{{ paciente | async | nombre }}" subtitulo='{{ (paciente | async).documento }}'>
+    </plex-label>
+    <plex-label justify="start" size="md" [color]="iconsColor" icon="centro-salud" type="default"
+                titulo="{{ organizacion.nombre }}" subtitulo="Centro de salud">
+    </plex-label>
+    <plex-label justify="start" size="md" [color]="iconsColor" icon="documento" type="default" titulo="Nota"
+                subtitulo="{{ textoLibre }}">
+    </plex-label>
+</ng-container>
+

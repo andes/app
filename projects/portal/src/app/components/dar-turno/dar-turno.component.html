@@ -10,5 +10,10 @@
     </plex-item>
 </plex-list>
 <plex-loader *ngIf="inProgress" type="ball-beat"></plex-loader>
-<plex-label *ngIf="!prestacionesTurneables.length && !inProgress" titulo="No hay turnos disponibles en este momento">
-</plex-label>
+<plex-item *ngIf="!prestacionesTurneables.length && !inProgress">
+    <plex-label justify="center" direction="column" size="lg" icon="turno-menos" type="warning" class="mt-4"
+                titulo="¿No está la prestación que buscas?" subtitulo=''>
+    </plex-label>
+    <plex-label justify="center">Puedes seleccionar la prestación del siguiente listado y de éste modo ayudarnos a saber qué turnos están faltando.</plex-label>
+    <plex-button class="mt-3" justify="center" (click)="goTo('notificar-necesidad')" type="success">Completar solicitud</plex-button>
+</plex-item>

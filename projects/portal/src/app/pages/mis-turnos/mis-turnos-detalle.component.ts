@@ -18,7 +18,6 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
         private activeRoute: ActivatedRoute,
         private router: Router,
         private el: ElementRef
-
     ) { }
 
     ngOnInit() {
@@ -29,7 +28,6 @@ export class PDPMisTurnosDetallesComponent implements OnInit {
     }
 
     goTo() {
-
         this.router.navigate(['mis-turnos']);
     }
 
