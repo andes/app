@@ -443,10 +443,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
                 // Recuperamos snapshot inicial, por si hay un cambio de cama
-                sincronizarCamaResumen.subscribe(() => {
+                sincronizarCamaResumen.subscribe(camaEstado => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                     this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
+                    this.selectCama(camaEstado);
                     this.disableButton = false;
                     this.onSave.emit();
                 }, (err1) => {
@@ -497,9 +498,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.cama.idInternacion = internacion.id;
                         return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
                     })
-                ).subscribe(() => {
+                ).subscribe(camaEstado => {
                     this.plex.info('success', 'Paciente internado');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.selectCama(camaEstado);
                     this.onSave.emit();
                     this.disableButton = false;
                 }, (err1) => {

@@ -1,7 +1,7 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { auditTime, first, map, tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription, of } from 'rxjs';
+import { auditTime, map, tap, switchMap } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
@@ -59,15 +59,16 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.prestacion$ = this.mapaCamasService.prestacion$.pipe(
-            tap(p => this.editar = false)
+            tap(() => this.editar = false)
         );
+
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
             this.mapaCamasService.resumenInternacion$
         ).subscribe(([capa, resumen]) => {
             this.capa = capa;
             if (capa !== 'estadistica' && capa !== 'estadistica-v2') {
-                if (resumen.ingreso) {
+                if (resumen?.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },
                         { key: 'movimientos', label: 'MOVIMIENTOS' },
@@ -83,30 +84,20 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     ];
                 }
             } else {
-                if (capa === 'estadistica') {
-                    this.items = [
-                        { key: 'ingreso', label: 'INGRESO' },
-                        { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' },
-                        { key: 'egreso', label: 'EGRESO' }
-                    ];
-                } else {
-                    // estadistica-v2
-                    this.items = [
-                        { key: 'ingreso', label: 'INGRESO' },
-                        { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' }
-                    ];
-                }
+                //  estadistica / estadistica-v2
+                this.items = [
+                    { key: 'ingreso', label: 'INGRESO' },
+                    { key: 'movimientos', label: 'MOVIMIENTOS' },
+                    { key: 'registros', label: 'REGISTROS' },
+                    { key: 'egreso', label: 'EGRESO' }
+                ];
             }
-
             const registro = this.items.findIndex(item => item.key === 'registros');
             if (registro !== -1 && !this.permisosMapaCamasService.registros) {
                 this.items.splice(registro, 1);
             }
         });
 
-        this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
         this.mapaCamasService.selectedPrestacion.subscribe(prestacion => {
             this.existeEgreso = prestacion?.ejecucion?.registros?.length > 1;
             if (this.editar) {
@@ -116,7 +107,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         });
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
-            map((historial) => {
+            map(historial => {
                 const tieneIDMov = historial.every(
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
                 );
@@ -125,13 +116,13 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         );
 
         this.anular$ = combineLatest([
-            this.prestacion$,
+            this.mapaCamasService.selectedPrestacion,
             this.hayMovimientosAt$,
             this.mapaCamasService.view
         ]).pipe(
             auditTime(1),
             map(([prestacion, movimientos, vista]) => {
-                return prestacion?.estadoActual.tipo !== 'validada' && movimientos && vista === 'listado-internacion';
+                return prestacion?.estadoActual?.tipo !== 'validada' && movimientos && vista === 'listado-internacion';
             })
         );
     }
@@ -167,22 +158,41 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
     }
 
-
     deshacerInternacion(completo: boolean) {
-        this.prestacion$.pipe(first()).subscribe(prestacion => {
-            this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
-                if (resultado) {
-                    this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, prestacion.id, completo).subscribe((response) => {
-                        if (response.status && this.mapaCamasService.capa === 'estadistica') {
-                            const prestacionAux = { id: prestacion.id, solicitud: { turno: null } };
-                            this.prestacionesService.invalidarPrestacion(prestacionAux).subscribe();
+        this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
+            if (resultado) {
+                combineLatest([
+                    this.prestacion$,
+                    this.resumenInternacion$
+                ]).pipe(
+                    switchMap(([prestacion, resumen]) => {
+                        const idInternacion = resumen?.id || prestacion?.id;
+                        return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo);
+                    }),
+                    switchMap(response => {
+                        if (response.status) {
+                            // puede ser paciente internado por estadistica o estadistica-v2
+                            return combineLatest([
+                                this.prestacion$,
+                                this.resumenInternacion$
+                            ]);
                         }
-                        this.plex.info('success', 'Se deshizo la internacion', 'Éxito');
-                        this.mapaCamasService.selectPrestacion(null);
-                        this.listadoInternacionService.refresh.next(true);
-                    });
-                }
-            });
+                        return of(null);
+                    }),
+                    switchMap(([prestacion, resumen]) => {
+                        const idPrestacion = resumen?.idPrestacion || prestacion?.id;
+                        const prestacionAux = {
+                            id: idPrestacion,
+                            solicitud: { turno: null }
+                        };
+                        return this.prestacionesService.invalidarPrestacion(prestacionAux);
+                    })
+                ).subscribe(() => {
+                    this.plex.info('success', 'Se deshizo la internación', 'Éxito');;
+                    this.mapaCamasService.selectPrestacion(null);
+                    this.listadoInternacionService.refresh.next(true);
+                });
+            }
         });
     }
 }

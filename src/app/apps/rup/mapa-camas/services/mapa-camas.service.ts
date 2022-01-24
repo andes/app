@@ -47,6 +47,7 @@ export class MapaCamasService {
     public prestacion$: Observable<IPrestacion>;
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
     public camaSelectedSegunView$: Observable<ISnapshot>;
+    public prestacionSegunView$: Observable<IPrestacion>;
 
     public maquinaDeEstado$: Observable<IMaquinaEstados>;
 
@@ -57,10 +58,7 @@ export class MapaCamasService {
     public snapshotFiltrado$: Observable<ISnapshot[]>;
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
-
     public resumenInternacion$: Observable<IResumenInternacion>;
-
-
     public fechaActual$: Observable<Date>;
 
     public columnsMapa = new BehaviorSubject<MapaCamaListadoColumns>({} as any);
@@ -125,14 +123,11 @@ export class MapaCamasService {
                         snap.diaEstada = 0;
                     }
                 });
-
-
-
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
                     (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
                     (a.nombre.localeCompare('' + b.nombre)));
             }),
-            cache(),
+            cache()
         );
 
         this.snapshotFiltrado$ = combineLatest(
@@ -160,14 +155,15 @@ export class MapaCamasService {
             )
         );
 
-
+        // Devuelve la prestación que contiene el informe de ingreso
         this.prestacion$ = combineLatest(
+            this.selectedPrestacion,
             this.selectedCama,
             this.view,
             this.capa2
         ).pipe(
-            switchMap(([cama, view, capa]) => {
-                const idInternacion = (view === 'listado-internacion') ? cama.id : cama.idInternacion;
+            switchMap(([prestacion, cama, view, capa]) => {
+                const idInternacion = view === 'listado-internacion' ? prestacion.id : cama?.idInternacion;
                 if (!idInternacion) {
                     return of(null);
                 }
@@ -180,9 +176,10 @@ export class MapaCamasService {
                     return this.internacionResumenHTTP.get(idInternacion).pipe(
                         switchMap(
                             internacionResumen => {
-                                return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false }).pipe(
-                                    catchError(() => of(null))
-                                );
+                                if (internacionResumen.idPrestacion) {
+                                    return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false });
+                                }
+                                return of(null);
                             })
                     );
                 }
@@ -190,25 +187,52 @@ export class MapaCamasService {
             cache()
         );
 
-        this.camaSelectedSegunView$ = this.view.pipe(
-            switchMap((view) => {
-                if (view === 'mapa-camas') {
-                    return this.selectedCama;
-                } else {
-                    // Chamuyo para conseguir la cama de la internación!
-                    return combineLatest(
-                        this.snapshot$,
-                        this.selectedPrestacion
-                    ).pipe(
-                        map(([camas, prestacion]) => {
-                            return camas.find(c => c.idInternacion === prestacion.id);
-                        })
-                    );
+        this.resumenInternacion$ = combineLatest([
+            this.selectedCama,
+            this.ambito2,
+            this.capa2
+        ]).pipe(
+            switchMap(([cama, ambito, capa]) => {
+                if (capa !== 'estadistica' && cama.idInternacion) {
+                    return this.internacionResumenHTTP.get(cama.idInternacion);
                 }
+                return of(null);
+            }),
+            cache()
+        ) as Observable<IResumenInternacion>;
+
+        this.camaSelectedSegunView$ = this.view.pipe(
+            switchMap(() => {
+                // Para conseguir la cama de la internación!
+                return combineLatest(
+                    this.snapshot$,
+                    this.selectedPrestacion
+                ).pipe(
+                    map(([camas, prestacion]) => {
+                        return camas.find(c => c.idInternacion === prestacion.id);
+                    })
+                );
             })
         );
 
-        // const hoy = new Date();
+        // Devuelve la prestación correspondiente a una internación de capa estadistica-v2
+        this.prestacionSegunView$ = this.view.pipe(
+            switchMap(view => {
+                if (this.capa === 'estadistica') {
+                    return of(null);
+                }
+                if (view === 'mapa-camas') {
+                    return this.selectedCama.pipe(
+                        switchMap(cama => this.internacionResumenHTTP.get(cama.idInternacion)),
+                        switchMap(resumen => this.prestacionService.getById(resumen.idPrestacion))
+                    );
+                }
+                return this.selectedPrestacion;
+            }),
+            cache()
+        ) as Observable<IPrestacion>;
+
+
         const desde = moment().subtract(12, 'months').toDate();
         this.historialInternacion$ = this.historial('internacion', desde).pipe(
             map((historial: ISnapshot[]) => {
@@ -226,24 +250,6 @@ export class MapaCamasService {
             startWith(0),
             map(() => moment().endOf('minute').toDate()),
         );
-
-        this.resumenInternacion$ = combineLatest([
-            this.selectedCama,
-            this.ambito2,
-            this.capa2
-        ]).pipe(
-            switchMap(([cama, ambito, capa]) => {
-                if (cama.idInternacion && capa !== 'estadistica') {
-                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                        catchError((err) => {
-                            return of(null);
-                        })
-                    );
-                }
-                return of({});
-            }),
-            cache()
-        ) as Observable<IResumenInternacion>;
     }
 
     resetView() {
@@ -495,9 +501,7 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama.pipe(filter(snap => {
-                return !!snap.id;
-            })),
+            this.selectedCama,
             this.selectedPrestacion,
             this.view
         ).pipe(
@@ -509,6 +513,11 @@ export class MapaCamasService {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
                     } else if (view === 'listado-internacion' && selectedPrestacion.id) {
+                        if (this.capa !== 'estadistica') {
+                            return this.internacionResumenHTTP.search({ idPrestacion: selectedPrestacion.id }).pipe(
+                                switchMap(resumen => this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, resumen[0].id))
+                            );
+                        }
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
                     }
                     return of([]);

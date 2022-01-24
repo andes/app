@@ -25,8 +25,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
-    ambito$: Observable<string>;
-    capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
     organizacion: string;
     fecha = moment().toDate();
@@ -43,8 +41,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     camasDisponibles;
     fecha$: Observable<Date>;
 
-    puedeVerHistorial$: Observable<boolean>;
-    puedeVerListado$: Observable<boolean>;
+    estado$: Observable<IMaquinaEstados>;
 
     mainView$ = this.mapaCamasService.mainView;
 
@@ -147,11 +144,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.organizacion = this.auth.organizacion.id;
         this.columns = this.mapaCamasService.columnsMapa.getValue();
 
-        this.puedeVerHistorial$ = this.mapaCamasService.maquinaDeEstado$.pipe(
-            map(estado => estado.historialMedico)
-        );
-        this.puedeVerListado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
-            map(estado => estado.listadoInternacion)
+        this.estado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
+            map(estado => estado)
         );
 
         this.getSnapshot();
@@ -174,7 +168,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.listadoRecursos = this.listadoRecursos ? false : true;
     }
     verListadoInternacion() {
-        this.router.navigate(['/mapa-camas/listado-internacion']);
+        this.router.navigate([`/mapa-camas/listado-internacion/${this.route.snapshot.paramMap.get('capa')}`]);
     }
 
     verListadoInternacionMedico() {
@@ -216,7 +210,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     volverADetalle() {
-        this.accion = 'verDetalle';
+        const cama = this.mapaCamasService.selectedCama.getValue();
+        this.accion = cama.id ? 'verDetalle': null;
     }
 
     volverADesocupar() {

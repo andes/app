@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -114,15 +115,15 @@ export class InternacionListadoComponent implements OnInit {
         private prestacionService: PrestacionesService,
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
-        private permisosMapaCamasService: PermisosMapaCamasService
+        private permisosMapaCamasService: PermisosMapaCamasService,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
         this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setView('listado-internacion');
-        this.mapaCamasService.setCapa('estadistica');
+        this.mapaCamasService.setCapa(this.route.snapshot.paramMap.get('capa'));
         this.mapaCamasService.setAmbito('internacion');
-
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -131,7 +132,7 @@ export class InternacionListadoComponent implements OnInit {
         }, {
             name: 'Listado de Internacion'
         }]);
-        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
+
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
             map((prestacion) => {
                 this.puedeValidar = false;
@@ -181,7 +182,6 @@ export class InternacionListadoComponent implements OnInit {
                 this.mapaCamasService.selectPrestacion(null);
                 this.mapaCamasService.select(null);
             } else {
-
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                 this.verificarPrestacion(prestacion);

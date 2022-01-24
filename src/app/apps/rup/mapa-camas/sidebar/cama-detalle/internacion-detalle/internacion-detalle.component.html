@@ -1,59 +1,57 @@
-<ng-container *ngIf="resumenInternacion$ | async as resumen">
-    <div class="mt-2">
+<div class="mt-2">
+    <ng-container *ngIf="!editar">
+        <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
+    </ng-container>
+
+    <ng-container *ngIf="mostrar === 'ingreso'">
         <ng-container *ngIf="!editar">
-            <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
-        </ng-container>
-
-        <ng-container *ngIf="mostrar === 'ingreso'">
-            <ng-container *ngIf="!editar">
-                <!-- ESTADISTICA-V2 -->
-                <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')" [capa]='capa'
-                            [permisosIngreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
-                </app-informe-ingreso-estadistica-v2>
-                <!-- ESTADISTICA -->
-                <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
-                    <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
-                                (click)="toggleEdit()" class="mr-1">
+            <!-- ESTADISTICA-V2 -->
+            <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')" [capa]='capa'
+                        [permisosIngreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
+            </app-informe-ingreso-estadistica-v2>
+            <!-- ESTADISTICA -->
+            <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="editar ingreso" icon="pencil" type="warning" size="sm"
+                            (click)="toggleEdit()" class="mr-1">
+                </plex-button>
+                <ng-container *ngIf="anular$ | async">
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                (click)="onAnularInternacion()">
                     </plex-button>
-                    <ng-container *ngIf="anular$ | async">
-                        <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
-                                    (click)="onAnularInternacion()">
-                        </plex-button>
-                    </ng-container>
-                </app-informe-ingreso>
-            </ng-container>
-
-            <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
-                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
-                </plex-button>
-            </app-ingresar-paciente>
+                </ng-container>
+            </app-informe-ingreso>
         </ng-container>
 
-        <ng-container *ngIf="mostrar === 'movimientos'">
-            <app-movimientos-internacion>
-                <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos)"
-                             [disabled]="(prestacion$ | async)?.ejecucion?.registros[1]" label="Cambiar cama"
-                             type="warning" size="sm" (click)="changeCama()">
-                </plex-button>
-            </app-movimientos-internacion>
-        </ng-container>
+        <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
+            <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+            </plex-button>
+        </app-ingresar-paciente>
+    </ng-container>
 
-        <ng-container *ngIf="mostrar === 'egreso'">
-            <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
-                <plex-button *ngIf="permisosMapaCamasService.egreso" title="editar egreso" icon="pencil" type="warning"
-                             size="sm" (click)="toggleEdit()">
-                </plex-button>
-            </app-informe-egreso>
-            <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !existeEgreso)"
-                                  (onSave)="toggleEdit()">
-                <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
-                             (click)="toggleEdit();" [autodisabled]="true">
-                </plex-button>
-            </app-egresar-paciente>
-        </ng-container>
+    <ng-container *ngIf="mostrar === 'movimientos'">
+        <app-movimientos-internacion>
+            <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos)"
+                            [disabled]="(prestacion$ | async)?.ejecucion?.registros[1]" label="Cambiar cama"
+                            type="warning" size="sm" (click)="changeCama()">
+            </plex-button>
+        </app-movimientos-internacion>
+    </ng-container>
 
-        <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">
-            <app-registros-huds-detalle (accion)="onAccion($event)"></app-registros-huds-detalle>
-        </ng-container>
-    </div>
-</ng-container>
+    <ng-container *ngIf="mostrar === 'egreso'">
+        <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
+            <plex-button *ngIf="permisosMapaCamasService.egreso" title="editar egreso" icon="pencil" type="warning"
+                            size="sm" (click)="toggleEdit()">
+            </plex-button>
+        </app-informe-egreso>
+        <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !existeEgreso)"
+                                (onSave)="toggleEdit()">
+            <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
+                            (click)="toggleEdit();" [autodisabled]="true">
+            </plex-button>
+        </app-egresar-paciente>
+    </ng-container>
+
+    <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">
+        <app-registros-huds-detalle (accion)="onAccion($event)"></app-registros-huds-detalle>
+    </ng-container>
+</div>

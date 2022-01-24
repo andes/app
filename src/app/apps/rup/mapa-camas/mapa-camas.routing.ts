@@ -29,7 +29,7 @@ export const INTERNACION_ROUTES = [
 
     { path: ':ambito/sala-comun/:id', component: SalaComunComponent },
 
-    { path: 'listado-internacion', component: InternacionListadoComponent },
+    { path: 'listado-internacion/:capa', component: InternacionListadoComponent },
 
     { path: 'listado-internacion-medico', component: ListadoInternacionCapasComponent },
 

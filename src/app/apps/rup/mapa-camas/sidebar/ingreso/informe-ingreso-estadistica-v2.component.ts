@@ -1,9 +1,8 @@
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, of } from 'rxjs';
-import { map, switchMap, filter, isEmpty } from 'rxjs/operators';
+import { Observable, combineLatest, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 
@@ -26,39 +25,29 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     @Input() permisosIngreso;
 
     constructor(
-        private mapaCamasService: MapaCamasService,
-        private prestacionesService: PrestacionesService
+        private mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
-        this.prestacion$ = this.resumenInternacion$.pipe(
-            notNull(),
-            switchMap((resumen) => {
-                if (resumen.idPrestacion) {
-                    return this.prestacionesService.getById(resumen.idPrestacion);
-                };
-                return of(null);
-            })
-        );
+        this.prestacion$ = this.mapaCamasService.prestacionSegunView$;
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
-                return prestacion.ejecucion.registros[0].valor.informeIngreso;
+                return prestacion.ejecucion?.registros[0].valor.informeIngreso;
             })
         );
-        this.paciente$ = this.prestacion$.pipe(
-            notNull(),
-            switchMap(prestacion => this.mapaCamasService.getPaciente(prestacion.paciente))
-        );
-        this.paciente$ = this.prestacion$.pipe(
-            isEmpty(),
-            switchMap(() => {
-                return this.mapaCamasService.selectedCama.pipe(
-                    filter(cama => !!cama.paciente),
-                    switchMap(cama => {
-                        return this.mapaCamasService.getPaciente(cama.paciente);
-                    }));
+
+        this.paciente$ = combineLatest([
+            this.prestacion$,
+            this.mapaCamasService.selectedCama
+        ]).pipe(
+            switchMap(([prestacion, cama]) => {
+                const paciente = prestacion.paciente || cama.paciente;
+                if (paciente) {
+                    return this.mapaCamasService.getPaciente(paciente);
+                }
+                return of(null);
             })
         );
     }

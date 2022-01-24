@@ -95,6 +95,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     private subscription2: Subscription;
     private subscription3: Subscription;
     private subscription4: Subscription;
+    public disableButton$: Observable<boolean>;
 
     constructor(
         public auth: Auth,
@@ -126,11 +127,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.subscription4.unsubscribe();
         }
     }
-    public disableButton$: Observable<boolean>;
     ngOnInit() {
         this.inProgress = true;
         this.fecha = this.mapaCamasService.fecha;
-
 
         this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => {
@@ -142,9 +141,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion) || this.prestacion) {
                     return false;
                 }
-
                 return true;
-
             })
         );
 
@@ -154,25 +151,18 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa !== 'estadistica' || !prestacion) {
+                if (capa === 'estadistica') {
                     return of(null);
                 }
-                const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                const paciente = prestacion.paciente.id;
-
-                const desde = moment(fecha).subtract(12, 'hours').toDate();
-                const hasta = moment(fecha).add(12, 'hours').toDate();
-                return this.internacionResumenService.search({
-                    organizacion: this.auth.organizacion.id,
-                    paciente: paciente,
-                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
-                });
-
+                if (prestacion) {
+                    return this.internacionResumenService.search({ idPrestacion: prestacion.id });
+                }
             }),
             map(resumenes => resumenes && resumenes[0]),
             tap(resumen => {
                 if (resumen) {
                     resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
+                    this.fecha = resumen.fechaEgreso;
                 }
             }),
             cache()
@@ -201,13 +191,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (!prestacion) {
                     return;
                 }
-                const pacienteId = prestacion.paciente.id;
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
-                    this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
