@@ -285,11 +285,12 @@ export class DatosContactoComponent implements OnInit {
 
     get direccionLegal() {
         let dir = null;
-        if (this.paciente.direccion[1] && this.paciente.direccion[1].valor) {
+        if (this.paciente.direccion[1]) {
             dir = this.paciente.direccion[1];
-            const localidad = dir.ubicacion && dir.ubicacion.localidad && dir.ubicacion.localidad.nombre ? `, ${dir.ubicacion.localidad.nombre}` : '';
-            const provincia = dir.ubicacion && dir.ubicacion.provincia && dir.ubicacion.provincia.nombre ? `, ${dir.ubicacion.provincia.nombre}` : '';
-            dir = `${dir.valor} ${localidad} ${provincia}`;
+            const localidad = dir.ubicacion && dir.ubicacion.localidad && dir.ubicacion.localidad.nombre ? `${dir.ubicacion.localidad.nombre}, ` : '';
+            const provincia = dir.ubicacion && dir.ubicacion.provincia && dir.ubicacion.provincia.nombre ? `${dir.ubicacion.provincia.nombre}` : '';
+            const valor = dir.valor ? `${dir.valor}, ` : '';
+            dir = `${valor} ${localidad} ${provincia}`;
         }
         return dir;
     }
