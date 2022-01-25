@@ -1,12 +1,12 @@
-import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-import { Component, OnInit } from '@angular/core';
-import { QueriesService } from '../../../../services/query.service';
-import { Observable } from 'rxjs';
-import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { Observable } from 'rxjs';
 import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
+import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { QueriesService } from '../../../../services/query.service';
+import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 
 
 @Component({
@@ -100,11 +100,13 @@ export class BiQueriesComponent implements OnInit {
                 const key = arg.key;
                 const valor = this.argumentos[key];
                 params[key] = valor;
+                const idField = arg.idField || 'id';
+
                 if (valor instanceof Date) {
                     params[key] = valor;
                 } else {
-                    if (valor && valor.id) {
-                        params[key] = valor.id;
+                    if (valor && valor[idField]) {
+                        params[key] = valor[idField];
                     } else if (valor === undefined && arg.tipo === 'salida') {
                         params[key] = arg.check;
                     }
