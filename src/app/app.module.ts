@@ -139,6 +139,8 @@ import { PacienteService } from './core/mpi/services/paciente.service';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { DirectiveLibModule } from './directives/directives.module';
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
+import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
+import { ValidarCertificadoService } from './modules/epidemiologia/services/validar-certificado.service';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { FormulaBaseService } from './modules/rup/components/formulas';
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
@@ -279,6 +281,7 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
+        ValidarCertificadoComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -405,6 +408,7 @@ registerLocaleData(localeEs, 'es');
         CommonNovedadesService,
         QueriesService,
         CarpetaPacienteService,
+        ValidarCertificadoService,
         { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler },
         {
             provide: RECAPTCHA_SETTINGS,

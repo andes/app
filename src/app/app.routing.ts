@@ -39,6 +39,8 @@ import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.compone
 import { PacienteComponent } from './core/mpi/components/paciente.component';
 // Internacion
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
+import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
+
 
 const appRoutes: Routes = [
 
@@ -190,6 +192,8 @@ const appRoutes: Routes = [
 
     // Inscripcion de profesionales
     { path: 'inscripcion/profesionales', component: InscripcionProfesionalesComponent, canActivate: [RoutingNavBar] },
+
+    { path: 'validar-certificado', component: ValidarCertificadoComponent, canActivate: [RoutingNavBar] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }
