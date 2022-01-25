@@ -151,7 +151,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             pacienteID$
         ]).pipe(
             switchMap(([capa, fecha, paciente]) => {
-                if (capa !== 'estadistica') {
+                if (capa !== 'estadistica' && capa !== 'estadistica-v2') {
                     return of(null);
                 }
                 const desde = moment(fecha).subtract(12, 'hours').toDate();
