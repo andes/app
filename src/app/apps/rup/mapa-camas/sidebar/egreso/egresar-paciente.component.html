@@ -34,7 +34,7 @@
             </ng-container>
         </ng-container>
     </plex-wrapper>
-    <ng-container *ngIf="capa === 'estadistica'">
+    <ng-container *ngIf="capa === 'estadistica' || capa ==='estadistica-v2'">
         <ng-container *ngIf="resumenPacienteInternacion$ | async as resumenes">
             <plex-title size="sm" justify titulo="Diagnosticos al egreso"></plex-title>
             <plex-list *ngIf="resumenes" size="sm" [selectable]="false">
