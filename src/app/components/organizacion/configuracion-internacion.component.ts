@@ -1,31 +1,36 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina-estados.http';
-import { Router, ActivatedRoute } from '@angular/router';
-import { SnomedService } from 'src/app/apps/mitos';
-import { OrganizacionService } from 'src/app/services/organizacion.service';
-import { switchMap } from 'rxjs/operators';
-import { forkJoin } from 'rxjs';
 import { Plex } from '@andes/plex';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, throwError } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { SnomedService } from 'src/app/apps/mitos';
+import { IMaquinaEstados } from 'src/app/apps/rup/mapa-camas/interfaces/IMaquinaEstados';
+import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina-estados.http';
+import { IOrganizacion } from 'src/app/interfaces/IOrganizacion';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { Auth } from '@andes/auth';
 
+interface ICapaRef {
+    id: string;
+    nombre: string;
+    activa?: boolean;
+}
 @Component({
     selector: 'configuracion-internacion',
     templateUrl: 'configuracion-internacion.html'
 })
-export class ConfiguracionInternacionComponent implements OnInit {
 
+export class ConfiguracionInternacionComponent implements OnInit {
     @ViewChild('form', { static: true }) form: NgForm;
-    private idOrgReferencia = '57e9670e52df311059bc8964'; /* id de castro rendon. Se usa como referencia para
-                                                    la carga por defecto de acciones y otras propiedades   */
-    private organizacionActual: any = {};
-    public capas = [
-        { id: 'estadistica', nombre: 'Estadística' },
-        { id: 'medica', nombre: 'Médica' },
-        { id: 'enfermeria', nombre: 'Enfermería' }
-    ];
-    public capaSelected;
+
+    private capasOrganizacionActual: IMaquinaEstados[] = [];
+    public organizacionActual;
+    public usaCapasUnificadas = false;
+    public capasTotales: ICapaRef[] = [];
+    public capaSelected: ICapaRef;
     public unidadesOrganizativas;
-    public configuracionDefaultCapa; // configuración del efector en una capa determinada
+    public capaModel: IMaquinaEstados;
     private expression = '<<284548004'; // con esta query de snomed se traen todos los servicios
     public columns = [
         {
@@ -60,49 +65,92 @@ export class ConfiguracionInternacionComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         public snomed: SnomedService,
+        public auth: Auth,
         private plex: Plex
     ) {}
 
     ngOnInit() {
-        this.route.params.pipe(
-            switchMap(params =>
-                forkJoin([
-                    this.maquinaEstadosService.get('internacion', undefined, params['id']),
-                    this.maquinaEstadosService.get('internacion', undefined, this.idOrgReferencia),
-                    this.organizacionService.getById(params['id'])
-                ])
-            )
-        ).subscribe(([capasOrgActual, capasOrgRef, orgActual]) => {
-            /* Se cargan las capas de la organizacion actual. Si no existe registro se copian las de la organizacion de referencia */
-            this.organizacionActual.estadistica = capasOrgActual.find(item => item.capa === 'estadistica') || capasOrgRef.find(item => item.capa === 'estadistica');
-            this.organizacionActual.medica = capasOrgActual.find(item => item.capa === 'medica') || capasOrgRef.find(item => item.capa === 'medica');
-            this.organizacionActual.enfermeria = capasOrgActual.find(item => item.capa === 'enfermeria') || capasOrgRef.find(item => item.capa === 'enfermeria');
+        const idOrganizacionActual = this.route.snapshot.params['id'];
+
+        this.organizacionService.get({ internacionDefault : true }).pipe(
+            switchMap(organizaciones => {
+                if (!organizaciones[0]) {
+                    return throwError('no hay organizacion por defecto');
+                }
+                return forkJoin([
+                    this.maquinaEstadosService.get('internacion', undefined, idOrganizacionActual),
+                    this.maquinaEstadosService.get('internacion', undefined, organizaciones[0].id),
+                    this.organizacionService.getById(idOrganizacionActual)
+                ]).pipe(
+                    map(([capasOrgActual, capasOrgRef, orgActual]) => [capasOrgActual, capasOrgRef, orgActual, organizaciones[0]])
+                );
+            })
+        ).subscribe(([capasOrgActual, capasOrgReferencia, orgActual, orgReferencia]: [IMaquinaEstados[], IMaquinaEstados[], IOrganizacion, IOrganizacion]) => {
+            this.organizacionActual = orgActual;
+            this.usaCapasUnificadas = orgActual.usaEstadisticaV2;
+            this.capasTotales = capasOrgReferencia.map(capa => ({ id: capa.capa, nombre: capa.capa }))
+                .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+            /*  Se cargan las capas pre-existentes de la organizacion actual. Las capas no configuradas se completan
+                con las correspondientes de la organizacion de referencia */
+            this.capasTotales.forEach(capa => {
+                const capaActual = capasOrgActual.find(c => c.capa === capa.nombre);
+                if (capaActual) {
+                    this.capasOrganizacionActual[capa.nombre] = capaActual;
+                    capa.activa = true;
+                } else {
+                    this.capasOrganizacionActual[capa.nombre] = capasOrgReferencia.find(c => c.capa === capa.nombre);
+                    this.capasOrganizacionActual[capa.nombre].organizacion = orgActual.id;
+                    delete this.capasOrganizacionActual[capa.nombre].id;
+                    delete this.capasOrganizacionActual[capa.nombre]._id;
+                }
+            });
+            this.changeCapasActivas();
             // Se recuperan las UO del efector
-            this.organizacionActual.unidadesOrganizativas = orgActual.unidadesOrganizativas;
+            this.unidadesOrganizativas = orgActual.unidadesOrganizativas ? orgActual.unidadesOrganizativas : orgReferencia.unidadesOrganizativas;
         });
     }
 
-    changeCapa() {
-        if (this.configuracionDefaultCapa) {
-            this.organizacionActual[this.configuracionDefaultCapa.capa] = this.configuracionDefaultCapa;
+    changeCapasActivas() {
+        const estadistica = this.capasTotales.find(c => c.nombre === 'estadistica');
+        const estadisticaV2 = this.capasTotales.find(c => c.nombre === 'estadistica-v2');
+        if (estadistica.activa || estadisticaV2.activa) {
+            estadistica.activa = !this.usaCapasUnificadas;
+            estadisticaV2.activa = this.usaCapasUnificadas;
         }
-        this.configuracionDefaultCapa = this.organizacionActual[this.capaSelected?.id];
-        this.configuracionDefaultCapa.historialMedico = this.configuracionDefaultCapa.historialMedico || false;
-        this.configuracionDefaultCapa.estados[1]?.acciones.map(acc => {
+    }
+
+    changeCapa(capa: ICapaRef) {
+        if (!capa.activa) {
+            this.capaSelected = null;
+            return;
+        }
+        this.capaSelected = capa;
+        if (this.capaModel) {
+            this.capasOrganizacionActual[this.capaModel.capa] = this.capaModel;
+        }
+        this.capaModel = this.capasOrganizacionActual[capa.id];
+        this.capaModel.historialMedico = this.capaModel?.historialMedico || false;
+
+        const estadoOcupado = this.capaModel?.estados.find(e => e.key === 'ocupada');
+
+        estadoOcupado?.acciones.forEach((acc: any) => {
             acc.parametros.unidadOrganizativa = acc.parametros.unidadOrganizativa || [];
             const unidadOrg = acc.parametros.unidadOrganizativa[0];
-            // se agrega opción de exceptuar la unidad organizativa seleccionada (En la db la UO se precede con '!')
-            acc.parametros.unidadExceptuada = unidadOrg?.substring(0, 1) === '!' || false;
-            if (acc.parametros.unidadExceptuada) {
-                acc.parametros.unidadOrganizativa[0] = unidadOrg.substring(1);
+            if (unidadOrg) {
+                acc.parametros.unidadExceptuada = unidadOrg.substring(0, 1) === '!' || false;
+                acc.parametros.unidadOrg = unidadOrg;
+                if (acc.parametros.unidadExceptuada) {
+                    acc.parametros.unidadOrg = unidadOrg.substring(1);
+                }
             }
         });
     }
 
     // retorna true si existe algún campo sin completar
     campoFaltante() {
-        return this.capas.some(capa => {
-            return this.organizacionActual[capa.id].estados[1].acciones.some(accion => !accion.label || !accion.parametros.concepto || !accion.parametros.unidadOrganizativa[0]);
+        return this.capasTotales.some(capa => {
+            return this.capasOrganizacionActual[capa.id].estados[1].acciones?.some(accion => !accion.label || !accion.parametros.concepto);
         });
     }
 
@@ -114,7 +162,6 @@ export class ConfiguracionInternacionComponent implements OnInit {
             });
         }
     }
-
     loadConceptos(event) {
         if (event.query) {
             this.snomed.get({
@@ -129,17 +176,19 @@ export class ConfiguracionInternacionComponent implements OnInit {
     nuevaAccion() {
         const nueva = {
             tipo: 'nuevo-registro',
-            label: 'Valoración inicial',
+            label: '',
             parametros: {
                 unidadOrganizativa: [],
-                concepto: []
+                concepto: null
             }
         };
-        this.configuracionDefaultCapa?.estados[1]?.acciones.push(nueva);
+        const estadoOcupado = this.capaModel.estados.find(e => e.key === 'ocupada');
+        estadoOcupado.acciones.unshift(nueva);
     }
 
     deleteAccion(index) {
-        this.configuracionDefaultCapa?.estados[1]?.acciones.splice(index, 1);
+        const estadoOcupado = this.capaModel.estados.find(e => e.key === 'ocupada');
+        estadoOcupado?.acciones.splice(index, 1);
     }
 
     volver() {
@@ -148,26 +197,30 @@ export class ConfiguracionInternacionComponent implements OnInit {
 
     guardar(formValid) {
         if (!this.campoFaltante() && formValid) {
-            const saveArray = [];
-            // se recorre cada capa del efector ...
-            this.capas.map((c: any) => {
-                const organizacionCapa = this.organizacionActual[c.id];
-                // por cada acción se buscan unidades organizativas exceptuadas
-                organizacionCapa.estados[1]?.acciones.map(acc => {
-                    const unidadOrg = acc.parametros.unidadOrganizativa[0];
-                    if (acc.parametros.unidadExceptuada) {
-                        acc.parametros.unidadOrganizativa[0] = `!${unidadOrg?.conceptId || unidadOrg}`;
+            // TODO: agregar propiedad 'activa' a las capas reales para poder inactivar una pre-existente en caso necesario
+            const saveArray = this.capasTotales.filter(c => c.activa).map((c: any) => {
+                const organizacionCapa = this.capasOrganizacionActual[c.id];
+                const estadoOcupado = organizacionCapa.estados.find(e => e.key === 'ocupada');
+                estadoOcupado?.acciones.map((acc: any) => {
+                    const unidadOrg = acc.parametros.unidadOrg;
+                    if (unidadOrg) {
+                        if (acc.parametros.unidadExceptuada) {
+                            acc.parametros.unidadOrganizativa[0] = `!${unidadOrg?.conceptId || unidadOrg}`;
+                        } else {
+                            acc.parametros.unidadOrganizativa[0] = unidadOrg?.conceptId || unidadOrg;
+                        }
                     } else {
-                        acc.parametros.unidadOrganizativa[0] = unidadOrg?.conceptId || unidadOrg;
+                        acc.parametros.unidadOrganizativa = [];
                     }
                     delete acc.parametros.unidadExceptuada;
+                    delete acc.parametros.unidadOrg;
                 });
-                saveArray.push(this.maquinaEstadosService.save(organizacionCapa));
+                delete (organizacionCapa as any).updatedAt;
+                delete (organizacionCapa as any).updatedBy;
+                return this.maquinaEstadosService.save(organizacionCapa);
             });
-            forkJoin(saveArray).subscribe(resp => {
-                if (resp) {
-                    this.plex.toast('success', 'Cambios guardados exitosamente');
-                }
+            forkJoin(saveArray).subscribe(() => {
+                this.plex.toast('success', 'Cambios guardados exitosamente');
                 this.volver();
             }, error => {
                 this.plex.info('danger', 'Ocurrió un error guardando los cambios');
