@@ -64,6 +64,9 @@
                              hint="El máximo permitido de prestaciones es de {{prestacionesMax}}" hintType="warning"
                              hintIcon="lock" detach="top">
                 </plex-button>
+                <plex-button type="info" size="sm" icon="download" (click)="refreshSelection($event, 'descargar')"
+                             tooltip="Descargar CSV">
+                </plex-button>
                 <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true"
                                class="ml-2">
                     <plex-grid cols="3">

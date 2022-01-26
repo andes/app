@@ -48,6 +48,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
     public estado;
+    public turnosYprestaciones = [];
     public sinOS = false;
     public selectProfesional = false;
     public profesional: any;
@@ -298,6 +299,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             }
             if (tipo === 'filter') {
                 this.buscar(this.parametros);
+            }
+            if (tipo === 'descargar') {
+                this.turnosPrestacionesService.descargar(this.parametros, 'turnos-y-prestaciones').subscribe();
             }
         }
     }

@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
-import { cache, Server } from '@andes/shared';
+import { cache, Server, saveAs } from '@andes/shared';
 import { ITurnosPrestaciones } from '../interfaces/turnos-prestaciones.interface';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TurnosPrestacionesService {
-
 
     private turnosPrestacionesURL = '/modules/estadistica/turnos_prestaciones'; // URL to web api
 
@@ -17,10 +16,7 @@ export class TurnosPrestacionesService {
     public sortBy$ = new BehaviorSubject<string>('fecha'); // Seteo con fecha para que el primer orden sea por fecha
     public sortOrder$ = new BehaviorSubject<string>('asc');
 
-
     private filtros = new Subject<any>();
-
-
 
     constructor(private server: Server) {
 
@@ -53,8 +49,6 @@ export class TurnosPrestacionesService {
         return this.server.get(this.turnosPrestacionesURL, { params: params, showError: true });
     }
 
-
-
     sortPrestaciones(prestaciones, sortBy: string, sortOrder: string) {
         if (sortOrder === 'desc') {
             prestaciones = prestaciones.reverse();
@@ -86,5 +80,11 @@ export class TurnosPrestacionesService {
             }
         }
         return prestaciones;
+    }
+
+    descargar(params: any, nombreArchivo: string): Observable<ITurnosPrestaciones[]> {
+        return this.server.post(this.turnosPrestacionesURL + '/csv', params, { responseType: 'blob' } as any).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
     }
 }
