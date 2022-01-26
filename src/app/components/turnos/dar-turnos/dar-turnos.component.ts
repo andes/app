@@ -9,6 +9,7 @@ import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
+import { forEach } from 'vis-util';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
@@ -43,6 +44,7 @@ import { EstadosDarTurnos } from './enums';
 })
 
 export class DarTurnosComponent implements OnInit {
+    pacienteFields = ['financiador', 'numeroAfiliado', 'telefono'];
     nroCarpetaOriginal: string;
     public lenNota = 140;
     public nota = '';
@@ -173,6 +175,8 @@ export class DarTurnosComponent implements OnInit {
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
     showTab = 0;
+    equipoSalud;
+    prestacionesAlternativa;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -507,6 +511,10 @@ export class DarTurnosComponent implements OnInit {
         }).length > 0;
     }
 
+    isActive(turno) {
+        return (turno === this.turno);
+    }
+
     /**
      * Selecciona una Agenda (click en el calendario). Pueden haber mas de una en el mismo dia.
      */
@@ -515,6 +523,8 @@ export class DarTurnosComponent implements OnInit {
         // Asigno agenda
         if (this.indice > -1 && this.indice < agendasDelDia.length) {
             this.agenda = agendasDelDia[this.indice];
+            this.bloque = null;
+            this.turno = null;
         } else {
             this.indice = 0;
             this.agenda = agendasDelDia[0];
@@ -619,7 +629,6 @@ export class DarTurnosComponent implements OnInit {
                             this.countBloques = countBloques;
                         }
                     } else {
-
                         /* Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                         this.estadoT = 'noTurnos';
 
@@ -640,6 +649,18 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
         });
+    }
+
+    equipoSaludAlternativas(profesionales) {
+        let salida = '';
+        for (let index = 0; index < profesionales.length; index++) {
+            if ((index + 1) >= profesionales.length) {
+                salida += profesionales[index].apellido + ', ' + profesionales[index].nombre;
+            } else {
+                salida += profesionales[index].apellido + ', ' + profesionales[index].nombre + ' - ';
+            }
+        }
+        return salida;
     }
 
     private filtrarBloques(esAgendaDeHoy) {
@@ -717,9 +738,20 @@ export class DarTurnosComponent implements OnInit {
             }
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
-            this.estadoT = 'confirmacion';
+            this.equipoSaludAgenda();
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
+        }
+    }
+
+    equipoSaludAgenda() {
+        this.equipoSalud = '';
+        for (let index = 0; index < this.agenda.profesionales.length; index++) {
+            if ((index + 1) >= this.agenda.profesionales.length) {
+                this.equipoSalud += this.agenda.profesionales[index].apellido + ', ' + this.agenda.profesionales[index].nombre;
+            } else {
+                this.equipoSalud += this.agenda.profesionales[index].apellido + ', ' + this.agenda.profesionales[index].nombre + ' - ';
+            }
         }
     }
 
@@ -727,13 +759,6 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         this.opciones.profesional = this.busquedas[indice].profesional;
         this.filtrar();
-    }
-
-    seleccionarUltimoTurno(turno) {
-        this.opciones.tipoPrestacion = turno.tipoPrestacion;
-        const actualizarProfesional = (this.opciones.profesional === turno.profesionales);
-        this.opciones.profesional = turno.profesionales[0];
-        this.actualizar();
     }
 
     seleccionarAlternativa(indice: number) {
@@ -811,39 +836,6 @@ export class DarTurnosComponent implements OnInit {
         this.changeCarpeta = true;
     }
 
-    getUltimosTurnos() {
-        const ultimosTurnos = [];
-        this.serviceAgenda.find(this.paciente.id).subscribe(agendas => {
-            agendas.forEach((agenda, indexAgenda) => {
-                agenda.bloques.forEach((bloque, indexBloque) => {
-                    bloque.turnos.forEach((turno, indexTurno) => {
-                        if (turno.paciente) {
-                            // TODO. agregar la condicion turno.asistencia
-                            if (turno.paciente.id === this.paciente.id) {
-                                ultimosTurnos.push({
-                                    tipoPrestacion: turno.tipoPrestacion,
-                                    horaInicio: turno.horaInicio,
-                                    estado: turno.estado,
-                                    organizacion: agenda.organizacion.nombre,
-                                    profesionales: agenda.profesionales
-                                });
-                            }
-                        }
-                    });
-                });
-            });
-            if (this.permisos[0] !== '*') {
-                this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
-                    return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
-                });
-
-            } else {
-                this.ultimosTurnos = ultimosTurnos;
-            }
-        });
-
-    }
-
     actualizarPaciente() {
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
@@ -884,7 +876,7 @@ export class DarTurnosComponent implements OnInit {
                 this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
                 this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
             }
-            this.estadoT = 'confirmacion';
+            this.darTurno();
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
         }
@@ -1165,49 +1157,6 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
-    afterCreateUpdate(paciente) {
-        this.showCreateUpdate = false;
-        this.showDarTurnos = true;
-        this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: paciente });
-        if (paciente) {
-            this.actualizarDatosPaciente(paciente.id);
-        } else {
-            this.resetBuscarPaciente();
-        }
-    }
-
-    afterSearch(paciente: IPaciente): void {
-        this.paciente = paciente;
-        this.showDarTurnos = true;
-        if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.pacientesSearch = false;
-                    this.verificarTelefono(this.paciente);
-                    window.setTimeout(() => this.pacientesSearch = false, 100);
-                    this.obtenerCarpetaPaciente();
-                    this.getUltimosTurnos();
-                    if (!this.paciente.scan) {
-                        this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
-                    }
-                    if (this.paciente.documento) {
-                        this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
-                            this.obraSocialPaciente = financiador;
-                        });
-                    }
-                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                });
-        } else {
-            this.seleccion = paciente;
-            this.esEscaneado = true;
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
-            this.showDarTurnos = false;
-            this.plex.clearNavbar();
-        }
-    }
-
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
         this.telefono = paciente?.contacto?.find(c => c.tipo === 'celular')?.valor || '';
@@ -1283,23 +1232,6 @@ export class DarTurnosComponent implements OnInit {
         if (this.nota && this.nota.length > this.lenNota) {
             this.nota = this.nota.substring(0, this.lenNota);
         }
-    }
-
-    cancelar() {
-        this.showDarTurnos = false;
-        this.plex.clearNavbar();
-        this.volverAlGestor.emit(true);
-    }
-
-    volver() {
-        this.showDarTurnos = false;
-        this.plex.clearNavbar();
-        this.estadoT = 'noSeleccionada';
-        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
-        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
-        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(true);
-        this.resetBuscarPaciente();
     }
 
     redirect(pagina: string) {
