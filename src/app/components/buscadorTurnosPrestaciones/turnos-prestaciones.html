@@ -196,10 +196,8 @@
     </plex-layout-main>
     <!-- Prestacion -->
     <plex-layout-sidebar *ngIf="showPrestacion">
-        <plex-title titulo="Datos de la prestación" size="md">
-            <plex-button label="Cerrar" type="danger" (click)="onClose()" size="md"></plex-button>
-            <plex-button class="ml-1" *ngIf="generarComprobante()" label="Comprobante" type="success"
-                         (click)="recupero()"></plex-button>
+        <plex-title titulo="Datos del Paciente" size="md">
+            <plex-button icon="close" type="danger" (click)="onClose()" size="sm"></plex-button>
         </plex-title>
         <paciente-detalle *ngIf="paciente" [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
         <div class="row">
@@ -216,7 +214,10 @@
             </div>
         </div>
 
-        <plex-title titulo="Prestación" size="md"></plex-title>
+        <plex-title titulo="Prestación" size="md">
+            <plex-button size="sm" *ngIf="generarComprobante()" label="Comprobante" type="success" (click)="recupero()">
+            </plex-button>
+        </plex-title>
         <div *ngIf="!prestacion.idPrestacion">
             <plex-badge size="md" type="danger">La prestación no ha sido iniciada</plex-badge>
         </div>
