@@ -1,3 +1,18 @@
+# [5.82.0](https://github.com/andes/app/compare/v5.81.0...v5.82.0) (2022-01-26)
+
+
+### Bug Fixes
+
+* **mpi:** domicilio legal de un paciente ([#2570](https://github.com/andes/app/issues/2570)) ([1e51545](https://github.com/andes/app/commit/1e51545e595baf5e1a988cdfe8b7cc5bf1250cb9))
+
+
+### Features
+
+* **mapa-camas:** ajustes a prescripción de medicamentos ([#2571](https://github.com/andes/app/issues/2571)) ([4dce320](https://github.com/andes/app/commit/4dce320e5565ae7beee7c48613ed08cf3a7b1583))
+* **mapa-camas:** nueva capa interconsultores ([#2557](https://github.com/andes/app/issues/2557)) ([bc42b67](https://github.com/andes/app/commit/bc42b678d9ed015690a7bb04c41754580deb7c7a))
+* **MISC-116:** filtro multiple de obras sociales ([#2568](https://github.com/andes/app/issues/2568)) ([aff4620](https://github.com/andes/app/commit/aff46201ac02eae009173c1fd09bd7b6535a9e6d))
+* **pdp:** formulario para registrar una demanda rechazada de turno ([#2487](https://github.com/andes/app/issues/2487)) ([3581ece](https://github.com/andes/app/commit/3581ece970e603cc932e578584ad517f10eb6aa4))
+
 # [5.81.0](https://github.com/andes/app/compare/v5.80.0...v5.81.0) (2022-01-19)
 
 
