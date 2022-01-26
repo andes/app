@@ -36,10 +36,10 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             );
         } else {
             return this.mapaCamasService.resumenInternacion$.pipe(
-                map(prestacion => {
+                map(resumen => {
                     return {
-                        desde: prestacion.fechaIngreso,
-                        hasta: prestacion.fechaEgreso || new Date()
+                        desde: resumen.fechaIngreso,
+                        hasta: resumen.fechaEgreso || new Date()
                     };
                 }),
                 catchError(() => of(null))

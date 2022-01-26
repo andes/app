@@ -58,9 +58,8 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
-        this.prestacion$ = this.mapaCamasService.prestacion$.pipe(
-            tap(() => this.editar = false)
-        );
+        this.editar = false;
+        this.prestacion$ = this.mapaCamasService.prestacion$;
 
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,

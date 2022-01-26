@@ -151,18 +151,27 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa === 'estadistica') {
+                if (capa !== 'estadistica' || !prestacion) {
                     return of(null);
                 }
-                if (prestacion) {
-                    return this.internacionResumenService.search({ idPrestacion: prestacion.id });
-                }
+                const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                const paciente = prestacion.paciente.id;
+
+                const desde = moment(fecha).subtract(12, 'hours').toDate();
+                const hasta = moment(fecha).add(12, 'hours').toDate();
+
+                return this.internacionResumenService.search({
+                    organizacion: this.auth.organizacion.id,
+                    paciente: paciente,
+                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                });
+
             }),
             map(resumenes => resumenes && resumenes[0]),
             tap(resumen => {
                 if (resumen) {
                     resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
-                    this.fecha = resumen.fechaEgreso;
+                    this.fecha = resumen.fechaEgreso || this.fecha;
                 }
             }),
             cache()
@@ -177,6 +186,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).subscribe(([view, capa, ambito, cama, prestacion]) => {
             this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
+
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
                 fecha = moment().toDate();
@@ -631,7 +641,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             (historialCama) => {
                 this.fechaMax = null;
                 for (const historial of historialCama) {
-                    if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama.idInternacion) {
+                    if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama?.idInternacion) {
                         this.fechaMax = historial.fecha;
                     }
                 }

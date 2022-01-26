@@ -30,7 +30,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
 
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
-        this.prestacion$ = this.mapaCamasService.prestacionSegunView$;
+        this.prestacion$ = this.mapaCamasService.prestacion$;
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
@@ -43,7 +43,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
             this.mapaCamasService.selectedCama
         ]).pipe(
             switchMap(([prestacion, cama]) => {
-                const paciente = prestacion.paciente || cama.paciente;
+                const paciente = prestacion?.paciente || cama.paciente;
                 if (paciente) {
                     return this.mapaCamasService.getPaciente(paciente);
                 }

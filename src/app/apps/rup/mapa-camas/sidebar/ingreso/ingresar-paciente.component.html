@@ -1,6 +1,6 @@
 <ng-container *ngIf="paciente">
     <form #formIngreso="ngForm">
-        <plex-title justify titulo="INGRESO">
+        <plex-title justify titulo="INGRESO" size="md">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
                          (click)="guardar($event)" [disabled]="disableButton || inProgress">
             </plex-button>
@@ -14,10 +14,10 @@
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
             <ng-container *ngIf="prestacion?.id">
-                <plex-button *ngIf="!cama.esCensable && !esInternacionCensable" type="warning"
+                <plex-button *ngIf="!cama?.esCensable && !esInternacionCensable" type="warning"
                              label="Convertir en censable" size="sm" (click)="setValueCensable()">
                 </plex-button>
-                <plex-badge *ngIf="!cama.esCensable && esInternacionCensable" type="info" size="sm">
+                <plex-badge *ngIf="!cama?.esCensable && esInternacionCensable" type="info" size="sm">
                     Censable
                     <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="setValueCensable()">
                     </plex-button>

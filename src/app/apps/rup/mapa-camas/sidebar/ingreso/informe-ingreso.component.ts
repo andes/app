@@ -28,9 +28,7 @@ export class InformeIngresoComponent implements OnInit {
         this.prestacion$ = this.mapaCamasService.prestacion$;
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
-            map((prestacion) => {
-                return prestacion.ejecucion.registros[0].valor.informeIngreso;
-            })
+            map((prestacion) => prestacion.ejecucion.registros[0].valor.informeIngreso)
         );
         this.paciente$ = this.prestacion$.pipe(
             notNull(),

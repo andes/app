@@ -124,6 +124,7 @@ export class InternacionListadoComponent implements OnInit {
         this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setCapa(this.route.snapshot.paramMap.get('capa'));
         this.mapaCamasService.setAmbito('internacion');
+        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
