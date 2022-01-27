@@ -18,7 +18,6 @@ import { ObraSocialCacheService } from '../../../services/obraSocialCache.servic
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
-import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
 import { idCMI } from '../constantes';
 import { environment } from './../../../../environments/environment';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
@@ -228,7 +227,6 @@ export class DarTurnosComponent implements OnInit {
         if (this._pacienteSeleccionado) {
             this.pacientesSearch = false;
             this.showDarTurnos = true;
-            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this._pacienteSeleccionado });
         }
 
         // Filtra las búsquedas en localStorage para que muestre sólo las del usuario y organización donde se encuentra logueado
@@ -651,18 +649,6 @@ export class DarTurnosComponent implements OnInit {
         });
     }
 
-    equipoSaludAlternativas(profesionales) {
-        let salida = '';
-        for (let index = 0; index < profesionales.length; index++) {
-            if ((index + 1) >= profesionales.length) {
-                salida += profesionales[index].apellido + ', ' + profesionales[index].nombre;
-            } else {
-                salida += profesionales[index].apellido + ', ' + profesionales[index].nombre + ' - ';
-            }
-        }
-        return salida;
-    }
-
     private filtrarBloques(esAgendaDeHoy) {
         // Tipo de Prestación, para poder filtrar las agendas
         const tipoPrestacion: string = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.conceptId : '';
@@ -738,20 +724,8 @@ export class DarTurnosComponent implements OnInit {
             }
             this.habilitarTurnoDoble();
             this.nota = this.turno.nota;
-            this.equipoSaludAgenda();
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
-        }
-    }
-
-    equipoSaludAgenda() {
-        this.equipoSalud = '';
-        for (let index = 0; index < this.agenda.profesionales.length; index++) {
-            if ((index + 1) >= this.agenda.profesionales.length) {
-                this.equipoSalud += this.agenda.profesionales[index].apellido + ', ' + this.agenda.profesionales[index].nombre;
-            } else {
-                this.equipoSalud += this.agenda.profesionales[index].apellido + ', ' + this.agenda.profesionales[index].nombre + ' - ';
-            }
         }
     }
 
