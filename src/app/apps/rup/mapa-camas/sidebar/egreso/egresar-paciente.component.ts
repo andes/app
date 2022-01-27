@@ -1,8 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -11,6 +12,7 @@ import { Cie10Service } from '../../../../mitos';
 import { causaExterna, listaTipoEgreso, opcionesCondicionAlNacer, opcionesSexo, opcionesTerminacion, opcionesTipoParto } from '../../constantes-internacion';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
@@ -103,7 +105,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         private listadoInternacionService: ListadoInternacionService,
-        private internacionResumenService: InternacionResumenHTTP
+        private internacionResumenService: InternacionResumenHTTP,
+        private camasHTTP: MapaCamasHTTP,
+
     ) {
 
     }
@@ -148,6 +152,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.prestacion$
         ]).pipe(
+            first(),
             switchMap(([capa, prestacion]) => {
                 if (capa !== 'estadistica'|| !prestacion) {
                     return of(null);
@@ -157,7 +162,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
                 const desde = moment(fecha).subtract(12, 'hours').toDate();
                 const hasta = moment(fecha).add(12, 'hours').toDate();
-
                 return this.internacionResumenService.search({
                     organizacion: this.auth.organizacion.id,
                     paciente: paciente,
@@ -170,15 +174,17 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (resumen) {
                     resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
                 }
-            })
+            }),
+            cache()
         );
 
         this.subscription = combineLatest([
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
+            this.mapaCamasService.ambito2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ]).subscribe(([view, capa, cama, prestacion]) => {
+        ]).subscribe(([view, capa,ambito, cama, prestacion]) => {
             this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             if (view === 'listado-internacion' && prestacion) {
@@ -214,26 +220,25 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (this.subscription2) {
                         this.subscription2.unsubscribe();
                     }
-                    let fechaABuscar = moment(this.informeIngreso.fechaIngreso).add(1, 's');
-                    if (this.hayEgreso) {
-                        fechaABuscar = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's');
-                    }
-                    this.subscription2 = this.mapaCamasService.snapshot(
-                        fechaABuscar.toDate(),
-                        this.prestacion.id
-                    ).subscribe((snapshot) => {
-                        this.cama = snapshot[0];
-                        if (this.cama) {
-                            this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
-                            this.checkHistorial(fecha);
-                            if (this.subscription3) {
-                                this.subscription3.unsubscribe();
+                    const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
+                    const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
+
+                    this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, this.prestacion.id)
+                        .subscribe((snapshot) => {
+                            snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                            this.cama = snapshot[0];
+                            this.cama.id = this.cama.idCama;
+                            if (this.cama) {
+                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                                this.checkHistorial(fecha);
+                                if (this.subscription3) {
+                                    this.subscription3.unsubscribe();
+                                }
+                                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                                    this.estadoDestino = relacionesPosibles[0].destino;
+                                });
                             }
-                            this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                                this.estadoDestino = relacionesPosibles[0].destino;
-                            });
-                        }
-                    });
+                        });
                 }
             }
             if (cama.id && cama.id !== ' ') {

@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { ISnapshot } from '../../interfaces/ISnapshot';
-import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
 import { cache } from '@andes/shared';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
@@ -46,11 +46,14 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
+    public loading = false;
 
     ngOnInit() {
         const HOY = moment().toDate();
+        this.inProgress = true;
 
         this.historial$ = this.mapaCamasService.fecha2.pipe(
+            tap(() => this.inProgress = true),
             switchMap((fecha) => {
                 this.fecha = moment(fecha).toDate();
                 return this.mapaCamasService.historial('internacion', fecha, HOY);
@@ -77,25 +80,25 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                     );
                 }
             }),
+            tap(() => this.inProgress = false),
         );
 
-        this.hayMovimientosAt$ = combineLatest(
+        this.hayMovimientosAt$ = combineLatest([
             this.mapaCamasService.fecha2,
             this.fechaMin$
-        ).pipe(
+        ]).pipe(
             map(([fechaElegida, fechaMinima]) => {
                 return moment(fechaElegida).isBefore(moment(fechaMinima));
             })
         );
 
-        this.camaOcupada$ = combineLatest(
+        this.camaOcupada$ = combineLatest([
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.snapshot$,
-        ).pipe(
-            tap(() => this.inProgress = false),
+        ]).pipe(
             map(([selectedCama, snapshots]) => {
                 const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
-                return cama.estado !== 'ocupada' && !cama.sala;
+                return (cama.estado !== 'ocupada' || cama.idInternacion !== selectedCama.idInternacion) && !cama.sala;
             })
         );
 
