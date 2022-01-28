@@ -184,7 +184,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.ambito2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ]).subscribe(([view, capa,ambito, cama, prestacion]) => {
+        ]).subscribe(([view, capa, ambito, cama, prestacion]) => {
             this.inProgress = false;
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             if (view === 'listado-internacion' && prestacion) {

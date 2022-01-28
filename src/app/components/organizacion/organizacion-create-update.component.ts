@@ -1,32 +1,32 @@
 import { Auth } from '@andes/auth';
-import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
-import * as enumerados from './../../utils/enumerados';
-
-// Services
-import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { cache } from '@andes/shared';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, of, Subject } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
+import { SnomedService } from '../../apps/mitos';
+import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
+import { MapaCamasHTTP } from '../../apps/rup/mapa-camas/services/mapa-camas.http';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
+import { IContacto } from './../../interfaces/IContacto';
+import { IEdificio } from './../../interfaces/IEdificio';
+// Interfaces
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IOrganizacion } from './../../interfaces/IOrganizacion';
+import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
+import { IUbicacion } from './../../interfaces/IUbicacion';
+import { IZonaSanitaria } from './../../interfaces/IZonaSanitaria';
+import { LocalidadService } from './../../services/localidad.service';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
-import { LocalidadService } from './../../services/localidad.service';
-import { ZonaSanitariaService} from './../../services/zonaSanitaria.service';
+// Services
+import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { ZonaSanitariaService } from './../../services/zonaSanitaria.service';
+import * as enumerados from './../../utils/enumerados';
 
-// Interfaces
-import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IUbicacion } from './../../interfaces/IUbicacion';
-import { IEdificio } from './../../interfaces/IEdificio';
-import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
-import { IContacto } from './../../interfaces/IContacto';
-import { IOrganizacion } from './../../interfaces/IOrganizacion';
-import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
-import { Router } from '@angular/router';
-import { MapaCamasHTTP } from '../../apps/rup/mapa-camas/services/mapa-camas.http';
-import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
-import { Observable, Subject, of } from 'rxjs';
-import { switchMap, startWith } from 'rxjs/operators';
-import { cache } from '@andes/shared';
-import { IZonaSanitaria} from './../../interfaces/IZonaSanitaria';
+
 
 
 @Component({

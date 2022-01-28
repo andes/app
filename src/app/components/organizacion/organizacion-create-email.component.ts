@@ -30,7 +30,7 @@ export class OrganizacionCreateEmailComponent implements OnInit {
                 this.idOrganizacion = params['id'];
                 return this.organizacionService.getById(this.idOrganizacion);
             }),
-            tap((org: any) => this.configuraciones = org.configuraciones || { emails: []})
+            tap((org: any) => this.configuraciones = org.configuraciones || { emails: [] })
         ).subscribe();
     }
 

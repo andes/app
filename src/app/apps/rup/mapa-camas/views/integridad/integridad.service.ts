@@ -14,7 +14,7 @@ export class IntegridadService {
 
     public ambito = new BehaviorSubject<string>(null);
     public capa = new BehaviorSubject<string>(null);
-    public selectedInconsistencia = new BehaviorSubject<IInconsistencia>({ source: { _id: null }} as any);
+    public selectedInconsistencia = new BehaviorSubject<IInconsistencia>({ source: { _id: null } } as any);
     public listaInconsistencias$: Observable<IInconsistencia[]>;
     public listaInconsistenciasFiltrada$: Observable<IInconsistencia[]>;
 
@@ -65,7 +65,7 @@ export class IntegridadService {
 
     select(integridad: IInconsistencia) {
         if (!integridad) {
-            return this.selectedInconsistencia.next({ source: { _id: null }} as any);
+            return this.selectedInconsistencia.next({ source: { _id: null } } as any);
         }
         this.selectedInconsistencia.next(integridad);
     }

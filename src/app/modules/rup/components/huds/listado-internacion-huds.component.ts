@@ -86,7 +86,7 @@ export class ListadoInternacionHudsComponent implements OnInit {
     ngOnInit() {
         this.internacione$ = of(this.internaciones).pipe(
             map(prestaciones => {
-                return prestaciones.sort((a,b) => {
+                return prestaciones.sort((a, b) => {
                     const fecha1 = moment(a.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                     const fecha2 = moment(b.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                     return fecha2.diff(fecha1);
