@@ -21,6 +21,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -60,7 +61,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public inProgress = false;
     public prepagas$: Observable<any[]>;
     private backupObraSocial;
-    public resumenPacienteInternacion$: Observable<any>;;
+    public registrosIngresoResumen$: Observable<any>;;
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
     }
@@ -145,30 +146,33 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.inProgress = true;
 
-        this.resumenPacienteInternacion$ = combineLatest([
+        this.registrosIngresoResumen$ = combineLatest([
             this.mapaCamasService.capa2,
             this.mapaCamasService.fecha2,
             pacienteID$
         ]).pipe(
             switchMap(([capa, fecha, paciente]) => {
-                if (capa !== 'estadistica' && capa !== 'estadistica-v2') {
-                    return of(null);
+                if (capa === 'estadistica') {
+                    const desde = moment(fecha).subtract(12, 'hours').toDate();
+                    const hasta = moment(fecha).add(12, 'hours').toDate();
+
+                    return this.internacionResumenService.search({
+                        organizacion: this.auth.organizacion.id,
+                        paciente: paciente,
+                        ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                    }).pipe(
+                        map(resumen => resumen[0])
+                    );
                 }
-                const desde = moment(fecha).subtract(12, 'hours').toDate();
-                const hasta = moment(fecha).add(12, 'hours').toDate();
-                return this.internacionResumenService.search({
-                    organizacion: this.auth.organizacion.id,
-                    paciente: paciente,
-                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
-                });
+                if (capa === 'estadistica-v2') {
+                    return this.mapaCamasService.resumenDesdePrestacion$;
+                }
+                return of(null);
             }),
-            map(resumenes => resumenes && resumenes[0]),
-            tap(resumen => {
-                if (resumen) {
-                    resumen.registros = resumen.registros.filter(r => r.tipo === 'valoracion-inicial');
-                }
-            })
+            map(resumen => resumen.registros.filter(r => r.tipo === 'valoracion-inicial')),
+            cache()
         );
+
 
         this.subscription = combineLatest(
             this.mapaCamasService.maquinaDeEstado$,
@@ -389,12 +393,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
     }
 
-
     validarRUP() {
         if (!this.prestacionFake) {
             return true;
         }
-
         let flagValid = true;
         this.rupElements.forEach((item) => {
             const instance = item.rupInstance;

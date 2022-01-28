@@ -58,6 +58,8 @@ export class MapaCamasService {
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
     public resumenInternacion$: Observable<IResumenInternacion>;
+    public resumenDesdePrestacion$: Observable<IResumenInternacion>;
+
     public fechaActual$: Observable<Date>;
 
     public columnsMapa = new BehaviorSubject<MapaCamaListadoColumns>({} as any);
@@ -216,6 +218,15 @@ export class MapaCamasService {
             }),
             cache()
         ) as Observable<IResumenInternacion>;
+
+        this.resumenDesdePrestacion$ = this.selectedPrestacion.pipe(
+            map(prestacion => prestacion.id),
+            switchMap(idPrestacion => this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
+                map(resumen => resumen[0]),
+                catchError(() => of(null)),
+                cache()
+            ))
+        );
 
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap(view => {

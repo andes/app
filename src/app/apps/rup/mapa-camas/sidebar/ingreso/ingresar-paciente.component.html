@@ -78,10 +78,10 @@
             </ng-container>
         </plex-wrapper>
         <ng-container *ngIf="capa === 'estadistica' || capa==='estadistica-v2'">
-            <ng-container *ngIf="resumenPacienteInternacion$ | async as resumenes">
-                <plex-title size="sm" justify titulo="Motivo Ingreso"></plex-title>
-                <plex-list *ngIf="resumenes" size="sm" [selectable]="false">
-                    <ng-container *ngFor="let registro of resumenes.registros || []">
+            <ng-container *ngIf="registrosIngresoResumen$ | async as registros">
+                <plex-title *ngIf="registros?.length" size="sm" justify titulo="Motivo Ingreso"></plex-title>
+                <plex-list size="sm" [selectable]="false">
+                    <ng-container *ngFor="let registro of registros || []">
                         <plex-item>
                             <plex-label [titulo]="registro.concepto.term"></plex-label>
                             <plex-badge *ngIf="registro.esDiagnosticoPrincipal" type="success" ngProjectAs="plex-label">

@@ -48,7 +48,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public estadoDestino;
     public checkTraslado = false;
     private informeIngreso;
-    public resumenPacienteInternacion$: Observable<any>;
+    public registrosEgresoResumen$: Observable<any>;
     public registro: any = {
         destacado: false,
         esSolicitud: false,
@@ -145,35 +145,33 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.resumenPacienteInternacion$ = combineLatest([
+        this.registrosEgresoResumen$ = combineLatest([
             this.mapaCamasService.capa2,
             this.mapaCamasService.prestacion$
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa !== 'estadistica' || !prestacion) {
-                    return of(null);
+                if (capa === 'estadistica') {
+                    const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                    const paciente = prestacion.paciente.id;
+
+                    const desde = moment(fecha).subtract(12, 'hours').toDate();
+                    const hasta = moment(fecha).add(12, 'hours').toDate();
+
+                    return this.internacionResumenService.search({
+                        organizacion: this.auth.organizacion.id,
+                        paciente: paciente,
+                        ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                    }).pipe(
+                        map(resumen => resumen[0])
+                    );
                 }
-                const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                const paciente = prestacion.paciente.id;
-
-                const desde = moment(fecha).subtract(12, 'hours').toDate();
-                const hasta = moment(fecha).add(12, 'hours').toDate();
-
-                return this.internacionResumenService.search({
-                    organizacion: this.auth.organizacion.id,
-                    paciente: paciente,
-                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
-                });
-
-            }),
-            map(resumenes => resumenes && resumenes[0]),
-            tap(resumen => {
-                if (resumen) {
-                    resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
-                    this.fecha = resumen.fechaEgreso || this.fecha;
+                if (capa === 'estadistica-v2') {
+                    return this.mapaCamasService.resumenDesdePrestacion$;
                 }
+                return of(null);
             }),
+            map(resumen => resumen.registros?.filter(r => r.tipo === 'epicrisis')),
             cache()
         );
 
@@ -182,14 +180,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.ambito2,
             this.mapaCamasService.selectedCama,
-            this.mapaCamasService.prestacion$
-        ]).subscribe(([view, capa, ambito, cama, prestacion]) => {
+            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.resumenDesdePrestacion$
+        ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
-            let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
+            let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha || moment().toDate();
 
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
-                fecha = moment().toDate();
+                fecha = resumen?.fechaEgreso || moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
@@ -219,8 +218,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     }
                     const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
                     const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
+                    const idInternacion = resumen?.id || prestacion.id;
 
-                    this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, this.prestacion.id)
+                    this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
                         .subscribe((snapshot) => {
                             snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
                             this.cama = snapshot[0];
@@ -269,7 +269,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.setDiasEstada();
             this.checkEstadoCama();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
-
         }
     }
 
@@ -294,7 +293,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     egresoSimplificado(estado) {
-        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion || this.capa === 'estadistica-v2') {
+        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
             let estadoPatch = {};
             if (!this.cama.sala) {// si no es sala comun
                 estadoPatch = {
@@ -320,7 +319,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 estadoPatch = this.cama;
             }
             const saveInternacion = () => {
-                if (this.capa !== 'estadistica') {
+                if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                     return this.internacionResumenService.update(this.cama.idInternacion, {
                         tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                         fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
