@@ -1,9 +1,9 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { TurnoService } from '../../services/turno.service';
+import { cache } from '@andes/shared';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { cache } from '@andes/shared';
+import { map } from 'rxjs/operators';
+import { TurnoService } from '../../services/turno.service';
 
 @Component({
     selector: 'pdp-mis-turnos',
@@ -66,7 +66,7 @@ export class PDPMisTurnosComponent implements OnInit {
     }
 
     showNotificar() {
-        this.router.navigate(['notificar-necesidad'], {relativeTo: this.activeRoute });
+        this.router.navigate(['notificar-necesidad'], { relativeTo: this.activeRoute });
     }
 
     /**

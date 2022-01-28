@@ -25,7 +25,7 @@ export interface ISnapshot {
     nombre: String;
     tipoCama: ISnomedConcept;
     equipamiento: ISnomedConcept[];
-    idCama: String;
+    idCama: string;
     paciente?: {
         id: String;
         documento: String;

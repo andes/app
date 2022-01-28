@@ -87,7 +87,7 @@ export class FormBuilderItemComponent implements OnInit {
                 this.lastCallSubscription.unsubscribe();
             }
 
-            const params = {...elemento.request.params};
+            const params = { ...elemento.request.params };
             Object.keys(params).forEach((key) => {
                 const value: string = params[key];
                 if (value.startsWith('$')) {
@@ -125,7 +125,7 @@ export class FormBuilderItemComponent implements OnInit {
             }
         }
 
-        const b = this.items.reduce((flag, current) => flag && current.isValid() , true);
+        const b = this.items.reduce((flag, current) => flag && current.isValid(), true);
         if (this.formulario) {
             return b && this.formulario.valid;
         }
@@ -134,7 +134,7 @@ export class FormBuilderItemComponent implements OnInit {
 
 
     makeRequest(requestData) {
-        const params = {...requestData.params};
+        const params = { ...requestData.params };
         Object.keys(params).forEach((key) => {
             const value: string = params[key];
             if (value.startsWith('$')) {

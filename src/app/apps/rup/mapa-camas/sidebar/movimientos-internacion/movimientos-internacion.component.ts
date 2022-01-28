@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import { auditTime, catchError, map, startWith, takeUntil } from 'rxjs/operators';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, combineLatest, of } from 'rxjs';
-import { startWith, map, auditTime, catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -87,7 +87,9 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
                 return movimientos.filter((mov) => {
                     return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
                 }).map(mov => {
-                    mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
+                    if (mov.sectores) {
+                        mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
+                    }
                     return mov;
                 });
             })

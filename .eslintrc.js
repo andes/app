@@ -120,7 +120,9 @@ module.exports = {
             "1tbs",
             { "allowSingleLine": true }
         ],
+        "object-curly-spacing": ["error", "always"],
         "curly": "error",
+        "comma-spacing": ["error", { "before": false, "after": true }],
         "dot-notation": "off",
         "eol-last": "error",
         "eqeqeq": [
