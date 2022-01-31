@@ -3,13 +3,13 @@
         <ng-container>
             <plex-title size="sm" titulo="Calendario de Agendas">
                 <plex-bool *ngIf="mostrarCalendario" [(ngModel)]="mostrarNoDisponibles" type="slide"
-                    name="mostrarNoDisponibles" label="Agendas sin turnos"
-                    title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
-                    (change)="actualizar()"></plex-bool>
+                           name="mostrarNoDisponibles" label="Agendas sin turnos"
+                           title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
+                           (change)="actualizar()"></plex-bool>
                 <plex-bool *ngIf="mostrarCalendario" class="ml-2" [(ngModel)]="mostrarFinesDeSemana" type="slide"
-                    name="mostrarFinesDeSemana" label="Sábados y domingos"
-                    title="{{mostrarFinesDeSemana ? 'Mostrar sábados y domingos' : 'Ocultar sábados y domingos'}}"
-                    (change)="actualizar()">
+                           name="mostrarFinesDeSemana" label="Sábados y domingos"
+                           title="{{mostrarFinesDeSemana ? 'Mostrar sábados y domingos' : 'Ocultar sábados y domingos'}}"
+                           (change)="actualizar()">
                 </plex-bool>
 
                 <plex-button class="mx-2" type="info" size="sm" icon="chevron-left" (click)="cambiarMes('-')">
@@ -18,38 +18,39 @@
                 <plex-button class="ml-2" type="info" size="sm" icon="chevron-right" (click)="cambiarMes('+')">
                 </plex-button>
                 <plex-button label="Cancelar" class="ml-2" type="danger" size="sm" icon="danger" size="sm"
-                    (click)="noSeAsignaTurno()">
+                             (click)="noSeAsignaTurno()">
                 </plex-button>
             </plex-title>
 
             <plex-grid size="lg" type="full">
                 <plex-wrapper>
                     <plex-select *ngIf="!_solicitudPrestacion?.solicitud && !tipoPrestacionesPermitidas"
-                        [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
-                        label="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
+                                 [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                                 label="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
                     </plex-select>
                     <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion && !tipoPrestacionesPermitidas"
-                        [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
-                        (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()"
-                        name="tipoPrestacion" [readonly]="true">
+                                 [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
+                                 (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación"
+                                 (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                     </plex-select>
 
                     <plex-select *ngIf="tipoPrestacionesPermitidas" [(ngModel)]="opciones.tipoPrestacion"
-                        [data]="tipoPrestacionesPermitidas" label="Tipos de Prestación" (change)="filtrar()"
-                        name="tipoPrestacion">
+                                 [data]="tipoPrestacionesPermitidas" label="Tipos de Prestación" (change)="filtrar()"
+                                 name="tipoPrestacion">
                     </plex-select>
 
                     <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
-                        (getData)="loadProfesionales($event)" label="Equipo de Salud"
-                        labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                 (getData)="loadProfesionales($event)" label="Equipo de Salud"
+                                 labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                     </plex-select>
                     <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado" label="Profesional"
-                        [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
-                        labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                 [(ngModel)]="_solicitudPrestacion.solicitud.profesional"
+                                 (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre"
+                                 (change)="filtrar()" name="profesional">
                     </plex-select>
                     <plex-select *ngIf="(_solicitudPrestacion?.solicitud && !autocitado) " label="Profesional"
-                        [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
-                        labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                 [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
+                                 labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                     </plex-select>
                 </plex-wrapper>
             </plex-grid>
@@ -58,10 +59,10 @@
             </div>
             <!--Calendario-->
             <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda"
-                [estado]="estadoT" [opcionesCalendario]="!mostrarFinesDeSemana"
-                [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion"
-                [filtroPrestacion]="opciones.tipoPrestacion" [tipoTurno]="tipoTurno"
-                (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+                            [estado]="estadoT" [opcionesCalendario]="!mostrarFinesDeSemana"
+                            [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion"
+                            [filtroPrestacion]="opciones.tipoPrestacion" [tipoTurno]="tipoTurno"
+                            (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
@@ -83,40 +84,48 @@
         </ng-container>
 
         <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT === 'dinamica'">
-            <!--Header agenda-->
-            <div class="pt-3 text-center">
-                <div>Agenda seleccionada
-                    <plex-icon *ngIf="agenda.link" tooltip="Agenda Virtual" name="monitor"></plex-icon>
+            <plex-title titulo="Dar turno" size="sm"></plex-title>
+            <div class="contenedor">
+                <div class="btn-prev" aria-role="button" (click)="verAgenda('izq')"
+                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice-1]}">
+                    <plex-icon name="pico-izquierda"></plex-icon>
                 </div>
-                <!-- Botones para ver más agendas -->
-                <plex-button *ngIf="agendasDelDia && agendasDelDia[indice-1]" type="info" size="sm" icon="chevron-left"
-                    class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
-                <span class="mx-2">{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                    <plex-badge type="{{ estadosAgenda[agenda.estado].class }}">
-                        {{ estadosAgenda[agenda.estado].nombre }}</plex-badge>
-                    <plex-button *ngIf="puedeDarSobreturno" class="ml-1" ariaLabel="agregar sobreturno" type="success"
-                        size="sm" icon="account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
-                    </plex-button>
-                </span>
-                <span class="mx-2" *ngIf="estadoT==='dinamica'">
-                    {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
-                </span>
-                <plex-button *ngIf="agendasDelDia && agendasDelDia[indice+1]" type="info" size="sm" icon="chevron-right"
-                    class="text-lg" title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
-                <!-- Listado de prestaciones -->
-                <div *ngIf="agenda && agenda.tipoPrestaciones">
-                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                        {{ tipoPrestacion.term }}
-                    </div>
+                <div class="contenido">
+                    <plex-grid type="full" cols="3" justify="start">
+                        <plex-badge type="info" class="mr-1">
+                            AGENDA {{indice+1}} /{{agendasDelDia.length}}
+                        </plex-badge>
+                        <plex-badge type="warning" class="mr-1">
+                            {{agendasDelDia[indice].turnosDisponibles}}
+                            <plex-icon name="calendario-fecha" size="md"></plex-icon>
+                        </plex-badge>
+                        <plex-button *ngIf="puedeDarSobreturno" class="mr-1" ariaLabel="agregar sobreturno"
+                                     type="success" size="sm" icon="account-plus" (click)="agregarSobreturno()"
+                                     title="Agregar Sobreturno">
+                        </plex-button>
+                        <plex-button *ngIf="agenda.link" size="sm" type="default" tooltipPosition="top"
+                                     tooltip="Agenda Virtual">
+                            <plex-icon name="monitor"></plex-icon>
+                        </plex-button>
+                    </plex-grid>
+                    <plex-grid responsive type="auto" size="md">
+                        <plex-label size="md" case="capitalize" titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
+                                    subtitulo="Desde las {{agenda.horaInicio | date: 'HH:mm'}} hasta las {{agenda.horaFin | date: 'HH:mm'}}hs">
+                        </plex-label>
+                        <plex-label size="md" titulo="Prestación"
+                                    subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
+                        </plex-label>
+                        <plex-label *ngIf="agenda.profesionales.length !== 0" size="md" titulo="Equipo de Salud"
+                                    subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                        </plex-label>
+                        <plex-label *ngIf="agenda.espacioFisico" size="md" titulo="Espacio Físico"
+                                    subtitulo="{{agenda | espacioFisico}}">
+                        </plex-label>
+                    </plex-grid>
                 </div>
-                <div *ngIf="agenda && agenda.profesionales">
-                    <!-- Listado de Equipo de Salud -->
-                    <div *ngFor="let profesional of agenda.profesionales let i = index">
-                        {{profesional | nombre}}
-                    </div>
-                </div>
-                <div *ngIf="agenda | espacioFisico" class='text-capitalize'>
-                    {{ agenda | espacioFisico }}
+                <div class="btn-next" aria-role="button" (click)="verAgenda('der')"
+                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice+1]}">
+                    <plex-icon name="pico-derecha"></plex-icon>
                 </div>
             </div>
             <!-- Tiene turnos disponibles -->
@@ -133,7 +142,7 @@
                                 <td>Del día</td>
                                 <td>Programados</td>
                                 <ng-container
-                                    *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitud else llaveComun">
+                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitud else llaveComun">
                                 </ng-container>
                                 <ng-template #llaveComun>
                                     <td>Con llave</td>
@@ -144,7 +153,7 @@
                                     </td>
                                 </ng-template>
                                 <ng-container
-                                    *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun">
+                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun">
                                 </ng-container>
                                 <ng-template #profesionalComun>
                                     <td>Profesional</td>
@@ -162,7 +171,7 @@
                                 <td>{{countBloques[findIndex(bloque)]?.delDia}}</td>
                                 <td>{{countBloques[findIndex(bloque)]?.programado}}</td>
                                 <ng-container
-                                    *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor">
+                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor">
                                 </ng-container>
                                 <ng-template #llaveComunValor>
                                     <td>{{countBloques[findIndex(bloque)]?.gestion}}</td>
@@ -173,7 +182,7 @@
                                     </td>
                                 </ng-template>
                                 <ng-container
-                                    *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitudValor else profesionalComunValor">
+                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitudValor else profesionalComunValor">
                                 </ng-container>
                                 <ng-template #profesionalComunValor>
                                     <td>{{countBloques[findIndex(bloque)]?.profesional}}</td>
@@ -193,23 +202,23 @@
                         <div *ngFor="let turno of bloque.turnos; let i=index">
                             <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
                                 <div *ngIf="turno.estado == 'disponible'"
-                                    class="text-center hover p-2 mb-3 outline-dashed-default"
-                                    [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                     class="text-center hover p-2 mb-3 outline-dashed-default"
+                                     [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
                                     {{turno.horaInicio | date: 'HH:mm'}}
                                 </div>
                             </div>
                             <div *ngIf="bloque.pacienteSimultaneos">
                                 <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)"
-                                    class="text-center hover p-2 mb-3 outline-dashed-default"
-                                    [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                     class="text-center hover p-2 mb-3 outline-dashed-default"
+                                     [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
                                     {{turno.horaInicio | date: 'HH:mm'}}
                                 </div>
                                 <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
                             </div>
                             <div *ngIf="bloque.citarPorBloque">
                                 <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)"
-                                    class="text-center hover p-2 mb-3 outline-dashed-default"
-                                    [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                     class="text-center hover p-2 mb-3 outline-dashed-default"
+                                     [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
                                     {{turno.horaInicio | date: 'HH:mm'}}
                                 </div>
                                 <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
@@ -229,7 +238,7 @@
                         </div>
                     </div>
                     <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover"
-                        (click)="seleccionarAlternativa(i)">
+                       (click)="seleccionarAlternativa(i)">
                         <div class="row">
                             <div class="col col-md-12" *ngIf="alternativa.horaInicio">
                                 <label>Fecha: </label>
@@ -241,7 +250,7 @@
                             <div class="col col-md-12" *ngIf="alternativa.tipoPrestaciones">
                                 <label>Tipo de Prestación: </label>
                                 <span
-                                    *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}}
+                                      *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}}
                                     - </span>
                                 <br>
                             </div>
@@ -328,29 +337,30 @@
                 <div class="col">
                     <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
                         <label
-                            *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador!=='SUMAR'">Obra
+                               *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador!=='SUMAR'">Obra
                             Social </label>
                         <label
-                            *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador==='SUMAR'">Financiador
+                               *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador==='SUMAR'">Financiador
                         </label>
 
                         <div>{{obraSocialPaciente.financiador}}</div>
                     </ng-container>
                     <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
-                        name="obraSocialPaciente" (getData)="loadObrasSociales($event)" labelField="financiador">
+                                 name="obraSocialPaciente" (getData)="loadObrasSociales($event)"
+                                 labelField="financiador">
                     </plex-select>
                 </div>
             </div>
             <div class="row" *ngIf="desplegarOS && obraSocialPaciente">
                 <div class="col">
                     <plex-text label="Número de Afiliado" name="obraSocialPaciente.numeroAfiliado"
-                        [(ngModel)]="obraSocialPaciente.numeroAfiliado"></plex-text>
+                               [(ngModel)]="obraSocialPaciente.numeroAfiliado"></plex-text>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta"
-                        [(ngModel)]="motivoConsulta"></plex-text>
+                               [(ngModel)]="motivoConsulta"></plex-text>
                 </div>
             </div>
             <div class="row">
@@ -371,22 +381,22 @@
                 <div class="col">
                     <!--Otros datos-->
                     <plex-select *ngIf="!turno.tipoPrestacion || (dinamica && bloque.tipoPrestaciones.length > 1)"
-                        label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
-                        name="turnoTipoPrestacion"></plex-select>
+                                 label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion"
+                                 [data]="bloque.tipoPrestaciones" name="turnoTipoPrestacion"></plex-select>
                     <div class="row">
                         <div class="col-6">
                             <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono()"
-                                name="telefono"></plex-phone>
+                                        name="telefono"></plex-phone>
                         </div>
                         <div class="col-6">
                             <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
-                                name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                       name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                         </div>
                     </div>
                     <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
                     </plex-text>
                     <plex-text *ngIf="agenda.link" tooltip="Puede cambiar link de turno virtual" label="Link"
-                        name="link" [(ngModel)]="link">
+                               name="link" [(ngModel)]="link">
                     </plex-text>
 
                 </div>
@@ -395,7 +405,7 @@
             <div class="row" *ngIf="!hideDarTurno && estadoT === 'confirmacion'">
                 <div class="col text-left">
                     <plex-button class="text-left" label="Cambiar horario" type="info"
-                        (click)="seleccionarAgenda(agendasDelDia)"></plex-button>
+                                 (click)="seleccionarAgenda(agendasDelDia)"></plex-button>
                 </div>
                 <div class="col text-right">
                     <plex-button class="text-right" label="Confirmar" type="success" (click)="darTurno()">
