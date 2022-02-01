@@ -382,8 +382,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (prestaciones.length) {
             this.exportHudsService.peticionHuds({ prestaciones }).subscribe(res => {
                 if (res) {
-                    this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
+                    this.plex.toast('success', 'Su pedido esta siendo procesado', 'Información', 2000);
                     this.getPendientes();
+                    this.descargasPendientes = true;
                 }
             });
         } else {

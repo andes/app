@@ -2,7 +2,8 @@
     <plex-layout-main>
 
         <plex-title titulo="Turnos y prestaciones">
-            <plex-button label="Descargas pendientes" size="sm" type="info" (click)="mostrarPendientes()">
+            <plex-button label="Descargas pendientes" size="sm" type="info" (click)="mostrarPendientes()"
+                         tooltip="Ver listado" tooltipPosition="left">
             </plex-button>
         </plex-title>
         <!--Botones / Acciones-->
@@ -57,7 +58,8 @@
         <ng-container *ngIf="state$ | async as state">
             <plex-title titulo="Listado" size="sm">
                 <plex-button *ngIf="!showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
-                             [disabled]="!state.enableExport"></plex-button>
+                             [disabled]="!state.enableExport" tooltip="Enviar prestaciones" tooltipPosition="left">
+                </plex-button>
                 <plex-button *ngIf="showHint" label="Exportar" size="sm" type="success" disabled="true"
                              hint="El máximo permitido de prestaciones es de {{prestacionesMax}}" hintType="warning"
                              hintIcon="lock" detach="top">
