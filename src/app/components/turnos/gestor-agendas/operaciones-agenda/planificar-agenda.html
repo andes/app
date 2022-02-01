@@ -384,3 +384,4 @@
     </footer>
 </form>
 <clonar-agenda *ngIf="showClonar && autorizado" [agenda]="modelo" (volverAlGestor)="cancelar()"></clonar-agenda>
+<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (close)="cerrarModal()"></modal-agenda>

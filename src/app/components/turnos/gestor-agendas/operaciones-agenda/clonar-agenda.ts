@@ -1,10 +1,11 @@
-import { Router } from '@angular/router';
-import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
     selector: 'clonar-agenda',
@@ -24,10 +25,13 @@ export class ClonarAgendaComponent implements OnInit {
     }
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
     public autorizado = false;
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
+    public datos;
+    public showModal = false;
     private _agenda: any;
     private estado: Estado = 'noSeleccionado';
     /**
@@ -45,7 +49,13 @@ export class ClonarAgendaComponent implements OnInit {
     private original = true;
     private inicioAgenda: Date;
 
-    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
+    constructor(
+        private serviceAgenda: AgendaService,
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router
+    ) { }
+
     ngOnInit() {
         moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
@@ -271,22 +281,25 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
                 if (conf) {
+                    const elem = this.seleccionados[0];
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                     this.seleccionados = [...this.seleccionados];
                     const data = {
-                        idAgenda: this.agenda.id,
                         clones: this.seleccionados
                     };
-                    this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
-                            this.volverAlGestor.emit(true);
+                    this.serviceAgenda.clonar(this.agenda.id, data).subscribe(
+                        resultado => {
+                            if ((resultado as any).tipoError) {
+                                this.datos = resultado;
+                                this.showModal = true;
+                                this.datos.clonarOguardar = 'clonar';
+                            } else {
+                                this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
+                                    this.volverAlGestor.emit(true);
+                                });
+                            }
                         });
-                    },
-                    err => {
-                        if (err) {
-
-                        }
-                    });
+                    this.seleccionados.splice(0, 0, elem);
                 }
             }).catch(() => {
             });
@@ -297,5 +310,8 @@ export class ClonarAgendaComponent implements OnInit {
 
     cancelar() {
         this.volverAlGestor.emit(true);
+    }
+    cerrarModal() {
+        this.showModal = false;
     }
 }

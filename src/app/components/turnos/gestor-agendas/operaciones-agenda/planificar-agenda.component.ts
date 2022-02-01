@@ -53,6 +53,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public today = new Date();
     public mobileEnabled: null;
     public virtual = false;
+    public datos;
+    public showModal = false;
     showClonar = false;
     showAgenda = true;
     espacioFisicoPropios = true;
@@ -855,21 +857,23 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             const espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe((resultado: any) => {
-                this.plex.toast('success', 'La agenda se guardó correctamente');
-                this.modelo.id = resultado.id;
-                if (clonar) {
-                    this.showClonar = true;
-                    this.showAgenda = false;
+                if ((resultado as any).tipoError) {
+                    this.datos = resultado;
+                    this.showModal = true;
+                    this.datos.clonarOguardar = 'guardar';
                 } else {
-                    this.modelo = {};
-                    this.showAgenda = false;
-                    this.volverAlGestor.emit(true);
+                    this.plex.toast('success', 'La agenda se guardó correctamente');
+                    this.modelo.id = resultado.id;
+                    if (clonar) {
+                        this.showClonar = true;
+                        this.showAgenda = false;
+                    } else {
+                        this.modelo = {};
+                        this.showAgenda = false;
+                        this.volverAlGestor.emit(true);
+                    }
+                    this.hideGuardar = false;
                 }
-                this.hideGuardar = false;
-            },
-            (err) => {
-                this.hideGuardar = false;
-                this.plex.info('warning', err, 'Aviso');
             });
         } else {
             if (!this.verificarNoNominalizada()) {
@@ -950,5 +954,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (!$event.value) {
             this.elementoActivo.cupoMobile = 0;
         }
+    }
+    cerrarModal() {
+        this.showModal = false;
     }
 }
