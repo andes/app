@@ -90,7 +90,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public prestacionValidada = false;
     public disableButton = false;
     public inProgress = false;
-
+    public resumen;
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
@@ -171,7 +171,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 return of(null);
             }),
-            map(resumen => resumen.registros?.filter(r => r.tipo === 'epicrisis')),
+            map(resumen => resumen?.registros.filter(r => r.tipo === 'epicrisis')),
             cache()
         );
 
@@ -184,6 +184,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.resumenInternacion$
         ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
+            this.resumen = resumen;
             let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha || moment().toDate();
 
             if (view === 'listado-internacion' && prestacion) {
@@ -218,14 +219,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     }
                     const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
                     const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
-                    const idInternacion = resumen?.id || prestacion.id;
-
+                    const idInternacion = resumen.id || prestacion.id;
                     this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
                         .subscribe((snapshot) => {
                             snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
                             this.cama = snapshot[0];
-                            this.cama.id = this.cama.idCama;
                             if (this.cama) {
+                                this.cama.id = this.cama.idCama;
                                 this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
@@ -378,12 +378,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.selectPrestacion(prestacion);
                 }
                 if (this.prestacion.ejecucion.registros[1] && this.capa === 'estadistica-v2') {// para actualizar la hora de egreso en el resumen
-                    this.internacionResumenService.update(this.cama.idInternacion, {
+                    const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
+                    this.internacionResumenService.update(idInternacion, {
                         tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                         fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                    }).pipe(
-                        catchError(() => of(null))
-                    );
+                    }).subscribe(() => {
+                        this.plex.toast('success', 'Prestacion actualizada correctamente', 'Prestacion actualizada', 100);
+                    }, () => {
+                        this.plex.info('danger', 'ERROR: La prestación no pudo ser actualizada');
+                    });
                 } else {
                     this.egresoSimplificado(this.estadoDestino);
                     this.cambiarEstado();

@@ -37,7 +37,7 @@
     <ng-container *ngIf="capa === 'estadistica' || capa ==='estadistica-v2'">
         <ng-container *ngIf="registrosEgresoResumen$ | async as registros">
             <plex-title size="sm" justify titulo="Diagnosticos al egreso"></plex-title>
-            <plex-list *ngIf="registros" size="sm" [selectable]="false">
+            <plex-list *ngIf="registros?.length" size="sm" [selectable]="false">
                 <ng-container *ngFor="let registro of registros || []">
                     <plex-item>
                         <plex-label [titulo]="registro.concepto.term"></plex-label>

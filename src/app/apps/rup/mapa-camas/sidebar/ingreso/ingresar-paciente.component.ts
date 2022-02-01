@@ -170,7 +170,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
                 return of(null);
             }),
-            map(resumen => resumen.registros.filter(r => r.tipo === 'valoracion-inicial')),
+            map(resumen => resumen?.registros.filter(r => r.tipo === 'valoracion-inicial')),
             cache()
         );
 
