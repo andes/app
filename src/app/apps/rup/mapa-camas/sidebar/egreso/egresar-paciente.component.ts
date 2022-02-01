@@ -151,7 +151,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-cama')) {
+                if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-camas')) {
                     const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
                     const paciente = prestacion.paciente.id;
 
@@ -352,15 +352,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
             this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
                 this.prestacion.id).subscribe((snapshot) => {
-                    const ultimaCama = snapshot[0];
-                    this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                const ultimaCama = snapshot[0];
+                this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
 
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-                        this.listadoInternacionService.setFechaHasta(moment().toDate());
-                    });
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.listadoInternacionService.setFechaHasta(moment().toDate());
                 });
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+            });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
         }
