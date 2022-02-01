@@ -152,7 +152,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             pacienteID$
         ]).pipe(
             switchMap(([capa, fecha, paciente]) => {
-                if (capa === 'estadistica') {
+                if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-cama')) {
                     const desde = moment(fecha).subtract(12, 'hours').toDate();
                     const hasta = moment(fecha).add(12, 'hours').toDate();
 
@@ -164,9 +164,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         map(resumen => resumen[0])
                     );
                 }
-                if (capa === 'estadistica-v2') {
-                    return this.mapaCamasService.resumenDesdePrestacion$;
+                if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
+                    return this.mapaCamasService.resumenInternacion$;
                 }
+
                 return of(null);
             }),
             map(resumen => resumen.registros.filter(r => r.tipo === 'valoracion-inicial')),

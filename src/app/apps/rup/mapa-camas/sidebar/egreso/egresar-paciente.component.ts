@@ -151,7 +151,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa === 'estadistica') {
+                if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-cama')) {
                     const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
                     const paciente = prestacion.paciente.id;
 
@@ -166,8 +166,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         map(resumen => resumen[0])
                     );
                 }
-                if (capa === 'estadistica-v2') {
-                    return this.mapaCamasService.resumenDesdePrestacion$;
+                if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
+                    return this.mapaCamasService.resumenInternacion$;
                 }
                 return of(null);
             }),
@@ -181,7 +181,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.ambito2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
-            this.mapaCamasService.resumenDesdePrestacion$
+            this.mapaCamasService.resumenInternacion$
         ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
             let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha || moment().toDate();
@@ -319,7 +319,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 estadoPatch = this.cama;
             }
             const saveInternacion = () => {
-                if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+                if (this.capa !== 'estadistica') {
                     return this.internacionResumenService.update(this.cama.idInternacion, {
                         tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
                         fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
@@ -352,15 +352,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
             this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
                 this.prestacion.id).subscribe((snapshot) => {
-                const ultimaCama = snapshot[0];
-                this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                    const ultimaCama = snapshot[0];
+                    this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
 
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.listadoInternacionService.setFechaHasta(moment().toDate());
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        this.listadoInternacionService.setFechaHasta(moment().toDate());
+                    });
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
                 });
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
-            });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
         }
@@ -377,8 +377,18 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (this.view === 'listado-internacion') {
                     this.mapaCamasService.selectPrestacion(prestacion);
                 }
-                this.egresoSimplificado(this.estadoDestino);
-                this.cambiarEstado();
+                if (this.prestacion.ejecucion.registros[1] && this.capa === 'estadistica-v2') {// para actualizar la hora de egreso en el resumen
+                    this.internacionResumenService.update(this.cama.idInternacion, {
+                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                    }).pipe(
+                        catchError(() => of(null))
+                    );
+                } else {
+                    this.egresoSimplificado(this.estadoDestino);
+                    this.cambiarEstado();
+                }
+
             });
         }
     }

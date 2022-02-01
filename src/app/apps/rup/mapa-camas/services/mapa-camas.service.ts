@@ -196,36 +196,45 @@ export class MapaCamasService {
         );
 
         this.resumenInternacion$ = combineLatest([
+            this.selectedPrestacion,
             this.selectedCama,
             this.ambito2,
             this.capa2
         ]).pipe(
-            switchMap(([cama, ambito, capa]) => {
+            switchMap(([prestacion, cama, ambito, capa]) => {
+
                 if (capa !== 'estadistica') {
-                    if (cama.idInternacion) {
+                    if (cama?.idInternacion) {
                         // mapa de camas
                         return this.internacionResumenHTTP.get(cama.idInternacion);
                     }
                     // listado de internacion
-                    const idPrestacion = this.selectedPrestacion.getValue()?.id;
-                    if (idPrestacion) {
-                        return this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
-                            map(resumen => resumen[0])
+                    if (prestacion?.id) {
+                        return this.selectedPrestacion.pipe(
+                            map(prestacion => prestacion.id),
+                            switchMap(idPrestacion =>
+                                this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
+                                    map(resumen => resumen[0]),
+                                    catchError(() => of(null)),
+                                    cache()
+                                ))
                         );
                     }
                 }
                 return of(null);
+
             }),
             cache()
         ) as Observable<IResumenInternacion>;
-
+        // falta el caso del mapa de camas, deberia reaccionar a la seleccion de una cama.
         this.resumenDesdePrestacion$ = this.selectedPrestacion.pipe(
             map(prestacion => prestacion.id),
-            switchMap(idPrestacion => this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
-                map(resumen => resumen[0]),
-                catchError(() => of(null)),
-                cache()
-            ))
+            switchMap(idPrestacion =>
+                this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
+                    map(resumen => resumen[0]),
+                    catchError(() => of(null)),
+                    cache()
+                ))
         );
 
         this.camaSelectedSegunView$ = this.view.pipe(
@@ -375,7 +384,7 @@ export class MapaCamasService {
                     snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
