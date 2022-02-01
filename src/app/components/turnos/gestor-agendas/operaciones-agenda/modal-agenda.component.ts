@@ -14,7 +14,7 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
         <plex-modal-subtitle *ngIf="dato.tipoError === 'espacio-fisico'" center class="font-subtitle text-muted text-center">
             El espacio físico está asignado a otra agenda en ese horario.
         </plex-modal-subtitle>
-    <main style="overflow-y: hidden;">
+    <main class="hide-scroll">
         <div class="w-100">
             <plex-title size="sm" titulo="Detalles"></plex-title>
             <plex-grid type="full" cols="2">
@@ -33,7 +33,8 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
         ACEPTAR
     </plex-button>
 </plex-modal>
-    `
+    `,
+    styleUrls: ['modal-agenda.scss'],
 })
 
 export class ModalAgendaComponent {
