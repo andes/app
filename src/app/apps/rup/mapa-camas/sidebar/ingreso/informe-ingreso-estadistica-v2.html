@@ -2,8 +2,9 @@
     <plex-title titulo="INGRESO" size="md">
         <ng-container *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
             <plex-button *ngIf="permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning"
-                            size="sm" (click)="toggleEdit()" class="mr-1">
+                        size="sm" (click)="toggleEdit()" class="mr-1">
             </plex-button>
+            <ng-content></ng-content>
         </ng-container>
     </plex-title>
 

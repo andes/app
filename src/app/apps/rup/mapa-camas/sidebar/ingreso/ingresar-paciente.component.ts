@@ -432,7 +432,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     return of(null);
                 }
                 // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
-                return this.internacionResumenService.update(cama.idInternacion, { fechaIngreso: this.informeIngreso.fechaIngreso });
+                return this.internacionResumenService.update(cama.idInternacion, {
+                    idPrestacion: this.prestacion.id,
+                    fechaIngreso: this.informeIngreso.fechaIngreso
+                });
             })
         ) as Observable<IResumenInternacion>;
     }
@@ -468,6 +471,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.onSave.emit();
             }
         } else {
+            if (nuevaPrestacion) {
+                this.prestacion = nuevaPrestacion;
+            }
             if (this.cama.idInternacion) {
                 // Edición de internación existente por capa medica/enfermeria
                 this.sincronizarCamaResumen(idInternacion).subscribe(() => {
@@ -503,10 +509,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 createAction.pipe(
                     switchMap(internacion => {
                         this.cama.idInternacion = internacion.id;
-                        if (nuevaPrestacion?.id === internacion?.idPrestacion) {
-                            // nuevo ingreso desde capa estadistica-v2
-                            this.prestacion = nuevaPrestacion;
-                        }
                         return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
                     })
                 ).subscribe(camaEstado => {
@@ -637,12 +639,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        if (!this.prestacion) {
-            this.mapaCamasService.select(null);
-        } else {
-            this.checkEstadoCama();
-            this.checkMovimientos();
-        }
+        this.checkEstadoCama();
+        this.checkMovimientos();
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 

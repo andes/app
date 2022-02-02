@@ -534,6 +534,7 @@ export class MapaCamasService {
                     return of([]);
                 }
             }),
+            catchError(() => of([])),
             cache()
         );
     }

@@ -8,6 +8,11 @@
             <!-- ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')" [capa]='capa'
                         [permisosIngreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
+                <ng-container *ngIf="anular$ | async">
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                    (click)="onAnularInternacion()">
+                    </plex-button>
+                </ng-container>
             </app-informe-ingreso-estadistica-v2>
             <!-- ESTADISTICA -->
             <app-informe-ingreso *ngIf="capa === 'estadistica'" (cancel)="activatedOption('ingreso')">
@@ -15,7 +20,7 @@
                             (click)="toggleEdit()" class="mr-1">
                 </plex-button>
                 <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                    <plex-button class="ml-1" size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
                                 (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>

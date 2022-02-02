@@ -1,13 +1,14 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { combineLatest, Observable, Subscription, of } from 'rxjs';
-import { auditTime, map, tap, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { auditTime, map, switchMap } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
+import { InternacionResumenHTTP } from '../../../services/resumen-internacion.http';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -47,7 +48,8 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         private mapaCamasHTTP: MapaCamasHTTP,
         private plex: Plex,
         private prestacionesService: PrestacionesService,
-        private listadoInternacionService: ListadoInternacionService
+        private listadoInternacionService: ListadoInternacionService,
+        private internacionResumenHTTP: InternacionResumenHTTP
     ) { }
 
     ngOnDestroy() {
@@ -158,33 +160,27 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     }
 
     deshacerInternacion(completo: boolean) {
+        // deshacer desde listado de internacion
         this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
             if (resultado) {
+                const idPrestacion = this.mapaCamasService.selectedPrestacion.getValue()?.id;
                 combineLatest([
                     this.prestacion$,
-                    this.resumenInternacion$
+                    this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
+                        map(resumen => resumen[0])
+                    )
                 ]).pipe(
                     switchMap(([prestacion, resumen]) => {
                         const idInternacion = resumen?.id || prestacion?.id;
-                        return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo);
-                    }),
-                    switchMap(response => {
-                        if (response.status) {
-                            // puede ser paciente internado por estadistica o estadistica-v2
-                            return combineLatest([
-                                this.prestacion$,
-                                this.resumenInternacion$
-                            ]);
-                        }
-                        return of(null);
-                    }),
-                    switchMap(([prestacion, resumen]) => {
-                        const idPrestacion = resumen?.idPrestacion || prestacion?.id;
-                        const prestacionAux = {
-                            id: idPrestacion,
-                            solicitud: { turno: null }
-                        };
-                        return this.prestacionesService.invalidarPrestacion(prestacionAux);
+                        return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
+                            switchMap(() => {
+                                const prestacionAux = {
+                                    id: idPrestacion,
+                                    solicitud: { turno: null }
+                                };
+                                return this.prestacionesService.invalidarPrestacion(prestacionAux);
+                            })
+                        );
                     })
                 ).subscribe(() => {
                     this.plex.info('success', 'Se deshizo la internación', 'Éxito');;

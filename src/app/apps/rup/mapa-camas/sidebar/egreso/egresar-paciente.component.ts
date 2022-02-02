@@ -216,7 +216,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     }
                     const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
                     const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
-                    const idInternacion = resumen.id || prestacion.id;
+                    const idInternacion = resumen?.id || prestacion.id;
                     this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
                         .subscribe((snapshot) => {
                             snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
@@ -375,7 +375,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (this.view === 'listado-internacion') {
                         this.mapaCamasService.selectPrestacion(prestacion);
                     }
-                    if (this.prestacion.ejecucion.registros[1] && this.capa === 'estadistica-v2') {
+                    if (this.resumen?.fechaEgreso && this.capa === 'estadistica-v2') {
                         const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
                         // actualiza fecha y tipo de egreso en el resumen para mantener la sincronización
                         return this.internacionResumenService.update(idInternacion, {
@@ -390,6 +390,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }),
             ).subscribe(() => {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
+                this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
             }, () => {
                 this.plex.info('danger', 'Error al intentar actualizar los datos');
             });

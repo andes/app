@@ -13,6 +13,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 
 
 @Component({
@@ -89,7 +90,8 @@ export class CamaDetalleComponent implements OnInit {
         private prestacionesService: PrestacionesService,
         public permisosMapaCamasService: PermisosMapaCamasService,
         private turneroService: TurneroService,
-        private motivoAccesoService: ModalMotivoAccesoHudsService
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private internacionResumenHTTP: InternacionResumenHTTP
     ) {
     }
 
@@ -211,17 +213,20 @@ export class CamaDetalleComponent implements OnInit {
                     first(),
                     switchMap(cama => this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.idInternacion, completo)),
                     switchMap(response => {
+                        // status es true si se desea eliminar internacion completa
                         if (response.status) {
-                            if (this.mapaCamasService.capa === 'estadistica') {
-                                return this.cama$.pipe(
-                                    first(),
-                                    map(cama => cama.idInternacion)
-                                );
-                            } else if (this.mapaCamasService.capa === 'estadistica-v2') {
-                                return this.mapaCamasService.resumenInternacion$.pipe(
-                                    map(resumen => resumen?.idPrestacion)
-                                );
-                            }
+                            return this.cama$.pipe(
+                                first(),
+                                switchMap(cama => {
+                                    if (this.mapaCamasService.capa === 'estadistica') {
+                                        return of(cama.idInternacion);
+                                    }
+                                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                                        map(resumen => resumen?.idPrestacion)
+                                        // Si el efector no usa estadistica-v2 entonces esto retornará undefined
+                                    );
+                                })
+                            );
                         }
                         return of(null);
                     }),
