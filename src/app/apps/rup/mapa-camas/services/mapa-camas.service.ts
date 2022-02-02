@@ -165,9 +165,7 @@ export class MapaCamasService {
             switchMap(([prestacion, cama, view, capa]) => {
                 if (view === 'listado-internacion') {
                     if (prestacion.id) {
-                        return this.prestacionService.getById(prestacion.id, { showError: false }).pipe(
-                            catchError(() => of(null))
-                        );
+                        return this.prestacionService.getById(prestacion.id, { showError: false });
                     }
                     return of(null);
                 }
@@ -176,10 +174,7 @@ export class MapaCamasService {
                     return of(null);
                 }
                 if (capa === 'estadistica') {
-                    return this.prestacionService.getById(cama.idInternacion, { showError: false }).pipe(
-                        // No todas las capas tienen un ID de internacion real.
-                        catchError(() => of(null))
-                    );
+                    return this.prestacionService.getById(cama.idInternacion, { showError: false });
                 }
                 return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
                     switchMap(
@@ -191,6 +186,7 @@ export class MapaCamasService {
                         })
                 );
             }),
+            catchError(() => of(null)),
             cache()
         );
 
@@ -213,9 +209,7 @@ export class MapaCamasService {
                             map(prestacion => prestacion.id),
                             switchMap(idPrestacion =>
                                 this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
-                                    map(resumen => resumen[0]),
-                                    catchError(() => of(null)),
-                                    cache()
+                                    map(resumen => resumen[0])
                                 ))
                         );
                     }
@@ -223,6 +217,7 @@ export class MapaCamasService {
                 return of(null);
 
             }),
+            catchError(() => of(null)),
             cache()
         ) as Observable<IResumenInternacion>;
 

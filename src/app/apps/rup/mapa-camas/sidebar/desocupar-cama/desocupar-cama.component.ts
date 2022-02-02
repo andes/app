@@ -52,11 +52,11 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         const HOY = moment().toDate();
         this.inProgress = true;
 
-        this.historial$ = this.mapaCamasService.fecha2.pipe(
+        this.historial$ = this.mapaCamasService.selectedCama.pipe(
             tap(() => this.inProgress = true),
-            switchMap((fecha) => {
-                this.fecha = moment(fecha).toDate();
-                return this.mapaCamasService.historial('internacion', fecha, HOY);
+            switchMap(cama => {
+                this.fecha = moment().toDate();
+                return this.mapaCamasService.historial('internacion', cama.fechaIngreso, HOY);
             }),
             map((movimientos) => {
                 return movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
