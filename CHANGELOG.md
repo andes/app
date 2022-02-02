@@ -1,3 +1,17 @@
+# [5.83.0](https://github.com/andes/app/compare/v5.82.0...v5.83.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* **mapa-camas:** errores egresos ([#2577](https://github.com/andes/app/issues/2577)) ([b8d0942](https://github.com/andes/app/commit/b8d0942840d0da10e9cdc465494610ae3d03a574))
+* **turnos-prestaciones:** separa boton ([#2578](https://github.com/andes/app/issues/2578)) ([e241346](https://github.com/andes/app/commit/e241346157da0430639e0c8f24ef1c140dbfcee4))
+
+
+### Features
+
+* **bi-query:** campo key configurable ([#2572](https://github.com/andes/app/issues/2572)) ([ac4dc9f](https://github.com/andes/app/commit/ac4dc9f07894261b16e04ef3a3941abf70159f3e))
+* **CIT-147:** Descarga del csv del listado de pacientes en turnos y prestaciones ([#2573](https://github.com/andes/app/issues/2573)) ([f474446](https://github.com/andes/app/commit/f4744466bfcb8347c0961b2a13dd98855d492b39))
+
 # [5.82.0](https://github.com/andes/app/compare/v5.81.0...v5.82.0) (2022-01-26)
 
 
