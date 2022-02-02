@@ -42,10 +42,10 @@ export class ValidarCertificadoComponent implements OnInit {
         this.validarCertificadoService.get(params).subscribe(res => {
             if (res) {
                 this.plex.info('success', '', '<div class="small">El certificado es valido<div>');
-            } else {
-                this.plex.info('warning', 'Verifique los datos ingresados', '<div class="small">El certificado es inválido</div>');
             }
-            this.paciente.recaptcha = '';
+        }, () => {
+            this.plex.info('warning', 'Verifique los datos ingresados', '<div class="small">El certificado es inválido</div>');
         });
+        this.paciente.recaptcha = '';
     }
 }
