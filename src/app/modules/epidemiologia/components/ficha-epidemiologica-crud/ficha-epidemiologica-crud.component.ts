@@ -691,7 +691,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 const vacunas = res[0];
                 const ultimaDosis = vacunas.aplicaciones[vacunas.aplicaciones.length - 1];
                 fields['vacunacioncovid'] = true;
-                fields['vacunacionestado'] = vacunas.cantDosis >= 2 ? { id: 'completa', nombre: 'Completa' } : { id: 'incompleta', nombre: 'Incompleta' };
                 fields['fechadosis'] = ultimaDosis.fechaAplicacion;
                 fields['nombrevacunacovid'] = { _id: ultimaDosis.vacuna.id, nombre: ultimaDosis.vacuna.nombre };
             }
