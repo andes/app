@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -108,10 +108,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         private listadoInternacionService: ListadoInternacionService,
         private internacionResumenService: InternacionResumenHTTP,
         private camasHTTP: MapaCamasHTTP,
-
-    ) {
-
-    }
+    ) { }
 
     ngOnDestroy() {
         if (this.subscription) {
@@ -373,25 +370,28 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 op: 'registros',
                 registros: registros
             };
-            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
-                if (this.view === 'listado-internacion') {
-                    this.mapaCamasService.selectPrestacion(prestacion);
-                }
-                if (this.prestacion.ejecucion.registros[1] && this.capa === 'estadistica-v2') {// para actualizar la hora de egreso en el resumen
-                    const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
-                    this.internacionResumenService.update(idInternacion, {
-                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
-                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                    }).subscribe(() => {
-                        this.plex.toast('success', 'Prestacion actualizada correctamente', 'Prestacion actualizada', 100);
-                    }, () => {
-                        this.plex.info('danger', 'ERROR: La prestación no pudo ser actualizada');
-                    });
-                } else {
-                    this.egresoSimplificado(this.estadoDestino);
-                    this.cambiarEstado();
-                }
-
+            this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
+                switchMap(prestacion => {
+                    if (this.view === 'listado-internacion') {
+                        this.mapaCamasService.selectPrestacion(prestacion);
+                    }
+                    if (this.prestacion.ejecucion.registros[1] && this.capa === 'estadistica-v2') {
+                        const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
+                        // actualiza fecha y tipo de egreso en el resumen para mantener la sincronización
+                        return this.internacionResumenService.update(idInternacion, {
+                            tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                            fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                        });
+                    } else {
+                        this.egresoSimplificado(this.estadoDestino);
+                        this.cambiarEstado();
+                    }
+                    return of(null);
+                }),
+            ).subscribe(() => {
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
+            }, () => {
+                this.plex.info('danger', 'Error al intentar actualizar los datos');
             });
         }
     }

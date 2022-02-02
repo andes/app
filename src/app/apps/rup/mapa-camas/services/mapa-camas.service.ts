@@ -58,7 +58,6 @@ export class MapaCamasService {
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
     public resumenInternacion$: Observable<IResumenInternacion>;
-    public resumenDesdePrestacion$: Observable<IResumenInternacion>;
 
     public fechaActual$: Observable<Date>;
 
@@ -226,16 +225,7 @@ export class MapaCamasService {
             }),
             cache()
         ) as Observable<IResumenInternacion>;
-        // falta el caso del mapa de camas, deberia reaccionar a la seleccion de una cama.
-        this.resumenDesdePrestacion$ = this.selectedPrestacion.pipe(
-            map(prestacion => prestacion.id),
-            switchMap(idPrestacion =>
-                this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
-                    map(resumen => resumen[0]),
-                    catchError(() => of(null)),
-                    cache()
-                ))
-        );
+
 
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap(view => {

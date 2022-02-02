@@ -6,12 +6,12 @@
         Debe elegir un perfil para ingresar
     </plex-modal-subtitle>
     <main>
-        <section class="w-100 h-100">
+        <section class="h-50">
             <plex-button *ngFor="let perfil of perfiles" type="info mb-2" size="block" (click)="ingresar(perfil.id)">
                 {{perfil.label}}</plex-button>
         </section>
     </main>
-    <plex-button modal right type="danger" (click)="volver()">
+    <plex-button class="mb-4" modal center type="danger" (click)="volver()">
         CANCELAR
     </plex-button>
 </plex-modal>

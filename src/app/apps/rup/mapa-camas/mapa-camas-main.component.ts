@@ -4,7 +4,12 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-mapa-camas-main',
-    templateUrl: './mapa-camas-main.component.html'
+    templateUrl: './mapa-camas-main.component.html',
+    styles: [`
+        plex-modal main {
+            min-height: 20vh;
+        }
+    `]
 })
 
 export class MapaCamasMainComponent implements OnInit {
