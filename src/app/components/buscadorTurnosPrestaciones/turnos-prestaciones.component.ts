@@ -338,18 +338,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
-        let turno;
+        const turno = this.prestacion;
 
-        // Para facturar desde recupero es necesario enviar el turno
-        if (this.prestacion.turno) {
-            turno = this.prestacion.turno;
-            turno.organizacion = this.prestacion.organizacion;
-            if (!turno.profesionales || turno.profesionales.length) {
-                turno.profesionales = this.prestacion.profesionales;
-            }
-        } else {
-            turno = this.prestacion;
-        }
         if (this.modelo.prepaga !== '') {
             turno.obraSocial = 'prepaga';
             turno.prepaga = this.modelo.prepaga;
