@@ -218,7 +218,7 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                         this.listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.query.skip = this.listado.length;
                         this.inProgress = false;
-                        this.wrapper.desplegado = this.collapse;
+                        this.wrapper.desplegado = this.checkCollapse();
                         return this.listado;
                     })
                 );
@@ -354,5 +354,10 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                 });
             }
         });
+    }
+
+    checkCollapse() {
+        return this.organizacion || this.zonaSanitaria || this.idPcr ||
+            this.filtrarSISA || this.idClasificacion || this.idTipoConfirmacion || this.idClasificacionFinal;
     }
 }
