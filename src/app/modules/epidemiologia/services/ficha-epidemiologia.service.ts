@@ -49,6 +49,9 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                     if (field.clasificacionfinal === 'Sospechoso') {
                         conceptos.push(this.elementoRupService.getConceptosCovidSospechoso());
                     }
+                    if (field.clasificacionfinal === 'Confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoCertificadoAislamiento());
+                    }
                     break;
                 case 'segundaclasificacion':
                     if (field.segundaclasificacion.id === 'confirmado') {
