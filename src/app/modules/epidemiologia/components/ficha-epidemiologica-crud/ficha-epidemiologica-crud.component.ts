@@ -33,6 +33,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     @Input() hideVolver: boolean;
     @Input() fichaName: string;
     @Input() form: any;
+    @Input() volverBuscador: boolean;
     @Output() volver = new EventEmitter<any>();
     @ViewChild('form', { static: false }) ngForm: NgForm;
 
@@ -504,7 +505,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
         const nuevaPrestacion = this.prestacionesService.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'ambulatorio', new Date(), null, null, registrosEjecucion);
         this.prestacionesService.post(nuevaPrestacion).subscribe(prestacion => {
-            this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
+            if (this.volverBuscador) {
+                this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/buscador-ficha-epidemiologica' });
+            } else {
+                this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
+            }
             this.router.navigate(['rup/ejecucion', prestacion.id]);
         });
     }
