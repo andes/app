@@ -1,5 +1,5 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -14,7 +14,7 @@ import { InternacionResumenHTTP } from '../../../services/resumen-internacion.ht
     templateUrl: './internacion-detalle.component.html',
 })
 
-export class InternacionDetalleComponent implements OnInit, OnDestroy {
+export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
 
@@ -49,13 +49,18 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         private plex: Plex,
         private prestacionesService: PrestacionesService,
         private listadoInternacionService: ListadoInternacionService,
-        private internacionResumenHTTP: InternacionResumenHTTP
+        private internacionResumenHTTP: InternacionResumenHTTP,
+        private cdr: ChangeDetectorRef
     ) { }
 
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+    }
+
+    ngAfterViewChecked() {
+        this.cdr.detectChanges();
     }
 
     ngOnInit() {
