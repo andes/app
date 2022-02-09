@@ -1,3 +1,16 @@
+# [5.84.0](https://github.com/andes/app/compare/v5.83.0...v5.84.0) (2022-02-09)
+
+
+### Bug Fixes
+
+* **facturacion:** corrige facturación sumar en turnos con agendas ([#2580](https://github.com/andes/app/issues/2580)) ([50f3436](https://github.com/andes/app/commit/50f3436f52b6ae121616246f443a278b8c2dc98a))
+
+
+### Features
+
+* **buscador-fichas:** actualizaciones buscador ([#2582](https://github.com/andes/app/issues/2582)) ([d9b89ea](https://github.com/andes/app/commit/d9b89ea1bd876bfaf19cbb8035513d7c93eff8a6))
+* **ficha-epidemio:** agrega concepto aislamiento ([#2581](https://github.com/andes/app/issues/2581)) ([9ba7ba2](https://github.com/andes/app/commit/9ba7ba295998860a17b82c7a26fc2093c73ffe2c))
+
 # [5.83.0](https://github.com/andes/app/compare/v5.82.0...v5.83.0) (2022-02-02)
 
 
