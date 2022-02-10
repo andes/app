@@ -65,7 +65,7 @@
                             (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
         </ng-container>
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud">
             <plex-title size="sm" titulo="Búsquedas recientes"></plex-title>
             <ul class="list-group">
@@ -92,6 +92,7 @@
                 </div>
                 <div class="contenido">
                     <plex-grid type="full" cols="3" justify="start">
+
                         <plex-badge type="info" class="mr-1">
                             AGENDA {{indice+1}} /{{agendasDelDia.length}}
                         </plex-badge>
@@ -108,20 +109,33 @@
                             <plex-icon name="monitor"></plex-icon>
                         </plex-button>
                     </plex-grid>
-                    <plex-grid responsive type="auto" size="md">
-                        <plex-label size="md" case="capitalize" titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
-                                    subtitulo="Desde las {{agenda.horaInicio | date: 'HH:mm'}} hasta las {{agenda.horaFin | date: 'HH:mm'}}hs">
-                        </plex-label>
-                        <plex-label size="md" titulo="Prestación"
-                                    subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
-                        </plex-label>
-                        <plex-label *ngIf="agenda.profesionales.length !== 0" size="md" titulo="Equipo de Salud"
-                                    subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
-                        </plex-label>
-                        <plex-label *ngIf="agenda.espacioFisico" size="md" titulo="Espacio Físico"
-                                    subtitulo="{{agenda | espacioFisico}}">
-                        </plex-label>
-                    </plex-grid>
+                    <div class="row w-100 m-0 p-0">
+                        <div class="icono d-flex justify-content-center align-items-center px-2">
+                            <plex-icon name="calendar" size="xl" type="warning"></plex-icon>
+                        </div>
+                        <div class="grid-label p-0">
+                            <div class="mr-1">
+                                <plex-label size="md" case="capitalize"
+                                            titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
+                                            subtitulo="Desde las {{agenda.horaInicio | date: 'HH:mm'}} hasta {{agenda.horaFin | date: 'HH:mm'}}hs">
+                                </plex-label>
+                            </div>
+                            <div class="mr-1">
+                                <plex-label size="md" titulo="Prestación"
+                                            subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
+                                </plex-label>
+                            </div>
+                            <div class="mr-1" *ngIf="agenda.profesionales.length !== 0">
+                                <plex-label size="md" titulo="Equipo de Salud"
+                                            subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                                </plex-label>
+                            </div>
+                            <div class="mr-1" *ngIf="agenda.espacioFisico">
+                                <plex-label size="md" titulo="Espacio Físico" subtitulo="{{agenda | espacioFisico}}">
+                                </plex-label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="btn-next" aria-role="button" (click)="verAgenda('der')"
                      [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice+1]}">
