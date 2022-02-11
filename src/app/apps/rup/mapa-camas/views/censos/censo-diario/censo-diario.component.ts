@@ -4,6 +4,7 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { Location } from '@angular/common';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-censo-diario',
@@ -26,7 +27,8 @@ export class CensosDiariosComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private servicioDocumentos: DocumentosService,
         private organizacionService: OrganizacionService,
-        private location: Location
+        private location: Location,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -111,6 +113,20 @@ export class CensosDiariosComponent implements OnInit {
                     });
                 });
             });
+    }
+
+    descargarCsv() {
+        this.servicioDocumentos.descargarCensoCsv({
+            tipo: 'diario',
+            fecha: this.fecha,
+            unidadOrganizativa: this.selectedUnidadOranizativa.conceptId
+        },
+        'CENSODIARIO'
+        ).subscribe(() => {
+            this.plex.toast('success', 'Descarga exitosa');
+        }, error => {
+            this.plex.toast('danger', 'Descarga fallida');
+        });
     }
 
     descargarCenso() {

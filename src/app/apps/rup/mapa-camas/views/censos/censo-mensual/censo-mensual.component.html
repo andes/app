@@ -22,13 +22,17 @@
                 </div>
                 <div class="d-flex align-items-end col-md-2">
                     <!-- <br> -->
-                    <plex-button [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
+                    <plex-button class="mr-1" [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
                                  label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
                     </plex-button>
-                    <plex-button [disabled]="!(censo.length > 0) || requestInProgress"
+                    <plex-button class="mr-1" [disabled]="disabledDescargar"
                                  [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
                                  type="warning" (click)="descargarCensoMensual()">
-                        <plex-icon name="download"></plex-icon>
+                        <plex-icon class="mr-1" name="download"></plex-icon>PDF
+                    </plex-button>
+                    <plex-button [disabled]="disabledDescargar" type="success"
+                                 (click)="descargarCsv()">
+                        <plex-icon class="mr-1" name="download"></plex-icon>CSV
                     </plex-button>
                 </div>
             </div>

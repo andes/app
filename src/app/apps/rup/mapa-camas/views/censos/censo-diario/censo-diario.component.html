@@ -16,13 +16,16 @@
                     </plex-select>
                 </div>
                 <div class="d-flex align-items-end col-md-2">
-                    <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
+                    <plex-button class="mr-1" [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
                                  (click)="generarCensoDiario()">
                     </plex-button>
-                    <plex-button [disabled]="!censo || requestInProgress"
+                    <plex-button class="mr-1" [disabled]="!censo || !fecha || !selectedUnidadOranizativa || requestInProgress"
                                  [title]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
                                  type="warning" (click)="descargarCenso()">
-                        <plex-icon name="download"></plex-icon>
+                        <plex-icon class="mr-1" name="download"></plex-icon>PDF
+                    </plex-button>
+                    <plex-button [disabled]="!censo || !fecha || !selectedUnidadOranizativa || requestInProgress" type="success" (click)="descargarCsv()">
+                        <plex-icon class="mr-1" name="download"></plex-icon>CSV
                     </plex-button>
                 </div>
             </div>

@@ -52,6 +52,12 @@ export class DocumentosService {
         );
     }
 
+    descargarCensoCsv(params: any, nombreArchivo: string): Observable<any> {
+        return this.server.post(`/modules/rup/internacion/censo-${params.tipo}/csv`, params, { responseType: 'blob' }).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
+    }
+
     descargarReporteInternaciones(params, nombreArchivo: string): Observable<any> {
         return this.server.post('/bi/queries/listado-internacion/csv', { params }, { responseType: 'blob' } as any).pipe(
             saveAs(nombreArchivo, 'csv')
