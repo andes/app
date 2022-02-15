@@ -476,7 +476,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
             if (this.cama.idInternacion) {
                 // Edición de internación existente por capa medica/enfermeria
-                this.sincronizarCamaResumen(idInternacion).subscribe(() => {
+                this.sincronizarCamaResumen(this.cama.idInternacion).subscribe(() => {
                     this.onSave.emit();
                     this.disableButton = false;
                     this.mapaCamasService.select(this.cama);
