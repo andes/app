@@ -24,6 +24,8 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { LoteComponent } from './components/lote/lote.component';
 import { CITASLibModule } from 'src/app/components/turnos/citas.module';
 import { LoteEsquemasComponent } from './components/lote/lote-esquemas.component';
+import { EstadoPacienteComponent } from './components/estado-paciente/estado-paciente.component';
+import { AplicacionesPacienteComponent } from './components/aplicaciones-paciente/aplicaciones-paciente.component';
 
 @NgModule({
     imports: [
@@ -52,6 +54,8 @@ import { LoteEsquemasComponent } from './components/lote/lote-esquemas.component
         MonitoreoInscriptosComponent,
         LoteComponent,
         LoteEsquemasComponent,
+        EstadoPacienteComponent,
+        AplicacionesPacienteComponent
     ],
     providers: [
         {
