@@ -79,6 +79,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     ];
     public segundaClasificacion = [
         { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
+        { id: 'autotest', nombre: 'Autotest' },
+        { id: 'laboPcr', nombre: 'Laboratorio privado (PCR)' },
+        { id: 'laboAntigeno', nombre: 'Laboratorio privado (Antígeno)' },
         { id: 'antigeno', nombre: 'Antígeno' },
         { id: 'pcr', nombre: 'PCR-RT' },
         { id: 'lamp', nombre: 'LAMP (NeoKit)' }
@@ -424,13 +427,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         this.secciones.map(seccion => {
             if (seccion.id === 'clasificacionFinal') {
                 const clasificaciones = {
-                    segundaclasificacion: seccion.fields['segundaclasificacion']?.id,
+                    segundaclasificacion: this.checkConfirmados(seccion.fields['segundaclasificacion']),
                     antigeno: seccion.fields['antigeno']?.id,
                     pcrM: seccion.fields['pcrM'] ? 'muestra' : '',
                     pcr: seccion.fields['pcr']?.id,
                     lamp: seccion.fields['lamp']?.id
                 };
-                if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
+                if (this.checkConfirmados(seccion.fields['segundaclasificacion']) === 'confirmado') {
                     this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
                 } else {
                     if (!seccion.fields['fechamuestra']) {
@@ -700,5 +703,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 fields['nombrevacunacovid'] = { _id: ultimaDosis.vacuna.id, nombre: ultimaDosis.vacuna.nombre };
             }
         });
+    }
+
+    checkConfirmados(field) {
+        if (field?.id === 'autotest' || field?.id === 'laboPcr' || field?.id === 'laboAntigeno') {
+            return 'confirmado';
+        } else {
+            return field?.id;
+        }
     }
 }
