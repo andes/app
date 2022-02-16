@@ -56,6 +56,10 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                 case 'segundaclasificacion':
                     if (field.segundaclasificacion.id === 'confirmado') {
                         conceptos.push(this.elementoRupService.getConceptoCovidConfirmadoNexo());
+                    } else if (field.segundaclasificacion.id === 'autotest' ||
+                        field.segundaclasificacion.id === 'laboPcr'
+                        || field.segundaclasificacion.id === 'laboAntigeno') {
+                        conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
                     }
                     break;
                 case 'pcr':
