@@ -4,10 +4,11 @@ $dark-grey: #999999;
 $light-blue: #edf8fd;
 $orange: #ff8d22;
 
-.contenedor {
+.contenedor-slider {
     width: 100%;
     height: auto;
     display: flex;
+    margin: 2px 0 3px 0;
     .btn-prev,
     .btn-next {
         width: 20px;
@@ -29,32 +30,31 @@ $orange: #ff8d22;
             }
         }
     }
-    .contenido{
+    .contenido-agenda{
         width: 100%;
         margin-left: 1rem;
         margin-right: 1rem;
+
+        plex-help{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }
 
-plex-list section.item {
-    margin-bottom: 0;
-}
-
-.grid-label {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    width: 80%;
-  }
-
-  .icono{
-      width: 20%;
-
-      plex-icon{
-        border: 2px solid $orange;
-        border-radius: 50%;
-        padding: 0.5rem;
+.icono-agenda{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+        
+    plex-icon{
         display: flex;
         justify-content: center;
         align-items: center;
-      }
-  }
+        border: solid 3px $orange;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        padding: 10px;
+    }
+}
