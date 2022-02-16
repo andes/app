@@ -14,7 +14,7 @@
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
             <ng-container *ngIf="prestacion?.id">
-                <plex-button *ngIf="!cama?.esCensable && !esInternacionCensable" type="warning"
+                <plex-button *ngIf="!cama?.esCensable && !esInternacionCensable && (capa === 'estadistica' || capa === 'estadistica-v2')" type="warning"
                              label="Convertir en censable" size="sm" (click)="setValueCensable()">
                 </plex-button>
                 <plex-badge *ngIf="!cama?.esCensable && esInternacionCensable" type="info" size="sm">
