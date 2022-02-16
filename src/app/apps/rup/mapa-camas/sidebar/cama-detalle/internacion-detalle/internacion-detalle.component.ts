@@ -68,12 +68,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         this.editar = false;
         this.prestacion$ = this.mapaCamasService.prestacion$;
 
-        this.subscription = combineLatest(
-            this.mapaCamasService.capa2,
-            this.mapaCamasService.resumenInternacion$
-        ).subscribe(([capa, resumen]) => {
-            this.capa = capa;
-            if (capa !== 'estadistica' && capa !== 'estadistica-v2') {
+        this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
+            this.capa = this.mapaCamasService.capa;
+            if ( this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                 if (resumen?.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },

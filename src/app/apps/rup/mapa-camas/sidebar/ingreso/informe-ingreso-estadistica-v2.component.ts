@@ -5,6 +5,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'app-informe-ingreso-estadistica-v2',
@@ -25,19 +26,21 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     @Input() permisosIngreso;
 
     constructor(
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private prestacionService: PrestacionesService
     ) { }
 
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
-        this.prestacion$ = this.mapaCamasService.prestacion$;
+        this.prestacion$ = this.resumenInternacion$.pipe(
+            switchMap(resumen => this.prestacionService.getById(resumen.idPrestacion, { showError: false }))
+        );
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
                 return prestacion.ejecucion?.registros[0].valor.informeIngreso;
             })
         );
-
         this.paciente$ = combineLatest([
             this.prestacion$,
             this.mapaCamasService.selectedCama
