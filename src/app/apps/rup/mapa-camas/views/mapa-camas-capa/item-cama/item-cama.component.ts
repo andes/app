@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { aporteOxigeno, monitorFisiologico, monitorTelemetrico, respirador } from '../../../constantes-internacion';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 
 @Component({
@@ -32,6 +32,7 @@ export class ItemCamaComponent implements OnChanges {
         aporteOxigeno: false,
         respirador: false,
         monitorParamedico: false,
+        usaRespirador: false
     };
 
     get sectorCama() {
@@ -53,6 +54,7 @@ export class ItemCamaComponent implements OnChanges {
             aporteOxigeno: false,
             respirador: false,
             monitorParamedico: false,
+            usaRespirador: false
         };
         if (this.cama.equipamiento) {
             this.cama.equipamiento.map(equip => {
@@ -68,6 +70,12 @@ export class ItemCamaComponent implements OnChanges {
                     this.equipos.monitorParamedico = true;
                 }
             });
+        }
+        if (this.cama.registros) {
+            const respirador: any[] = this.cama.registros.filter(r => r.tipo === 'respirador');
+            if (respirador.length > 0) {
+                this.equipos.usaRespirador = respirador.some(r => !r.fechaHasta);
+            }
         }
     }
 
