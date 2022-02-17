@@ -21,6 +21,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
     @Output() revisionAgendaEmit = new EventEmitter<boolean>();
     @Output() reasignarTurnosEmit = new EventEmitter<boolean>();
+    @Output() cargarPacientesEmit = new EventEmitter<boolean>();
 
 
     private _agendasSeleccionadas: Array<any>;
@@ -138,6 +139,7 @@ export class BotonesAgendaComponent implements OnInit {
         const puedeBorrar = this.auth.getPermissions('turnos:agenda:puedeBorrar:').length > 0;
         const puedeRevisar = this.auth.getPermissions('turnos:agenda:puedeRevision:').length > 0;
         const puedeNota = this.auth.getPermissions('turnos:agenda:puedeNota:').length > 0;
+        const puedeCargar = this.auth.getPermissions('turnos:agenda:asignacionMasiva:').length > 0;;
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
@@ -170,6 +172,8 @@ export class BotonesAgendaComponent implements OnInit {
             listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
             listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
+            // Hablita carga de pacientes masivos
+            cargaMasiva: puedeCargar && this.puedeCargaMasiva()
         };
     }
 
@@ -261,6 +265,11 @@ export class BotonesAgendaComponent implements OnInit {
         return !this.agendasSeleccionadas.some((agenda: any) => agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida');
     }
 
+    puedeCargaMasiva() {
+        const agenda = this._agendasSeleccionadas[0];
+        return this.cantidadSeleccionadas === 1 && (agenda.estado === 'disponible' || agenda.estado === 'publicada') && agenda.tipoPrestaciones.some(p => p.queries?.length);
+    }
+
     // Verifica que las agendas seleccionadas tengan al menos un turno de acceso directo poder para publicar la agenda
     haySoloTurnosReservados() {
         let band = false;
@@ -349,6 +358,10 @@ export class BotonesAgendaComponent implements OnInit {
     cancelar() {
         this.showEditarAgenda = false;
         this.showBotonesAgenda = true;
+    }
+
+    cargarPacientes() {
+        this.cargarPacientesEmit.emit(true);
     }
 
 }

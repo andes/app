@@ -7,4 +7,5 @@ export interface ITipoPrestacion {
     semanticTag: String;
     noNominalizada?: Boolean;
     ambito?: Array<string>;
+    queries?: String[];
 }

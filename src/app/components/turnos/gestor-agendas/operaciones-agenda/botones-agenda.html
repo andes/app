@@ -66,4 +66,8 @@
                      title="Imprimir carpetas">
         </plex-button>
     </span>
+    <span *ngIf="vistaBotones.cargaMasiva">
+        <plex-button icon="account-multiple-plus" type="success" title="Cargar Pacientes" (click)="cargarPacientes()">
+        </plex-button>
+    </span>
 </div>
