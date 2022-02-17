@@ -2,8 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, combineLatest, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { notNull } from '@andes/shared';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { notNull, cache } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 
@@ -33,7 +33,9 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
         this.prestacion$ = this.resumenInternacion$.pipe(
-            switchMap(resumen => this.prestacionService.getById(resumen.idPrestacion, { showError: false }))
+            switchMap(resumen => this.prestacionService.getById(resumen.idPrestacion, { showError: false })),
+            catchError(() => of(null)),
+            cache()
         );
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),

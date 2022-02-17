@@ -639,8 +639,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        this.checkEstadoCama();
-        this.checkMovimientos();
+        if (this.prestacion || this.resumen) { // Si se trata de un movimiento (Paciente ya ingresado)
+            this.checkEstadoCama();
+            this.checkMovimientos();
+        }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 

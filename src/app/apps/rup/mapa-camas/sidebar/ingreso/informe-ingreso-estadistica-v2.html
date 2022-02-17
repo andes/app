@@ -1,78 +1,81 @@
-<ng-container *ngIf="prestacion$ | async as prestacion; else sinInforme">
-    <plex-title titulo="INGRESO" size="md">
-        <ng-container *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-            <plex-button *ngIf="permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning"
-                        size="sm" (click)="toggleEdit()" class="mr-1">
-            </plex-button>
-            <ng-content></ng-content>
+
+<ng-container *ngIf="resumenInternacion$ | async as resumen">
+    <ng-container *ngIf="prestacion$ | async as prestacion; else sinInforme">
+        <plex-title titulo="INGRESO" size="md">
+            <ng-container *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
+                <plex-button *ngIf="permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning"
+                            size="sm" (click)="toggleEdit()" class="mr-1">
+                </plex-button>
+                <ng-content></ng-content>
+            </ng-container>
+        </plex-title>
+
+        <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
+            <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
+                <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
+                            [subtitulo]="informeIngreso.situacionLaboral">
+                </plex-label>
+                <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
+                            [subtitulo]="informeIngreso.nivelInstruccion">
+                </plex-label>
+                <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
+                            [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+                </plex-label>
+            </paciente-detalle>
+            <fieldset>
+                <plex-title size="sm" titulo="DATOS DE INTERNACION">
+                    <plex-badge *ngIf="prestacion?.ejecucion.registros[0].esCensable" type="info" size="sm">
+                        Censable
+                    </plex-badge>
+                </plex-title>
+
+                <plex-grid cols="2">
+                    <plex-label titulo="Fecha ingreso"
+                                subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+                    </plex-label>
+                    <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
+                    </plex-label>
+                    <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen.nombre }}">
+                    </plex-label>
+                    <plex-label titulo="Especialidad/es"
+                                subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
+                    </plex-label>
+                    <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
+                    </plex-label>
+                </plex-grid>
+
+            </fieldset>
+            <fieldset>
+                <plex-title size="sm" titulo="COBERTURA">
+                </plex-title>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado?.nombre">
+                        </plex-label>
+                    </div>
+                    <div class="col-6">
+                        <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
+                                    [subtitulo]="informeIngreso.obraSocial?.nombre">
+                        </plex-label>
+                    </div>
+                </div>
+            </fieldset>
         </ng-container>
-    </plex-title>
-
-    <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-        <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
-            <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
-                        [subtitulo]="informeIngreso.situacionLaboral">
-            </plex-label>
-            <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
-                        [subtitulo]="informeIngreso.nivelInstruccion">
-            </plex-label>
-            <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
-                        [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
-            </plex-label>
-        </paciente-detalle>
-        <fieldset>
-            <plex-title size="sm" titulo="DATOS DE INTERNACION">
-                <plex-badge *ngIf="prestacion?.ejecucion.registros[0].esCensable" type="info" size="sm">
-                    Censable
-                </plex-badge>
-            </plex-title>
-
-            <plex-grid cols="2">
-                <plex-label titulo="Fecha ingreso"
-                            subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
-                </plex-label>
-                <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
-                </plex-label>
-                <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen.nombre }}">
-                </plex-label>
-                <plex-label titulo="Especialidad/es"
-                            subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
-                </plex-label>
-                <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
-                </plex-label>
-            </plex-grid>
-
-        </fieldset>
-        <fieldset>
-            <plex-title size="sm" titulo="COBERTURA">
-            </plex-title>
-            <div class="row">
-                <div class="col-6">
-                    <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado?.nombre">
-                    </plex-label>
-                </div>
-                <div class="col-6">
-                    <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
-                                [subtitulo]="informeIngreso.obraSocial?.nombre">
-                    </plex-label>
-                </div>
-            </div>
-        </fieldset>
     </ng-container>
-</ng-container>
 
-<ng-template #sinInforme>
-    <plex-title titulo="INGRESO" size="md">
-        <plex-button *ngIf="capa === 'estadistica-v2' && permisosIngreso" tooltip="Completar informe" icon="lapiz-documento" type="warning"
-                        size="sm" class="mr-1" (click)="toggleEdit()">
-        </plex-button>
-        <plex-button *ngIf="capa !== 'estadistica-v2' && permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning" size="sm"
-                     (click)="toggleEdit()" class="mr-1">
-        </plex-button>
-    </plex-title>
-    <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
-    </paciente-detalle>
-    <plex-title size="sm" titulo="DATOS DE INTERNACION"></plex-title>
-    <plex-label *ngIf="resumenInternacion$ | async as resumen" titulo="Fecha ingreso" subtitulo="{{ resumen.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
-    </plex-label>
-</ng-template>
+    <ng-template #sinInforme>
+        <plex-title titulo="INGRESO" size="md">
+            <plex-button *ngIf="capa === 'estadistica-v2' && permisosIngreso" tooltip="Completar informe" icon="lapiz-documento" type="warning"
+                            size="sm" class="mr-1" (click)="toggleEdit()">
+            </plex-button>
+            <plex-button *ngIf="capa !== 'estadistica-v2' && permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning" size="sm"
+                        (click)="toggleEdit()" class="mr-1">
+            </plex-button>
+        </plex-title>
+        <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
+        </paciente-detalle>
+        <plex-title size="sm" titulo="DATOS DE INTERNACION"></plex-title>
+        <plex-label titulo="Fecha ingreso" subtitulo="{{ resumen.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+        </plex-label>
+    </ng-template>
+</ng-container>
