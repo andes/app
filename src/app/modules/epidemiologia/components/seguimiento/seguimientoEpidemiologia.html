@@ -9,21 +9,25 @@
                 </plex-button>
             </plex-title>
             <plex-grid size="lg" type="full">
-                <plex-wrapper>
-                    <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                                   [max]="fechaHasta">
-                    </plex-datetime>
-                    <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                                   [min]="fechaDesde">
-                    </plex-datetime>
-                    <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
-                                 labelField="nombre">
-                    </plex-select>
-                    <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
-                    <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
-                               [(ngModel)]="asignados" (change)="buscar()">
-                    </plex-bool>
-                </plex-wrapper>
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
+                                [max]="fechaHasta">
+                </plex-datetime>
+                <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                                [min]="fechaDesde">
+                </plex-datetime>
+                <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
+                                labelField="nombre">
+                </plex-select>
+                <plex-select grow="1" name="prioridad"  (getData)="getOpcionesSemaforo($event)" label="Prioridad" [(ngModel)]="prioridad"
+                                labelField="label">
+                </plex-select>
+                <plex-select grow="1" name="nombre" tmProfesionales label="Profesional" [(ngModel)]="profesional"
+                                labelField="label">
+                </plex-select>
+                <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
+                <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
+                            [(ngModel)]="asignados" (change)="buscar()">
+                </plex-bool>
             </plex-grid>
             <div *ngIf='(seguimientos$ | async)?.length'>
                 <plex-list [striped]="false" height="calc(100vh - 233px)" (scrolled)="onScroll()">
