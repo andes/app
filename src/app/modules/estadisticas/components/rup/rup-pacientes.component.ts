@@ -8,8 +8,8 @@ import { ConceptosTurneablesService } from '../../../../services/conceptos-turne
 
 
 function hasAncestor(conceptos, _padre, item) {
-    const statedAncestors = conceptos[item.concepto.conceptId].statedAncestors;
-    return !!statedAncestors.find(i => i === _padre.conceptId);
+    const statedAncestors = conceptos[item.concepto.conceptId].relationships;
+    return !!statedAncestors.find(i => i.conceptId === _padre.conceptId);
 }
 
 interface IRegistros {
@@ -48,7 +48,7 @@ export class RupPacientesComponent implements OnInit {
 
     // Permite :hover y click()
     public selectable = true;
-
+    public openSidebar = false;
     public conceptosColumns = [
         {
             key: 'conceptoTerm',
@@ -240,6 +240,16 @@ export class RupPacientesComponent implements OnInit {
             opcional: true
         },
     ];
+    public column = [
+        {
+            key: 'concepto',
+            label: 'Concepto',
+        },
+        {
+            key: 'hijos',
+            label: 'Hijos registrados',
+        },
+    ];
 
     constructor(
         public estService: EstRupService,
@@ -401,9 +411,10 @@ export class RupPacientesComponent implements OnInit {
             this.selectedChilds = this.selectedFather = null;
             this.demografia();
         } else {
-            this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
+            this.selectIndex = this.selectedChilds = this.selectedFather = null;
             this.tableDemografia = this.tableLocalidades = null;
         }
+        this.openSidebar = true;
     }
 
     groupBy(row, padre) {
@@ -411,7 +422,6 @@ export class RupPacientesComponent implements OnInit {
             this.conceptos[concepts[0].conceptId] = concepts[0];
 
             const hijos = this.getChilds(padre);
-
             const elemento: any = {
                 concepto: padre,
                 count: hijos.reduce((a, b) => a + b.count, 0),
@@ -421,11 +431,16 @@ export class RupPacientesComponent implements OnInit {
                 hijos,
                 hijosName: hijos.reduce(((a, item) => a + item.concepto.term + ','), '')
             };
-
             const names = [];
-            elemento.relaciones.filter(e => e.concepto.conceptId !== '371531000').forEach((item) => {
+            elemento.relaciones.filter(e => e.concepto?.conceptId !== '371531000').forEach((item) => {
                 this.registros.forEach((reg) => {
-                    const i = reg.ids.indexOf(item.id);
+                    let i;
+                    if (typeof item === 'string') {
+                        i = reg.ids.indexOf(item);
+                    } else {
+                        i = reg.ids.indexOf(item.id);
+                    }
+                    i = reg.ids.indexOf(item);
                     if (i >= 0) {
                         names.push(reg.concepto.term);
                     }
@@ -439,6 +454,7 @@ export class RupPacientesComponent implements OnInit {
 
             this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
             this.tableDemografia = this.tableLocalidades = null;
+            this.plex.toast('success', 'Concepto agrupado exitosamente');
 
         });
     }
@@ -475,5 +491,9 @@ export class RupPacientesComponent implements OnInit {
             this.tableDemografia = tabla;
             this.tableLocalidades = localidades;
         });
+    }
+
+    cerrar() {
+        this.selectedConcept = null;
     }
 }
