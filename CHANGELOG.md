@@ -1,3 +1,12 @@
+# [5.85.0](https://github.com/andes/app/compare/v5.84.0...v5.85.0) (2022-02-23)
+
+
+### Features
+
+* **citas:** carga masiva ([#2526](https://github.com/andes/app/issues/2526)) ([4543322](https://github.com/andes/app/commit/4543322a96305ca5e5fab09050bc904e087b439f))
+* **ficha:** nuevos tipos de confirmacion ([#2586](https://github.com/andes/app/issues/2586)) ([aba5629](https://github.com/andes/app/commit/aba5629f8d28cb973a21820ab2f80936e8cd745d))
+* **vacunas:** nueva pantalla verificar estado ([#2584](https://github.com/andes/app/issues/2584)) ([c22e1e5](https://github.com/andes/app/commit/c22e1e5bdf323e78ec8f35ef0517e6dceaf14bef))
+
 # [5.84.0](https://github.com/andes/app/compare/v5.83.0...v5.84.0) (2022-02-09)
 
 
