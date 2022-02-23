@@ -1,22 +1,61 @@
-.dar-turnos-section {
-    display: flex;
-    flex-direction: column;
-}
+$blue: #00a8e0;
+$dark-blue: #002738;
+$dark-grey: #999999;
+$light-blue: #edf8fd;
+$orange: #ff8d22;
 
-.calendario-expandido {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-}
-.acciones-dar-turno {
-    display: flex;
-    justify-content: space-around;
-}
-
-.text-ellipsis{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
+.contenedor-slider {
     width: 100%;
-    overflow: hidden;
+    height: auto;
+    display: flex;
+    margin: 2px 0 3px 0;
+    border-bottom: 1px solid $blue;
+    .btn-prev,
+    .btn-next {
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: $blue;
+        color: lightblue;
+        &:hover {
+            plex-icon {
+                color: $dark-blue;
+            }
+        }
+        &.disabled {
+            background: #35474e;
+            plex-icon {
+                color: $dark-grey;
+            }
+        }
+    }
+    .contenido-agenda{
+        width: 100%;
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+        plex-help{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+.icono-agenda{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+        
+    plex-icon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: solid 3px $orange;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        padding: 10px;
+    }
 }

@@ -78,111 +78,82 @@
         </plex-list>
         <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT === 'dinamica'">
             <plex-title titulo="Dar turno" size="sm"></plex-title>
-            <!--Header agenda-->
-            <div class="pt-3 text-center">
-                <div>Agenda seleccionada
-                    <plex-icon *ngIf="agenda.link" tooltip="Agenda Virtual" name="monitor"></plex-icon>
+            <div class="contenedor-slider">
+                <div class="btn-prev" aria-role="button" (click)="verAgenda('izq')"
+                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice-1]}">
+                    <plex-icon name="pico-izquierda"></plex-icon>
                 </div>
-                <!-- Botones para ver más agendas -->
-                <plex-button *ngIf="agendasDelDia && agendasDelDia[indice-1]" type="info" size="sm" icon="chevron-left"
-                             class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
-                <span class="mx-2">{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                    <plex-badge type="{{ estadosAgenda[agenda.estado].class }}">
-                        {{ estadosAgenda[agenda.estado].nombre }}</plex-badge>
-                    <plex-button *ngIf="puedeDarSobreturno" class="ml-1" ariaLabel="agregar sobreturno" type="success"
-                                 size="sm" icon="account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
-                    </plex-button>
-                </span>
-                <span class="mx-2" *ngIf="estadoT==='dinamica'">
-                    {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
-                </span>
-                <plex-button *ngIf="agendasDelDia && agendasDelDia[indice+1]" type="info" size="sm" icon="chevron-right"
-                             class="text-lg" title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
-                <!-- Listado de prestaciones -->
-                <div *ngIf="agenda && agenda.tipoPrestaciones">
-                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                        {{ tipoPrestacion.term }}
-                    </div>
+                <div class="contenido-agenda">
+                    <plex-grid type="full" cols="3" justify="start">
+                        <plex-badge type="info">
+                            AGENDA {{indice+1}} /{{agendasDelDia.length}}
+                        </plex-badge>
+                        <plex-badge type="warning" class="mx-1">
+                            {{agendasDelDia[indice].turnosDisponibles}}
+                            <plex-icon name="calendario-fecha" size="md"></plex-icon>
+                        </plex-badge>
+                        <plex-button *ngIf="puedeDarSobreturno" class="mr-1" type="success" size="sm"
+                                     icon="account-plus" (click)="agregarSobreturno()" tooltipPosition="top"
+                                     tooltip="Agregar Sobreturno">
+                        </plex-button>
+                        <plex-button *ngIf="agenda.link" size="sm" type="default" tooltipPosition="top"
+                                     tooltip="Agenda Virtual" icon="monitor">
+                        </plex-button>
+                    </plex-grid>
+                    <plex-grid type="full" justify="start">
+                        <div class="icono-agenda">
+                            <plex-icon name="calendar" size="xl" type="warning"></plex-icon>
+                        </div>
+                        <plex-grid type="full" cols="2" justify="start">
+                            <plex-label size="md" case="capitalize"
+                                        titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
+                                        subtitulo="Desde {{agenda.horaInicio | date: 'HH:mm'}} hasta {{agenda.horaFin | date: 'HH:mm'}}hs">
+                            </plex-label>
+                            <plex-grid class="m-0" type="full" justify="start" cols="2">
+                                <plex-label size="md" titulo="Prestación"
+                                            subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
+                                </plex-label>
+                                <plex-help *ngIf="agenda.profesionales.length !== 0 || agenda.espacioFisico" titulo=""
+                                           subtitulo="" type="help" size="sm" icon="information-variant">
+                                    <plex-label *ngIf="agenda.profesionales.length !== 0" size="md"
+                                                titulo="Equipo de Salud"
+                                                subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                                    </plex-label>
+                                    <plex-label *ngIf="agenda.espacioFisico" size="md" titulo="Espacio Físico"
+                                                subtitulo="{{agenda | espacioFisico}}">
+                                    </plex-label>
+                                </plex-help>
+                            </plex-grid>
+                        </plex-grid>
+                    </plex-grid>
                 </div>
-                <div *ngIf="agenda && agenda.profesionales">
-                    <!-- Listado de Equipo de Salud -->
-                    <div *ngFor="let profesional of agenda.profesionales let i = index">
-                        {{profesional | nombre}}
-                    </div>
-                </div>
-                <div *ngIf="agenda | espacioFisico" class='text-capitalize'>
-                    {{ agenda | espacioFisico }}
+                <div class="btn-next" aria-role="button" (click)="verAgenda('der')"
+                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice+1]}">
+                    <plex-icon name="pico-derecha"></plex-icon>
                 </div>
             </div>
 
-            <!-- Tiene turnos disponibles -->
-            <ng-container *ngIf="estadoT === 'seleccionada'">
-                <!--Lista de turnos, bloque por bloque-->
-                <div *ngFor="let bloque of bloques">
-                    <!--Tipos de turnos-->
-                    <table class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
-                        <thead>
-                            <tr>
-                                <td>Del día</td>
-                                <td>Programados</td>
-                                <ng-container
-                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitud else llaveComun">
-                                </ng-container>
-                                <ng-template #llaveComun>
-                                    <td>Con llave</td>
-                                </ng-template>
-                                <ng-template #llaveSolicitud>
-                                    <td>
-                                        <b>Con llave</b>
-                                    </td>
-                                </ng-template>
-                                <ng-container
-                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun">
-                                </ng-container>
-                                <ng-template #profesionalComun>
-                                    <td>Profesional</td>
-                                </ng-template>
-                                <ng-template #profesionalSolicitud>
-                                    <td>
-                                        <b>Profesional</b>
-                                    </td>
-                                </ng-template>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{countBloques[findIndex(bloque)]?.delDia}}</td>
-                                <td>{{countBloques[findIndex(bloque)]?.programado}}</td>
-                                <ng-container
-                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor">
-                                </ng-container>
-                                <ng-template #llaveComunValor>
-                                    <td>{{countBloques[findIndex(bloque)]?.gestion}}</td>
-                                </ng-template>
-                                <ng-template #llaveSolicitudValor>
-                                    <td>
-                                        <b>{{countBloques[findIndex(bloque)]?.gestion}}</b>
-                                    </td>
-                                </ng-template>
-                                <ng-container
-                                              *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitudValor else profesionalComunValor">
-                                </ng-container>
-                                <ng-template #profesionalComunValor>
-                                    <td>{{countBloques[findIndex(bloque)]?.profesional}}</td>
-                                </ng-template>
-                                <ng-template #profesionalSolicitudValor>
-                                    <td>
-                                        <b>{{countBloques[findIndex(bloque)]?.profesional}}</b>
-                                    </td>
-                                </ng-template>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </ng-container>
             <!--Paciente detalle -->
             <paciente-detalle [paciente]="paciente" orientacion="horizontal" size="xs" [fields]="pacienteFields">
             </paciente-detalle>
+            <!-- Tiene turnos disponibles -->
+            <ng-container *ngIf="estadoT === 'seleccionada'">
+                <!--Lista de turnos, bloque por bloque-->
+                <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
+                <!--Tipos de turnos-->
+                <plex-grid responsive type="full" cols="4" *ngFor="let bloque of bloques">
+                    <plex-label size="md" titulo="Del día" subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
+                    </plex-label>
+                    <plex-label size="md" titulo="Programados"
+                                subtitulo="{{countBloques[findIndex(bloque)]?.programado}}">
+                    </plex-label>
+                    <plex-label size="md" titulo="Con llave" subtitulo="{{countBloques[findIndex(bloque)]?.gestion}}">
+                    </plex-label>
+                    <plex-label size="md" titulo="Profesional"
+                                subtitulo="{{countBloques[findIndex(bloque)]?.profesional}}">
+                    </plex-label>
+                </plex-grid>
+            </ng-container>
 
             <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
             <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
