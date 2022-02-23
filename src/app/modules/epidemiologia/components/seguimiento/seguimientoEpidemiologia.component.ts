@@ -49,6 +49,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     public orden = 'prioridad';
     public collapse = false;
     public itemsOrden = [];
+    public totalResultados;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -96,7 +97,8 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             sort: this.orden === 'prioridad' ? '-score.value score.fecha' : '-createdAt',
             limit: 20,
             profesional: this.profesional?.id,
-            asignados: this.asignados ? !this.asignados : undefined
+            asignados: this.asignados ? !this.asignados : undefined,
+            total: true
         };
         if (!this.esAuditor) {
             this.query.profesional = this.auth.profesional;
@@ -125,8 +127,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
                     this.query.skip = 0;
                 }
                 return this.seguimientoPacientesService.search(this.query).pipe(
-                    map(resultados => {
-                        this.listado = lastResults ? lastResults.concat(resultados) : resultados;
+                    map((resultados: any) => {
+                        this.listado = lastResults ? lastResults.concat(resultados.data) : resultados.data;
+                        if (resultados.pagination.total) {
+                            // si skip > 0 total es undefined
+                            this.totalResultados = resultados.pagination.total;
+                        }
                         this.clearChecked();
                         this.query.skip = this.listado.length;
                         this.inProgress = false;
