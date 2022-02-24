@@ -7,13 +7,15 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
+
 @Component({
     selector: 'app-mapa-camas-capa',
     templateUrl: 'mapa-camas-capa.component.html',
@@ -40,7 +42,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     listadoRecursos = false;
     camasDisponibles;
     fecha$: Observable<Date>;
-
+    organizacionv2;
     estado$: Observable<IMaquinaEstados>;
 
     mainView$ = this.mapaCamasService.mainView;
@@ -78,7 +80,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
-        public ws: WebSocketService
+        public ws: WebSocketService,
+        public organizacionService: OrganizacionService
 
     ) { }
 
@@ -143,6 +146,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.organizacion = this.auth.organizacion.id;
         this.columns = this.mapaCamasService.columnsMapa.getValue();
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion =>
+            this.organizacionv2 = organizacion.usaEstadisticaV2);
 
         this.estado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
             map(estado => estado)
@@ -176,6 +181,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         }
     }
     verListadoInternacionMedico() {
+        if (this.organizacionv2) {
+            this.router.navigate(['/mapa-camas/listado-internacion-unificado']);
+        }
         this.router.navigate(['/mapa-camas/listado-internacion-medico']);
     }
 
