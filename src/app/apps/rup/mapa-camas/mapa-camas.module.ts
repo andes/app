@@ -53,6 +53,7 @@ import { ItemInconsistenciaComponent } from './views/integridad/item-inconsisten
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { FiltrosListadoCapasComponent } from './views/listado-internacion-capas/filtros-listado/filtros-listado-capas.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { ListadoInternacionUnificadoComponent } from './views/listado-internacion-capas/listado-internacion-unificado.component';
 import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
@@ -105,6 +106,7 @@ export const INTERNACION_COMPONENTS = [
     IngresoDinamicoComponent,
     PrestarDevolverRecursoComponent,
     ListadoInternacionCapasComponent,
+    ListadoInternacionUnificadoComponent,
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,

@@ -168,9 +168,13 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.listadoRecursos = this.listadoRecursos ? false : true;
     }
     verListadoInternacion() {
-        this.router.navigate([`/mapa-camas/listado-internacion/${this.route.snapshot.paramMap.get('capa')}`]);
-    }
+        if (this.mapaCamasService.capa === 'estadistica-v2') {
+            this.router.navigate(['/mapa-camas/listado-internacion-unificado']);
 
+        } else {
+            this.router.navigate([`/mapa-camas/listado-internacion/${this.route.snapshot.paramMap.get('capa')}`]);
+        }
+    }
     verListadoInternacionMedico() {
         this.router.navigate(['/mapa-camas/listado-internacion-medico']);
     }
@@ -211,7 +215,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     volverADetalle() {
         const cama = this.mapaCamasService.selectedCama.getValue();
-        this.accion = cama.id ? 'verDetalle': null;
+        this.accion = cama.id ? 'verDetalle' : null;
     }
 
     volverADesocupar() {

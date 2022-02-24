@@ -1,0 +1,67 @@
+<plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
+    <plex-layout-main *ngIf="mainView$ | async as mainView">
+        <header *ngIf="mainView === 'principal'">
+            <plex-title titulo="LISTADO INTERNACION ">
+                <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+            </plex-title>
+            <app-filtros-listado-capas></app-filtros-listado-capas>
+        </header>
+
+        <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'principal'">
+            <plex-title titulo="Listado Internacion">
+                <plex-table-columns>
+                </plex-table-columns>
+            </plex-title>
+
+            <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
+                [class.selected]="internacion.id === idInternacionSelected"
+                (click)="seleccionarPrestacion(internacion)">
+                <td *plTableCol="'nombre'">
+                    {{internacion.paciente | nombre }}
+                </td>
+                <td *plTableCol="'documento'">
+                    {{ internacion.paciente.documento }}
+                </td>
+                <td *plTableCol="'diagnostico'">
+                    <span *ngIf="internacion.diagnostico?.term">
+                        {{ internacion.diagnostico?.term}}
+                    </span>
+                </td>
+                <td *plTableCol="'fechaIngreso'">
+                    {{ internacion.fechaIngreso | fecha }}
+                    {{ internacion.fechaIngreso | hora }}
+                </td>
+                <td *plTableCol="'fechaEgreso'">
+                    <span *ngIf="internacion.fechaEgreso">
+                        {{ internacion.fechaEgreso | fecha }}
+                        {{ internacion.fechaEgreso | hora }}
+                    </span>
+                </td>
+                <td *plTableCol="'obraSocial'">
+                    {{ internacion.idPrestacion?.paciente.obraSocial?.nombre }}
+                </td>
+                <td *plTableCol="'unidadOrganizativa'">
+                    {{ internacion.idPrestacion?.unidadOrganizativa?.term }}
+                </td>
+                <td *plTableCol="'estado'">
+                    {{internacion.idPrestacion?.estadoActual.tipo }}
+                </td>
+                <td *plTableCol="'informe'">
+                    <plex-badge *ngIf="internacion.idPrestacion" type="success"> completo</plex-badge>
+                    <plex-badge *ngIf="!internacion.idPrestacion" type="danger"> incompleto</plex-badge>
+                </td>
+            </tr>
+        </plex-table>
+
+        <ng-container *ngIf="mainView !== 'principal'">
+            <vista-prestacion [idPrestacion]="mainView.id">
+                <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
+            </vista-prestacion>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert" *ngIf="idInternacionSelected">
+        <app-internacion-detalle>
+        </app-internacion-detalle>
+
+    </plex-layout-sidebar>
+</plex-layout>
