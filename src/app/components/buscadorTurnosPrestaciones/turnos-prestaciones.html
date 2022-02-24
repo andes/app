@@ -1,4 +1,4 @@
-<plex-layout main="{{ showPrestacion || descargasPendientes ? '6' : '12'}}">
+<plex-layout main="{{ showPrestacion? '6': descargasPendientes? '8': '12'}}">
     <plex-layout-main>
 
         <plex-title titulo="Turnos y prestaciones">
@@ -283,7 +283,7 @@
         </div>
 
     </plex-layout-sidebar>
-    <plex-layout-sidebar *ngIf="descargasPendientes" [type]="'invert'">
+    <plex-layout-sidebar *ngIf="descargasPendientes" type="invert">
         <descargas-pendientes>
             <plex-button justify="end" icon="close" type="danger" tooltip="Cerrar" (click)="mostrarPendientes()">
             </plex-button>
