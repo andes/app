@@ -82,13 +82,13 @@
                                         titulo="{{prestacion.paciente | nombre }}"
                                         subtitulo="DNI: {{prestacion.paciente.documento}}">
                             </plex-label>
-                            <plex-label [tituloBold]="true" titulo="{{prestacion.solicitud.profesionalOrigen?
-                                   (prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}"
-                                        subtitulo="{{prestacion.solicitud.organizacionOrigen? prestacion.solicitud.organizacionOrigen.nombre : 'Sin organización de origen'}}">
+                            <plex-label [tituloBold]="true"
+                                        titulo="{{prestacion.solicitud.organizacionOrigen? prestacion.solicitud.organizacionOrigen.nombre : 'Sin organización de origen'}}"
+                                        subtitulo="{{prestacion.solicitud.profesionalOrigen?(prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}">
                             </plex-label>
                             <plex-label [tituloBold]="true"
-                                        titulo="{{prestacion.solicitud.profesional? (prestacion.solicitud.profesional | nombre):'Sin profesional de destino'}}"
-                                        subtitulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion.term}}">
+                                        titulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion.term}}"
+                                        subtitulo="{{prestacion.solicitud.profesional? (prestacion.solicitud.profesional | nombre):'Sin profesional de destino'}}">
                             </plex-label>
                             <!-- Botones -->
                             <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
@@ -224,13 +224,13 @@
                                         titulo="{{prestacion.paciente | nombre }}"
                                         subtitulo="DNI: {{prestacion.paciente.documento}}">
                             </plex-label>
-                            <plex-label [tituloBold]="true" titulo="{{prestacion.solicitud.profesional?
-                                    (prestacion.solicitud.profesional | nombre) : 'Sin profesional de destino'}}"
-                                        subtitulo="{{prestacion.solicitud.organizacion? prestacion.solicitud.organizacion.nombre : 'Sin organización de destino'}}">
+                            <plex-label [tituloBold]="true"
+                                        titulo="{{prestacion.solicitud.organizacion? prestacion.solicitud.organizacion.nombre : 'Sin organización de destino'}}"
+                                        subtitulo=" {{prestacion.solicitud.profesional?(prestacion.solicitud.profesional | nombre) : 'Sin profesional de destino'}}">
                             </plex-label>
-                            <plex-label [tituloBold]="true" titulo="{{prestacion.solicitud.profesionalOrigen?
-                                    (prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}"
-                                        subtitulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion? prestacion.solicitud.tipoPrestacion.term : 'No indica'}}">
+                            <plex-label [tituloBold]="true"
+                                        titulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion? prestacion.solicitud.tipoPrestacion.term : 'No indica'}}"
+                                        subtitulo=" {{prestacion.solicitud.profesionalOrigen?(prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}">
                             </plex-label>
                             <!-- Bagges -->
                             <plex-badge type="danger"
