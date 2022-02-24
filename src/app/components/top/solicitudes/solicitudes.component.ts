@@ -189,10 +189,18 @@ export class SolicitudesComponent implements OnInit {
             // Si se seleccionó por error un paciente fallecido
             this.pacienteService.checkFallecido(paciente);
         });
-        // Pasar filtros al calendario
-        this.solicitudTurno = prestacionSolicitud;
-        this.pacienteSeleccionado = prestacionSolicitud.paciente;
-        this.showDarTurnos = true;
+        this.servicioPrestacion.getById(prestacionSolicitud._id).subscribe(prestacion => {
+            if (prestacion.solicitud.turno) {
+                this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
+                this.cargarSolicitudes();
+                this.showSidebar = false;
+            } else {
+                // Pasar filtros al calendario
+                this.solicitudTurno = prestacionSolicitud;
+                this.pacienteSeleccionado = prestacionSolicitud.paciente;
+                this.showDarTurnos = true;
+            }
+        });
     }
 
     cancelar(prestacionSolicitud) {
