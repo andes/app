@@ -1,7 +1,10 @@
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
@@ -118,12 +121,20 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
 
     constructor(
         private plex: Plex,
-        public mapaCamasService: MapaCamasService,
+        private mapaCamasService: MapaCamasService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private location: Location,
+        private organizacionService: OrganizacionService,
+        private auth: Auth,
+        private router: Router
     ) { }
 
     ngOnInit() {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            if (!organizacion.usaEstadisticaV2) {
+                this.router.navigate(['inicio']);
+            }
+        });
         this.mapaCamasService.setView('mapa-camas');
         this.mapaCamasService.setCapa('medica');
         this.mapaCamasService.setAmbito('internacion');
