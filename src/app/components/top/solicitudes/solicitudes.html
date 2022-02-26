@@ -139,7 +139,7 @@
                                                  (click)="$event.stopPropagation();darTurno(prestacion)"
                                                  title="Dar Turno">
                                     </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion" icon="check" type="success"
+                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion && isPresentationEnabled(prestacion)" icon="check" type="success"
                                                  (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
                                                  title="Iniciar prestación">
                                     </plex-button>
