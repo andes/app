@@ -1,3 +1,17 @@
+# [5.86.0](https://github.com/andes/app/compare/v5.85.0...v5.86.0) (2022-03-02)
+
+
+### Bug Fixes
+
+* **TOP-122:** Agenda suspendida ([#2583](https://github.com/andes/app/issues/2583)) ([f08f1d5](https://github.com/andes/app/commit/f08f1d5412cd27c66f51a0654949474b09bfbf2e))
+
+
+### Features
+
+* **mapa-camas:** mostrar uso del respirador ([#2587](https://github.com/andes/app/issues/2587)) ([424ed46](https://github.com/andes/app/commit/424ed46ed14eed61ea38c549d1e9e4e4adac90f6))
+* **TOP:** cambia de lugar titulo en label ([#2589](https://github.com/andes/app/issues/2589)) ([527c200](https://github.com/andes/app/commit/527c200d5ba4e49d5a0b2871527b6317a151a633))
+* **turnos-prestaciones:** cambia visualizacion de descargas ([#2592](https://github.com/andes/app/issues/2592)) ([a5975bb](https://github.com/andes/app/commit/a5975bb0d2b77f9e21784032dc98b5d2e682ee96))
+
 # [5.85.0](https://github.com/andes/app/compare/v5.84.0...v5.85.0) (2022-02-23)
 
 
