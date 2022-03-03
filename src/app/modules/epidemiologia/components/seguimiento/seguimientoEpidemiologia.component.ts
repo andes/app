@@ -39,6 +39,8 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     public estadosSeguimiento = estados;
     public anyChecked;
     public asignados = false;
+    prioridad;
+    profesional;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -57,7 +59,6 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         }
         this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
         this.organizacion = this.auth.organizacion;
-        this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res => this.opcionesSemaforo = res.options);
     }
 
     volverInicio() {
@@ -73,12 +74,27 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             paciente: this.documento,
             sort: '-score.value score.fecha',
             limit: 20,
+            profesional: this.profesional?.id,
             asignados: this.asignados ? !this.asignados : undefined
         };
 
         if (!this.esAuditor) {
             this.query.profesional = this.auth.profesional;
         }
+
+        if (this.prioridad) {
+            const scoreRange = [];
+            if (this.prioridad.max) {
+                for (let i = this.prioridad.min; i <= this.prioridad.max; i++) {
+                    scoreRange.push(i);
+                }
+            } else {
+                scoreRange.push(this.prioridad.min);
+            }
+
+            this.query.score = scoreRange;
+        }
+
 
         this.inProgress = true;
         this.lastResults.next(null);
@@ -106,6 +122,13 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         this.checkedSeguimientos = {};
         this.allSelected = false;
         this.anyChecked = false;
+    }
+
+    getOpcionesSemaforo(event) {
+        this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res =>{
+            this.opcionesSemaforo = res.options;
+            event.callback(this.opcionesSemaforo);
+        });
     }
 
     onScroll() {
