@@ -186,7 +186,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     }
 
     getColorPrioridad(score) {
-        return score ? this.opcionesSemaforo.find(x => {
+        return score ? this.opcionesSemaforo?.find(x => {
             return score >= x.min && (!x.max || score <= x.max);
         })?.itemRowStyle : false;
     }
