@@ -1,5 +1,5 @@
 import { cache } from '@andes/shared';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { Auth } from '@andes/auth';
 import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/semaforo.service';
 import { estadosSeguimiento as estados } from '../../constantes';
 import { Plex } from '@andes/plex';
+import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
 
 @Component({
     selector: 'seguimiento-epidemiologia',
@@ -17,6 +18,8 @@ import { Plex } from '@andes/plex';
     encapsulation: ViewEncapsulation.None
 })
 export class SeguimientoEpidemiologiaComponent implements OnInit {
+    @ViewChild('wrapper') wrapper: PlexWrapperComponent;
+
     public checkedSeguimientos = {};
     public seguimientos$: Observable<any[]> = new Observable<any[]>();
     public showAsingar: boolean;
@@ -41,6 +44,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     public asignados = false;
     prioridad;
     profesional;
+    public orderBy = [{ id: 'prioridad', label: 'Prioridad' }, { id: 'fecha', label: 'Fecha' }];
+    public orden = 'prioridad';
+    public collapse = false;
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -72,7 +78,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             estado: this.estado?.id || estadosActivo,
             organizacionSeguimiento: this.auth.organizacion.id,
             paciente: this.documento,
-            sort: '-score.value score.fecha',
+            sort: this.orden === 'prioridad' ? '-score.value score.fecha' : '-createdAt',
             limit: 20,
             profesional: this.profesional?.id,
             asignados: this.asignados ? !this.asignados : undefined
@@ -98,6 +104,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
 
         this.inProgress = true;
         this.lastResults.next(null);
+        this.wrapper.desplegado = this.checkCollapse();
         this.seguimientos$ = this.lastResults.pipe(
             switchMap(lastResults => {
                 if (!lastResults) {
@@ -125,7 +132,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     }
 
     getOpcionesSemaforo(event) {
-        this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res =>{
+        this.semaforoService.findByName('seguimiento-epidemiologico').subscribe(res => {
             this.opcionesSemaforo = res.options;
             event.callback(this.opcionesSemaforo);
         });
@@ -216,5 +223,13 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             this.checkedSeguimientos = {};
             this.reload();
         });
+    }
+
+    changeCollapse(event) {
+        this.collapse = event;
+    }
+
+    checkCollapse() {
+        return this.query.score || this.query.profesional || this.query.paciente || this.asignados;
     }
 }
