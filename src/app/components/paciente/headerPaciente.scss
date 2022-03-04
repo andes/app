@@ -4,14 +4,18 @@
         background: #0070BA;
     }
     z-index: 3000;
-    cursor: help; // Texto
-    .texto {
+    cursor: help; 
+    .datos-paciente {
         color: white;
         white-space: nowrap;
-        padding-right: 5px;
-        padding-top: 10px;
+        padding-right: 20px;
+        padding-left: 5px;
+        display: flex;
+        align-items: start;
+        flex-direction: column;
+        justify-content: center;
     } // Foto header
-    .foto {
+    .foto-paciente {
         height: 50px;
         padding-right: 5px;
     } // Popover con detalles de paciente
