@@ -8,29 +8,40 @@
                 <plex-button type="success" size="md" label="Buscar" (click)="buscar()">
                 </plex-button>
             </plex-title>
-            <plex-grid size="lg" type="full">
-                <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                                [max]="fechaHasta">
-                </plex-datetime>
-                <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                                [min]="fechaDesde">
-                </plex-datetime>
-                <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado" [(ngModel)]="estado"
-                                labelField="nombre">
-                </plex-select>
-                <plex-select grow="1" name="prioridad"  (getData)="getOpcionesSemaforo($event)" label="Prioridad" [(ngModel)]="prioridad"
-                                labelField="label">
-                </plex-select>
-                <plex-select grow="1" name="nombre" tmProfesionales label="Profesional" [(ngModel)]="profesional"
-                                labelField="label">
-                </plex-select>
-                <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
-                <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
-                            [(ngModel)]="asignados" (change)="buscar()">
-                </plex-bool>
-            </plex-grid>
+            <form autosave="seguimiento-filtros" autosaveType="session" (restore)="buscar()">
+                <plex-grid size="lg" type="full">
+                    <plex-wrapper #wrapper (change)="changeCollapse($event)">
+                        <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
+                                       [max]="fechaHasta">
+                        </plex-datetime>
+                        <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                                       [min]="fechaDesde">
+                        </plex-datetime>
+                        <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado"
+                                     [(ngModel)]="estado" labelField="nombre">
+                        </plex-select>
+                        <plex-select grow="1" name="prioridad" (getData)="getOpcionesSemaforo($event)" label="Prioridad"
+                                     [(ngModel)]="prioridad" labelField="label">
+                        </plex-select>
+                        <div collapse>
+                            <plex-select grow="1" name="nombre" tmProfesionales label="Profesional"
+                                         [(ngModel)]="profesional" labelField="label">
+                            </plex-select>
+                            <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
+                            <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
+                                       [(ngModel)]="asignados" (change)="buscar()">
+                            </plex-bool>
+                        </div>
+                    </plex-wrapper>
+                </plex-grid>
+                <plex-title titulo="listado" size="sm">
+                    <plex-label titulo="Orden: " class="mr-2"></plex-label>
+                    <plex-radio [(ngModel)]="orden" [data]="orderBy" name="orden" (change)="buscar()" type="horizontal">
+                    </plex-radio>
+                </plex-title>
+            </form>
             <div *ngIf='(seguimientos$ | async)?.length'>
-                <plex-list [striped]="false" height="calc(100vh - 233px)" (scrolled)="onScroll()">
+                <plex-list [striped]="false" height="calc(100vh - 269px)" (scrolled)="onScroll()">
                     <plex-item>
                         <plex-bool *ngIf="esAuditor" name="all" (change)="selectAll($event)" [(ngModel)]="allSelected">
                         </plex-bool>
@@ -124,10 +135,10 @@
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
         <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
-            (selectLlamado)="verLlamado($event)">
+                             (selectLlamado)="verLlamado($event)">
         </detalle-seguimiento>
         <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
-            (save)="reload()"></actualizar-seguimiento>
+                                (save)="reload()"></actualizar-seguimiento>
     </plex-layout-sidebar>
     <plex-layout-sidebar *ngIf="showAsingar" type="invert">
         <asignar-seguimientos (close)="closeSideBar()" (save)="asignarProfesional($event)"></asignar-seguimientos>
