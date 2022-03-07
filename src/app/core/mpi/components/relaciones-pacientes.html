@@ -9,7 +9,7 @@
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
 <paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarRelacionEntrante($event)" [offset]="160"
-                  *ngIf="posiblesRelaciones.length > 0">
+                  *ngIf="posiblesRelaciones.length > 0" [showRelaciones]="false">
 </paciente-listado>
 
 <div *ngIf="posiblesRelaciones && !posiblesRelaciones.length && !searchClear" class="alert alert-danger">
@@ -23,8 +23,9 @@
         <img *ngIf="unaRel.referencia" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
              [mpiFotoPaciente]="{id: unaRel.referencia, fotoId: unaRel.fotoId}">
         <!-- caso paciente aun no relacionado -->
-      <img *ngIf="!unaRel.referencia && unaRel.id && unaRel.fotoId" [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}" [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}"
-             alt="">
+        <img *ngIf="!unaRel.referencia && unaRel.id && unaRel.fotoId"
+             [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
+             [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}" alt="">
 
         <plex-label *ngIf="!unaRel.numeroIdentificacion" titulo="{{ unaRel | nombre }}"
                     subtitulo="{{ (unaRel.documento | number) || 'Sin DNI' }}">

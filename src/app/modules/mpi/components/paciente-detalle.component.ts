@@ -182,11 +182,12 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
                 this.paciente = result;
                 this.loadObraSocial();
+                this.doRelaciones();
             });
         } else {
             this.loadObraSocial();
+            this.doRelaciones();
         }
-        this.doRelaciones();
         this.notasDestacadas = (this.paciente.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 

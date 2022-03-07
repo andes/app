@@ -12,7 +12,7 @@
         <ng-container *ngIf="!showDetallePaciente">
             <plex-title size="md" titulo="Busquedas recientes"></plex-title>
 
-            <paciente-listado [pacientes]="historialSeleccionados" (selected)="toEdit($event)">
+            <paciente-listado [pacientes]="historialSeleccionados" (selected)="toEdit($event)" [showRelaciones]="false">
             </paciente-listado>
         </ng-container>
 

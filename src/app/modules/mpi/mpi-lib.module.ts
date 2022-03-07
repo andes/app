@@ -8,6 +8,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 
 import { PacienteBuscarComponent } from './components/paciente-buscar.component';
 import { PacienteListadoComponent } from './components/paciente-listado.component';
+import { PacienteRelacionesComponent } from './components/paciente-relaciones.component';
 import { PacienteBusquedaComponent } from './components/paciente-busqueda.component';
 import { FotoDirective } from './components/paciente-detalle-foto.directive';
 
@@ -34,6 +35,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
     declarations: [
         PacienteBuscarComponent,
         PacienteListadoComponent,
+        PacienteRelacionesComponent,
         PacienteBusquedaComponent,
         PacientePanelComponent,
         UpdateContactoDireccionComponent,
@@ -47,6 +49,7 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
     exports: [
         PacienteBuscarComponent,
         PacienteListadoComponent,
+        PacienteRelacionesComponent,
         PacienteBusquedaComponent,
         PacientePanelComponent,
         UpdateContactoDireccionComponent,
