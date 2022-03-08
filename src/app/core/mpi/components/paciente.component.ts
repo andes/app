@@ -444,7 +444,7 @@ export class PacienteComponent implements OnInit {
 
     checkDisableValidar() {
         const sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        this.disableValidar = !(parseInt(this.pacienteModel.documento, 10) >= 9999 && sexo !== undefined && sexo !== 'otro');
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 10) >= 9999 && sexo !== undefined);
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -495,10 +495,6 @@ export class PacienteComponent implements OnInit {
             return;
         }
         const sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        if (sexoPaciente === 'otro') {
-            this.plex.info('warning', 'La validación requiere sexo MASCULINO o FEMENINO.', 'Atención');
-            return;
-        }
         this.disableValidar = true;
         this.loading = true;
 
