@@ -139,7 +139,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             fechaDesde: '',
             fechaHasta: '',
             organizacion: '',
-            idTipoPrestacion: '',
+            tipoPrestacion: '',
             idProfesional: '',
             espacioFisico: '',
             otroEspacioFisico: '',
@@ -159,8 +159,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.fechaDesde = moment(this.parametros.fechaDesde).startOf('day');
             this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
 
-            if (this.parametros.idTipoPrestacion) {
-                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => {
+            if (this.parametros.tipoPrestacion) {
+                this.conceptoTurneablesService.search({ conceptId: this.parametros.tipoPrestacion }).subscribe(rta => {
                     this.prestaciones = rta;
                 });
             }
@@ -227,10 +227,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
-                this.parametros['idTipoPrestacion'] = value.value.id;
+                this.parametros['tipoPrestacion'] = value.value.conceptId;
                 delete this.parametros['tipoPrestaciones'];
             } else {
-                this.parametros['idTipoPrestacion'] = '';
+                this.parametros['tipoPrestacion'] = '';
             }
         }
         if (tipo === 'profesionales') {
