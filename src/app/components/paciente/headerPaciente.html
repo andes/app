@@ -1,8 +1,9 @@
 <div *ngIf="paciente">
     <div>
-        <img class="foto" [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
+        <img class="foto-paciente" [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}"
+             [mpiFotoPaciente]="paciente" />
     </div>
-    <div class="texto">
+    <div class="datos-paciente">
         <div>
             <strong>{{paciente | nombre}}</strong>
         </div>
