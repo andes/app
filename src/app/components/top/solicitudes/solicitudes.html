@@ -122,7 +122,7 @@
                                         </span>
                                     </plex-badge>
                                 </ng-container>
-
+ 
                                 <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                             type="success">Registro en HUDS</plex-badge>
@@ -139,7 +139,7 @@
                                                  (click)="$event.stopPropagation();darTurno(prestacion)"
                                                  title="Dar Turno">
                                     </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion" icon="check" type="success"
+                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion && isPresentationEnabled(prestacion)" icon="check" type="success"
                                                  (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
                                                  title="Iniciar prestación">
                                     </plex-button>
