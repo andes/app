@@ -63,6 +63,12 @@
                                         <span *ngIf="agenda.cupo == -1">Sin límite</span>
                                     </div>
                                 </div>
+                                <div *ngIf="agenda.link" class="row">
+                                    <div class="col-12">
+                                        <label>Link agenda virtual</label>
+                                        <a href="{{agenda.link}}" target="_blank">{{agenda.link}}</a>
+                                    </div>
+                                </div>
                             </div>
                         </plex-help>
                     </plex-title>

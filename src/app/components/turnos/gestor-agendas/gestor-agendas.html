@@ -143,6 +143,10 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)"
                                     class="text-right align-middle estado medium">
+                                    <plex-badge *ngIf="agenda.link" class="mr-1" type="info" tooltip="Agenda Virtual"
+                                                tooltipPosition="top">
+                                        <plex-icon name="monitor" size="md"></plex-icon>
+                                    </plex-badge>
                                     <plex-badge type="info" *ngIf="agenda.dinamica">Dinámica</plex-badge>
                                     <plex-badge type="info" *ngIf="!agenda.nominalizada">No Nominalizada</plex-badge>
                                     <plex-badge type="{{estadosAgenda[agenda.estado]?.class}}">
@@ -194,7 +198,8 @@
                 <plex-box *ngIf="enableQueries">
                     <app-bi-queries [queries]="queries">
                         <plex-button size="sm" type="danger" (click)="cerrarCargarPacientes()">Cerrar</plex-button>
-                        <plex-button size="sm" type="success" (click)="asignarPacientesPorConsulta()">Importar</plex-button>
+                        <plex-button size="sm" type="success" (click)="asignarPacientesPorConsulta()">Importar
+                        </plex-button>
                     </app-bi-queries>
                 </plex-box>
             </div>
