@@ -26,7 +26,9 @@ import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop
 import { EstadoSolicitudPipe } from './pipes/estado-solicitud.pipe';
 import { AuditoriasSolicitudPipe } from './pipes/auditorias-solicitud.pipe';
 import { BotonesSolicitudPipe } from './pipes/botones.pipe';
-
+import { LinkTurnoRemotoPipe } from './pipes/linkTurnoRemoto.pipe';
+import { IsEmptyPipe } from './pipes/isEmpty.pipe';
+import { IsNotEmptyPipe } from './pipes/isNotEmpty.pipe';
 
 export const TOP_ROUTES = [
     { path: '', component: SolicitudesComponent, pathMatch: 'full' },
@@ -65,7 +67,10 @@ export const TOP_ROUTES = [
         BusquedaPacienteComponent,
         EstadoSolicitudPipe,
         AuditoriasSolicitudPipe,
-        BotonesSolicitudPipe
+        BotonesSolicitudPipe,
+        LinkTurnoRemotoPipe,
+        IsEmptyPipe,
+        IsNotEmptyPipe
     ]
 })
 export class TOPRouting { }

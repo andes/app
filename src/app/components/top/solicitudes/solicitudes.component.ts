@@ -238,7 +238,7 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
     }
 
-    // check if the type of prestarion is among the authorized prestations of the professional
+    // verifica que el tipo de prestación este entre las autorizadas para el profesional
     isPresentationEnabled(prestacion) {
         return this.auth.check('rup:tipoPrestacion:' + prestacion.solicitud.tipoPrestacion.id);
     }
