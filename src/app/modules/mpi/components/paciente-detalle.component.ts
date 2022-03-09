@@ -201,7 +201,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         const edad = 5;
         const paciente = this.paciente;
         return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad &&
-            this.relaciones !== null && this.relaciones.length > 0 && this.relaciones[0];
+            this.relaciones?.length && this.relaciones[0];
     }
 
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)

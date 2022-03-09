@@ -36,7 +36,7 @@
                     </paciente-buscar>
 
                     <paciente-listado *ngIf="busquedaTutor?.length" [pacientes]="busquedaTutor"
-                                      (selected)="onPacienteSelected($event)">
+                                      (selected)="onPacienteSelected($event)" [showRelaciones]="false">
                     </paciente-listado>
                     <div *ngIf="!busquedaTutor?.length && !searchClear" class="alert alert-danger">
                         <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..

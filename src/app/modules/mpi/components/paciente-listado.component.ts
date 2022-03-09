@@ -4,6 +4,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarService } from 'src/app/core/mpi/services/paciente-buscar.service';
 import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
+import { calcularEdad } from '@andes/shared';
 
 @Component({
     selector: 'paciente-listado',
@@ -17,6 +18,7 @@ export class PacienteListadoComponent {
 
     // Propiedades públicas
     public listado: IPaciente[]; // Contiene un listado plano de pacientes
+    public listadoRelaciones: IPacienteRelacion[];
     public desplegado: Boolean = false;
     public seletedOn: Boolean = true;
     public coloresItems = {
@@ -108,13 +110,27 @@ export class PacienteListadoComponent {
         (paciente.id) ? this.edit.emit(paciente) : this.edit.emit(null);
     }
 
-    public verBtnRelaciones(paciente: IPaciente) {
+    public openBtnRelaciones(paciente: IPaciente) {
         const igualPaciente = this.pacienteSeleccionado?.id === paciente.id;
-        if (this.desplegado && igualPaciente) {
-            return 'No ver relaciones';
-        } else {
-            return 'Ver relaciones';
+        return (this.desplegado && igualPaciente);
+    }
+    /**
+     * Se visualiza el botón para ver las relaciones de un paciente,
+     * sólo en aquellas relaciones que son hijo/a, tutelado menores de 11 años y que sean pacientes activos
+     * @param paciente un item del listado
+     */
+    public showBtnRelaciones(paciente: IPaciente) {
+        this.listadoRelaciones = [];
+        if (this.showRelaciones && paciente.relaciones?.length) {
+            const limiteEdad = 11;
+            const relaciones = ['progenitor/a', 'tutor'];
+            this.listadoRelaciones = paciente.relaciones.filter(rela => {
+                const relacionesTutor = rela?.relacion?.opuesto && relaciones.includes(rela.relacion.opuesto);
+                const cumpleEdad = rela?.fechaNacimiento && calcularEdad(rela.fechaNacimiento, 'y') < limiteEdad;
+                return (relacionesTutor && rela.activo && rela.fechaNacimiento && cumpleEdad);
+            });
         }
+        return this.listadoRelaciones.length;
     }
 
     public verRelaciones(paciente: IPaciente) {
@@ -123,7 +139,7 @@ export class PacienteListadoComponent {
             this.desplegado = false;
             this.pacienteSeleccionado = null;
         } else {
-            if (paciente.id && paciente.relaciones && paciente.relaciones.length > 0) {
+            if (paciente.id && paciente.relaciones?.length) {
                 this.relaciones.emit(paciente.relaciones);
                 this.desplegado = true;
                 this.pacienteSeleccionado = paciente;
@@ -142,7 +158,7 @@ export class PacienteListadoComponent {
         //  si es un paciente sin documento menor a 5 años mostramos datos de un familiar/tutor
         const edad = 5;
         const rel = paciente.relaciones;
-        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length > 0;
+        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length;
     }
     /**
      *

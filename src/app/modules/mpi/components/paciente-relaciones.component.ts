@@ -27,12 +27,9 @@ export class PacienteRelacionesComponent {
      * @type { IPacienteRelacion[]}
      */
     @Input()
-    get relaciones(): IPacienteRelacion[] {
-        return this._relaciones;
-    }
     set relaciones(value: IPacienteRelacion[]) {
         this._relaciones = value;
-        if (value && value.length) {
+        if (value?.length) {
             this.listado = value as IPacienteRelacion[];
         } else {
             this.listado = [];
