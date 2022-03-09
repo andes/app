@@ -28,6 +28,7 @@ import { ElementosRUPModule } from './elementos-rup.module';
 import { HUDSLibModule } from './huds-lib.module';
 import { RUPLibModule } from './rup-lib.module';
 
+
 export const RUP_COMPONENTS = [
     PuntoInicioComponent,
     PrestacionCrearComponent,
@@ -39,9 +40,6 @@ export const RUP_COMPONENTS = [
     AutocitarTurnoAgendasComponent,
     RupRelacionesComponent,
     RUPServicioIntermedioAltaComponent
-];
-
-export const RUP_PROVIDERS = [
 ];
 
 @NgModule({
@@ -75,8 +73,7 @@ export const RUP_PROVIDERS = [
     declarations: [
         ...RUP_COMPONENTS
     ],
-    exports: [
-    ],
+    exports: []
 })
 export class RUPModule {
 

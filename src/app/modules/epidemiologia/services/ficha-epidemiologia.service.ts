@@ -49,10 +49,17 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                     if (field.clasificacionfinal === 'Sospechoso') {
                         conceptos.push(this.elementoRupService.getConceptosCovidSospechoso());
                     }
+                    if (field.clasificacionfinal === 'Confirmado') {
+                        conceptos.push(this.elementoRupService.getConceptoCertificadoAislamiento());
+                    }
                     break;
                 case 'segundaclasificacion':
                     if (field.segundaclasificacion.id === 'confirmado') {
                         conceptos.push(this.elementoRupService.getConceptoCovidConfirmadoNexo());
+                    } else if (field.segundaclasificacion.id === 'autotest' ||
+                        field.segundaclasificacion.id === 'laboPcr'
+                        || field.segundaclasificacion.id === 'laboAntigeno') {
+                        conceptos.push(this.elementoRupService.getConceptoEnfermedadCovid());
                     }
                     break;
                 case 'pcr':

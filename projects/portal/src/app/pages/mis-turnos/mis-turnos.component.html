@@ -2,10 +2,11 @@
     <plex-layout-main type="invert">
         <pdp-titulo></pdp-titulo>
         <pdp-menu>
-            <plex-title size="sm" titulo="Mis turnos">
+            <plex-title size="sm" titulo="{{ titulo }}">
                 <plex-button (click)="goTo(); filtrarTurnos()" type="info" size="sm" class="mr-2">historial de turnos</plex-button>
                 <plex-button (click)="goTo(); filtrarTurnos(true)" type="info" size="sm" class="mr-2">próximos turnos</plex-button>
-                <plex-button (click)="darTurnos()" type="success" size="sm">obtener turno</plex-button>
+                <plex-button (click)="goTo(); darTurnos()" type="success" size="sm" class="mr-2">obtener turno</plex-button>
+                <plex-button (click)="showNotificar()" type="warning" size="sm">notificar necesidad de turno</plex-button>
             </plex-title>
             <ng-container *ngIf="showTurnosDisponibles">
                 <pdp-dar-turno (detalleTurnos)="turnosDisponibles($event)"></pdp-dar-turno>

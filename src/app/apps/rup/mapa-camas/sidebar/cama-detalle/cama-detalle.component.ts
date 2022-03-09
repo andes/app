@@ -1,9 +1,8 @@
 import { Plex } from '@andes/plex';
-import { notNull } from '@andes/shared';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
-import { filter, first, map, pluck, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -64,6 +63,7 @@ export class CamaDetalleComponent implements OnInit {
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
     public turnero$: Observable<string>;
+    public hayRespirador$: Observable<any>;
 
     items = [
         {
@@ -122,11 +122,7 @@ export class CamaDetalleComponent implements OnInit {
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
 
-        this.accionesEstado$ = this.estadoCama$.pipe(
-            notNull(),
-            pluck('acciones'),
-            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
-        );
+        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
@@ -135,6 +131,13 @@ export class CamaDetalleComponent implements OnInit {
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento
                 );
                 return historial.length > 0 && tieneIDMov && !egreso;
+            })
+        );
+
+        this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
+            map(resumen => {
+                const respirador = resumen.registros?.reverse().find(r => r.tipo === 'respirador');
+                return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
     }
@@ -235,10 +238,12 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     onVerIndicaciones(cama: ISnapshot) {
-        // this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente).subscribe(() => {
         const capa = this.mapaCamasService.capa;
         const ambito = this.mapaCamasService.ambito;
         this.router.navigate([`/mapa-camas/${ambito}/${capa}/plan-indicaciones/${cama.idInternacion}`]);
-        // });
+    }
+
+    registraRespirador(respirador) {
+        return respirador?.fechaDesde && !respirador.fechaHasta;
     }
 }

@@ -189,10 +189,18 @@ export class SolicitudesComponent implements OnInit {
             // Si se seleccionó por error un paciente fallecido
             this.pacienteService.checkFallecido(paciente);
         });
-        // Pasar filtros al calendario
-        this.solicitudTurno = prestacionSolicitud;
-        this.pacienteSeleccionado = prestacionSolicitud.paciente;
-        this.showDarTurnos = true;
+        this.servicioPrestacion.getById(prestacionSolicitud._id).subscribe(prestacion => {
+            if (prestacion.solicitud.turno) {
+                this.plex.info('warning', 'La solicitud ya tiene un turno asignado.');
+                this.cargarSolicitudes();
+                this.showSidebar = false;
+            } else {
+                // Pasar filtros al calendario
+                this.solicitudTurno = prestacionSolicitud;
+                this.pacienteSeleccionado = prestacionSolicitud.paciente;
+                this.showDarTurnos = true;
+            }
+        });
     }
 
     cancelar(prestacionSolicitud) {
@@ -202,7 +210,7 @@ export class SolicitudesComponent implements OnInit {
                     op: 'estadoPush',
                     estado: { tipo: 'anulada' }
                 };
-                // CAMBIEMOS e  l estado de la prestacion a 'anulada'
+                // CAMBIEMOS el estado de la prestacion a 'anulada'
                 this.servicioPrestacion.patch(prestacionSolicitud.id, cambioEstado).subscribe(prestacion => this.plex.toast('info', 'Prestación cancelada'), (err) => this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación'));
             }
         });
@@ -228,6 +236,11 @@ export class SolicitudesComponent implements OnInit {
         this.showDetalle = false;
         this.showNuevaSolicitud = false;
         this.showIniciarPrestacion = false;
+    }
+
+    // check if the type of prestarion is among the authorized prestations of the professional
+    isPresentationEnabled(prestacion) {
+        return this.auth.check('rup:tipoPrestacion:' + prestacion.solicitud.tipoPrestacion.id);
     }
 
     onIniciarPrestacionClick(prestacion) {

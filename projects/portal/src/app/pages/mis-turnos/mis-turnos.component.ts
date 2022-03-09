@@ -1,9 +1,9 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { TurnoService } from '../../services/turno.service';
+import { cache } from '@andes/shared';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { cache } from '@andes/shared';
+import { TurnoService } from '../../services/turno.service';
 
 @Component({
     selector: 'pdp-mis-turnos',
@@ -14,8 +14,9 @@ export class PDPMisTurnosComponent implements OnInit {
     public width: number;
     public turnos$: Observable<any>;
     public showTurnosDisponibles = false;
-    public showProximos;
+    public showProximos = true;
     public fecha = new Date();
+    public titulo = '';
 
     constructor(
         private turnoService: TurnoService,
@@ -28,6 +29,7 @@ export class PDPMisTurnosComponent implements OnInit {
             map(turnos => this.sortTurnos(turnos)),
             cache()
         );
+        this.turnoService.filtroProximos.subscribe(value => this.titulo = value ? 'Próximos turnos' : 'Historial de turnos');
     }
 
     private sortTurnos(turnos) {
@@ -56,12 +58,16 @@ export class PDPMisTurnosComponent implements OnInit {
 
     darTurnos() {
         this.showTurnosDisponibles = true;
+        this.titulo = 'Obtener turno';
     }
 
     turnosDisponibles(agenda) {
         this.router.navigate(['dar-turno-detalle', agenda.idAgenda, agenda.prestacion._id], { relativeTo: this.activeRoute });
     }
 
+    showNotificar() {
+        this.router.navigate(['notificar-necesidad'], { relativeTo: this.activeRoute });
+    }
 
     /**
      * Filtra los turnos con respecto a la fecha actual

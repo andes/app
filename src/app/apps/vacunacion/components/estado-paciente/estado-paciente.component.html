@@ -1,0 +1,20 @@
+<plex-layout main="{{ paciente ? 6 : 12 }}">
+    <plex-layout-main>
+        <plex-title titulo="Estado Vacunación"></plex-title>
+        <paciente-busqueda (selected)="searchVacunas($event)" (searchStart)="onSearchStart()"
+                           (searchClear)="onSearchClear()">
+        </paciente-busqueda>
+        <div *ngIf="showLabel" justify="center" class="h-75">
+            <plex-label titulo="Comience seleccionando un paciente" direction="column"
+                        subtitulo="Ingrese los datos de un paciente y seleccione para ver su estado de vacunación"
+                        type="info" size="xl" icon="arrow-up"></plex-label>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar *ngIf="paciente" type="invert">
+        <plex-title titulo="Paciente">
+            <plex-button type="danger" icon="close" size="sm" (click)="close()"></plex-button>
+        </plex-title>
+        <paciente-detalle [fields]="pacienteFields" [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
+        <app-aplicaciones-paciente [paciente]="paciente"></app-aplicaciones-paciente>
+    </plex-layout-sidebar>
+</plex-layout>

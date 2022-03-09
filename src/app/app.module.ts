@@ -100,6 +100,7 @@ import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/ope
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
+import { ModalAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/modal-agenda.component';
 import { DetalleAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/detalle-agenda.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
@@ -138,6 +139,8 @@ import { PacienteService } from './core/mpi/services/paciente.service';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { DirectiveLibModule } from './directives/directives.module';
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
+import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
+import { ValidarCertificadoService } from './modules/epidemiologia/services/validar-certificado.service';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { FormulaBaseService } from './modules/rup/components/formulas';
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
@@ -156,6 +159,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 import { PlantillasService } from './modules/rup/services/plantillas.service';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
+import { VisualizacionInformacionModule } from './modules/visualizacion-informacion/visualizacion-informacion.module';
 import { AppMobileService } from './services/appMobile.service';
 import { BarrioService } from './services/barrio.service';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
@@ -245,7 +249,9 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        Ng2ImgMaxModule
+        Ng2ImgMaxModule,
+        VisualizacionInformacionModule
+
     ],
     declarations: [
         AppComponent,
@@ -258,7 +264,7 @@ registerLocaleData(localeEs, 'es');
         PlanificarAgendaComponent,
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         GestorAgendasComponent,
-        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
+        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent, ModalAgendaComponent,
         RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
@@ -278,6 +284,7 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PuntoInicioInternacionComponent,
+        ValidarCertificadoComponent,
 
         // Solicitudes
         PrestamosHcComponent,
@@ -404,6 +411,7 @@ registerLocaleData(localeEs, 'es');
         CommonNovedadesService,
         QueriesService,
         CarpetaPacienteService,
+        ValidarCertificadoService,
         { provide: ErrorHandler, useClass: environment.environmentName === 'development' ? ErrorHandler : ServerErrorHandler },
         {
             provide: RECAPTCHA_SETTINGS,

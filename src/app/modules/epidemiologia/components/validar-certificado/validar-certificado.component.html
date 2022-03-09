@@ -1,0 +1,31 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Validar certificado de aislamiento">
+            <plex-button type="success" (click)="validarCertificado()"
+                         [disabled]="formCertificado.invalid || !recaptcha">
+                Validar</plex-button>
+        </plex-title>
+        <section justify="center">
+            <div class="w-100" *mobile="false">
+            </div>
+            <form class="w-100" #formCertificado="ngForm">
+                <plex-wrapper>
+                    <plex-text [(ngModel)]="paciente.documento" name="documento" label="Documento" required="true"
+                               grow="full">
+                    </plex-text>
+                    <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
+                                 required="true" grow="full">
+                    </plex-select>
+                    <plex-datetime label="fecha de validación" [(ngModel)]="fechaValidacion" type="date"
+                                   name="fechaValidacion" required="true" grow="full"></plex-datetime>
+                    <div class="mt-3" grow="full">
+                        <re-captcha [(ngModel)]="paciente.recaptcha" name="recaptcha" (resolved)="resolved($event)">
+                        </re-captcha>
+                    </div>
+                </plex-wrapper>
+            </form>
+            <div class="w-100" *mobile="false">
+            </div>
+        </section>
+    </plex-layout-main>
+</plex-layout>

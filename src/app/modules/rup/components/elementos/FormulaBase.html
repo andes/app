@@ -1,32 +1,45 @@
 <!-- Moléculas -->
-<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="elementoRUP.requeridos?.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <div *ngIf="item.elementoRUP"
-                 class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
-                     [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                     (change)="emitChange2($event)" (ejecutarAccion)="emitEjecutarAccion($event)">
-                </rup>
-            </div>
+        <div *ngIf="params?.valorEditable && !soloValores" class="col-12">
+            <!-- En caso de que la molécula permita edición manual del valor del registro -->
+            <plex-bool type="slide" label="Introducir el valor manualmente" [(ngModel)]="valorManual" name="boolValorManual" (change)="changeValorManual()"></plex-bool>
+        </div>
+        <ng-container *ngIf="!valorManual">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <div *ngIf="item.elementoRUP"
+                     class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
+                    <rup [ngClass]="{'readonly': valorManual}" [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                         [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                         (change)="emitChange2()" (ejecutarAccion)="emitEjecutarAccion($event)">
+                    </rup>
+                </div>
+            </ng-container>
         </ng-container>
 
         <div class="col-{{ elementoRUP.style.columns }}">
-
             <label class="form-control-label text-capitalize-first"> {{ registro.concepto.term}} </label>
-
-            <p>
-                <ng-container *ngIf="!hasRules">
-                    {{registro.valor}}
-                </ng-container>
-                <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
-                    {{mensaje.texto}}
-                    <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
-                                 title="Registrar">
-                        <plex-icon name="plus"></plex-icon>
-                    </plex-button>
-                </plex-badge>
-            </p>
+            
+            <!-- Campo para ingreso manual del valor del registro -->
+            <plex-float *ngIf="valorManual && !soloValores" placeholder="Ingrese un valor" [(ngModel)]="registro.valor" 
+                    label='' name="valorCalculo" [readonly]="soloValores" (change)="emitChange2()">
+            </plex-float>
+            
+            <!-- Valor/resultado del cálculo -->
+            <ng-container *ngIf="!valorManual || soloValores">
+                <p>
+                    <ng-container *ngIf="!hasRules">
+                        {{ registro.valor }}
+                    </ng-container>
+                    <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
+                        {{ mensaje.texto }}
+                        <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
+                                     title="Registrar">
+                            <plex-icon name="plus"></plex-icon>
+                        </plex-button>
+                    </plex-badge>
+                </p>
+            </ng-container>
         </div>
     </div>
 </ng-container>

@@ -108,3 +108,5 @@
         <!--<plex-button title="Clonar Agenda" label="Clonar Agenda" type="primary" (click)="clonar()"></plex-button>-->
     </footer>
 </form>
+
+<modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (close)="cerrarModal()"></modal-agenda>

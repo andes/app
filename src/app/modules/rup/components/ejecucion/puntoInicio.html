@@ -221,12 +221,13 @@
                                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                     </ng-container>
 
-                                    <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
+                                    <div *ngIf="turno.prestaciones[0] && turno?.prestaciones[0]?.estados">
                                         <br />
                                         <plex-badge *ngIf="turno.asistencia !== 'noAsistio'" type="{{ 
-                                                    turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada' ? 'success': 'warning'
+                                                    turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1].tipo==='validada' ? 'success': 'warning'
                                                         }}">
-                                            {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
+                                            {{turno.prestaciones[0].estados[turno.prestaciones[0].estados.length -
+                                            1].tipo}}
                                         </plex-badge>
 
                                     </div>
@@ -284,9 +285,9 @@
                                             {{turno.tipoPrestacion.nombre}}
                                         </span>
                                         <ng-container class="text-muted"
-                                                      *ngIf="turno?.prestacion?.solicitud?.profesional">
+                                                      *ngIf="turno?.prestaciones[0]?.solicitud?.profesional">
                                             <br>
-                                            Prof.: {{turno.prestacion.solicitud.profesional | nombre}}
+                                            Prof.: {{turno.prestaciones[0].solicitud.profesional | nombre}}
                                         </ng-container>
                                     </small>
 
@@ -357,7 +358,7 @@
                                         <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
                                         <plex-button size="block" *ngIf="turno.botonera.iniciar"
                                                      label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                     (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno.id)">
+                                                     (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.iniciarDisabled"
@@ -403,10 +404,10 @@
                                     <td>
                                         <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                                         <div
-                                             *ngIf="sobreturno && sobreturno.prestacion && sobreturno?.prestacion?.estados">
+                                             *ngIf="sobreturno && sobreturno.prestaciones[0] && sobreturno?.prestaciones[0]?.estados">
                                             <plex-badge *ngIf="sobreturno.asistencia !== 'noAsistio'"
-                                                        type="{{ sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' ? 'success' : 'warning' }}">
-                                                {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length-1].tipo}}
+                                                        type="{{ sobreturno.prestaciones[0].estados[sobreturno.prestaciones[0].estados.length - 1].tipo === 'validada' ? 'success' : 'warning' }}">
+                                                {{sobreturno.prestaciones[0].estados[sobreturno.prestaciones[0].estados.length-1].tipo}}
                                             </plex-badge>
                                             <br />
                                         </div>
@@ -457,11 +458,11 @@
                                             <small> {{sobreturno.tipoPrestacion.nombre}} </small>
                                         </span>
                                         <ng-container class="text-muted"
-                                                      *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
+                                                      *ngIf="sobreturno?.prestaciones[0]?.solicitud?.profesional">
                                             <br>
                                             <small>
                                                 Prof.:
-                                                {{ sobreturno.prestacion.solicitud.profesional | nombre}}
+                                                {{ sobreturno.prestaciones[0].solicitud.profesional | nombre}}
                                             </small>
                                         </ng-container>
 

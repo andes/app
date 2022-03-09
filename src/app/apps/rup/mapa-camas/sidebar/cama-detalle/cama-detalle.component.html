@@ -1,7 +1,7 @@
 <plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)" *ngIf="cama$ | async as cama">
     <plex-tab label="CAMA">
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
-            <plex-title titulo="DATOS DE CAMA">
+            <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
                         <ng-container
@@ -73,6 +73,7 @@
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
 
+
                 <plex-button label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
 
@@ -96,14 +97,19 @@
                                    tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>
                 </ng-container>
+
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
+                    <plex-badge class="pr-1" type="warning" *ngIf="hayRespirador$ | async as respirador"
+                                tooltip="Desde {{ respirador.valor.fechaDesde | fecha }}">
+                        Respirador
+                    </plex-badge>
                 </paciente-detalle>
             </fieldset>
         </ng-container>
         <ng-container *ngIf="cama.estado === 'ocupada' && !cama.sala">
-            <plex-title titulo="Nota">
+            <plex-title titulo="Nota" size="md">
                 <plex-button *ngIf="!editNota" size="sm" title="Editar nota" type="warning" icon="documento"
                              (click)="toggleEditNota(true, cama.nota)"></plex-button>
             </plex-title>

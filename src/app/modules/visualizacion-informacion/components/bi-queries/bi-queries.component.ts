@@ -1,12 +1,12 @@
-import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-import { Component, OnInit } from '@angular/core';
-import { QueriesService } from '../../../../services/query.service';
-import { Observable } from 'rxjs';
-import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { Observable } from 'rxjs';
 import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
+import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { QueriesService } from '../../../../services/query.service';
+import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 
 
 @Component({
@@ -15,6 +15,7 @@ import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
     styleUrls: ['./bi-queries.component.scss']
 })
 export class BiQueriesComponent implements OnInit {
+    @Input() queries;
 
     public consultaSeleccionada;
     public opciones = [];
@@ -45,16 +46,30 @@ export class BiQueriesComponent implements OnInit {
         if (this.permisosZonas.length > 0) {
             this.loadZonasSanitarias();
         }
+        let params;
         if (permisos.length) {
             if (permisos[0] === '*') {
-                this.queries$ = this.queryService.getAllQueries({ desdeAndes: true });
+                if (this.queries?.length) {
+                    params = { _id: this.queries };
+                } else {
+                    params = { desdeAndes: true };
+                }
             } else {
-                this.queries$ = this.queryService.getAllQueries({ _id: permisos });
+                if (this.queries?.length) {
+                    const permisosFilter = this.queries.filter(q => permisos.find(p => p === q));
+                    if (permisosFilter?.length) {
+                        params = { _id: permisosFilter };
+                    } else {
+                        return;
+                    }
+                } else {
+                    params = { _id: permisos };
+                }
             }
+            this.queries$ = this.queryService.getAllQueries(params);
         } else {
             this.router.navigate(['./inicio']);
         }
-
     }
 
     getArgumentos() {
@@ -100,11 +115,13 @@ export class BiQueriesComponent implements OnInit {
                 const key = arg.key;
                 const valor = this.argumentos[key];
                 params[key] = valor;
+                const idField = arg.idField || 'id';
+
                 if (valor instanceof Date) {
                     params[key] = valor;
                 } else {
-                    if (valor && valor.id) {
-                        params[key] = valor.id;
+                    if (valor && valor[idField]) {
+                        params[key] = valor[idField];
                     } else if (valor === undefined && arg.tipo === 'salida') {
                         params[key] = arg.check;
                     }

@@ -24,6 +24,7 @@ export class IPrestacionRegistro {
     // Almacena el valor del átomo, molécula o fórmula.
     // Para el caso de las moléculas, el valor puede ser nulo.
     valor: any;
+    valorManual: Boolean;
     link: string;
     // Almacena los registros de los átomos asociados a la molécula
     registros: IPrestacionRegistro[];

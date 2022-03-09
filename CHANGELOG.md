@@ -1,3 +1,93 @@
+# [5.86.0](https://github.com/andes/app/compare/v5.85.0...v5.86.0) (2022-03-02)
+
+
+### Bug Fixes
+
+* **TOP-122:** Agenda suspendida ([#2583](https://github.com/andes/app/issues/2583)) ([f08f1d5](https://github.com/andes/app/commit/f08f1d5412cd27c66f51a0654949474b09bfbf2e))
+
+
+### Features
+
+* **mapa-camas:** mostrar uso del respirador ([#2587](https://github.com/andes/app/issues/2587)) ([424ed46](https://github.com/andes/app/commit/424ed46ed14eed61ea38c549d1e9e4e4adac90f6))
+* **TOP:** cambia de lugar titulo en label ([#2589](https://github.com/andes/app/issues/2589)) ([527c200](https://github.com/andes/app/commit/527c200d5ba4e49d5a0b2871527b6317a151a633))
+* **turnos-prestaciones:** cambia visualizacion de descargas ([#2592](https://github.com/andes/app/issues/2592)) ([a5975bb](https://github.com/andes/app/commit/a5975bb0d2b77f9e21784032dc98b5d2e682ee96))
+
+# [5.85.0](https://github.com/andes/app/compare/v5.84.0...v5.85.0) (2022-02-23)
+
+
+### Features
+
+* **citas:** carga masiva ([#2526](https://github.com/andes/app/issues/2526)) ([4543322](https://github.com/andes/app/commit/4543322a96305ca5e5fab09050bc904e087b439f))
+* **ficha:** nuevos tipos de confirmacion ([#2586](https://github.com/andes/app/issues/2586)) ([aba5629](https://github.com/andes/app/commit/aba5629f8d28cb973a21820ab2f80936e8cd745d))
+* **vacunas:** nueva pantalla verificar estado ([#2584](https://github.com/andes/app/issues/2584)) ([c22e1e5](https://github.com/andes/app/commit/c22e1e5bdf323e78ec8f35ef0517e6dceaf14bef))
+
+# [5.84.0](https://github.com/andes/app/compare/v5.83.0...v5.84.0) (2022-02-09)
+
+
+### Bug Fixes
+
+* **facturacion:** corrige facturación sumar en turnos con agendas ([#2580](https://github.com/andes/app/issues/2580)) ([50f3436](https://github.com/andes/app/commit/50f3436f52b6ae121616246f443a278b8c2dc98a))
+
+
+### Features
+
+* **buscador-fichas:** actualizaciones buscador ([#2582](https://github.com/andes/app/issues/2582)) ([d9b89ea](https://github.com/andes/app/commit/d9b89ea1bd876bfaf19cbb8035513d7c93eff8a6))
+* **ficha-epidemio:** agrega concepto aislamiento ([#2581](https://github.com/andes/app/issues/2581)) ([9ba7ba2](https://github.com/andes/app/commit/9ba7ba295998860a17b82c7a26fc2093c73ffe2c))
+
+# [5.83.0](https://github.com/andes/app/compare/v5.82.0...v5.83.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* **mapa-camas:** errores egresos ([#2577](https://github.com/andes/app/issues/2577)) ([b8d0942](https://github.com/andes/app/commit/b8d0942840d0da10e9cdc465494610ae3d03a574))
+* **turnos-prestaciones:** separa boton ([#2578](https://github.com/andes/app/issues/2578)) ([e241346](https://github.com/andes/app/commit/e241346157da0430639e0c8f24ef1c140dbfcee4))
+
+
+### Features
+
+* **bi-query:** campo key configurable ([#2572](https://github.com/andes/app/issues/2572)) ([ac4dc9f](https://github.com/andes/app/commit/ac4dc9f07894261b16e04ef3a3941abf70159f3e))
+* **CIT-147:** Descarga del csv del listado de pacientes en turnos y prestaciones ([#2573](https://github.com/andes/app/issues/2573)) ([f474446](https://github.com/andes/app/commit/f4744466bfcb8347c0961b2a13dd98855d492b39))
+
+# [5.82.0](https://github.com/andes/app/compare/v5.81.0...v5.82.0) (2022-01-26)
+
+
+### Bug Fixes
+
+* **mpi:** domicilio legal de un paciente ([#2570](https://github.com/andes/app/issues/2570)) ([1e51545](https://github.com/andes/app/commit/1e51545e595baf5e1a988cdfe8b7cc5bf1250cb9))
+
+
+### Features
+
+* **mapa-camas:** ajustes a prescripción de medicamentos ([#2571](https://github.com/andes/app/issues/2571)) ([4dce320](https://github.com/andes/app/commit/4dce320e5565ae7beee7c48613ed08cf3a7b1583))
+* **mapa-camas:** nueva capa interconsultores ([#2557](https://github.com/andes/app/issues/2557)) ([bc42b67](https://github.com/andes/app/commit/bc42b678d9ed015690a7bb04c41754580deb7c7a))
+* **MISC-116:** filtro multiple de obras sociales ([#2568](https://github.com/andes/app/issues/2568)) ([aff4620](https://github.com/andes/app/commit/aff46201ac02eae009173c1fd09bd7b6535a9e6d))
+* **pdp:** formulario para registrar una demanda rechazada de turno ([#2487](https://github.com/andes/app/issues/2487)) ([3581ece](https://github.com/andes/app/commit/3581ece970e603cc932e578584ad517f10eb6aa4))
+
+# [5.81.0](https://github.com/andes/app/compare/v5.80.0...v5.81.0) (2022-01-19)
+
+
+### Features
+
+* **rup:** ingresar valor manualmente en formulaBase ([#2550](https://github.com/andes/app/issues/2550)) ([a817f1a](https://github.com/andes/app/commit/a817f1a52be4362d9f4682ccaca5e3526050a330))
+
+# [5.80.0](https://github.com/andes/app/compare/v5.79.0...v5.80.0) (2022-01-12)
+
+
+### Bug Fixes
+
+* **ficha:** semana epidemiologica ([#2561](https://github.com/andes/app/issues/2561)) ([83186a1](https://github.com/andes/app/commit/83186a1d795ac8df038cf018716c5fd0ace1aeed))
+* **mapa-camas:** estadistica no tiene resumen ([d4a3715](https://github.com/andes/app/commit/d4a3715e416eee2e50496e4083c29c7ee1542913))
+* **rup:** controles de permisos ([#2565](https://github.com/andes/app/issues/2565)) ([9426c43](https://github.com/andes/app/commit/9426c43b256db167aa5a47534d2c4a4b7009f375))
+* **rup:** huds en turno suspendido ([d856bc9](https://github.com/andes/app/commit/d856bc960f8621d396b9540700ae6daa083e45e6))
+* **rup:** permisos turnos ([#2562](https://github.com/andes/app/issues/2562)) ([d472df3](https://github.com/andes/app/commit/d472df3e564efe8574d3fb8c41990de7a85d9e74))
+* **RUP:** continuar registro no nominalizada ([#2560](https://github.com/andes/app/issues/2560)) ([1c9de8a](https://github.com/andes/app/commit/1c9de8ad275731e82ab91d3cc3ea5f6315f6aa97))
+
+
+### Features
+
+* **in:** registro de respiracion asistida para internacion ([#2525](https://github.com/andes/app/issues/2525)) ([8a8badc](https://github.com/andes/app/commit/8a8badc86a67a0f74842c90462ac7f9d24f40427))
+* **VAC:** se visualizan todas las dosis de una vacunas con excepciones ([#2567](https://github.com/andes/app/issues/2567)) ([5b0f398](https://github.com/andes/app/commit/5b0f39815db923cd26b08c7f81481bbeaa23a189))
+
 # [5.79.0](https://github.com/andes/app/compare/v5.78.1...v5.79.0) (2022-01-05)
 
 

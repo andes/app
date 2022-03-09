@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
-
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { Router } from '@angular/router';
@@ -13,6 +13,8 @@ import { ExportHudsService } from '../../modules/visualizacion-informacion/servi
 import { combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
+import { IFinanciador } from 'src/app/interfaces/IFinanciador';
+import { ObraSocialService } from '../../services/obraSocial.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -23,6 +25,9 @@ import { cache } from '@andes/shared';
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busqueda$: Observable<any[]>;
+    public paciente$: Observable<any>;
+    public obraSocialPaciente: any[] = [];
+    public prepagas: any[] = [];
     public lastSelect$ = new BehaviorSubject<string>(null);
     public descargasPendientes = false;
     public prestacionesExport = [];
@@ -36,10 +41,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public sumarB = false;
     public arrayEstadosFacturacion;
     public documento;
+    public financiadores: IFinanciador[];
     prestacion: any;
+    paciente: any;
+    public obraSocial: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
     public estado;
+    public turnosYprestaciones = [];
     public sinOS = false;
     public selectProfesional = false;
     public profesional: any;
@@ -49,6 +58,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public ambito;
     public prestacionesMax = 500;
     public showHint = false;
+    public prestacionIniciada;
+    public showListaPrepagas: Boolean = false;
+    public modelo: any = {
+        obraSocial: '',
+        prepaga: ''
+    };
 
     public columnas = {
         fecha: true,
@@ -81,6 +96,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private hudsService: HUDSService,
         private router: Router,
         private exportHudsService: ExportHudsService,
+        public obraSocialService: ObraSocialService,
+        private pacienteService: PacienteService,
 
     ) { }
 
@@ -112,7 +129,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             organizacion: '',
             idPrestacion: '',
             idProfesional: '',
-            financiadores: '',
+            financiadores: [],
             estado: '',
             estadoFacturacion: ''
         };
@@ -186,6 +203,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         );
 
         this.initialize();
+        this.obraSocialService.getPrepagas().subscribe(prepagas => {
+            this.prepagas = prepagas;
+        });
     }
 
     initialize() {
@@ -195,7 +215,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             organizacion: this.auth.organizacion.id,
             idPrestacion: '',
             idProfesional: '',
-            financiadores: '',
+            financiadores: [],
             estado: '',
             estadoFacturacion: '',
         };
@@ -260,7 +280,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.parametros['estado'] = data ? data.id : '';
             }
             if (tipo === 'financiador') {
-                this.parametros['financiador'] = data ? data.nombre : '';
+                this.parametros['financiador'] = this.financiadores?.map(f => f.nombre) || [];
             }
             if (tipo === 'sumar') {
                 this.parametros['financiador'] = data ? 'SUMAR' : '';
@@ -280,12 +300,16 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             if (tipo === 'filter') {
                 this.buscar(this.parametros);
             }
+            if (tipo === 'descargar') {
+                this.turnosPrestacionesService.descargar(this.parametros, 'turnos-y-prestaciones').subscribe();
+            }
         }
-
     }
 
     mostrarPrestacion(datos) {
+        this.modelo.prepaga = null;
         this.descargasPendientes = false;
+        this.prestacionIniciada = datos.idPrestacion;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
@@ -296,8 +320,15 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             this.lastSelect$.next(datos);
             datos.seleccionada = true;
             this.showPrestacion = true;
+            this.showListaPrepagas = false;
             this.prestacion = datos;
-
+            this.cargarObraSocial(datos);
+        });
+        if (datos.financiador) {
+            this.modelo.prepaga = '';
+        };
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
+            this.paciente = paciente;;
         });
     }
 
@@ -307,7 +338,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
-        this.facturacionAutomaticaService.post(this.prestacion).subscribe(respuesta => {
+        const turno = this.prestacion;
+
+        if (this.modelo.prepaga !== '') {
+            turno.obraSocial = 'prepaga';
+            turno.prepaga = this.modelo.prepaga;
+        }
+        this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
             if (respuesta.message) {
                 this.plex.info('info', respuesta.message);
             }
@@ -339,8 +376,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (prestaciones.length) {
             this.exportHudsService.peticionHuds({ prestaciones }).subscribe(res => {
                 if (res) {
-                    this.plex.toast('success', 'Su pedido esta siendo procesado, diríjase a descargas pendientes para obtener su reporte', 'Información', 2000);
+                    this.plex.toast('success', 'Su pedido esta siendo procesado', 'Información', 2000);
                     this.getPendientes();
+                    this.descargasPendientes = true;
                 }
             });
         } else {
@@ -376,5 +414,49 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (aux._value) {
             aux._value.seleccionada = false;
         }
+    }
+
+    cargarObraSocial(datos) {
+        if ((datos.idPrestacion)) {
+            this.obraSocialPaciente = [];
+            this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
+                if (resultado.length) {
+                    this.obraSocialPaciente = resultado.map((os: any) => {
+                        const osPaciente = {
+                            'id': os.financiador,
+                            'label': os.financiador
+                        };
+                        return osPaciente;
+                    });
+                    this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                } else {
+                    if (datos.paciente.obraSocial) {
+                        this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+                        this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                    }
+
+
+                }
+                this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+            });
+        }
+    }
+
+    seleccionarObraSocial(event) {
+        if (event.value === 'prepaga') {
+            this.modelo.prepaga = null;
+            this.obraSocialService.getPrepagas().subscribe(prepagas => {
+                this.prepagas = prepagas;
+            });
+            this.showListaPrepagas = true;
+        } else {
+            this.showListaPrepagas = false;
+            this.modelo.prepaga = '';
+        }
+        this.modelo.obraSocial = event.value;
+    }
+
+    generarComprobante() {
+        return this.prestacionIniciada && this.puedeEmitirComprobante && this.modelo.prepaga !== null && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
     }
 }

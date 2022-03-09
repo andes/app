@@ -4,24 +4,29 @@
     </plex-button>
     <ng-content></ng-content>
 </plex-title>
-<plex-list *ngIf="!sinPendientes; else noPendientes">
-    <plex-item *ngFor="let pendiente of completed">
-        <plex-label
-                    titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
-        </plex-label>
-        <plex-button type="info" size="sm" (click)="exportarHuds(pendiente)">
-            Descargar
-        </plex-button>
-    </plex-item>
-    <plex-item *ngFor="let pendiente of pending">
-        <plex-label
-                    titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
-        </plex-label>
-        <plex-button type="info" size="sm" disabled="true">
-            En proceso
-        </plex-button>
-    </plex-item>
-</plex-list>
+<plex-table *ngIf="!sinPendientes; else noPendientes">
+    <tr *ngFor="let pendiente of completed">
+        <td>
+            <plex-label size="md"
+                        titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+            </plex-label>
+        </td>
+        <td>
+            <plex-button type="info" size="sm" class="float-right" (click)="exportarHuds(pendiente)">Descargar
+            </plex-button>
+        </td>
+    </tr>
+    <tr *ngFor="let pendiente of pending">
+        <td>
+            <plex-label size="md"
+                        titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+            </plex-label>
+        </td>
+        <td>
+            <plex-button type="info" size="sm" class="float-right" disabled="true">En proceso</plex-button>
+        </td>
+    </tr>
+</plex-table>
 <ng-template #noPendientes>
     <div justify="center" class="h-75">
         <plex-label icon="information-variant" type="default" size="xl" direction="column"

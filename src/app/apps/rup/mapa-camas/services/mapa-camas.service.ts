@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
@@ -8,6 +9,7 @@ import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { IMAQEstado, IMAQRelacion, IMaquinaEstados } from '../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { MapaCamaListadoColumns } from '../interfaces/mapa-camas.internface';
@@ -15,7 +17,6 @@ import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
-
 @Injectable()
 export class MapaCamasService {
     public timer$;
@@ -82,7 +83,9 @@ export class MapaCamasService {
         private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private salaComunService: SalaComunService,
-        private internacionResumenHTTP: InternacionResumenHTTP
+        private internacionResumenHTTP: InternacionResumenHTTP,
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        public auth: Auth,
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -598,36 +601,64 @@ export class MapaCamasService {
 
 
     prestacionesPermitidas(cama: Observable<ISnapshot>) {
+        const conceptosTurneables$ = this.conceptosTurneablesService.getAll().pipe(
+            map((ct) => {
+                const tipoPrestacionPermisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+                return ct.filter(c => {
+                    return c.ambito?.includes('internacion') && tipoPrestacionPermisos.includes(c.id as string);
+                });
+            })
+        );
+
         const unidadOrganizativa$ = cama.pipe(
             pluck('unidadOrganizativa')
         );
-        const accionesCapa$ = cama.pipe(
+        const estadoCama$ = cama.pipe(
             switchMap(_cama => this.getEstadoCama(_cama)),
             notNull(),
-            pluck('acciones')
+            map(({ checkRupTiposPrestacion, acciones }) => ({ checkRupTiposPrestacion, acciones }))
         );
 
-        return combineLatest(
+        return combineLatest([
+            conceptosTurneables$,
+            estadoCama$,
             unidadOrganizativa$,
-            accionesCapa$
-        ).pipe(
-            map(([uo, acciones]) => {
+        ]).pipe(
+            map(([conceptosTurneables, estadoCama, uo]) => {
                 if (!uo) {
                     return [];
                 }
-                const registros = acciones.filter(acc => acc.tipo === 'nuevo-registro');
-                return registros.filter((registro) => {
+                const registros = estadoCama?.acciones.filter(acc => acc.tipo === 'nuevo-registro');
+                const filteredRegistros = registros.filter((registro) => {
                     const { unidadOrganizativa } = registro.parametros;
-                    if (unidadOrganizativa.length === 0) {
+                    if (unidadOrganizativa.length === 0 || unidadOrganizativa[0] === null) {
                         return true;
                     }
-                    const isExclude = unidadOrganizativa[0].startsWith('!');
+                    const isExclude = unidadOrganizativa[0]?.startsWith('!');
                     if (!isExclude) {
                         return unidadOrganizativa.includes(uo.conceptId);
                     } else {
                         return !unidadOrganizativa.map(s => s.substr(1)).includes(uo.conceptId);
                     }
                 });
+
+                if (estadoCama?.checkRupTiposPrestacion && Array.isArray(conceptosTurneables)) {
+                    const ct = conceptosTurneables.map((ct) => {
+                        return {
+                            tipo: 'nuevo-registro',
+                            label: ct.fsn,
+                            parametros: {
+                                concepto: ct,
+                            }
+                        };
+                    });
+                    return [
+                        ...filteredRegistros,
+                        ...ct
+                    ];
+                } else {
+                    return filteredRegistros;
+                }
 
             })
         );

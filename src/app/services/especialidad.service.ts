@@ -1,8 +1,7 @@
-import { Observable } from 'rxjs';
 import { Server } from '@andes/shared';
-import { IEspecialidad } from './../interfaces/IEspecialidad';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { IEspecialidad } from './../interfaces/IEspecialidad';
 
 @Injectable()
 export class EspecialidadService {
@@ -16,7 +15,7 @@ export class EspecialidadService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IEspecialidad[]> {
-        return this.server.get(this.especialidadUrl, {params: params, showError: true});
+        return this.server.get(this.especialidadUrl, { params: params, showError: true });
     }
 
     /**

@@ -1,10 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { BiQueriesComponent } from 'src/app/modules/visualizacion-informacion/components/bi-queries/bi-queries.component';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { QueriesService } from 'src/app/services/query.service';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { InstitucionService } from '../../../services/turnos/institucion.service';
 import { enumToArray } from '../../../utils/enums';
@@ -28,6 +30,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     @ViewChild('guardarAgendaPanel', { static: false }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
         this.guardarAgendaPanel = theElementRef;
     }
+    @ViewChildren(BiQueriesComponent) biQuery: QueryList<any>;
+
 
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
@@ -72,6 +76,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
     private scrollEnd = false;
+    public enableQueries = false;
+    queries = [];
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -97,7 +103,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         public serviceAgenda: AgendaService,
         public serviceInstitucion: InstitucionService,
         private router: Router,
-        public auth: Auth) { }
+        public auth: Auth,
+        private queryService: QueriesService,
+    ) { }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -131,7 +139,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             fechaDesde: '',
             fechaHasta: '',
             organizacion: '',
-            idTipoPrestacion: '',
+            tipoPrestacion: '',
             idProfesional: '',
             espacioFisico: '',
             otroEspacioFisico: '',
@@ -151,8 +159,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.fechaDesde = moment(this.parametros.fechaDesde).startOf('day');
             this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
 
-            if (this.parametros.idTipoPrestacion) {
-                this.conceptoTurneablesService.get(this.parametros.idTipoPrestacion).subscribe(rta => {
+            if (this.parametros.tipoPrestacion) {
+                this.conceptoTurneablesService.search({ conceptId: this.parametros.tipoPrestacion }).subscribe(rta => {
                     this.prestaciones = rta;
                 });
             }
@@ -219,10 +227,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
-                this.parametros['idTipoPrestacion'] = value.value.id;
+                this.parametros['tipoPrestacion'] = value.value.conceptId;
                 delete this.parametros['tipoPrestaciones'];
             } else {
-                this.parametros['idTipoPrestacion'] = '';
+                this.parametros['tipoPrestacion'] = '';
             }
         }
         if (tipo === 'profesionales') {
@@ -496,6 +504,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     verAgenda(agenda, multiple, e) {
         // Si se presionó el boton suspender, no se muestran otras agendas hasta que se confirme o cancele la acción.
         if (!this.showSuspenderAgenda) {
+            this.enableQueries = false;
             this.showBotonesAgenda = false;
             this.showTurnos = false;
             this.showSuspendida = false;
@@ -693,4 +702,84 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showRevisionFueraAgenda = true;
     }
 
+    cargarPacientes() {
+        this.enableQueries = true;
+        const agenda = this.agendasSeleccionadas[0];
+        agenda.tipoPrestaciones.forEach(p => {
+            if (p.queries?.length) {
+                this.queries = [...this.queries, ...p.queries];
+            }
+        });
+    }
+
+    asignarPacientesPorConsulta() {
+        let query;
+        const params = {};
+        let invalidFormMsg;
+        this.biQuery.forEach(item => {
+            if (item.consultaSeleccionada) {
+                query = item.consultaSeleccionada.nombre;
+                item.argumentos.forEach(arg => {
+                    const key = arg.key;
+                    const value = item.argumentos[key];
+                    if (arg.required && !value) {
+                        invalidFormMsg = 'Debe completar los filtros obligatorios';
+                    }
+                    params[key] = value;
+                });
+            } else {
+                invalidFormMsg = 'Debe seleccionar una lista de pacientes';
+            }
+        });
+
+        if (invalidFormMsg) {
+            this.plex.info('warning', invalidFormMsg, 'Atención');
+        } else {
+            this.queryService.getQuery(query, params).subscribe(res => {
+                this.asignarTurnosBulk(res);
+            });
+        }
+    }
+
+    cerrarCargarPacientes() {
+        this.enableQueries = false;
+    }
+
+    asignarTurnosBulk(inscripciones) {
+        const pacientes = inscripciones.map(e => ({
+            _id: e.idPaciente,
+            id: e.idPaciente,
+            nombre: e.nombre,
+            apellido: e.apellido,
+            documento: e.dni,
+            fechaNacimiento: moment(e.fechaNacimiento, 'DD-MM-YYYY').toDate(),
+            telefono: e.telefono,
+            sexo: e.sexo,
+            carpetaEfectores: []
+        }));
+
+        let turnos = [];
+        this.agendasSeleccionadas[0].bloques.forEach(b => {
+            const turnosDisponibles = b.turnos.filter(t => !t.paciente);
+            turnos = [...turnos, ...turnosDisponibles];
+        });
+
+        let i = 0;
+        let end = pacientes.length;
+        if (end > turnos.length) {
+            end = turnos.length;
+        }
+        while (i < end) {
+            turnos[i].paciente = pacientes[i];
+            turnos[i].tipoPrestacion = this.agendasSeleccionadas[0].bloques[0]?.tipoPrestaciones[0];
+            turnos[i].estado = 'asignado';
+            i++;
+        }
+
+        this.serviceAgenda.save(this.agendasSeleccionadas[0]).subscribe(res => {
+            this.showTurnos = true;
+            this.enableQueries = false;
+            this.plex.toast('success', 'Asignación automática exitosa', '', 1000);
+        });
+    }
 }

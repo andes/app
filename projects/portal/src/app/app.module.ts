@@ -49,6 +49,11 @@ import { PrestacionService } from './services/prestacion.service';
 import { LogPacienteService } from 'src/app/services/logPaciente.service';
 import { PDPMiInicioComponent } from './pages/mi-inicio/mi-inicio.component';
 import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-codigo.component';
+import { PDPNotificarNecesidadComponent } from './pages/mis-turnos/notificar-necesidad.component';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
+
 
 @NgModule({
     declarations: [
@@ -77,7 +82,8 @@ import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-cod
         ResetPasswordComponent,
         PDPMisDatosPersonalesComponent,
         PDPMiInicioComponent,
-        SolicitarCodigoComponent
+        SolicitarCodigoComponent,
+        PDPNotificarNecesidadComponent
     ],
     imports: [
         BrowserModule,
@@ -116,7 +122,10 @@ import { SolicitarCodigoComponent } from './pages/solicitar-codigo/solicitar-cod
                 siteKey: environment.SITE_KEY,
             } as RecaptchaSettings,
         },
-        LogPacienteService
+        LogPacienteService,
+        ConceptosTurneablesService,
+        OrganizacionService,
+        ListaEsperaService
     ],
     bootstrap: [AppComponent]
 })

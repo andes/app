@@ -43,7 +43,7 @@ export class FormBuilderComponent implements OnInit, OnChanges {
 
 
     validate() {
-        const b = this.items.reduce((flag, current) => flag && current.isValid() , true);
+        const b = this.items.reduce((flag, current) => flag && current.isValid(), true);
     }
 
 }

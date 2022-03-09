@@ -32,6 +32,7 @@ export interface IMAQEstado {
             unidadOrganizativa?: string[];
         };
     }[];
+    checkRupTiposPrestacion: boolean;
 }
 
 export interface IMAQRelacion {

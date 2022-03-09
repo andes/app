@@ -232,7 +232,7 @@
                                                [label]="field.label?field.label:field.key" grow="auto" type="date"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha"
-                                               (change)="setSemanaEpidemiologica($event)">
+                                               (change)="setSemanaEpidemiologica($event)" [debounce]="600">
                                 </plex-datetime>
                                 <plex-int *ngIf="field.key==='semanaepidemiologica' && !asintomatico"
                                           [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
@@ -308,17 +308,17 @@
                                              (change)="clearDependencias({value:false},'clasificacionFinal',
                                              ['tipomuestra','antigeno','lamp','pcr','identificadorpcr','pcrM']) ; resultadoFinal(field.key)" [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='tipomuestra' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-select *ngIf="field.key==='tipomuestra' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="field.required" [data]="tipoMuestra" [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-datetime *ngIf="field.key==='fechamuestra' && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-datetime *ngIf="field.key==='fechamuestra' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                                [label]="field.label?field.label:field.key" grow="auto" type="date"
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>
-                                <plex-select *ngIf="field.key==='antigeno' && seccion.fields['segundaclasificacion']?.id!=='confirmado' 
+                                <plex-select *ngIf="field.key==='antigeno' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado' 
                                               && seccion.fields['segundaclasificacion']?.id!=='lamp' && seccion.fields['segundaclasificacion']?.id!=='pcr'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -326,7 +326,7 @@
                                              [data]="resultadoAntigeno" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='lamp' && seccion.fields['segundaclasificacion']?.id!=='confirmado'
+                                <plex-select *ngIf="field.key==='lamp' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'
                                             && seccion.fields['antigeno']?.id!=='confirmado' && seccion.fields['segundaclasificacion']?.id!=='pcr'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -334,19 +334,19 @@
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-bool *ngIf="field.key==='pcrM'&& seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-bool *ngIf="field.key==='pcrM'&& checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            (change)="setPcr($event); clearDependencias($event,'clasificacionFinal',['pcr','identificadorpcr']); resultadoFinal(field.key)"
                                            [readonly]="!editFicha">
                                 </plex-bool>
-                                <plex-select *ngIf="field.key==='pcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-select *ngIf="field.key==='pcr' && seccion.fields['pcrM'] && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [data]="resultadoDetectable" (change)="resultadoFinal(field.key)"
-                                             [readonly]="!editFicha">
+                                             readonly=true>
                                 </plex-select>
-                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcrM'] && seccion.fields['segundaclasificacion']?.id!=='confirmado'"
+                                <plex-text *ngIf="field.key==='identificadorpcr' && seccion.fields['pcrM'] && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [pattern]="patronPCR" [required]="field.required" [readonly]="!editFicha">
@@ -455,7 +455,7 @@
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [readonly]="!editFicha"
-                                           (change)="getVacunas(); clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
+                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['vacunacionestado','fechadosis','nombrevacunacovid'])">
                                 </plex-bool>
                                 <plex-select *ngIf="field.key==='vacunacionestado' && seccion.fields['vacunacioncovid']"
                                              [label]="field.label?field.label:field.key" grow="auto"

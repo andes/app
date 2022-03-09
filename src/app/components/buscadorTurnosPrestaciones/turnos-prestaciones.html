@@ -1,8 +1,9 @@
-<plex-layout main="{{ showPrestacion || descargasPendientes ? '6' : '12'}}">
+<plex-layout main="{{ showPrestacion? '6': descargasPendientes? '8': '12'}}">
     <plex-layout-main>
 
         <plex-title titulo="Turnos y prestaciones">
-            <plex-button label="Descargas pendientes" size="sm" type="info" (click)="mostrarPendientes()">
+            <plex-button label="Descargas pendientes" size="sm" type="info" (click)="mostrarPendientes()"
+                         tooltip="Ver listado" tooltipPosition="left">
             </plex-button>
         </plex-title>
         <!--Botones / Acciones-->
@@ -34,7 +35,7 @@
                 <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="arrayEstados"
                              label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
                 </plex-select>
-                <plex-select *ngIf="!sumarB && !sinOS" [(ngModel)]="financiadores"
+                <plex-select *ngIf="!sumarB && !sinOS" [(ngModel)]="financiadores" [multiple]="true"
                              (change)="refreshSelection($event,'financiador')" tmFinanciador label="Financiador"
                              placeholder="Buscar por financiador">
                 </plex-select>
@@ -57,10 +58,14 @@
         <ng-container *ngIf="state$ | async as state">
             <plex-title titulo="Listado" size="sm">
                 <plex-button *ngIf="!showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
-                             [disabled]="!state.enableExport"></plex-button>
+                             [disabled]="!state.enableExport" tooltip="Enviar prestaciones" tooltipPosition="left">
+                </plex-button>
                 <plex-button *ngIf="showHint" label="Exportar" size="sm" type="success" disabled="true"
                              hint="El máximo permitido de prestaciones es de {{prestacionesMax}}" hintType="warning"
                              hintIcon="lock" detach="top">
+                </plex-button>
+                <plex-button type="info" size="sm" icon="download" (click)="refreshSelection($event, 'descargar')"
+                             tooltip="Descargar CSV" class="ml-2">
                 </plex-button>
                 <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true"
                                class="ml-2">
@@ -178,8 +183,8 @@
                                     {{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}
                                 </td>
                                 <td *ngIf="sumarB">
-                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin
-                                    Comprobante'}}
+                                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado:
+                                    'Sin Comprobante'}}
                                 </td>
                             </tr>
                         </tbody>
@@ -196,69 +201,10 @@
     </plex-layout-main>
     <!-- Prestacion -->
     <plex-layout-sidebar *ngIf="showPrestacion">
-        <header>
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="clearfix">
-                        <div class="page-title float-left">Datos de la prestación</div>
-                    </div>
-                </div>
-                <div class="col d-flex justify-content-end">
-                    <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
-                    <plex-button *ngIf="puedeEmitirComprobante && (permisos!==0) && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
-                                 label="Comprobante" type="success" (click)="recupero()"></plex-button>
-                </div>
-            </div>
-        </header>
-        <div class="clearfix">
-            <div class="page-subtitle float-left">Paciente</div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-
-                <div *ngIf="prestacion.paciente.apellido">
-                    <label class="block">Apellido y nombre</label>
-                    <span>{{prestacion.paciente | nombre}}</span>
-                </div>
-            </div>
-
-            <div class="col-md">
-                <div *ngIf="prestacion.paciente.documento !== ''">
-                    <label class="block">Documento</label>
-                    <span>{{ prestacion.paciente.documento }}</span>
-                </div>
-                <div *ngIf="prestacion.paciente.documento === ''">
-                    <label class="block">Documento</label>
-                    <span class="text-danger">Sin documento</span>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-md">
-                <div *ngIf="prestacion.paciente.fechaNacimiento !== null">
-                    <label>Fecha de Nacimiento</label>
-                    <span>{{ prestacion.paciente.fechaNacimiento | date: "dd/MM/yyyy " }}</span>
-                </div>
-                <div *ngIf="prestacion.paciente.fechaNacimiento === null">
-                    <label>Fecha de Nacimiento</label>
-                    <span class="text-danger">Sin fecha de nacimiento</span>
-                </div>
-            </div>
-            <div class="col-md">
-                <div>
-                    <label>Edad</label>
-                    <span>{{ prestacion.paciente | edad }}</span>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="full-col" *ngIf="prestacion.paciente.sexo">
-                    <label>Sexo / Género</label>
-                    <span>{{ prestacion.paciente | sexo }}</span>
-                </div>
-            </div>
-        </div>
+        <plex-title titulo="Datos del Paciente" size="md">
+            <plex-button icon="close" type="danger" (click)="onClose()" size="sm"></plex-button>
+        </plex-title>
+        <paciente-detalle *ngIf="paciente" [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
         <div class="row">
             <div class="col-md">
                 <div *ngIf="prestacion.paciente.estado">
@@ -272,12 +218,13 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="clearfix">
-            <div class="page-subtitle float-left">Prestación</div>
-        </div>
-        <div *ngIf="!prestacion.idPrestacion" class="col">
-            <span class="text-danger">La prestación no ha sido iniciada</span>
+
+        <plex-title titulo="Prestación" size="md">
+            <plex-button size="sm" *ngIf="generarComprobante()" label="Comprobante" type="success" (click)="recupero()">
+            </plex-button>
+        </plex-title>
+        <div *ngIf="!prestacion.idPrestacion">
+            <plex-badge size="md" type="danger">La prestación no ha sido iniciada</plex-badge>
         </div>
 
         <div *ngIf="prestacion.idPrestacion">
@@ -313,18 +260,22 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div *ngIf="prestacion.financiador?.financiador">
-                        <label>Obra social</label>
-                        <span>{{prestacion.financiador.financiador}}</span>
-                    </div>
-                    <div *ngIf="!prestacion.financiador">
-                        <label>Obra social</label>
-                        <span>No posee</span>
-                    </div>
-                </div>
+            <div *ngIf="modelo.obraSocial !== 'SUMAR'">
+                <plex-radio *ngIf="prestacion.financiador" [(ngModel)]="modelo.obraSocial" name="os"
+                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
+                            [data]="obraSocialPaciente">
+                </plex-radio>
+                <plex-select *ngIf="showListaPrepagas || !prestacion.financiador" [(ngModel)]="modelo.prepaga"
+                             name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
+                             labelField="nombre">
+                </plex-select>
+                <br>
             </div>
+            <div *ngIf="modelo.obraSocial === 'SUMAR'">
+                <label>Obra social</label>
+                <div>{{modelo.obraSocial}}</div>
+            </div>
+            <br>
         </div>
 
         <div *ngIf="prestacion.idPrestacion">
@@ -332,7 +283,7 @@
         </div>
 
     </plex-layout-sidebar>
-    <plex-layout-sidebar *ngIf="descargasPendientes" [type]="'invert'">
+    <plex-layout-sidebar *ngIf="descargasPendientes" type="invert">
         <descargas-pendientes>
             <plex-button justify="end" icon="close" type="danger" tooltip="Cerrar" (click)="mostrarPendientes()">
             </plex-button>

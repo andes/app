@@ -1,13 +1,13 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
-import { InscripcionService } from '../services/inscripcion.service';
-import { cache, calcularEdad } from '@andes/shared';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { cache, calcularEdad } from '@andes/shared';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { forkJoin, Observable } from 'rxjs';
+import { GrupoPoblacionalService } from 'src/app/services/grupo-poblacional.service';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { ProfesionService } from 'src/app/services/profesion.service';
-import { NgForm } from '@angular/forms';
+import { InscripcionService } from '../services/inscripcion.service';
 
 @Component({
     selector: 'editar-inscripcion',
@@ -20,7 +20,7 @@ export class EditarInscripcionComponent implements OnInit, AfterViewChecked {
         { id: 'pendiente', nombre: 'Pendiente' },
         { id: 'inhabilitado', nombre: 'Inhabilitado' },
         { id: 'fallecido', nombre: 'Fallecido' },
-        { id: 'noCompletaEsquema', nombre: 'No completa esquema'}
+        { id: 'noCompletaEsquema', nombre: 'No completa esquema' }
     ];
     public fechaMinimaNacimiento = moment('1900-01-01').toDate();
     public fechaMaximaNacimiento = moment().subtract(60, 'years').toDate();

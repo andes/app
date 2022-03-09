@@ -19,6 +19,7 @@ import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.se
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { SECCION_CLASIFICACION, SECCION_CONTACTOS_ESTRECHOS, SECCION_MPI, SECCION_OPERACIONES, SECCION_USUARIO } from '../../constantes';
+import { PacientesVacunasService } from 'src/app/services/pacientes-vacunas.service';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     @Input() hideVolver: boolean;
     @Input() fichaName: string;
     @Input() form: any;
+    @Input() volverBuscador: boolean;
     @Output() volver = new EventEmitter<any>();
     @ViewChild('form', { static: false }) ngForm: NgForm;
 
@@ -77,6 +79,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     ];
     public segundaClasificacion = [
         { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
+        { id: 'autotest', nombre: 'Autotest' },
+        { id: 'laboPcr', nombre: 'Laboratorio privado (PCR)' },
+        { id: 'laboAntigeno', nombre: 'Laboratorio privado (Antígeno)' },
         { id: 'antigeno', nombre: 'Antígeno' },
         { id: 'pcr', nombre: 'PCR-RT' },
         { id: 'lamp', nombre: 'LAMP (NeoKit)' }
@@ -192,7 +197,8 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         private paisService: PaisService,
         private vacunasService: VacunasService,
         private prestacionesService: PrestacionesService,
-        private elementoRupService: ElementosRUPService
+        private elementoRupService: ElementosRUPService,
+        private pacientesVacunasService: PacientesVacunasService
     ) { }
 
     ngOnChanges(): void {
@@ -273,11 +279,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             this.ngForm.control.markAllAsTouched();
         } else {
             this.getValues();
-            if (this.checkClasificacionFinal()) {
-                this.setFicha();
-            } else {
-                this.plex.info('warning', 'Si el resultado del antigeno es NO REACTIVO debe completar el campo LAMP o PCR', 'Atención');
-            }
+            this.setFicha();
         }
     }
 
@@ -413,6 +415,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                     seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
                     this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
                     break;
+                case 'antecedentesEpidemiologicos':
+                    this.setEstadoVacunacion(seccion.fields);
+                    break;
             }
         });
     }
@@ -422,13 +427,13 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         this.secciones.map(seccion => {
             if (seccion.id === 'clasificacionFinal') {
                 const clasificaciones = {
-                    segundaclasificacion: seccion.fields['segundaclasificacion']?.id,
+                    segundaclasificacion: this.checkConfirmados(seccion.fields['segundaclasificacion']),
                     antigeno: seccion.fields['antigeno']?.id,
                     pcrM: seccion.fields['pcrM'] ? 'muestra' : '',
                     pcr: seccion.fields['pcr']?.id,
                     lamp: seccion.fields['lamp']?.id
                 };
-                if (seccion.fields['segundaclasificacion']?.nombre === 'Criterio clínico epidemiológico (Nexo)') {
+                if (this.checkConfirmados(seccion.fields['segundaclasificacion']) === 'confirmado') {
                     this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
                 } else {
                     if (!seccion.fields['fechamuestra']) {
@@ -503,7 +508,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
 
         const nuevaPrestacion = this.prestacionesService.inicializarPrestacion(this.paciente, concepto, 'ejecucion', 'ambulatorio', new Date(), null, null, registrosEjecucion);
         this.prestacionesService.post(nuevaPrestacion).subscribe(prestacion => {
-            this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
+            if (this.volverBuscador) {
+                this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/buscador-ficha-epidemiologica' });
+            } else {
+                this.prestacionesService.notificaRuta({ nombre: 'EPIDEMIOLOGÍA', ruta: 'epidemiologia/ficha-epidemiologica' });
+            }
             this.router.navigate(['rup/ejecucion', prestacion.id]);
         });
     }
@@ -632,25 +641,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         return this.estaInternado;
     }
 
-    checkClasificacionFinal() {
-        const seccionClasificacion = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
-        if (seccionClasificacion?.fields['antigeno']?.id === 'muestra' && !this.asintomatico) {
-            return (seccionClasificacion.fields['lamp']?.id || seccionClasificacion.fields['pcrM']);
-        } else {
-            return true;
-        }
-    }
-
     getInstituciones(educativas) {
         if (educativas) {
             this.institucionesEducativas$ = this.serviceInstitucion.get({ tipo: 'Establecimiento educativo' });
         } else {
             this.residencias$ = this.serviceInstitucion.get({ tipo: 'Residencia' });
         }
-    }
-
-    getVacunas() {
-        this.vacunas$ = this.vacunasService.getNomivacVacunas({});
     }
 
     setPcr(event) {
@@ -664,11 +660,11 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     setSemanaEpidemiologica(event) {
-        const primerDomingo = moment().startOf('year').startOf('week').weekday(-1);
+        const primerSintoma = moment(event.value);
+        const primerDomingo = moment(primerSintoma).startOf('year').startOf('week').weekday(-1);
         if (primerDomingo.format('YYYY') < moment().format('YYYY')) {
             primerDomingo.add(7, 'days');
         }
-        const primerSintoma = moment(event.value);
         this.secciones.map(seccion => {
             if (seccion.id === 'informacionClinica') {
                 const resultado = Math.trunc((primerSintoma.diff(primerDomingo, 'days') / 7)) + 1;
@@ -693,6 +689,27 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         } else {
             this.asintomatico = false;
             this.clearDependencias({ value: false }, 'clasificacion', ['situacionespecial']);
+        }
+    }
+
+    setEstadoVacunacion(fields) {
+        this.vacunas$ = this.vacunasService.getNomivacVacunas({});
+        this.pacientesVacunasService.search({ paciente: this.paciente.id }).subscribe(res => {
+            if (res.length) {
+                const vacunas = res[0];
+                const ultimaDosis = vacunas.aplicaciones[vacunas.aplicaciones.length - 1];
+                fields['vacunacioncovid'] = true;
+                fields['fechadosis'] = ultimaDosis.fechaAplicacion;
+                fields['nombrevacunacovid'] = { _id: ultimaDosis.vacuna.id, nombre: ultimaDosis.vacuna.nombre };
+            }
+        });
+    }
+
+    checkConfirmados(field) {
+        if (field?.id === 'autotest' || field?.id === 'laboPcr' || field?.id === 'laboAntigeno') {
+            return 'confirmado';
+        } else {
+            return field?.id;
         }
     }
 }

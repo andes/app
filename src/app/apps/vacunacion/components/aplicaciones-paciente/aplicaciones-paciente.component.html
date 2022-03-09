@@ -1,0 +1,13 @@
+<plex-title titulo="Aplicaciones"></plex-title>
+<plex-list *ngIf="aplicaciones">
+    <plex-item *ngFor="let aplicacion of aplicaciones">
+        <plex-badge type="success">{{ aplicacion.dosis.nombre}}</plex-badge>
+        <plex-label size="sm" titulo="{{aplicacion.vacuna.nombre}}">
+            <plex-icon size="sm" name="vacuna">
+            </plex-icon>
+        </plex-label>
+        <plex-label size="sm" titulo="Organización" subtitulo="{{aplicacion.organizacion.nombre}}"></plex-label>
+        <plex-label size="sm" titulo="Esquema" subtitulo="{{aplicacion.esquema.nombre}}"></plex-label>
+    </plex-item>
+</plex-list>
+<plex-label *ngIf="!aplicaciones" titulo="El paciente no tiene vacunas registradas"></plex-label>

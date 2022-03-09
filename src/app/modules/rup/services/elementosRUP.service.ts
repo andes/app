@@ -284,4 +284,13 @@ export class ElementosRUPService {
             semanticTag: 'situación'
         };
     }
+
+    getConceptoCertificadoAislamiento() {
+        return {
+            term: 'certificado de aislamiento por COVID-19',
+            fsn: 'certificado de aislamiento por COVID-19 (elemento de registro)',
+            conceptId: '781000246105',
+            semanticTag: 'elemento de registro'
+        };
+    }
 }

@@ -239,7 +239,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     chequearMultiprestacion(id) {
         const prestacion = this.tiposPrestacion.find(p => p.id === id);
-        if (prestacion.multiprestacion?.length >= 1) {
+        if (prestacion?.multiprestacion?.length >= 1) {
             const prestacionHijo = this.tiposPrestacion.find(p => prestacion.multiprestacion.find(concepto => concepto.conceptId === p.conceptId));
             if (prestacionHijo) {
                 prestacionHijo['esMultiprestacion'] = true;
@@ -318,6 +318,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                             let nombreCompleto = '';
                             if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
+                                if (!t.paciente.documento) {
+                                    t.paciente.documento = '';
+                                }
                             }
                             return (t.paciente && t.paciente.id &&
                                 (nombreCompleto.toLowerCase().indexOf(search) >= 0
@@ -480,7 +483,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 const fechaPrestacion = this.agendaSeleccionada.dinamica ? this.servicioPrestacion.getFechaPrestacionTurnoDinamico(turno.horaInicio) : turno.horaInicio;
-                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno).subscribe(prestacion => {
+                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', fechaPrestacion, turno.id).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     if (err === 'ya_iniciada') {
@@ -593,7 +596,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     chequearPrestacion(turno) {
-
         const prestacion = this.tiposPrestacion.find(tipoPrestacion => tipoPrestacion.conceptId === turno.tipoPrestacion?.conceptId);
 
         if (prestacion && prestacion.multiprestacion) {
@@ -638,16 +640,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                 }
 
-                if (turno.estado === 'asignado' || agenda.tipoPrestaciones[0].noNominalizada) {
+                if (turno.estado === 'asignado' || turno.estado === 'suspendido' || agenda.tipoPrestaciones[0].noNominalizada) {
 
                     turno.botonera = {
                         huds: turno.paciente?.id && this.tieneAccesoHUDS,
                         iniciar: !this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && !this.chequearPrestacion(turno) && this.tienePermisos(turno) && this.verificarAsistencia(turno),
                         iniciarDisabled: this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && !this.chequearPrestacion(turno) && this.verificarAsistencia(turno),
-                        continuar: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno),
-                        resumen: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'validada') && this.tienePermisos(turno),
+                        continuar: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno, 'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno),
+                        resumen: (turno.paciente || agenda.tipoPrestaciones[0].noNominalizada) && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno, 'validada') && this.tienePermisos(turno),
                         inasistencia: !turno.asistencia && !this.esFutura(agenda) && agenda.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!this.chequearPrestacion(turno) || this.chequearEstados(turno, 'ejecucion')),
-                        anular: turno.paciente && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno,'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno)
+                        anular: turno.paciente && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno, 'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno)
                     };
                 }
 
@@ -671,10 +673,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     huds: sobreturno.paciente.id && this.tieneAccesoHUDS,
                     iniciar: !this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !this.chequearPrestacion(sobreturno) && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno),
                     iniciarDisabled: this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !this.chequearPrestacion(sobreturno) && this.verificarAsistencia(sobreturno),
-                    continuar: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno),
-                    resumen: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'validada') && this.tienePermisos(sobreturno),
+                    continuar: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno, 'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno),
+                    resumen: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno, 'validada') && this.tienePermisos(sobreturno),
                     inasistencia: !sobreturno.asistencia && !this.esFutura(agenda) && agenda.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!this.chequearPrestacion(sobreturno) || this.chequearEstados(sobreturno, 'ejecucion')),
-                    anular: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno,'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno)
+                    anular: sobreturno.paciente && sobreturno.estado !== 'suspendido' && this.chequearPrestacion(sobreturno) && this.chequearEstados(sobreturno, 'ejecucion') && this.tienePermisos(sobreturno) && this.verificarAsistencia(sobreturno)
                 };
             });
         }

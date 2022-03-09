@@ -10,7 +10,7 @@ import { FormBuilderComponent } from './form-builder/form-builder.component';
 
 @NgModule({
     declarations: [
-        FormBuilderComponent ,
+        FormBuilderComponent,
         FormBuilderItemComponent
     ],
     imports: [
