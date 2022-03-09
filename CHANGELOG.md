@@ -1,3 +1,18 @@
+# [5.87.0](https://github.com/andes/app/compare/v5.86.0...v5.87.0) (2022-03-09)
+
+
+### Bug Fixes
+
+* **seguimiento:** semaforo ([#2600](https://github.com/andes/app/issues/2600)) ([fbeed69](https://github.com/andes/app/commit/fbeed69b31d48b1b889cdfc614c4d3a09efed7f3))
+
+
+### Features
+
+* **EP:** filtro score seguimiento ([#2590](https://github.com/andes/app/issues/2590)) ([522ccdf](https://github.com/andes/app/commit/522ccdf1de6f2b04218c13543082b611904e7971))
+* **mpi:** se agrega la validación por sexo no binario ([#2588](https://github.com/andes/app/issues/2588)) ([22c019d](https://github.com/andes/app/commit/22c019dee7f52d09b774bd392bdf8ff3f52a70ce))
+* **seguimiento:** orden prioridad o fecha ([#2599](https://github.com/andes/app/issues/2599)) ([4616b67](https://github.com/andes/app/commit/4616b67cb7030740475b195a63981fb501dec1eb))
+* **UIUX:** acomoda correctamente header de paciente en navbar ([#2598](https://github.com/andes/app/issues/2598)) ([b1d93db](https://github.com/andes/app/commit/b1d93dbbd44779371d66a10acfacd50e0d9b415f))
+
 # [5.86.0](https://github.com/andes/app/compare/v5.85.0...v5.86.0) (2022-03-02)
 
 
