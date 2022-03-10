@@ -708,7 +708,6 @@ export class DarTurnosComponent implements OnInit {
     * Se selecciona un turno del listado
     */
     seleccionarTurno(bloque: any, indice: number) {
-        this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);

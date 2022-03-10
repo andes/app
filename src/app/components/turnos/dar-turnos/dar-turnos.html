@@ -88,28 +88,28 @@
                         <plex-badge type="info">
                             AGENDA {{indice+1}} /{{agendasDelDia.length}}
                         </plex-badge>
-                        <plex-badge type="warning" class="mx-1">
+                        <plex-badge type="warning" class="mx-1" tooltipPosition="top" tooltip="Turnos agenda">
                             {{agendasDelDia[indice].turnosDisponibles}}
                             <plex-icon name="calendario-fecha" size="md"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="agenda.link" type="info" tooltipPosition="top" tooltip="Agenda Virtual">
+                            <plex-icon name="monitor" size="md"></plex-icon>
                         </plex-badge>
                         <plex-button *ngIf="puedeDarSobreturno" class="mr-1" type="success" size="sm"
                                      icon="account-plus" (click)="agregarSobreturno()" tooltipPosition="top"
                                      tooltip="Agregar Sobreturno">
-                        </plex-button>
-                        <plex-button *ngIf="agenda.link" size="sm" type="default" tooltipPosition="top"
-                                     tooltip="Agenda Virtual" icon="monitor">
                         </plex-button>
                     </plex-grid>
                     <plex-grid type="full" justify="start">
                         <div class="icono-agenda">
                             <plex-icon name="calendar" size="xl" type="warning"></plex-icon>
                         </div>
-                        <plex-grid type="full" cols="2" justify="start">
+                        <plex-grid type="full" cols="2" justify="center">
                             <plex-label size="md" case="capitalize"
                                         titulo="{{ agenda.horaInicio | date: 'EEEE d/M/yyyy' }}"
                                         subtitulo="Desde {{agenda.horaInicio | date: 'HH:mm'}} hasta {{agenda.horaFin | date: 'HH:mm'}}hs">
                             </plex-label>
-                            <plex-grid class="m-0" type="full" justify="start" cols="2">
+                            <plex-grid class="m-0" type="full" justify="center" cols="2">
                                 <plex-label size="md" titulo="Prestación"
                                             subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
                                 </plex-label>
@@ -140,16 +140,17 @@
             <ng-container *ngIf="estadoT === 'seleccionada'">
                 <!--Lista de turnos, bloque por bloque-->
                 <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
-                <!--Tipos de turnos-->
-                <plex-grid responsive type="full" cols="4" *ngFor="let bloque of bloques">
-                    <plex-label size="md" titulo="Del día" subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
+                <plex-grid class="turnos_disponibles" responsive type="full" cols="4" *ngFor="let bloque of bloques">
+                    <plex-label align="center" size="md" titulo="Del día"
+                                subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
                     </plex-label>
-                    <plex-label size="md" titulo="Programados"
+                    <plex-label align="center" size="md" titulo="Programados"
                                 subtitulo="{{countBloques[findIndex(bloque)]?.programado}}">
                     </plex-label>
-                    <plex-label size="md" titulo="Con llave" subtitulo="{{countBloques[findIndex(bloque)]?.gestion}}">
+                    <plex-label align="center" size="md" titulo="Con llave"
+                                subtitulo="{{countBloques[findIndex(bloque)]?.gestion}}">
                     </plex-label>
-                    <plex-label size="md" titulo="Profesional"
+                    <plex-label align="center" size="md" titulo="Profesional"
                                 subtitulo="{{countBloques[findIndex(bloque)]?.profesional}}">
                     </plex-label>
                 </plex-grid>
@@ -158,8 +159,8 @@
             <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
             <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
                         size="sm">
-                <plex-bool *ngIf="estadoT !== 'noTurnos'" class="mr-2" label="Turno doble" [(ngModel)]='turnoDoble'
-                           name="turnoDoble">
+                <plex-bool *ngIf="estadoT !== 'noTurnos' && permitirTurnoDoble" class="mr-2 text-secondary"
+                           label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble">
                 </plex-bool>
                 <plex-bool *ngIf="agenda.nominalizada && estadoT !== 'noTurnos'" label="Turno telefónico"
                            [(ngModel)]='turnoTelefonico' name="turnoTelefonico">
@@ -246,8 +247,7 @@
                              [data]="bloque.tipoPrestaciones" name="turnoTipoPrestacion"></plex-select>
                 <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
                 </plex-text>
-                <plex-text *ngIf="agenda.link" tooltip="Puede cambiar link de turno virtual" label="Link" name="link"
-                           [(ngModel)]="link"></plex-text>
+                <plex-text *ngIf="agenda.link" label="Link" name="link" [(ngModel)]="link"></plex-text>
             </ng-container>
             <plex-button *ngIf="estadoT === 'seleccionada'" class="mt-1" justify="end" label="Confirmar" type="success"
                          (click)="darTurno()" [disabled]="!bloque">
