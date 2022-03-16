@@ -28,6 +28,7 @@ export class ListadoPerinatalComponent implements OnInit {
     public carnetSelected;
     public profesional;
     public organizacion;
+    public collapse = false;
     public sortBy: string;
     public sortOrder = 'desc';
     public columns = [
@@ -82,6 +83,13 @@ export class ListadoPerinatalComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.fechaUltimoControl.getTime() - b.fechaUltimoControl.getTime()
+        },
+        {
+            key: 'numeroEmbarazo',
+            label: 'Número Embarazo',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.embarazo.term.localeCompare(b.embarazo.term)
         }
     ];
 
@@ -181,5 +189,13 @@ export class ListadoPerinatalComponent implements OnInit {
         }, error => {
             this.plex.toast('danger', 'El carnet no pudo ser actualizado');
         });
+    }
+
+    changeCollapse(event) {
+        this.collapse = event;
+    }
+
+    heightTable() {
+        return (!this.collapse && !this.showSidebar) ? 102 : (this.collapse && this.showSidebar) ? 247 : 174;
     }
 }
