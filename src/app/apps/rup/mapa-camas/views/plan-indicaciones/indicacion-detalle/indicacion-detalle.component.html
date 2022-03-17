@@ -1,4 +1,4 @@
-<plex-title titulo="Detalle Indicacion">
+<plex-title titulo="Detalle Indicacion" size="md">
     <ng-content></ng-content>
 </plex-title>
 
@@ -25,6 +25,7 @@
     </div>
 </plex-detail>
 
+<!-- Prescripcion de medicamentos -->
 <rup *ngIf="init" [elementoRUP]="indicacion.elementoRUP | elementoRUPById" [registro]="{ valor: indicacion.valor }"
      [soloValores]="true">
 </rup>
@@ -33,9 +34,9 @@
 
 <plex-list>
     <plex-item *ngFor="let estado of indicacion.estados">
-        <plex-label size="lg" case="capitalize" titulo="fecha" subtitulo="{{ estado.fecha | fecha }}"></plex-label>
-        <plex-label size="lg" case="capitalize" titulo="hora" subtitulo="{{ estado.fecha | hora }}"></plex-label>
-        <plex-label size="lg" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}">
+        <plex-label size="md" case="capitalize" titulo="fecha" subtitulo="{{ estado.fecha | fecha }}"></plex-label>
+        <plex-label size="md" case="capitalize" titulo="hora" subtitulo="{{ estado.fecha | hora }}"></plex-label>
+        <plex-label size="md" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}">
         </plex-label>
         <plex-badge [color]="estado.tipo | indicacionColor">
             {{ estado.tipo | indicacionLabel }}
