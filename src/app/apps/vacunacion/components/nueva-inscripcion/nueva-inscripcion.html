@@ -19,7 +19,7 @@
                             placeholder="Ej: 2990000000" [pattern]="patronContactoNumerico">
                 </plex-phone>
                 <plex-text email label="email" name="email" debounce="900" [(ngModel)]="ciudadano.email"
-                           placeholder="maria@gmail.com" [required]="true">
+                           placeholder="maria@gmail.com">
                 </plex-text>
             </plex-grid>
             <ng-container *ngIf="ciudadano.grupo?.nombre === 'factores-riesgo'">
