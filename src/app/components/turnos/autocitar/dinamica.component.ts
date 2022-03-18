@@ -12,7 +12,8 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-
+import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { Location } from '@angular/common';
 @Component({
     selector: 'dinamica',
     templateUrl: 'dinamica.html'
@@ -24,7 +25,10 @@ export class DinamicaFormComponent implements OnInit {
     public datosTurno: any = {};
     public prestaciones = [];
     public obraSocialPaciente: IObraSocial;
-
+    public horaTurno = null;
+    public hoy = new Date();
+    public inicio: Date;
+    public fin: Date;
     // Eventos
     @Input() agenda: IAgenda;
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
@@ -35,12 +39,16 @@ export class DinamicaFormComponent implements OnInit {
                 public serviceTurno: TurnoService,
                 public servicioPrestacion: PrestacionesService,
                 private obraSocialService: ObraSocialService,
-                private pacienteService: PacienteService
+                private pacienteService: PacienteService,
+                private serviceAgenda: AgendaService,
+                private location: Location
     ) {
     }
 
     ngOnInit() {
         this.getPrestacionesAgendaDinamicas();
+        this.inicio = new Date(this.hoy.setHours(moment(this.agenda.horaInicio).hour(), moment(this.agenda.horaInicio).minutes()));
+        this.fin = new Date(this.hoy.setHours(moment(this.agenda.horaFin).hour(), moment(this.agenda.horaFin).minutes()));
     }
 
     searchStart() {
@@ -184,7 +192,47 @@ export class DinamicaFormComponent implements OnInit {
                 }
 
             });
+        } else {
+            const patch = {
+                'op': 'agregarSobreturno',
+                'sobreturno': {
+                    horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
+                    estado: 'asignado',
+                    tipoPrestacion: this.turnoTipoPrestacion,
+                    paciente: this.pacienteActivo,
+                }
+            };
+
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(agenda => {
+                const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
+                if (sobreTurno) {
+                    return this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
+                        prestacion => {
+                            this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                        }
+                    );
+                } else {
+                    this.plex.info('danger', 'No fue posible crear la prestación');
+                    return EMPTY;
+                }
+
+            });
+
         }
     }
+
+    combinarFechas(fecha1, fecha2) {
+        if (fecha1 && fecha2) {
+            const auxiliar = new Date(fecha1);
+            const horas = fecha2.getHours();
+            const minutes = fecha2.getMinutes();
+            // Date.setHours(hour, min, sec, millisec)
+            auxiliar.setHours(horas, minutes, 0, 0);
+            return auxiliar;
+        } else {
+            return null;
+        }
+    }
+
 
 }

@@ -60,3 +60,15 @@
     </fieldset>
 
 </form>
+<div class="row" *ngIf="pacienteActivo">
+    <div class="col-3">
+        <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true" name="horaTurno"
+                       label="Hora Turno">
+        </plex-datetime>
+    </div>
+    <div *ngIf="agenda.link" class="col">
+        <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true" name="turno_link"
+                   label="Link">
+        </plex-text>
+    </div>
+</div>

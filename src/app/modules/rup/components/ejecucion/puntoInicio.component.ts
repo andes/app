@@ -85,6 +85,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
 
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
+    private sobreturno;
 
     constructor(
         private router: Router,
@@ -551,6 +552,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     cargarTurnos(agenda, servicio = null) {
+        this.sobreturno = (!agenda.dinamica && agenda.nominalizada && moment().isSame(agenda.horaInicio, 'day'));
         this.turno = null;
         this.prestacionPendiente = null;
         this.cancelarDinamica();

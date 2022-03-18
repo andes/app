@@ -188,6 +188,10 @@
                             <plex-badge type="info" *ngIf="agendaSeleccionada.dinamica">
                                 Dinámica
                             </plex-badge>
+                            <plex-button *ngIf="sobreturno" class="ml-1" ariaLabel="agregar sobreturno" type="success"
+                                         size="sm" icon="account-plus" (click)="buscarPaciente()"
+                                         title="Agregar Sobreturno">
+                            </plex-button>
                             <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
                                 {{tipoPrestacion.nombre}}
                             </div>
