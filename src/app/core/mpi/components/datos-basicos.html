@@ -111,11 +111,11 @@
 
                     <plex-select label="Tipo de identificación" [(ngModel)]="paciente.tipoIdentificacion"
                                  [data]="tipoIdentificacion" name="tipoIdentificacion" placeholder="Seleccione.."
-                                 grow="3">
+                                 grow="3" required="true">
                     </plex-select>
 
                     <plex-text label="Número de identificación" [(ngModel)]="paciente.numeroIdentificacion"
-                               name="numeroIdentificacion" grow="3">
+                               name="numeroIdentificacion" grow="3" required="true">
                     </plex-text>
                 </plex-wrapper>
             </div>
