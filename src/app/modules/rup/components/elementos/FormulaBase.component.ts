@@ -13,6 +13,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;
     public hasRules = false;
+    public habilitado = false;
     public valorManual: Boolean = false;
 
     ngOnInit() {
@@ -62,7 +63,8 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
         this.addFact('value', this.registro.valor);
     }
 
-    changeValorManual() {
+    changeValorManual(valor) {
+        this.valorManual = valor;
         if (this.valorManual) {
             this.registro.valorManual = true;
             this.registro.registros.map(reg => reg.valor = null);

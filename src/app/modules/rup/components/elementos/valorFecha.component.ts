@@ -11,11 +11,11 @@ export class ValorFechaComponent extends RUPComponent implements OnInit {
     get DateFormat() {
         switch (this.params.type) {
             case 'date':
-                return moment(this.registro.valor).format('DD/MM/YYYY');
+                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY') : 'Sin fecha';
             case 'datetime':
-                return moment(this.registro.valor).format('DD/MM/YYYY hh:mm');
+                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY hh:mm') : 'Sin fecha';
             case 'time':
-                return moment(this.registro.valor).format('hh:mm');
+                return (this.registro.valor) ? moment(this.registro.valor).format('hh:mm') : 'Sin hora';
             default:
                 break;
         }
