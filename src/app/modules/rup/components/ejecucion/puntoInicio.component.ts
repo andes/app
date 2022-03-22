@@ -201,7 +201,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => {
-                const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.id);
+                const puedeValidar = this.prestacionesValidacion.some(tt => tt === p.solicitud.tipoPrestacion.conceptId);
                 const estadoActual = p.estadoActual;
                 const creadaPorMi = estadoActual.createdBy.username === this.auth.usuario.username;
                 const esHoy = moment(p.ejecucion.fecha).isBetween(this.fecha, this.fecha, 'day', '[]');
@@ -530,13 +530,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     tienePermisos(turno) {
-        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion?._id));
-        // if (existe) {
-        //     return this.chequearMultiprestacion(existe);
-        // }
+        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion?.conceptId));
         if (turno.prestaciones[0]) {
-            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
-
+            const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.conceptId);
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
             if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
@@ -547,7 +543,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     checkPuedeValidar(prestacion) {
         const miPrestacion = prestacion.estadoActual.createdBy.username === this.auth.usuario.username;
-        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.id);
+        const permisoValidar = this.prestacionesValidacion.some(tt => tt === prestacion.solicitud.tipoPrestacion.conceptId);
         return miPrestacion || permisoValidar;
     }
 
@@ -616,24 +612,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 return turno.prestaciones?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
             }
             return turno.prestaciones.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
-
         }
         return turno.prestaciones ? turno.prestaciones[0] : null;
     }
 
     chequearEstados(turno, estado) {
-
         const prestacion = this.chequearPrestacion(turno);
-
         if (prestacion) {
-
             return prestacion.estados[prestacion.estados.length - 1].tipo === estado;
         }
-
     }
 
     cargarPrestacionesTurnos(agenda) {
-        // if (agenda) {
         // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
         agenda['cantidadTurnos'] = 0;
         agenda.bloques.forEach(bloques => {
@@ -661,8 +651,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                         anular: turno.paciente && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno, 'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno)
                     };
                 }
-
-
             });
         });
 
@@ -689,7 +677,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 };
             });
         }
-        // }
     }
 
     intervalAgendaRefresh() {
