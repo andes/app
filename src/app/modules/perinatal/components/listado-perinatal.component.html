@@ -5,7 +5,7 @@
                          ariaLabel="volver al punto de inicio"></plex-button>
             <alertas-perinatal></alertas-perinatal>
         </plex-title>
-        <plex-wrapper>
+        <plex-wrapper (change)="changeCollapse($event)">
 
             <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesdeEntrada" name="fechaDesde" [debounce]="200"
                            label="Fecha Desde" class="fechas" [max]="fechaHastaEntrada" (change)="filtrar()">
@@ -38,7 +38,7 @@
             </div>
         </plex-wrapper>
 
-        <plex-table [columns]="columns" #table="plTable" [offset]="showSidebar ? 203 : 131" (scroll)="onScroll()">
+        <plex-table [columns]="columns" #table="plTable" [offset]="heightTable()" (scroll)="onScroll()">
             <plex-title titulo="Listado de pacientes" size="sm">
                 <plex-button size="sm" type="info" label="Descargar" [disabled]="disableDescargar"
                              (click)="descargarListado()"></plex-button>
@@ -70,6 +70,8 @@
                         <plex-icon name="calendar-today" type="info" size="sm"></plex-icon>
                     </plex-badge>
                 </td>
+                <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?'Primer
+                    Embarazo':carnet.embarazo.term }}</td>
             </tr>
         </plex-table>
     </plex-layout-main>
