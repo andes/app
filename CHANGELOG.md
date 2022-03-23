@@ -1,3 +1,10 @@
+# [5.88.0](https://github.com/andes/app/compare/v5.87.0...v5.88.0) (2022-03-23)
+
+
+### Features
+
+* **CITAS:** agrega icono y link agenda virtual en gestor de agendas ([#2601](https://github.com/andes/app/issues/2601)) ([3844ad1](https://github.com/andes/app/commit/3844ad1fff7544c1ebe1c1aa65fcb06dfc674a75))
+
 # [5.87.0](https://github.com/andes/app/compare/v5.86.0...v5.87.0) (2022-03-09)
 
 
