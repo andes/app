@@ -93,7 +93,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         this.selectedConcept = concepto;
         if (concepto) {
             this.elementoRUP = this.elementoRUPService.buscarElemento(concepto, concepto.esSolicitud);
-            this.ps.get(concepto.conceptId, true).subscribe(() => { });
+            this.ps.get(concepto.conceptId, true).subscribe();
             this.registro = this.indicacion ? { valor: this.indicacion.valor, concepto } : new IPrestacionRegistro(this.elementoRUP, concepto);
         }
     }
