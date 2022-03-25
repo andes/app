@@ -1,13 +1,12 @@
 
-import { debounceTime } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-
+import { Observable } from 'rxjs';
 @Component({
     selector: 'profesionales',
     templateUrl: 'profesional.html',
@@ -19,8 +18,8 @@ export class ProfesionalComponent implements OnInit {
 
     showcreate = false;
     showupdate = false;
-    datos: IProfesional[];
-    searchForm: FormGroup;
+    listadoActual: IProfesional[];
+    filtros: any = {};
     seleccion: IProfesional;
     skip = 0;
     loader = false;
@@ -31,44 +30,80 @@ export class ProfesionalComponent implements OnInit {
     profesionalSelected: any = false;
     fotoProfesional: any;
     nuevoProfesional = false;
-    // cantidad: IProfesional[];
 
-    constructor(private formBuilder: FormBuilder,
-                private profesionalService: ProfesionalService,
-                public sanitizer: DomSanitizer,
-                private router: Router,
-                private auth: Auth, ) { }
+    public listado$: Observable<any[]>;
+
+    // Permite :hover y click()
+    @Input() selectable = true;
+
+    // Muestra efecto de selección
+    @Input() selected = false;
+
+    public sortBy: string;
+    public sortOrder = 'desc';
+    botonera = true;
+
+    public columns = [
+        {
+            key: 'documento',
+            label: 'Documento',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.documento.localeCompare(b.documento)
+        },
+        {
+            key: 'apellido',
+            label: 'Apellido',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.apellido.localeCompare(b.apellido)
+        },
+        {
+            key: 'nombre',
+            label: 'Nombre',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => a.nombre.localeCompare(b.nombre)
+
+        },
+        {
+            key: 'condicion',
+            label: 'Condición',
+            opcional: true,
+        }
+    ];
+
+
+    constructor(
+        private profesionalService: ProfesionalService,
+        public sanitizer: DomSanitizer,
+        private router: Router,
+        private auth: Auth,) { }
 
     ngOnInit() {
-        this.searchForm = this.formBuilder.group({
-            apellido: [''],
-            nombre: [''],
-            documento: ['']
-        });
         if (this.auth.getPermissions('matriculaciones:profesionales:?').length < 1) {
             this.router.navigate(['inicio']);
         } else {
-            this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
-                this.value = value;
-                this.skip = 0;
-                this.loadDatos(false);
-            });
-            this.loadDatos();
+            this.filtrar();
+            this.listado$ = this.profesionalService.profesionalesFiltrados$.pipe(
+                map(resp => {
+                    this.listadoActual = resp;
+                    this.loader = false;
+                    return resp;
+                })
+            );
         }
-
     }
 
-    loadDatos(concatenar: boolean = false) {
-        const parametros = {
-            'apellido': this.value && this.value.apellido,
-            'nombre': this.value && this.value.nombre,
-            'documento': this.value && this.value.documento,
-            'skip': this.skip,
-            'limit': this.limit
-        };
-        this.profesionalService.getProfesional(parametros).subscribe(datos => {
-            this.datos = datos;
-        });
+    onScroll() {
+        this.profesionalService.lastResults.next(this.listadoActual);
+    }
+
+    filtrar() {
+        this.profesionalService.lastResults.next(null);
+        this.profesionalService.documento.next(this.filtros.documento);
+        this.profesionalService.apellido.next(this.filtros.apellido);
+        this.profesionalService.nombre.next(this.filtros.nombre);
     }
 
     seleccionarProfesional(profesional) {
@@ -84,5 +119,9 @@ export class ProfesionalComponent implements OnInit {
 
     routeTo(action, id) {
         this.router.navigate([`tm/profesional/${action}/${id}`]);
+    }
+
+    cerrar() {
+        this.profesionalSelected = false;
     }
 }
