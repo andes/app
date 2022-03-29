@@ -65,46 +65,65 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="selectedConcept" type="invert">
-        <plex-title titulo="{{ selectedConcept.concepto.term }}"></plex-title>
+        <plex-title titulo="Detalle del concepto" size="md">
+            <plex-button size="sm" type="danger" icon="close" (click)="cerrar()"></plex-button>
+        </plex-title>
+        <plex-label type="info" icon="mano-corazon" titulo="Concepto" subtitulo="{{selectedConcept.concepto.term}}">
+        </plex-label>
+        <br>
         <plex-tabs size="full">
             <plex-tab label="Jerarquía">
+                <br>
                 <plex-title size="md" titulo="Próximos padres"></plex-title>
-                <ul class="list-group"
-                    *ngFor="let padre of conceptos[selectedConcept.concepto.conceptId].relationships">
-                    <li class="list-group-item d-flex justify-content-between align-items-center hover"
+                <plex-table [columns]="column" #table="plTable">
+                    <plex-table-columns></plex-table-columns>
+                    <tr *ngFor="let padre of conceptos[selectedConcept.concepto.conceptId].relationships"
                         (click)="showChild(padre)">
-                        {{ padre.term }}
-                        <plex-badge type="info badge-pill" title="Cantidad de hijos registrados">
-                            {{ getChilds(padre) | sum:'count' }}
-                        </plex-badge>
-                    </li>
-                </ul>
+                        <td>
+                            <plex-label titulo="{{ padre.term }}"></plex-label>
+                        </td>
+                        <td>
+                            <plex-badge type="info ">
+                                {{ getChilds(padre) | sum:'count' }}
+                            </plex-badge>
+                        </td>
+                    </tr>
+                </plex-table>
+                <br>
+
                 <ng-container *ngIf="selectedChilds">
                     <plex-title size="sm" titulo="Conceptos a agrupar">
                         <plex-button size="sm" type="success" (click)="groupBy(selectedConcept, selectedFather)">Agrupar
                         </plex-button>
                     </plex-title>
-                    <plex-list size="sm" [selectable]="false">
-                        <ng-container *ngFor="let concepto of selectedChilds">
-                            <plex-item [colors]="item.colores" [selectable]="item.selectable">
-                                <plex-label titulo="Concepto" subtitulo="{{ concepto.concepto.term }}" size="sm">
-                                </plex-label>
-                                <plex-badge type="info">{{ concepto.count }}</plex-badge>
-                            </plex-item>
-                        </ng-container>
-                    </plex-list>
+                    <plex-table [columns]="column" #table="plTable">
+                        <plex-table-columns></plex-table-columns>
+                        <tr *ngFor="let concepto of selectedChilds">
+                            <td>
+                                <plex-label titulo="{{ concepto.concepto.term }}" size="md" span="9"></plex-label>
+                            </td>
+                            <td>
+                                <plex-badge direction="column" type="info">{{ concepto.count }}</plex-badge>
+                            </td>
+                        </tr>
+                    </plex-table>
                 </ng-container>
+
                 <ng-container *ngIf="!selectedChilds && selectedConcept.hijos && selectedConcept.hijos.length > 0">
                     <plex-title size="sm" titulo="Conceptos agrupados"></plex-title>
-                    <plex-list size="sm" [selectable]="false">
-                        <ng-container *ngFor="let concepto of selectedConcept.hijos">
-                            <plex-item [colors]="item.colores" [selectable]="item.selectable">
-                                <plex-label titulo="Concepto" subtitulo="{{ concepto.concepto.term }}" size="sm">
+                    <plex-table [columns]="column" #table="plTable">
+                        <plex-table-columns></plex-table-columns>
+                        <tr *ngFor="let concepto of selectedConcept.hijos">
+                            <td>
+                                <plex-label titulo="{{ concepto.concepto.term }}" size="md">
                                 </plex-label>
-                                <plex-badge type="info">{{ concepto.count }}</plex-badge>
-                            </plex-item>
-                        </ng-container>
-                    </plex-list>
+                            </td>
+                            <td>
+                                <plex-badge type="info">{{ concepto.count }}
+                                </plex-badge>
+                            </td>
+                        </tr>
+                    </plex-table>
                 </ng-container>
             </plex-tab>
             <plex-tab label="Estadisticas">
