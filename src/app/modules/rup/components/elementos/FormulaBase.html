@@ -1,45 +1,69 @@
 <!-- Moléculas -->
 <ng-container *ngIf="elementoRUP.requeridos?.length">
-    <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
-        <div *ngIf="params?.valorEditable && !soloValores" class="col-12">
-            <!-- En caso de que la molécula permita edición manual del valor del registro -->
-            <plex-bool type="slide" label="Introducir el valor manualmente" [(ngModel)]="valorManual" name="boolValorManual" (change)="changeValorManual()"></plex-bool>
-        </div>
-        <ng-container *ngIf="!valorManual">
-            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-                <div *ngIf="item.elementoRUP"
-                     class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
-                    <rup [ngClass]="{'readonly': valorManual}" [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
-                         [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                         (change)="emitChange2()" (ejecutarAccion)="emitEjecutarAccion($event)">
-                    </rup>
-                </div>
+    <plex-wrapper class="w-100">
+        <plex-grid cols="2">
+            <ng-container *ngIf="!valorManual">
+                <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                    <div *ngIf="item.elementoRUP" class="pr-3">
+                        <rup [ngClass]="{'readonly': valorManual}" [elementoRUP]="item.elementoRUP"
+                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
+                             (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
+                        </rup>
+                    </div>
+                </ng-container>
             </ng-container>
-        </ng-container>
+            <ng-container *ngIf="valorManual">
+                <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                    <div *ngIf="item.elementoRUP" class="pr-3">
+                        <rup [ngClass]="{'readonly': !valorManual}" [elementoRUP]="item.elementoRUP"
+                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
+                             (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
+                        </rup>
+                    </div>
+                </ng-container>
+            </ng-container>
 
-        <div class="col-{{ elementoRUP.style.columns }}">
-            <label class="form-control-label text-capitalize-first"> {{ registro.concepto.term}} </label>
-            
-            <!-- Campo para ingreso manual del valor del registro -->
-            <plex-float *ngIf="valorManual && !soloValores" placeholder="Ingrese un valor" [(ngModel)]="registro.valor" 
-                    label='' name="valorCalculo" [readonly]="soloValores" (change)="emitChange2()">
-            </plex-float>
-            
-            <!-- Valor/resultado del cálculo -->
-            <ng-container *ngIf="!valorManual || soloValores">
-                <p>
-                    <ng-container *ngIf="!hasRules">
-                        {{ registro.valor }}
-                    </ng-container>
-                    <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
-                        {{ mensaje.texto }}
-                        <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
-                                     title="Registrar">
-                            <plex-icon name="plus"></plex-icon>
+            <div>
+                <div class="d-flex align-items-center w-100">
+                    <div class="w-100">
+                        <label> {{ registro.concepto.term}} </label>
+                        <!-- Valor/resultado del cálculo -->
+                        <ng-container *ngIf="soloValores">
+                            <p>
+                                <ng-container *ngIf="!hasRules">
+                                    {{registro.valor}}
+                                </ng-container>
+                                <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
+                                    {{ mensaje.texto }}
+                                    <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
+                                                 title="Registrar">
+                                        <plex-icon name="plus"></plex-icon>
+                                    </plex-button>
+                                </plex-badge>
+                            </p>
+                        </ng-container>
+                        <!-- Campo para ingreso manual del valor del registro -->
+                        <plex-float *ngIf="!soloValores && valorManual" placeholder="Ingrese un valor"
+                                    [(ngModel)]="registro.valor" label='' name="valorCalculo" [readonly]="soloValores"
+                                    (change)="emitChange2()" [disabled]="!valorManual">
+                        </plex-float>
+                        <plex-float *ngIf="!soloValores && !valorManual" [(ngModel)]="registro.valor" required="true"
+                                    [disabled]="true">
+                        </plex-float>
+                    </div>
+                    <div class="d-flex align-items-start mt-2">
+                        <plex-button *ngIf="!valorManual && !soloValores" type="warning" icon="pencil"
+                                     (click)="changeValorManual(true)" tooltip="Agregar manualmente"
+                                     tooltipPosition="left">
                         </plex-button>
-                    </plex-badge>
-                </p>
-            </ng-container>
-        </div>
-    </div>
+                        <plex-button *ngIf="valorManual && !soloValores" class="mr-1" type="danger" icon="close"
+                                     (click)="changeValorManual(false)">
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </plex-grid>
+    </plex-wrapper>
 </ng-container>

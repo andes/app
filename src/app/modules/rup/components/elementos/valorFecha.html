@@ -2,7 +2,10 @@
     <div class="row flex-column">
         <div class="col-12">
             <ng-container *ngIf="!soloValores; else showSoloValores">
-                <plex-datetime [(ngModel)]="registro.valor" [label]="params?.title || registro.concepto.term" name="DateValue" [type]="params?.type || 'date'" [required]="params?.required || false" (change)="onChange()">
+                <plex-datetime [(ngModel)]="registro.valor" [label]="params?.title || registro.concepto.term"
+                               name="DateValue" [type]="params?.type || 'date'"
+                               [required]="params?.required || !habilitado" (change)="onChange()"
+                               [readonly]="habilitado">
                 </plex-datetime>
             </ng-container>
             <ng-template #showSoloValores>

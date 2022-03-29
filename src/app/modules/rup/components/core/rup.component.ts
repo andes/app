@@ -51,6 +51,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() vistaHUDS = false;
     @Input() params: any;
     @Input() style: any;
+    @Input() habilitado: any;
 
     public mensaje: any = {};
 
@@ -100,6 +101,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
         componentReference.instance['style'] = this.style;
+        componentReference.instance['habilitado'] = this.habilitado;
 
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
@@ -283,7 +285,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get isValid() {
         if (this.rupInstance) {
-            return (!this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid) ) && this.rupInstance.onValidate();
+            return (!this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid)) && this.rupInstance.onValidate();
         }
         return true;
     }
@@ -316,7 +318,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         for (let i = 0; i < this.registro.registros.length; i++) {
             const concepto = this.registro.registros[i].concepto;
             const requerido = requeridos[i];
-            const elementoRUP = this.registro.registros[i].elementoRUP ? this.elementosRUPService.getById(this.registro.registros[i].elementoRUP): null;
+            const elementoRUP = this.registro.registros[i].elementoRUP ? this.elementosRUPService.getById(this.registro.registros[i].elementoRUP) : null;
             if (requerido && requerido.concepto.conceptId === concepto.conceptId) {
                 requerido.elementoRUP = elementoRUP || requerido.elementoRUP;
                 response.push(requerido);
