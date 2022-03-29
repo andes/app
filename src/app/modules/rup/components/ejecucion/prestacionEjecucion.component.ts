@@ -3,8 +3,9 @@ import { Plex } from '@andes/plex';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -579,28 +580,32 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
-
-        unPopulateRelaciones(this.prestacion);
-        const registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        const backupRegistros = JSON.parse(JSON.stringify(this.prestacion));
+        unPopulateRelaciones(backupRegistros);
+        const registros = JSON.parse(JSON.stringify(backupRegistros.ejecucion.registros));
 
         const params: any = {
             op: 'registros',
-            solicitud: this.prestacion.solicitud,
+            solicitud: backupRegistros.solicitud,
             registros: registros
         };
 
-        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-            this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
-            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                // Actualizamos las prestaciones de la HUDS
-                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                    this.servicioPrestacion.clearRefSetData();
-                    this.router.navigate(['rup/validacion', this.prestacion.id]);
-                });
-            } else {
-                this.router.navigate(['rup/validacion', this.prestacion.id]);
-            }
+        this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
+            switchMap(() => {
+                this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
+                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    this.prestacion = backupRegistros;
+                    // Actualizamos las prestaciones de la HUDS
+                    return this.servicioPrestacion.getByPaciente(this.paciente.id, true).pipe(
+                        tap(() => this.servicioPrestacion.clearRefSetData()),
+                    );
+                }
+                return of(null);
+            })
+        ).subscribe(() => {
+            this.router.navigate(['rup/validacion', this.prestacion.id]);
         });
+
     }
     /**
      * Setea el boton volver, Segun la ruta que recibe y el
