@@ -1,3 +1,11 @@
+## [5.88.1](https://github.com/andes/app/compare/v5.88.0...v5.88.1) (2022-03-30)
+
+
+### Bug Fixes
+
+* **BI-109:** Proximos padres ([#2591](https://github.com/andes/app/issues/2591)) ([2d82003](https://github.com/andes/app/commit/2d82003caf1144074a1d6b0710f8497ccd809248))
+* **RUP-307:** Error al eliminar registros vinculados ([#2597](https://github.com/andes/app/issues/2597)) ([9d368db](https://github.com/andes/app/commit/9d368dbb4d57545cb4794294ecb0f1738607206b))
+
 # [5.88.0](https://github.com/andes/app/compare/v5.87.0...v5.88.0) (2022-03-23)
 
 
