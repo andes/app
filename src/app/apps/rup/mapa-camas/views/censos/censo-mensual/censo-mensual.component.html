@@ -3,41 +3,32 @@
         <plex-title titulo="Censo Mensual">
             <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
         </plex-title>
-        <fieldset>
-            <div class="row">
-                <div class="col-md-3">
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                                   (change)="resetCenso()" [debounce]="600">
-                    </plex-datetime>
-                </div>
-                <div class="col-md-3">
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                                   (change)="resetCenso()" [debounce]="600">
-                    </plex-datetime>
-                </div>
-                <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">
-                    <plex-select label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
-                                 [data]="unidadesOranizativas" [required]="true" idField="conceptId" labelField="term">
-                    </plex-select>
-                </div>
-                <div class="d-flex align-items-end col-md-2">
-                    <!-- <br> -->
-                    <plex-button class="mr-1" [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
-                                 label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
-                    </plex-button>
-                    <plex-button class="mr-1" [disabled]="disabledDescargar"
-                                 [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
-                                 type="warning" (click)="descargarCensoMensual()">
-                        <plex-icon class="mr-1" name="download"></plex-icon>PDF
-                    </plex-button>
-                    <plex-button [disabled]="disabledDescargar" type="success"
-                                 (click)="descargarCsv()">
-                        <plex-icon class="mr-1" name="download"></plex-icon>CSV
-                    </plex-button>
-                </div>
+        
+        <plex-wrapper>
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
+                            (change)="resetCenso()" [debounce]="600">
+            </plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                            (change)="resetCenso()" [debounce]="600">
+            </plex-datetime>
+            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
+                            [data]="unidadesOranizativas" [required]="true" idField="conceptId" labelField="term" (change)="resetCenso()">
+            </plex-select>
+            <div class="d-flex align-items-end">
+                <plex-button class="mr-1" [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
+                            label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
+                </plex-button>
+                <plex-button class="mr-1" [disabled]="!censo.length" icon="download" label="PDF"
+                            [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
+                            type="warning" (click)="descargarCensoMensual()">
+                </plex-button>
+                <plex-button [disabled]="!censo.length" type="success" icon="download" label="CSV"
+                            (click)="descargarCsv()">
+                </plex-button>
             </div>
-        </fieldset>
-        <fieldset *ngIf="censo.length > 0">
+        </plex-wrapper>
+            
+        <ng-container *ngIf="censo.length > 0">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -117,6 +108,6 @@
                     <td>{{ datosCensoTotal.promDiasEstada }}</td>
                 </tr>
             </table>
-        </fieldset>
+        </ng-container>
     </plex-layout-main>
 </plex-layout>

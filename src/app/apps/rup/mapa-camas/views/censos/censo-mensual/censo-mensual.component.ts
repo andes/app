@@ -45,10 +45,6 @@ export class CensosMensualesComponent implements OnInit {
         diasEstada: 0
     };
 
-    get disabledDescargar() {
-        return !(this.censo.length > 0) || !this.fechaDesde || !this.fechaHasta || !this.selectedUnidadOranizativa || this.requestInProgress;
-    }
-
     constructor(
         public auth: Auth,
         private mapaCamasService: MapaCamasService,
