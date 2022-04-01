@@ -177,7 +177,12 @@
                         <plex-card type="dark" mode="filled" size="xs" *ngFor="let turno of bloque.turnos; let i=index"
                                    selectable="true" [selected]="isActive(turno)" (click)="seleccionarTurno(bloque,i)"
                                    [ngClass]="{'disabled' : turno.estado !== 'disponible'}">
-                            <plex-label size="md" direction="column" titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
+                            <plex-label *ngIf="turno.estado === 'disponible'" size="md" direction="column"
+                                        titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
+                            </plex-label>
+                            <plex-label *ngIf="turno.estado !== 'disponible'" size="md" direction="column"
+                                        titulo="{{turno.horaInicio | date: 'HH:mm'}}hss"
+                                        aria-label="turno no disponible">
                             </plex-label>
                         </plex-card>
                     </plex-grid>
