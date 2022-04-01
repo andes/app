@@ -5,7 +5,6 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
-import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',

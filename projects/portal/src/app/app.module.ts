@@ -53,7 +53,7 @@ import { PDPNotificarNecesidadComponent } from './pages/mis-turnos/notificar-nec
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service';
-
+import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
 
 @NgModule({
     declarations: [
@@ -98,7 +98,8 @@ import { ListaEsperaService } from 'src/app/services/turnos/listaEspera.service'
         BrowserAnimationsModule,
         ZXingScannerModule,
         RecaptchaModule,
-        RecaptchaFormsModule
+        RecaptchaFormsModule,
+        RUPLibModule
     ],
     providers: [
         Server,

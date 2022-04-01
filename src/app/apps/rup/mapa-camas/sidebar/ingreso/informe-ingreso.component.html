@@ -5,7 +5,7 @@
         </ng-container>
     </plex-title>
     <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
+        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields" [accesoHuds]="true">
             <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
                         [subtitulo]="informeIngreso.situacionLaboral">
             </plex-label>

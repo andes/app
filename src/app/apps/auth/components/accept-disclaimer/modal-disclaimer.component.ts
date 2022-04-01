@@ -1,5 +1,5 @@
 import { UsuarioService } from '../../../../services/usuarios/usuario.service';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { DisclaimerService } from '../../../../services/disclaimer.service';

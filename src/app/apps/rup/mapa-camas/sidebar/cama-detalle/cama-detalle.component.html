@@ -100,7 +100,7 @@
 
             </plex-title>
             <fieldset>
-                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields">
+                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields" [accesoHuds]="true">
                     <plex-badge class="pr-1" type="warning" *ngIf="hayRespirador$ | async as respirador"
                                 tooltip="Desde {{ respirador.valor.fechaDesde | fecha }}">
                         Respirador
