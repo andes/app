@@ -52,7 +52,14 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
-        FotoDirective
+        FotoDirective,
+
+        CommonModule,
+        PlexModule,
+        FormsModule,
+        HttpClientModule,
+        SharedModule,
+        DirectiveLibModule
     ],
 })
 export class MPILibModule {

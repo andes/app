@@ -5,7 +5,14 @@ import { RUPComponent } from '../../../core/rup.component';
 
 @Component({
     selector: 'rup-prescripcion-medicamentos-internacion',
-    templateUrl: 'prescripcion-medicamento-internacion.component.html'
+    templateUrl: 'prescripcion-medicamento-internacion.component.html',
+    styles: [`
+        .aclaraciones {
+            background-color: #003a52;
+            padding: 0.8rem 0.8rem 0.1rem 0.8rem;
+            font-size: 0.8rem;
+        }
+    `]
 })
 @RupElement('SolicitudPrescripcionMedicamentoInternacionComponent')
 export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPComponent implements OnInit, AfterViewInit {
@@ -75,7 +82,6 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     valuesChange() {
         const nombre = this.registro.valor.sustancias.map(item => {
             return `${item.ingrediente?.term || ''} ${item.dosis || ''}`;
-            // return `${item.ingrediente?.term || ''} ${item.cantidad || ''} ${item.numerador?.term || ''}${ item.denominador ? '/' : '' }${item.denominador?.term || ''}`;
         }).join(' y ');
         this.registro.valor.nombre = nombre;
     }

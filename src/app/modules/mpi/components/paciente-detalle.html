@@ -1,8 +1,10 @@
 <ng-container>
+    <plex-button *ngIf="true" size="sm" type="info" (click)="ruteo(paciente.id)">
+        VER HUDS
+    </plex-button>
     <plex-detail [direction]="orientacion === 'vertical' ? 'column' : 'row'" [size]="size" [items]="datos"
                  [justify]="justificado">
         <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]=" paciente" />
-
         <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
             {{ paciente.estado | uppercase }}
         </plex-badge>

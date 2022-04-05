@@ -5,6 +5,8 @@ import { ObraSocialCacheService } from '../../../services/obraSocialCache.servic
 import { Observable } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
+import { ModalMotivoAccesoHudsService } from '../../rup/components/huds/modal-motivo-acceso-huds.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -170,6 +172,8 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     constructor(
         private obraSocialCacheService: ObraSocialCacheService,
         private pacienteService: PacienteService,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private router: Router,
         private auth: Auth
     ) {
     }
@@ -220,4 +224,13 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             return;
         }
     }
+
+    ruteo(id) {
+        this.motivoAccesoService.getAccessoHUDS(id).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', id]);
+            }
+        });
+    }
+
 }
