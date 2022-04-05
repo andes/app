@@ -16,13 +16,9 @@ export class PlantillasService {
         private server: Server,
         public auth: Auth,
         public cos: ConceptObserverService
-    ) {
-
-
-    }
+    ) { }
 
     get(conceptId: string, esSolicitud: Boolean, force = false): Observable<any> {
-
         const cache = this.getCache(conceptId, esSolicitud);
         if (cache.getValue() && !force) {
             return cache;
@@ -50,15 +46,11 @@ export class PlantillasService {
                 }
             }));
         }
-
     }
 
     getCache(conceptId: string, esSolicitud: Boolean) {
-
         if (esSolicitud && !this.cacheSolicitud[conceptId]) {
             this.cacheSolicitud[conceptId] = new BehaviorSubject(null);
-
-
         } else {
             if (!esSolicitud && !this.cache[conceptId]) {
                 this.cache[conceptId] = new BehaviorSubject(null);
@@ -80,23 +72,19 @@ export class PlantillasService {
 
     handlerDropDown(conceptId, plantilla) {
         const ctid = plantilla.target?.conceptId || conceptId;
-
         if (plantilla.link) {
             return () => {
                 window.open(plantilla.link);
             };
-
         } else {
             return () => {
                 this.cos.notify({ conceptId: ctid } as any, { valor: plantilla.descripcion } as any);
             };
         }
-
     }
 
 
-    plantillas(conceptId: string, esSolicitud: boolean) {
-
+    plantillas(conceptId: string, esSolicitud: boolean): Observable<any[]> {
         return this.getCache(conceptId, esSolicitud);
     }
 

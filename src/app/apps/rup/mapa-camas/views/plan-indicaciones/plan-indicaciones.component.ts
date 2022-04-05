@@ -313,25 +313,6 @@ export class PlanIndicacionesComponent implements OnInit {
         if (!seccion) {
             this.seccionSelected = this.secciones.find(s => s.concepto.conceptId === '6381000013101');
         }
-
-        // const concepto = {
-        //     'conceptId': '4981000013105',
-        //     'term': 'plan de indicaciones médicas',
-        //     'fsn': 'plan de indicaciones médicas (procedimiento)',
-        //     'semanticTag': 'procedimiento'
-        // };
-
-        // this.crearPrestacion(this.internacion.paciente, concepto, new Date()).pipe(
-        //     switchMap(prestacion => {
-        //         return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
-        //             map(() => prestacion)
-        //         );
-        //     })
-        // ).subscribe((prestacion) => {
-        //     this.prestacionService.notificaRuta({ nombre: 'Plan de Indicaciones', ruta: `/mapa-camas/${this.ambito}/${this.capa}/plan-indicaciones/${this.idInternacion}` });
-        //     this.router.navigate(['rup/ejecucion', prestacion.id]);
-        // });
-
     }
 
     onSaveIndicacion(indicacion) {
@@ -417,7 +398,6 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     editar(indicacion) {
-
         if (indicacion.estado.tipo === 'draft') {
             this.indicacion = indicacion;
             this.indicacionEventoSelected = null;

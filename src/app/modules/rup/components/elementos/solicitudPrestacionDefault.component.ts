@@ -34,8 +34,8 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
         }
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacion.solicitud.tipoPrestacion.conceptId,
-            prestacionDestino: this.registro.concepto.conceptId
+            prestacionOrigen: this.prestacion?.solicitud.tipoPrestacion.conceptId,
+            prestacionDestino: this.registro.concepto?.conceptId
         }).subscribe(reglas => {
             this.reglasMatch = reglas;
             this.organizaciones = reglas.map(elem => {
@@ -49,20 +49,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 this.registro.valor.solicitudPrestacion.organizacionDestino = this.organizaciones[0];
                 this.onOrganizacionChange();
             }
-
         });
-
-
-
-
-        if (!this.soloValores) {
-            this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                if (this.registro !== data && this.registro.valor !== data.valor) {
-                    this.registro.valor.solicitudPrestacion.indicaciones = data.valor;
-                    this.emitChange(false);
-                }
-            });
-        }
     }
 
     onOrganizacionChange() {
