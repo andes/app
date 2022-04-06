@@ -1,3 +1,10 @@
+# [5.89.0](https://github.com/andes/app/compare/v5.88.1...v5.89.0) (2022-04-06)
+
+
+### Features
+
+* **CITAS:** agrega aria label a card de turno no disponible ([#2614](https://github.com/andes/app/issues/2614)) ([2b4118b](https://github.com/andes/app/commit/2b4118b93e11c181d1847736bbc16c47a54670f0))
+
 ## [5.88.1](https://github.com/andes/app/compare/v5.88.0...v5.88.1) (2022-03-30)
 
 
