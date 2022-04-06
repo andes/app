@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, merge, BehaviorSubject } from 'rxjs';
@@ -21,7 +21,8 @@ export class UsuariosListComponent implements OnInit {
         public plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
-        private auth: Auth
+        private auth: Auth,
+        private cd: ChangeDetectorRef
     ) {
     }
 
@@ -114,6 +115,8 @@ export class UsuariosListComponent implements OnInit {
             tap(() => this.userSelected = null),
             cache()
         );
+
+        this.cd.detectChanges();
 
         this.organizacionesParaAgregar$ = this.userSelected$.pipe(
             map((user: any) => {
