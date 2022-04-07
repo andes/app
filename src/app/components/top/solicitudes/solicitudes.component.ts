@@ -25,6 +25,7 @@ export class SolicitudesComponent implements OnInit {
     showDarTurnos: boolean;
     solicitudTurno: any;
     showAuditar = false;
+    diasAntes = 15;
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
@@ -126,18 +127,48 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         const currentUrl = this.router.url;
+        this.fechaDesdeSalida = null;
+        this.fechaHastaSalida = null;
+        this.fechaDesdeEntrada = null;
+        this.fechaHastaEntrada = null;
         if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
             ];
-            this.fechaDesdeEntrada = null;
-            this.fechaHastaEntrada = null;
-            this.fechaDesdeSalida = null;
-            this.fechaHastaSalida = null;
+            if (this.tipoSolicitud === 'entrada') {
+                const hoy = new Date();
+                const fechaAnterior = this.calcularFechaDesde(hoy);
+                this.fechaDesdeEntrada = fechaAnterior;
+                this.fechaHastaEntrada = hoy;
+            }
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
         this.buscarSolicitudes();
+    }
+
+    calcularFechaDesde(fecha) {
+        const diasAntes = 1000 * 60 * 60 * 24 * this.diasAntes;
+        return new Date(fecha.getTime() - diasAntes);
+    }
+
+    calcularFechaHasta(fecha) {
+        const diasAntes = 1000 * 60 * 60 * 24 * this.diasAntes;
+        return new Date(fecha.getTime() + diasAntes);
+    }
+
+    cambioFechaDesde() {
+        if ( !(this.fechaDesdeEntrada === undefined) && !(this.fechaDesdeEntrada === null) ) {
+            this.fechaHastaEntrada = this.calcularFechaHasta(this.fechaDesdeEntrada);
+            this.cargarSolicitudes();
+        }
+    }
+
+    cambioFechaHasta() {
+        if ( !(this.fechaHastaEntrada === undefined) && !(this.fechaHastaEntrada === null) ) {
+            this.fechaDesdeEntrada = this.calcularFechaDesde(this.fechaHastaEntrada);
+            this.cargarSolicitudes();
+        }
     }
 
     cambio(activeTab) {
