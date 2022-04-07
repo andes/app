@@ -97,26 +97,9 @@
     <plex-title titulo="Relaciones" size="sm"></plex-title>
     <plex-list>
         <plex-label *ngIf="!relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
-
-        <plex-item *ngFor="let relacionado of relaciones" class="">
-            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento}" [mpiFotoPaciente]="relacionado" />
-
-            <plex-label *ngIf="!relacionado.numeroIdentificacion?.length" titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
-            </plex-label>
-
-            <plex-label *ngIf="relacionado.numeroIdentificacion?.length" titulo="{{ relacionado | nombre }}"
-                        subtitulo="{{ relacionado.numeroIdentificacion }}">
-            </plex-label>
-
-            <plex-badge type="info">{{ relacionado.parentesco }}
-            </plex-badge>
-
-            <plex-badge type="danger" *ngIf="relacionado.fechaFallecimiento"> Fallecido
-            </plex-badge>
-
-        </plex-item>
-
+        <ng-container *ngIf="relaciones?.length">
+            <paciente-relaciones [relaciones]="paciente.relaciones"> </paciente-relaciones>
+        </ng-container>
     </plex-list>
 </ng-container>
 

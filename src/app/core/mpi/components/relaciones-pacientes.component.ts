@@ -124,10 +124,12 @@ export class RelacionesPacientesComponent implements OnInit {
                 nombre: '',
                 apellido: '',
                 documento: '',
+                fechaNacimiento: null,
                 fechaFallecimiento: null,
                 numeroIdentificacion: '',
                 foto: null,
-                fotoId: null
+                fotoId: null,
+                activo: true,
             });
 
             // Se completan los campos de la nueva relación
@@ -143,6 +145,9 @@ export class RelacionesPacientesComponent implements OnInit {
             }
             if (unaRelacion.fotoId) {
                 nuevaRelacion.fotoId = unaRelacion.fotoId;
+            }
+            if (unaRelacion.fechaNacimiento) {
+                nuevaRelacion.fechaNacimiento = unaRelacion.fechaNacimiento;
             }
             if (unaRelacion.fechaFallecimiento) {
                 nuevaRelacion.fechaFallecimiento = unaRelacion.fechaFallecimiento;

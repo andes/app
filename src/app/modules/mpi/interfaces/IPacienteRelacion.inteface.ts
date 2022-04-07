@@ -16,4 +16,5 @@ export interface IPacienteRelacion {
     sexo?: string;
     foto: any;
     fotoId: any;
+    activo?: boolean;
 }

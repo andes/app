@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
 
 @Component({
     selector: 'paciente-busqueda',
@@ -13,7 +14,7 @@ export class PacienteBusquedaComponent {
     public resultados = [];
     public loading = false;
     public searchAreaCleared = true;
-
+    public relaciones: IPacienteRelacion[];
     // Buscador
     @Input() hostComponent = '';
     @Input() create = false;
@@ -63,5 +64,11 @@ export class PacienteBusquedaComponent {
 
     public onEdit(data: IPaciente) {
         this.edit.emit(data);
+    }
+
+    public onRelaciones(data: IPacienteRelacion[]) {
+        if (data) {
+            this.relaciones = data;
+        }
     }
 }

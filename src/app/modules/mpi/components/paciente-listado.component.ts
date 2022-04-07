@@ -3,6 +3,8 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarService } from 'src/app/core/mpi/services/paciente-buscar.service';
+import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
+import { calcularEdad } from '@andes/shared';
 
 @Component({
     selector: 'paciente-listado',
@@ -16,7 +18,21 @@ export class PacienteListadoComponent {
 
     // Propiedades públicas
     public listado: IPaciente[]; // Contiene un listado plano de pacientes
-
+    public listadoRelaciones: IPacienteRelacion[];
+    public desplegado: Boolean = false;
+    public seletedOn: Boolean = true;
+    public coloresItems = {
+        impar: {
+            border: '#00000000',
+            hover: '#00a8e099',
+            background: '#00a8e01a'
+        },
+        par: {
+            border: '#00000000',
+            hover: '#00a8e099',
+            background: '#0027381a'
+        }
+    };
     /**
      * Listado de pacientes para mostrar. Acepta una lista de pacientes o un resultado de una búsqueda
      *
@@ -58,11 +74,17 @@ export class PacienteListadoComponent {
     // Indica si debe aparecer el boton 'editar' en cada resultado
     @Input() editing = false;
 
+    // Indica si debe aparecer el boton 'relaciones' en cada paciente
+    @Input() showRelaciones = true;
+
     // Evento que se emite cuando se selecciona un paciente (click en la lista)
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     // Evento que se emite cuando se presiona el boton 'editar' de un paciente
     @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+
+    // Evento que se emite cuando se presiona el boton 'verRelaciones' de un paciente
+    @Output() relaciones: EventEmitter<IPacienteRelacion[]> = new EventEmitter<IPacienteRelacion[]>();
 
     constructor(
         private plex: Plex,
@@ -77,11 +99,55 @@ export class PacienteListadoComponent {
     }
 
     public seleccionar(paciente: IPaciente) {
-        (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+        if (this.seletedOn) {
+            (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+        } else {
+            this.seletedOn = true;
+        }
     }
 
     public editar(paciente: IPaciente) {
         (paciente.id) ? this.edit.emit(paciente) : this.edit.emit(null);
+    }
+
+    public openBtnRelaciones(paciente: IPaciente) {
+        const igualPaciente = this.pacienteSeleccionado?.id === paciente.id;
+        return (this.desplegado && igualPaciente);
+    }
+    /**
+     * Se visualiza el botón para ver las relaciones de un paciente,
+     * sólo en aquellas relaciones que son hijo/a, tutelado menores de 11 años y que sean pacientes activos
+     * @param paciente un item del listado
+     */
+    public showBtnRelaciones(paciente: IPaciente) {
+        this.listadoRelaciones = [];
+        if (this.showRelaciones && paciente.relaciones?.length) {
+            const limiteEdad = 11;
+            const relaciones = ['progenitor/a', 'tutor'];
+            this.listadoRelaciones = paciente.relaciones.filter(rela => {
+                const relacionesTutor = rela?.relacion?.opuesto && relaciones.includes(rela.relacion.opuesto);
+                const cumpleEdad = rela?.fechaNacimiento && calcularEdad(rela.fechaNacimiento, 'y') < limiteEdad;
+                return (relacionesTutor && rela.activo && rela.fechaNacimiento && cumpleEdad);
+            });
+        }
+        return this.listadoRelaciones.length;
+    }
+
+    public verRelaciones(paciente: IPaciente) {
+        this.seletedOn = false;
+        if (this.desplegado) {
+            this.desplegado = false;
+            this.pacienteSeleccionado = null;
+        } else {
+            if (paciente.id && paciente.relaciones?.length) {
+                this.relaciones.emit(paciente.relaciones);
+                this.desplegado = true;
+                this.pacienteSeleccionado = paciente;
+
+            } else {
+                this.relaciones.emit(null);
+            }
+        }
     }
 
     /**
@@ -92,6 +158,14 @@ export class PacienteListadoComponent {
         //  si es un paciente sin documento menor a 5 años mostramos datos de un familiar/tutor
         const edad = 5;
         const rel = paciente.relaciones;
-        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length > 0;
+        return !paciente.documento && !paciente.numeroIdentificacion && paciente.edad < edad && rel !== null && rel.length;
+    }
+    /**
+     *
+     * @param pos posición en el listado
+     * @returns color del item
+     */
+    public colorItem(pos) {
+        return (pos % 2 === 0) ? this.coloresItems.par : this.coloresItems.impar;
     }
 }
