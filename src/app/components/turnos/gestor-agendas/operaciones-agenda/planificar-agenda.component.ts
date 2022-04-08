@@ -742,7 +742,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             const auxiliar = new Date(fecha1);
             const horas = fecha2.getHours();
             const minutes = fecha2.getMinutes();
-            // Date.setHours(hour, min, sec, millisec)
             auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
         } else {

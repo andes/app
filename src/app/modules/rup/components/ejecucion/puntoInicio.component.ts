@@ -80,6 +80,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public prestacionNominalizada;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
+    public puedeDarSobreturno: Boolean;
     public tieneAccesoHUDS: Boolean;
     public matchPaciente: Boolean = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
@@ -157,7 +158,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     // tieneTurnosAsignados: true,
     actualizar() {
-        this.cancelarDinamica();
+        this.cancelarDacionTurno();
 
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
@@ -253,7 +254,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      */
     filtrar() {
         this.stopAgendaRefresh();
-        this.cancelarDinamica();
+        this.cancelarDacionTurno();
         // filtrar solo por las prestaciones que el profesional tenga disponibles
         this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
@@ -351,7 +352,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
 
         if (this.agendas.length) {
-            this.agendaSeleccionada = this.agendas[0];
+            this.cargarTurnos(this.agendas[0]);
             this.intervalAgendaRefresh();
             this.volverALlamar = false;
         }
@@ -551,9 +552,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     cargarTurnos(agenda, servicio = null) {
+        this.reloadPuedeDarSobreturno(agenda);
         this.turno = null;
         this.prestacionPendiente = null;
-        this.cancelarDinamica();
+        this.cancelarDacionTurno();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
         this.intervalAgendaRefresh();
         if (agenda === 'servicio-intermedio') {
@@ -562,6 +564,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         } else {
             this.servicioSelected = null;
         }
+    }
+
+    reloadPuedeDarSobreturno(agenda) {
+        const esDeHoy = moment().isSame(agenda.horaInicio, 'day');
+        const esNominalizadaNoDinamica = !agenda.dinamica && agenda.nominalizada;
+        const esDelUsuario = agenda.profesionales.some(p => p.id === this.auth.profesional);
+        this.puedeDarSobreturno = esDeHoy && esNominalizadaNoDinamica && esDelUsuario;
     }
 
     @Unsubscribe()
@@ -740,7 +749,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = true;
     }
 
-    cancelarDinamica() {
+    cancelarDacionTurno() {
         this.buscandoPaciente = false;
     }
 
