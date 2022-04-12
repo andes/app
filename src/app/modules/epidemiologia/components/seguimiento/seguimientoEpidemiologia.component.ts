@@ -48,6 +48,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     public orderBy = [{ id: 'prioridad', label: 'Prioridad' }, { id: 'fecha', label: 'Fecha' }];
     public orden = 'prioridad';
     public collapse = false;
+    public itemsOrden = [];
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -59,7 +60,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         private plex: Plex,
         private auth: Auth,
         private documentosService: DocumentosService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         if (!this.auth.getPermissions('epidemiologia:seguimiento:?').length) {
@@ -67,6 +68,18 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         }
         this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
         this.organizacion = this.auth.organizacion;
+        this.itemsOrden.push({
+            'label': 'Prioridad', handler: () => {
+                this.orden = 'prioridad';
+                this.buscar();
+            }
+        },
+        {
+            'label': 'Fecha', handler: () => {
+                this.orden = 'fecha';
+                this.buscar();
+            }
+        });
     }
 
     volverInicio() {
