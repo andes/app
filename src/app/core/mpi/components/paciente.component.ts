@@ -381,10 +381,12 @@ export class PacienteComponent implements OnInit {
                 });
                 const dto = {
                     id: null,
+                    activo: unPacienteSave.activo,
                     relacion: relacionOpuesta,
                     referencia: unPacienteSave.id,
                     nombre: unPacienteSave.nombre,
                     apellido: unPacienteSave.apellido,
+                    fechaNacimiento: unPacienteSave.fechaNacimiento,
                     documento: (unPacienteSave.documento) ? unPacienteSave.documento : null,
                     numeroIdentificacion: (unPacienteSave.numeroIdentificacion) ? unPacienteSave.numeroIdentificacion : null,
                     foto: unPacienteSave.foto ? unPacienteSave.foto : null,
@@ -579,8 +581,8 @@ export class PacienteComponent implements OnInit {
                                 }
                                 this.plex.toast('success', '¡Paciente Validado!');
                             }
-                        }, // error
-                        () => {
+                            // error
+                        }, () => {
                             this.plex.toast('danger', 'Validación Fallida');
                             this.disableValidar = false;
                         })
