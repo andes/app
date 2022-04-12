@@ -195,8 +195,8 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="d-flex justify-content-end">
-                                <plex-badge size="sm" [type]="item | semanticClass: filtroActual === 'planes'">
-                                    {{ (item.plan || filtroActual === 'planes') ? 'solicitud' :
+                                <plex-badge size="sm" [type]="item | semanticClass: filtroActual === 'planes' || item.esSolicitud">
+                                    {{ (item.esSolicitud || filtroActual === 'planes') ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
                                 <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)"
