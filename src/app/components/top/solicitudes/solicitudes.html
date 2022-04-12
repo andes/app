@@ -25,10 +25,10 @@
                     <form #formEntrada="ngForm">
                         <plex-wrapper>
                             <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date" [(ngModel)]="fechaDesdeEntrada" (change)="cambioFechaDesde()" name="fechaDesdeLimitada"
-                                        label="Desde" class="fechas" [max]="fechaHastaEntrada" required>
+                                        label="Desde" class="fechas" required>
                             </plex-datetime>
                             <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date" [(ngModel)]="fechaHastaEntrada" (change)="cambioFechaHasta()" name="fechaHastaLimitada"
-                                        label="Hasta" class="fechas" [min]="fechaDesdeEntrada" required>
+                                        label="Hasta" class="fechas" required>
                             </plex-datetime>
                             <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date" [(ngModel)]="fechaDesdeEntrada" (change)="cargarSolicitudes()" name="fechaDesde"
                                             label="Desde" class="fechas" [max]="fechaHastaEntrada" required>
@@ -60,7 +60,7 @@
                         </plex-wrapper>
                     </form>
                     <span class="text-danger" *ngIf='mostrarAlertaRangoDias'>
-                                El rango de fecha no pueda superar los {{ diasAntes }} días</span>
+                                El rango de fecha no pueda superar los {{ diasIntervalo }} días, se reajustará la fecha en forma automática</span>
                     <div *ngIf="!(prestacionesEntrada?.length)" class="mt-1 alert alert-default">
                         No hay solicitudes de entrada programadas en ese rango de fechas
                     </div>

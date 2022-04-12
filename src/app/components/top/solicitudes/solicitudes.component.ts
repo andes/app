@@ -25,7 +25,7 @@ export class SolicitudesComponent implements OnInit {
     showDarTurnos: boolean;
     solicitudTurno: any;
     showAuditar = false;
-    diasAntes = 15;
+    diasIntervalo = 15;
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
@@ -128,76 +128,43 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         const currentUrl = this.router.url;
-        this.fechaDesdeSalida = null;
-        this.fechaHastaSalida = null;
-        this.fechaDesdeEntrada = null;
-        this.fechaHastaEntrada = null;
         if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
             ];
+            this.fechaDesdeSalida = null;
+            this.fechaHastaSalida = null;
+            this.fechaDesdeEntrada = null;
+            this.fechaHastaEntrada = null;
             if (this.tipoSolicitud === 'entrada') {
-                const hoy = new Date();
-                const fechaAnterior = this.calcularFechaDesde(hoy);
-                this.fechaDesdeEntrada = fechaAnterior;
-                this.fechaHastaEntrada = hoy;
+                this.fechaHastaEntrada = moment().startOf('day').toDate();
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
             }
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
         this.buscarSolicitudes();
     }
 
-    calcutarDiasDiferencia(fecha1, fecha2) {
-        let mayor = 0;
-        let menor = 0;
-        try {
-            const fecha1num = fecha1.getTime();
-            const fecha2num = fecha2.getTime();
-            if (fecha1num < fecha2num) {
-                mayor = fecha2num;
-                menor = fecha1num;
-            } else {
-                mayor = fecha1num;
-                menor = fecha2num;
+    cambioFechaDesde() {
+        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        if (this.fechaDesdeEntrada) {
+            this.mostrarAlertaRangoDias = false;
+            if (!this.fechaHastaEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days');
+                this.mostrarAlertaRangoDias = true;
             }
-            return Math.round( (mayor - menor) / ( 1000 * 60 * 60 * 24) );
-        } catch {
-            return 0;
+            this.cargarSolicitudes();
         }
     }
 
-    calcularFechaDesde(fecha) {
-        const diasAntes = 1000 * 60 * 60 * 24 * this.diasAntes;
-        return new Date(fecha.getTime() - diasAntes);
-    }
-
-    calcularFechaHasta(fecha) {
-        const diasAntes = 1000 * 60 * 60 * 24 * this.diasAntes;
-        return new Date(fecha.getTime() + diasAntes);
-    }
-
-    cambioFechaDesde() {
-        this.cambioFecha('desde');
-    }
-
     cambioFechaHasta() {
-        this.cambioFecha('hasta');
-    }
-
-    cambioFecha(tipo) {
-        if ( ( !(this.fechaDesdeEntrada === undefined) && !(this.fechaDesdeEntrada === null) ) &&
-            (!(this.fechaHastaEntrada === undefined) && !(this.fechaHastaEntrada === null)) ) {
-            if ( this.calcutarDiasDiferencia(this.fechaDesdeEntrada, this.fechaHastaEntrada) > this.diasAntes ) {
-                if ( tipo === 'desde') {
-                    this.fechaHastaEntrada = this.calcularFechaHasta(this.fechaDesdeEntrada);
-                }
-                if (tipo === 'hasta') {
-                    this.fechaDesdeEntrada = this.calcularFechaDesde(this.fechaHastaEntrada);
-                }
+        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        if (this.fechaHastaEntrada) {
+            this.mostrarAlertaRangoDias = false;
+            if (!this.fechaDesdeEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
                 this.mostrarAlertaRangoDias = true;
-            } else {
-                this.mostrarAlertaRangoDias = false;
             }
             this.cargarSolicitudes();
         }
@@ -301,7 +268,7 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
     }
 
-    // check if the type of prestarion is among the authorized prestations of the professional
+    // verifica que el tipo de prestación este entre las autorizadas para el profesional
     isPresentationEnabled(prestacion) {
         return this.auth.check('rup:tipoPrestacion:' + prestacion.solicitud.tipoPrestacion.id);
     }
