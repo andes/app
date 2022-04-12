@@ -1,0 +1,61 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-title titulo="Ficha {{fichaName}}" main>
+            <plex-button type="danger" (click)="toBack()">Volver
+            </plex-button>
+            <plex-button *ngIf="editFicha" position="right" type="success" [autodisabled]="true"
+                         (click)="registrarFicha()">
+                Registrar
+                ficha
+            </plex-button>
+        </plex-title>
+        <form #form="ngForm">
+
+            <ng-container *ngFor="let seccion of secciones">
+                <plex-title size="sm" titulo="{{seccion.name}}"></plex-title>
+                <plex-grid>
+                    <ng-container *ngFor="let field of seccion.fields" [ngSwitch]="field.type">
+                        <ng-container *ngIf="checkDependency(field)">
+                            <plex-select *ngSwitchCase="'select'" [label]="field.label?field.label:field.key"
+                                         grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                         [required]="field.required" [ssSearch]="field.resources"
+                                         [readonly]="!editFicha">
+                            </plex-select>
+                            <plex-text *ngSwitchCase="'string'" [label]="field.label?field.label:field.key" grow="auto"
+                                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                       [required]="field.required" [readonly]="!editFicha">
+                            </plex-text>
+                            <plex-int *ngSwitchCase="'int'" [label]="field.label?field.label:field.key" grow="auto"
+                                      name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                      [required]="field.required" [readonly]="!editFicha">
+                            </plex-int>
+                            <plex-datetime *ngSwitchCase="'date'" [label]="field.label?field.label:field.key"
+                                           type="date" grow="auto" name="{{ field.key }}"
+                                           [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                           [readonly]="!editFicha">
+                            </plex-datetime>
+                            <plex-phone *ngSwitchCase="'phone'" [label]="field.label?field.label:field.key"
+                                        [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
+                                        placeholder="Ej: 2990000000" name="{{ field.key }}" [readonly]="!editFicha">
+                            </plex-phone>
+                            <plex-bool *ngSwitchCase="'boolean'" [label]="field.label?field.label:field.key" grow="auto"
+                                       name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                       [required]="field.required" [readonly]="!editFicha">
+                            </plex-bool>
+                            <plex-select *ngSwitchCase="'snomed'" [label]="field.label?field.label:field.key"
+                                         grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                         labelField="fsn" idField="conceptId" [required]="field.required"
+                                         placeholder="Ingrese concepto..."
+                                         (getData)="getSnomed(field.snomedCodeOrQuery,$event)" [readonly]="!editFicha">
+                            </plex-select>
+                            <plex-select *ngSwitchCase="'selectStatic'" [label]="field.label?field.label:field.key"
+                                         grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                         [required]="field.required" [data]="field.items" [readonly]="!editFicha">
+                            </plex-select>
+                        </ng-container>
+                    </ng-container>
+                </plex-grid>
+            </ng-container>
+        </form>
+    </plex-layout-main>
+</plex-layout>

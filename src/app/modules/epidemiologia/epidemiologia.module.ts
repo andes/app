@@ -23,6 +23,7 @@ import { EpidemiologiaRoutingModule } from './epidemiologia.routing';
 import { CodigSisaPipe } from './pipes/codigoSisa.pipe';
 import { CheckEditPipe } from './pipes/checkEdit.pipe';
 import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
+import { FichaEpidemiologicaGenericComponent } from './components/ficha-epidemiologica-generic/ficha-epidemiologica-generic.component';
 @NgModule({
     declarations: [
         FichaEpidemiologicaComponent,
@@ -37,7 +38,8 @@ import { SeguimientoFieldsPipe } from './pipes/seguimientoFields.pipe';
         CodigSisaPipe,
         CheckEditPipe,
         ActualizarSeguimientoComponent,
-        AsignarSeguimientosComponent
+        AsignarSeguimientosComponent,
+        FichaEpidemiologicaGenericComponent
     ],
     imports: [
         CommonModule,

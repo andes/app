@@ -163,9 +163,8 @@ export class AppFormsCrudComponent implements OnInit {
         if ($event.formValid) {
             const aux = [];
             this.form.fields.forEach(f => {
-                if (!f.key) {
-                    f.key = f.label.slice(0, 16).replace(/ /g, '').toLowerCase();
-                }
+                f.key = f.label.length > 16 ? f.label.replace(/ /g, '').slice(0, 16).toLowerCase()
+                    : f.label.replace(/ /g, '').toLowerCase();
                 const cloneField = Object.assign({}, f);
                 delete cloneField.sections;
                 const field: any = { ...cloneField };
