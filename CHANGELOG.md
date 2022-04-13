@@ -1,3 +1,15 @@
+# [5.90.0](https://github.com/andes/app/compare/v5.89.0...v5.90.0) (2022-04-13)
+
+
+### Bug Fixes
+
+* **GDU:** Eliminar cartel informativo de angular por actualizacion luego de que se realizara la lectura de los datos ([#2615](https://github.com/andes/app/issues/2615)) ([5206b38](https://github.com/andes/app/commit/5206b380f0fdea06b10bf73931288f38ea4b3e83))
+
+
+### Features
+
+* **TM:** actualizacion de plex y validacion sexo no binario ([#2611](https://github.com/andes/app/issues/2611)) ([1c15d3b](https://github.com/andes/app/commit/1c15d3b3641c710e9992f42e7987445fdf36d53e))
+
 # [5.89.0](https://github.com/andes/app/compare/v5.88.1...v5.89.0) (2022-04-06)
 
 
