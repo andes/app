@@ -14,7 +14,6 @@ import { getObjSexos } from '../../../utils/enumerados';
 })
 export class InscripcionProfesionalesComponent implements OnInit {
 
-    public aceptaPermisos = false;
     public existeUsuario = false;
     public sexos = [];
     public contactos = [];
@@ -22,27 +21,21 @@ export class InscripcionProfesionalesComponent implements OnInit {
     public enProceso = false;
     public token = '';
     public captchaEnabled = true;
-    public infoNroTramite = false;
     public profesional = {
         id: '',
         documento: '',
         nombre: '',
         apellido: '',
         sexo: null,
-        nroTramite: '',
         recaptcha: '',
         nombreCompleto: '',
         fechaNacimiento: null,
-        matricula: '',
-        profesion: '',
         email: '',
         telefono: '',
-        estaMatriculado: null,
-        caducidadMatricula: ''
+        matriculas: []
     };
     public estaValidado = false;
     public user = null;
-    private tipoPermisos = 'certificadosCovid19';
 
     constructor(
         private profesionalService: ProfesionalService,
@@ -62,9 +55,10 @@ export class InscripcionProfesionalesComponent implements OnInit {
         this.enProceso = true;
         this.recaptcha = '';
         this.profesionalService.validarProfesional({
+            nombre: this.profesional.nombre,
+            apellido: this.profesional.apellido,
             documento: this.profesional.documento,
             sexo: this.profesional.sexo.id,
-            nroTramite: this.profesional.nroTramite
         }).subscribe(
             (datos) => {
                 if (datos.profesional) {
@@ -73,15 +67,11 @@ export class InscripcionProfesionalesComponent implements OnInit {
                     this.profesional.nombre = datos.profesional.nombre;
                     this.profesional.apellido = datos.profesional.apellido;
                     this.contactos = datos.profesional.contactos;
-                    const datosMatricula: any = this.getMatricula(datos.profesional);
+                    this.profesional.matriculas = this.getMatriculas(datos.profesional);
                     this.profesional.nombreCompleto = datos.profesional.nombreCompleto;
                     this.profesional.fechaNacimiento = moment(datos.profesional.fechaNacimiento).format('L');
-                    this.profesional.matricula = datosMatricula.numeroMatricula;
-                    this.profesional.profesion = datosMatricula.profesion;
                     this.profesional.email = datos.profesional.contactos ? this.getEmail(datos.profesional.contactos) : '';
                     this.profesional.telefono = datos.profesional.contactos ? this.getTelefono(datos.profesional.contactos) : '';
-                    this.profesional.estaMatriculado = Object.keys(datosMatricula).length ? true : false;
-                    this.profesional.caducidadMatricula = datosMatricula?.fechaFin;
                     this.estaValidado = true;
                     this.enProceso = false;
                 }
@@ -106,19 +96,14 @@ export class InscripcionProfesionalesComponent implements OnInit {
             nombre: '',
             apellido: '',
             sexo: null,
-            nroTramite: '',
             recaptcha: '',
             nombreCompleto: '',
             fechaNacimiento: null,
-            matricula: '',
-            profesion: '',
+            matriculas: [],
             email: '',
             telefono: '',
-            estaMatriculado: null,
-            caducidadMatricula: ''
         };
         this.estaValidado = false;
-        this.aceptaPermisos = false;
     }
 
     getEmail(contacto: Array<any>) {
@@ -131,45 +116,20 @@ export class InscripcionProfesionalesComponent implements OnInit {
         return (telefono ? telefono.valor : null);
     }
 
-    getMatricula(profesional) {
-        const resultado = {};
-        let ultimaEspecialidad;
-        let especialidad;
-        let ultimaMatricula;
-        if (profesional.formacionPosgrado?.length) {
-            ultimaEspecialidad = profesional.formacionPosgrado.length - 1;
-            especialidad = profesional.formacionPosgrado[ultimaEspecialidad];
-            ultimaMatricula = especialidad.matriculacion[especialidad.matriculacion.length - 1];
-            if (ultimaMatricula.fin > new Date()) {
-                resultado['numeroMatricula'] = ultimaMatricula.matriculaNumero;
-                resultado['profesion'] = especialidad.especialidad.nombre;
-                resultado['fechaFin'] = ultimaMatricula.fin;
-
-            } else {
-                ultimaEspecialidad = profesional.formacionGrado.length - 1;
-                especialidad = profesional.formacionGrado[ultimaEspecialidad];
-                ultimaMatricula = especialidad.matriculacion[especialidad.matriculacion.length - 1];
-                if (ultimaMatricula.fin > new Date()) {
-                    resultado['numeroMatricula'] = ultimaMatricula.matriculaNumero;
-                    resultado['profesion'] = especialidad.profesion.nombre;
-                    resultado['fechaFin'] = ultimaMatricula.fin;
-                }
-            }
-        } else {
-            if (profesional.formacionGrado?.length) {
-                ultimaEspecialidad = profesional.formacionGrado.length - 1;
-                especialidad = profesional.formacionGrado[ultimaEspecialidad];
-                if (especialidad.matriculado) {
-                    ultimaMatricula = especialidad.matriculacion[especialidad.matriculacion.length - 1];
-                    if (ultimaMatricula.fin > new Date()) {
-                        resultado['numeroMatricula'] = ultimaMatricula.matriculaNumero;
-                        resultado['profesion'] = especialidad.profesion.nombre;
-                        resultado['fechaFin'] = ultimaMatricula.fin;
-                    }
-                }
-            }
+    getMatriculas(profesional) {
+        if (profesional.formacionGrado?.length) {
+            return profesional.formacionGrado
+                .filter(m => m.matriculado)
+                .map( m => {
+                    const matricula = m.matriculacion[m.matriculacion.length - 1];
+                    return {
+                        numeroMatricula: matricula.matriculaNumero,
+                        profesion: m.profesion.nombre,
+                        fechaFin: matricula.fin
+                    };
+                });
         }
-        return resultado;
+        return [];
     }
 
     verificarUsuario() {
@@ -179,30 +139,13 @@ export class InscripcionProfesionalesComponent implements OnInit {
         });
     }
 
-    agregarPermisos() {
-        this.enProceso = true;
-        this.usuarioService.updateUsuarioPermisos(this.user[0]._id, this.tipoPermisos, { token: this.token }).subscribe(user => {
-            if (user) {
-                const contactoProfesional = this.updateContactos();
-                this.profesionalService.actualizarProfesional({ id: this.profesional.id, contactos: contactoProfesional }, { token: this.token }).subscribe((res) => {
-                    if (res) {
-                        this.enProceso = false;
-                        this.plex.info('success', 'Sus permisos fueron actualizado correctamente', 'Se encuentra autorizado para generar certificados COVID19');
-                        this.resetForm();
-                    }
-                });
-            }
-        });
-    }
-
     createUser() {
         this.enProceso = true;
         const newUser = {
             documento: this.profesional.documento,
             nombre: this.profesional.nombre,
             apellido: this.profesional.apellido,
-            email: this.profesional.email,
-            tipoPermisos: this.tipoPermisos
+            email: this.profesional.email
         };
         this.usuarioService.createUsuario(newUser, { token: this.token }).subscribe(user => {
             if (user) {
@@ -215,6 +158,10 @@ export class InscripcionProfesionalesComponent implements OnInit {
                     }
                 });
             }
+        },
+        (error) => {
+            this.plex.info('danger', error);
+            this.enProceso = false;
         });
     }
 
@@ -237,7 +184,4 @@ export class InscripcionProfesionalesComponent implements OnInit {
         this.router.navigate(['matriculaciones']);
     }
 
-    infoTramite() {
-        this.infoNroTramite = !this.infoNroTramite;
-    }
 }
