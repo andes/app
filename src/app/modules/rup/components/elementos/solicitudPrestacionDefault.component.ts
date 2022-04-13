@@ -50,6 +50,15 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 this.onOrganizacionChange();
             }
         });
+
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor.solicitudPrestacion.indicaciones = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
     }
 
     onOrganizacionChange() {
