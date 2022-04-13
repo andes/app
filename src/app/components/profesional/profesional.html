@@ -1,167 +1,112 @@
-<plex-layout main="{{profesionalSelected ? 8 : 12}}">
+<plex-layout main="{{profesionalSelected?'8':'12'}}" resizable="true" [min]="4" [max]="5" [steps]="2">
     <plex-layout-main>
-        <ng-container>
-            <header>
-                <plex-title titulo="Listado de profesionales"></plex-title>
-                <form [formGroup]="searchForm">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <plex-int formControlName="documento" label="Documento"
-                                      placeholder="Ingrese numero de Documento..."></plex-int>
-                        </div>
-                        <div class="col-md-4">
-                            <plex-text formControlName="apellido" label="Apellido"
-                                       placeholder="Filtrar por apellido..."></plex-text>
-                        </div>
-                        <div class="col-md-4">
-                            <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre...">
-                            </plex-text>
-                        </div>
-                    </div>
-                </form>
-                <br>
-            </header>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
-                            <th>Condición</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let profesional of datos" (click)="seleccionarProfesional(profesional)"
-                            class="hover">
-                            <td>{{profesional.documento}}</td>
-                            <td>{{profesional.apellido}}</td>
-                            <td>{{profesional.nombre}}</td>
-                            <td>
-                                <plex-badge *ngIf="profesional.profesionalMatriculado" type="info">
-                                    Matriculado
-                                </plex-badge>
-                                <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
-                                    No Matriculado
-                                </plex-badge>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </ng-container>
+        <plex-title main titulo="PROFESIONALES">
+            <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
+
+            <plex-button label="Nuevo Profesional" type="success" position="right" routerLink='/tm/profesional/create'>
+            </plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-int [(ngModel)]="filtros.documento" name="documento" label="Documento" placeholder="Ingrese documento"
+                      (change)="filtrar()">
+            </plex-int>
+            <plex-text [(ngModel)]="filtros.apellido" name="apellido" label="Apellido" placeholder="Ingrese apellido"
+                       (change)="filtrar()">
+            </plex-text>
+            <plex-text [(ngModel)]="filtros.nombre" name="nombre" label="Nombre" placeholder="Ingrese nombre"
+                       (change)="filtrar()">
+            </plex-text>
+        </plex-wrapper>
+        <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
+            <plex-title size="sm">
+                <plex-table-columns>
+                </plex-table-columns>
+            </plex-title>
+
+            <tr *ngFor="let profesional of (listado$ | plSort:table | async)"
+                (click)="seleccionarProfesional(profesional)"
+                [class.selected]="profesional.id===profesionalSelected?.id" [class.selectable]="selectable">
+                <td *plTableCol="'documento'">{{profesional.documento}}</td>
+                <td *plTableCol="'apellido'">{{profesional.apellido }}</td>
+                <td *plTableCol="'nombre'">{{profesional.nombre}}</td>
+                <td *plTableCol="'condicion'">
+                    <plex-badge *ngIf="profesional.profesionalMatriculado" type="info">
+                        Matriculado
+                    </plex-badge>
+                    <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
+                        No Matriculado
+                    </plex-badge>
+                </td>
+            </tr>
+        </plex-table>
     </plex-layout-main>
 
     <!-- sidebar listado -->
-    <plex-layout-sidebar *ngIf='profesionalSelected'>
-        <fieldset>
-            <plex-title size="md" titulo="Profesional"></plex-title>
+    <plex-layout-sidebar type="invert" *ngIf='profesionalSelected'>
+        <plex-title size="md" titulo="Detalle Profesional">
+            <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+            <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" label="Editar"
+                         type="warning" size="sm" (click)="routeTo('create', profesionalSelected.id)">
+            </plex-button>
+        </plex-title>
+        <plex-detail size="lg">
+            <img *ngIf="fotoProfesional" [src]="fotoProfesional">
+            <plex-badge *ngIf='profesionalSelected.profesionalMatriculado' type="info">Matriculado</plex-badge>
+            <plex-badge *ngIf='!profesionalSelected.profesionalMatriculado' type="warning">No Matriculado</plex-badge>
+            <div title> {{ profesionalSelected.apellido | uppercase }}, {{ profesionalSelected.nombre | uppercase}}
+            </div>
+            <div subtitle> {{ profesionalSelected.documento }} </div>
+            <plex-label *ngIf='profesionalSelected.fechaNacimiento' titulo="Fecha de Nacimiento"
+                        subtitulo="{{ profesionalSelected.fechaNacimiento | fecha }}" size="md">
+            </plex-label>
+            <plex-label *ngIf='profesionalSelected.fechaNacimiento' titulo="Edad"
+                        subtitulo="{{ profesionalSelected | edad }}" size="md"></plex-label>
+            <plex-label *ngIf='profesionalSelected.sexo' titulo="Sexo" subtitulo="{{ profesionalSelected | sexo }}"
+                        size="md">
+            </plex-label>
+            <plex-label *ngIf='profesionalSelected.cuit' titulo="CUIT" subtitulo="{{ profesionalSelected.cuit }}"
+                        size="md">
+            </plex-label>
+        </plex-detail>
 
-            <div class="row mb-1">
-                <div class="col text-center">
-                    <img [src]="fotoProfesional" class="img-thumbnail" />
-                </div>
-            </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.apellido">
-                <div class="col">
-                    <strong>
-                        {{profesionalSelected.apellido | uppercase}},
-                        {{profesionalSelected.nombre | uppercase}}
-                    </strong>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col">
-                    <span *ngIf="profesionalSelected.documento" class="mr-1">
-                        {{ profesionalSelected.documento }}
-                    </span>
-                    <plex-badge *ngIf='profesionalSelected.profesionalMatriculado' type="info">
-                        Matriculado
-                    </plex-badge>
-                    <plex-badge *ngIf='!profesionalSelected.profesionalMatriculado' type="warning">
-                        No Matriculado
-                    </plex-badge>
-                </div>
-            </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.fechaNacimiento">
-                <div class="col">
-                    <label>Fecha de nacimiento</label>
-                    <span>
-                        {{ profesionalSelected.fechaNacimiento | fecha }}
-                    </span> |
-                    <span>
-                        {{ profesionalSelected | edad }}
-                    </span>
-                </div>
-            </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.sexo">
-                <div class="col">
-                    <label>Sexo / Género</label>
-                    <span>
-                        {{ profesionalSelected | sexo }}
-                    </span>
-                </div>
-            </div>
-            <div class="row mb-1" *ngIf="profesionalSelected.cuit">
-                <div class="col">
-                    <label>CUIL</label>
-                    <span>
-                        {{ profesionalSelected.cuit }}
-                    </span>
-                </div>
-            </div>
-            <div class="row mb-1"
-                 *ngIf="profesionalSelected.formacionGrado && profesionalSelected.formacionGrado.length > 0">
-                <div class="col">
-                    <label>Formaciones de Grado</label>
-                    <div *ngFor='let formacionGrado of profesionalSelected.formacionGrado'>
-                        <div *ngIf='formacionGrado.matriculacion'>
-                            {{formacionGrado.profesion.nombre}} - Matricula:
-                            {{formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].matriculaNumero}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-1"
-                 *ngIf="profesionalSelected.formacionPosgrado && profesionalSelected.formacionPosgrado.length > 0 ">
-                <div class="col">
-                    <label>Especialidades</label>
-                    <div *ngFor='let formacionPosgrado of profesionalSelected.formacionPosgrado'>
-                        <div
-                             *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
-                            {{formacionPosgrado.especialidad.nombre}} -
-                            Matricula:
-                            {{ formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length
-                            -1].matriculaNumero }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-1"
-                 *ngIf="!profesionalSelected.profesionalMatriculado && (profesionalSelected.profesionExterna || profesionalSelected.matriculaExterna)">
-                <div class="col" *ngIf="profesionalSelected.profesionExterna">
-                    <label>Profesión Externa</label>
-                    <div>
-                        {{profesionalSelected.profesionExterna.nombre}}
-                    </div>
-                </div>
-                <div class="col" *ngIf="profesionalSelected.matriculaExterna">
-                    <label>Matrícula Externa</label>
-                    <div>
-                        {{profesionalSelected.matriculaExterna}}
-                    </div>
-                </div>
-            </div>
-        </fieldset>
+        <ng-container *ngIf="profesionalSelected.formacionGrado?.length">
+            <plex-title size="sm" titulo="Formaciones de grado"></plex-title>
+            <plex-list [selectable]="false" *ngFor="let formacionGrado of profesionalSelected.formacionGrado">
+                <plex-item *ngIf="formacionGrado?.matriculacion && formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].matriculaNumero"
+                           [selectable]="false">
+                    <plex-label titulo="Profesión" subtitulo="{{formacionGrado.profesion.nombre}}" size="md">
+                    </plex-label>
+                    <plex-label titulo="Matrícula"
+                                subtitulo="{{formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].matriculaNumero}}"
+                                size="md"></plex-label>
+                </plex-item>
+            </plex-list>
+        </ng-container>
+        <ng-container *ngIf="profesionalSelected.formacionPosgrado?.length">
+            <plex-title size="sm" titulo="Posgrados"></plex-title>
+            <plex-list [selectable]="false" *ngFor="let formacionPosgrado of profesionalSelected.formacionPosgrado">
+                <plex-item *ngIf="formacionPosgrado?.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero"
+                           [selectable]="false">
+                    <plex-label titulo="Especialidad" subtitulo="{{formacionPosgrado.especialidad.nombre}}" size="md">
+                    </plex-label>
+                    <plex-label titulo="Matrícula"
+                                subtitulo="{{ formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length-1].matriculaNumero }}"
+                                size="md"></plex-label>
+                </plex-item>
+            </plex-list>
+        </ng-container>
+        <ng-container
+                      *ngIf="!profesionalSelected.profesionalMatriculado && (profesionalSelected.profesionExterna || profesionalSelected.matriculaExterna)">
+            <plex-title size="sm" titulo="Profesión Externa"></plex-title>
+            <plex-list [selectable]="false">
+                <plex-item [selectable]="false">
+                    <plex-label *ngIf="profesionalSelected.profesionExterna" titulo="Profesión"
+                                subtitulo="{{profesionalSelected.profesionExterna.nombre}}" size="md">
+                    </plex-label>
+                    <plex-label *ngIf="profesionalSelected.matriculaExterna" titulo="Matrícula"
+                                subtitulo="{{profesionalSelected.matriculaExterna}}" size="md"></plex-label>
+                </plex-item>
+            </plex-list>
+        </ng-container>
     </plex-layout-sidebar>
-
-
-    <plex-layout-footer>
-        <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
-        <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" label="Editar"
-                     type="info" position="right" (click)="routeTo('create', profesionalSelected.id)">
-        </plex-button>
-        <plex-button label="Nuevo Profesional" type="success" position="right" routerLink='/tm/profesional/create'>
-        </plex-button>
-    </plex-layout-footer>
 </plex-layout>

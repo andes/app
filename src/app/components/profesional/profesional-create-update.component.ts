@@ -88,20 +88,25 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     fotoProfesional: any;
     validado = false;
     noPoseeContacto = false;
+    contactosCache = [];
     public seEstaCreandoProfesional = true;
     public profesiones: ISiisa[] = [];
     public firmaProfesional = null;
 
-    constructor(private profesionalService: ProfesionalService,
-                private paisService: PaisService,
-                private plex: Plex,
-                private router: Router,
-                private route: ActivatedRoute,
-                private provinciaService: ProvinciaService,
-                private localidadService: LocalidadService,
-                private validacionService: ValidacionService,
-                private siisaService: SIISAService,
-                public sanitizer: DomSanitizer) { }
+    patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
+    patronContactoAlfabetico = /^[-\w.%+]{1,61}@[a-z]+(.[a-z]+)+$/;
+
+    constructor(
+        private profesionalService: ProfesionalService,
+        private paisService: PaisService,
+        private plex: Plex,
+        private router: Router,
+        private route: ActivatedRoute,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
+        private validacionService: ValidacionService,
+        private siisaService: SIISAService,
+        public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         this.sexos = enumerados.getObjSexos();
@@ -110,10 +115,12 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
 
         this.route.params.subscribe(params => {
+
             if (params && params['id']) {
                 this.seEstaCreandoProfesional = false;
                 this.profesionalService.getProfesional({ id: params['id'] }).subscribe(profesional => {
                     this.profesional = profesional[0];
+                    this.profesional.contactos = this.profesional.contactos.length ? this.profesional.contactos : [this.contacto];
                     if (this.profesional.validadoRenaper) {
                         this.validado = true;
                         this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
@@ -123,6 +130,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                         });
                     }
                 });
+            } else {
+                this.profesional.contactos = [this.contacto];
             }
         });
         this.siisaService.getProfesiones().subscribe(res => {
@@ -146,20 +155,29 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     /* Código de contactos*/
 
     addContacto(key, valor) {
-        const nuevoContacto = Object.assign({}, {
-            tipo: key,
-            valor: valor,
-            ranking: 0,
-            activo: true,
-            ultimaActualizacion: new Date()
-        });
-        this.profesional.contactos.push(nuevoContacto);
+        const indexUltimo = this.profesional.contactos.length - 1;
+
+        if (this.profesional.contactos[indexUltimo].valor) {
+            const nuevoContacto = Object.assign({}, {
+                tipo: key,
+                valor: valor,
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
+            });
+
+            this.profesional.contactos.push(nuevoContacto);
+        } else {
+            this.plex.toast('info', 'Debe completar los contactos anteriores.');
+        }
     }
 
     limpiarContacto() {
         if (this.noPoseeContacto) {
+            this.contactosCache = this.profesional.contactos;
             this.profesional.contactos = [this.contacto];
-            this.profesional.contactos[0].valor = '';
+        } else {
+            this.profesional.contactos = this.contactosCache;
         }
     }
 
@@ -169,41 +187,64 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         }
     }
 
+    onFocusout(type, value) {
+        let item = null;
+        for (const elem of this.profesional.contactos) {
+            if (elem.tipo === type || elem.valor === value) {
+                item = elem;
+            }
+        }
+        if (!item) {
+            this.addContacto(type, value);
+        } else {
+            if (!item.valor) {
+                item.valor = value;
+            } else if (item.valor !== value) {
+                this.addContacto(type, value);
+            }
+        }
+    }
+
+
+    contactoTelefonico(index) {
+        const tipoContacto = this.profesional.contactos[index].tipo;
+        return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
+    }
+
+
     setFirma(firma) {
         this.firmaProfesional = firma;
     }
 
     renaperVerification(profesional) {
-        if (!profesional.documento || (profesional.sexo.id === 'otro')) {
-            this.plex.info('warning', 'La validación por RENAPER requiere sexo MASCULINO o FEMENINO.', 'Atención');
-        } else {
-            // this.loading = true;
-            let sexoRena = null;
-            let documentoRena = null;
 
-            profesional.sexo = ((typeof profesional.sexo === 'string')) ? profesional.sexo : (Object(profesional.sexo).id);
-            sexoRena = profesional.sexo;
-            documentoRena = profesional.documento;
-            this.validacionService.post({ documento: documentoRena, sexo: sexoRena }).subscribe(
-                resultado => {
-                    if (!resultado || resultado.error) {
-                        this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
-                    } else {
-                        this.validado = true;
-                        this.profesional.nombre = resultado.nombre.toUpperCase();
-                        this.profesional.apellido = resultado.apellido.toUpperCase();
-                        this.profesional.fechaNacimiento = moment(resultado.fechaNacimiento, 'YYYY-MM-DD');
-                        this.profesional.validadoRenaper = true;
-                        if (resultado.foto) {
-                            this.profesional.foto = resultado.foto;
-                            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
-                        }
-                        this.plex.toast('success', 'El profesional ha sido validado con RENAPER');
+        // this.loading = true;
+        let sexoRena = null;
+        let documentoRena = null;
+
+        profesional.sexo = ((typeof profesional.sexo === 'string')) ? profesional.sexo : (Object(profesional.sexo).id);
+        sexoRena = profesional.sexo;
+        documentoRena = profesional.documento;
+        this.validacionService.post({ documento: documentoRena, sexo: sexoRena }).subscribe(
+            resultado => {
+                if (!resultado || resultado.error) {
+                    this.plex.info('warning', 'El profesional no se encontró en RENAPER');
+                } else {
+                    this.validado = true;
+                    this.profesional.nombre = resultado.nombre.toUpperCase();
+                    this.profesional.apellido = resultado.apellido.toUpperCase();
+                    this.profesional.fechaNacimiento = moment(resultado.fechaNacimiento, 'YYYY-MM-DD');
+                    this.profesional.validadoRenaper = true;
+                    if (resultado.foto) {
+                        this.profesional.foto = resultado.foto;
+                        this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
                     }
-                }, err => {
-                    this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
-                });
-        }
+                    this.plex.info('success', 'El profesional ha sido validado con RENAPER');
+                }
+            }, err => {
+                this.plex.info('warning', 'El profesional no se encontró en RENAPER');
+            });
+
     }
 
     save($event) {
@@ -241,24 +282,21 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             });
 
                             if (match100 && this.seEstaCreandoProfesional) {
-                                this.plex.info('warning', '', 'El profesional que está intentando guardar ya se encuentra cargado');
-                                // this.mostrarBtnGuardar = false;
+                                this.plex.info('info', 'El profesional que está cargando ya existe en el sistema');
                             } else {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
                                 this.profesionalService.saveProfesional(this.profesional).subscribe(profesionalSaved => {
                                     this.guardarFirma(profesionalSaved.id);
-                                    this.plex.info('success', '', `¡El profesional se ${this.seEstaCreandoProfesional ? 'creó' : 'editó'} con éxito!`);
+                                    this.plex.info('success', `¡El profesional se ${this.seEstaCreandoProfesional ? 'creó' : 'editó'} con éxito!`);
                                     this.router.navigate(['/tm/profesional']);
                                 });
                             }
-                            // this.sugeridosEncontrados = true;
-                            // this.sugeridos = datos;
                         } else {
                             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                             this.profesionalService.saveProfesional(this.profesional).subscribe(profesionalSaved => {
                                 this.guardarFirma(profesionalSaved.id);
-                                this.plex.info('success', '', '¡El profesional se creó con éxito!');
+                                this.plex.info('success', '¡El profesional se creó con éxito!');
                                 this.router.navigate(['/tm/profesional']);
 
                             });

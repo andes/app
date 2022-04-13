@@ -2,154 +2,99 @@
     <plex-layout-main>
         <form #formulario="ngForm">
 
-            <plex-title size="md" titulo="Datos básicos"></plex-title>
+            <plex-title size="md" titulo="Datos básicos">
+                <plex-button label="volver" type="danger" position="left" routerLink='/tm/profesional'></plex-button>
+                <plex-button *ngIf='mostrarBtnGuardar' label="Guardar" type="success" position="right"
+                             [disabled]="!formulario.valid" [validateForm]="formulario" (click)='save($event)'>
+                </plex-button>
+            </plex-title>
             <plex-wrapper>
                 <plex-text label="Nombre" [(ngModel)]="profesional.nombre" name="profesional.nombre"
-                           [readonly]="validado" [required]="true">
+                           [readonly]="validado" [required]="true" grow="3">
                 </plex-text>
                 <plex-text label="Apellido" [(ngModel)]="profesional.apellido" name="profesional.apellido"
-                           [readonly]="validado" [required]="true">
+                           [readonly]="validado" [required]="true" grow="3">
                 </plex-text>
                 <plex-int label="Número de Documento" [(ngModel)]="profesional.documento" name="profesional.documento"
-                          [readonly]="validado" [required]="true">
+                          [readonly]="validado" [required]="true" grow="3">
                 </plex-int>
                 <plex-select [data]="sexos" [(ngModel)]="profesional.sexo" name='sexo' placeholder="Seleccione..."
-                             label="Sexo" [readonly]="validado" [required]="true">
+                             label="Sexo" [readonly]="validado" [required]="true" grow="3">
                 </plex-select>
                 <plex-datetime type="date" label="Fecha de nacimiento" [(ngModel)]="profesional.fechaNacimiento"
-                               name='fechaNacimiento' [required]="true" [readonly]="validado">
+                               name="fechaNacimiento" [required]="true" [readonly]="validado" grow="3">
                 </plex-datetime>
             </plex-wrapper>
 
             <plex-title size="md" titulo="Datos de contacto">
-                <plex-bool class="mr-2" [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto"
-                           name="noPoseeContacto" (change)="limpiarContacto()" type="slide">
-                </plex-bool>
+                <plex-bool [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto"
+                           type="slide" (change)="limpiarContacto()"></plex-bool>
             </plex-title>
-            <plex-wrapper>
-                <div *ngFor="let _unContacto of profesional.contactos; let i = index" justify="around" grow="full">
-                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                                 [required]="i <= 0" label="Tipo" [readonly]="noPoseeContacto">
-                    </plex-select>
+            <plex-wrapper class="mr-1" *ngFor="let _unContacto of profesional.contactos; let i = index">
+                <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                             [required]="i <= 0" label="Tipo" (change)="_unContacto.valor = ''"
+                             [readonly]="noPoseeContacto">
+                </plex-select>
 
-                    <ng-container *ngIf="_unContacto.tipo && _unContacto.tipo.id">
-                        <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato"
-                                   [(ngModel)]="_unContacto.valor" name="valor-{{i}}"
-                                   [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto">
-                        </plex-text>
-                        <plex-phone label="Número" *ngIf="_unContacto.tipo.id === 'celular'"
-                                    [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
-                                    [readonly]="noPoseeContacto">
-                        </plex-phone>
-                    </ng-container>
-
-                    <ng-container *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
-                        <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato" [(ngModel)]="_unContacto.valor"
-                                   name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)"
-                                   [readonly]="noPoseeContacto">
-                        </plex-text>
-                        <plex-phone label="Número" *ngIf="_unContacto.tipo === 'celular'"
-                                    [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
-                                    [readonly]="noPoseeContacto">
-                        </plex-phone>
-                    </ng-container>
-
-                    <div>
-                        <label>&nbsp;</label>
-                        <plex-button *ngIf="i === 0" title="Agregar contacto" titlePosition="left" type="primary"
-                                     icon="phone-plus" [disabled]="noPoseeContacto"
-                                     (click)="addContacto('celular', '')">
-                        </plex-button>
-                        <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
-                        </plex-button>
-                    </div>
-                </div>
+                <plex-phone *ngIf="contactoTelefonico(i)" label="Número" [(ngModel)]="_unContacto.valor"
+                            placeholder="Ej: 2990000000" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)"
+                            [readonly]="noPoseeContacto" [pattern]="patronContactoNumerico">
+                </plex-phone>
+                <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i)" [(ngModel)]="_unContacto.valor"
+                           placeholder="Ej: ejemplo@email.com" [required]="!noPoseeContacto && (i <= 0)"
+                           name="valor-{{i}}" [readonly]="noPoseeContacto" [pattern]="patronContactoAlfabetico">
+                </plex-text>
+                <plex-button *ngIf="i == 0" title="Agregar contacto" type="info" icon="plus" name="agregarContacto"
+                             (click)="addContacto('celular', '')" [disabled]="noPoseeContacto">
+                </plex-button>
+                <plex-button *ngIf="i > 0" type="danger" icon="close" (click)="removeContacto(i)">
+                </plex-button>
             </plex-wrapper>
-
             <plex-title size="md" titulo="Datos profesionales"> </plex-title>
-            <plex-wrapper justify="around">
+            <plex-wrapper>
                 <plex-select [(ngModel)]="profesional.profesionExterna" name="profesion" label="Profesión"
                              [data]="profesiones" [required]="false" grow="2">
                 </plex-select>
                 <plex-text [(ngModel)]="profesional.matriculaExterna" name="matriculaExterna" label="Matrícula"
                            [required]="false" grow="2">
                 </plex-text>
-
-                <app-firma-profesional class="w-100 mt-2" [profesional]="profesional"
-                                       (onFileUploaded)="setFirma($event)">
-                </app-firma-profesional>
             </plex-wrapper>
 
-            <plex-title size="md" titulo="Otros"> </plex-title>
-            <plex-wrapper justify="around">
-                <plex-text [(ngModel)]="profesional.observaciones" name="observaciones" label="Observaciones"
-                           [required]="false" grow="full">
-                </plex-text>
-            </plex-wrapper>
+            <plex-grid type="full" cols="2">
+                <div>
+                    <plex-title size="md" titulo="Otros"> </plex-title>
+                    <plex-text [(ngModel)]="profesional.observaciones" name="observaciones" columns="5" multiline="true"
+                               placeholder="Observaciones" [required]="false">
+                    </plex-text>
+                </div>
+                <div>
+                    <app-firma-profesional [profesional]="profesional" (onFileUploaded)="setFirma($event)">
+                    </app-firma-profesional>
+                </div>
+
+            </plex-grid>
         </form>
     </plex-layout-main>
 
 
-    <plex-layout-sidebar>
-        <div class="row mb-1">
-            <div class="col text-center">
-                <img *ngIf="!fotoProfesional" class="img-thumbnail" src='data:image/svg+xml;charset=utf-8,<svg%20version%3D"1.1"%20id%3D"Layer_4"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"%20xmlns%3Axlink%3D"http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink"%20x%3D"0px"%20y%3D"0px"%0D%0A%09%20width%3D"480px"%20height%3D"535px"%20viewBox%3D"0%200%20480%20535"%20enable-background%3D"new%200%200%20480%20535"%20xml%3Aspace%3D"preserve">%0D%0A<g%20id%3D"Layer_3">%0D%0A%09<linearGradient%20id%3D"SVGID_1_"%20gradientUnits%3D"userSpaceOnUse"%20x1%3D"240"%20y1%3D"535"%20x2%3D"240"%20y2%3D"4.882812e-04">%0D%0A%09%09<stop%20%20offset%3D"0"%20style%3D"stop-color%3A%23C5C5C5"%2F>%0D%0A%09%09<stop%20%20offset%3D"1"%20style%3D"stop-color%3A%239A9A9A"%2F>%0D%0A%09<%2FlinearGradient>%0D%0A%09<rect%20fill%3D"url%28%23SVGID_1_%29"%20width%3D"480"%20height%3D"535"%2F>%0D%0A<%2Fg>%0D%0A<g%20id%3D"Layer_2">%0D%0A%09<path%20fill%3D"%23FFFFFF"%20d%3D"M347.5%2C250c0%2C59.375-48.125%2C107.5-107.5%2C107.5c-59.375%2C0-107.5-48.125-107.5-107.5%0D%0A%09%09c0-59.375%2C48.125-107.5%2C107.5-107.5C299.375%2C142.5%2C347.5%2C190.625%2C347.5%2C250z"%2F>%0D%0A%09<path%20fill%3D"%23FFFFFF"%20d%3D"M421.194%2C535C413.917%2C424.125%2C335.575%2C336.834%2C240%2C336.834c-95.576%2C0-173.917%2C87.291-181.194%2C198.166%0D%0A%09%09H421.194z"%2F>%0D%0A<%2Fg>%0D%0A<%2Fsvg>'>
-                <img *ngIf="fotoProfesional" [src]="fotoProfesional" class="img-thumbnail" />
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col">
-                <label>Nombre y apellido</label>
-                <strong *ngIf="profesional.apellido">
-                    {{profesional.apellido | uppercase}}, {{profesional.nombre | uppercase}}
-                </strong>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col">
-                <label>Documento</label>
-                <span *ngIf="profesional.documento" class="mr-1">
-                    {{ profesional.documento }}
-                </span>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col">
-                <label>Fecha de nacimiento</label>
-                <span *ngIf="profesional.fechaNacimiento">
-                    {{ profesional.fechaNacimiento | fecha }}
-                </span> |
-                <span *ngIf="profesional.fechaNacimiento">
-                    {{ profesional | edad }}
-                </span>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col">
-                <label>Sexo / Género</label>
-                <span *ngIf="profesional.sexo">
-                    {{ profesional | sexo }}
-                </span>
-            </div>
-        </div>
-        <div class="row mb-1" *ngIf="profesional.sexo && profesional.documento">
-            <div class="col">
-                <plex-button type="primary btn-sm" [disabled]="validado" icon="account"
-                             label="Validar con servicios de Renaper" (click)="renaperVerification(profesional)">
-                </plex-button>
-                <plex-button type="primary btn-sm" [disabled]="!validado" *ngIf="seEstaCreandoProfesional" icon="undo" label="Deshacer"
-                             (click)="validado = false;"></plex-button>
-
-            </div>
-        </div>
-
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="DETALLE" size="md">
+            <plex-button *ngIf="profesional.sexo && profesional.documento" type="info" size="sm" [disabled]="validado"
+                         label="Validar Renaper" (click)="renaperVerification(profesional)"></plex-button>
+            <plex-button *ngIf="profesional.sexo && profesional.documento && seEstaCreandoProfesional" type="warning"
+                         size="sm" [disabled]="!validado" label="Deshacer" (click)="validado = false;"></plex-button>
+        </plex-title>
+        <plex-detail size="lg">
+            <img *ngIf="fotoProfesional" [src]="fotoProfesional">
+            <div *ngIf="profesional.apellido || profesional.nombre" title> {{ profesional.apellido | uppercase }}, {{
+                profesional.nombre | uppercase}}</div>
+            <div *ngIf="profesional.documento" subtitle> {{ profesional.documento }} </div>
+            <plex-label *ngIf="profesional.fechaNacimiento" titulo="Fecha de Nacimiento"
+                        subtitulo="{{ profesional.fechaNacimiento | fecha }}">
+            </plex-label>
+            <plex-label *ngIf="profesional.fechaNacimiento" titulo="Edad" subtitulo="{{ profesional | edad }}">
+            </plex-label>
+            <plex-label *ngIf="profesional.sexo" titulo="Sexo" subtitulo="{{ profesional | sexo }}"></plex-label>
+        </plex-detail>
     </plex-layout-sidebar>
-
-    <plex-layout-footer>
-        <plex-button label="volver" type="danger" position="left" routerLink='/tm/profesional'></plex-button>
-        <plex-button *ngIf='mostrarBtnGuardar' label="Guardar" type="success" position="right" [disabled]="!formulario.valid"
-                     [validateForm]="formulario" (click)='save($event)'></plex-button>
-    </plex-layout-footer>
 </plex-layout>
