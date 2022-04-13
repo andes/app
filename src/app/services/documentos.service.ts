@@ -46,6 +46,12 @@ export class DocumentosService {
         );
     }
 
+    descargarListadoSeguimiento(params, nombreArchivo: string): Observable<any> {
+        return this.server.post('/modules/seguimiento-paciente/seguimientoPaciente/listadoCsv', params, { responseType: 'blob' } as any).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
+    }
+
     descargarCenso(data, nombreArchivo: string): Observable<any> {
         return this.download('censo', data).pipe(
             saveAs(nombreArchivo, 'pdf')
