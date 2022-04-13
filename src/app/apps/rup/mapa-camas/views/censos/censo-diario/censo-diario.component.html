@@ -3,31 +3,28 @@
         <plex-title titulo="Censo Diario">
             <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
         </plex-title>
-        <fieldset>
-            <div class="row">
-                <div class="col-md-3">
-                    <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()"
-                                   [debounce]="600">
-                    </plex-datetime>
-                </div>
-                <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">
-                    <plex-select label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
-                                 [data]="unidadesOranizativas" [required]="true">
-                    </plex-select>
-                </div>
-                <div class="d-flex align-items-end col-md-2">
-                    <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
-                                 (click)="generarCensoDiario()">
-                    </plex-button>
-                    <plex-button [disabled]="!censo || requestInProgress"
-                                 [title]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
-                                 type="warning" (click)="descargarCenso()">
-                        <plex-icon name="download"></plex-icon>
-                    </plex-button>
-                </div>
+
+        <plex-grid size="sm" type="auto" cols="4">
+            <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()"
+                        [debounce]="600">
+            </plex-datetime>
+            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
+                        [data]="unidadesOranizativas" [required]="true" (change)="resetCenso()">
+            </plex-select>
+            <div class="d-flex align-items-end">
+                <plex-button class="mr-1" [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
+                            (click)="generarCensoDiario()">
+                </plex-button>
+                <plex-button class="mr-1" [disabled]="!censoPacientes.length" label="PDF" icon="download"
+                            [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'"
+                            type="warning" (click)="descargarCenso()">
+                </plex-button>
+                <plex-button [disabled]="!censoPacientes.length" icon="download" label="CSV" type="success" [tooltip]="(!censo) ? 'Debe generar el censo para descargarlo' : 'Descargar censo diario'" (click)="descargarCsv()">
+                </plex-button>
             </div>
-        </fieldset>
-        <fieldset *ngIf="censoPacientes.length > 0">
+        </plex-grid>
+
+        <ng-container *ngIf="censoPacientes.length">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -59,8 +56,8 @@
                     </tr>
                 </tbody>
             </table>
-        </fieldset>
-        <fieldset *ngIf="censo">
+        </ng-container>
+        <ng-container *ngIf="censo">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -93,6 +90,6 @@
                     </tr>
                 </tbody>
             </table>
-        </fieldset>
+        </ng-container>
     </plex-layout-main>
 </plex-layout>

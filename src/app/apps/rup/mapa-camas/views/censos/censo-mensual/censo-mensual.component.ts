@@ -4,6 +4,7 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { Location } from '@angular/common';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-censo-mensual',
@@ -49,7 +50,8 @@ export class CensosMensualesComponent implements OnInit {
         private mapaCamasService: MapaCamasService,
         private organizacionService: OrganizacionService,
         private servicioDocumentos: DocumentosService,
-        private location: Location
+        private location: Location,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -147,6 +149,21 @@ export class CensosMensualesComponent implements OnInit {
             () => this.requestInProgress = false,
             () => this.requestInProgress = false
         );
+    }
+
+    descargarCsv() {
+        this.servicioDocumentos.descargarCensoCsv({
+            tipo: 'mensual',
+            fechaDesde: moment(this.fechaDesde).toDate(),
+            fechaHasta: moment(this.fechaHasta).toDate(),
+            unidadOrganizativa: this.selectedUnidadOranizativa.conceptId
+        },
+        'CENSOMENSUAL'
+        ).subscribe(() => {
+            this.plex.toast('success', 'Descarga exitosa');
+        }, error => {
+            this.plex.toast('danger', 'Descarga fallida');
+        });
     }
 
     resetCenso() {
