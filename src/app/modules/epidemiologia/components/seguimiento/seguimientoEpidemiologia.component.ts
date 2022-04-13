@@ -11,6 +11,7 @@ import { SemaforoService } from 'src/app/modules/semaforo-priorizacion/service/s
 import { estadosSeguimiento as estados } from '../../constantes';
 import { Plex } from '@andes/plex';
 import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
+import { DocumentosService } from 'src/app/services/documentos.service';
 
 @Component({
     selector: 'seguimiento-epidemiologia',
@@ -47,6 +48,7 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
     public orderBy = [{ id: 'prioridad', label: 'Prioridad' }, { id: 'fecha', label: 'Fecha' }];
     public orden = 'prioridad';
     public collapse = false;
+    public itemsOrden = [];
 
     constructor(
         private seguimientoPacientesService: SeguimientoPacientesService,
@@ -56,8 +58,9 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         private router: Router,
         private semaforoService: SemaforoService,
         private plex: Plex,
-        private auth: Auth) {
-    }
+        private auth: Auth,
+        private documentosService: DocumentosService
+    ) { }
 
     ngOnInit(): void {
         if (!this.auth.getPermissions('epidemiologia:seguimiento:?').length) {
@@ -65,29 +68,39 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
         }
         this.esAuditor = this.auth.check('epidemiologia:seguimiento:auditoria');
         this.organizacion = this.auth.organizacion;
+        this.itemsOrden.push({
+            'label': 'Prioridad', handler: () => {
+                this.orden = 'prioridad';
+                this.buscar();
+            }
+        },
+        {
+            'label': 'Fecha', handler: () => {
+                this.orden = 'fecha';
+                this.buscar();
+            }
+        });
     }
 
     volverInicio() {
         this.router.navigate(['../epidemiologia'], { relativeTo: this.route });
     }
 
-    buscar() {
+    private setQueryParams() {
         const estadosActivo = ['pendiente', 'seguimiento'];
         this.query = {
             fechaInicio: this.seguimientoPacientesService.queryDateParams(this.fechaDesde, this.fechaHasta),
             estado: this.estado?.id || estadosActivo,
             organizacionSeguimiento: this.auth.organizacion.id,
-            paciente: this.documento,
+            paciente: this.documento || undefined,
             sort: this.orden === 'prioridad' ? '-score.value score.fecha' : '-createdAt',
             limit: 20,
             profesional: this.profesional?.id,
             asignados: this.asignados ? !this.asignados : undefined
         };
-
         if (!this.esAuditor) {
             this.query.profesional = this.auth.profesional;
         }
-
         if (this.prioridad) {
             const scoreRange = [];
             if (this.prioridad.max) {
@@ -97,11 +110,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             } else {
                 scoreRange.push(this.prioridad.min);
             }
-
             this.query.score = scoreRange;
         }
+    }
 
-
+    buscar() {
+        this.setQueryParams();
         this.inProgress = true;
         this.lastResults.next(null);
         this.wrapper.desplegado = this.checkCollapse();
@@ -123,6 +137,12 @@ export class SeguimientoEpidemiologiaComponent implements OnInit {
             }),
             cache()
         );
+    }
+
+    descargarListadoCsv() {
+        this.setQueryParams();
+        const now = moment().format('DD-MM-hh-mm-ss');
+        this.documentosService.descargarListadoSeguimiento(this.query, `seguimiento ${now}`).subscribe();
     }
 
     private clearChecked() {

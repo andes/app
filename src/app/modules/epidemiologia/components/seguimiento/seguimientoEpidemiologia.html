@@ -34,14 +34,17 @@
                         </div>
                     </plex-wrapper>
                 </plex-grid>
-                <plex-title titulo="listado" size="sm">
-                    <plex-label titulo="Orden: " class="mr-2"></plex-label>
-                    <plex-radio [(ngModel)]="orden" [data]="orderBy" name="orden" (change)="buscar()" type="horizontal">
-                    </plex-radio>
-                </plex-title>
             </form>
             <div *ngIf='(seguimientos$ | async)?.length'>
-                <plex-list [striped]="false" height="calc(100vh - 269px)" (scrolled)="onScroll()">
+                <plex-list [striped]="false" height="calc(100vh - 280px)" (scrolled)="onScroll()">
+                    <plex-title titulo="listado" size="md">
+                        <plex-dropdown size="sm" type="info" class="mr-1" [right]="true" label="Ordenar"
+                                       [items]="itemsOrden">
+                        </plex-dropdown>
+                        <plex-button type="info" size="sm" icon="download" (click)="descargarListadoCsv()"
+                                     tooltip="Descargar csv">
+                        </plex-button>
+                    </plex-title>
                     <plex-item>
                         <plex-bool *ngIf="esAuditor" name="all" (change)="selectAll($event)" [(ngModel)]="allSelected">
                         </plex-bool>
