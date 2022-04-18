@@ -48,6 +48,10 @@
                                              label="Organización origen" placeholder="Seleccione la organización"
                                              labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                                 </plex-select>
+                                <plex-select *ngIf="!asignadas" [(ngModel)]="profesionalDestino" name="Equipo de salud" tmProfesionales
+                                                label="Equipo de salud" placeholder="Buscar por equipo de salud"
+                                                (change)="cargarSolicitudes()" [closeAfterSelect]="true">
+                                </plex-select>
                                 <plex-select [(ngModel)]="prioridadEntrada" [data]="prioridades" name="prioridad"
                                              label="Prioridad" ngModelOptions="{standalone: true}"
                                              (change)="cargarSolicitudes()">
