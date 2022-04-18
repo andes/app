@@ -69,6 +69,10 @@
                                          placeholder="Ingrese concepto..."
                                          (getData)="getSnomed(field.snomedCodeOrQuery,$event)" [readonly]="!editFicha">
                             </plex-select>
+                            <plex-select *ngSwitchCase="'selectStatic'" [label]="field.label?field.label:field.key"
+                                         grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                         [required]="field.required" [data]="field.items" [readonly]="!editFicha">
+                            </plex-select>
                             <!--Campos opcionales exclusivos de la ficha covid-->
                             <!--Usuario-->
                             <plex-select *ngIf="field.key==='funcionusuario'"
