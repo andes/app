@@ -24,6 +24,15 @@ export class ValorFechaComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor) {
             this.registro.valor = null;
         }
+        if (!this.soloValores) {
+            // Observa cuando cambia la propiedad 'valor' en otro elemento RUP
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange();
+                }
+            });
+        }
     }
 
     onChange() {

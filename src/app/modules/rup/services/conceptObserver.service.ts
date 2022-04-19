@@ -20,9 +20,8 @@ export class ConceptObserverService {
 
             this.observers[registro.concepto.conceptId] = new BehaviorSubject<IPrestacionRegistro>(registro);
         }
-        // Filtra para que notifique al mismo elemento que lo generó el cambio
+        // Filtra para que notifique al mismo elemento que generó el cambio
         return this.observers[registro.concepto.conceptId].pipe(filter((value, index) => value.id !== registro.id));
-    // return this.observers[registro.concepto.conceptId];
     }
 
     /**
@@ -38,7 +37,7 @@ export class ConceptObserverService {
     }
 
     /**
-   * Limpia los observers para que no aparezcan valores los valores en una consulta nueva
+   * Limpia los observers para que no aparezcan los valores en una consulta nueva
    *
    */
 
