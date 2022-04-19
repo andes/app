@@ -10,6 +10,7 @@ $orange: #ff8d22;
     display: flex;
     margin: 2px 0 3px 0;
     border-bottom: 1px solid $blue;
+
     .btn-prev,
     .btn-next {
         width: 20px;
@@ -19,24 +20,28 @@ $orange: #ff8d22;
         cursor: pointer;
         background: $blue;
         color: lightblue;
+
         &:hover {
             plex-icon {
                 color: $dark-blue;
             }
         }
+
         &.disabled {
             background: #35474e;
+
             plex-icon {
                 color: $dark-grey;
             }
         }
     }
-    .contenido-agenda{
+
+    .contenido-agenda {
         width: 100%;
         margin-left: 1rem;
         margin-right: 1rem;
 
-        plex-help{
+        plex-help {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,21 +49,27 @@ $orange: #ff8d22;
     }
 }
 
-.icono-agenda{   
-    plex-icon{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: solid 3px $orange;
-            border-radius: 50%;
-            padding: 0.75rem;
-            height: 3rem;
-            width: 3rem;
+.icono-agenda {
+    plex-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: solid 3px $orange;
+        border-radius: 50%;
+        padding: 0.75rem;
+        height: 3rem;
+        width: 3rem;
     }
 }
 
-.turnos_disponibles{
+.turnos_disponibles {
     margin-top: 0 !important;
     display: flex !important;
     justify-content: space-between !important;
+}
+
+.listado-turnos {
+    plex-grid {
+        margin-top: 0 !important;
+    }
 }
