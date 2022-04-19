@@ -13,8 +13,9 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;
     public hasRules = false;
+    public valorEditable; // Indica si se puede editar el resultado de la formula manualmente
     public habilitado = false;
-    public valorManual: Boolean = false;
+    public valorManual: Boolean = false; // Indica si el usuario efectivamente editó manualmente el resultado
 
     ngOnInit() {
         this.valorManual = this.registro.valorManual;
@@ -29,6 +30,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.formulaProvider.formula = this.params.formula;
         }
         this.hasRules = this.elementoRUP.rules?.length > 0;
+        this.valorEditable = this.elementoRUP.params?.valorEditable;
         this.emitChange2();
 
         this.addFact('value', this.registro.valor);
