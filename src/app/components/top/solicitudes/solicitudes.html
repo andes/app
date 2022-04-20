@@ -243,10 +243,12 @@
                                         type="info">
                                 {{prestacion.estadoActual.tipo}}
                             </plex-badge>
-                            <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.solicitud.turno"
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'validada' && prestacion.solicitud.turno"
                                         type="success">
                                 Turno Dado
                             </plex-badge>
+                            <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
+                                        type="success">Registro en HUDS</plex-badge>
                             <!-- Botones -->
                             <plex-button size="sm" type="danger" icon="delete" (click)="cancelar(prestacion)"
                                          title="Cancelar"
