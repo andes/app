@@ -1,3 +1,10 @@
+# [5.91.0](https://github.com/andes/app/compare/v5.90.0...v5.91.0) (2022-04-20)
+
+
+### Features
+
+* **rup:** completa campos fecha de conceptos repetidos ([#2618](https://github.com/andes/app/issues/2618)) ([f00b9f3](https://github.com/andes/app/commit/f00b9f3703313cd31ad8a067faf6f9bbbd13d984))
+
 # [5.90.0](https://github.com/andes/app/compare/v5.89.0...v5.90.0) (2022-04-13)
 
 
