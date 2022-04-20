@@ -45,13 +45,13 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             };
         });
 
-        if (!this.soloValores && this.params?.buscarAnterior) {
+        if (!this.soloValores && this.params?.buscarAnterior && !this.registro.valor) {
             // Busca la última consulta en la huds del paciente y pre-carga los valores
             this.prestacionesService.getRegistrosHuds(this.paciente.id, this.registro.concepto.conceptId).subscribe(consultas => {
                 if (consultas.length) {
                     const fechaPrestacion = moment(this.prestacion.updatedAt || this.prestacion.createdAt);
                     // filtramos por consultas menores a 9 meses
-                    consultas = consultas.filter(c => moment(c.fecha).add(9, 'month').diff(fechaPrestacion) > 0 && c.registro.valor)
+                    consultas = consultas.filter(c => moment(c.fecha).add(9, 'month').diff(fechaPrestacion) > 0 && c.registro.valor && !c.registro.valorManual)
                         .sort((a, b) => {
                             return moment(b.fecha).diff(moment(a.fecha));
                         });
@@ -60,7 +60,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
 
                     if (!esFutura) {
                         this.registro.registros.map(reg => {
-                            reg.valor = reg.valor || ultimaConsulta.registros.find(r => r.concepto.conceptId === reg.concepto.conceptId).valor;
+                            reg.valor = ultimaConsulta.registros.find(r => r.concepto.conceptId === reg.concepto.conceptId).valor;
                         });
                         this.emitChange2();
                         return;
