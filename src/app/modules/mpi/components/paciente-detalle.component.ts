@@ -5,6 +5,8 @@ import { ObraSocialCacheService } from '../../../services/obraSocialCache.servic
 import { Observable } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
+import { ModalMotivoAccesoHudsService } from '../../rup/components/huds/modal-motivo-acceso-huds.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -20,12 +22,13 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() reload: Boolean = false;
     @Input() showRelaciones = false;
     @Input() showDocumentos = false;
+    @Input() accesoHuds = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
     notasDestacadas = [];
-
-    documentacionPermiso = this.auth.check('mpi:paciente:documentacion');
+    hudsPermiso;
+    documentacionPermiso;
 
     get justificado() {
         return this.orientacion === 'vertical' ? 'center' : 'start';
@@ -170,11 +173,14 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     constructor(
         private obraSocialCacheService: ObraSocialCacheService,
         private pacienteService: PacienteService,
-        private auth: Auth
-    ) {
-    }
+        private auth: Auth,
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
+        this.hudsPermiso = this.auth.check('huds:visualizacionHuds');
+        this.documentacionPermiso = this.auth.check('mpi:paciente:documentacion');
     }
 
     ngOnChanges() {
@@ -220,5 +226,13 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
         }
+    }
+
+    showMotivoAcceso() {
+        this.motivoAccesoService.getAccessoHUDS(this.paciente).subscribe(motivo => {
+            if (motivo) {
+                this.router.navigate(['/huds/paciente/', this.paciente.id]);
+            }
+        });
     }
 }

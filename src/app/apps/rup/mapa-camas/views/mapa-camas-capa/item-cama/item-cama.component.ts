@@ -71,7 +71,7 @@ export class ItemCamaComponent implements OnChanges {
                 }
             });
         }
-        if (this.cama.registros) {
+        if (this.cama.registros?.length) {
             const respirador: any[] = this.cama.registros.filter(r => r.tipo === 'respirador');
             if (respirador.length > 0) {
                 this.equipos.usaRespirador = respirador.some(r => !r.fechaHasta);

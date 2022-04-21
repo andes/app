@@ -23,7 +23,7 @@ import { ElementosRUPModule } from './elementos-rup.module';
         HttpClientModule,
         SharedModule,
         ScrollingModule,
-        ElementosRUPModule,
+        ElementosRUPModule
     ],
     declarations: [
         ModalMotivoAccesoHudsComponent,
@@ -32,10 +32,6 @@ import { ElementosRUPModule } from './elementos-rup.module';
         SnomedBuscarComponent,
         SnomedLinkComponent,
         SnomedSinonimoComponent
-
-    ],
-    entryComponents: [
-        ModalMotivoAccesoHudsComponent
     ],
     exports: [
         ModalMotivoAccesoHudsComponent,
