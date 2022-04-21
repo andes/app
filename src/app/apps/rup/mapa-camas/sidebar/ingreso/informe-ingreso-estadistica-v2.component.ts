@@ -33,7 +33,12 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
         this.prestacion$ = this.resumenInternacion$.pipe(
-            switchMap(resumen => this.prestacionService.getById(resumen.idPrestacion, { showError: false })),
+            switchMap(resumen => {
+                if (resumen.idPrestacion) {
+                    return this.prestacionService.getById(resumen.idPrestacion, { showError: false });
+                }
+                return of(null);
+            }),
             catchError(() => of(null)),
             cache()
         );
