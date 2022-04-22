@@ -31,7 +31,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
         return moment(this.internacion.fechaIngreso).startOf('day');
     }
     get fechaMax() {
-        return moment(this.internacion.fechaEgreso).startOf('day');
+        return moment(this.internacion.fechaEgreso).endOf('day');
     }
     get horaMin() {
         if (this.dia && moment(this.dia).startOf('day').diff(this.fechaMin) === 0) {
@@ -40,10 +40,13 @@ export class NuevoRegistroSaludComponent implements OnInit {
         return null;
     }
     get horaMax() {
-        if (this.dia && moment(this.dia).startOf('day') === this.fechaMax && this.internacion.fechaEgreso) {
-            return this.internacion.fechaEgreso;
+        if (this.dia && moment(this.dia).endOf('day').diff(this.fechaMax) === 0) {
+            if (this.internacion.fechaEgreso) {
+                return this.internacion.fechaEgreso;
+            }
+            return moment();
         }
-        return moment(this.internacion.fechaEgreso).endOf('day');
+        return null;
     }
 
     constructor(
@@ -60,7 +63,8 @@ export class NuevoRegistroSaludComponent implements OnInit {
         this.mapaCamasService.historialInternacion$.pipe(
             map(estados => {
                 this.internacion.fechaIngreso = moment(estados[0].fechaIngreso);
-                this.internacion.fechaEgreso = moment(estados.find(e => e.extras?.egreso)?.fecha);
+                const egreso = estados.find(e => e.extras?.egreso)?.fecha;
+                this.internacion.fechaEgreso = egreso ? moment(egreso) : undefined;
             })
         ).subscribe();
     }
@@ -84,13 +88,13 @@ export class NuevoRegistroSaludComponent implements OnInit {
                 this.router.navigate(['rup/ejecucion', prestacion.id]);
             });
         }
-
     }
 
     changeTime() {
         if (this.hora) {
-            // para que vuelva a controlar el contenido del campo 'hora'
-            this.ngForm.controls.hora.setValue(this.hora);
+            // para ajustar el dia, mes y año de 'hora' segun 'dia' cada vez que se modifique
+            const hora = moment(this.hora);
+            this.hora = moment(this.dia || undefined).hours(hora.hours()).minutes(hora.minutes());
         }
     }
 
