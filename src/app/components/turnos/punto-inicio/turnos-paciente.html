@@ -40,7 +40,7 @@
 
 
                             <div class="col-md-6">
-                                <div *ngIf="turno && turno.profesionales.length>0">
+                                <div *ngIf="turno && turno.profesionales?.length">
                                     <div class="col-md">
                                         <strong>Equipo de Salud</strong>
                                         <div *ngFor="let profesional of turno.profesionales">
@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div
-                                     *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0 && turno.estado !== 'suspendido' && turno.paciente.documento">
+                                     *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales?.length && turno.estado !== 'suspendido' && turno.paciente.documento">
                                     <plex-radio *ngIf="turno.paciente.obraSocial"
                                                 [(ngModel)]="turno.paciente.obraSocial.nombre" name="os"
                                                 (change)="seleccionarObraSocial($event, turno)"
@@ -106,7 +106,7 @@
                                              (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
 
 
-                                <plex-button *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0 && turno.paciente.documento"
+                                <plex-button *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales?.length > 0 && turno.paciente.documento"
                                              class="float-right mr-1" type="info btn-sm" label="Recupero"
                                              (click)="showArancelamiento(turno)">
                                 </plex-button>

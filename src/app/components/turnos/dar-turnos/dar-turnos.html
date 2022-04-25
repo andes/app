@@ -113,9 +113,9 @@
                                 <plex-label size="md" titulo="Prestación"
                                             subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
                                 </plex-label>
-                                <plex-help *ngIf="agenda.profesionales.length !== 0 || agenda.espacioFisico" titulo=""
+                                <plex-help *ngIf="agenda.profesionales?.length || agenda.espacioFisico" titulo=""
                                            subtitulo="" type="help" size="sm" icon="information-variant">
-                                    <plex-label *ngIf="agenda.profesionales.length !== 0" size="md"
+                                    <plex-label *ngIf="agenda.profesionales?.length !== 0" size="md"
                                                 titulo="Equipo de Salud"
                                                 subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
                                     </plex-label>
