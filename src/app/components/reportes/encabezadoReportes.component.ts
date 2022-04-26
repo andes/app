@@ -6,9 +6,7 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 import { ZonaSanitariaService } from '../../../../src/app/services/zonaSanitaria.service';
 import { Observable } from 'rxjs';
 import { cache } from '@andes/shared';
-
-
-
+import { Cie10Service } from 'src/app/apps/mitos';
 @Component({
     selector: 'encabezadoReportes',
     templateUrl: 'encabezadoReportes.html',
@@ -26,10 +24,12 @@ export class EncabezadoReportesComponent implements OnInit {
     public horaInicio: any;
     public horaFin: any;
     public tipoReportes;
+    public reportes = false;
     public diagnosticos = [];
     public diagnostico;
     public inicio = true;
     public estaVacio = false;
+    public cie10;
     // Propiedades reporteC2
     public totalConsultas = 0;
     public totalMenor1 = 0;
@@ -55,7 +55,8 @@ export class EncabezadoReportesComponent implements OnInit {
         private router: Router,
         private agendaService: AgendaService,
         private zonaSanitariaService: ZonaSanitariaService,
-        public auth: Auth,
+        private auth: Auth,
+        public cie10Service: Cie10Service
     ) { }
 
     public ngOnInit() {
@@ -111,6 +112,11 @@ export class EncabezadoReportesComponent implements OnInit {
             } else {
                 this.parametros['zonaSanitaria'] = null;
             }
+        }
+        if (tipo === 'cie10') {
+            this.parametros['cie10'] = value.value ? this.cie10.codigo : null;
+        } else if (tipo === 'reporte') {
+            this.reportes = this.tipoReportes?.nombre === 'Reporte C2';
         }
     }
 
@@ -168,6 +174,8 @@ export class EncabezadoReportesComponent implements OnInit {
                 });
                 break;
             case 'Consultas por prestación':
+                delete this.parametros.cie10;
+                this.cie10 = null;
                 this.showCantidadConsultaXPrestacion = true;
                 this.showReporteC2 = false;
                 this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
@@ -182,5 +190,24 @@ export class EncabezadoReportesComponent implements OnInit {
 
     add(a, b) {
         return a + b;
+    }
+
+    codigoCIE10(event) {
+        if (event?.query) {
+            const query = {
+                nombre: event.query
+            };
+            this.cie10Service.get(query).subscribe((datos) => {
+                const cie10s = datos.map(dato => ({
+                    id: dato.id,
+                    codigo: dato.codigo,
+                    nombre: `(${dato.codigo})  ${dato.nombre}`
+                }));
+                event.callback(cie10s);
+            });
+
+        } else {
+            event.callback([]);
+        }
     }
 }

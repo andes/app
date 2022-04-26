@@ -22,8 +22,13 @@
                                  (change)="refreshSelection($event,'organizacion')" [(ngModel)]="organizacion"
                                  name="organizacion" [readonly]="totalOrganizaciones || zonaSanitaria">
                     </plex-select>
+                    <plex-select *ngIf="tipoReportes?.nombre === 'Reporte C2'" label="Diagnostico"
+                                 (change)="refreshSelection($event,'cie10')" [(ngModel)]="cie10" name="diagnostico"
+                                 (getData)="codigoCIE10($event)">
+                    </plex-select>
                     <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
-                                 label-field="Tipo de reportes" label="Seleccione reporte" [required]="true">
+                                 label-field="Tipo de reportes" label="Seleccione reporte" [required]="true"
+                                 (change)="refreshSelection($event,'reporte')">
                     </plex-select>
                 </plex-wrapper>
             </plex-grid>
