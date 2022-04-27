@@ -138,6 +138,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.view = this.mapaCamasService.view.getValue();
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
         this.prepagas$ = this.obraSocialService.getPrepagas();
         const pacienteID$ = this.handlerPacienteID();
@@ -177,7 +178,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
-            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.camaSelectedSegunView$,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.resumenInternacion$,
             pacienteID$.pipe(
@@ -187,7 +188,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 })
             )
         ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]) => {
-            this.view = view;
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;

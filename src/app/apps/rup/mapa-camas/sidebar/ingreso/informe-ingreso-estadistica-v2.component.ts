@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, combineLatest, of } from 'rxjs';
@@ -6,6 +6,7 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { notNull, cache } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-informe-ingreso-estadistica-v2',
@@ -22,11 +23,10 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     // EVENTOS
     @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
-    @Input() capa;
-    @Input() permisosIngreso;
 
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
+        public permisosMapaCamasService: PermisosMapaCamasService,
         private prestacionService: PrestacionesService
     ) { }
 

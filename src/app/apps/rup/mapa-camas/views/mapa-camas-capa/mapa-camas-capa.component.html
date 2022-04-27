@@ -4,15 +4,15 @@
             <plex-title titulo="Mapa de Camas">
                 <ng-container *ngIf="(estado$ | async) as estado">
                     <plex-button *ngIf="estado.listadoInternacion"
-                                 class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
-                                 (click)="verListadoInternacion()">
+                                class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
+                                (click)="verListadoInternacion()">
                     </plex-button>
                     <plex-button *ngIf="estado.historialMedico" class="mr-1"
-                                 size="sm" label="HISTORIAL" type="primary" (click)="verListadoInternacionMedico()">
+                                size="sm" label="HISTORIAL" type="primary" (click)="verListadoInternacionMedico()">
                     </plex-button>
                     <plex-dropdown *ngIf="(mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2') && permisosMapaCamasService.censo"
-                                   size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
-                                   [items]="itemsCensoDropdown">
+                                size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
+                                [items]="itemsCensoDropdown">
                     </plex-dropdown>
                     <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
                         <plex-icon name="atom"></plex-icon>

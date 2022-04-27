@@ -58,6 +58,7 @@ export class MapaCamasService {
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
     public resumenInternacion$: Observable<IResumenInternacion>;
+    public selectedResumen = new BehaviorSubject<IResumenInternacion>({ id: null } as any);
 
     public fechaActual$: Observable<Date>;
 
@@ -164,8 +165,10 @@ export class MapaCamasService {
         ).pipe(
             switchMap(([prestacion, cama, view, capa]) => {
                 if (view === 'listado-internacion') {
-                    if (prestacion.id) {
-                        return this.prestacionService.getById(prestacion.id, { showError: false });
+                    // estadistica || estadistica-v2 (listadoInternacion || listadoInternacionUnificado)
+                    const idInternacion = prestacion.id || this.selectedResumen.getValue().idPrestacion;
+                    if (idInternacion) {
+                        return this.prestacionService.getById(idInternacion, { showError: false });
                     }
                     return of(null);
                 }
@@ -227,13 +230,19 @@ export class MapaCamasService {
                 if (view === 'mapa-camas') {
                     return this.selectedCama;
                 }
-                // Para conseguir la cama de la internación!
+                // Para conseguir la cama de la internación desde el listado
                 return combineLatest(
-                    this.snapshot$,
-                    this.selectedPrestacion
+                    this.selectedPrestacion,
+                    this.selectedResumen
                 ).pipe(
-                    map(([camas, prestacion]) => {
-                        return camas.find(c => c.idInternacion === prestacion.id);
+                    switchMap(([prestacion, resumen]) => {
+                        const internacion = {
+                            id: prestacion.id || resumen.id,
+                            fecha: prestacion.ejecucion?.fecha || resumen.fechaIngreso
+                        };
+                        return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
+                            map(camas => camas[0])
+                        );
                     })
                 );
             })
@@ -356,6 +365,13 @@ export class MapaCamasService {
             return this.selectedPrestacion.next({ id: null } as any);
         }
         this.selectedPrestacion.next(prestacion);
+    }
+
+    selectResumen(resumen: IResumenInternacion) {
+        if (!resumen) {
+            return this.selectedResumen.next({ id: null } as any);
+        }
+        this.selectedResumen.next(resumen);
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable, estado, equipamiento: ISnomedConcept[]) {

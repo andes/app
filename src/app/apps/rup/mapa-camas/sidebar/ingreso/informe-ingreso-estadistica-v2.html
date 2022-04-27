@@ -3,7 +3,7 @@
     <ng-container *ngIf="prestacion$ | async as prestacion; else sinInforme">
         <plex-title titulo="INGRESO" size="md">
             <ng-container *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                <plex-button *ngIf="permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning"
+                <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso" icon="pencil" type="warning"
                             size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
                 <ng-content></ng-content>
@@ -65,10 +65,10 @@
 
     <ng-template #sinInforme>
         <plex-title titulo="INGRESO" size="md">
-            <plex-button *ngIf="capa === 'estadistica-v2' && permisosIngreso" tooltip="Completar informe" icon="lapiz-documento" type="warning"
+            <plex-button *ngIf="mapaCamasService.capa === 'estadistica-v2' && permisosMapaCamasService.ingreso" tooltip="Completar informe" icon="lapiz-documento" type="warning"
                             size="sm" class="mr-1" (click)="toggleEdit()">
             </plex-button>
-            <plex-button *ngIf="capa !== 'estadistica-v2' && permisosIngreso" tooltip="Editar ingreso" icon="pencil" type="warning" size="sm"
+            <plex-button *ngIf="mapaCamasService.capa !== 'estadistica-v2' && permisosMapaCamasService.ingreso" tooltip="Editar ingreso" icon="pencil" type="warning" size="sm"
                         (click)="toggleEdit()" class="mr-1">
             </plex-button>
         </plex-title>

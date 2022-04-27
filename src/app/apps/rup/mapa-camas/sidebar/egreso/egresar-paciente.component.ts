@@ -149,11 +149,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             first(),
             switchMap(([capa, prestacion]) => {
                 if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-camas')) {
-                    const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                    const paciente = prestacion.paciente.id;
-
-                    const desde = moment(fecha).subtract(12, 'hours').toDate();
-                    const hasta = moment(fecha).add(12, 'hours').toDate();
+                    /*  Si es capa estadistica va a existir la prestacion pero no el resumen.
+                        Si es capa medica la que realiza el egreso, puede que estadistica-v2 aun no haya cargado el informe de ingreso.
+                        En este caso particular, permitimos el egreso y sacamos la fecha de ingreso del resumen.
+                    */
+                    const fechaIngreso = prestacion?.ejecucion.registros[0].valor.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
+                    const paciente = prestacion?.paciente.id || this.resumen.paciente.id;
+                    const desde = moment(fechaIngreso).subtract(12, 'hours').toDate();
+                    const hasta = moment(fechaIngreso).add(12, 'hours').toDate();
 
                     return this.internacionResumenService.search({
                         organizacion: this.auth.organizacion.id,
@@ -263,6 +266,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setFecha(this.fecha);
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
+            // si se está egresando con fusion de capas puede que estadistica-v2 aun no haya cargado el informe
+            if (this.capa === 'estadistica-v2' && !this.informeIngreso?.fechaIngreso) {
+                this.plex.info('warning', 'Antes de egresar al paciente debe cargar el informe de ingreso.');
+                return;
+            }
             this.setDiasEstada();
             this.checkEstadoCama();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
@@ -426,7 +434,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     setDiasEstada() {
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
-            const fechaIngreso = this.informeIngreso.fechaIngreso;
+            const fechaIngreso = this.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
             const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
             this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
         }

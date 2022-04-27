@@ -6,8 +6,8 @@
     <ng-container *ngIf="mostrar === 'ingreso'">
         <ng-container *ngIf="!editar">
             <!-- ESTADISTICA-V2 -->
-            <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')" [capa]='capa'
-                        [permisosIngreso]='permisosMapaCamasService.ingreso' (toggleEditar)="toggleEdit()">
+            <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (cancel)="activatedOption('ingreso')"
+                        (toggleEditar)="toggleEdit()">
                 <ng-container *ngIf="anular$ | async">
                     <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
                                     (click)="onAnularInternacion()">

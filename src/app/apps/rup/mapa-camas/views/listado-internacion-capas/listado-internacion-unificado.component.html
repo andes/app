@@ -14,8 +14,8 @@
             </plex-title>
 
             <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
-                [class.selected]="internacion.id === idInternacionSelected"
-                (click)="seleccionarPrestacion(internacion)">
+                    [class.selected]="internacion.id === idInternacionSelected"
+                    (click)="seleccionarInternacion(internacion)">
                 <td *plTableCol="'nombre'">
                     {{internacion.paciente | nombre }}
                 </td>
@@ -38,13 +38,13 @@
                     </span>
                 </td>
                 <td *plTableCol="'obraSocial'">
-                    {{ internacion.idPrestacion?.paciente.obraSocial?.nombre }}
+                    {{ internacion.idPrestacion?.paciente?.obraSocial?.nombre }}
                 </td>
                 <td *plTableCol="'unidadOrganizativa'">
                     {{ internacion.idPrestacion?.unidadOrganizativa?.term }}
                 </td>
                 <td *plTableCol="'estado'">
-                    {{internacion.idPrestacion?.estadoActual.tipo }}
+                    {{internacion.idPrestacion?.estadoActual?.tipo }}
                 </td>
                 <td *plTableCol="'informe'">
                     <plex-badge *ngIf="internacion.idPrestacion" type="success"> completo</plex-badge>
