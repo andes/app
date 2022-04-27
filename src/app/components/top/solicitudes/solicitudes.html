@@ -129,7 +129,10 @@
                                 <plex-badge *ngIf="estado === 'referida'" type="warning">
                                     REFERIDA
                                 </plex-badge>
-
+                                <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" class="mr-1" type="info" tooltip="Agenda Virtual"
+                                            tooltipPosition="top">
+                                    <plex-icon name="monitor" size="md"></plex-icon>
+                                </plex-badge>
                                 <ng-container *ngIf="prestacion | botonesSolicitud as botones">
                                     <plex-button size="sm" *ngIf="botones.auditar" icon="lock-alert" type="info"
                                                  (click)="$event.stopPropagation();auditar(prestacion)"
