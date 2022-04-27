@@ -13,13 +13,23 @@
             </carpeta-paciente>
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
-            <ng-container *ngIf="prestacion?.id">
-                <plex-button *ngIf="!cama?.esCensable && !esInternacionCensable && (capa === 'estadistica' || capa === 'estadistica-v2')" type="warning"
-                            label="Convertir en censable" size="sm" (click)="setValueCensable()">
+            <ng-container *ngIf="prestacion?.id && !cama.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+                <plex-button *ngIf="!esInternacionCensable" type="warning"
+                            label="Convertir en censable" size="sm" (click)="togglePrestacionCensable()">
                 </plex-button>
-                <plex-badge *ngIf="!cama?.esCensable && esInternacionCensable" type="info" size="sm">
-                    Censable
-                    <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="setValueCensable()">
+                <plex-badge *ngIf="esInternacionCensable" type="info" size="sm">
+                    <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="togglePrestacionCensable()">
+                    </plex-button>
+                </plex-badge>
+            </ng-container>
+
+            <ng-container *ngIf="prestacion?.id && cama.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+                <plex-button *ngIf="!esInternacionNoCensable" type="warning"
+                            label="Convertir en no censable" size="sm" (click)="togglePrestacionNoCensable()">
+                </plex-button>
+                <plex-badge *ngIf="esInternacionNoCensable" type="info" size="sm">
+                    No Censable
+                    <plex-button tooltip="Deshacer" size="sm" icon="undo" (click)="togglePrestacionNoCensable()">
                     </plex-button>
                 </plex-badge>
             </ng-container>
