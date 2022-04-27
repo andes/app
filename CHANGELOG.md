@@ -1,3 +1,17 @@
+# [5.92.0](https://github.com/andes/app/compare/v5.91.0...v5.92.0) (2022-04-27)
+
+
+### Bug Fixes
+
+* **RUP:** buscador clasificacion rup card ([#2623](https://github.com/andes/app/issues/2623)) ([ef9765d](https://github.com/andes/app/commit/ef9765d8c81912ac039a419dd6ef315d00f12f20))
+* **RUP-313:** Error en formulas ([#2628](https://github.com/andes/app/issues/2628)) ([4d3387f](https://github.com/andes/app/commit/4d3387fc8131310c85bef820a52632c81d43b641))
+
+
+### Features
+
+* **form:** selectStatic ([#2626](https://github.com/andes/app/issues/2626)) ([b15f4a9](https://github.com/andes/app/commit/b15f4a960e95cfa0964693bfed62db95df97ae46))
+* **MPI-378:** Relaciones de un paciente ([#2622](https://github.com/andes/app/issues/2622)) ([1975159](https://github.com/andes/app/commit/19751596002feb342697aca84af4414281fbf02f))
+
 # [5.91.0](https://github.com/andes/app/compare/v5.90.0...v5.91.0) (2022-04-20)
 
 
