@@ -1,0 +1,23 @@
+<plex-title titulo="Elementos seleccionables" size="sm">
+</plex-title>
+<plex-table [columns]="columns" #table="plTable">
+    <plex-table-columns>
+    </plex-table-columns>
+    <tr *ngFor="let item of fieldStatic?.items">
+        <td *plTableCol="'nombre'">{{item.nombre}}</td>
+        <td *plTableCol="'acciones'">
+            <plex-icon size="sm" type="danger" name="delete" (click)="deleteItem(item)" class="hover">
+            </plex-icon>
+        </td>
+    </tr>
+    <tr>
+        <td *plTableCol="'nombre'">
+            <plex-text size="sm" name="nombre" [(ngModel)]="nuevoItem.nombre">
+            </plex-text>
+        </td>
+        <td *plTableCol="'acciones'">
+            <plex-icon size="sm" type="success" name="mas" class="hover" (click)="addItem()">
+            </plex-icon>
+        </td>
+    </tr>
+</plex-table>

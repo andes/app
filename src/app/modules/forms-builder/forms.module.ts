@@ -11,12 +11,14 @@ import { FormsListComponent } from './components/forms-list/forms-list.component
 import { FormsRouting } from './forms.routing';
 import { FormsResolver } from './resolver/forms.resolver';
 import { FormResourcesService } from './services/resources.service';
+import { SelectStaticComponent } from './components/select-static/select-static.component';
 
 @NgModule({
     // prettier-ignore
     declarations: [
         AppFormsCrudComponent,
-        FormsListComponent
+        FormsListComponent,
+        SelectStaticComponent
     ],
     // prettier-ignore
     imports: [

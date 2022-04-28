@@ -16,6 +16,7 @@ export interface Form {
             label: string;
             type: string;
             description: string;
+            items: any;
             snomedCodeOrQuery: string;
             required: boolean;
             subfilter: boolean;
