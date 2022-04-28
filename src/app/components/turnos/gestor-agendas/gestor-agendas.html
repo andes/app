@@ -43,8 +43,8 @@
                                  class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-8' : 'col-4'}}">
                                 <plex-select [(ngModel)]="prestaciones"
                                              (change)="refreshSelection($event,'prestaciones')"
-                                             tmPrestaciones="turnos:planificarAgenda:prestacion:?" preload="true"
-                                             name="prestaciones" label="Prestación">
+                                             tmPrestaciones="turnos:planificarAgenda:prestacion:?" ambito="ambulatorio"
+                                             preload="true" name="prestaciones" label="Prestación">
                                 </plex-select>
                             </div>
                             <div

@@ -41,8 +41,8 @@
                             <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones"
                                          label="Tipos de prestación"
                                          tmPrestaciones="turnos:planificarAgenda:prestacion:?" preload="true"
-                                         [multiple]="true" [required]="true" (change)="cambioPrestaciones()"
-                                         [closeAfterSelect]="true">
+                                         ambito="ambulatorio" [multiple]="true" [required]="true"
+                                         (change)="cambioPrestaciones()" [closeAfterSelect]="true">
                             </plex-select>
                         </div>
                     </div>
