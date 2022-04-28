@@ -14,7 +14,6 @@ import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
-
 @Component({
     selector: 'app-mapa-camas-capa',
     templateUrl: 'mapa-camas-capa.component.html',
@@ -84,7 +83,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     ) { }
 
-
     ngOnDestroy() {
         this.ws.disconnect();
     }
@@ -140,20 +138,12 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             })
         );
 
-
         this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
         this.mapaCamasService.select(null);
 
         this.organizacion = this.auth.organizacion.id;
-
-        this.mapaCamasService.maquinaDeEstado$.pipe(take(1)).subscribe((estado) => {
-            const columns = estado.columns;
-            if (columns) {
-                this.columns = columns;
-                this.toggleColumns();
-            }
-        });
+        this.columns = this.mapaCamasService.columnsMapa.getValue();
 
         this.puedeVerHistorial$ = this.mapaCamasService.maquinaDeEstado$.pipe(
             map(estado => estado.historialMedico)
