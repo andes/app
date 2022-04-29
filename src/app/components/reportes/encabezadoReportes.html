@@ -18,8 +18,8 @@
                                  (change)="refreshSelection($event,'zonaSanitaria')" [(ngModel)]="zonaSanitaria"
                                  name="zona" [readonly]="totalOrganizaciones">
                     </plex-select>
-                    <plex-select tmOrganizaciones label="Organización" [data]="organizacion"
-                                 (change)="refreshSelection($event,'organizacion')" [(ngModel)]="organizacionSelected"
+                    <plex-select [data]="organizaciones$ | async" label="Organización"
+                                 (change)="refreshSelection($event,'organizacion')" [(ngModel)]="organizacion"
                                  name="organizacion" [readonly]="totalOrganizaciones || zonaSanitaria">
                     </plex-select>
                     <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"

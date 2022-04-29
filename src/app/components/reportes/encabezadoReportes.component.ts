@@ -21,11 +21,10 @@ export class EncabezadoReportesComponent implements OnInit {
     public showReporteC2 = false;
     public showCantidadConsultaXPrestacion = false;
     public opciones: any = [];
-    public organizacion: any = [];
+    public organizacion;
     public parametros;
     public horaInicio: any;
     public horaFin: any;
-    public organizacionSelected;
     public tipoReportes;
     public diagnosticos = [];
     public diagnostico;
@@ -46,6 +45,7 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalOtro = 0;
     public totalOrganizaciones = true;
     public zonaSanitaria$: Observable<any>;
+    public organizaciones$: Observable<any>;
     public zonaSanitaria;
 
 
@@ -53,7 +53,7 @@ export class EncabezadoReportesComponent implements OnInit {
         private router: Router,
         private agendaService: AgendaService,
         private zonaSanitariaService: ZonaSanitariaService,
-        private auth: Auth,
+        public auth: Auth,
     ) { }
 
     public ngOnInit() {
@@ -66,17 +66,14 @@ export class EncabezadoReportesComponent implements OnInit {
             horaFin: this.horaFin,
             organizacion: this.auth.organizacion.id
         };
-        this.organizacionSelected = this.auth.organizacion;
+        this.organizacion = this.auth.organizacion;
+        this.organizaciones$ = this.auth.organizaciones();
         this.opciones = [{
             id: 1,
             nombre: 'Reporte C2'
         }, {
             id: 2,
             nombre: 'Consultas por prestación'
-        }];
-        this.organizacion = [{
-            id: this.auth.organizacion.id,
-            nombre: this.auth.organizacion.nombre
         }];
         this.tipoReportes = this.opciones[0];
         this.zonaSanitaria$ = this.zonaSanitariaService.search().pipe(cache());
@@ -98,14 +95,15 @@ export class EncabezadoReportesComponent implements OnInit {
         }
         if (tipo === 'organizacion') {
             if (value.value !== null) {
-                this.parametros['organizacion'] = this.organizacionSelected.id;
+                this.parametros['organizacion'] = this.organizacion.id;
             } else {
                 this.parametros['organizacion'] = null;
+                this.organizacion = null;
             }
         }
         if (tipo === 'zonaSanitaria') {
             if (value.value) {
-                this.organizacionSelected = null;
+                this.organizacion = null;
                 this.parametros['zonaSanitaria'] = this.zonaSanitaria.id;
             } else {
                 this.parametros['zonaSanitaria'] = null;
