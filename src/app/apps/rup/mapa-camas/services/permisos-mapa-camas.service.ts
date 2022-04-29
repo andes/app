@@ -9,6 +9,7 @@ export class PermisosMapaCamasService {
     public camaCreate = false;
     public camaEdit = false;
     public camaBaja = false;
+    public camaPrestamo = false;
     public salaCreate = false;
     public salaEdit = false;
     public salaDelete = false;
@@ -32,6 +33,7 @@ export class PermisosMapaCamasService {
         this.camaCreate = this.auth.check(`${this.ambito}:cama:create`);
         this.camaEdit = this.auth.check(`${this.ambito}:cama:edit`);
         this.camaBaja = this.auth.check(`${this.ambito}:cama:baja`);
+        this.camaPrestamo = this.auth.check(`${this.ambito}:cama:prestamo`);
         this.salaCreate = this.auth.check(`${this.ambito}:sala:create`);
         this.salaEdit = this.auth.check(`${this.ambito}:sala:edit`);
         this.salaDelete = this.auth.check(`${this.ambito}:salaDelete`);
