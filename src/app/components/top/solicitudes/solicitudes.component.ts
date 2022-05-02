@@ -323,10 +323,8 @@ export class SolicitudesComponent implements OnInit {
             // params.referidas = true;
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
-            } else {
-                if (this.profesionalDestino?.id) {
-                    params['idProfesional'] = this.profesionalDestino.id;
-                }
+            } else if (this.profesionalDestino?.id) {
+                params['idProfesional'] = this.profesionalDestino.id;
             }
             if (this.estadoEntrada) {
                 if (this.estadoEntrada.id === 'turnoDado') {
