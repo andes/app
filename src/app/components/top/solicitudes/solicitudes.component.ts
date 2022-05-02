@@ -93,6 +93,7 @@ export class SolicitudesComponent implements OnInit {
     public estadoSalida;
     public organizacionesDestino = [];
     public organizacionesOrigen = [];
+    public profesionalDestino;
     public fechaDesdeEntrada: Date = moment().startOf('day').toDate();
     public fechaHastaEntrada: Date = moment().startOf('day').toDate();
     public fechaDesdeSalida: Date = moment().startOf('day').toDate();
@@ -322,6 +323,8 @@ export class SolicitudesComponent implements OnInit {
             // params.referidas = true;
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
+            } else if (this.profesionalDestino?.id) {
+                params['idProfesional'] = this.profesionalDestino.id;
             }
             if (this.estadoEntrada) {
                 if (this.estadoEntrada.id === 'turnoDado') {
