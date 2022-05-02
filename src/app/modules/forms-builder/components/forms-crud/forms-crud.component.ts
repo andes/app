@@ -31,6 +31,7 @@ export class AppFormsCrudComponent implements OnInit {
     public hasOcurrences = false;
     public isFormSnomedizable = false;
     public desabilitado = false;
+    public fieldToConfig = null;
     public form: any = {
         name: '',
         type: '',
@@ -39,6 +40,9 @@ export class AppFormsCrudComponent implements OnInit {
         fields: []
     };
     private formToUpdate: Form;
+    public fieldStatic = null;
+    public dependencia = null;
+    public dependencyData = [];
 
     constructor(
         private plex: Plex,
@@ -71,9 +75,9 @@ export class AppFormsCrudComponent implements OnInit {
                 const campos = [];
                 formulario.sections.forEach(s => {
                     s.fields.forEach(f => {
-                        f.type = this.tiposList.find(t => t.id === f.type) as any;
-                        if ((f.type as any).id === 'select') {
-                            f.resources = this.recursos.find(t => t.id === f.resources) as any;
+                        f.type = this.tiposList.find(t => t?.id === f.type) as any;
+                        if ((f.type as any)?.id === 'select') {
+                            f.resources = this.recursos.find(t => t?.id === f.resources) as any;
                         }
                         if (!this.fieldAssigned(fieldsAssigns, f, s)) {
                             f.sections = [];
@@ -148,6 +152,8 @@ export class AppFormsCrudComponent implements OnInit {
         if ($event.formValid) {
             const aux = [];
             this.form.fields.forEach(f => {
+                f.key = f.label.length > 16 ? f.label.replace(/ /g, '').slice(0, 16).toLowerCase()
+                    : f.label.replace(/ /g, '').toLowerCase();
                 const cloneField = Object.assign({}, f);
                 delete cloneField.sections;
                 const field: any = { ...cloneField };
@@ -158,7 +164,7 @@ export class AppFormsCrudComponent implements OnInit {
                 if (f.sections && f.sections.length > 0) {
                     f.sections.forEach(s => {
                         const r = aux.find(item => {
-                            if (item.seccion.name === s.name) {
+                            if (item.seccion.name === s?.name) {
                                 item.campos.push(cloneField);
                                 return true;
                             }
@@ -196,5 +202,26 @@ export class AppFormsCrudComponent implements OnInit {
                 });
             }
         }
+    }
+
+    setConfiguracion(field) {
+        this.fieldToConfig = field;
+        if (!field.items) {
+            field.items = [];
+        }
+        this.fieldStatic = field;
+    }
+
+    setDependencyData() {
+        this.dependencyData = [];
+        this.form.fields.forEach(field => {
+            if (field.type.id === 'boolean' && field.key !== this.fieldToConfig.key) {
+                this.dependencyData.push({ id: field.key, nombre: field.label });
+            }
+        });
+    }
+
+    close() {
+        this.fieldToConfig = null;
     }
 }
