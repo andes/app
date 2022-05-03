@@ -21,10 +21,10 @@ export class EncabezadoReportesComponent implements OnInit {
     public showReporteC2 = false;
     public showCantidadConsultaXPrestacion = false;
     public opciones: any = [];
+    public organizacion;
     public parametros;
     public horaInicio: any;
     public horaFin: any;
-    public organizacion;
     public tipoReportes;
     public diagnosticos = [];
     public diagnostico;
@@ -45,6 +45,7 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalOtro = 0;
     public totalOrganizaciones = true;
     public zonaSanitaria$: Observable<any>;
+    public organizaciones$: Observable<any>;
     public zonaSanitaria;
 
 
@@ -52,7 +53,7 @@ export class EncabezadoReportesComponent implements OnInit {
         private router: Router,
         private agendaService: AgendaService,
         private zonaSanitariaService: ZonaSanitariaService,
-        private auth: Auth,
+        public auth: Auth,
     ) { }
 
     public ngOnInit() {
@@ -66,6 +67,7 @@ export class EncabezadoReportesComponent implements OnInit {
             organizacion: this.auth.organizacion.id
         };
         this.organizacion = this.auth.organizacion;
+        this.organizaciones$ = this.auth.organizaciones();
         this.opciones = [{
             id: 1,
             nombre: 'Reporte C2'
@@ -96,6 +98,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.parametros['organizacion'] = this.organizacion.id;
             } else {
                 this.parametros['organizacion'] = null;
+                this.organizacion = null;
             }
         }
         if (tipo === 'zonaSanitaria') {
