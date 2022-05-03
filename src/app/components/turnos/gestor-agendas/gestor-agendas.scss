@@ -1,48 +1,14 @@
-
-
-.datos-agenda:not(span),
-.tipo-prestacion,
-.fechas {
-    font-size: 0.9rem;
-}
-
 .nombres-profesionales {
     div {
         font-size: 0.9rem;
     }
 }
 
-.table-lista-agendas {
-    
-    height:100%; 
-    tbody {
-        display: block;
-        height: 100%;
-        overflow: scroll;
-        td:not(:first) {
-            min-width: 200px !important;
-        }
-    }
-    thead,
-    tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        &:last-child{
-            margin-bottom: 2rem;
-        }
-    }
-    .small {
-        width: 5%;
-    }
-    .medium {
-        width: 20%;
-    }
-}
 
 ::ng-deep {
+
     // Se quita scroll del padre del contenedor con scroll infinito
-    body > app > plex-app > div > gestor-agendas > form > section > div > div.col.h-100 > plex-box > div > div {
+    body>app>plex-app>div>gestor-agendas>form>section>div>div.col.h-100>plex-box>div>div {
         overflow-y: hidden !important;
         padding-right: 0 !important;
     }

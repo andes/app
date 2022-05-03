@@ -97,7 +97,6 @@ import { EstadisticasAgendasComponent } from './components/turnos/dashboard/esta
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
-import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { ModalAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/modal-agenda.component';
@@ -263,8 +262,7 @@ registerLocaleData(localeEs, 'es');
         MapsComponent,
         PlanificarAgendaComponent,
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        GestorAgendasComponent,
-        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent, ModalAgendaComponent,
+        GestorAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
         RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
