@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
+import { FormPresetResourcesService } from '../../services/preset.resources.service';
 
 
 @Component({
@@ -43,6 +44,7 @@ export class AppFormsCrudComponent implements OnInit {
     public fieldStatic = null;
     public dependencia = null;
     public dependencyData = [];
+    itemsDropdown;
 
     constructor(
         private plex: Plex,
@@ -50,6 +52,7 @@ export class AppFormsCrudComponent implements OnInit {
         private location: Location,
         private route: ActivatedRoute,
         private formResourceService: FormResourcesService,
+        private formDefaultResourceService: FormPresetResourcesService,
         private auth: Auth,
         private router: Router
     ) { }
@@ -75,10 +78,7 @@ export class AppFormsCrudComponent implements OnInit {
                 const campos = [];
                 formulario.sections.forEach(s => {
                     s.fields.forEach(f => {
-                        f.type = this.tiposList.find(t => t?.id === f.type) as any;
-                        if ((f.type as any)?.id === 'select') {
-                            f.resources = this.recursos.find(t => t?.id === f.resources) as any;
-                        }
+                        this.setFieldType(f);
                         if (!this.fieldAssigned(fieldsAssigns, f, s)) {
                             f.sections = [];
                             f.sections.push(this.secciones.find(sec => sec.name === s.name) as any);
@@ -93,6 +93,17 @@ export class AppFormsCrudComponent implements OnInit {
                     this.router.navigate(['inicio']);
                 }
             }
+        });
+
+        this.loadDefaultResources();
+    }
+
+    private loadDefaultResources() {
+        this.formDefaultResourceService.search({}).subscribe((data: any) => {
+            this.itemsDropdown = data.map(d => ({
+                label: d.id,
+                handler: () => { this.loadPresetSection(d); }
+            }));
         });
     }
 
@@ -152,8 +163,9 @@ export class AppFormsCrudComponent implements OnInit {
         if ($event.formValid) {
             const aux = [];
             this.form.fields.forEach(f => {
-                f.key = f.label.length > 16 ? f.label.replace(/ /g, '').slice(0, 16).toLowerCase()
-                    : f.label.replace(/ /g, '').toLowerCase();
+                if (!f.key) {
+                    f.key = f.label.slice(0, 16).replace(/ /g, '').toLowerCase();
+                }
                 const cloneField = Object.assign({}, f);
                 delete cloneField.sections;
                 const field: any = { ...cloneField };
@@ -223,5 +235,21 @@ export class AppFormsCrudComponent implements OnInit {
 
     close() {
         this.fieldToConfig = null;
+    }
+
+    setFieldType(f) {
+        f.type = this.tiposList.find(t => t?.id === f.type) as any;
+        if ((f.type as any)?.id === 'select') {
+            f.resources = this.recursos.find(t => t?.id === f.resources) as any;
+        }
+    }
+
+    loadPresetSection(section) {
+        const fields = [...section.fields];
+        fields.forEach(f => {
+            f.sections = [this.secciones.find(s => section.id)];
+            this.setFieldType(f);
+        });
+        this.form.fields = [...this.form.fields, ...fields];
     }
 }
