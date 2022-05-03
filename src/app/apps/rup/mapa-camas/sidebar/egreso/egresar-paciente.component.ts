@@ -280,15 +280,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     guardar(valid) {
         if (valid.formValid) {
             this.disableButton = true;
-            if (this.capa === 'estadistica') {
+            if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
                 this.egresoExtendido();
             } else {
-                if (this.capa === 'estadistica-v2') {
-                    this.egresoExtendido();
-                } else {
-                    this.egresoSimplificado(this.estadoDestino);
-                }
-
+                this.egresoSimplificado(this.estadoDestino);
             }
             this.onSave.emit(null);
         } else {
@@ -342,7 +337,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
                 } else if (this.view === 'mapa-camas') {
-                    this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
                 this.disableButton = false;
@@ -398,7 +392,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }),
             ).subscribe(() => {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                if (this.view === 'listado-internacion') {
+                    this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                }
             }, () => {
                 this.plex.info('danger', 'Error al intentar actualizar los datos');
             });

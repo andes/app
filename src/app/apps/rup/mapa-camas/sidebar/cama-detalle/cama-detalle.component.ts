@@ -166,6 +166,7 @@ export class CamaDetalleComponent implements OnInit {
         }
     }
 
+    // Para la ejecucion de acciones de una cama, segun sus relaciones.
     accion(relacion) {
         this.accionCama.emit(relacion);
     }
@@ -184,9 +185,11 @@ export class CamaDetalleComponent implements OnInit {
             if ($event.accion === 'nuevo-registro') {
                 this.onNuevoRegistrio();
             }
+            if ($event.accion === 'nuevo-egreso') {
+                this.cancelar();
+            }
         }
     }
-
 
     onNuevoRegistrio() {
         this.accionCama.emit({ accion: 'nuevo-registro' });

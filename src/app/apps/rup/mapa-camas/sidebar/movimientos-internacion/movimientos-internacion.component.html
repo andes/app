@@ -1,18 +1,16 @@
-<plex-title titulo="Movimientos de Internación">
+<plex-title titulo="Movimientos de Internación" size="md">
+    <!-- HISTORIAL DE MOVIMIENTOS DE UN PACIENTE INTERNADO -->
     <ng-content></ng-content>
 </plex-title>
-<div class="row mb-1">
-    <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta"
-                       [debounce]="600">
-        </plex-datetime>
-    </div>
-    <div class="col">
+
+<plex-grid size="sm" type="full" cols="2" class="mb-1 mt-0">
+    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta"
+                [debounce]="600">
+    </plex-datetime>
         <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()" [min]="desde"
-                       [debounce]="600">
+                    [debounce]="600">
         </plex-datetime>
-    </div>
-</div>
+</plex-grid>
 
 <table class="table table-striped">
     <thead>
@@ -44,7 +42,10 @@
             </td>
             <td>
                 <small>
-                    <ng-container *ngIf="!movimiento.idInternacion">
+                    <ng-container *ngIf="movimiento.extras?.ingreso">
+                        INGRESO <br>
+                    </ng-container>
+                    <ng-container *ngIf="movimiento.extras?.egreso">
                         EGRESO <br>
                     </ng-container>
                     <ng-container *ngIf="!movimiento.idSalaComun">

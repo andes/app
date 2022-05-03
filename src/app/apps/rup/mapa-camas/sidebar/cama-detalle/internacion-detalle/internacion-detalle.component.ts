@@ -101,16 +101,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
             }
         });
 
-        this.mapaCamasService.selectedPrestacion.subscribe(prestacion => {
-            this.existeEgreso = prestacion?.ejecucion?.registros?.length > 1;
-            if (this.editar) {
-                this.editar = false;
-                this.accion.emit(null);
-            }
-        });
-
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map(historial => {
+                this.existeEgreso = historial.findIndex(mov => mov.extras?.egreso) > -1;
                 const tieneIDMov = historial.every(
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
                 );
@@ -159,6 +152,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     toggleEdit() {
         this.editar = !this.editar;
         this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+    }
+
+    // Notifica unicamente un nuevo egreso
+    notificarEgreso() {
+        this.accion.emit({ accion: 'nuevo-egreso' });
     }
 
     deshacerInternacion(completo: boolean) {

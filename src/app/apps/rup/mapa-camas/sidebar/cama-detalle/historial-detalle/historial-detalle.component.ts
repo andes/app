@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Subject, Observable, combineLatest } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { ISnapshot } from '../../../interfaces/ISnapshot';
@@ -43,7 +43,7 @@ export class HistorialDetalleComponent implements OnInit {
                 return this.mapaCamasService.historial('cama', filtros.desde, filtros.hasta);
             }),
             map((historial: ISnapshot[]) => {
-                return historial.filter(snap => snap.esMovimiento).sort((a, b) => {
+                return historial.sort((a, b) => {
                     const timeA = new Date(a.fecha).getTime();
                     const timeB = new Date(b.fecha).getTime();
                     return (timeB - timeA) !== 0 ? (timeB - timeA) : (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

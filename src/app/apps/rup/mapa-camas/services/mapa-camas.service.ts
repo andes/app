@@ -279,6 +279,10 @@ export class MapaCamasService {
         );
     }
 
+    /**
+     * Dado el estado actual de una cama, retorna los posibles estados finales segun las acciones
+     * que pueden ser llevadas a cabo en su estado actual
+     */
     private getEstadosRelacionesCama(cama: ISnapshot, estados: IMAQEstado[], relaciones: IMAQRelacion[]) {
         const relacionesPosibles = [];
         const estadoCama = estados.filter(est => cama.estado === est.key)[0];
@@ -525,22 +529,25 @@ export class MapaCamasService {
             this.capa2,
             this.selectedCama,
             this.selectedPrestacion,
+            this.selectedResumen,
             this.view
         ).pipe(
-            switchMap(([ambito, capa, selectedCama, selectedPrestacion, view]) => {
+            switchMap(([ambito, capa, selectedCama, selectedPrestacion, selectedResumen, view]) => {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
-                    } else if (view === 'listado-internacion' && selectedPrestacion.id) {
-                        if (this.capa !== 'estadistica') {
-                            return this.internacionResumenHTTP.search({ idPrestacion: selectedPrestacion.id }).pipe(
+                    } else if (view === 'listado-internacion') {
+                        if (this.capa !== 'estadistica' && selectedResumen.idPrestacion) {
+                            return this.internacionResumenHTTP.search({ idPrestacion: selectedResumen.idPrestacion }).pipe(
                                 switchMap(resumen => this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, resumen[0].id))
                             );
                         }
-                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
+                        if (selectedPrestacion.id) {
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
+                        }
                     }
                     return of([]);
                 }
