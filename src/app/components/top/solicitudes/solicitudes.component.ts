@@ -25,6 +25,7 @@ export class SolicitudesComponent implements OnInit {
     showDarTurnos: boolean;
     solicitudTurno: any;
     showAuditar = false;
+    diasIntervalo = 15;
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
@@ -104,6 +105,7 @@ export class SolicitudesComponent implements OnInit {
     public prestacionesDestinoSalida = [];
     public mostrarMasOpcionesSalida = false;
     public mostrarMasOpcionesEntrada = false;
+    public mostrarAlertaRangoDias = false;
 
     constructor(
         public auth: Auth,
@@ -136,9 +138,37 @@ export class SolicitudesComponent implements OnInit {
             this.fechaHastaEntrada = null;
             this.fechaDesdeSalida = null;
             this.fechaHastaSalida = null;
+            if (this.tipoSolicitud === 'entrada') {
+                this.fechaHastaEntrada = moment().startOf('day').toDate();
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
+            }
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
         this.buscarSolicitudes();
+    }
+
+    cambioFechaDesde() {
+        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        if (this.fechaDesdeEntrada) {
+            this.mostrarAlertaRangoDias = false;
+            if (!this.fechaHastaEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days');
+                this.mostrarAlertaRangoDias = true;
+            }
+            this.cargarSolicitudes();
+        }
+    }
+
+    cambioFechaHasta() {
+        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        if (this.fechaHastaEntrada) {
+            this.mostrarAlertaRangoDias = false;
+            if (!this.fechaDesdeEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
+                this.mostrarAlertaRangoDias = true;
+            }
+            this.cargarSolicitudes();
+        }
     }
 
     cambio(activeTab) {
