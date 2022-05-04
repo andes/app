@@ -1,3 +1,18 @@
+# [5.93.0](https://github.com/andes/app/compare/v5.92.0...v5.93.0) (2022-05-04)
+
+
+### Bug Fixes
+
+* **citas:** se agregan controles en agendas con profesionales null ([#2633](https://github.com/andes/app/issues/2633)) ([1ebbdaf](https://github.com/andes/app/commit/1ebbdafd7d4145dc9d081b2fae6ff98ffb363bbb))
+* **IN-414:** Header de la tabla al volver a la pantalla ([#2638](https://github.com/andes/app/issues/2638)) ([1c5148d](https://github.com/andes/app/commit/1c5148d4a34b783cb9b80c1316d5d00c780e84cf))
+
+
+### Features
+
+* **CITAS:** cambio distribucion de datos de agenda y agrega boton demanda rechazada ([#2627](https://github.com/andes/app/issues/2627)) ([a4f8f9b](https://github.com/andes/app/commit/a4f8f9bf4c0fff6b5aa111275ac8f96245349838))
+* **plan-indicaciones:** ejecutar prescripcion ([#2644](https://github.com/andes/app/issues/2644)) ([180e99c](https://github.com/andes/app/commit/180e99c16c7bd391b480cc2bb50d0261eb4cff91))
+* **TOP:** agregar campo de busqueda por profesional destino ([#2632](https://github.com/andes/app/issues/2632)) ([31ac620](https://github.com/andes/app/commit/31ac6209dc93997714e7791fc7b16062c1c3a393))
+
 # [5.92.0](https://github.com/andes/app/compare/v5.91.0...v5.92.0) (2022-04-27)
 
 
