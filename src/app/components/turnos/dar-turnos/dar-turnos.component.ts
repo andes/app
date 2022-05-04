@@ -1226,4 +1226,20 @@ export class DarTurnosComponent implements OnInit {
         this.router.navigate(['citas/sobreturnos', this.agenda.id], { queryParams: { paciente: this.paciente.id } });
     }
 
+    volver() {
+        // se ingresó desde monitoreo de inscriptos
+        if (this.solicitudVacunacion) {
+            this.afterDarTurno.emit(null);
+            this.plex.clearNavbar();
+            return;
+        }
+
+        // se ingresó desde citas
+        if (this._pacienteSeleccionado) {
+            this.afterDarTurno.emit(this.paciente);
+        } else {
+            this.resetBuscarPaciente();
+        }
+    }
+
 }
