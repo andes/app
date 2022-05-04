@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { ignoreElements, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
@@ -287,12 +287,11 @@ export class PlanIndicacionesComponent implements OnInit {
 
 
     onIndicacionesCellClick(indicacion, hora) {
-        // queda comentado para la primera version
-        // if (indicacion.estado.tipo !== 'draft') {
-        //     this.indicacionEventoSelected = indicacion;
-        //     this.horaSelected = hora;
-        //     this.indicacionView = null;
-        // }
+        if (indicacion.estado.tipo !== 'draft') {
+            this.indicacionEventoSelected = indicacion;
+            this.horaSelected = hora;
+            this.indicacionView = null;
+        }
     }
 
     onEventos(debeActualizar: boolean) {
