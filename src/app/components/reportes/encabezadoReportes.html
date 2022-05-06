@@ -28,8 +28,22 @@
                 </plex-wrapper>
             </plex-grid>
         </form>
-        <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos" (select)="diagnostico = $event"></reporteC2>
-        <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion" [diagnosticos]="diagnosticos">
+        <plex-title *ngIf="!inicio" titulo="Listado de reportes" size="sm"></plex-title>
+        <div *ngIf="!inicio && estaVacio" justify="center" class="h-50">
+            <plex-label titulo="No hay resultados para esta búsqueda" direction="column"
+                        subtitulo="Edite algún filtro y genere nuevamente un reporte" type="warning" size="xl"
+                        icon="close"></plex-label>
+        </div>
+        <div *ngIf="inicio" justify="center" class="h-50">
+            <plex-label titulo="Comience completando los filtros" direction="column"
+                        subtitulo="Elija las opciones de filtrado y luego haga click en el botón 'Generar Reporte'"
+                        type="info" size="xl" icon="magnify"></plex-label>
+        </div>
+        <reporteC2 *ngIf="showReporteC2 && diagnosticos.length" [diagnosticos]="diagnosticos"
+                   (select)="diagnostico = $event">
+        </reporteC2>
+        <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion && diagnosticos.length"
+                                     [diagnosticos]="diagnosticos">
         </cantidadConsultaXPrestacion>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="showReporteC2 && diagnostico" type="invert">
@@ -49,6 +63,4 @@
             </plex-item>
         </plex-list>
     </plex-layout-sidebar>
-
-
 </plex-layout>
