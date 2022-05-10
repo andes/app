@@ -41,6 +41,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     cambiarUO;
     listadoRecursos = false;
     camasDisponibles;
+    fecha$: Observable<Date>;
 
     puedeVerHistorial$: Observable<boolean>;
 
@@ -150,6 +151,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         );
 
         this.getSnapshot();
+
+        this.fecha$ = this.mapaCamasService.fecha2;
     }
 
     getSnapshot(fecha = null) {

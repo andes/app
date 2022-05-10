@@ -1,21 +1,24 @@
 <plex-layout main="8">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'">
-            <plex-title titulo="Mapa de Camas">
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
-                             label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
-                </plex-button>
-                <plex-button *ngIf="mapaCamasService.capa === 'estadistica' && puedeVerHistorial$ | async" class="mr-1"
-                             size="sm" label="HISTORIAL" type="primary" (click)="verListadoInternacionMedico()">
-                </plex-button>
-                <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
-                               size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
-                               [items]="itemsCensoDropdown">
-                </plex-dropdown>
-                <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
-                    <plex-icon name="atom"></plex-icon>
-                </plex-button>
-            </plex-title>
+            <ng-container *ngIf="fecha$ | async as fecha">
+                <plex-title titulo="Mapa de camas - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
+                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica'" class="mr-1" size="sm"
+                                 label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
+                    </plex-button>
+                    <plex-button *ngIf="mapaCamasService.capa === 'estadistica' && puedeVerHistorial$ | async"
+                                 class="mr-1" size="sm" label="HISTORIAL" type="primary"
+                                 (click)="verListadoInternacionMedico()">
+                    </plex-button>
+                    <plex-dropdown *ngIf="mapaCamasService.capa === 'estadistica' && permisosMapaCamasService.censo"
+                                   size="sm" label="VER CENSO" type="primary" class="d-inline-block mr-1" [right]="true"
+                                   [items]="itemsCensoDropdown">
+                    </plex-dropdown>
+                    <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
+                        <plex-icon name="atom"></plex-icon>
+                    </plex-button>
+                </plex-title>
+            </ng-container>
 
             <app-filtros-camas></app-filtros-camas>
 
