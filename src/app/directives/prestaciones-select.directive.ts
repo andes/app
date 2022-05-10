@@ -15,7 +15,7 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
 
     @Input() tmPrestaciones;
     @Input() preload = false;
-    @Input() ambito = null;
+    @Input() ambito;
 
     private subscription: Subscription = null;
     private lastCallSubscription: Subscription = null;
