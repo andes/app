@@ -592,8 +592,7 @@ export class MapaCamasService {
     getPaciente(paciente, _startWith = true) {
         if (!this.paciente$[paciente.id]) {
             this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
-                _startWith ? startWith(paciente) : map(res => res),
-                cache()
+                _startWith ? startWith(paciente) : map(res => res)
             );
         }
         return this.paciente$[paciente.id];
