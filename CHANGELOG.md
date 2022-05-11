@@ -1,3 +1,11 @@
+# [5.94.0](https://github.com/andes/app/compare/v5.93.0...v5.94.0) (2022-05-11)
+
+
+### Features
+
+* **IN-431:** Mostrar fecha y hora del mapa de cama ([#2648](https://github.com/andes/app/issues/2648)) ([9b4e6e5](https://github.com/andes/app/commit/9b4e6e503076c331eff4e79931c6f26f1b0f5d59))
+* **TOP:** Se agrega un control de periodo de tiempo para las prestaciones mostradas en la entrada de rup para un profesional ([#2643](https://github.com/andes/app/issues/2643)) ([fca007b](https://github.com/andes/app/commit/fca007b69303241b40885f857859b4767e3a02f7))
+
 # [5.93.0](https://github.com/andes/app/compare/v5.92.0...v5.93.0) (2022-05-04)
 
 
