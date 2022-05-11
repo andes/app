@@ -67,12 +67,12 @@
                 </plex-bool>
             </ng-container>
 
-            <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otro Diagnóstico"
+            <plex-select grow="full" (change)="showProcedimientos_causas()" label="Otros Diagnósticos"
                          [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
                          (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..." labelField="nombre">
             </plex-select>
 
-            <plex-select grow="full" label="Otras circunstancias"
+            <plex-select grow="full" label="Otras circunstancias que prolongan la internación"
                          [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias" name="otrasCircunstancias"
                          (getData)="codigoCIE10($event)" placeholder="buscar...">
             </plex-select>
