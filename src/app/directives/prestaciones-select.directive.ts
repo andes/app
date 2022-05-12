@@ -15,6 +15,7 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
 
     @Input() tmPrestaciones;
     @Input() preload = false;
+    @Input() ambito = null;
 
     private subscription: Subscription = null;
     private lastCallSubscription: Subscription = null;
@@ -38,12 +39,13 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
             this.subscription = this.plexSelect.getData.subscribe(($event) => {
                 const inputText: string = $event.query;
                 const permisos = this.tmPrestaciones || undefined;
+                const ambito = this.ambito;
 
                 if (inputText && inputText.length > 2) {
                     if (this.lastCallSubscription) {
                         this.lastCallSubscription.unsubscribe();
                     }
-                    this.lastCallSubscription = this.conceptosTurneables.search({ permisos, term: `^${inputText}` }).subscribe(result => {
+                    this.lastCallSubscription = this.conceptosTurneables.search({ permisos, ambito, term: `^${inputText}` }).subscribe(result => {
                         $event.callback(result);
                     });
 

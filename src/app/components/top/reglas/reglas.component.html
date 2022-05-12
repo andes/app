@@ -1,25 +1,25 @@
-
 <plex-layout [main]="6">
     <plex-layout-main>
         <form #form="ngForm">
             <plex-title titulo="Configuración de Reglas"></plex-title>
-            <div class="pt-2 pb-3" >
+            <div class="pt-2 pb-3">
                 <plex-label [tituloBold]="true" titulo="Organización Destino" subtitulo=""></plex-label>
                 <plex-label>{{ organizacionDestino.nombre }}</plex-label>
-                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" tmPrestaciones label="Prestación Destino"
-                            placeholder="Tipos de Prestación Destino" [required]="true" (change)="cargarReglas()">
+                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" tmPrestaciones ambito="ambulatorio"
+                             label="Prestación Destino" placeholder="Tipos de Prestación Destino" [required]="true"
+                             (change)="cargarReglas()">
                 </plex-select>
             </div>
-            
+
             <plex-title titulo="Organizaciones Origen" size="sm"></plex-title>
             <div justify="start">
-                <plex-select class="w-100 mr-1"[(ngModel)]="organizacion" name="organizacion" tmOrganizaciones
-                            placeholder="Seleccione la organización origen">
+                <plex-select class="w-100 mr-1" [(ngModel)]="organizacion" name="organizacion" tmOrganizaciones
+                             placeholder="Seleccione la organización origen">
                 </plex-select>
                 <plex-button icon="plus" type="info" tooltip="Agregar Organización" (click)="addOrganizacion()">
                 </plex-button>
             </div>
-            
+
             <plex-list *ngFor="let regla of reglas; let i=index" size="sm" (click)="activarRegla(i)">
                 <plex-item>
                     <plex-label *ngIf="regla.origen && regla.origen.organizacion">
@@ -42,28 +42,31 @@
         <plex-title titulo="Prestaciones Origen" size="sm"></plex-title>
         <div justify="start">
             <plex-select class="w-100 mr-1" [(ngModel)]="prestacionOrigen" name="prestacionOrigen" tmPrestaciones
-                        placeholder="prestacionOrigen">
+                         placeholder="prestacionOrigen">
             </plex-select>
             <plex-button icon="plus" type="info" tooltip="Agregar Prestación" (click)="addPrestacion()">
             </plex-button>
         </div>
 
-        <plex-list *ngFor="let prestacion of regla.origen.prestaciones; let i=index" size="sm" (click)="activarPrestacion(i)">
+        <plex-list *ngFor="let prestacion of regla.origen.prestaciones; let i=index" size="sm"
+                   (click)="activarPrestacion(i)">
             <plex-item case="capitalize">
-                <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}" [tituloBold]="false" subtitulo=""></plex-label>
-                <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}" label="Auditable">
+                <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}"
+                            [tituloBold]="false" subtitulo=""></plex-label>
+                <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"
+                           label="Auditable">
                 </plex-bool>
-                <plex-button icon="delete" type="danger" size="sm"  (click)="deletePrestacion(i)">
+                <plex-button icon="delete" type="danger" size="sm" (click)="deletePrestacion(i)">
                 </plex-button>
             </plex-item>
         </plex-list>
-    </plex-layout-sidebar>        
+    </plex-layout-sidebar>
 
     <plex-layout-footer>
         <plex-button position="left" type="danger" label="Volver" (click)="cancelar()">
         </plex-button>
         <plex-button position="right" type="success" label="Guardar" (click)="preSave()"
-                    [disabled]="form.invalid || !reglaCorrecta()">
+                     [disabled]="form.invalid || !reglaCorrecta()">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
