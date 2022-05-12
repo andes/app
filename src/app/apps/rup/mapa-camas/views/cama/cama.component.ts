@@ -177,7 +177,7 @@ export class CamaMainComponent implements OnInit {
                 () => {
                     this.disabled = false;
                     this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                    this.router.navigate([`/mapa-camas/${this.ambito}`]);
+                    this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
                 }
             );
         } else {
