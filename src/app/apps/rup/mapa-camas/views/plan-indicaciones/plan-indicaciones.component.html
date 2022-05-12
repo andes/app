@@ -120,16 +120,27 @@
                                                     class="icon icon--border--procedimiento mr-2">
                                             </plex-icon>
     
-    
                                             <span class="item-title-container item-title-container--vertical">
-                                                <h6 class="item__title">{{ indicacion.nombre }}</h6>
+                                                <h2 class="item__title">{{ indicacion.nombre }} 
+                                                    <plex-icon *ngIf="indicacion.valor.indicaciones" size="md" name="documento" [tooltip]="indicacion.valor.indicaciones"
+                                                    type="info"></plex-icon></h2> 
+                                                <h3>
+                                                    <b>Vía: </b>{{ indicacion.valor.via?.term  || '(no definida)' }}, 
+                                                    <b>Presentación: </b>{{ indicacion.valor.presentacion?.term || '(no definida)' }}, 
+                                                    <b>Frecuencia: </b>
+                                                    <ng-container *ngIf="indicacion.valor.frecuencias && indicacion.valor.frecuencias[0]?.frecuencia?.term">
+                                                        {{ indicacion.valor.frecuencias[0].frecuencia.term }}
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!(indicacion.valor.frecuencias && indicacion.valor.frecuencias[0]?.frecuencia?.term)">
+                                                        (no definida)
+                                                    </ng-container>
+                                                </h3>
                                             </span>
                                         </div>
                                         <div class="item__botonera">
                                             <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">
                                                 pendiente de revisión
                                             </plex-badge>
-    
                                             <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">
                                                 borrador
                                             </plex-badge>
