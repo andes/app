@@ -20,6 +20,9 @@
     <plex-badge type="info" tooltip="Fecha de inicio">
         {{ indicacion.fechaInicio | fecha }}
     </plex-badge>
+    <plex-badge type="info" *ngIf="diasSuministro" tooltip="{{ diasSuministro }} días suministrando medicamento">
+        {{ diasSuministro }} días
+    </plex-badge>
     <div title case="capitalize">
         {{ indicacion.nombre }}
     </div>

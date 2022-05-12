@@ -7,6 +7,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 export class IndicacionDetalleComponent implements OnChanges {
     init = false;
     @Input() indicacion;
+    diasSuministro;
 
     public observaciones: string;
 
@@ -16,6 +17,8 @@ export class IndicacionDetalleComponent implements OnChanges {
         } else {
             this.observaciones = this.indicacion.valor.indicaciones;
         }
+
+        this.diasSuministro = moment().diff(moment(this.indicacion.fechaInicio), 'days');
 
         // Por como esta diseñado el rup component no acepta un update de Inputs.
         this.init = false;
