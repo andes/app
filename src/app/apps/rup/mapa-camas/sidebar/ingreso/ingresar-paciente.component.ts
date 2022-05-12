@@ -279,7 +279,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
                 if (cama && this.view !== 'listado-internacion') {
                     camasDisponibles = [];
-                    this.plex.info('warning', `${this.paciente.nombreCompleto} (${this.paciente.documento}) se encuentra internado
+                    this.plex.info('warning', `<b>${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}</b> DNI: ${this.paciente.documento} se encuentra internado
                 en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
                 de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
                 }
@@ -643,17 +643,31 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.checkEstadoCama();
             this.checkMovimientos();
         }
+
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+
+        if (!this.prestacion && !this.resumen) {
+            // chequeamos estado de la cama
+            this.mapaCamasService.snapshot$.subscribe(camas => {
+                //  si para la nueva fecha la cama seleccionada se encuentra ocupada, anulamos la seleccion
+                const camaSeleccionada = camas.filter(cama => cama.id === this.cama?.id)?.shift();
+                if (camaSeleccionada?.estado === 'ocupada') {
+                    this.plex.toast('danger', 'La cama seleccionada no está disponible en la fecha indicada');
+                    this.mapaCamasService.select(null);
+                }
+            });
+        }
     }
 
     onType() {
         this.inProgress = true;
     }
 
-    // Se debe controlar que:
-    // La cama este disponible en la fecha que la quiero usar,
-    // Y que no puede ser una fecha posterior al siguiente movimiento
-
+    /**
+     *  Se debe controlar que:
+        La cama este disponible en la fecha que la quiero usar,
+        Y que no puede ser una fecha posterior al siguiente movimiento
+     */
     checkMovimientos() {
         const HOY = moment().toDate();
         this.mapaCamasService.historial('internacion', this.fechaIngresoOriginal, HOY).subscribe(h => {
