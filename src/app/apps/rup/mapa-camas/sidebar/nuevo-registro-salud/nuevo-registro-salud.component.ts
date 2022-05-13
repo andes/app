@@ -1,27 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, combineLatest } from 'rxjs';
-import { switchMap, pluck, map, tap, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { switchMap, map, tap, take } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
-import { ISnomedConcept } from '../../../../../modules/rup/interfaces/snomed-concept.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
     templateUrl: './nuevo-registro-salud.component.html'
 })
 export class NuevoRegistroSaludComponent implements OnInit {
+    @ViewChild('formulario', { static: false }) ngForm: NgForm;
+
     public accionesEstado$: Observable<any>;
     public paciente$: Observable<any>;
-
-    // Dejo la fecha en blanco para que el Profesional escriba una fecha cuente a conciencia.
-    public fecha: Date = new Date();
-    public hora: Date;
+    public fecha;
+    public dia;
+    public hora;
     public registro: any;
+    public internacion = {
+        fechaIngreso: null,
+        fechaEgreso: null
+    };
 
+    get fechaMin() {
+        return moment(this.internacion.fechaIngreso).startOf('day');
+    }
+    get fechaMax() {
+        return moment(this.internacion.fechaEgreso).endOf('day');
+    }
+    get horaMin() {
+        if (this.dia && moment(this.dia).startOf('day').diff(this.fechaMin) === 0) {
+            return this.internacion.fechaIngreso;
+        }
+        return null;
+    }
+    get horaMax() {
+        if (this.dia && moment(this.dia).endOf('day').diff(this.fechaMax) === 0) {
+            if (this.internacion.fechaEgreso) {
+                return this.internacion.fechaEgreso;
+            }
+            return moment();
+        }
+        return null;
+    }
 
     constructor(
         private mapaCamasService: MapaCamasService,
@@ -34,6 +60,13 @@ export class NuevoRegistroSaludComponent implements OnInit {
     ngOnInit() {
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.paciente$ = this.mapaCamasService.selectedCama;
+        this.mapaCamasService.historialInternacion$.pipe(
+            map(estados => {
+                this.internacion.fechaIngreso = moment(estados[0].fechaIngreso);
+                const egreso = estados.find(e => e.extras?.egreso)?.fecha;
+                this.internacion.fechaEgreso = egreso ? moment(egreso) : undefined;
+            })
+        ).subscribe();
     }
 
     onIniciar($event) {
@@ -55,7 +88,14 @@ export class NuevoRegistroSaludComponent implements OnInit {
                 this.router.navigate(['rup/ejecucion', prestacion.id]);
             });
         }
+    }
 
+    changeTime() {
+        if (this.hora) {
+            // para ajustar el dia, mes y año de 'hora' segun 'dia' cada vez que se modifique
+            const hora = moment(this.hora);
+            this.hora = moment(this.dia || undefined).hours(hora.hours()).minutes(hora.minutes());
+        }
     }
 
     crearPrestacion(cama: ISnapshot, concepto, fecha: Date) {
@@ -81,5 +121,4 @@ export class NuevoRegistroSaludComponent implements OnInit {
         );
     }
 }
-// this.router.navigate(['rup/ejecucion', prestacion.id]);
 
