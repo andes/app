@@ -46,7 +46,7 @@
                          name="plexSelect" idField="_id" (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>
             <plex-select *ngIf="item.type === 'prestacion'" [multiple]="true" [readonly]="all"
-                         [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
+                         [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event, item.subtype)"
                          placeholder="Seleccione los elementos con permisos" name="plexSelect" idField="id"
                          (change)="parseSelecionados()" (paste)="onPaste($event);">
             </plex-select>

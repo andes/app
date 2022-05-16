@@ -19,6 +19,7 @@ export interface IPermiso {
      */
     child?: IPermiso[];
     type?: string;
+    subtype?: string;
     /**
      * Si se permite o no marcar todos los permisos hijos de este permiso
      * @type {boolean}
