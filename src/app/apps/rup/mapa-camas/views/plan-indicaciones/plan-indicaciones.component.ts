@@ -114,7 +114,7 @@ export class PlanIndicacionesComponent implements OnInit {
         private auth: Auth,
         private maquinaEstadoService: MaquinaEstadosHTTP,
         private elementoRUPService: ElementosRUPService,
-        public ejecucionService: RupEjecucionService
+        public ejecucionService: RupEjecucionService,
     ) { }
 
 
@@ -239,6 +239,10 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.actualizar();
                 this.plex.toast('success', 'Indicaciones actualizadas');
             });
+        } else if (estado === 'active') {
+            indicaciones.forEach(ind => {
+                this.setHorarios(ind);
+            });
         } else {
             const estadoParams = {
                 tipo: estado,
@@ -328,7 +332,8 @@ export class PlanIndicacionesComponent implements OnInit {
             this.nuevaIndicacion = false;
         } else {
             indicacion.paciente = this.paciente;
-            this.planIndicacionesServices.create(indicacion).subscribe(() => {
+            this.planIndicacionesServices.create(indicacion).subscribe((newIndicacion) => {
+                this.setHorarios(newIndicacion);
                 this.actualizar();
                 this.nuevaIndicacion = false;
 
@@ -424,5 +429,25 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.nuevaIndicacion = false;
             });
         }
+    }
+
+    setHorarios(indicacion) {
+        let endDay: Date;
+        indicacion.valor.frecuencias.forEach(frecuencia => {
+            endDay = moment().endOf('day');
+            while (frecuencia.horario <= endDay) {
+                const evento = {
+                    idInternacion: indicacion.idInternacion,
+                    idIndicacion: indicacion.id,
+                    fecha: frecuencia.horario,
+                    estado: 'on-hold',
+                    observaciones: indicacion.observaciones
+                };
+                this.indicacionEventosService.create(evento).subscribe(() => {
+                    this.actualizar();
+                });
+                frecuencia.horario = moment(frecuencia.horario).add(frecuencia.frecuencia.targetValue, 'hours').toDate();
+            }
+        });
     }
 }

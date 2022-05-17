@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { DriveService } from 'src/app/services/drive.service';
+import { QueriesMappingService } from 'src/app/services/queries-mapping/queries-mapping.service';
 import { SnomedService } from '../../../../apps/mitos';
 import { Cie10Service } from '../../../../apps/mitos/services/cie10.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -151,7 +152,8 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
         public driveService: DriveService,
         @Optional() public ejecucionService: RupEjecucionService,
         public pacienteService: PacienteService,
-        public plexVisualizador: PlexVisualizadorService
+        public plexVisualizador: PlexVisualizadorService,
+        public queriesMappingService: QueriesMappingService
     ) {
     }
 

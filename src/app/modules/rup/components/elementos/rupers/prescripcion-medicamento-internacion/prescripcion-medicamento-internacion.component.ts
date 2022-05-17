@@ -1,5 +1,6 @@
 import { Unsubscribe } from '@andes/shared';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 
@@ -25,6 +26,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
 
     showModal = false;
 
+    public frecuencias$: Observable<any>;
+
     ngAfterViewInit() {
         setTimeout(() => {
             this.afterInit = true;
@@ -32,6 +35,7 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     ngOnInit() {
+        this.frecuencias$ = this.queriesMappingService.search({ source: 'plan-indicaciones:frecuencia' });
         if (!this.registro.valor) {
             this.registro.valor = {
                 nombre: '',

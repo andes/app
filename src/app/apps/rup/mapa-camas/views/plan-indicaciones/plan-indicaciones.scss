@@ -17,11 +17,16 @@
     cursor: pointer;
 }
 
-.selected.pointer {
-    border: 2px solid #5bc0de!important;
-    background-color: #5bc0de15!important;
+.scroll {
+    height: 100%;
+    overflow-x: auto;
+}
 
-    > .punto {
+.selected.pointer {
+    border: 2px solid #5bc0de !important;
+    background-color: #5bc0de15 !important;
+
+    >.punto {
         width: 24px;
         height: 24px;
         box-shadow: inset 0 0 0 0.2em white;
@@ -30,12 +35,12 @@
             --pointState: #8cc63f;
             border: solid 2px var(--pointState);
         }
-        
+
         &.no-realizado {
             --pointState: #dd4b39;
             border: solid 2px var(--pointState);
         }
-        
+
         &.incompleto {
             --pointState: #ff8d22;
             border: solid 2px var(--pointState);
@@ -54,19 +59,26 @@
         --pointState: #8cc63f;
         background-color: var(--pointState);
     }
-    
+
     &.no-realizado {
         --pointState: #dd4b39;
         background-color: var(--pointState);
     }
-    
+
     &.incompleto {
         --pointState: #ff8d22;
         background-color: var(--pointState);
     }
 
+    &.on-hold {
+        --pointState: #161615;
+        background-color: var(--pointState);
+    }
+
     // modificadores de estados
-    &:hover,&:active,&:focus {
+    &:hover,
+    &:active,
+    &:focus {
         width: 24px;
         height: 24px;
         box-shadow: inset 0 0 0 0.2em white;
@@ -82,6 +94,7 @@ table.plan-indicaciones {
         text-align: center;
         font-weight: bolder;
     }
+
     tr {
 
         td.pointer {
@@ -96,28 +109,29 @@ table.plan-indicaciones {
             background-color: #ff8d2212;
             border: 2px solid #ff8d22;
         }
-        
+
         &.completed {
             background-color: #8cc63f12;
             border: 2px solid #8cc63f;
         }
-        
-        &.stopped, &.cancelled  {
+
+        &.stopped,
+        &.cancelled {
             background-color: #dd4b3912;
             border: 2px solid #dd4b39;
         }
-        
-        &.selected  {
+
+        &.selected {
             background-color: #00a8e012;
             border: 2px solid $blue;
         }
     }
 
 
-}    
+}
 
 // Item
-in-plan-indicacion{
+in-plan-indicacion {
 
     .item-indicacion {
         position: relative;
@@ -130,97 +144,97 @@ in-plan-indicacion{
         min-width: min-content;
         align-items: center;
         box-sizing: border-box;
-        
+
         &:hover {
             .item__acciones {
                 opacity: 1;
                 transition: 900ms opacity ease-in;
             }
         }
-    
+
         .item__icon {
             margin-right: .25rem;
         }
-    
-        .item__container {  
+
+        .item__container {
             display: flex;
             align-self: center;
             //max-width: 50%;
             margin-right: .5rem;
             overflow: hidden;
-    
+
             plex-bool {
                 align-self: center;
             }
         }
-    
+
         .item-title-container {
-    
+
             display: flex;
-    
+
             &[center] {
                 text-align: center;
             }
-        
+
             &[left] {
                 text-align: left;
                 justify-content: start;
             }
-            
+
             &--horizontal {
                 flex-direction: row;
                 justify-content: center;
-                
+
                 .icon {
                     margin-right: .25rem;
                 }
             }
-            
+
             &--vertical {
                 flex-direction: column;
                 justify-content: center;
-        
+
                 .icon {
                     margin-bottom: .25rem;
                 }
             }
-    
+
             .item__title {
-                    font-size: medium;
-                    text-align: left;
-                    font-weight: 500;
-                    text-transform: capitalize;
-                    color: darkslategray;
-                    
-                    &:hover {
-                        font-weight: 600;
-                        color: $blue;
-                    }
+                font-size: medium;
+                text-align: left;
+                font-weight: 500;
+                text-transform: capitalize;
+                color: darkslategray;
+
+                &:hover {
+                    font-weight: 600;
+                    color: $blue;
                 }
-        
+            }
+
             .item__subtitle {
                 font-weight: 200;
                 white-space: nowrap;
                 color: gray;
             }
         }
-    
+
         &.divisor {
             height: 50px;
             padding: 0;
-    
+
             div.title__container {
                 height: 50px;
                 position: absolute;
                 left: 0;
                 display: flex;
                 align-items: center;
-    
+
                 .icon__container {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    
+
                     color: white;
                     width: 50px;
                     height: 100%;
@@ -228,57 +242,63 @@ in-plan-indicacion{
 
                     --iconColor: #00bcb4;
                     background-color: var(--iconColor);
-                    + .item__title { 
+
+                    +.item__title {
                         color: var(--iconColor);
                     }
-                            
+
                     // Modificadores cromáticos
                     &--procedimiento {
                         --iconColor: #92278e;
                         background-color: var(--iconColor);
-                        + .item__title {
+
+                        +.item__title {
                             --iconColor: #92278e;
                             color: var(--iconColor);
                         }
                     }
-                    
+
                     &--producto {
                         --iconColor: #00bcb4;
                         background-color: var(--iconColor);
-                        + .item__title {
+
+                        +.item__title {
                             --iconColor: #00bcb4;
                             color: var(--iconColor);
                         }
                     }
-                    
+
                     &--alimentacion {
                         --iconColor: #8cc63f;
                         background-color: var(--iconColor);
-                        + .item__title {
+
+                        +.item__title {
                             --iconColor: #8cc63f;
                             color: var(--iconColor);
                         }
                     }
-                    
+
                     &--hidratacion {
                         --iconColor: #00a8e0;
                         background-color: var(--iconColor);
-                        + .item__title {
+
+                        +.item__title {
                             --iconColor: #00a8e0;
                             color: var(--iconColor);
                         }
                     }
-                    
+
                     &--noSeccion {
                         --iconColor: gray;
                         background-color: var(--iconColor);
-                        + .item__title {
+
+                        +.item__title {
                             --iconColor: gray;
                             color: var(--iconColor);
                         }
                     }
                 }
-        
+
                 .item__title {
                     left: 65px;
                     font-weight: bolder;
@@ -286,13 +306,13 @@ in-plan-indicacion{
                     font-size: normal;
                 }
             }
-    
+
             .item__botonera {
                 right: 1rem;
                 position: absolute;
             }
         }
-    
+
         .item__acciones {
             // para garantizar accesibilidad
             display: flex;
@@ -300,13 +320,14 @@ in-plan-indicacion{
             flex-wrap: nowrap;
             opacity: 0;
         }
-    
+
         .item__botonera {
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
-    
-            .badge, button {
+
+            .badge,
+            button {
                 margin-right: 0.25rem;
             }
         }
@@ -315,7 +336,7 @@ in-plan-indicacion{
 
 // ICONOS
 .icon-container {
-	display: flex;
+    display: flex;
 
     &[center] {
         text-align: center;
@@ -325,24 +346,24 @@ in-plan-indicacion{
         text-align: left;
         justify-content: start;
     }
-    
-	&--horizontal {
-		flex-direction: row;
+
+    &--horizontal {
+        flex-direction: row;
         justify-content: center;
-        
+
         .icon {
             margin-right: .25rem;
         }
-	}
-    
-	&--vertical {
+    }
+
+    &--vertical {
         flex-direction: column;
         justify-content: center;
 
         .icon {
             margin-bottom: .25rem;
         }
-	}
+    }
 }
 
 .icon {
@@ -352,82 +373,82 @@ in-plan-indicacion{
     height: 36px;
 
     // Modificadores formales
-	&--24 {
+    &--24 {
         i {
-            font-size: 24px;    
+            font-size: 24px;
         }
-	}
-	
+    }
+
     // Modificadores cromáticos
-	&--procedimiento {
-		--iconColor: #92278e;
-		-webkit-text-fill-color: var(--iconColor);
+    &--procedimiento {
+        --iconColor: #92278e;
+        -webkit-text-fill-color: var(--iconColor);
         //border: solid 2px var(--iconColor);
         color: var(--iconColor);
-	}
-    
-	&--producto {
-		--iconColor: #00bcb4;
-		-webkit-text-fill-color: var(--iconColor);
-        //border: solid 2px var(--iconColor);
-        color: var(--iconColor);
-	}
-    
-	&--alimentacion {
-		--iconColor: #8cc63f;
-		-webkit-text-fill-color: var(--iconColor);
-        //border: solid 2px var(--iconColor);
-        color: var(--iconColor);
-	}
-    
-	&--hidratacion {
-		--iconColor: #00a8e0;
-		-webkit-text-fill-color: var(--iconColor);
-        //border: solid 2px var(--iconColor);
-        color: var(--iconColor);
-	}
+    }
 
-	&--noSeccion {
-		--iconColor: gray;
-		-webkit-text-fill-color: var(--iconColor);
+    &--producto {
+        --iconColor: #00bcb4;
+        -webkit-text-fill-color: var(--iconColor);
         //border: solid 2px var(--iconColor);
         color: var(--iconColor);
-	}
-    
+    }
+
+    &--alimentacion {
+        --iconColor: #8cc63f;
+        -webkit-text-fill-color: var(--iconColor);
+        //border: solid 2px var(--iconColor);
+        color: var(--iconColor);
+    }
+
+    &--hidratacion {
+        --iconColor: #00a8e0;
+        -webkit-text-fill-color: var(--iconColor);
+        //border: solid 2px var(--iconColor);
+        color: var(--iconColor);
+    }
+
+    &--noSeccion {
+        --iconColor: gray;
+        -webkit-text-fill-color: var(--iconColor);
+        //border: solid 2px var(--iconColor);
+        color: var(--iconColor);
+    }
+
     // Modificadores cromáticos borders
-	&--border--procedimiento {
-		--iconColor: #92278e;
-		-webkit-text-fill-color: var(--iconColor);
+    &--border--procedimiento {
+        --iconColor: #92278e;
+        -webkit-text-fill-color: var(--iconColor);
         border: solid 2px var(--iconColor);
-	}
-    
-	&--border--producto {
-		--iconColor: #00bcb4;
-		-webkit-text-fill-color: var(--iconColor);
-        border: solid 2px var(--iconColor);
-	}
-    
-	&--border--alimentacion {
-		--iconColor: #8cc63f;
-		-webkit-text-fill-color: var(--iconColor);
-        border: solid 2px var(--iconColor);
-	}
-    
-	&--border--hidratacion {
-		--iconColor: #00a8e0;
-		-webkit-text-fill-color: var(--iconColor);
-        border: solid 2px var(--iconColor);
-	}
+    }
 
-	&--border--noSeccion {
-		--iconColor: gray;
-		-webkit-text-fill-color: var(--iconColor);
+    &--border--producto {
+        --iconColor: #00bcb4;
+        -webkit-text-fill-color: var(--iconColor);
         border: solid 2px var(--iconColor);
-	}
-    
-	&--baseline {
-		padding-top: 25%;
-	}
+    }
+
+    &--border--alimentacion {
+        --iconColor: #8cc63f;
+        -webkit-text-fill-color: var(--iconColor);
+        border: solid 2px var(--iconColor);
+    }
+
+    &--border--hidratacion {
+        --iconColor: #00a8e0;
+        -webkit-text-fill-color: var(--iconColor);
+        border: solid 2px var(--iconColor);
+    }
+
+    &--border--noSeccion {
+        --iconColor: gray;
+        -webkit-text-fill-color: var(--iconColor);
+        border: solid 2px var(--iconColor);
+    }
+
+    &--baseline {
+        padding-top: 25%;
+    }
 }
 
 
@@ -436,14 +457,14 @@ in-plan-indicacion {
     div.col-12.readonly {
         display: flex;
         flex-flow: row wrap;
-        
+
         div {
             font-size: .75rem;
             margin-right: 1rem;
 
-            & span {    
+            & span {
                 font-weight: bolder;
-                
+
                 p {
                     font-size: .75rem;
                     font-weight: normal;
@@ -451,5 +472,5 @@ in-plan-indicacion {
             }
         }
     }
-    
+
 }

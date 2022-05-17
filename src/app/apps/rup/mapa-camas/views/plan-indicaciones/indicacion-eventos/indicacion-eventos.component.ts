@@ -17,6 +17,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         { id: 'realizado', nombre: 'Realizado' },
         { id: 'no-realizado', nombre: 'No realizado' },
         { id: 'incompleto', nombre: 'Incompleto' },
+        { id: 'on-hold', nombre: 'En espera' }
     ];
 
     estado = null;

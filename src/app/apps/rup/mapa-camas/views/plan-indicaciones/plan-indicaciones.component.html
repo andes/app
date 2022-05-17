@@ -4,157 +4,161 @@
             <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange()" [max]="hoy">
             </plex-datetime>
 
-            <plex-button type="danger" label="volver" class="ml-2"
-                        routerLink="/mapa-camas/internacion/medica">
+            <plex-button type="danger" label="volver" class="ml-2" routerLink="/mapa-camas/internacion/medica">
             </plex-button>
         </plex-title>
-
-        <table class="table table-bordered plan-indicaciones">
-            <thead>
-                <tr>
-                    <td rowspan="2" style="min-width: 500px;">
-                        <section class="item-indicacion">
-                            <div class="item__container">
-                                <!-- Sin funcionalidad -->
-                                <!-- <plex-bool type="checkbox" label="seleccionar todos"> </plex-bool> -->
-                                <!-- <plex-icon name=""></plex-icon> -->
-                            </div>
-                            <div class="item__botonera">
-                                <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
-                                            (click)="onDetenerClick()" tooltip="Suspender" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
-                                            (click)="onPausarClick()" tooltip="Pausar" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
-                                            (click)="onContinuarClick()" tooltip="Continuar" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="completar$ | async" type="info" icon="check" size="sm"
-                                            (click)="onCompletarClick()" tooltip="Completar" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="deleted$ | async" type="danger" icon="delete" size="sm"
-                                            (click)="onDeletedClick()" tooltip="Borrar seleccionadas" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
-                                            (click)="onValidar()">
-                                    Validar Pendientes
-                                </plex-button>
-                            </div>
-                        </section>
-                    </td>
-                    <td colspan="8">
-                        Mañana
-                    </td>
-                    <td colspan="8">
-                        Tarde
-                    </td>
-                    <td colspan="8">
-                        Noche
-                    </td>
-                </tr>
-                <tr>
-                    <td *ngFor="let hora of horas">
-                        {{ hora}}
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngIf="seccionesActivas.length">
-                    <ng-container *ngFor="let seccion of seccionesActivas">
-                        <tr class="separador">
-                            <td class="item-indicacion divisor" colspan="25">
-    
-                                <div class="title__container">
-                                    <span class="icon__container">
-                                        <plex-icon size="lg" [name]="seccion.icono"></plex-icon>
-                                    </span>
-    
-                                    <h6 class="item__title">{{ seccion.concepto.term }}</h6>
+        <div class="scroll">
+            <table class="table table-bordered plan-indicaciones">
+                <thead>
+                    <tr>
+                        <td rowspan="2" style="min-width: 500px;">
+                            <section class="item-indicacion">
+                                <div class="item__container">
+                                    <!-- Sin funcionalidad -->
+                                    <!-- <plex-bool type="checkbox" label="seleccionar todos"> </plex-bool> -->
+                                    <!-- <plex-icon name=""></plex-icon> -->
                                 </div>
                                 <div class="item__botonera">
-                                    <plex-button size="sm" type="info" icon="plus" (click)="onNuevaIndicacion(seccion)"
-                                                tooltip="Agregar indicación">
+                                    <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
+                                                 (click)="onDetenerClick()" tooltip="Suspender"
+                                                 tooltipPosition="bottom">
                                     </plex-button>
-                                    <plex-button type="info" size="sm"
-                                                [icon]="showSecciones[seccion.concepto.term] ? 'chevron-up' : 'chevron-down'"
-                                                (click)="tootleSeccion(seccion.concepto)">
+                                    <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
+                                                 (click)="onPausarClick()" tooltip="Pausar" tooltipPosition="bottom">
+                                    </plex-button>
+                                    <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
+                                                 (click)="onContinuarClick()" tooltip="Continuar"
+                                                 tooltipPosition="bottom">
+                                    </plex-button>
+                                    <plex-button *ngIf="completar$ | async" type="info" icon="check" size="sm"
+                                                 (click)="onCompletarClick()" tooltip="Completar"
+                                                 tooltipPosition="bottom">
+                                    </plex-button>
+                                    <plex-button *ngIf="deleted$ | async" type="danger" icon="delete" size="sm"
+                                                 (click)="onDeletedClick()" tooltip="Borrar seleccionadas"
+                                                 tooltipPosition="bottom">
+                                    </plex-button>
+                                    <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
+                                                 (click)="onValidar()">
+                                        Validar Pendientes
                                     </plex-button>
                                 </div>
-                            </td>
-                        </tr>
-    
-                        <ng-container *ngIf="getItems(seccion) as indicaciones$">
-                            <tr *ngIf="!indicaciones$.length && showSecciones[seccion.concepto.term]">
-                                <td colspan="25">
-                                    No hay indicaciones
+                            </section>
+                        </td>
+                        <td colspan="8">
+                            Mañana
+                        </td>
+                        <td colspan="8">
+                            Tarde
+                        </td>
+                        <td colspan="8">
+                            Noche
+                        </td>
+                    </tr>
+                    <tr>
+                        <td *ngFor="let hora of horas">
+                            {{ hora}}
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="seccionesActivas.length">
+                        <ng-container *ngFor="let seccion of seccionesActivas">
+                            <tr class="separador">
+                                <td class="item-indicacion divisor" colspan="25">
+
+                                    <div class="title__container">
+                                        <span class="icon__container">
+                                            <plex-icon size="lg" [name]="seccion.icono"></plex-icon>
+                                        </span>
+
+                                        <h6 class="item__title">{{ seccion.concepto.term }}</h6>
+                                    </div>
+                                    <div class="item__botonera">
+                                        <plex-button size="sm" type="info" icon="plus"
+                                                     (click)="onNuevaIndicacion(seccion)" tooltip="Agregar indicación">
+                                        </plex-button>
+                                        <plex-button type="info" size="sm"
+                                                     [icon]="showSecciones[seccion.concepto.term] ? 'chevron-up' : 'chevron-down'"
+                                                     (click)="tootleSeccion(seccion.concepto)">
+                                        </plex-button>
+                                    </div>
                                 </td>
                             </tr>
-    
-                            <ng-container *ngIf="showSecciones[seccion.concepto.term]">
-                                <tr [ngClass]="indicacion.estado.tipo" *ngFor="let indicacion of indicaciones$">
-                                    <td justify class="item-indicacion pointer">
-                                        <div class="item__container" (click)="onSelectIndicacion(indicacion)">
-                                            <plex-bool *ngIf="!indicacion.readonly" type="checkbox"
-                                                    [(ngModel)]="selectedIndicacion[indicacion.id]"
-                                                    (change)="onSelectedChange()" [value]="true"> </plex-bool>
-    
-                                            <plex-icon size="md" *ngIf="indicacion.seccion.term === ' - sin sección -'"
-                                                    name="documento" class="icon icon--border--noSeccion mr-2">
-                                            </plex-icon>
-                                            <plex-icon size="md"
-                                                    *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
-                                                    name="docuemento-manzana"
-                                                    class="icon icon--border--alimentacion mr-2">
-                                            </plex-icon>
-                                            <plex-icon size="md"
-                                                    *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'"
-                                                    name="mano-gota" class="icon icon--border--hidratacion mr-2">
-                                            </plex-icon>
-                                            <plex-icon size="md"
-                                                    *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'"
-                                                    name="pildoras" class="icon icon--border--producto mr-2">
-                                            </plex-icon>
-                                            <plex-icon size="md"
-                                                    *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'"
-                                                    name="documento-termometro"
-                                                    class="icon icon--border--procedimiento mr-2">
-                                            </plex-icon>
-    
-    
-                                            <span class="item-title-container item-title-container--vertical">
-                                                <h6 class="item__title">{{ indicacion.nombre }}</h6>
-                                            </span>
-                                        </div>
-                                        <div class="item__botonera">
-                                            <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">
-                                                pendiente de revisión
-                                            </plex-badge>
-    
-                                            <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">
-                                                borrador
-                                            </plex-badge>
-    
-                                            <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
-                                                in-plan-indicacion-botonera [indicacion]="indicacion"
-                                                (refresh)="actualizar()">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td *ngFor="let hora of horas" class="pointer"
-                                        [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"
-                                        (click)="onIndicacionesCellClick(indicacion, hora)">
-    
-                                        <span *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora]" class="punto"
-                                            [ngClass]="eventos[indicacion.id][hora].estado"></span>
+
+                            <ng-container *ngIf="getItems(seccion) as indicaciones$">
+                                <tr *ngIf="!indicaciones$.length && showSecciones[seccion.concepto.term]">
+                                    <td colspan="25">
+                                        No hay indicaciones
                                     </td>
                                 </tr>
+
+                                <ng-container *ngIf="showSecciones[seccion.concepto.term]">
+                                    <tr [ngClass]="indicacion.estado.tipo" *ngFor="let indicacion of indicaciones$">
+                                        <td justify class="item-indicacion pointer">
+                                            <div class="item__container" (click)="onSelectIndicacion(indicacion)">
+                                                <plex-bool *ngIf="!indicacion.readonly" type="checkbox"
+                                                           [(ngModel)]="selectedIndicacion[indicacion.id]"
+                                                           (change)="onSelectedChange()" [value]="true"> </plex-bool>
+
+                                                <plex-icon size="md"
+                                                           *ngIf="indicacion.seccion.term === ' - sin sección -'"
+                                                           name="documento" class="icon icon--border--noSeccion mr-2">
+                                                </plex-icon>
+                                                <plex-icon size="md"
+                                                           *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
+                                                           name="docuemento-manzana"
+                                                           class="icon icon--border--alimentacion mr-2">
+                                                </plex-icon>
+                                                <plex-icon size="md"
+                                                           *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'"
+                                                           name="mano-gota" class="icon icon--border--hidratacion mr-2">
+                                                </plex-icon>
+                                                <plex-icon size="md"
+                                                           *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'"
+                                                           name="pildoras" class="icon icon--border--producto mr-2">
+                                                </plex-icon>
+                                                <plex-icon size="md"
+                                                           *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'"
+                                                           name="documento-termometro"
+                                                           class="icon icon--border--procedimiento mr-2">
+                                                </plex-icon>
+
+
+                                                <span class="item-title-container item-title-container--vertical">
+                                                    <h6 class="item__title">{{ indicacion.nombre }}</h6>
+                                                </span>
+                                            </div>
+                                            <div class="item__botonera">
+                                                <plex-badge *ngIf="indicacion.estado.tipo === 'pending'" type="warning">
+                                                    pendiente de revisión
+                                                </plex-badge>
+
+                                                <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">
+                                                    borrador
+                                                </plex-badge>
+
+                                                <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
+                                                     in-plan-indicacion-botonera [indicacion]="indicacion"
+                                                     (refresh)="actualizar()">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td *ngFor="let hora of horas" class="pointer"
+                                            [class.selected]="indicacionEventoSelected?.id === indicacion.id && hora === horaSelected"
+                                            (click)="onIndicacionesCellClick(indicacion, hora)">
+
+                                            <span *ngIf="eventos[indicacion.id] && eventos[indicacion.id][hora]"
+                                                  class="punto" [ngClass]="eventos[indicacion.id][hora].estado"></span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
                     </ng-container>
-                </ng-container>
-            </tbody>
-        </table>
-
+                </tbody>
+            </table>
+        </div>
     </plex-layout-main>
     <plex-layout-sidebar [type]="!nuevaIndicacion ? 'invert': null">
 
@@ -167,14 +171,15 @@
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
-                <plex-button *ngIf="indicacionView.estado.tipo !== 'cancelled'" class="mr-1" type="warning" size="sm" icon="pencil" (click)="editar(indicacionView)"></plex-button>
+                <plex-button *ngIf="indicacionView.estado.tipo !== 'cancelled'" class="mr-1" type="warning" size="sm"
+                             icon="pencil" (click)="editar(indicacionView)"></plex-button>
                 <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
             </in-indicacion-detalle>
         </ng-container>
         <ng-container *ngIf="indicacionEventoSelected">
             <in-plan-indicacion-evento [hora]="horaSelected" [indicacion]="indicacionEventoSelected" [fecha]="fecha"
-                                    [evento]="eventos[indicacionEventoSelected.id] && eventos[indicacionEventoSelected.id][horaSelected]"
-                                    (events)="onEventos($event)">
+                                       [evento]="eventos[indicacionEventoSelected.id] && eventos[indicacionEventoSelected.id][horaSelected]"
+                                       (events)="onEventos($event)">
             </in-plan-indicacion-evento>
         </ng-container>
     </plex-layout-sidebar>

@@ -4,6 +4,7 @@ import { AndesCommonModule } from 'src/app/andes-common.module';
 import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
 import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
+import { QueriesMappingService } from 'src/app/services/queries-mapping/queries-mapping.service';
 import { PlanIndicacionesResumenComponent } from '../../components/plan-indicaciones-resumen.component';
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
 import { IndicacionDetalleComponent } from './indicacion-detalle/indicacion-detalle.component';
@@ -39,7 +40,8 @@ import { PlanIndicacionesComponent } from './plan-indicaciones.component';
         PlanIndicacionesResumenComponent
     ],
     providers: [
-        { provide: RupEjecucionService, useClass: PlanIndicacionesServices }
+        { provide: RupEjecucionService, useClass: PlanIndicacionesServices },
+        QueriesMappingService
     ]
 })
 export class MapaCamasPlanIndicacionModule {
