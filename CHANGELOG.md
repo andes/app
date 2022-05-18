@@ -1,3 +1,16 @@
+# [5.95.0](https://github.com/andes/app/compare/v5.94.0...v5.95.0) (2022-05-18)
+
+
+### Bug Fixes
+
+* **IN-420:** Error al mostrar los modals al editar una cama ([#2654](https://github.com/andes/app/issues/2654)) ([54999a3](https://github.com/andes/app/commit/54999a301bda3540f34e1db6d0c47a06cf5222b6))
+* **RUP:** se modifica mensaje de error por fechas fuera de rango ([#2651](https://github.com/andes/app/issues/2651)) ([c7f842b](https://github.com/andes/app/commit/c7f842b75497765425ff5e21539ad5a46f9e5e35))
+
+
+### Features
+
+* **TOP-127:** Agregar filtro por ambito ambulatorio en reglas ([#2636](https://github.com/andes/app/issues/2636)) ([6615229](https://github.com/andes/app/commit/66152297939078bbe9765bf795f4516d42a00bd6))
+
 # [5.94.0](https://github.com/andes/app/compare/v5.93.0...v5.94.0) (2022-05-11)
 
 
