@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter, HostBinding, HostListener } fro
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
+import { Plex } from '@andes/plex';
 
-export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion';
+export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion' | 'anular-validacion';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class RegistroHUDSItemComponent {
     }
 
     constructor(
+        private plex: Plex,
         private auth: Auth,
         private mapaCamasService: MapaCamasService,
     ) { }
@@ -59,6 +61,17 @@ export class RegistroHUDSItemComponent {
         }
 
         this.accion.emit(accion);
+    }
+
+    invalidarPrestacion(accion: RegistroHUDSItemAccion, $event?: Event) {
+        if ($event) {
+            $event.stopPropagation();
+        }
+        this.plex.confirm('¿Está seguro que desea invalidar este registro?').then(confirmacion => {
+            if (confirmacion) {
+                this.accion.emit(accion);
+            }
+        });
     }
 
 }
