@@ -279,9 +279,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
                 if (cama && this.view !== 'listado-internacion') {
                     camasDisponibles = [];
-                    this.plex.info('warning', `<b>${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}</b> DNI: ${this.paciente.documento} se encuentra internado
-                en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
-                de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
+                    this.plex.info('warning', `${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}, DNI: ${this.paciente.documento || this.paciente.numeroIdentificacion} tiene una internacion
+                    en curso con fecha de ingreso el <b>${moment(cama.fechaIngreso).format('DD/MM/YYYY hh:mm')}</b>.`, 'Paciente ya internado');
                 }
                 return camasDisponibles;
             })

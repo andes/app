@@ -1,70 +1,44 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MapaCamasService } from '../../services/mapa-camas.service';
+import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { Subscription, combineLatest } from 'rxjs';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-elegir-paciente',
     templateUrl: './elegir-paciente.component.html',
 })
 
-export class ElegirPacienteComponent implements OnInit, OnDestroy {
+export class ElegirPacienteComponent {
     public snapshot;
     public selectedCama;
 
-    private subscription: Subscription;
-
     constructor(
         private plex: Plex,
-        private mapaCamasService: MapaCamasService,
         private ingresoPacienteService: IngresoPacienteService,
-        private pacienteService: PacienteService
+        private pacienteService: PacienteService,
+        private InternacionResumenHTTP: InternacionResumenHTTP,
+        private auth: Auth
     ) { }
-
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
-
-    ngOnInit() {
-        this.subscription = combineLatest(
-            this.mapaCamasService.snapshot$,
-            this.mapaCamasService.selectedCama,
-        ).subscribe(([snapshot, cama]) => {
-            this.snapshot = snapshot;
-            this.selectedCama = cama;
-        });
-    }
 
     onPacienteSelected(paciente: IPaciente) {
         // Si se seleccionó por error un paciente fallecido
         this.pacienteService.checkFallecido(paciente);
-        const cama = this.verificarPaciente(paciente);
-        if (cama) {
-            this.plex.info('warning', `${paciente.nombreCompleto} (${paciente.documento}) se encuentra internado
-                en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
-                de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
-        } else {
-            this.ingresoPacienteService.selectPaciente(paciente.id);
-        }
-    }
-
-    verificarPaciente(paciente: IPaciente) {
-        let cama = null;
-        this.snapshot.map((snap) => {
-            if (snap.estado === 'ocupada') {
-                if (snap.id !== this.selectedCama.id) {
-                    if (snap.paciente.id === paciente.id) {
-                        cama = snap;
-                    }
-                }
+        // verificamos internaciones en curso
+        this.InternacionResumenHTTP.search({
+            organizacion: this.auth.organizacion.id,
+            paciente: paciente.id
+        }).subscribe(internaciones => {
+            const enCurso = internaciones.filter(i => !i.fechaEgreso);
+            if (enCurso.length) {
+                this.plex.info('warning', `${paciente.apellido}, ${paciente.alias || paciente.nombre}, DNI: ${paciente.documento || paciente.numeroIdentificacion} tiene una internacion
+                en curso con fecha de ingreso el <b>${moment(internaciones[0].fechaIngreso).format('DD/MM/YYYY hh:mm')}</b>.`, 'Paciente ya internado');
+            } else {
+                this.ingresoPacienteService.selectPaciente(paciente.id);
             }
         });
-        return cama;
     }
 
     searchEnd(resultado: any) {
