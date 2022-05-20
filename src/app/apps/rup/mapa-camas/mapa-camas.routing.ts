@@ -32,7 +32,7 @@ export const INTERNACION_ROUTES = [
 
     { path: 'listado-internacion/:capa', component: InternacionListadoComponent },
 
-    { path: 'listado-internacion-unificado', component: ListadoInternacionUnificadoComponent },
+    { path: 'listado-internacion-unificado/:capa', component: ListadoInternacionUnificadoComponent },
 
     { path: 'listado-internacion-medico', component: ListadoInternacionCapasComponent },
 

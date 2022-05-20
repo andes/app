@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { ListadoInternacionService } from './listado-internacion.service';
 import { map } from 'rxjs/operators';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -116,13 +117,22 @@ export class InternacionListadoComponent implements OnInit {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private permisosMapaCamasService: PermisosMapaCamasService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router,
+        private auth: Auth
     ) { }
 
     ngOnInit() {
+        // verificamos permisos
+        const capa = this.route.snapshot.paramMap.get('capa');
+        const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+        if (permisosInternacion.length >= 1 && (permisosInternacion.indexOf(capa) !== -1 || permisosInternacion[0] === '*')) {
+            this.mapaCamasService.setCapa(capa);
+        } else {
+            this.router.navigate(['/inicio']);
+        }
         this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setView('listado-internacion');
-        this.mapaCamasService.setCapa(this.route.snapshot.paramMap.get('capa'));
         this.mapaCamasService.setAmbito('internacion');
         this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
         this.plex.updateTitle([{

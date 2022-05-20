@@ -1,6 +1,6 @@
 <plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
-        <header *ngIf="mainView === 'principal'">
+        <header *ngIf="mainView === 'principal'" class="mb-0 border-0">
             <plex-title titulo="LISTADO INTERNACION ">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
@@ -8,11 +8,10 @@
         </header>
 
         <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'principal'">
-            <plex-title titulo="Listado Internacion">
-                <plex-table-columns>
+            <plex-title titulo="pacientes" size="md">
+                <plex-table-columns [selected]="columnsVisibles">
                 </plex-table-columns>
             </plex-title>
-
             <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
                     [class.selected]="internacion.id === idInternacionSelected"
                     (click)="seleccionarInternacion(internacion)">

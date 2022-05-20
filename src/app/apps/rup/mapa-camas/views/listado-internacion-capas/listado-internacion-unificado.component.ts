@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
@@ -10,7 +10,6 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
-import { map, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-listado-internacion-unificado',
@@ -32,7 +31,13 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
 
     mainView$ = this.mapaCamasService.mainView;
 
-
+    public columnsVisibles = { // para inicializar solo con ciertas columnas visibles
+        'nombre': true,
+        'documento': true,
+        'fechaIngreso': true,
+        'fechaEgreso': true,
+        'informe': true
+    };
     public columns = [
         {
             key: 'nombre',
@@ -70,7 +75,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             opcional: true,
             sort: (a: any, b: any) => a.fechaIngreso.getTime() - b.fechaIngreso.getTime()
         },
-
         {
             key: 'fechaEgreso',
             label: 'Fecha Egreso',
@@ -93,7 +97,7 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             key: 'unidadOrganizativa',
             label: 'Unidad organizativa',
             sorteable: true,
-            opcional: false,
+            opcional: true,
             sort: (a, b) => {
                 return a.idPrestacion?.unidadOrganizativa.term.localeCompare(b.idPrestacion?.unidadOrganizativa.term);
             }
@@ -113,7 +117,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             sorteable: true,
             opcional: false,
             sort: (a, b) => {
-
                 const nameA = a.idPrestacion ? 'a' : '';
                 const nameB = b.idPrestacion ? 'b' : '';
                 return nameA.localeCompare(nameB);
@@ -129,7 +132,8 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         private location: Location,
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
@@ -138,10 +142,19 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
                 this.router.navigate(['inicio']);
             }
         });
+
+        // verificamos permisos
+        const capa = this.route.snapshot.paramMap.get('capa');
+        const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+        if (permisosInternacion.length >= 1 && (permisosInternacion.indexOf(capa) !== -1 || permisosInternacion[0] === '*')) {
+            this.mapaCamasService.setCapa(capa);
+        } else {
+            this.router.navigate(['/inicio']);
+        }
         this.mapaCamasService.setView('listado-internacion');
-        this.mapaCamasService.setCapa('estadistica-v2');
         this.mapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setFecha(new Date());
+        this.mapaCamasService.select({ id: ' ' } as any);
         this.permisosMapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
@@ -154,16 +167,21 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             name: 'Listado de Internacion unificado'
         }]);
 
+        if (this.mapaCamasService.capa !== 'estadistica-v2') {
+            const index = this.columns.findIndex(col => col.key === 'estado');
+            if (index >= 0) {
+                this.columns.splice(index, 1);
+            }
+        }
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$;
     }
 
     seleccionarInternacion(resumen: IResumenInternacion) {
         if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
             this.mapaCamasService.selectResumen(resumen);
-            this.mapaCamasService.camaSelectedSegunView$.pipe(
-                take(1),
-                map(cama => this.mapaCamasService.select(cama))
-            ).subscribe(() => this.idInternacionSelected = resumen.id);
+            this.idInternacionSelected = resumen.id;
+            const prestacion = resumen.idPrestacion as any; // prestacion populada
+            this.mapaCamasService.selectPrestacion(prestacion);
         } else {
             this.idInternacionSelected = null;
         }
