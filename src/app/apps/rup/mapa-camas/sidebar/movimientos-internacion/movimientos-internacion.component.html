@@ -64,6 +64,6 @@
         </tr>
     </tbody>
 </table>
-<div *ngIf="!(historial$ | async).length" justify="center">
+<div *ngIf="!(historial$ | async)?.length" justify="center">
     <plex-label class="mt-2" direction="column" size="md" icon="" titulo="No existen movimientos entre las fechas seleccionadas" icon="calendario-rango-bold"></plex-label>
 </div>

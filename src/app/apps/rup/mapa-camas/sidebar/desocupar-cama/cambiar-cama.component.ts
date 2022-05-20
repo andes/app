@@ -21,9 +21,6 @@ export class CambiarCamaComponent implements OnInit {
     @Output() onSave = new EventEmitter<any>();
 
     // VARIABLES
-    public fecha: Date;
-    public fechaMin: Date;
-    public cama: ISnapshot;
     public nuevaCama: ISnapshot;
     public disableButton = false;
 
@@ -75,7 +72,6 @@ export class CambiarCamaComponent implements OnInit {
                     );
                 }
             }
-
         });
     }
 
@@ -89,15 +85,14 @@ export class CambiarCamaComponent implements OnInit {
             ).pipe(
                 take(1),
                 switchMap(([fechaCambio, camaActual, salaPases]) => {
-                    this.fecha = fechaCambio;
                     const proximaCama = this.nuevaCama || salaPases;
                     return this.cambiarCama(camaActual, proximaCama, fechaCambio);
                 })
             ).subscribe(
-                () => {
+                camas => {
                     const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
                     this.plex.info('success', mensaje);
-                    this.mapaCamasService.setFecha(this.fecha);
+                    this.mapaCamasService.setFecha(moment().toDate()); // para que actualice el snapshot al momento luego del cambio
                     this.onSave.emit();
                     this.disableButton = false;
                 }, err => {
