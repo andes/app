@@ -100,9 +100,7 @@ export class CamaDetalleComponent implements OnInit {
         this.cama$ = this.mapaCamasService.selectedCama;
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
-            switchMap(cama => {
-                return this.mapaCamasService.getPaciente(cama.paciente);
-            })
+            switchMap(cama => cama.paciente ? this.mapaCamasService.getPaciente(cama.paciente) : of(null))
         );
 
         this.turnero$ = combineLatest(

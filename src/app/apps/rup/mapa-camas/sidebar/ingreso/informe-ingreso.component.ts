@@ -17,7 +17,6 @@ export class InformeIngresoComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     // EVENTOS
-    @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
 
     constructor(

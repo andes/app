@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, combineLatest, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { notNull, cache } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
@@ -21,7 +21,6 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     // EVENTOS
-    @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
 
     constructor(
@@ -35,6 +34,10 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.prestacion$ = this.resumenInternacion$.pipe(
             switchMap(resumen => {
                 if (resumen.idPrestacion) {
+                    if ((resumen.idPrestacion as any)?.id) {
+                        // prestacion populada desde el listado
+                        return of(resumen.idPrestacion);
+                    }
                     return this.prestacionService.getById(resumen.idPrestacion, { showError: false });
                 }
                 return of(null);
@@ -48,17 +51,8 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
                 return prestacion.ejecucion?.registros[0].valor.informeIngreso;
             })
         );
-        this.paciente$ = combineLatest([
-            this.prestacion$,
-            this.mapaCamasService.selectedCama
-        ]).pipe(
-            switchMap(([prestacion, cama]) => {
-                const paciente = prestacion?.paciente || cama.paciente;
-                if (paciente) {
-                    return this.mapaCamasService.getPaciente(paciente);
-                }
-                return of(null);
-            })
+        this.paciente$ = this.resumenInternacion$.pipe(
+            switchMap(resumen => resumen?.paciente ? this.mapaCamasService.getPaciente(resumen.paciente) : of(null))
         );
     }
 

@@ -42,7 +42,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     listadoRecursos = false;
     camasDisponibles;
     fecha$: Observable<Date>;
-    organizacionv2;
+    organizacionv2; // true si la organizacion usa capas unificadas
     estado$: Observable<IMaquinaEstados>;
 
     mainView$ = this.mapaCamasService.mainView;
@@ -169,21 +169,20 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             })
         );
     }
+
     verListadoRecursos() {
         this.listadoRecursos = this.listadoRecursos ? false : true;
     }
-    verListadoInternacion() {
-        if (this.mapaCamasService.capa === 'estadistica-v2') {
-            this.router.navigate(['/mapa-camas/listado-internacion-unificado']);
 
+    verListadoInternacion() {
+        if (this.organizacionv2) { // Si el efector usa capas unificadas
+            this.router.navigate([`/mapa-camas/listado-internacion-unificado/${this.route.snapshot.paramMap.get('capa')}`]);
         } else {
             this.router.navigate([`/mapa-camas/listado-internacion/${this.route.snapshot.paramMap.get('capa')}`]);
         }
     }
+
     verListadoInternacionMedico() {
-        if (this.organizacionv2) {
-            this.router.navigate(['/mapa-camas/listado-internacion-unificado']);
-        }
         this.router.navigate(['/mapa-camas/listado-internacion-medico']);
     }
 
@@ -249,9 +248,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     accionListadoRecurso(data) {
-        if (data.verDetalle) {
-            this.verDetalle(data.cama, data.selectedCama);
-        }
         if (data.selectCama) {
             this.selectCama(data.cama, data.relacion);
         }

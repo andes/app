@@ -8,7 +8,6 @@ import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
-import { InternacionResumenHTTP } from '../../../services/resumen-internacion.http';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -17,6 +16,7 @@ import { InternacionResumenHTTP } from '../../../services/resumen-internacion.ht
 export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
+    existeEgreso$: Observable<Boolean>;
 
     public prestacion$: Observable<IPrestacion>;
 
@@ -28,7 +28,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public editar = false;
-    public existeEgreso = false;
+    // public existeEgreso = false;
     public mostrar;
     public hayMovimientosAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
@@ -49,7 +49,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         private plex: Plex,
         private prestacionesService: PrestacionesService,
         private listadoInternacionService: ListadoInternacionService,
-        private internacionResumenHTTP: InternacionResumenHTTP,
         private cdr: ChangeDetectorRef
     ) { }
 
@@ -101,9 +100,15 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
             }
         });
 
+        this.existeEgreso$ = this.mapaCamasService.historialInternacion$.pipe(
+            map(historial => {
+                const a = this.accion;
+                return historial.findIndex(mov => mov.extras?.egreso) > -1;
+            })
+        );
+
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map(historial => {
-                this.existeEgreso = historial.findIndex(mov => mov.extras?.egreso) > -1;
                 const tieneIDMov = historial.every(
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
                 );
@@ -132,7 +137,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         this.mostrar = opcion;
     }
 
-    activatedOption(opcion) {
+    activateOption(opcion) {
         this.mostrar = opcion;
         this.plexOptions.activate(opcion);
     }
@@ -163,19 +168,12 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         // deshacer desde listado de internacion
         this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
             if (resultado) {
-                const idPrestacion = this.mapaCamasService.selectedPrestacion.getValue()?.id;
-                combineLatest([
-                    this.prestacion$,
-                    this.internacionResumenHTTP.search({ idPrestacion: idPrestacion }).pipe(
-                        map(resumen => resumen[0])
-                    )
-                ]).pipe(
-                    switchMap(([prestacion, resumen]) => {
-                        const idInternacion = resumen?.id || prestacion?.id;
-                        return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
+                this.mapaCamasService.selectedPrestacion.pipe(
+                    switchMap(prestacion => {
+                        return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, prestacion.id, completo).pipe(
                             switchMap(() => {
                                 const prestacionAux = {
-                                    id: idPrestacion,
+                                    id: prestacion.id,
                                     solicitud: { turno: null }
                                 };
                                 return this.prestacionesService.invalidarPrestacion(prestacionAux);

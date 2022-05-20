@@ -151,7 +151,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-camas')) {
                     /*  Si es capa estadistica va a existir la prestacion pero no el resumen.
                         Si es capa medica la que realiza el egreso, puede que estadistica-v2 aun no haya cargado el informe de ingreso.
-                        En este caso particular, permitimos el egreso y sacamos la fecha de ingreso del resumen.
+                        En este caso particular, permitimos el egreso y obtenemos la fecha de ingreso desde el resumen.
                     */
                     const fechaIngreso = prestacion?.ejecucion.registros[0].valor.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
                     const paciente = prestacion?.paciente.id || this.resumen.paciente.id;
@@ -629,9 +629,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
     }
 
-    // Se debe controlar que:
-    // La cama este disponible en la fecha que la quiero usar,
-
+    //  Se debe controlar que la cama este disponible en la fecha que la quiero usar,
     checkEstadoCama() {
         this.mapaCamasService.get(this.fecha, this.cama?.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
