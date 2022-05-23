@@ -56,9 +56,9 @@ export class AgregarNotaAgendaComponent implements OnInit {
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
                 if (alertCount === 0) {
                     if (this.agendasSeleccionadas.length === 1) {
-                        this.plex.toast('success', 'La Nota se guardó correctamente');
+                        this.plex.toast('success', 'La nota se guardó correctamente');
                     } else {
-                        this.plex.toast('success', 'Las Notas se guardaron correctamente');
+                        this.plex.toast('success', 'Las notas se guardaron correctamente');
                     }
                     alertCount++;
                 }
