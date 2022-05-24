@@ -60,6 +60,8 @@ export class NuevoRegistroSaludComponent implements OnInit {
     ngOnInit() {
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.paciente$ = this.mapaCamasService.selectedCama;
+        this.dia = this.mapaCamasService.fecha;
+        this.hora = this.mapaCamasService.fecha;
         this.mapaCamasService.historialInternacion$.pipe(
             map(estados => {
                 this.internacion.fechaIngreso = moment(estados[0].fechaIngreso);
