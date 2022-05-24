@@ -3,31 +3,32 @@
         <plex-title titulo="Censo Mensual">
             <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
         </plex-title>
-        
+
         <plex-wrapper>
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                            (change)="resetCenso()" [debounce]="600">
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" (change)="resetCenso()"
+                           [debounce]="600">
             </plex-datetime>
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                            (change)="resetCenso()" [debounce]="600">
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta" (change)="resetCenso()"
+                           [debounce]="600">
             </plex-datetime>
-            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
-                            [data]="unidadesOranizativas" [required]="true" idField="conceptId" labelField="term" (change)="resetCenso()">
+            <plex-select *ngIf="unidadesOranizativas.length" label="Unidad Organizativa"
+                         [(ngModel)]="selectedUnidadOranizativa" name="sectores" [data]="unidadesOranizativas"
+                         [required]="true" idField="conceptId" labelField="term" (change)="resetCenso()">
             </plex-select>
             <div class="d-flex align-items-end">
                 <plex-button class="mr-1" [disabled]="!fechaDesde || !fechaHasta || !selectedUnidadOranizativa"
-                            label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
+                             label="GENERAR CENSO" type="primary" (click)="generarCensoMensual()">
                 </plex-button>
                 <plex-button class="mr-1" [disabled]="!censo.length" icon="download" label="PDF"
-                            [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
-                            type="warning" (click)="descargarCensoMensual()">
+                             [title]="(!(censo.length > 0)) ? 'Debe generar el censo para descargarlo' : 'Descargar censo mensual'"
+                             type="warning" (click)="descargarCensoMensual()">
                 </plex-button>
                 <plex-button [disabled]="!censo.length" type="success" icon="download" label="CSV"
-                            (click)="descargarCsv()">
+                             (click)="descargarCsv()">
                 </plex-button>
             </div>
         </plex-wrapper>
-            
+
         <ng-container *ngIf="censo.length > 0">
             <table class="table table-striped">
                 <thead>
@@ -106,6 +107,10 @@
                 <tr>
                     <td>Promedio días de estada</td>
                     <td>{{ datosCensoTotal.promDiasEstada }}</td>
+                </tr>
+                <tr>
+                    <td>Porcentaje de ocupación de camas</td>
+                    <td>{{ datosCensoTotal.porcentajeCamasOcupadas }}</td>
                 </tr>
             </table>
         </ng-container>
