@@ -103,8 +103,6 @@ export class ExportarHudsComponent implements OnInit {
     }
 
     descargasPendientes() {
-        this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
-            this.exportHudsService.hud$.next(data);
-        });
+        this.exportHudsService.refrescarPendientes();
     }
 }

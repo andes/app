@@ -14,12 +14,20 @@ export class DescargasPendientesComponent implements OnInit {
     public pending = [];
     public sinPendientes = false;
     public busqueda$: Observable<any[]>;
+    public fechaDesde;
+    public fechaHasta;
 
 
     constructor(
         private exportHudsService: ExportHudsService,
         private auth: Auth
-    ) { }
+    ) {
+        this.fechaDesde = moment().startOf('day').toDate();
+        this.fechaHasta = moment().endOf('day').toDate();
+        exportHudsService.$refrescarPendientes.subscribe(() => {
+            this.descargasPendientes();
+        });
+    }
 
     ngOnInit(): void {
         this.descargasPendientes();
@@ -39,7 +47,14 @@ export class DescargasPendientesComponent implements OnInit {
     }
 
     descargasPendientes() {
-        this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
+        const query: any = { id: this.auth.usuario.id };
+        if (this.fechaDesde) {
+            query.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        }
+        if (this.fechaHasta) {
+            query.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
+        }
+        this.exportHudsService.pendientes(query).subscribe((data) => {
             this.exportHudsService.hud$.next(data);
         });
         this.busqueda$ = this.exportHudsService.pendiente$;
