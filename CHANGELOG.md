@@ -1,3 +1,10 @@
+## [5.95.1](https://github.com/andes/app/compare/v5.95.0...v5.95.1) (2022-05-25)
+
+
+### Bug Fixes
+
+* **MPI:** No agregar foto de perfil si es que no se ha recuperado de renaper al momento de realizar la validación ([#2647](https://github.com/andes/app/issues/2647)) ([82e960c](https://github.com/andes/app/commit/82e960c54d6c087195f7ee2d77e64f3c0895392c))
+
 # [5.95.0](https://github.com/andes/app/compare/v5.94.0...v5.95.0) (2022-05-18)
 
 
