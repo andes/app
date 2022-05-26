@@ -3,7 +3,7 @@
         <ng-container *ngIf="!selectedLlamado">
             <plex-title titulo="Seguimiento de Pacientes">
                 <plex-button *ngIf="anyChecked" class="mr-1" type="warning" size="md" label="Asignar"
-                             (click)="displayAsignar()">
+                            (click)="displayAsignar()">
                 </plex-button>
                 <plex-button type="success" size="md" label="Buscar" (click)="buscar()">
                 </plex-button>
@@ -12,24 +12,24 @@
                 <plex-grid size="lg" type="full">
                     <plex-wrapper #wrapper (change)="changeCollapse($event)">
                         <plex-datetime grow="1" type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                                       [max]="fechaHasta">
+                                    [max]="fechaHasta">
                         </plex-datetime>
                         <plex-datetime grow="1" type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                                       [min]="fechaDesde">
+                                    [min]="fechaDesde">
                         </plex-datetime>
                         <plex-select grow="1" name="estado" [data]="estadosSeguimiento" label="Estado"
-                                     [(ngModel)]="estado" labelField="nombre">
+                                    [(ngModel)]="estado" labelField="nombre">
                         </plex-select>
                         <plex-select grow="1" name="prioridad" (getData)="getOpcionesSemaforo($event)" label="Prioridad"
-                                     [(ngModel)]="prioridad" labelField="label">
+                                    [(ngModel)]="prioridad" labelField="label">
                         </plex-select>
                         <div collapse>
                             <plex-select grow="1" name="nombre" tmProfesionales label="Profesional"
-                                         [(ngModel)]="profesional" labelField="label">
+                                        [(ngModel)]="profesional" labelField="label">
                             </plex-select>
                             <plex-text [(ngModel)]="documento" name="documento" label="Documento"></plex-text>
                             <plex-bool *ngIf="esAuditor" type="slide" name="asignados" label="Ocultar Asignados"
-                                       [(ngModel)]="asignados" (change)="buscar()">
+                                    [(ngModel)]="asignados" (change)="buscar()">
                             </plex-bool>
                         </div>
                     </plex-wrapper>
@@ -39,11 +39,12 @@
                 <plex-list [striped]="false" height="calc(100vh - 280px)" (scrolled)="onScroll()">
                     <plex-title titulo="listado" size="md">
                         <plex-dropdown size="sm" type="info" class="mr-1" [right]="true" label="Ordenar"
-                                       [items]="itemsOrden">
+                                        [items]="itemsOrden">
                         </plex-dropdown>
                         <plex-button type="info" size="sm" icon="download" (click)="descargarListadoCsv()"
-                                     tooltip="Descargar csv">
+                                    tooltip="Descargar csv">
                         </plex-button>
+                        <plex-badge class="ml-1" type="info" name="totalResultados">Total: {{ totalResultados }}</plex-badge>
                     </plex-title>
                     <plex-item>
                         <plex-bool *ngIf="esAuditor" name="all" (change)="selectAll($event)" [(ngModel)]="allSelected">
@@ -57,9 +58,9 @@
                     <ng-container *ngFor="let seguimiento of seguimientos$ | async">
                         <ng-container *ngIf="seguimiento | seguimientoFields as fields">
                             <plex-item [colors]="getColorPrioridad(seguimiento.score.value)"
-                                       (click)="!anyChecked ? selectSeguimiento(seguimiento) : $event.preventDefault()">
+                                    (click)="!anyChecked ? selectSeguimiento(seguimiento) : $event.preventDefault()">
                                 <plex-bool *ngIf="esAuditor" name="all" (change)="onCheck($event)"
-                                           [(ngModel)]="checkedSeguimientos[seguimiento.id]">
+                                        [(ngModel)]="checkedSeguimientos[seguimiento.id]">
                                 </plex-bool>
                                 <plex-label [tituloBold]="true" titulo="{{ seguimiento.paciente | nombre}}"
                                             subtitulo="{{ seguimiento.paciente.documento}}"></plex-label>
@@ -85,13 +86,13 @@
                                     <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="info"
                                                 icon="phone" class="ml-1">
                                         {{ seguimiento.ultimoEstado.valor | date:"dd/MM/yyy HH:mm" }} <plex-icon
-                                                   size="sm" name="phone" type="info">
+                                                size="sm" name="phone" type="info">
                                         </plex-icon>
                                     </plex-badge>
                                     <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="warning"
                                                 icon="phone" class="ml-1">
                                         {{ seguimiento.llamados.length }} <plex-icon size="sm" name="phone"
-                                                   type="warning">
+                                                type="warning">
                                         </plex-icon>
                                     </plex-badge>
                                     <plex-badge *ngIf="seguimiento.ultimoEstado.clave === 'alta'" type="success"
@@ -105,17 +106,17 @@
                                 </div>
                                 <div>
                                     <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'pendiente'" type="success"
-                                                 size="sm" tooltip="Iniciar Seguimiento" label="Iniciar" class="ml-4"
-                                                 (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                                size="sm" tooltip="Iniciar Seguimiento" label="Iniciar" class="ml-4"
+                                                (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
                                     </plex-button>
                                     <plex-button *ngIf="seguimiento.ultimoEstado.clave === 'seguimiento'" type="success"
-                                                 size="sm" tooltip="Continuar Seguimiento" label="Continuar"
-                                                 class="ml-4"
-                                                 (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
+                                                size="sm" tooltip="Continuar Seguimiento" label="Continuar"
+                                                class="ml-4"
+                                                (click)="iniciarSeguimiento(seguimiento);$event.stopPropagation()">
                                     </plex-button>
                                     <plex-button type="info" size="sm" tooltip="Actualizar Datos" class="ml-1"
-                                                 icon="pencil" [disabled]="anyChecked"
-                                                 (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
+                                                icon="pencil" [disabled]="anyChecked"
+                                                (click)="actualizarSeguimiento(seguimiento);$event.stopPropagation()">
                                     </plex-button>
                                 </div>
                             </plex-item>
@@ -138,7 +139,7 @@
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="seguimiento" type="invert">
         <detalle-seguimiento *ngIf="!actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
-                             (selectLlamado)="verLlamado($event)">
+                            (selectLlamado)="verLlamado($event)">
         </detalle-seguimiento>
         <actualizar-seguimiento *ngIf="actualizacionSeguimiento" [seguimiento]="seguimiento" (close)="closeSideBar()"
                                 (save)="reload()"></actualizar-seguimiento>
