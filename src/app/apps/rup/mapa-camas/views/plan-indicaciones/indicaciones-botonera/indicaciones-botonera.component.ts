@@ -1,5 +1,7 @@
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
+import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaciones-eventos.service';
 import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
 
     constructor(
         private planIndicacionesServices: PlanIndicacionesServices,
+        private indicacionEventosService: PlanIndicacionesEventosServices,
         private plex: Plex
     ) {
 
@@ -62,6 +65,8 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
                 this.refresh.emit();
                 this.plex.toast('success', 'La indicación ha sido borrada');
             });
+        } else if (estado === 'active') {
+            this.setHorarios();
         } else {
             const estadoParams = {
                 tipo: estado,
@@ -82,5 +87,21 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
                 this.cambiarEstado(state);
             }
         };
+    }
+
+    setHorarios() {
+        this.indicacion.valor.frecuencias.forEach(frecuencia => {
+            this.indicacionEventosService.getLastEvent(this.indicacion).pipe(
+                switchMap((evento: any) => {
+                    if (evento) {
+                        frecuencia.horario = moment(evento.fecha).add(frecuencia.frecuencia.targetValue, 'hours').toDate();
+                    }
+                    return this.planIndicacionesServices.getHorarios(this.indicacion, frecuencia);
+                }),
+                switchMap(horarios => this.indicacionEventosService.create(horarios))
+            ).subscribe(() => {
+                this.refresh.emit();
+            });
+        });
     }
 }

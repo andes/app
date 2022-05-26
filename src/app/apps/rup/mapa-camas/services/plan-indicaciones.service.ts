@@ -2,7 +2,6 @@ import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PlanIndicacionesServices extends ResourceBaseHttp {
@@ -67,9 +66,23 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
         return of(null);
     }
 
-    agregarConcepto(concepto: ISnomedConcept, esSolicitud = false, seccion: ISnomedConcept | boolean = null, valor: any = null, extras: any = {}) {
-
+    getHorarios(indicacion, frecuencia) {
+        const horarios = [];
+        const endDay = moment().endOf('day');
+        while (frecuencia.horario <= endDay) {
+            const evento = {
+                idInternacion: indicacion.idInternacion,
+                idIndicacion: indicacion.id,
+                fecha: frecuencia.horario,
+                estado: 'on-hold',
+                observaciones: indicacion.observaciones
+            };
+            horarios.push(evento);
+            frecuencia.horario = moment(frecuencia.horario).add(frecuencia.frecuencia.targetValue, 'hours').toDate();
+        }
+        return horarios;
     }
+
 
     getSugeridos() {
         return of([]);

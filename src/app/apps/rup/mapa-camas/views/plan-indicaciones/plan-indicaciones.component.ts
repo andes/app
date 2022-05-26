@@ -2,8 +2,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, forkJoin, from, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
@@ -334,7 +334,6 @@ export class PlanIndicacionesComponent implements OnInit {
             indicacion.paciente = this.paciente;
             this.planIndicacionesServices.create(indicacion).subscribe((newIndicacion) => {
                 this.setHorarios(newIndicacion);
-                this.actualizar();
                 this.nuevaIndicacion = false;
 
             });
@@ -432,22 +431,18 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     setHorarios(indicacion) {
-        let endDay: Date;
         indicacion.valor.frecuencias.forEach(frecuencia => {
-            endDay = moment().endOf('day');
-            while (frecuencia.horario <= endDay) {
-                const evento = {
-                    idInternacion: indicacion.idInternacion,
-                    idIndicacion: indicacion.id,
-                    fecha: frecuencia.horario,
-                    estado: 'on-hold',
-                    observaciones: indicacion.observaciones
-                };
-                this.indicacionEventosService.create(evento).subscribe(() => {
-                    this.actualizar();
-                });
-                frecuencia.horario = moment(frecuencia.horario).add(frecuencia.frecuencia.targetValue, 'hours').toDate();
-            }
+            this.indicacionEventosService.getLastEvent(indicacion).pipe(
+                switchMap((evento: any) => {
+                    if (evento) {
+                        frecuencia.horario = moment(evento.fecha).add(frecuencia.frecuencia.targetValue, 'hours').toDate();
+                    }
+                    return this.planIndicacionesServices.getHorarios(indicacion, frecuencia);
+                }),
+                switchMap(horarios => this.indicacionEventosService.create(horarios))
+            ).subscribe(() => {
+                this.actualizar();
+            });
         });
     }
 }
