@@ -89,7 +89,7 @@ export class CambiarCamaComponent implements OnInit {
                     return this.cambiarCama(camaActual, proximaCama, fechaCambio);
                 })
             ).subscribe(
-                camas => {
+                () => {
                     const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
                     this.plex.info('success', mensaje);
                     this.mapaCamasService.setFecha(moment().toDate()); // para que actualice el snapshot al momento luego del cambio
@@ -119,6 +119,7 @@ export class CambiarCamaComponent implements OnInit {
 
         let camaOcupada: any = {
             _id: camaNueva.id,
+            idCamaAnterior: camaActual.id,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
             paciente: camaActual.paciente,
