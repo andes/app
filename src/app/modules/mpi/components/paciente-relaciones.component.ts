@@ -28,9 +28,12 @@ export class PacienteRelacionesComponent {
      */
     @Input()
     set relaciones(value: IPacienteRelacion[]) {
-        this._relaciones = value;
-        if (value?.length) {
-            this.listado = value as IPacienteRelacion[];
+        this._relaciones = value.filter( rel => {
+            const existe = rel.hasOwnProperty('activo');
+            if (existe) {return rel.activo;} else {return true;}
+        });
+        if (this._relaciones?.length) {
+            this.listado = this._relaciones as IPacienteRelacion[];
         } else {
             this.listado = [];
         }
