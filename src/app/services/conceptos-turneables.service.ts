@@ -8,6 +8,7 @@ import { ITipoPrestacion } from '../interfaces/ITipoPrestacion';
 export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion> {
     protected url = '/core/tm/conceptos-turneables';
     public static Laboratorio_CDA_ID = '4241000179101';
+    public static Laboratorio_SISA_CDA_ID = '3031000246109';
     public static Vacunas_CDA_ID = '33879002';
     public static VacunacionCovid_ID = '1821000246103';
 
