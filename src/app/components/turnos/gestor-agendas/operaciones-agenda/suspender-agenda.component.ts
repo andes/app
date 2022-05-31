@@ -181,7 +181,7 @@ export class SuspenderAgendaComponent implements OnInit {
         this.smsService.enviarSms(smsParams).subscribe(
             sms => {
                 if (sms === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + turno.paciente.alias || turno.paciente.nombre + ' ' + turno.paciente.apellido);
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + (turno.paciente.alias || turno.paciente.nombre) + ' ' + turno.paciente.apellido);
                     const data = {
                         avisoSuspension: 'enviado'
                     };

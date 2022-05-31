@@ -3,7 +3,7 @@
     <!-- Filtros -->
     <plex-wrapper>
         <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
-                   placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+                    placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
         </plex-text>
 
         <plex-button label="Buscar" type="primary" (click)="buscarHistorial()" grow="2">
@@ -12,8 +12,8 @@
 
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-    <plex-title *ngIf="paciente" titulo="Paciente: {{ paciente.apellido }}, {{ paciente.nombre }} |
-            Documento: {{ paciente.documento }}" size="md"></plex-title>
+    <plex-title *ngIf="paciente" titulo="Paciente: {{ paciente | nombre }} |
+            Documento: {{ paciente | documento }}" size="md"></plex-title>
 
     <table *ngIf="historial?.length" class="table table-striped">
         <thead>

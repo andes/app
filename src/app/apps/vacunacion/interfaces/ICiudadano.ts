@@ -11,8 +11,10 @@ export interface ICiudadano {
     };
     documento: string;
     nombre: string;
+    alias?: string;
     apellido: string;
     sexo: string;
+    genero: string;
     fechaNacimiento: Date;
     telefono: string;
     email: string;
@@ -38,5 +40,5 @@ export interface ICiudadano {
         id: String;
     };
     factorRiesgoEdad: boolean;
-    numeroIdentificacion: string;
+    numeroIdentificacion?: string;
 }

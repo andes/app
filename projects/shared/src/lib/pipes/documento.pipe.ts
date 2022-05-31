@@ -6,6 +6,6 @@ export class DocumentoPipe implements PipeTransform {
         if (!value) {
             return null;
         }
-        return value.numeroIdentificacion || value.documento;
+        return value.numeroIdentificacion || value.documento || 'Sin documento';
     }
 }

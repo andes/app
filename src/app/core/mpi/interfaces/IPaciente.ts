@@ -3,6 +3,7 @@ import { IContacto } from '../../../interfaces/IContacto';
 import { IDireccion } from './IDireccion';
 import { EstadoCivil } from '../../../utils/enumerados';
 import { IUbicacion } from '../../../interfaces/IUbicacion';
+import { IObraSocial } from '../../../../../src/app/interfaces/IObraSocial';
 
 export interface IPaciente {
     id: string;
@@ -32,9 +33,9 @@ export interface IPaciente {
     financiador: [{
         codigoPuco: Number;
         nombre: string;
-        financiador: String;
+        financiador: string;
         id: string;
-        numeroAfiliado: String;
+        numeroAfiliado: string;
     }];
     identificadores: [{
         entidad: string;
@@ -71,4 +72,17 @@ export interface IPaciente {
         }[];
     }[];
     idPacientePrincipal?: string;
+}
+
+export interface IPacienteBasico {
+    id: string;
+    nombre: string;
+    apellido: string;
+    alias: string;
+    documento: string;
+    numeroIdentificacion: string;
+    sexo: string;
+    genero: string;
+    fechaNacimiento: Date;
+    obraSocial?: IObraSocial;
 }

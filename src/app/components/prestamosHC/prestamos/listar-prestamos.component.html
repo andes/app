@@ -75,10 +75,10 @@
                 <td>{{carpeta._id}}</td>
                 <td>
                     <b>
-                        {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
+                        {{carpeta.paciente | nombre }}
                     </b>
                     <br> Documento:
-                    <b>{{carpeta.paciente.documento}}</b>
+                    <b>{{carpeta.paciente | documento }}</b>
                 </td>
                 <td *ngIf='!carpeta.datosSolicitudManual'>
                     {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}}

@@ -10,11 +10,13 @@ export interface IPacienteRelacion {
     nombre: string;
     apellido: string;
     documento: string;
-    numeroIdentificacion: string;
+    numeroIdentificacion?: string;
     fechaNacimiento?: Date;
     fechaFallecimiento?: Date;
     sexo?: string;
     foto: any;
     fotoId: any;
     activo?: boolean;
+    alias?: string;
+    genero?: string;
 }

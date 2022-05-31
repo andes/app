@@ -75,12 +75,12 @@
                                         </plex-label>
                                         <div>
                                             <plex-label *ngIf="derivacion.prioridad && esCOM"
-                                                        titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                        subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                                        titulo="{{ derivacion.paciente | nombre }}"
+                                                        subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                             <plex-label *ngIf="!esCOM || !derivacion.prioridad"
-                                                        titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                        subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                                        titulo="{{ derivacion.paciente | nombre }}"
+                                                        subtitulo="{{ derivacion.paciente | documento }}">
                                             </plex-label>
                                         </div>
                                         <plex-button *ngIf="esTrasladoEspecial || esCOM || (derivacion.estado === 'aceptada' || derivacion.estado === 'encomendada') || (derivacion.historial[derivacion.historial.length - 1].createdBy?.organizacion._id === orgActual._id)"
@@ -184,12 +184,12 @@
                                         </plex-label>
                                         <div>
                                             <plex-label *ngIf="derivacion.prioridad && esCOM"
-                                                        titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                        subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                                        titulo="{{ derivacion.paciente | nombre }}"
+                                                        subtitulo="{{ derivacion | documento }}">
                                             </plex-label>
                                             <plex-label *ngIf="!esCOM || !derivacion.prioridad"
-                                                        titulo="{{ derivacion.paciente.apellido }}, {{ derivacion.paciente.nombre }}"
-                                                        subtitulo="{{ (derivacion.paciente.documento | number) || 'Sin DNI'}}">
+                                                        titulo="{{ derivacion.paciente | nombre }}"
+                                                        subtitulo="{{ derivacion | documento }}">
                                             </plex-label>
                                         </div>
                                         <plex-button *ngIf="derivacion.estado === 'solicitada'" type="danger" size="sm"

@@ -21,8 +21,7 @@
                 <div *ngIf="prestacionSeleccionada.paciente?.id"> <b>Paciente: &nbsp;</b>{{
                     prestacionSeleccionada.paciente |
                     nombre }}
-                    <span> | DNI {{ (prestacionSeleccionada.paciente | documento) || 'Sin documento (temporal)'
-                        }}</span>
+                    <span> | DNI {{ prestacionSeleccionada.paciente | documento }}</span>
                     <span *ngIf="prestacionSeleccionada.paciente.fechaNacimiento !== null"> | Edad: {{
                         prestacionSeleccionada.paciente | edad }}</span>
                     <span *ngIf="prestacionSeleccionada?.paciente?.id && prestacionSeleccionada?.paciente?.sexo"> |

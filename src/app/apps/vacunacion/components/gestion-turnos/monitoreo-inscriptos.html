@@ -72,13 +72,13 @@
                     <form #formulario="ngForm">
                         <plex-wrapper>
                             <plex-select name="grupo" label="Grupo" [(ngModel)]="grupoAsignadasSelected"
-                                         idField="nombre" labelField="descripcion" [data]="gruposPoblacionales">
+                                        idField="nombre" labelField="descripcion" [data]="gruposPoblacionales">
                             </plex-select>
                             <plex-select name="localidad" label="Localidad" [(ngModel)]="localidadAsignadasSelected"
-                                         idField="nombre" labelField="nombre" [data]="localidades$ | async">
+                                        idField="nombre" labelField="nombre" [data]="localidades$ | async">
                             </plex-select>
                             <plex-button size="md" type="success" label="Filtrar" class="mr-1"
-                                         (click)="cargarAsignadas()">
+                                        (click)="cargarAsignadas()">
                             </plex-button>
                         </plex-wrapper>
                     </form>
@@ -88,9 +88,9 @@
                         <tr *ngFor="let paciente of pacientes" class='selectable' (click)="showInSidebar(paciente)"
                             [class.selected]="paciente.id===pacienteSelected?.id">
                             <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
-                            <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
+                            <td *plTableCol="'documento'"> {{ paciente | documento }} </td>
                             <td *plTableCol="'apellido-nombre'">
-                                {{ paciente.apellido + ', ' + paciente.nombre }} </td>
+                                {{ paciente | nombre }} </td>
                             <td *plTableCol="'sexo'"> {{ paciente.sexo === 'femenino' ? 'F' : 'M' }} </td>
                             <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
                             <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>

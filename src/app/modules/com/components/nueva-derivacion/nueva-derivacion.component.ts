@@ -194,6 +194,9 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
         this.modelo.paciente = {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
+            alias: this.paciente.alias,
+            genero: this.paciente.genero,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento,
             sexo: this.paciente.sexo,

@@ -29,7 +29,7 @@
                                 {{ paciente | nombre }}
                                 <br> |
                                 <b>Documento: </b>
-                                <span>{{ (paciente | documento) || 'Sin documento' }}</span>
+                                <span>{{ paciente | documento }}</span>
                                 <b>Fecha de Nacimiento </b>
                                 <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento |
                                     date:'dd-MM-yyyy'}}</span>

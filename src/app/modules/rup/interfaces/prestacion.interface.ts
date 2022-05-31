@@ -14,10 +14,13 @@ export class IPrestacion {
         // requirido, validar en middleware
         id: string;
         nombre: string;
+        alias: string;
         apellido: string;
         documento: string;
+        numeroIdentificacion: string;
         telefono: string;
         sexo: string;
+        genero: string;
         fechaNacimiento: Date;
         obraSocial?: IObraSocial; // Refactor cobertura
     };
@@ -85,7 +88,7 @@ export class IPrestacion {
     createdAt: Date;
     updatedAt: Date;
     createdBy: {
-        id: String;
+        id: string;
     };
 
     metadata: { key: string; valor: any }[];
