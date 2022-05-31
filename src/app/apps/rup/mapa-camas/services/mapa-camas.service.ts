@@ -389,10 +389,11 @@ export class MapaCamasService {
             const esNumero = Number.isInteger(Number(paciente));
             if (esNumero) {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    snap.paciente.documento.includes(paciente));
+                    snap.paciente.documento.includes(paciente) || snap.paciente.numeroIdentificacion?.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
@@ -503,7 +504,8 @@ export class MapaCamasService {
         let listaInternacionFiltrada = listaInternacion;
 
         if (documento) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.toLowerCase().includes(documento.toLowerCase()));
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.toLowerCase().includes(documento.toLowerCase())
+                || internacion.paciente.numeroIdentificacion.toLowerCase().includes(documento.toLowerCase()));
         }
 
         if (apellido) {

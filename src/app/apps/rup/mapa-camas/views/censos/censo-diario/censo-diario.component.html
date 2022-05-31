@@ -40,8 +40,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let censoP of censoPacientes">
-                        <td>{{censoP.datos.paciente.apellido}}, {{censoP.datos.paciente.nombre}} |
-                            {{censoP.datos.paciente.documento}} </td>
+                        <td>{{censoP.datos.paciente | nombre}} |
+                            {{censoP.datos.paciente | documento}} </td>
                         <td>{{censoP.datos.cama.nombre}},
                             {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}
                         </td>

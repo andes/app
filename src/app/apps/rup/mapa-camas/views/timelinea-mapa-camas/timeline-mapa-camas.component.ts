@@ -279,7 +279,7 @@ export class TimelineMapaCamasComponent implements OnInit {
                 return {
                     group: d.cama,
                     id: c++,
-                    content: d.paciente ? `${d.paciente.documento} | ${d.paciente.apellido} ${d.paciente.nombre}` : 'BLOQUEADA',
+                    content: d.paciente ? `${d.paciente.documento || d.paciente.numeroIdentificacion} | ${d.paciente.apellido} ${d.paciente.alias || d.paciente.nombre}` : 'BLOQUEADA',
                     start: d.desde,
                     end: d.hasta,
                     className: d.className,
@@ -340,7 +340,7 @@ export class TimelineMapaCamasComponent implements OnInit {
             if (esNumero) {
                 return paciente?.documento.includes(this.paciente);
             } else {
-                const nombreApellido = `${paciente.apellido} ${paciente.nombre}`;
+                const nombreApellido = `${paciente.apellido} ${paciente.alias || paciente.nombre}`;
                 return nombreApellido?.toLowerCase().includes(this.paciente.toLowerCase());
             }
         } else if (this.paciente && !paciente) {

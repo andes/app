@@ -17,9 +17,12 @@ export interface IResumenInternacion {
     paciente: {
         id: string;
         nombre: string;
+        alias?: string;
         apellido: string;
         documento: string;
+        numeroIdentificion?: string;
         sexo: string;
+        genero: string;
         fechaNacimiento: string;
     };
     fechaIngreso: Date;

@@ -71,6 +71,7 @@ export class PDPNotificarNecesidadComponent {
                     const paciente = {
                         id: pac.id,
                         nombre: pac.nombre,
+                        alias: pac.alias,
                         apellido: pac.apellido,
                         documento: pac.documento
                     };

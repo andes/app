@@ -29,8 +29,8 @@ export class ListadoInternacionCapasComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const nameA = `${a.paciente.apellido} ${a.paciente.nombre}`;
-                const nameB = `${b.paciente.apellido} ${b.paciente.nombre}`;
+                const nameA = `${a.paciente.apellido} ${a.paciente.alias || a.paciente.nombre}`;
+                const nameB = `${b.paciente.apellido} ${b.paciente.alias || b.paciente.nombre}`;
                 return nameA.localeCompare(nameB);
             }
         },
@@ -39,7 +39,11 @@ export class ListadoInternacionCapasComponent implements OnInit {
             label: 'Documento',
             sorteable: true,
             opcional: true,
-            sort: (a: any, b: any) => a.paciente.documento.localeCompare(b.paciente.documento)
+            sort: (a: any, b: any) => {
+                const aDocumento = a.paciente.numeroIdentificacion || a.paciente.documento;
+                const bDocumento = b.paciente.numeroIdentificacion || b.paciente.documento;
+                return aDocumento.localeCompare(bDocumento);
+            }
         },
         {
             key: 'diagnostico',

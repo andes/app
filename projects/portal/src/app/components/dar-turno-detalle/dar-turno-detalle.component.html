@@ -30,7 +30,7 @@
             <plex-detail direction="column" size="md" class="fix-height mt-2">
                 <img [mpiFotoPaciente]="paciente">
                 <div title case="capitalize" title>{{paciente.nombreCompleto }}</div>
-                <div subtitle>{{paciente.documento }}</div>
+                <div subtitle>{{ paciente | documento }}</div>
             </plex-detail>
 
             <plex-detail direction="column" size="md" class="fix-height mt-2">
@@ -39,7 +39,7 @@
                     {{turnoSelected.horaInicio | date:'HH:mm'}}</div>
             </plex-detail>
         </plex-grid>
-       
+
         <plex-grid type="full" size="lg" class="mr-2">
             <plex-label icon="mano-corazon" titulo="{{ prestacion.term  }}" subtitulo="Prestación"></plex-label>
             <plex-label icon="centro-salud" titulo="{{ agenda.organizacion.nombre}}" subtitulo="Organización">

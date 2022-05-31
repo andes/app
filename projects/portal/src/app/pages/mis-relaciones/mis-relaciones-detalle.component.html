@@ -2,10 +2,10 @@
     <plex-detail size="lg">
         <img [mpiFotoPaciente]="familiar">
         <plex-badge type="success">{{ vinculoFamiliar }}</plex-badge>
-        <div title>{{ familiar.apellido }}, {{ familiar.nombre }} </div>
+        <div title>{{ familiar | nombre }} </div>
         <div subtitle>{{ familiar.documento }} </div>
         <plex-label titulo="Edad" subtitulo="{{ familiar.edad }}"></plex-label>
-        <plex-label titulo="Documento" subtitulo="{{ familiar.documento }}"></plex-label>
+        <plex-label titulo="Documento" subtitulo="{{ familiar | documento }}"></plex-label>
     </plex-detail>
     <plex-title titulo="datos de contacto" size="sm"></plex-title>
     <plex-grid type="auto" size="md">

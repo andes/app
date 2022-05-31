@@ -99,11 +99,13 @@ export class DarTurnoDetalleComponent implements OnInit {
             const pacienteSave = {
                 id: paciente.id,
                 documento: paciente.documento,
+                numeroIdentificacion: paciente.numeroIdentificacion,
                 apellido: paciente.apellido,
                 nombre: paciente.nombre,
                 alias: paciente.alias,
                 fechaNacimiento: paciente.fechaNacimiento,
                 sexo: paciente.sexo,
+                genero: paciente.genero,
                 telefono,
                 carpetaEfectores: paciente.carpetaEfectores
             };

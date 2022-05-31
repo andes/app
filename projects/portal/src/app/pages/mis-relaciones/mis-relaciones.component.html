@@ -16,8 +16,8 @@
                            (click)="goTo(familiar.id)" [selected]="familiar?.id === selectedId">
                     <img [mpiFotoPaciente]="familiar">
                     <plex-badge type="success">{{ familiar.relacion.nombre }}</plex-badge>
-                    <plex-label direction="column" titulo="{{ familiar.nombre }} {{ familiar.apellido }}"
-                                subtitulo="{{ familiar.documento }}">
+                    <plex-label direction="column" titulo="{{ familiar | nombre }}"
+                                subtitulo="{{ familiar | documento }}">
                     </plex-label>
                     <plex-button type="warning" size="sm" icon="pencil"></plex-button>
                     <plex-button type="danger" size="sm" icon="account-off"></plex-button>

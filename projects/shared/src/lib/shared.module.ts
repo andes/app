@@ -17,6 +17,7 @@ import { FormAutoSaveDirective } from './directives/autosave.directives';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
 import { FormsModule } from '@angular/forms';
+import { DocumentoPipe } from './pipes/documento.pipe';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { FormsModule } from '@angular/forms';
         FechaPipe,
         HoraPipe,
         EdadPipe,
+        DocumentoPipe,
         EnumerarPipe,
         FromNowPipe,
         Html2TextPipe,
@@ -44,6 +46,7 @@ import { FormsModule } from '@angular/forms';
         FechaPipe,
         HoraPipe,
         EdadPipe,
+        DocumentoPipe,
         EnumerarPipe,
         FromNowPipe,
         Html2TextPipe,
