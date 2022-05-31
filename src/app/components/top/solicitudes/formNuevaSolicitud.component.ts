@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChildren, QueryList, OnInit, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
@@ -302,9 +302,12 @@ export class FormNuevaSolicitudComponent implements OnInit {
         this.modelo.paciente = {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
+            alias: this.paciente.alias,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentifiacion,
             sexo: this.paciente.sexo,
+            genero: this.paciente.genero,
             fechaNacimiento: this.paciente.fechaNacimiento
         };
         // Se guarda la solicitud 'pendiente' de prestación

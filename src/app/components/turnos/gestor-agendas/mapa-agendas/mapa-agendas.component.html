@@ -69,17 +69,17 @@
                                     <div plex-accordion-title>
                                         <plex-label titulo="{{turno.horaInicio
                                         | date: 'HH:mm'}}"
-                                                    subtitulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}}">
+                                                    subtitulo="{{turno.paciente | nombre}}">
                                         </plex-label>
                                     </div>
 
                                     <plex-grid cols="2">
                                         <plex-label size="sm" titulo="Documento"
-                                                    subtitulo="{{turno.paciente.documento}}">
+                                                    subtitulo="{{turno | documento}}">
                                         </plex-label>
                                         <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
                                         </plex-label>
-                                        <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
+                                        <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente | sexo}}">
                                         </plex-label>
                                         <plex-label size="sm" *ngIf="turno.nota" titulo="Nota"
                                                     subtitulo="{{turno.nota}}">
@@ -119,16 +119,16 @@
                                 <div plex-accordion-title>
                                     <plex-label titulo="{{turno.horaInicio
                                     | date: 'HH:mm'}}"
-                                                subtitulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}}">
+                                                subtitulo="{{turno.paciente | nombre}}">
                                     </plex-label>
                                 </div>
 
                                 <plex-grid cols="2">
-                                    <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente.documento}}">
+                                    <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente | documento}}">
                                     </plex-label>
                                     <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
                                     </plex-label>
-                                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
+                                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente | sexo}}">
                                     </plex-label>
                                     <plex-label size="sm" *ngIf="turno.nota" titulo="Nota" subtitulo="{{turno.nota}}">
                                     </plex-label>
@@ -177,16 +177,16 @@
             <plex-panel>
                 <div plex-accordion-title>
                     <plex-label titulo="{{turno.horaInicio
-                        | date: 'HH:mm'}}" subtitulo="{{turno.paciente.apellido}} , {{turno.paciente.nombre}}">
+                        | date: 'HH:mm'}}" subtitulo="{{turno.paciente | nombre}}">
                     </plex-label>
                 </div>
 
                 <plex-grid cols="2">
-                    <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente.documento}}">
+                    <plex-label size="sm" titulo="Documento" subtitulo="{{turno.paciente | documento}}">
                     </plex-label>
                     <plex-label size="sm" titulo="Edad" subtitulo="{{ turno.paciente | edad }}">
                     </plex-label>
-                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente.sexo}}">
+                    <plex-label size="sm" titulo="Sexo" subtitulo="{{turno.paciente | sexo}}">
                     </plex-label>
                     <plex-label size="sm" *ngIf="dia.agenda.espacioFisico" titulo="Espacio Fisico"
                                 subtitulo="{{dia.agenda.espacioFisico}}">

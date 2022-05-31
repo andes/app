@@ -918,9 +918,11 @@ export class DarTurnosComponent implements OnInit {
         const pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
             alias: this.paciente.alias,
+            genero: this.paciente.genero,
             fechaNacimiento: this.paciente.fechaNacimiento,
             sexo: this.paciente.sexo,
             telefono: this.telefono,
@@ -1067,7 +1069,7 @@ export class DarTurnosComponent implements OnInit {
             const dia = moment(this.turno.horaInicio).format('DD/MMM');
             const horario = moment(this.turno.horaInicio).format('HH:mm');
             // Inicial del nombre. más Apellidos (Max 20 caracteres)
-            const nombrePaciente = paciente.nombre.substr(0, 1) + '. ' + this.paciente.apellido.substr(0, 20);
+            const nombrePaciente = (paciente.alias || paciente.nombre).substr(0, 1) + '. ' + this.paciente.apellido.substr(0, 20);
             // Max 30 caracteres
             const prestacion = this.turnoTipoPrestacion.term.substr(0, 30);
             let nombreOrganizacion = this.agenda.organizacion.nombre.toLocaleLowerCase();
@@ -1186,8 +1188,10 @@ export class DarTurnosComponent implements OnInit {
         const datosPaciente = !this.paciente ? null : {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
+            alias: this.paciente.alias,
             apellido: this.paciente.apellido,
-            documento: this.paciente.documento
+            documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
         };
         const organizacion = !this.organizacion ? null : {
             id: this.organizacion.id,

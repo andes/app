@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -135,7 +135,7 @@ export class SolicitudManualComponent {
                             cb();
                         }
                     } else {
-                        this.plex.confirm('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + '<br> no posee una carpeta en esta Institución. <br> ¿Desea crear una nueva carpeta?').then((confirmar) => {
+                        this.plex.confirm('El paciente ' + this.paciente.apellido + ', ' + (this.paciente.alias || this.paciente.nombre) + '<br> no posee una carpeta en esta Institución. <br> ¿Desea crear una nueva carpeta?').then((confirmar) => {
                             if (confirmar) {
                                 this.crearNuevaCarpetaEmmiter.emit(true);
                             } else {

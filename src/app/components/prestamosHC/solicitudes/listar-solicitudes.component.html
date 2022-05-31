@@ -1,13 +1,13 @@
 <fieldset>
     <plex-title titulo="Solicitudes de Carpetas" size="lg">
         <plex-button class="pr-1" *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch" type='success'
-                     icon="share" title="Prestar todas" (click)="prestarCarpetas()">
+                    icon="share" title="Prestar todas" (click)="prestarCarpetas()">
         </plex-button>
         <plex-button class="pr-1" *ngIf="carpetas.length" icon="printer" type="primary" title="Imprimir solicitudes"
-                     (click)="showImprimirCarpetas()">
+                    (click)="showImprimirCarpetas()">
         </plex-button>
         <plex-button class="pr-1" type="success" icon="plus" title="Agregar solicitud manual"
-                     (click)="showSolicitudManual()">
+                    (click)="showSolicitudManual()">
         </plex-button>
     </plex-title>
 
@@ -20,11 +20,11 @@
         </plex-badge>
 
         <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
-                       name="fechaDesde" label="Desde" class="fechas" grow="1">
+                    name="fechaDesde" label="Desde" class="fechas" grow="1">
         </plex-datetime>
 
         <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
-                       name="fechaHasta" label="Hasta" class="fechas" grow="1">
+                    name="fechaHasta" label="Hasta" class="fechas" grow="1">
         </plex-datetime>
 
         <div grow="2">
@@ -36,12 +36,12 @@
 
     <plex-wrapper>
         <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" tmPrestaciones
-                     preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
+                    preload="true" name="prestaciones" label="Prestación" placeholder="Buscar una prestación">
         </plex-select>
 
         <plex-select [(ngModel)]=" profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
-                     (getData)="loadProfesionales($event)" label="Profesional"
-                     placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+                    (getData)="loadProfesionales($event)" label="Profesional"
+                    placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
         </plex-select>
     </plex-wrapper>
 
@@ -71,9 +71,9 @@
                 [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
                 <td (click)="switchSeleccionCarpeta(carpeta)">
                     <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                       class="mdi mdi-checkbox-marked"></i>
+                    class="mdi mdi-checkbox-marked"></i>
                     <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                       class="mdi mdi-checkbox-blank-outline"></i>
+                    class="mdi mdi-checkbox-blank-outline"></i>
                 </td>
                 <td>
                     {{carpeta.fecha | date:'dd-MM-yyyy'}}
@@ -87,10 +87,10 @@
                 </td>
                 <td>
                     <b>
-                        {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
+                        {{carpeta.paciente | nombre }}
                     </b>
                     <br> Documento:
-                    <b>{{carpeta.paciente.documento}}</b>
+                    <b>{{carpeta.paciente | documento}}</b>
                 </td>
                 <!-- Prestacion -->
                 <td *ngIf="carpeta.datosPrestamo?.turno">
@@ -135,7 +135,7 @@
                 <!-- Boton para subir HUDS digitalizada -->
                 <td>
                     <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
-                                 (onUpload)="onUpload($event, carpeta)" [modulo]="'prestamosHC'">
+                                (onUpload)="onUpload($event, carpeta)" [modulo]="'prestamosHC'">
                     </upload-file>
                     <br><br>
                     <span *ngIf="errorExt===i">
@@ -145,7 +145,7 @@
                 <!-- Estado -->
                 <td *ngIf="carpeta.estado == 'En archivo'">
                     <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)"
-                                 [disabled]="carpetasSeleccionadas.length > 0">
+                                [disabled]="carpetasSeleccionadas.length > 0">
                     </plex-button>
                 </td>
                 <td *ngIf="carpeta.estado == 'Prestada'">

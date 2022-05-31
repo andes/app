@@ -15,16 +15,16 @@
                                 * PROFESIONAL | {{ solicitud.fecha | fecha }} |
                                 {{ solicitud.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }} |
                                 {{ solicitud.datosPrestamo.turno.tipoPrestacion.term }} -> {{ solicitud.numero}} |
-                                {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                {{solicitud.paciente | nombre}}
                             </span>
                             <span *ngIf="solicitud.datosSolicitudManual">
                                 <span *ngIf="solicitud.datosSolicitudManual.profesional">
-                                    * PROFESIONAL | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.profesional.apellido }}, {{ solicitud.datosSolicitudManual.profesional.nombre
-                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                    * PROFESIONAL | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.profesional | nombre
+                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente | nombre}}
                                 </span>
                                 <span *ngIf="!solicitud.datosSolicitudManual.profesional">
-                                    * ADMINISTRATIVO | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.responsable.apellido }}, {{ solicitud.datosSolicitudManual.responsable.nombre
-                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                    * ADMINISTRATIVO | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.responsable | nombre
+                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente | nombre}}
                                 </span>
                             </span>
                         </th>
@@ -36,7 +36,7 @@
                                     <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
                                         <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null && 
                                         carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
-                                            {{carpeta.nroCarpeta}} - {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                            {{carpeta.nroCarpeta}} - {{ turno.paciente | nombre }}
                                         </span>
                                     </span>
                                 </td>

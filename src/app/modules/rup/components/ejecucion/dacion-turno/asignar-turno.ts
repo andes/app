@@ -109,6 +109,8 @@ export class RupAsignarTurnoComponent implements OnInit {
             apellido: paciente.apellido,
             nombre: paciente.nombre,
             alias: paciente.alias,
+            numeroIdentificacion: paciente.numeroIdentificacion,
+            genero: paciente.genero,
             fechaNacimiento: paciente.fechaNacimiento,
             sexo: paciente.sexo,
             obraSocial: this.obraSocialPaciente
@@ -167,7 +169,8 @@ export class RupAsignarTurnoComponent implements OnInit {
     guardarDatosTurno() {
         const paciente = this.datosTurno.paciente;
         if (this.agenda.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + (paciente.alias || paciente.nombre) +
+                '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
                 let fechaTurno;
                 if (confirmacion) {
                     const datosConfirma = {
