@@ -8,6 +8,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { Router } from '@angular/router';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { NgForm } from '@angular/forms';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
@@ -18,7 +19,6 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     public accionesEstado$: Observable<any>;
     public paciente$: Observable<any>;
-    public fecha;
     public dia;
     public hora;
     public registro: any;
@@ -60,9 +60,11 @@ export class NuevoRegistroSaludComponent implements OnInit {
     ngOnInit() {
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.paciente$ = this.mapaCamasService.selectedCama;
+        this.dia = this.mapaCamasService.fecha;
+        this.hora = this.mapaCamasService.fecha;
         this.mapaCamasService.historialInternacion$.pipe(
             map(estados => {
-                this.internacion.fechaIngreso = moment(estados[0].fechaIngreso);
+                this.internacion.fechaIngreso = moment(estados[0]?.fechaIngreso);
                 const egreso = estados.find(e => e.extras?.egreso)?.fecha;
                 this.internacion.fechaEgreso = egreso ? moment(egreso) : undefined;
             })
@@ -71,14 +73,15 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     onIniciar($event) {
         if ($event.formValid) {
-            const dateTime = moment(moment(this.fecha).format('MM/DD/YYYY') + ' ' + moment(this.hora).format('HH:mm')).toDate();
+            const hora = moment(this.hora);
+            const dateTime = moment(this.dia).hours(hora.hours()).minutes(hora.minutes()).toDate();
             const concepto = this.registro.parametros.concepto;
             this.paciente$.pipe(
                 take(1),
                 switchMap(cama => {
                     return this.crearPrestacion(cama, concepto, dateTime);
                 }),
-                switchMap(prestacion => {
+                switchMap((prestacion: IPrestacion) => {
                     return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
                         map(() => prestacion)
                     );
@@ -92,7 +95,10 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     changeTime() {
         if (this.hora) {
-            // para ajustar el dia, mes y año de 'hora' segun 'dia' cada vez que se modifique
+            /**
+             * Cada vez que 'dia' sea modificado, seteamos 'hora' con esta nueva fecha (dia, mes y año)
+             * de manera de poder realizar los controles necesarios.
+             */
             const hora = moment(this.hora);
             this.hora = moment(this.dia || undefined).hours(hora.hours()).minutes(hora.minutes());
         }
