@@ -1,3 +1,11 @@
+# [5.96.0](https://github.com/andes/app/compare/v5.95.1...v5.96.0) (2022-06-01)
+
+
+### Features
+
+* **ep:** muestra cantidad total de fichas filtradas ([#2594](https://github.com/andes/app/issues/2594)) ([8330072](https://github.com/andes/app/commit/8330072efedc7216193f60b4449e1d5591af6059))
+* **HUDS:** incluir ctId labos externos ([#2642](https://github.com/andes/app/issues/2642)) ([52293d4](https://github.com/andes/app/commit/52293d48e6f9578ffbe9813de7ab4aa36dca3b99))
+
 ## [5.95.1](https://github.com/andes/app/compare/v5.95.0...v5.95.1) (2022-05-25)
 
 
