@@ -432,7 +432,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
                 return this.internacionResumenService.update(cama.idInternacion, {
-                    idPrestacion: this.prestacion.id,
+                    idPrestacion: this.prestacion?.id,
                     fechaIngreso: this.informeIngreso.fechaIngreso
                 });
             })

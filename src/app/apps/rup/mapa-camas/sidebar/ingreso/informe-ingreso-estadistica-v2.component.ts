@@ -15,6 +15,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 
 export class InformeIngresoEstadisticaV2Component implements OnInit {
     resumenInternacion$: Observable<IResumenInternacion>;
+    accionesEstado$: Observable<any>;
     prestacion$: Observable<IPrestacion>;
     informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
@@ -22,6 +23,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
 
     // EVENTOS
     @Output() toggleEditar = new EventEmitter<any>();
+    @Output() accion = new EventEmitter<any>();
 
     constructor(
         public mapaCamasService: MapaCamasService,
@@ -54,9 +56,17 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.paciente$ = this.resumenInternacion$.pipe(
             switchMap(resumen => resumen?.paciente ? this.mapaCamasService.getPaciente(resumen.paciente) : of(null))
         );
+        this.accionesEstado$ = this.mapaCamasService.camaSelectedSegunView$.pipe(
+            switchMap(cama => this.mapaCamasService.prestacionesPermitidas(of(cama))),
+            cache()
+        );
     }
 
     toggleEdit() {
         this.toggleEditar.emit();
+    }
+
+    onNuevoRegistrio() {
+        this.accion.emit({ accion: 'nuevo-registro' });
     }
 }

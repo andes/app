@@ -4,16 +4,16 @@
 <form #formulario="ngForm">
     <plex-wrapper>
         <plex-datetime label="Fecha del registro" type="date" name="fecha" [(ngModel)]="dia" required [min]="fechaMin"
-                       [max]="fechaMax" placeholder="01/01/2020" [skipBy]="'day'" (change)="changeTime()">
+                    [max]="fechaMax" placeholder="01/01/2020" [skipBy]="'day'" (change)="changeTime()">
         </plex-datetime>
         <plex-datetime label="Hora del registro" type="time" name="hora" [(ngModel)]="hora" required [min]="horaMin"
-                       [max]="horaMax" placeholder="00:00">
+                    [max]="horaMax" placeholder="00:00">
         </plex-datetime>
     </plex-wrapper>
 
     <plex-select label="Tipo de registro" name="tipo" [(ngModel)]="registro" [data]="accionesEstado$ | async"
-                 labelField="label" idField="label" required>
+                labelField="label" idField="label" required>
     </plex-select>
     <plex-button class="mt-4 float-right" type="success" label="Iniciar prestación" (click)="onIniciar($event)"
-                 [validateForm]="formulario" [disabled]="!formulario.valid"> </plex-button>
+                [validateForm]="formulario" [disabled]="!formulario.valid"> </plex-button>
 </form>

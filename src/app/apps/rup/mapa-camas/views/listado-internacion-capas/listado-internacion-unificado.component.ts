@@ -28,6 +28,7 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
+    public accion;
 
     mainView$ = this.mapaCamasService.mainView;
 
@@ -185,10 +186,19 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         } else {
             this.idInternacionSelected = null;
         }
+        this.accion = this.idInternacionSelected ? 'verDetalle' : null;
+    }
+
+    onAccion(value) {
+        if (value) {
+            this.accion = value.accion;
+        } else {
+            this.accion = this.idInternacionSelected ? 'verDetalle' : null;
+        }
     }
 
     volver() {
-        this.location.back();
+        this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/${this.mapaCamasService.capa}`]);
     }
 
 }

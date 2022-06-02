@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap, map, tap, take } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { NgForm } from '@angular/forms';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
@@ -18,7 +19,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
     @ViewChild('formulario', { static: false }) ngForm: NgForm;
 
     public accionesEstado$: Observable<any>;
-    public paciente$: Observable<any>;
+    public cama$: Observable<any>;
     public dia;
     public hora;
     public registro: any;
@@ -58,10 +59,15 @@ export class NuevoRegistroSaludComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
-        this.paciente$ = this.mapaCamasService.selectedCama;
+        this.cama$ = this.mapaCamasService.camaSelectedSegunView$.pipe(
+            map(cama => cama)
+        );
+        this.accionesEstado$ = this.cama$.pipe(
+            switchMap(cama => this.mapaCamasService.prestacionesPermitidas(of(cama))),
+            cache()
+        );
         this.dia = this.mapaCamasService.fecha;
-        this.hora = this.mapaCamasService.fecha;
+        this.hora = moment(this.mapaCamasService.fecha).toDate();
         this.mapaCamasService.historialInternacion$.pipe(
             map(estados => {
                 this.internacion.fechaIngreso = moment(estados[0]?.fechaIngreso);
@@ -76,7 +82,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
             const hora = moment(this.hora);
             const dateTime = moment(this.dia).hours(hora.hours()).minutes(hora.minutes()).toDate();
             const concepto = this.registro.parametros.concepto;
-            this.paciente$.pipe(
+            this.cama$.pipe(
                 take(1),
                 switchMap(cama => {
                     return this.crearPrestacion(cama, concepto, dateTime);
@@ -87,7 +93,8 @@ export class NuevoRegistroSaludComponent implements OnInit {
                     );
                 })
             ).subscribe((prestacion) => {
-                this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/${this.mapaCamasService.ambito}` });
+                const nombreButton = this.router.url.includes('listado-internacion') ? 'Listado de internacion' : 'Mapa de camas';
+                this.prestacionService.notificaRuta({ nombre: nombreButton, ruta: this.router.url });
                 this.router.navigate(['rup/ejecucion', prestacion.id]);
             });
         }

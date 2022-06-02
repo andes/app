@@ -236,7 +236,8 @@ export class MapaCamasService {
                         );
                     })
                 );
-            })
+            }),
+            cache()
         );
 
         const desde = moment().subtract(12, 'months').toDate();

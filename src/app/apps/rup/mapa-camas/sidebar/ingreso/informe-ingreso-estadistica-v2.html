@@ -27,6 +27,9 @@
                     <plex-badge *ngIf="prestacion?.ejecucion.registros[0].esCensable" type="info" size="sm">
                         Censable
                     </plex-badge>
+                    <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
+                        <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                    </ng-container>
                 </plex-title>
 
                 <plex-grid cols="2">
@@ -74,7 +77,11 @@
         </plex-title>
         <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal" [fields]="pacienteFields">
         </paciente-detalle>
-        <plex-title size="sm" titulo="DATOS DE INTERNACION"></plex-title>
+        <plex-title size="sm" titulo="DATOS DE INTERNACION">
+            <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
+                <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+            </ng-container>
+        </plex-title>
         <plex-label titulo="Fecha ingreso" subtitulo="{{ resumen.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
         </plex-label>
     </ng-template>
