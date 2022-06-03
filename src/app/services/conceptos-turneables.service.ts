@@ -16,11 +16,11 @@ export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion
         super(server);
     }
 
-    getByPermisos(permisos?: string) {
-        permisos = permisos || undefined;
-        return this.search({ permisos }).pipe(
+    getByPermisos(permisos?: string, ambito?: string) {
+        permisos = permisos || null;
+        return this.search({ permisos, ambito }).pipe(
             cacheStorage({
-                key: 'conceptos-turneables-' + permisos,
+                key: 'conceptos-turneables-' + permisos + ambito,
                 until: this.auth.session(true)
             })
         );
