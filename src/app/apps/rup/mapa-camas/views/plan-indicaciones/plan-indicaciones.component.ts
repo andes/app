@@ -181,6 +181,7 @@ export class PlanIndicacionesComponent implements OnInit {
                     );
                 }
                 this.showSecciones[indicacion.seccion.term] = true;
+                this.resetSelection();
             });
 
             const eventosMap = {};
@@ -225,6 +226,10 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onDateChange() {
         this.actualizar();
+        this.resetSelection();
+    }
+
+    resetSelection() {
         this.selectedIndicacion = {};
         this.onSelectedChange();
     }
