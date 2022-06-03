@@ -29,7 +29,8 @@ export class CensosMensualesComponent implements OnInit {
         mortHosp: '0',
         promPer: '0',
         giroCama: '0',
-        promDiasEstada: '0'
+        promDiasEstada: '0',
+        porcentajeCamasOcupadas: '0'
     };
     totales = {
         existencia0: 0,
@@ -93,7 +94,8 @@ export class CensosMensualesComponent implements OnInit {
             mortHosp: '0',
             promPer: '0',
             giroCama: '0',
-            promDiasEstada: '0'
+            promDiasEstada: '0',
+            porcentajeCamasOcupadas: '0'
         };
         this.censo = [];
         this.mapaCamasService.censoMensual(moment(this.fechaDesde).toDate(), moment(this.fechaHasta).toDate(), this.selectedUnidadOranizativa.conceptId)
@@ -157,9 +159,7 @@ export class CensosMensualesComponent implements OnInit {
             fechaDesde: moment(this.fechaDesde).toDate(),
             fechaHasta: moment(this.fechaHasta).toDate(),
             unidadOrganizativa: this.selectedUnidadOranizativa.conceptId
-        },
-        'CENSOMENSUAL'
-        ).subscribe(() => {
+        }, 'CENSOMENSUAL').subscribe(() => {
             this.plex.toast('success', 'Descarga exitosa');
         }, error => {
             this.plex.toast('danger', 'Descarga fallida');
@@ -191,6 +191,8 @@ export class CensosMensualesComponent implements OnInit {
 
         const totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
         this.datosCensoTotal['promDiasEstada'] = (totalEgreso === 0) ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
+
+        this.datosCensoTotal['porcentajeCamasOcupadas'] = (this.censo.length && this.totales.pacientesDia > 0) ? ((this.totales.pacientesDia / this.totales.disponibles24) * 100).toFixed(2) : '0';
     }
 
     volver() {
