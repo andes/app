@@ -138,7 +138,11 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
-                                this.conceptosTurneablesService.search({ ids: items }).subscribe((data) => {
+                                const srhPrest: any = { ids: items };
+                                if (this.item.subtype) {
+                                    srhPrest.ambito = this.item.subtype;
+                                }
+                                this.conceptosTurneablesService.search(srhPrest).subscribe((data) => {
                                     this.loading = false;
                                     this.seleccionados = [...data];
                                     this.parseSelecionados();
@@ -201,7 +205,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         }
     }
 
-    loadData(type, event) {
+    loadData(type, event, subtype?) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
         // [TODO] Filtrar otras tipos de datos
         const query: any = {};
@@ -211,6 +215,9 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         switch (type) {
             case 'prestacion':
                 query.term = '^' + event.query;
+                if (subtype) {
+                    query.ambito = subtype;
+                }
                 this.conceptosTurneablesService.search(query).subscribe((data) => {
                     data = [...data, ...this.seleccionados || []];
                     event.callback(data);
