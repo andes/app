@@ -1,3 +1,17 @@
+# [5.97.0](https://github.com/andes/app/compare/v5.96.0...v5.97.0) (2022-06-08)
+
+
+### Bug Fixes
+
+* **in:** deshabilita cambio de cama fuera de fecha ([#2667](https://github.com/andes/app/issues/2667)) ([43539c6](https://github.com/andes/app/commit/43539c65be35ad98ad4ba0345dd958c6c1f7a5d2))
+
+
+### Features
+
+* **CIT-175:** filtrar por ambito ambulatorio en prestacion fuera de agenda ([#2650](https://github.com/andes/app/issues/2650)) ([e1f4b09](https://github.com/andes/app/commit/e1f4b09ffca80e45487a75cea1d2a8a3ae3e0fd4))
+* **GDU-49:** sea grega subtypo a los permisos ([#2657](https://github.com/andes/app/issues/2657)) ([f2e9a40](https://github.com/andes/app/commit/f2e9a402fe0cb0f942fc7a30bd93f071719be62d))
+* **IN-408:** Censo mensual - porcentajes ([#2660](https://github.com/andes/app/issues/2660)) ([5b1e7dc](https://github.com/andes/app/commit/5b1e7dca0d96a517899b29dc201f57cac4d0e642))
+
 # [5.96.0](https://github.com/andes/app/compare/v5.95.1...v5.96.0) (2022-06-01)
 
 
