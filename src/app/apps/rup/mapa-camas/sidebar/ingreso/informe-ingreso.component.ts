@@ -17,7 +17,6 @@ export class InformeIngresoComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     // EVENTOS
-    @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
 
     constructor(
@@ -26,14 +25,10 @@ export class InformeIngresoComponent implements OnInit {
 
     ngOnInit() {
         this.prestacion$ = this.mapaCamasService.prestacion$;
-
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
-            map((prestacion) => {
-                return prestacion.ejecucion.registros[0].valor.informeIngreso;
-            })
+            map((prestacion) => prestacion.ejecucion.registros[0].valor.informeIngreso)
         );
-
         this.paciente$ = this.prestacion$.pipe(
             notNull(),
             switchMap(prestacion => this.mapaCamasService.getPaciente(prestacion.paciente))

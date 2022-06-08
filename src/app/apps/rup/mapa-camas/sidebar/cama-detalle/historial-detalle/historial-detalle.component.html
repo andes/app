@@ -1,17 +1,11 @@
 <plex-title titulo="Historial de movimientos"></plex-title>
-
-<div class="row mb-1">
-    <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600"
-                       (change)="onChange($event)">
-        </plex-datetime>
-    </div>
-    <div class="col">
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600"
-                       (change)="onChange($event)">
-        </plex-datetime>
-    </div>
-</div>
+<!--  HISTORIAL DE MOVIMIENTOS DE UNA CAMA -->
+<plex-grid size="sm" type="full" cols="2" class="mb-1 mt-0">
+    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600" (change)="onChange($event)">
+    </plex-datetime>
+    <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600" (change)="onChange($event)">
+    </plex-datetime>
+</plex-grid>
 
 <table class="table table-striped">
     <thead>
@@ -56,4 +50,7 @@
             </td>
         </tr>
     </tbody>
-</table>
+</table><div *ngIf="!(historial$ | async)?.length" justify="center">
+    <plex-label class="mt-2" direction="column" size="md" icon=""
+                titulo="No existen movimientos entre las fechas seleccionadas" icon="calendario-rango-bold"></plex-label>
+</div>

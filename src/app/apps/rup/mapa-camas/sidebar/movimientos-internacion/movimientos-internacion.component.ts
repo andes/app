@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { auditTime, catchError, map, startWith, takeUntil } from 'rxjs/operators';
+import { auditTime, catchError, map, startWith, takeUntil, switchMap } from 'rxjs/operators';
 import { MapaCamasService } from '../../services/mapa-camas.service';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -20,6 +21,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
 
     constructor(
         private mapaCamasService: MapaCamasService,
+        private mapaCamasHTTP: MapaCamasHTTP
     ) { }
 
     getFechasInternacion() {
@@ -36,10 +38,10 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             );
         } else {
             return this.mapaCamasService.resumenInternacion$.pipe(
-                map(prestacion => {
+                map(resumen => {
                     return {
-                        desde: prestacion.fechaIngreso,
-                        hasta: prestacion.fechaEgreso || new Date()
+                        desde: resumen.fechaIngreso,
+                        hasta: resumen.fechaEgreso || new Date()
                     };
                 }),
                 catchError(() => of(null))
@@ -54,8 +56,6 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
-        this.onChange();
-
         this.getFechasInternacion().pipe(
             takeUntil(this.onDestroy$),
             auditTime(0)
@@ -80,21 +80,25 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
         );
 
         this.historial$ = combineLatest([
-            this.mapaCamasService.historialInternacion$,
+            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.capa2,
             fechaPipe
         ]).pipe(
-            map(([movimientos, { desde, hasta }]) => {
-                return movimientos.filter((mov) => {
-                    return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
-                }).map(mov => {
-                    if (mov.sectores) {
-                        mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
-                    }
-                    return mov;
-                });
+            switchMap(([cama, capa, { desde, hasta }]) => {
+                return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, cama.idInternacion).pipe(
+                    map(movimientos => {
+                        return movimientos.filter((mov) => {
+                            return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
+                        }).map(mov => {
+                            if (mov.sectores) {
+                                mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
+                            }
+                            return mov;
+                        }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                    })
+                );
             })
         );
-
     }
 
     onChange() {
@@ -102,7 +106,6 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             desde: this.desde,
             hasta: this.hasta
         };
-
         if (this.desde && this.hasta) {
             const fechaDesdeValida = (this.desde <= this.hasta);
             const fechaHastaValida = (this.hasta <= moment().toDate() && this.hasta >= this.desde);
@@ -112,5 +115,4 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             }
         }
     }
-
 }

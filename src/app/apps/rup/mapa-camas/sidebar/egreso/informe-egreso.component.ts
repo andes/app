@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable } from 'rxjs';
 import { MapaCamasService } from '../../services/mapa-camas.service';
@@ -38,6 +38,5 @@ export class InformeEgresoComponent implements OnInit {
                 return registro.valor.InformeEgreso;
             })
         );
-
     }
 }

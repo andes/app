@@ -2,9 +2,9 @@
     <plex-layout-main>
         <form #formCama="ngForm">
             <plex-title titulo="DATOS DE CAMA">
-                <plex-button label="CANCELAR" type="danger" (click)="volver()"></plex-button>
+                <plex-button class="mr-1" label="CANCELAR" type="danger" (click)="volver()"></plex-button>
                 <plex-button *ngIf="permisosMapaCamasService.camaBaja && cama?.idCama"
-                             title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
+                             class="mr-1" title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
                              [disabled]="!verificarBaja() || disabled" label="INACTIVAR CAMA" type="warning"
                              (click)="darBaja()">
                 </plex-button>

@@ -10,7 +10,6 @@ export class ListadoInternacionService {
 
     public listaInternacion$: Observable<IPrestacion[]>;
     public listaInternacionFiltrada$: Observable<IPrestacion[]>;
-
     public pacienteText = new BehaviorSubject<string>(null);
     public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());

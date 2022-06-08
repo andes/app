@@ -55,11 +55,11 @@
 
             <plex-layout-sidebar type="invert">
                 <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES">
-                    <plex-button *ngIf="!puedeRomper" label="VALIDAR" type="success" size="sm"
+                    <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
                                  [disabled]="!puedeValidar || editando"
                                  (click)="validar(selectedPrestacion, fechaHasta)">
                     </plex-button>
-                    <plex-button *ngIf="puedeRomper" label="ROMPER VALIDACION" type="warning" size="sm"
+                    <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACION" type="warning" size="sm"
                                  (click)="romperValidacion(selectedPrestacion, fechaHasta)">
                     </plex-button>
                     <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">

@@ -4,7 +4,12 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-mapa-camas-main',
-    templateUrl: './mapa-camas-main.component.html'
+    templateUrl: './mapa-camas-main.component.html',
+    styles: [`
+        plex-modal main {
+            min-height: 20vh;
+        }
+    `]
 })
 
 export class MapaCamasMainComponent implements OnInit {
@@ -12,7 +17,8 @@ export class MapaCamasMainComponent implements OnInit {
         { id: 'medica', label: 'Médico' },
         { id: 'enfermeria', label: 'Enfermero' },
         { id: 'estadistica', label: 'Estadístico' },
-        { id: 'interconsultores', label: 'Interconsultores' }
+        { id: 'interconsultores', label: 'Interconsultores' },
+        { id: 'estadistica-v2', label: 'Estadístico (nuevo)' }
     ];
     constructor(
         public auth: Auth,

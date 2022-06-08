@@ -1,22 +1,22 @@
+
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../mitos';
-import { causaExterna, listaTipoEgreso, opcionesCondicionAlNacer, opcionesSexo, opcionesTerminacion, opcionesTipoParto } from '../../constantes-internacion';
+import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-
 @Component({
     selector: 'app-egresar-paciente',
     templateUrl: './egresar-paciente.component.html',
@@ -48,7 +48,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public estadoDestino;
     public checkTraslado = false;
     private informeIngreso;
-    public resumenPacienteInternacion$: Observable<any>;
+    public registrosEgresoResumen$: Observable<any>;
     public registro: any = {
         destacado: false,
         esSolicitud: false,
@@ -90,11 +90,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public prestacionValidada = false;
     public disableButton = false;
     public inProgress = false;
-
+    public resumen;
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
     private subscription4: Subscription;
+    public disableButton$: Observable<boolean>;
 
     constructor(
         public auth: Auth,
@@ -107,10 +108,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         private listadoInternacionService: ListadoInternacionService,
         private internacionResumenService: InternacionResumenHTTP,
         private camasHTTP: MapaCamasHTTP,
-
-    ) {
-
-    }
+    ) { }
 
     ngOnDestroy() {
         if (this.subscription) {
@@ -126,11 +124,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.subscription4.unsubscribe();
         }
     }
-    public disableButton$: Observable<boolean>;
     ngOnInit() {
         this.inProgress = true;
         this.fecha = this.mapaCamasService.fecha;
-
 
         this.disableButton$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => {
@@ -142,39 +138,40 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if ((camaActual?.estado === 'ocupada' && camaActual?.idInternacion === this.cama?.idInternacion) || this.prestacion) {
                     return false;
                 }
-
                 return true;
-
             })
         );
 
-        this.resumenPacienteInternacion$ = combineLatest([
+        this.registrosEgresoResumen$ = combineLatest([
             this.mapaCamasService.capa2,
             this.mapaCamasService.prestacion$
         ]).pipe(
             first(),
             switchMap(([capa, prestacion]) => {
-                if (capa !== 'estadistica'|| !prestacion) {
-                    return of(null);
-                }
-                const fecha = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                const paciente = prestacion.paciente.id;
+                if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-camas')) {
+                    /*  Si es capa estadistica va a existir la prestacion pero no el resumen.
+                        Si es capa medica la que realiza el egreso, puede que estadistica-v2 aun no haya cargado el informe de ingreso.
+                        En este caso particular, permitimos el egreso y obtenemos la fecha de ingreso desde el resumen.
+                    */
+                    const fechaIngreso = prestacion?.ejecucion.registros[0].valor.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
+                    const paciente = prestacion?.paciente.id || this.resumen.paciente.id;
+                    const desde = moment(fechaIngreso).subtract(12, 'hours').toDate();
+                    const hasta = moment(fechaIngreso).add(12, 'hours').toDate();
 
-                const desde = moment(fecha).subtract(12, 'hours').toDate();
-                const hasta = moment(fecha).add(12, 'hours').toDate();
-                return this.internacionResumenService.search({
-                    organizacion: this.auth.organizacion.id,
-                    paciente: paciente,
-                    ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
-                });
-
-            }),
-            map(resumenes => resumenes && resumenes[0]),
-            tap(resumen => {
-                if (resumen) {
-                    resumen.registros = resumen.registros.filter(r => r.tipo === 'epicrisis');
+                    return this.internacionResumenService.search({
+                        organizacion: this.auth.organizacion.id,
+                        paciente: paciente,
+                        ingreso: this.internacionResumenService.queryDateParams(desde, hasta)
+                    }).pipe(
+                        map(resumen => resumen[0])
+                    );
                 }
+                if (capa === 'estadistica-v2' && this.view === 'listado-internacion') {
+                    return this.mapaCamasService.resumenInternacion$;
+                }
+                return of(null);
             }),
+            map(resumen => resumen?.registros.filter(r => r.tipo === 'epicrisis')),
             cache()
         );
 
@@ -183,13 +180,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.ambito2,
             this.mapaCamasService.selectedCama,
-            this.mapaCamasService.prestacion$
-        ]).subscribe(([view, capa, ambito, cama, prestacion]) => {
+            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.resumenInternacion$
+        ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
-            let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
+            this.resumen = resumen;
+            let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha || moment().toDate();
+
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
-                fecha = moment().toDate();
+                fecha = resumen?.fechaEgreso || moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
@@ -197,18 +197,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             this.view = view;
             this.capa = capa;
-            if (capa === 'estadistica') {
+            if (capa === 'estadistica' || capa === 'estadistica-v2') {
                 if (!prestacion) {
                     return;
                 }
-                const pacienteId = prestacion.paciente.id;
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-
                 if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
-                    this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
@@ -222,13 +219,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     }
                     const fechaABuscarMin = moment(this.informeIngreso.fechaIngreso).add(-1, 's').toDate();
                     const fechaABuscarMax = this.hayEgreso ? moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's').toDate() : moment().toDate();
-
-                    this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, this.prestacion.id)
+                    const idInternacion = resumen?.id || prestacion.id;
+                    this.subscription2 = this.camasHTTP.historialInternacion(ambito, capa, fechaABuscarMin, fechaABuscarMax, idInternacion)
                         .subscribe((snapshot) => {
                             snapshot.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
                             this.cama = snapshot[0];
-                            this.cama.id = this.cama.idCama;
                             if (this.cama) {
+                                this.cama.id = this.cama.idCama;
                                 this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
                                 this.checkHistorial(fecha);
                                 if (this.subscription3) {
@@ -268,18 +265,22 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     setFecha() {
         this.mapaCamasService.setFecha(this.fecha);
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
-        if (this.capa === 'estadistica') {
+        if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
+            // si se está egresando con fusion de capas puede que estadistica-v2 aun no haya cargado el informe
+            if (this.capa === 'estadistica-v2' && !this.informeIngreso?.fechaIngreso) {
+                this.plex.info('warning', 'Antes de egresar al paciente debe cargar el informe de ingreso.');
+                return;
+            }
             this.setDiasEstada();
             this.checkEstadoCama();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
-
         }
     }
 
     guardar(valid) {
         if (valid.formValid) {
             this.disableButton = true;
-            if (this.capa === 'estadistica') {
+            if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
                 this.egresoExtendido();
             } else {
                 this.egresoSimplificado(this.estadoDestino);
@@ -294,7 +295,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     egresoSimplificado(estado) {
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
             let estadoPatch = {};
-            if (!this.cama.sala) {
+            if (!this.cama.sala) {// si no es sala comun
                 estadoPatch = {
                     _id: this.cama.id,
                     estado: estado,
@@ -317,7 +318,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 };
                 estadoPatch = this.cama;
             }
-
             const saveInternacion = () => {
                 if (this.capa !== 'estadistica') {
                     return this.internacionResumenService.update(this.cama.idInternacion, {
@@ -337,7 +337,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
                 } else if (this.view === 'mapa-camas') {
-                    this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
                 this.disableButton = false;
@@ -354,6 +353,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.prestacion.id).subscribe((snapshot) => {
                 const ultimaCama = snapshot[0];
                 this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.listadoInternacionService.setFechaHasta(moment().toDate());
                 });
@@ -372,12 +372,31 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 op: 'registros',
                 registros: registros
             };
-            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
+            this.servicioPrestacion.patch(this.prestacion.id, params).pipe(
+                switchMap(prestacion => {
+                    if (this.view === 'listado-internacion') {
+                        this.mapaCamasService.selectPrestacion(prestacion);
+                    }
+                    if (this.resumen?.fechaEgreso && this.capa === 'estadistica-v2') {
+                        const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
+                        // actualiza fecha y tipo de egreso en el resumen para mantener la sincronización
+                        return this.internacionResumenService.update(idInternacion, {
+                            tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                            fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                        });
+                    } else {
+                        this.egresoSimplificado(this.estadoDestino);
+                        this.cambiarEstado();
+                    }
+                    return of(null);
+                }),
+            ).subscribe(() => {
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
                 if (this.view === 'listado-internacion') {
-                    this.mapaCamasService.selectPrestacion(prestacion);
+                    this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
-                this.egresoSimplificado(this.estadoDestino);
-                this.cambiarEstado();
+            }, () => {
+                this.plex.info('danger', 'Error al intentar actualizar los datos');
             });
         }
     }
@@ -410,8 +429,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
 
     setDiasEstada() {
-        if (this.capa === 'estadistica') {
-            const fechaIngreso = this.informeIngreso.fechaIngreso;
+        if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
+            const fechaIngreso = this.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
             const fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
             this.registro.valor.InformeEgreso['diasDeEstada'] = this.mapaCamasService.calcularDiasEstada(fechaIngreso, fechaEgreso);
         }
@@ -610,13 +629,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
     }
 
-    // Se debe controlar que:
-    // La cama este disponible en la fecha que la quiero usar,
-
+    //  Se debe controlar que la cama este disponible en la fecha que la quiero usar,
     checkEstadoCama() {
         this.mapaCamasService.get(this.fecha, this.cama?.id).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
-                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
+                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id) && this.capa !== 'estadistica-v2') {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
                     this.fecha = this.fechaEgresoOriginal;
                     this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
@@ -639,7 +656,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             (historialCama) => {
                 this.fechaMax = null;
                 for (const historial of historialCama) {
-                    if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama.idInternacion) {
+                    if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama?.idInternacion) {
                         this.fechaMax = historial.fecha;
                     }
                 }

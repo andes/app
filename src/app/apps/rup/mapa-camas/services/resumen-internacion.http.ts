@@ -10,9 +10,7 @@ export class InternacionResumenHTTP extends ResourceBaseHttp<IResumenInternacion
     constructor(protected server: Server) {
         super(server);
     }
-
 }
-
 
 export interface IResumenInternacion {
     id: string;
@@ -37,4 +35,7 @@ export interface IResumenInternacion {
         valor: any;
         esDiagnosticoPrincipal: boolean;
     }[];
+
+    idPrestacion: string;
+
 }

@@ -7,13 +7,15 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
+
 @Component({
     selector: 'app-mapa-camas-capa',
     templateUrl: 'mapa-camas-capa.component.html',
@@ -25,8 +27,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     @ViewChild(CdkVirtualScrollViewport, { static: false })
     public viewPort: CdkVirtualScrollViewport;
 
-    ambito$: Observable<string>;
-    capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
     organizacion: string;
     fecha = moment().toDate();
@@ -42,8 +42,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     listadoRecursos = false;
     camasDisponibles;
     fecha$: Observable<Date>;
-
-    puedeVerHistorial$: Observable<boolean>;
+    organizacionv2; // true si la organizacion usa capas unificadas
+    estado$: Observable<IMaquinaEstados>;
 
     mainView$ = this.mapaCamasService.mainView;
 
@@ -80,7 +80,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
         public elementoRUPService: ElementosRUPService,
-        public ws: WebSocketService
+        public ws: WebSocketService,
+        public organizacionService: OrganizacionService
 
     ) { }
 
@@ -145,9 +146,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.organizacion = this.auth.organizacion.id;
         this.columns = this.mapaCamasService.columnsMapa.getValue();
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion =>
+            this.organizacionv2 = organizacion.usaEstadisticaV2);
 
-        this.puedeVerHistorial$ = this.mapaCamasService.maquinaDeEstado$.pipe(
-            map(estado => estado.historialMedico)
+        this.estado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
+            map(estado => estado)
         );
 
         this.getSnapshot();
@@ -166,11 +169,17 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             })
         );
     }
+
     verListadoRecursos() {
         this.listadoRecursos = this.listadoRecursos ? false : true;
     }
+
     verListadoInternacion() {
-        this.router.navigate(['/mapa-camas/listado-internacion']);
+        if (this.organizacionv2) { // Si el efector usa capas unificadas
+            this.router.navigate([`/mapa-camas/listado-internacion-unificado/${this.route.snapshot.paramMap.get('capa')}`]);
+        } else {
+            this.router.navigate([`/mapa-camas/listado-internacion/${this.route.snapshot.paramMap.get('capa')}`]);
+        }
     }
 
     verListadoInternacionMedico() {
@@ -212,7 +221,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     volverADetalle() {
-        this.accion = 'verDetalle';
+        const cama = this.mapaCamasService.selectedCama.getValue();
+        this.accion = cama.id ? 'verDetalle' : null;
     }
 
     volverADesocupar() {
@@ -238,9 +248,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     accionListadoRecurso(data) {
-        if (data.verDetalle) {
-            this.verDetalle(data.cama, data.selectedCama);
-        }
         if (data.selectCama) {
             this.selectCama(data.cama, data.relacion);
         }

@@ -61,4 +61,5 @@ export interface IOrganizacion {
     esCOM?: boolean;
     trasladosEspeciales?: [ITipoTraslado];
     zonaSanitaria?: IZonaSanitaria;
+    usaEstadisticaV2: boolean;
 }

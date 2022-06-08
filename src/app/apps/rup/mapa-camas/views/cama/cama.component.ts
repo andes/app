@@ -8,10 +8,10 @@ import { Plex } from '@andes/plex';
 import { SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-import { Observable, combineLatest, Subscription, forkJoin, concat } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
-import { map, pluck } from 'rxjs/operators';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
@@ -45,11 +45,7 @@ export class CamaMainComponent implements OnInit {
         esCensable: null
     };
     public infoCama = {};
-    public capas = [
-        'estadistica',
-        'medica',
-        // 'enfermeria'
-    ];
+    public capas$: Observable<string[]>;
     public puedeEditar = true;
 
     constructor(
@@ -70,7 +66,11 @@ export class CamaMainComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.permisosMapaCamasService.setAmbito(this.ambito);
-
+        this.capas$ = this.maquinaEstadosHTTP.getAll(this.auth.organizacion.id, this.ambito).pipe(
+            map(estados => estados.map(estado => estado.capa)
+                .filter(capa => capa !== 'enfermeria' && capa !== 'estadistica-v2')
+            )
+        );
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -113,15 +113,13 @@ export class CamaMainComponent implements OnInit {
             if (!this.permisosMapaCamasService.camaEdit) {
                 this.puedeEditar = false;
             }
-            const snapshotRequests = this.capas.map(capa => {
-                return this.camasHTTP.snapshot(this.ambito, capa, moment().toDate(), null, null, id).pipe(
-                    map(snapshots => snapshots[0])
-                );
-            });
-            forkJoin(
-                ...snapshotRequests
-            ).subscribe(snapshots => {
-                snapshots.forEach((snap) => {
+            this.capas$.pipe(
+                map(capas => capas.map(capa => this.camasHTTP.snapshot(this.ambito, capa, moment().toDate(), null, null, id))),
+                switchMap(snaps => forkJoin(snaps).pipe(
+                    map(snapshotsArray => snapshotsArray.map(snapshots => snapshots[0]) )
+                ) )
+            ).subscribe((snapshots: any) => {
+                snapshots.map((snap) => {
                     if (!this.infoCama[snap.capa]) {
                         this.infoCama[snap.capa] = [];
                     }
@@ -165,10 +163,10 @@ export class CamaMainComponent implements OnInit {
                 ...this.getCamaModel(),
                 esMovimiento: false
             };
-            const savedRequest = this.capas.map(capa => this.guardarCambios(datosCama, capa, fecha));
-            concat(
-                ...savedRequest
-            ).subscribe(
+            const savedRequest = this.capas$.pipe(
+                switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, fecha))))
+            );
+            savedRequest.subscribe(
                 () => null,
                 (err) => {
                     this.disabled = false;
@@ -188,7 +186,8 @@ export class CamaMainComponent implements OnInit {
             this.guardarCambios(dtoCama, null, this.fecha).subscribe(() => {
                 this.disabled = false;
                 this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                this.router.navigate([`/mapa-camas/${this.ambito}`]);
+                // this.router.navigate([`/mapa-camas/${this.ambito}`]);
+                this.location.back();
             }, () => {
                 this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
                 this.disabled = false;
@@ -214,10 +213,11 @@ export class CamaMainComponent implements OnInit {
                     esMovimiento: true
                 };
                 const hoy = moment().toDate();
-                const inactivarRequest = this.capas.map(capa => this.guardarCambios(datosCama, capa, hoy));
-                concat(
-                    ...inactivarRequest
-                ).subscribe(
+                const inactivarRequest = this.capas$.pipe(
+                    switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, hoy))))
+                );
+
+                inactivarRequest.subscribe(
                     () => null,
                     (err) => {
                         this.disabled = false;
@@ -235,20 +235,22 @@ export class CamaMainComponent implements OnInit {
 
     verificarBaja() {
         let contador = 0;
-
-        for (const capa of this.capas) {
-            const maquinaEstados = this.infoCama[capa][0];
-            const snap = this.infoCama[capa][1];
-            if (maquinaEstados) {
-                for (const relacion of maquinaEstados.relaciones) {
-                    if ((relacion.destino === 'inactiva') && (relacion.origen === snap.estado)) {
-                        contador++;
+        return this.capas$.pipe(
+            map(capas => {
+                capas.map(capa => {
+                    const maquinaEstados = this.infoCama[capa][0];
+                    const snap = this.infoCama[capa][1];
+                    if (maquinaEstados) {
+                        for (const relacion of maquinaEstados.relaciones) {
+                            if ((relacion.destino === 'inactiva') && (relacion.origen === snap.estado)) {
+                                contador++;
+                            }
+                        }
                     }
-                }
-            }
-        }
-
-        return (contador === this.capas.length);
+                });
+                return (contador === capas.length);
+            })
+        );
     }
 
     onSectorSelect($event, organizacion) {

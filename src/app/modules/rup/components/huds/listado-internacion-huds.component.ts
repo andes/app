@@ -52,8 +52,8 @@ export class ListadoInternacionHudsComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const fecha1 = moment(a.ejecucion.registros[0].valor.informeIngreso.fechaIngreso) || '';
-                const fecha2 = moment(b.ejecucion.registros[0].valor.informeIngreso.fechaIngreso) || '';
+                const fecha1 = moment(a.ejecucion.registros[1].valor.informeEgreso.fechaEgreso) || '';
+                const fecha2 = moment(b.ejecucion.registros[1].valor.informeEgreso.fechaEgreso) || '';
                 return fecha1.diff(fecha2);
             }
         },

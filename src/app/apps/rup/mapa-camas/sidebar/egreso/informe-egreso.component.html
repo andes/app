@@ -1,5 +1,5 @@
 <ng-container *ngIf="prestacion$ | async as prestacion">
-    <plex-title justify titulo="EGRESO">
+    <plex-title justify titulo="EGRESO" size="md">
         <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
             <ng-content></ng-content>
         </ng-container>

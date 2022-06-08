@@ -29,6 +29,7 @@ import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.comp
 import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { InformeEgresoComponent } from './sidebar/egreso/informe-egreso.component';
+import { InformeIngresoEstadisticaV2Component } from './sidebar/ingreso/informe-ingreso-estadistica-v2.component';
 import { EstadoServicioComponent } from './sidebar/estado-servicio/estado-servicio.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
 import { IngresoDinamicoComponent } from './sidebar/ingreso-dinamico/ingreso-dinamico.component';
@@ -52,6 +53,7 @@ import { ItemInconsistenciaComponent } from './views/integridad/item-inconsisten
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { FiltrosListadoCapasComponent } from './views/listado-internacion-capas/filtros-listado/filtros-listado-capas.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { ListadoInternacionUnificadoComponent } from './views/listado-internacion-capas/listado-internacion-unificado.component';
 import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
@@ -84,6 +86,7 @@ export const INTERNACION_COMPONENTS = [
     InternacionDetalleComponent,
     InformeIngresoComponent,
     InformeEgresoComponent,
+    InformeIngresoEstadisticaV2Component,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,
@@ -103,6 +106,7 @@ export const INTERNACION_COMPONENTS = [
     IngresoDinamicoComponent,
     PrestarDevolverRecursoComponent,
     ListadoInternacionCapasComponent,
+    ListadoInternacionUnificadoComponent,
     FiltrosListadoCapasComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,

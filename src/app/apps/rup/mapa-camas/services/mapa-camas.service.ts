@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { cache, notNull } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
-import { catchError, filter, map, multicast, pluck, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, multicast, pluck, startWith, switchMap } from 'rxjs/operators';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
@@ -57,9 +57,8 @@ export class MapaCamasService {
     public snapshotFiltrado$: Observable<ISnapshot[]>;
     public snapshotOrdenado$: Observable<ISnapshot[]>;
 
-
     public resumenInternacion$: Observable<IResumenInternacion>;
-
+    public selectedResumen = new BehaviorSubject<IResumenInternacion>({ id: null } as any);
 
     public fechaActual$: Observable<Date>;
 
@@ -125,14 +124,11 @@ export class MapaCamasService {
                         snap.diaEstada = 0;
                     }
                 });
-
-
-
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
                     (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
                     (a.nombre.localeCompare('' + b.nombre)));
             }),
-            cache(),
+            cache()
         );
 
         this.snapshotFiltrado$ = combineLatest(
@@ -160,7 +156,7 @@ export class MapaCamasService {
             )
         );
 
-
+        // Devuelve la prestación que contiene el informe de ingreso
         this.prestacion$ = combineLatest(
             this.selectedPrestacion,
             this.selectedCama,
@@ -168,39 +164,82 @@ export class MapaCamasService {
             this.capa2
         ).pipe(
             switchMap(([prestacion, cama, view, capa]) => {
-                const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
-                if (capa === 'estadistica') {
-                    if (idInternacion) {
-                        return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
-                            // No todas las capas tienen un ID de internacion real.
-                            catchError(() => of(null))
-                        );
+                if (view === 'listado-internacion') {
+                    // estadistica || estadistica-v2 (listadoInternacion || listadoInternacionUnificado)
+                    if (prestacion?.id) {
+                        // capa estadistica-v2 podria no tener prestacion
+                        return this.prestacionService.getById(prestacion.id, { showError: false });
                     }
+                    return of(null);
                 }
-                return of(null);
+                // mapa de camas
+                if (!cama.idInternacion) {
+                    return of(null);
+                }
+                if (capa === 'estadistica') {
+                    return this.prestacionService.getById(cama.idInternacion, { showError: false });
+                }
+                return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                    switchMap(
+                        internacionResumen => {
+                            if (internacionResumen.idPrestacion) {
+                                return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false });
+                            }
+                            return of(null);
+                        })
+                );
+            }),
+            catchError(() => of(null)),
+            cache()
+        );
+
+        this.resumenInternacion$ = combineLatest([
+            this.selectedResumen,
+            this.selectedCama,
+            this.ambito2,
+            this.capa2
+        ]).pipe(
+            switchMap(([resumen, cama, ambito, capa]) => {
+                if (capa === 'estadistica') {
+                    return of(null);
+                }
+                if (cama?.idInternacion) {
+                    // mapa de camas
+                    return this.internacionResumenHTTP.get(cama.idInternacion);
+                }
+                // listado de internacion
+                return of(resumen);
+
+            }),
+            catchError(() => of(null)),
+            cache()
+        ) as Observable<IResumenInternacion>;
+
+
+        this.camaSelectedSegunView$ = this.view.pipe(
+            switchMap(view => {
+                if (view === 'mapa-camas') {
+                    return this.selectedCama;
+                }
+                // Para conseguir la cama de la internación desde el listado
+                return combineLatest(
+                    this.selectedPrestacion,
+                    this.selectedResumen
+                ).pipe(
+                    switchMap(([prestacion, resumen]) => {
+                        const internacion = {
+                            id: prestacion.id || resumen.id,
+                            fecha: this.fecha
+                        };
+                        return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
+                            map(camas => camas[0])
+                        );
+                    })
+                );
             }),
             cache()
         );
 
-        this.camaSelectedSegunView$ = this.view.pipe(
-            switchMap((view) => {
-                if (view === 'mapa-camas') {
-                    return this.selectedCama;
-                } else {
-                    // Chamuyo para conseguir la cama de la internación!
-                    return combineLatest(
-                        this.snapshot$,
-                        this.selectedPrestacion
-                    ).pipe(
-                        map(([camas, prestacion]) => {
-                            return camas.find(c => c.idInternacion === prestacion.id);
-                        })
-                    );
-                }
-            })
-        );
-
-        // const hoy = new Date();
         const desde = moment().subtract(12, 'months').toDate();
         this.historialInternacion$ = this.historial('internacion', desde).pipe(
             map((historial: ISnapshot[]) => {
@@ -218,24 +257,6 @@ export class MapaCamasService {
             startWith(0),
             map(() => moment().endOf('minute').toDate()),
         );
-
-        this.resumenInternacion$ = combineLatest([
-            this.selectedCama,
-            this.ambito2,
-            this.capa2
-        ]).pipe(
-            switchMap(([cama, ambito, capa]) => {
-                if (cama.idInternacion && capa !== 'estadistica') {
-                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                        catchError((err) => {
-                            return of({});
-                        })
-                    );
-                }
-                return of({});
-            }),
-            cache()
-        ) as Observable<IResumenInternacion>;
     }
 
     resetView() {
@@ -250,6 +271,10 @@ export class MapaCamasService {
         );
     }
 
+    /**
+     * Dado el estado actual de una cama, retorna los posibles estados finales segun las acciones
+     * que pueden ser llevadas a cabo en su estado actual
+     */
     private getEstadosRelacionesCama(cama: ISnapshot, estados: IMAQEstado[], relaciones: IMAQRelacion[]) {
         const relacionesPosibles = [];
         const estadoCama = estados.filter(est => cama.estado === est.key)[0];
@@ -336,6 +361,13 @@ export class MapaCamasService {
             return this.selectedPrestacion.next({ id: null } as any);
         }
         this.selectedPrestacion.next(prestacion);
+    }
+
+    selectResumen(resumen: IResumenInternacion) {
+        if (!resumen) {
+            return this.selectedResumen.next({ id: null } as any);
+        }
+        this.selectedResumen.next(resumen);
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable, estado, equipamiento: ISnomedConcept[]) {
@@ -487,26 +519,30 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama.pipe(filter(snap => {
-                return !!snap.id;
-            })),
+            this.selectedCama,
             this.selectedPrestacion,
+            this.selectedResumen,
             this.view
         ).pipe(
-            switchMap(([ambito, capa, selectedCama, selectedPrestacion, view]) => {
+            switchMap(([ambito, capa, selectedCama, selectedPrestacion, selectedResumen, view]) => {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (view === 'mapa-camas' && selectedCama.idInternacion) {
                         return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
-                    } else if (view === 'listado-internacion' && selectedPrestacion.id) {
-                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
+                    } else if (view === 'listado-internacion') {
+                        if (this.capa === 'estadistica' && selectedPrestacion.id) {
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
+                        }
+                        if (selectedResumen.id) {
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedResumen.id);
+                        }
                     }
                     return of([]);
                 }
             }),
-            cache()
+            catchError(() => of([]))
         );
     }
 

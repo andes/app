@@ -25,7 +25,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public desde: Date;
     public hasta: Date;
     public tipoPrestacion;
-
+    public inProgress = true;
 
     public desde$ = new BehaviorSubject(new Date());
     public hasta$ = new BehaviorSubject(new Date());
@@ -122,6 +122,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 }
                 desde = desde.getTime() < min.getTime() ? min : desde;
                 desde = moment(desde);
+                this.inProgress = false;
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
                     if (tipoPrestacion) {
@@ -209,14 +210,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     onChangeDesde() {
+        this.inProgress = true;
         this.desde$.next(this.desde);
     }
 
     onChangeHasta() {
+        this.inProgress = true;
         this.hasta$.next(this.hasta);
     }
 
     onChangeTipoPrestacion() {
+        this.inProgress = true;
         this.tipoPrestacion$.next(this.tipoPrestacion);
     }
 }

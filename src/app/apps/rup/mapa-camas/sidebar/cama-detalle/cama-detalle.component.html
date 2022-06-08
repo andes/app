@@ -72,11 +72,8 @@
         </ng-container>
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
-
-
                 <plex-button label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
-
                 <ng-container *feature="'planIndicaciones'">
                     <plex-button *ngIf="capa !== 'estadistica'" label="INDICACIONES" size="sm" type="info"
                                  (click)="onVerIndicaciones(cama)" class="mr-1">
@@ -90,7 +87,7 @@
                 </ng-container>
 
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
-                    <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                    <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
                     <plex-dropdown right="true" size="sm" icon="account-off" type="danger"

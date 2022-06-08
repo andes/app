@@ -67,7 +67,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     }
 
     get estadoBadgeType() {
-        return this.paciente.estado === 'validado' ? 'success' : 'warning';
+        return this.paciente?.estado === 'validado' ? 'success' : 'warning';
     }
 
     get showLugarNacimiento() {
@@ -153,7 +153,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     public relaciones: any[];
 
     private doRelaciones() {
-        if (this.paciente.relaciones && this.paciente.relaciones.length) {
+        if (this.paciente?.relaciones?.length) {
             this.relaciones = this.paciente.relaciones.map(rel => {
                 return {
                     id: rel.referencia,
@@ -194,7 +194,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             this.loadObraSocial();
             this.doRelaciones();
         }
-        this.notasDestacadas = (this.paciente.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
+        this.notasDestacadas = (this.paciente?.notas) ? this.paciente.notas.filter(nota => (nota && nota.destacada)) : [];
     }
 
     /**

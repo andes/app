@@ -8,11 +8,11 @@ export interface IMaquinaEstados {
     capa: string;
     estados: IMAQEstado[];
     relaciones: IMAQRelacion[];
-
     columns: MapaCamaListadoColumns;
     ingresos: { [key: string]: string };
     turnero: { [key: string]: string };
     historialMedico?: boolean;
+    listadoInternacion: boolean;
     configPases: {
         sala: string;
         allowCama: boolean;

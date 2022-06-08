@@ -6,6 +6,7 @@ import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario
 import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-mensual.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 import { ListadoInternacionCapasComponent } from './views/listado-internacion-capas/listado-internacion-capas.component';
+import { ListadoInternacionUnificadoComponent } from './views/listado-internacion-capas/listado-internacion-unificado.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
 import { ResumenInternacionComponent } from './views/resumen-internacion/resumen-internacion.component';
@@ -29,7 +30,9 @@ export const INTERNACION_ROUTES = [
 
     { path: ':ambito/sala-comun/:id', component: SalaComunComponent },
 
-    { path: 'listado-internacion', component: InternacionListadoComponent },
+    { path: 'listado-internacion/:capa', component: InternacionListadoComponent },
+
+    { path: 'listado-internacion-unificado/:capa', component: ListadoInternacionUnificadoComponent },
 
     { path: 'listado-internacion-medico', component: ListadoInternacionCapasComponent },
 

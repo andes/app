@@ -34,7 +34,8 @@ export class ListadoInternacionCapasService {
                     return this.resumenHTTP.search({
                         organizacion: this.auth.organizacion.id,
                         ingreso: this.resumenHTTP.queryDateParams(fechaIngresoDesde, fechaIngresoHasta),
-                        egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta)
+                        egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta),
+                        populate: 'idPrestacion'
                     });
                 }
             }),
