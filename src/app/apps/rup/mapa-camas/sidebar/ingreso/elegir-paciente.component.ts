@@ -5,6 +5,9 @@ import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paci
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { map } from 'rxjs/operators';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'app-elegir-paciente',
@@ -20,21 +23,43 @@ export class ElegirPacienteComponent {
         private ingresoPacienteService: IngresoPacienteService,
         private pacienteService: PacienteService,
         private InternacionResumenHTTP: InternacionResumenHTTP,
-        private auth: Auth
+        private auth: Auth,
+        private mapaCamasService: MapaCamasService,
+        private prestacionesService: PrestacionesService
     ) { }
 
     onPacienteSelected(paciente: IPaciente) {
         // Si se seleccionó por error un paciente fallecido
         this.pacienteService.checkFallecido(paciente);
-        // verificamos internaciones en curso
-        this.InternacionResumenHTTP.search({
-            organizacion: this.auth.organizacion.id,
-            paciente: paciente.id
-        }).subscribe(internaciones => {
-            const enCurso = internaciones.filter(i => !i.fechaEgreso);
-            if (enCurso.length) {
-                this.plex.info('warning', `${paciente.apellido}, ${paciente.alias || paciente.nombre}, DNI: ${paciente.documento || paciente.numeroIdentificacion} tiene una internacion
-                en curso con fecha de ingreso el <b>${moment(internaciones[0].fechaIngreso).format('DD/MM/YYYY hh:mm')}</b>.`, 'Paciente ya internado');
+        // verificamos internaciones en curso segun capa
+        let request;
+        if (this.mapaCamasService.capa === 'estadistica') {
+            request = this.prestacionesService.get({
+                ambitoOrigen: 'internacion',
+                organizacion: this.auth.organizacion.id,
+                conceptId: '32485007',
+                idPaciente: paciente.id
+            }).pipe(
+                map(prestaciones => {
+                    const internacionEnCurso = prestaciones?.find(p => p.ejecucion.registros[0]?.valor.informeIngreso && !p.ejecucion.registros[1]?.valor.ImformeEgreso);
+                    return internacionEnCurso ? { fechaIngreso: internacionEnCurso.ejecucion.registros[0].valor.informeIngreso.fechaIngreso } : null;
+                })
+            );
+        } else {
+            request = this.InternacionResumenHTTP.search({
+                organizacion: this.auth.organizacion.id,
+                paciente: paciente.id
+            }).pipe(
+                map(internaciones => {
+                    const internacionEnCurso = internaciones?.find(i => !i.fechaEgreso);
+                    return internacionEnCurso ? { fechaIngreso: internacionEnCurso?.fechaIngreso } : null;
+                })
+            );
+        }
+        request.subscribe(internacionEnCurso => {
+            if (internacionEnCurso) {
+                this.plex.info('warning', `${paciente.apellido}, ${paciente.alias || paciente.nombre}, DNI: ${paciente.documento || paciente.numeroIdentificacion} tiene una internación
+                en curso con fecha de ingreso el <b>${moment(internacionEnCurso.fechaIngreso).format('DD/MM/YYYY HH:mm')}</b>.`, 'Paciente ya internado');
             } else {
                 this.ingresoPacienteService.selectPaciente(paciente.id);
             }
