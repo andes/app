@@ -11,6 +11,8 @@ import { DarTurnosComponent } from './dar-turnos/dar-turnos.component';
 import { CalendarioComponent } from './dar-turnos/calendario.component';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
+import { BotonesAgendaPipe } from './gestor-agendas/pipes/botonesAgenda.pipe';
+import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGeneral.pipe';
 
 @NgModule({
     imports: [
@@ -27,13 +29,17 @@ import { DirectiveLibModule } from '../../directives/directives.module';
         DarTurnosComponent,
         CalendarioComponent,
         SortBloquesPipe,
-        EspacioFisicoPipe
+        EspacioFisicoPipe,
+        BotonesAgendaPipe,
+        BotonesAgendaGeneralPipe
     ],
     exports: [
         DarTurnosComponent,
         SortBloquesPipe,
         EspacioFisicoPipe,
-        CalendarioComponent
+        CalendarioComponent,
+        BotonesAgendaPipe,
+        BotonesAgendaGeneralPipe
     ],
 })
 export class CITASLibModule {

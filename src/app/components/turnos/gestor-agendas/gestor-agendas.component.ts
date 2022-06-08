@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { ProfesionalService } from './../../../services/profesional.service';
 import { AgendaService } from './../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
 import * as enumerado from './../enums';
-
+import { BreakpointObserver } from '@angular/cdk/layout';
 @Component({
     selector: 'gestor-agendas',
     templateUrl: 'gestor-agendas.html',
@@ -31,7 +31,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.guardarAgendaPanel = theElementRef;
     }
     @ViewChildren(BiQueriesComponent) biQuery: QueryList<any>;
-
 
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
@@ -78,6 +77,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     private scrollEnd = false;
     public enableQueries = false;
     queries = [];
+    public collapse = false;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -95,6 +95,36 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     items: any[];
 
+    // Permite :hover y click()
+    @Input() selectable = true;
+
+    // Muestra efecto de selección
+    @Input() selected = false;
+
+    public sortBy: string;
+    public sortOrder = 'desc';
+    botonera = true;
+
+    public columns = [
+        {
+            key: 'seleccion',
+            label: '',
+
+        },
+        {
+            key: 'fecha',
+            label: 'Fecha',
+        },
+        {
+            key: 'tipoPrestacion',
+            label: 'Tipo Prestación',
+        },
+        {
+            key: 'acciones',
+            label: '',
+        },
+    ];
+
     constructor(
         public plex: Plex,
         private conceptoTurneablesService: ConceptosTurneablesService,
@@ -105,6 +135,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         private router: Router,
         public auth: Auth,
         private queryService: QueriesService,
+        private breakpointObserver: BreakpointObserver
     ) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -413,23 +444,34 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showGestorAgendas = false;
     }
 
-    editarAgenda(agenda) {
-        this.editaAgenda = agenda;
-        if (this.editaAgenda.estado === 'planificacion' && !this.editaAgenda.dinamica) {
-            this.showEditarAgenda = true;
-            this.showGestorAgendas = false;
-            this.showEditarAgendaPanel = false;
-        } else {
-            this.showGestorAgendas = true;
-            this.showEditarAgendaPanel = true;
-            this.showEditarAgenda = false;
-            this.showTurnos = false;
-        }
-        this.showAgregarNotaAgenda = false;
-        this.showRevisionFueraAgenda = false;
-        this.showReasignarTurno = false;
-        this.showListadoTurnos = false;
-        this.showReasignarTurnoAutomatico = false;
+    editarAgenda(agendaSeleccionada) {
+        this.editaAgenda = agendaSeleccionada;
+
+        this.serviceAgenda.getById(this.editaAgenda.id).subscribe((agenda: any) => {
+            if (agenda.estado === this.editaAgenda.estado) {
+                if (this.editaAgenda.estado === 'planificacion' && !this.editaAgenda.dinamica) {
+                    this.showEditarAgenda = true;
+                    this.showGestorAgendas = false;
+                    this.showEditarAgendaPanel = false;
+                    this.showTurnos = true;
+                } else {
+                    this.showEditarAgenda = false;
+                    this.showGestorAgendas = true;
+                    this.showEditarAgendaPanel = true;
+                    this.showTurnos = false;
+                }
+                this.showAgregarNotaAgenda = false;
+                this.showRevisionFueraAgenda = false;
+                this.showReasignarTurno = false;
+                this.showListadoTurnos = false;
+                this.showReasignarTurnoAutomatico = false;
+            } else {
+                this.plex.info('warning',
+                    'Otro usuario ha modificado el estado de la Agenda seleccionada y la misma ya no es editable.',
+                    'No se puede editar la Agenda');
+                this.actualizarGestor(agenda.estado);
+            }
+        });
     }
 
     revisionAgenda(agenda) {
@@ -502,6 +544,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     verAgenda(agenda, multiple, e) {
+
         // Si se presionó el boton suspender, no se muestran otras agendas hasta que se confirme o cancele la acción.
         if (!this.showSuspenderAgenda) {
             this.enableQueries = false;
@@ -599,7 +642,67 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showGestorAgendas = false;
     }
 
-    actualizarEstadoEmit(estado) {
+    actualizarEstado(estado) {
+
+        switch (estado) {
+            case 'publicada':
+                this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                    if (!confirmado) {
+                        return false;
+                    } else {
+                        this.confirmarEstado(estado);
+                    }
+                });
+                break;
+            case 'suspendida':
+                this.actualizarGestor(estado);
+                break;
+            case 'borrada':
+                this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {
+                    if (!confirmado) {
+                        return false;
+                    } else {
+                        this.confirmarEstado(estado);
+                    }
+                });
+                break;
+            default:
+                this.confirmarEstado(estado);
+                break;
+
+        }
+    }
+
+    confirmarEstado(estado) {
+        let alertCount = 0;
+        this.agendasSeleccionadas.forEach((agenda, index) => {
+            const patch = {
+                'op': estado,
+                'estado': estado
+            };
+            this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
+                // Si son múltiples, esperar a que todas se actualicen
+                agenda.estado = resultado.estado;
+                if (alertCount === 0) {
+                    if (this.agendasSeleccionadas.length === 1) {
+                        this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarGestor(estado);
+                    } else {
+                        this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarGestor(estado);
+                    }
+                    alertCount++;
+                }
+            }, err => {
+                if (err) {
+                    this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                    this.actualizarGestor(estado);
+                }
+            });
+        });
+    }
+
+    actualizarGestor(estado) {
         // Se suspende una agenda completa
         if (estado === 'suspendida') {
             this.showTurnos = false;
@@ -686,6 +789,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (agenda) {
             this.actualizarAgenda(agenda);
             this.verAgenda(agenda, false, null);
+            this.loadAgendas();
         }
     }
 
@@ -782,4 +886,16 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.plex.toast('success', 'Asignación automática exitosa', '', 1000);
         });
     }
+
+    changeCollapse(event) {
+        this.collapse = event;
+    }
+
+    volver() {
+        this.router.navigate(['/inicio']);
+    }
+    isMobile() {
+        return this.breakpointObserver.isMatched('(max-width: 599px)');
+    }
 }
+
