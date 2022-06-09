@@ -10,9 +10,6 @@ export class IndicacionColorPipe implements PipeTransform {
                 return '#ff8d22';
             case 'on-hold':
                 return '#ff8d22';
-            case 'completed':
-                return '#8cc63f';
-            case 'stopped':
             case 'cancelled':
                 return '#dd4b39';
             default:

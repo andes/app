@@ -38,22 +38,14 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
             case 'pending':
                 this.items = [
                     this.crearItem('Continuar', 'active'),
-                    this.crearItem('Pausar', 'on-hold'),
                     this.crearItem('Suspender', 'cancelled'),
-                    this.crearItem('Finalizar', 'completed')
                 ];
                 break;
             case 'active':
                 this.items = [
-                    this.crearItem('Pausar', 'on-hold'),
                     this.crearItem('Suspender', 'cancelled'),
-                    this.crearItem('Finalizar', 'completed')
                 ];
                 break;
-            case 'draft':
-                this.items = [
-                    this.crearItem('Eliminar', 'deleted'),
-                ];
         }
     }
 

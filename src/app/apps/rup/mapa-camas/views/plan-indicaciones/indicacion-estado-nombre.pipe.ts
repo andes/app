@@ -8,9 +8,6 @@ export class IndicacionLabelPipe implements PipeTransform {
         switch (estado) {
             case 'on-hold':
                 return 'pausado';
-            case 'completed':
-                return 'completado';
-            case 'stopped':
             case 'cancelled':
                 return 'suspendido';
             case 'draft':
