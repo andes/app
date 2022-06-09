@@ -12,7 +12,7 @@
         <table class="table table-bordered plan-indicaciones">
             <thead>
                 <tr>
-                    <td rowspan="2" style="min-width: 500px;">
+                    <td style="min-width: 500px;">
                         <section class="item-indicacion">
                             <div class="item__container">
                                 <!-- Sin funcionalidad -->
@@ -42,17 +42,6 @@
                             </div>
                         </section>
                     </td>
-                    <td colspan="8">
-                        Mañana
-                    </td>
-                    <td colspan="8">
-                        Tarde
-                    </td>
-                    <td colspan="8">
-                        Noche
-                    </td>
-                </tr>
-                <tr>
                     <td *ngFor="let hora of horas">
                         {{ hora}}
                     </td>
@@ -125,15 +114,7 @@
                                                     <plex-icon *ngIf="indicacion.valor.indicaciones" size="md" name="documento" [tooltip]="indicacion.valor.indicaciones"
                                                     type="info"></plex-icon></h2> 
                                                 <h3>
-                                                    <b>Vía: </b>{{ indicacion.valor.via?.term  || '(no definida)' }}, 
-                                                    <b>Presentación: </b>{{ indicacion.valor.presentacion?.term || '(no definida)' }}, 
-                                                    <b>Frecuencia: </b>
-                                                    <ng-container *ngIf="indicacion.valor.frecuencias && indicacion.valor.frecuencias[0]?.frecuencia?.term">
-                                                        {{ indicacion.valor.frecuencias[0].frecuencia.term }}
-                                                    </ng-container>
-                                                    <ng-container *ngIf="!(indicacion.valor.frecuencias && indicacion.valor.frecuencias[0]?.frecuencia?.term)">
-                                                        (no definida)
-                                                    </ng-container>
+                                                    {{ indicacion | detalleIndicacion }}
                                                 </h3>
                                             </span>
                                         </div>

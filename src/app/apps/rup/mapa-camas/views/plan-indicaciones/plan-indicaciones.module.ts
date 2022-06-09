@@ -5,6 +5,7 @@ import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
 import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
 import { PlanIndicacionesResumenComponent } from '../../components/plan-indicaciones-resumen.component';
+import { DetalleIndicacionPipe } from '../../pipes/plan-indicaciones/detalle-indicacion.pipe';
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
 import { IndicacionDetalleComponent } from './indicacion-detalle/indicacion-detalle.component';
 import { IndicacionColorPipe } from './indicacion-estado-color.pipes';
@@ -33,7 +34,8 @@ import { SuspensionIndicacionComponent } from './motivo-suspension/motivo-suspen
         PlanIndicacionesResumenComponent,
         PlanIndicacionesBotoneraComponent,
         PlanIndicacionesNuevaIndicacionComponent,
-        SuspensionIndicacionComponent
+        SuspensionIndicacionComponent,
+        DetalleIndicacionPipe
     ],
     exports: [
         IndicacionColorPipe,
