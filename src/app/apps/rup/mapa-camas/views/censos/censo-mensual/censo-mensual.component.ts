@@ -20,6 +20,8 @@ export class CensosMensualesComponent implements OnInit {
     unidadesOranizativas = [];
     selectedUnidadOranizativa;
     public requestInProgress: boolean;
+    public inicio = true;
+    public esVacio = false;
 
     censo = [];
     datosCensoTotal = {
@@ -131,6 +133,10 @@ export class CensosMensualesComponent implements OnInit {
                     });
                 });
                 this.calcularDatosCensoTotal();
+                this.inicio = false;
+                if (this.censo.length === 0) {
+                    this.esVacio = true;
+                }
             });
     }
 
@@ -159,7 +165,8 @@ export class CensosMensualesComponent implements OnInit {
             fechaDesde: moment(this.fechaDesde).toDate(),
             fechaHasta: moment(this.fechaHasta).toDate(),
             unidadOrganizativa: this.selectedUnidadOranizativa.conceptId
-        }, 'CENSOMENSUAL').subscribe(() => {
+        }, 'CENSOMENSUAL'
+        ).subscribe(() => {
             this.plex.toast('success', 'Descarga exitosa');
         }, error => {
             this.plex.toast('danger', 'Descarga fallida');
@@ -168,6 +175,7 @@ export class CensosMensualesComponent implements OnInit {
 
     resetCenso() {
         this.censo = [];
+        this.esVacio = false;
     }
 
     calcularDatosCensoTotal() {
