@@ -16,7 +16,7 @@
     <tr *ngFor="let pendiente of completed">
         <td>
             <plex-label size="md"
-                        titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+                        titulo="{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}-HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:''}}">
             </plex-label>
         </td>
         <td>
@@ -27,7 +27,7 @@
     <tr *ngFor="let pendiente of pending">
         <td>
             <plex-label size="md"
-                        titulo="HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:pendiente.createdAt| date: 'dd/MM/yyyy HH:mm'}}">
+                        titulo="{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}-HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:''}}">
             </plex-label>
         </td>
         <td>
