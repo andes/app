@@ -41,7 +41,7 @@ export class ElegirPacienteComponent {
                 idPaciente: paciente.id
             }).pipe(
                 map(prestaciones => {
-                    const internacionEnCurso = prestaciones?.find(p => p.ejecucion.registros[0]?.valor.informeIngreso && !p.ejecucion.registros[1]?.valor.ImformeEgreso);
+                    const internacionEnCurso = prestaciones?.find(p => p.ejecucion.registros[0]?.valor.informeIngreso && !p.ejecucion.registros[1]?.valor.InformeEgreso);
                     return internacionEnCurso ? { fechaIngreso: internacionEnCurso.ejecucion.registros[0].valor.informeIngreso.fechaIngreso } : null;
                 })
             );
