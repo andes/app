@@ -6,7 +6,9 @@ export class EspacioFisicoPipe implements PipeTransform {
         if (!value) {
             return null;
         } else if (value.espacioFisico) {
-            return value.espacioFisico.nombre;
+            const servicio = (value.espacioFisico.servicio?.nombre) ? '(' + value.espacioFisico.servicio.nombre + ')' : '';
+            const edificio = (value.espacioFisico.edificio?.descripcion) ? '(' + value.espacioFisico.edificio.descripcion + ')' : '';
+            return value.espacioFisico.nombre + servicio + edificio;
         } else {
             if (value.otroEspacioFisico) {
                 return value.otroEspacioFisico.nombre;
