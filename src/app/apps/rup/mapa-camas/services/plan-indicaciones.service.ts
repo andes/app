@@ -58,7 +58,8 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
                             return 1;
                         }
                         return (a.seccion.term as string).localeCompare(b.seccion.term);
-                    });
+                    })
+                    .sort((a) => a.estado.tipo === 'cancelled' ? 1 : -1);
             })
         );
     }
