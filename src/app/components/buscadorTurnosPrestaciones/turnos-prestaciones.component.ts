@@ -404,7 +404,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     getPendientes() {
         this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
-            this.exportHudsService.hud$.next(data);
+            this.exportHudsService.refrescarPendientes();
         });
     }
 

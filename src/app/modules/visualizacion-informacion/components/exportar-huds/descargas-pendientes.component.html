@@ -1,22 +1,22 @@
-<plex-title titulo="Descargas pendientes" size="sm">
-    <plex-button tooltip="Actualizar" type="success" size="sm">
+<plex-title titulo="Descargas pendientes">
+    <plex-button tooltip="Actualizar" type="success" size="sm" class="mr-1">
         <plex-icon prefix="adi" name="reload" (click)="descargasPendientes()" size="sm"></plex-icon>
     </plex-button>
     <ng-content></ng-content>
 </plex-title>
 <plex-wrapper>
     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="descargasPendientes()" name="fechaDesde"
-                label="Desde" class="fechas" [max]="fechaHasta" size="sm">
+                   label="Fecha desde" class="fechas" [max]="fechaHasta">
     </plex-datetime>
     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="descargasPendientes()" name="fechaHasta"
-                label="Hasta" class="fechas" [min]="fechaDesde" size="sm">
+                   label="Fecha hasta" class="fechas" [min]="fechaDesde">
     </plex-datetime>
 </plex-wrapper>
 <plex-table *ngIf="!sinPendientes; else noPendientes">
     <tr *ngFor="let pendiente of completed">
         <td>
             <plex-label size="md"
-                        titulo="{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}-HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:''}}">
+                        titulo="HUDS-{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}{{pendiente.pacienteNombre?('-'+pendiente.pacienteNombre):''}}">
             </plex-label>
         </td>
         <td>
@@ -27,7 +27,7 @@
     <tr *ngFor="let pendiente of pending">
         <td>
             <plex-label size="md"
-                        titulo="{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}-HUDS-{{pendiente.pacienteNombre?pendiente.pacienteNombre:''}}">
+                        titulo="HUDS-{{pendiente.createdAt | date: 'dd/MM/yyyy HH:mm'}}{{pendiente.pacienteNombre?('-'+pendiente.pacienteNombre):''}}">
             </plex-label>
         </td>
         <td>
@@ -36,7 +36,7 @@
     </tr>
 </plex-table>
 <ng-template #noPendientes>
-    <div justify="center" class="h-75">
+    <div justify="center" class="h-50">
         <plex-label icon="information-variant" type="default" size="xl" direction="column"
                     titulo='Usted no tiene descargas pendientes'
                     subtitulo='Si generó un nuevo pedido de exportación, presione el botón ACTUALIZAR '>

@@ -68,8 +68,8 @@
                 <plex-button type="info" size="sm" icon="download" (click)="refreshSelection($event, 'descargar')"
                              tooltip="Descargar CSV" class="ml-2">
                 </plex-button>
-                <plex-dropdown icon="format-list-checks" type="info" size="sm" class="d-inline-block" [right]="true"
-                               class="ml-2">
+                <plex-dropdown icon="format-list-checks" tooltip="Agregar columnas" type="info" size="sm"
+                               class="d-inline-block" [right]="true" class="ml-2">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
                         </plex-bool>
@@ -286,7 +286,8 @@
     </plex-layout-sidebar>
     <plex-layout-sidebar *ngIf="descargasPendientes" type="invert">
         <descargas-pendientes>
-            <plex-button justify="end" icon="close" type="danger" tooltip="Cerrar" (click)="mostrarPendientes()" size="sm">
+            <plex-button justify="end" icon="close" type="danger" tooltip="Cerrar" (click)="mostrarPendientes()"
+                         size="sm">
             </plex-button>
         </descargas-pendientes>
     </plex-layout-sidebar>
