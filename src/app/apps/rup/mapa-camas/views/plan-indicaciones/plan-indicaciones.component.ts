@@ -7,7 +7,6 @@ import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
-import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
@@ -28,8 +27,7 @@ export class PlanIndicacionesComponent implements OnInit {
     private capa: string;
     private ambito: string;
     private idInternacion: string;
-    private paciente: any;
-    private maquinaEsados: any[];
+    public paciente: any;
     public indicacion;
     public fecha = new Date();
     public hoy = new Date();
@@ -38,18 +36,10 @@ export class PlanIndicacionesComponent implements OnInit {
     public horas = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5];
     public indicaciones = [];
     public selectedIndicacion = {};
-    private selectedBuffer = new BehaviorSubject({});
-
-    private seccion = true;
-
     public suspenderIndicacion: Boolean;
-    public showSecciones = {
-
-    };
-
+    public showSecciones = {};
     public isToday = true;
-
-    private internacion;
+    private selectedBuffer = new BehaviorSubject({});
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
             const indicaciones = Object.keys(selected)
@@ -105,7 +95,6 @@ export class PlanIndicacionesComponent implements OnInit {
         private hudsService: HUDSService,
         private auth: Auth,
         private maquinaEstadoService: MaquinaEstadosHTTP,
-        private elementoRUPService: ElementosRUPService,
         public ejecucionService: RupEjecucionService
     ) { }
 
@@ -116,13 +105,11 @@ export class PlanIndicacionesComponent implements OnInit {
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
 
         this.getInternacion().subscribe((resumen) => {
-            this.internacion = resumen;
             this.pacienteService.getById(resumen.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
                 this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
             });
             this.actualizar();
-
         });
 
         this.maquinaEstadoService.getAll(
