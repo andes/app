@@ -120,6 +120,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             label: 'Tipo Prestación',
         },
         {
+            key: 'espacioFisico',
+            label: 'Espacio Físico',
+        },
+        {
             key: 'acciones',
             label: '',
         },

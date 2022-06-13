@@ -97,6 +97,12 @@
                     agenda.tipoPrestaciones | enumerar:['term']:'/' }}" subtitulo="Equipo de Salud no asignado">
                     </plex-label>
                 </td>
+                <td *plTableCol="'espacioFisico'" (click)="verAgenda(agenda, false, $event)">
+                    <span *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda |
+                        espacioFisico}}</span>
+                    <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre">Espacio físico no
+                        asignado</span>
+                </td>
                 <td *ngIf="agenda | botonesAgenda as botones" class="justify-content-center text-right w-50"
                     (click)="verAgenda(agenda, false, $event)">
                     <plex-badge class="ml-1" *ngIf="agenda.nota" size="sm" type="info" tooltip="Nota"
