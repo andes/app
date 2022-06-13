@@ -28,6 +28,8 @@ export class EncabezadoReportesComponent implements OnInit {
     public tipoReportes;
     public diagnosticos = [];
     public diagnostico;
+    public inicio = true;
+    public estaVacio = false;
     // Propiedades reporteC2
     public totalConsultas = 0;
     public totalMenor1 = 0;
@@ -81,6 +83,7 @@ export class EncabezadoReportesComponent implements OnInit {
 
     refreshSelection(value, tipo) {
         this.diagnosticos.length = 0; // al modificar un filtro, se limpia el reporte anterior
+        this.estaVacio = this.showReporteC2 = this.showCantidadConsultaXPrestacion = false;
         if (tipo === 'horaInicio') {
             const horaInicio = moment(this.horaInicio).startOf('day');
             if (horaInicio.isValid()) {
@@ -111,14 +114,15 @@ export class EncabezadoReportesComponent implements OnInit {
         }
     }
 
-
     public imprimir() {
+        this.inicio = false;
         switch (this.tipoReportes.nombre) {
             case 'Reporte C2':
                 this.showReporteC2 = true;
                 this.showCantidadConsultaXPrestacion = false;
                 this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
+                    this.estaVacio = this.diagnosticos.length ? false : true;
                     this.totalConsultas = this.diagnosticos.map(elem => {
                         return elem.total;
                     }).reduce(this.add, 0);
@@ -168,6 +172,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.showReporteC2 = false;
                 this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
                     this.diagnosticos = diagnosticos;
+                    this.estaVacio = this.diagnosticos.length ? false : true;
                 });
                 break;
             default:
