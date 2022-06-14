@@ -4,6 +4,7 @@ import { FormsService } from '../../../forms-builder/services/form.service';
 import { NgForm } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
+import { FormPresetResourcesService } from 'src/app/modules/forms-builder/services/preset.resources.service';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     constructor(
         private formsService: FormsService,
         private plex: Plex,
-        private formsEpidemiologiaService: FormsEpidemiologiaService
+        private formsEpidemiologiaService: FormsEpidemiologiaService,
+        private formPresetResourceService: FormPresetResourcesService,
     ) { }
 
     ngOnInit(): void {
@@ -41,6 +43,12 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                         const key = Object.keys(field);
                         this.secciones[buscado].fields[key[0]] = field[key[0]];
                     });
+                });
+            } else {
+                this.secciones.forEach(seccion => {
+                    if (seccion.preset) {
+                        this.formPresetResourceService.setResource(`${seccion.preset}`, seccion, this.paciente);
+                    }
                 });
             }
         });
@@ -94,10 +102,11 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     }
 
     setFicha() {
-        const type = { id: this.form.id, name: this.form.name };
+        const type = this.form ? { id: this.form.id, name: this.form.name } : this.fichaPaciente.type;
         const fichaFinal = {
             type,
             secciones: this.ficha,
+            config: this.form ? this.form.config : this.fichaPaciente.config,
             paciente: {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
@@ -136,9 +145,14 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     checkDependency(field) {
         let res = true;
         if (field.dependency) {
-            this.secciones.forEach(seccion => {
-                res = seccion.fields[field.dependency.id];
-            });
+            const seccion = this.secciones.find(seccion => seccion.fields[field.dependency.id]);
+            if (!seccion) {
+                const seccionBuscada = this.secciones.find(seccion => seccion.fields[field.key]);
+                if (seccionBuscada) {
+                    seccionBuscada.fields[field.key] = null;
+                }
+            }
+            res = seccion ? true : false;
         }
         return res;
     }

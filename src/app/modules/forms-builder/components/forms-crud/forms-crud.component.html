@@ -1,4 +1,4 @@
-<plex-layout [main]="fieldToConfig? 9 : 12" resizable="true" min="2" max="4">
+<plex-layout [main]="(fieldToConfig || formToConfig)? 9 : 12" resizable="true" min="2" max="4">
     <plex-layout-main>
         <form #formulario="ngForm" class="form-scroll">
             <plex-title main titulo="Alta de tipo de formulario">
@@ -22,6 +22,7 @@
                     <plex-text label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"></plex-text>
                 </div>
                 <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
+                <plex-button type="warning" size="sm" (click)="setSnvs()">SISA</plex-button>
             </plex-wrapper>
 
             <plex-title size="sm" titulo="Campos">
@@ -68,6 +69,8 @@
                                      (click)="onRemove(i)">
                         </plex-button>
                     </plex-item>
+                    <!-- hack hasta que se pueda agregar altura al ultimo item por plex-->
+                    <br><br><br><br><br><br>
                 </plex-list>
             </cdk-virtual-scroll-viewport>
         </form>
@@ -86,6 +89,9 @@
             <ng-container *ngIf="fieldToConfig?.type.id==='selectStatic'">
                 <app-select-static [fieldStatic]="fieldStatic"></app-select-static>
             </ng-container>
+        </ng-container>
+        <ng-container *ngIf="formToConfig">
+            <app-form-config [form]="formToConfig"></app-form-config>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

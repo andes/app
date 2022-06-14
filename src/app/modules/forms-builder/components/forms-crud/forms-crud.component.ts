@@ -33,9 +33,15 @@ export class AppFormsCrudComponent implements OnInit {
     public isFormSnomedizable = false;
     public desabilitado = false;
     public fieldToConfig = null;
+    public formToConfig = null;
     public form: any = {
         name: '',
         type: '',
+        config: {
+            idEvento: '',
+            idGrupoEvento: '',
+            configField: []
+        },
         snomedCode: '',
         active: true,
         fields: []
@@ -72,6 +78,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.desabilitado = true;
                 this.isFormSnomedizable = (formulario.snomedCode) ? true : false;
                 this.form.name = formulario.name;
+                this.form.config = formulario.config;
                 this.form.type = formulario.type;
                 this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
@@ -163,8 +170,9 @@ export class AppFormsCrudComponent implements OnInit {
         if ($event.formValid) {
             const aux = [];
             this.form.fields.forEach(f => {
-                f.key = f.label.length > 16 ? f.label.replace(/ /g, '').slice(0, 16).toLowerCase()
-                    : f.label.replace(/ /g, '').toLowerCase();
+                if (!f.key) {
+                    f.key = f.label.slice(0, 16).replace(/ /g, '').toLowerCase();
+                }
                 const cloneField = Object.assign({}, f);
                 delete cloneField.sections;
                 const field: any = { ...cloneField };
@@ -189,6 +197,7 @@ export class AppFormsCrudComponent implements OnInit {
             const dataSaved: Form = {
                 active: this.form.active,
                 name: this.form.name,
+                config: this.form.config,
                 type: this.form.type,
                 snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                 sections: aux.map(i => {
@@ -202,6 +211,7 @@ export class AppFormsCrudComponent implements OnInit {
                     ...this.formToUpdate,
                     active: this.form.active,
                     snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
+                    config: this.form.config,
                     sections: dataSaved.sections
                 };
                 this.formsService.save(this.formToUpdate).subscribe(() => {
@@ -234,6 +244,7 @@ export class AppFormsCrudComponent implements OnInit {
 
     close() {
         this.fieldToConfig = null;
+        this.formToConfig = null;
     }
 
     setFieldType(f) {
@@ -245,10 +256,16 @@ export class AppFormsCrudComponent implements OnInit {
 
     loadPresetSection(section) {
         const fields = [...section.fields];
+        const sec: any = this.secciones.find(s => s.id === section.id);
+        sec.preset = section.preset;
         fields.forEach(f => {
-            f.sections = [this.secciones.find(s => section.id)];
+            f.sections = [sec];
             this.setFieldType(f);
         });
         this.form.fields = [...this.form.fields, ...fields];
+    }
+
+    setSnvs() {
+        this.formToConfig = this.form;
     }
 }

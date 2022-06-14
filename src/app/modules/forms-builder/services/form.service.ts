@@ -5,6 +5,15 @@ export interface Form {
     name: string;
     type: string;
     snomedCode: string;
+    config: {
+        idEvento: string;
+        idGrupoEvento: string;
+        configField: [{
+            key: string;
+            value: string;
+            event: string;
+        }];
+    };
     active: boolean;
     sections: {
         id: string;

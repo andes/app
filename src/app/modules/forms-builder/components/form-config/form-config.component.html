@@ -1,0 +1,20 @@
+<plex-title titulo="Eventos SNVS" size="sm"></plex-title>
+<plex-text label="ID SNVS EVENTO" [(ngModel)]="idEvento" (change)="setIdEvento()"></plex-text>
+<plex-text label="ID SNVS GRUPO EVENTO" [(ngModel)]="idGrupoEvento" (change)="setIdGrupoEvento()"></plex-text>
+<plex-title titulo="campos" size="sm"></plex-title>
+<plex-table [columns]="columns" #table="plTable" *ngIf="form.config?.configField.length">
+    <plex-table-columns></plex-table-columns>
+    <tr *ngFor="let item of form.config.configField">
+        <td *plTableCol="'campo'">{{item.value ? item.value.nombre : item.key.nombre}}</td>
+        <td *plTableCol="'idEvento'">{{item.event}}</td>
+    </tr>
+</plex-table>
+<plex-select label="Seleccione un campo" size="sm" name="nombre" [(ngModel)]="nuevaConfig.campo" [data]="items"
+             (change)="checkStatic($event)">
+</plex-select>
+<plex-select *ngIf="itemsSelect.length" label="Seleccione un item" size="sm" name="itemSelect"
+             [(ngModel)]="nuevaConfig.valor" [data]="itemsSelect">
+</plex-select>
+<plex-text label="Ingrese numero de evento" name="idEvento" [(ngModel)]="nuevaConfig.idEvento"></plex-text>
+<plex-button class="float-right mt-1" size="sm" type="success" (click)="addConfig()">Agregar
+</plex-button>
