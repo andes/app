@@ -18,6 +18,10 @@ export class FormConfigComponent implements OnInit {
         {
             key: 'idEvento',
             label: 'Evento'
+        },
+        {
+            key: 'acciones',
+            label: 'Acciones'
         }
     ];
     public nuevaConfig = {
@@ -54,8 +58,21 @@ export class FormConfigComponent implements OnInit {
         };
     }
 
+    deleteConfig(config) {
+        let index = -1;
+        if (config.value) {
+            index = this.form.config.configField.findIndex(field => field.value.id === config.value.id);
+        } else {
+            index = this.form.config.configField.findIndex(field => field.key.id === config.key.id);
+        }
+        if (index >= 0) {
+            this.form.config.configField.splice(index, 1);
+            this.form.config.configField = [...this.form.config.configField];
+        }
+    }
+
     checkStatic(event) {
-        if (event.value.items) {
+        if (event.value?.items) {
             this.itemsSelect = event.value.items;
         } else {
             this.nuevaConfig.valor = '';

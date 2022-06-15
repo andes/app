@@ -7,6 +7,9 @@
     <tr *ngFor="let item of form.config.configField">
         <td *plTableCol="'campo'">{{item.value ? item.value.nombre : item.key.nombre}}</td>
         <td *plTableCol="'idEvento'">{{item.event}}</td>
+        <td *plTableCol="'acciones'">
+            <plex-icon type="danger" name="delete" (click)="deleteConfig(item)" class="hover"></plex-icon>
+        </td>
     </tr>
 </plex-table>
 <plex-select label="Seleccione un campo" size="sm" name="nombre" [(ngModel)]="nuevaConfig.campo" [data]="items"
