@@ -33,8 +33,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     hallazgosNoActivosAux: any;
     filtroActual: any = 'planes';
 
-    solicitudesMezcladas = [];
-
     public loading = false;
 
     public cdas = [];
@@ -74,7 +72,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     public todos: any = [];
     public solicitudes: any = [];
-    public solicitudesTOP: any = [];
+    // public solicitudesTOP: any = [];
 
     /**
      * Listado de todos los trastornos
@@ -82,8 +80,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public hallazgosCronicos: any = [];
 
     /**
-         * Listado de todos los hallazgos no activos
-         */
+     * Listado de todos los hallazgos no activos
+     */
     public hallazgosNoActivos: any = [];
     public fechaInicio;
     public fechaFin;
@@ -329,7 +327,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe((hallazgos) => {
                 this.registrosTotales.hallazgo = hallazgos;
                 this.registrosTotalesCopia.hallazgo = hallazgos;
-                // this.hallazgos = hallazgos;
             });
 
             this.servicioPrestacion.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
@@ -348,21 +345,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
             });
 
-            this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
-
-                solicitudes.forEach(solicitud => {
-                    const prestacion = this.prestacionesTotales.find(p => solicitud.idPrestacion === p.solicitud.prestacionOrigen);
-                    if (prestacion) {
-                        solicitud['dataPrestacion'] = prestacion;
-                        solicitud['estadoActual'] = prestacion.estadoActual;
-                    }
-                });
+            this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, inicio: 'top', ordenFechaDesc: true }).subscribe((solicitudes) => {
                 this.solicitudes = solicitudes;
-                this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origen: 'top' }).subscribe((solicitudesTOP) => {
-                    this.solicitudesTOP = solicitudesTOP;
-                    this.cargarSolicitudesMezcladas();
-                });
             });
+
         });
     }
 
@@ -373,18 +359,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             })
         );
     }
-
-    private cargarSolicitudesMezcladas() {
-        this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
-
-        this.solicitudesMezcladas.sort((e1, e2) => {
-            const fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
-            const fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
-            return fecha2 - fecha1;
-        });
-    }
-
-
 
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
@@ -470,7 +444,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             case 'vacunas':
                 return this.vacunas.length;
             case 'solicitudes':
-                return this.solicitudesMezcladas.length;
+                return this.solicitudes.length;
             case 'dominios':
                 return this.dominios.length;
         }
