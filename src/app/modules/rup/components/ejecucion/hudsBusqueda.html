@@ -133,7 +133,7 @@
         <ng-container *ngIf="filtroActual === 'solicitudes'">
             <ul class="hover conceptos list-unstyled">
 
-                <ng-container *ngFor="let registro of solicitudesMezcladas; let iPrestacion = index">
+                <ng-container *ngFor="let registro of solicitudes; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
                             [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': true}"
