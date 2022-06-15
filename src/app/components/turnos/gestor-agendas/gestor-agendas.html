@@ -85,7 +85,8 @@
                     <i *ngIf="!(estaSeleccionada(agenda) >= 0)" class="mdi mdi-checkbox-blank-outline"></i>
                 </td>
                 <td *plTableCol="'fecha'" (click)="verAgenda(agenda, false, $event)">
-                    <plex-label titulo="{{agenda.horaInicio | fecha}}" subtitulo="{{agenda.horaInicio |
+                    <plex-label titulo="{{agenda.horaInicio | date: 'EEEE' | uppercase}}  {{agenda.horaInicio | fecha}}"
+                                subtitulo="{{agenda.horaInicio |
                         date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs"></plex-label>
                 </td>
                 <td *plTableCol="'tipoPrestacion'" (click)="verAgenda(agenda, false, $event)">
