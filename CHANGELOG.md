@@ -1,3 +1,18 @@
+# [5.98.0](https://github.com/andes/app/compare/v5.97.0...v5.98.0) (2022-06-15)
+
+
+### Bug Fixes
+
+* **CITAS:** cambio funcion para boton de revisar agenda ([#2669](https://github.com/andes/app/issues/2669)) ([4def5ab](https://github.com/andes/app/commit/4def5ab48931102610431a05291b86f64881a286))
+* **in:** check paciente internado ([#2670](https://github.com/andes/app/issues/2670)) ([279f09d](https://github.com/andes/app/commit/279f09d5f498d687a940cbb3bc477d3d2b7ab2c8))
+* **IN:** permite internar paciente ya egresado ([#2671](https://github.com/andes/app/issues/2671)) ([91fb5f1](https://github.com/andes/app/commit/91fb5f142a23e3eb11d3ecc37acb93b2b7d07214))
+
+
+### Features
+
+* **CITAS:** agrega espacio fisico en listado ([#2673](https://github.com/andes/app/issues/2673)) ([f3cf6f9](https://github.com/andes/app/commit/f3cf6f9bde550badad1fd083ea75f546fa003f2c))
+* **IN:** refrescar botonera ([#2666](https://github.com/andes/app/issues/2666)) ([66ab070](https://github.com/andes/app/commit/66ab0707e6fbca6b8dc107bac992590b2cb28dc2))
+
 # [5.97.0](https://github.com/andes/app/compare/v5.96.0...v5.97.0) (2022-06-08)
 
 
