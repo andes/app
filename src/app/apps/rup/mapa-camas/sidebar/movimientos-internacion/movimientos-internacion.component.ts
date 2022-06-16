@@ -79,24 +79,36 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             })
         );
 
+        let requestPrestacion;
+        if (this.mapaCamasService.capa === 'estadistica') {
+            requestPrestacion = this.mapaCamasService.selectedPrestacion;
+        } else {
+            // se estaría usando capas unificadas
+            requestPrestacion = this.mapaCamasService.selectedResumen;
+        }
+
         this.historial$ = combineLatest([
+            requestPrestacion,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.capa2,
             fechaPipe
         ]).pipe(
-            switchMap(([cama, capa, { desde, hasta }]) => {
-                return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, cama.idInternacion).pipe(
-                    map(movimientos => {
-                        return movimientos.filter((mov) => {
-                            return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
-                        }).map(mov => {
-                            if (mov.sectores) {
-                                mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
-                            }
-                            return mov;
-                        }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-                    })
-                );
+            switchMap(([requestPrestacion, cama, capa, { desde, hasta }]) => {
+                const idInternacion = cama?.idInternacion || (requestPrestacion as any).id;
+                if (capa !== '') {
+                    return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, idInternacion).pipe(
+                        map(movimientos => {
+                            return movimientos.filter((mov) => {
+                                return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
+                            }).map(mov => {
+                                if (mov.sectores) {
+                                    mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
+                                }
+                                return mov;
+                            }).sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                        })
+                    );
+                }
             })
         );
     }
