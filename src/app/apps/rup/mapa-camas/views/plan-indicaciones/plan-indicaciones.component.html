@@ -1,4 +1,4 @@
-<plex-layout [main]="indicacionView || indicacionEventoSelected || nuevaIndicacion ? 8 : 12">
+<plex-layout [main]="indicacionView || indicacionEventoSelected || nuevaIndicacion || suspenderIndicacion ? 8 : 12">
     <plex-layout-main>
         <plex-title titulo="Plan de indicaciones" main>
             <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange()" [max]="hoy">
@@ -147,7 +147,7 @@
     
                                             <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
                                                 in-plan-indicacion-botonera [indicacion]="indicacion"
-                                                (refresh)="actualizar()">
+                                                (refresh)="actualizar()" (cancelIndicacion)="cancelIndicacion($event)">
                                             </div>
                                         </div>
                                     </td>
@@ -187,6 +187,9 @@
                                     [evento]="eventos[indicacionEventoSelected.id] && eventos[indicacionEventoSelected.id][horaSelected]"
                                     (events)="onEventos($event)">
             </in-plan-indicacion-evento>
+        </ng-container>
+        <ng-container *ngIf="suspenderIndicacion && !indicacionView && !indicacionEventoSelected">
+            <suspension-indicacion (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()"></suspension-indicacion>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

@@ -42,6 +42,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     private seccion = true;
 
+    public suspenderIndicacion: Boolean;
     public showSecciones = {
 
     };
@@ -216,6 +217,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onSelectedChange() {
+        this.suspenderIndicacion = false;
         this.selectedBuffer.next(this.selectedIndicacion);
     }
 
@@ -234,7 +236,7 @@ export class PlanIndicacionesComponent implements OnInit {
         this.onSelectedChange();
     }
 
-    cambiarEstado(estado: string) {
+    cambiarEstado(estado: string, motivo?: string) {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
         if (estado === 'deleted') {
             const datos = indicaciones.map(ind => this.planIndicacionesServices.delete(ind.id));
@@ -247,6 +249,7 @@ export class PlanIndicacionesComponent implements OnInit {
         } else {
             const estadoParams = {
                 tipo: estado,
+                motivo,
                 fecha: new Date()
             };
             const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
@@ -267,8 +270,15 @@ export class PlanIndicacionesComponent implements OnInit {
         this.cambiarEstado('on-hold');
     }
 
+    cancelIndicacion(event) {
+        this.selectedIndicacion = { [event.id]: event };
+        this.selectedBuffer.next(this.selectedIndicacion);
+        this.onDetenerClick();
+    }
+
     onDetenerClick() {
-        this.cambiarEstado('cancelled');
+        this.indicacionView = false;
+        this.suspenderIndicacion = true;
     }
 
     onContinuarClick() {
@@ -290,7 +300,6 @@ export class PlanIndicacionesComponent implements OnInit {
         }
     }
 
-
     onIndicacionesCellClick(indicacion, hora) {
         if (indicacion.estado.tipo !== 'draft') {
             this.indicacionEventoSelected = indicacion;
@@ -306,7 +315,6 @@ export class PlanIndicacionesComponent implements OnInit {
             this.actualizar();
         }
     }
-
 
     onNuevaIndicacion(seccion) {
         this.indicacionEventoSelected = null;
@@ -339,6 +347,15 @@ export class PlanIndicacionesComponent implements OnInit {
 
             });
         }
+    }
+
+    guardarSuspension(event) {
+        this.suspenderIndicacion = false;
+        this.cambiarEstado('cancelled', event);
+    }
+
+    cancelarSuspension() {
+        this.suspenderIndicacion = false;
     }
 
     crearPrestacion(paciente, concepto, fecha: Date) {

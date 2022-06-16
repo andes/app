@@ -10,6 +10,7 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
     @Input() indicacion;
 
     @Output() refresh = new EventEmitter<any>();
+    @Output() cancelIndicacion = new EventEmitter<any>();
 
     public items = [];
 
@@ -57,7 +58,9 @@ export class PlanIndicacionesBotoneraComponent implements OnChanges {
     }
 
     cambiarEstado(estado: string) {
-        if (estado === 'deleted') {
+        if (estado === 'cancelled') {
+            this.cancelIndicacion.emit(this.indicacion);
+        } else if (estado === 'deleted') {
             this.planIndicacionesServices.delete(this.indicacion.id).subscribe(() => {
                 this.refresh.emit();
                 this.plex.toast('success', 'La indicación ha sido borrada');

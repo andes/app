@@ -41,6 +41,8 @@
         <plex-label size="md" case="capitalize" titulo="hora" subtitulo="{{ estado.fecha | hora }}"></plex-label>
         <plex-label size="md" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}">
         </plex-label>
+        <plex-label *ngIf="estado.motivo" size="md" case="capitalize" titulo="motivo" subtitulo="{{ estado.motivo }}">
+        </plex-label>
         <plex-badge [color]="estado.tipo | indicacionColor">
             {{ estado.tipo | indicacionLabel }}
         </plex-badge>
