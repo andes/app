@@ -2,7 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -14,6 +14,8 @@ import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { OrganizacionService } from 'src/app/services/organizacion.service';
+import { Auth } from '@andes/auth';
 
 
 @Component({
@@ -24,7 +26,7 @@ export class CamaDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
-
+    public organizacionV2$: Observable<Boolean>;
     public accionesEstado$: Observable<any>;
     public paciente$: Observable<any>;
 
@@ -91,7 +93,9 @@ export class CamaDetalleComponent implements OnInit {
         public permisosMapaCamasService: PermisosMapaCamasService,
         private turneroService: TurneroService,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
-        private internacionResumenHTTP: InternacionResumenHTTP
+        private internacionResumenHTTP: InternacionResumenHTTP,
+        private organizacionService: OrganizacionService,
+        private auth: Auth
     ) {
     }
 
@@ -120,8 +124,8 @@ export class CamaDetalleComponent implements OnInit {
 
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
-
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
+        this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
