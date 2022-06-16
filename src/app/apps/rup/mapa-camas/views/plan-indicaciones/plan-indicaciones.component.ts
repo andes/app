@@ -49,6 +49,10 @@ export class PlanIndicacionesComponent implements OnInit {
         })
     );
 
+    get sidebarOpen() {
+        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion;
+    }
+
     public detener$ = this.botones$.pipe(
         map(indicaciones => {
             const b = indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending');

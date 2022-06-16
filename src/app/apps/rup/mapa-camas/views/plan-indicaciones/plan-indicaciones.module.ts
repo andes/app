@@ -43,7 +43,8 @@ import { AlergiasPacienteComponent } from './alergias-paciente.component';
         IndicacionColorPipe,
         IndicacionLabelPipe,
         PlanIndicacionesResumenComponent,
-        AlergiasPacienteComponent
+        AlergiasPacienteComponent,
+        SuspensionIndicacionComponent
     ],
     providers: [
         { provide: RupEjecucionService, useClass: PlanIndicacionesServices }
