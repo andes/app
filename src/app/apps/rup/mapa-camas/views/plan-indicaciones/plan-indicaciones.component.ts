@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
@@ -27,7 +28,7 @@ export class PlanIndicacionesComponent implements OnInit {
     private capa: string;
     private ambito: string;
     private idInternacion: string;
-    private paciente: any;
+    public paciente: any;
     public indicacion;
     public fecha = new Date();
     public hoy = new Date();
@@ -48,6 +49,10 @@ export class PlanIndicacionesComponent implements OnInit {
             return indicaciones;
         })
     );
+
+    get sidebarOpen() {
+        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion;
+    }
 
     public detener$ = this.botones$.pipe(
         map(indicaciones => {
