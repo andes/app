@@ -99,6 +99,9 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     }
 
     onSave() {
+        this.registro.valor.sustancias.forEach(s => {
+            s.dosis = `${s.dosisValor}${s.dosisUnidad?.term}`;
+        });
         const nombre = this.registro.valor?.nombre || this.registro.concepto.term;
         const indicacion = {
             idInternacion: this.idInternacion,

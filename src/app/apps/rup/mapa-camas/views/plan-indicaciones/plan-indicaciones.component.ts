@@ -394,7 +394,7 @@ export class PlanIndicacionesComponent implements OnInit {
         prestacion.trackId = this.idInternacion;
         this.prestacionService.post(prestacion).subscribe((prestacion) => {
             this.prestacionService.validarPrestacion(prestacion).subscribe(() => {
-                this.plex.info('info', 'Indicaciones validadas').then(() => {
+                this.plex.info('success', 'Indicaciones validadas').then(() => {
                     this.actualizar();
                 });
             });
