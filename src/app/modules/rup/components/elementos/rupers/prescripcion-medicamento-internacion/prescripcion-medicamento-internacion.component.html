@@ -12,7 +12,7 @@
     <ng-container *ngFor="let sustancia of registro.valor.sustancias">
         <plex-grid cols="2" class="mr-3">
             <plex-select [(ngModel)]="sustancia.ingrediente" name="conceptos2" [snomedExpression]="'<<312415009'"
-                        (change)="valuesChange()" label="Ingrediente" [preload]="false" span="2">
+                        (change)="valuesChange()" label="Principio activo" [preload]="false" span="2">
             </plex-select>
 
             <plex-text label="Valor Dosis" [(ngModel)]="sustancia.dosisValor" name="dosis" (change)="valuesChange()"></plex-text>
