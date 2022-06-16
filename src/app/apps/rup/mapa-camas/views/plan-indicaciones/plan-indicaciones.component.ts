@@ -47,6 +47,8 @@ export class PlanIndicacionesComponent implements OnInit {
 
     };
 
+    public isToday = true;
+
     private internacion;
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
@@ -68,17 +70,6 @@ export class PlanIndicacionesComponent implements OnInit {
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending'))
     );
 
-    public pausar$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
-    );
-
-    public completar$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'pending'))
-    );
-
-    public deleted$ = this.botones$.pipe(
-        map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'draft'))
-    );
 
     public hayDraft = 0;
 
@@ -227,6 +218,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onDateChange() {
+        this.isToday = moment(this.fecha).isSame(new Date(), 'day');
         this.actualizar();
         this.resetSelection();
     }
@@ -238,37 +230,19 @@ export class PlanIndicacionesComponent implements OnInit {
 
     cambiarEstado(estado: string, motivo?: string) {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
-        if (estado === 'deleted') {
-            const datos = indicaciones.map(ind => this.planIndicacionesServices.delete(ind.id));
-            forkJoin(
-                datos
-            ).subscribe(() => {
-                this.actualizar();
-                this.plex.toast('success', 'Indicaciones actualizadas');
-            });
-        } else {
-            const estadoParams = {
-                tipo: estado,
-                motivo,
-                fecha: new Date()
-            };
-            const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
-            forkJoin(
-                datos
-            ).subscribe(() => {
-                this.actualizar();
-                this.plex.toast('success', 'Indicaciones actualizadas');
-            });
-        }
+        const estadoParams = {
+            tipo: estado,
+            fecha: new Date()
+        };
+        const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
+        forkJoin(
+            datos
+        ).subscribe(() => {
+            this.actualizar();
+            this.plex.toast('success', 'Indicaciones actualizadas');
+        });
     }
 
-    onDeletedClick() {
-        this.cambiarEstado('deleted');
-    }
-
-    onPausarClick() {
-        this.cambiarEstado('on-hold');
-    }
 
     cancelIndicacion(event) {
         this.selectedIndicacion = { [event.id]: event };
@@ -283,10 +257,6 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onContinuarClick() {
         this.cambiarEstado('active');
-    }
-
-    onCompletarClick() {
-        this.cambiarEstado('completed');
     }
 
     onSelectIndicacion(indicacion) {

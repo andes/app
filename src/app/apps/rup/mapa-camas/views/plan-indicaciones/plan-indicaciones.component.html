@@ -23,17 +23,8 @@
                                 <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
                                             (click)="onDetenerClick()" tooltip="Suspender" tooltipPosition="bottom">
                                 </plex-button>
-                                <plex-button *ngIf="pausar$ | async" type="warning" icon="pause" size="sm"
-                                            (click)="onPausarClick()" tooltip="Pausar" tooltipPosition="bottom">
-                                </plex-button>
                                 <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
                                             (click)="onContinuarClick()" tooltip="Continuar" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="completar$ | async" type="info" icon="check" size="sm"
-                                            (click)="onCompletarClick()" tooltip="Completar" tooltipPosition="bottom">
-                                </plex-button>
-                                <plex-button *ngIf="deleted$ | async" type="danger" icon="delete" size="sm"
-                                            (click)="onDeletedClick()" tooltip="Borrar seleccionadas" tooltipPosition="bottom">
                                 </plex-button>
                                 <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
                                             (click)="onValidar()">
@@ -61,7 +52,7 @@
                                     <h6 class="item__title">{{ seccion.concepto.term }}</h6>
                                 </div>
                                 <div class="item__botonera">
-                                    <plex-button size="sm" type="info" icon="plus" (click)="onNuevaIndicacion(seccion)"
+                                    <plex-button *ngIf="isToday" size="sm" type="info" icon="plus" (click)="onNuevaIndicacion(seccion)"
                                                 tooltip="Agregar indicación">
                                     </plex-button>
                                     <plex-button type="info" size="sm"
