@@ -638,14 +638,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        if (this.prestacion || this.resumen) { // Si se trata de un movimiento (Paciente ya ingresado)
+        if (this.prestacion?.id || this.resumen?.id) { // Si se trata de un movimiento (Paciente ya ingresado)
             this.checkEstadoCama();
             this.checkMovimientos();
         }
 
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
 
-        if (!this.prestacion && !this.resumen) {
+        if (!this.prestacion?.id && !this.resumen?.id) { // se trata de un ingreso nuevo
             // chequeamos estado de la cama
             this.mapaCamasService.snapshot$.subscribe(camas => {
                 //  si para la nueva fecha la cama seleccionada se encuentra ocupada, anulamos la seleccion
@@ -685,18 +685,20 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     checkEstadoCama() {
         this.checkMovimientos();
-        this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.id).subscribe((cama) => {
-            if (cama && cama.estado !== 'disponible') {
-                const controlEstadistica = this.capa === 'estadistica' && cama.idInternacion !== this.prestacion.id;
-                const controlEstadisticaV2 = this.resumen && cama.idInternacion !== this.resumen.id;
-                // como la cama esta ocupada, se controla que sea por la misma internación
-                if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
-                    this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
-                    this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
-                        'Cama no dosponible');
+        if (this.cama?.idCama) {
+            this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.id).subscribe((cama) => {
+                if (cama && cama.estado !== 'disponible') {
+                    const controlEstadistica = this.capa === 'estadistica' && cama.idInternacion !== this.prestacion.id;
+                    const controlEstadisticaV2 = this.resumen && cama.idInternacion !== this.resumen.id;
+                    // como la cama esta ocupada, se controla que sea por la misma internación
+                    if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
+                        this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                        this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
+                            'Cama no dosponible');
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public prestacionFake;
