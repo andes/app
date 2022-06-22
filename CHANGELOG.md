@@ -1,3 +1,13 @@
+# [5.99.0](https://github.com/andes/app/compare/v5.98.0...v5.99.0) (2022-06-22)
+
+
+### Features
+
+* **IN:** motivo suspension indicacion ([#2665](https://github.com/andes/app/issues/2665)) ([ef5c3fe](https://github.com/andes/app/commit/ef5c3fe594307b1aad9ba5655693b1c85527808a))
+* **int:** mejoras visales plan ind ([#2676](https://github.com/andes/app/issues/2676)) ([396eb56](https://github.com/andes/app/commit/396eb56aa6e26ff8f33bcee60ab638684b07d382))
+* **INT:** plan ind mejoras ejecucion ([#2677](https://github.com/andes/app/issues/2677)) ([4972e90](https://github.com/andes/app/commit/4972e904330aa4be3395885dd2ea10fbcb8adc97))
+* **MPI:** No mostrar inactivos en las relaciones ([#2662](https://github.com/andes/app/issues/2662)) ([aa41a6d](https://github.com/andes/app/commit/aa41a6d34a2f2e2228ed0c8adb1e59c30e8bf687))
+
 # [5.98.0](https://github.com/andes/app/compare/v5.97.0...v5.98.0) (2022-06-15)
 
 
