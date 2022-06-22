@@ -80,7 +80,7 @@
     "@angular-builders/custom-webpack": "^8.1.0",
     "@angular-devkit/build-angular": "~0.901.12",
     "@angular-devkit/build-ng-packagr": "~0.803.23",
-    "@angular/cli": "^9.1.12",
+    "@angular/cli": "^10.2.1",
     "@angular/compiler-cli": "9.1.12",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
@@ -96,9 +96,9 @@
     "ng-packagr": "^5.4.0",
     "protractor": "^5.4.1",
     "semantic-release": "^17.0.8",
-    "ts-node": "~7.0.1",
-    "tsickle": "^0.37.0",
-    "typescript": "3.8.3"
+    "ts-node": "^10.8.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "4.0"
   },
   "release": {
     "branches": [
