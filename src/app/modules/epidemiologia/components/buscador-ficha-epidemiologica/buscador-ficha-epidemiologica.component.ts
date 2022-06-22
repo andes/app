@@ -65,7 +65,6 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
         { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
     ];
     public tipoConfirmacion = [
-        { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
         { id: 'antigeno', nombre: 'Antígeno' },
         { id: 'pcr', nombre: 'PCR-RT' },
         { id: 'lamp', nombre: 'LAMP(NeoKit)' }

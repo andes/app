@@ -78,7 +78,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         { id: 'demandaEspontanea', nombre: 'Demanda espontanea' },
     ];
     public segundaClasificacion = [
-        { id: 'confirmado', nombre: 'Criterio clínico epidemiológico (Nexo)' },
         { id: 'autotest', nombre: 'Autotest' },
         { id: 'laboPcr', nombre: 'Laboratorio privado (PCR)' },
         { id: 'laboAntigeno', nombre: 'Laboratorio privado (Antígeno)' },
