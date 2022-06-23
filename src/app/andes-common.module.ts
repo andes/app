@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HammerModule } from '@angular/platform-browser';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { DirectiveLibModule } from './directives/directives.module';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
@@ -20,7 +19,6 @@ import { MPILibModule } from './modules/mpi/mpi-lib.module';
         SharedModule,
         ScrollingModule,
         CdkTableModule,
-        HammerModule,
         DirectiveLibModule
     ],
     exports: [
@@ -28,7 +26,6 @@ import { MPILibModule } from './modules/mpi/mpi-lib.module';
         PlexModule,
         FormsModule,
         HttpClientModule,
-        HammerModule,
         CdkTableModule,
         DirectiveLibModule,
         MPILibModule,

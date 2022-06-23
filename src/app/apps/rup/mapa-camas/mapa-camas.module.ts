@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HammerModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { DirectiveLibModule } from 'src/app/directives/directives.module';
@@ -141,7 +140,6 @@ export const INTERNACION_PROVIDERS = [
         RUPLibModule,
         ScrollingModule,
         CdkTableModule,
-        HammerModule,
         DirectiveLibModule
     ],
     declarations: [
