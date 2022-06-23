@@ -25,7 +25,6 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import localeEs from '@angular/common/locales/es';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
@@ -225,7 +224,6 @@ registerLocaleData(localeEs, 'es');
 @NgModule({
     imports: [
         BrowserAnimationsModule,
-        HammerModule,
         PlexModule.forRoot({ networkLoading: true }),
         ReactiveFormsModule,
         FormsModule,
