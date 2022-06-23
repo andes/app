@@ -58,7 +58,7 @@ import { DocumentoPipe } from './pipes/documento.pipe';
     ]
 })
 export class SharedModule {
-    static forRoot(host: string): ModuleWithProviders {
+    static forRoot(host: string): ModuleWithProviders<any> {
         return {
             ngModule: SharedModule,
             providers: [

@@ -120,9 +120,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     public listadoUO = [];
 
-    public noPoseeContacto = this.seleccion && this.seleccion.contacto ? true : false; // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
+    public noPoseeContacto;
     private contactosCache = []; // se guardan los contactos ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee contacto"
-    public noPoseeEdificio = this.seleccion && this.seleccion.edificio ? true : false; // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
+    public noPoseeEdificio;
     private edificiosCache = []; // se guardan los edficios ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee edificio"
 
     // Datos para el mapa
@@ -192,6 +192,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             switchMap((_provincia: any) => _provincia ? this.localidadService.get({ 'provincia': _provincia }) : of([])),
             cache()
         );
+        this.noPoseeContacto = this.seleccion && this.seleccion.contacto ? true : false; // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
+        this.noPoseeEdificio = this.seleccion && this.seleccion.edificio ? true : false; // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
     }
 
     onSelectProvincia() {
