@@ -1,7 +1,7 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { auditTime, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription, of } from 'rxjs';
+import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
@@ -169,14 +169,18 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
             if (resultado) {
                 this.mapaCamasService.selectedPrestacion.pipe(
+                    take(1),
                     switchMap(prestacion => {
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, prestacion.id, completo).pipe(
                             switchMap(() => {
-                                const prestacionAux = {
-                                    id: prestacion.id,
-                                    solicitud: { turno: null }
-                                };
-                                return this.prestacionesService.invalidarPrestacion(prestacionAux);
+                                if (prestacion?.id) {
+                                    const prestacionAux = {
+                                        id: prestacion.id,
+                                        solicitud: { turno: null }
+                                    };
+                                    return this.prestacionesService.invalidarPrestacion(prestacionAux);
+                                }
+                                return of(null);
                             })
                         );
                     })
