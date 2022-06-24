@@ -15,20 +15,22 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
-    templateUrl: 'prestacionCrear.html'
+    templateUrl: 'prestacionCrear.html',
+    styles: [`
+        .autocitar-turno {
+            height: calc(100% - 302px);
+        }
+    `]
 })
 export class PrestacionCrearComponent implements OnInit {
+    pacienteFields = ['sexo', 'financiador', 'lugarNacimiento'];
     prestacionAutocitar: any;
     showAutocitar = false;
     agendasAutocitar: IAgenda[];
-    // solicitudPrestacion: {
-    //     paciente: IPaciente;
-    //     registros: { nombre: String; concepto: any; valor: { solicitudPrestacion: any; }; tipo: string; }; solicitudPrestacion: ITipoPrestacion; };
     solicitudPrestacion: any;
     solicitudTurno: any;
     agendasAutocitacion: IAgenda[];
     opcion: any;
-    // @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
     public fecha: Date = new Date();

@@ -1,4 +1,4 @@
-<plex-layout *ngIf="!showAutocitar" main="8">
+<plex-layout main="8">
     <plex-layout-main>
         <plex-title main titulo="Crear Prestación">
             <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
@@ -32,19 +32,17 @@
                 ¡No se encontró ningún paciente!
             </div>
         </ng-container>
-
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <ng-container *ngIf="paciente && paciente.id">
-            <plex-title size="sm" titulo="Datos del Paciente"></plex-title>
-            <div class="form-group">
-                <label class="form-control-label"></label>
-                <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-            </div>
+            <plex-title titulo="Datos del Paciente"></plex-title>
+            <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
+            </paciente-detalle>
+            <!-- Lista de Agendas para dar turnos autocitados -->
+            <autocitar-turno *ngIf="showAutocitar && paciente" class="autocitar-turno"
+                             (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
+                             [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar">
+            </autocitar-turno>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>
-
-<!-- Lista de Agendas para dar turnos autocitados -->
-<autocitar-turno *ngIf="showAutocitar && paciente" (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
-                 [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar"></autocitar-turno>

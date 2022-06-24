@@ -1,126 +1,75 @@
-<form *ngIf="autorizado" class="plex-layout">
-    <section>
-        <div class="row">
-            <!-- Header -->
-            <div class="col">
-                <plex-box>
-                    <header>
-                    </header>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <legend>
-                                <span>SELECCIÓN DE TURNO PARA AUTOCITACIÓN</span>
-                            </legend>
-                            <!-- Hay turno? -->
-                            <div class="row">
-                                <div class="col">
-                                    Paciente: {{paciente | nombre }}
-                                    <small>
-                                        <span *ngIf="paciente.documento !== ''">| DNI
-                                            {{paciente.documento}}</span>
-                                        <span *ngIf="paciente.documento === ''">| Sin documento (temporal)</span>
-                                    </small>
-                                    <br>
-                                    <b>{{prestacionAutocitar.nombre}}</b>
-                                </div>
-                            </div>
-                            <hr>
-                            <h5>
-                                Expanda una agenda y seleccione un horario para dar el turno:
-                            </h5>
-
-                            <!-- El turno -->
-                            <div class="row flex-row">
-                                <!-- Hay agendas similares? -->
-                                <div class="col"
-                                     *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar">
-                                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas con turnos disponibles para la
-                                    autocitación
-                                </div>
-
-                                <ng-container *ngFor="let agenda of agendasAutocitar; let indiceAgenda = index">
-
-                                    <div *ngIf="agendasAutocitar && agendasAutocitar.length > 0" class="col-3">
-                                        <div class="card">
-                                            <div class="card-block">
-                                                <b class="card-title">Agenda: {{ agenda.horaInicio | fecha }}
-                                                    <br>{{ agenda.horaInicio | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm'
-                                                    }} hs</b>
-                                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Equipo de
-                                                    Salud: {{ agenda.profesionales | enumerar:['apellido', 'nombre']
-                                                    }}
-                                                </p>
-                                                <p class="card-text text-danger"
-                                                   *ngIf="agenda.profesionales?.length === 0">Sin Equipo de Salud
-                                                    asignado</p>
-                                                <br>
-                                                <button class="btn btn-sm btn-primary"
-                                                        (click)="toggleExpandir(indiceAgenda)">Ver horarios
-                                                </button>
-                                                <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index"
-                                                     [ngClass]="{'d-none': !agendasExpandidas[indiceAgenda]}">
-                                                    <div>
-                                                        <div
-                                                             *ngFor="let turno of bloque.turnos; let indiceTurno = index">
-                                                            <div *ngIf="bloque.descripcion && indiceTurno === 0">
-                                                                Bloque
-                                                                <span>{{bloque.descripcion}}</span>
-                                                            </div>
-                                                            <ng-container
-                                                                          *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
-                                                                <div class="m-0 p-0"
-                                                                     *ngIf="!bloque.pacienteSimultaneos">
-                                                                    <div *ngIf="turno.estado === 'disponible'"
-                                                                         class="text-center p-0 mb-1 hover outline-dashed-default"
-                                                                         [appHover]="'text-info outline-info'"
-                                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                                    </div>
-                                                                </div>
-                                                                <!-- <div *ngIf="esTurnoDoble(prestacionAutocitar)">
-                                                                        <div *ngIf="turno.estado === 'disponible' && siguienteDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                                            [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                                            {{turno.horaInicio | date: 'HH:mm'}}
-                                                                        </div>
-                                                                    </div> -->
-                                                                <!-- <div *ngIf="bloque.pacienteSimultaneos && !esTurnoDoble(prestacionAutocitar)">
-                                                                        <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                                            [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                                            {{turno.horaInicio | date: 'HH:mm'}}
-                                                                        </div>
-                                                                    </div> -->
-                                                                <!-- <div *ngIf="bloque.citarPorBloque  && !esTurnoDoble(prestacionAutocitar)">
-                                                                    <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
-                                                                        [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
-                                                                        {{turno.horaInicio | date: 'HH:mm'}}
-                                                                    </div>
-                                                                </div> -->
-                                                            </ng-container>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
-                </plex-box>
-            </div>
+<div *ngIf="autorizado">
+    <plex-title titulo="Listado de agendas" size="sm"></plex-title>
+    <plex-list *ngIf="agendasAutocitar?.length" [selectable]="true">
+        <ng-container *ngFor="let agenda of agendasAutocitar; let indiceAgenda = index">
+            <plex-item class="text-white" [selected]="agenda === agendaSeleccionada"
+                       (click)="seleccionarAgenda(indiceAgenda)">
+                <plex-label class="text-white" titulo="{{ agenda.horaInicio | fecha }}"
+                            subtitulo="{{ agenda.horaInicio | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm'}} hs"
+                            size="md"></plex-label>
+                <plex-label class="text-white" titulo="Equipo de salud"
+                            subtitulo="{{ agenda.profesionales | enumerar:['apellido', 'nombre']}}" size="md">
+                </plex-label>
+            </plex-item>
+        </ng-container>
+    </plex-list>
+    <small *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar">No hay agendas con
+        turnos
+        disponibles para la autocitación</small>
+    <div *ngIf="agendaSeleccionada">
+        <plex-title titulo="Grilla Horaria" size="sm"></plex-title>
+        <div *ngFor="let bloque of agendaSeleccionada.bloques; let indiceBloque = index">
+            <plex-grid type="full" size="sm">
+                <plex-card type="dark" mode="filled" size="xs"
+                           *ngFor="let turno of bloque.turnos; let indiceTurno = index" selectable="true"
+                           [selected]="turno === turnoSeleccionado"
+                           (click)="seleccionarTurno(indiceTurno, indiceBloque)"
+                           [ngClass]="{'disabled' : turno.estado !== 'disponible'}">
+                    <plex-label *ngIf="turno.estado === 'disponible'" size="md" direction="column"
+                                titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
+                    </plex-label>
+                    <plex-label *ngIf="turno.estado !== 'disponible'" size="md" direction="column"
+                                titulo="{{turno.horaInicio | date: 'HH:mm'}}hs" aria-label="turno no disponible">
+                    </plex-label>
+                </plex-card>
+            </plex-grid>
         </div>
-    </section>
-    <!--Footer-->
-    <footer>
-        <div class="row">
-            <div class="col">
-                <plex-button type="danger" label="CANCELAR" (click)="cancelarAutocitar()"></plex-button>
-            </div>
+    </div>
+    <plex-grid type="full" *ngIf="agendaSeleccionada" justify="end">
+        <plex-button type="success" label="Confirmar" (click)="abrirModal()"
+                     [disabled]="!agendaSeleccionada || !turnoSeleccionado"></plex-button>
+    </plex-grid>
+</div>
+<plex-modal size="sm" #modal [allowEscClose]="false" [allowBackdropClose]="false" (closed)="cerrarModal()">
+    <plex-icon class="icono-help rounded-circle" name="help"></plex-icon>
+    <plex-modal-subtitle class="text-center">¿Desea confirmar el turno para paciente autocitado?
+    </plex-modal-subtitle>
+
+    <main>
+        <div>
+            <plex-title size="md" titulo="Datos del turno"></plex-title>
+            <plex-grid type="full" cols="2">
+                <plex-label *ngIf="agendaSeleccionada && turnoSeleccionado" type="info" size="sm"
+                            titulo="{{ agendaSeleccionada.horaInicio | fecha }}" icon="calendario"
+                            subtitulo="{{turnoSeleccionado.horaInicio | date: 'HH:mm'}}hs">
+                </plex-label>
+                <plex-label *ngIf="paciente" type="info" size="sm" titulo="{{ paciente | nombre}}" icon="paciente"
+                            subtitulo="{{ paciente.documento }}">
+                </plex-label>
+                <plex-label *ngIf="agendaSeleccionada && bloqueAgenda" type="info" size="sm" titulo="Prestación "
+                            icon="mano-corazon" subtitulo="{{ bloqueAgenda.tipoPrestaciones | enumerar:['term'] }}">
+                </plex-label>
+                <plex-label *ngIf="agendaSeleccionada" type="info" size="sm" titulo="Equipo de Salud"
+                            icon="circulo-medico"
+                            subtitulo="{{agendaSeleccionada.profesionales | enumerar:['apellido','nombre']}}">
+                </plex-label>
+            </plex-grid>
         </div>
-    </footer>
-</form>
+    </main>
+    <plex-button modal left type="danger" (click)="cerrarModal()">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="confirmarTurno()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>

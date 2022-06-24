@@ -1,14 +1,14 @@
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, EventEmitter, ViewChild, Output, OnInit, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import * as moment from 'moment';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'autocitar-turno',
@@ -18,7 +18,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 export class AutocitarTurnoAgendasComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
-
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
     @Input() agendasAutocitar: IAgenda[];
     @Input() prestacionAutocitar: IAgenda;
     @Input() paciente: any;
@@ -36,9 +36,12 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     // Muestra / oculta lista de turnos
     public agendasExpandidas: any[] = [];
 
+    public bloqueAgenda: IBloque;
+    turno: any;
+
     constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService,
     ) {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.autorizado = this.auth.check('turnos:darTurnos:?');
     }
 
     ngOnInit() {
@@ -46,41 +49,44 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             this.router.navigate(['/rup/crear/autocitar']);
         }
 
-        if (this.agendasAutocitar && this.agendasAutocitar.length > 0) {
-            // Filtro Agendas según cambios de acuerdo al día
-            // this.agendasAutocitar = this.agendasAutocitar.filter(ag => this.comprobarFecha(ag));
+        if (this.agendasAutocitar?.length) {
             this.showListaAgendas = true;
         }
     }
 
-    // comprobarFecha(agenda: IAgenda): Boolean {
-    //     // Genero una fecha 48 horas en el futuro...
-    //     let fechaLimite = moment(new Date()).add(2, 'days');
-    //     if (agenda.horaInicio <= fechaLimite.toDate()) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    toggleExpandir(index) {
+    seleccionarAgenda(index) {
+        this.agendaSeleccionada = this.agendasAutocitar[index];
         this.agendasExpandidas[index] = !this.agendasExpandidas[index];
+        this.turnoSeleccionado = null;
     }
 
-    seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-        const bloque = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque];
-        const turno = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
-        // Agenda con el turno que necesitamos
-        this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
+    seleccionarTurno(indiceTurno, indiceBloque) {
+        this.bloqueAgenda = this.agendaSeleccionada.bloques[indiceBloque];
+        this.turnoSeleccionado = this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno];
         this.obraSocialPaciente = null;
+
         if (this.paciente && this.paciente.financiador && this.paciente.financiador.length > 0) {
             this.obraSocialPaciente = this.paciente.financiador[0];
-            this.confirmarTurno(bloque, turno);
-        } else {
-            this.confirmarTurno(bloque, turno);
         }
     }
 
-    private confirmarTurno(bloque: IBloque, turno: ITurno) {
+    confirmarTurno() {
+        this.guardarTurno(this.bloqueAgenda, this.turnoSeleccionado);
+    }
+
+    cerrarModal() {
+        this.modal.showed = false;
+    }
+
+    abrirModal() {
+        this.modal.showed = true;
+    }
+
+    cerrarAutocitar() {
+        this.cancelarEmitter.emit(true);
+    }
+
+    private guardarTurno(bloque: IBloque, turno: ITurno) {
         // Paciente Turno
         const pacienteSave = {
             id: this.paciente.id,
@@ -102,27 +108,11 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             tipoPrestacion: this.prestacionAutocitar,
             tipoTurno: 'profesional',
         };
-        // ¿Ragnar Turno?
-        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, '¿Confirmar Autocitación?')
-            .then((confirmado) => {
-                if (!confirmado) {
-                    return false;
-                }
-                // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
-                // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
-                this.servicioTurno.save(datosTurnoNuevo).subscribe(() => {
-                    this.plex.toast('success', 'Turno asigando correctamente', 'Autocitación', 3000);
-                    this.cancelarEmitter.emit(true);
-                });
-            });
-    }
 
-    getHora(fecha) {
-        return moment(fecha).format('HH:mm');
-    }
-
-    getFecha(fecha) {
-        return moment(fecha).format('DD/MM/YYYY');
+        this.servicioTurno.save(datosTurnoNuevo).subscribe(() => {
+            this.cancelarEmitter.emit(true);
+            this.plex.toast('success', 'El turno autocitado se guardo correctamente');
+        });
     }
 
     esTurnoDoble(turno) {
@@ -140,12 +130,5 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
                 }
             }
         }
-    }
-
-    /**
-     * Volver
-     */
-    cancelarAutocitar() {
-        this.cancelarEmitter.emit(true);
     }
 }
