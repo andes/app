@@ -91,9 +91,6 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
             "browserTarget": "andes_app:build:dev"
           },
           "configurations": {
@@ -194,7 +191,11 @@
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
             "tsConfig": "projects/shared/tsconfig.lib.json",
-            "project": "projects/shared/ng-package.json"
+            "project": "projects/shared/ng-package.json",
+            "allowedCommonJsDependencies": [
+              "stream",
+              "ng2-img-max"
+            ]
           }
         },
         "test": {
@@ -238,7 +239,6 @@
             "main": "projects/portal/src/main.ts",
             "polyfills": "projects/portal/src/polyfills.ts",
             "tsConfig": "projects/portal/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/portal/src/favicon.ico",
               "projects/portal/src/assets"
@@ -246,7 +246,13 @@
             "styles": [
               "projects/portal/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -265,7 +271,8 @@
               "vendorChunk": false,
               "buildOptimizer": true
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
