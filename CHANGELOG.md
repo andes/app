@@ -1,3 +1,11 @@
+## [5.99.1](https://github.com/andes/app/compare/v5.99.0...v5.99.1) (2022-06-29)
+
+
+### Bug Fixes
+
+* **in:** visualizacion de movimientos ([#2683](https://github.com/andes/app/issues/2683)) ([a418ae7](https://github.com/andes/app/commit/a418ae7035a6e8a01bbbda10e2c2493106a181a3))
+* **IN-450:** Error al eliminar o modificar fecha de ingreso de una sala ([#2686](https://github.com/andes/app/issues/2686)) ([d6876e5](https://github.com/andes/app/commit/d6876e5ebf983f1fd3daea90e7b9cd1851989aee))
+
 # [5.99.0](https://github.com/andes/app/compare/v5.98.0...v5.99.0) (2022-06-22)
 
 
