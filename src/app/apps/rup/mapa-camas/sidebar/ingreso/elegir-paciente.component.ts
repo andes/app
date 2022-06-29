@@ -38,7 +38,8 @@ export class ElegirPacienteComponent {
                 ambitoOrigen: 'internacion',
                 organizacion: this.auth.organizacion.id,
                 conceptId: '32485007',
-                idPaciente: paciente.id
+                idPaciente: paciente.id,
+                estado: ['ejecucion', 'validada']
             }).pipe(
                 map(prestaciones => {
                     const internacionEnCurso = prestaciones?.find(p => p.ejecucion.registros[0]?.valor.informeIngreso && !p.ejecucion.registros[1]?.valor.InformeEgreso);

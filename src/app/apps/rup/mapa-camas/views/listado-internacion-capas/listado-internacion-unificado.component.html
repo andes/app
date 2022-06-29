@@ -59,7 +59,7 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar type="invert" *ngIf="idInternacionSelected">
-        <app-internacion-detalle *ngIf="accion === 'verDetalle'" (accion)="onAccion($event)">
+        <app-internacion-detalle *ngIf="accion === 'verDetalle' || accion === 'editando'" (accion)="onAccion($event)">
         </app-internacion-detalle>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="onAccion(null)">
