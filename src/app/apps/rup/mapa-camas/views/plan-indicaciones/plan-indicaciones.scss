@@ -17,6 +17,11 @@
     cursor: pointer;
 }
 
+.scroll {
+    height: 100%;
+    overflow-x: auto;
+}
+
 .selected.pointer {
     border: 2px solid #5bc0de!important;
     background-color: #5bc0de15!important;
