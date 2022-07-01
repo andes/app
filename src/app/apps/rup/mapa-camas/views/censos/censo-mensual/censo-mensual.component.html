@@ -29,7 +29,19 @@
             </div>
         </plex-wrapper>
 
-        <ng-container *ngIf="censo.length > 0">
+        <div *ngIf="!inicio && esVacio" justify="center" class="h-50">
+            <plex-label titulo="No hay resultados para esta búsqueda" direction="column"
+                        subtitulo="Edite algún filtro y genere nuevamente el censo" type="warning" size="xl"
+                        icon="close">
+            </plex-label>
+        </div>
+        <div *ngIf="inicio" justify="center" class="h-50">
+            <plex-label titulo="Comience completando los filtros" direction="column"
+                        subtitulo="Elija las opciones de filtrado y luego haga click en el botón 'Generar Censo'"
+                        type="info" size="xl" icon="magnify"></plex-label>
+        </div>
+
+        <ng-container *ngIf="censo.length">
             <table class="table table-striped">
                 <thead>
                     <tr>
