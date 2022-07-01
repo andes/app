@@ -117,21 +117,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
         this.registro.valor.vacuna.dosis = null;
         const registroVacuna = this.registro.valor.vacuna;
         if (registroVacuna.esquema) {
-            this.dosis$ = this.vacunasService.getNomivacDosis({ habilitado: true, esquema: registroVacuna.esquema._id, sort: 'orden' }).pipe(
-                map(dosis => {
-                    if (this.vacunasEncontradas && this.vacunasEncontradas.length) {
-                        const dosisAplicables = dosis.filter(d => !(this.vacunasEncontradas.find(v => d.nombre === v.dosis)));
-                        if (!dosisAplicables.length && dosis.length && dosis.length === this.vacunasEncontradas.length) {
-                            this.plex.info('warning', `El paciente ${this.paciente.nombreCompleto} ya posee todas las dosis permitidas.`);
-                        }
-                        return dosisAplicables;
-                    } else {
-                        const esquemaExcep = registroVacuna.condicion.nombre.replace(/ó/g, 'o').toLowerCase().includes('excepcion');
-                        dosis = dosis.filter(d => d.vacuna.codigo === registroVacuna.vacuna.codigo);
-                        return (esquemaExcep) ? dosis : dosis.slice(0, 1);
-                    }
-                })
-            );
+            this.dosis$ = this.vacunasService.getNomivacDosis({ habilitado: true, esquema: registroVacuna.esquema._id, sort: 'orden' });
         } else {
             this.dosis$ = null;
         }

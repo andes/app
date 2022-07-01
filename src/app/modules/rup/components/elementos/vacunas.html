@@ -14,8 +14,7 @@
             </plex-select>
             <plex-select [(ngModel)]="registro.valor.vacuna.vacuna" name="vacuna" [data]="vacunas$ | async"
                          placeholder="Seleccione una opción" label="Vacuna u otros biológicos" idField="_id"
-                         labelField="nombre" (change)="loadEsquemas();getHistorialVacunas();loadLotes()"
-                         required="true">
+                         labelField="nombre" (change)="loadEsquemas();loadLotes()" required="true">
             </plex-select>
             <plex-select name="condicion" [(ngModel)]="registro.valor.vacuna.condicion" [data]="condiciones$ | async"
                          placeholder="Seleccione una opción" label="Condición o motivo" idField="_id"
