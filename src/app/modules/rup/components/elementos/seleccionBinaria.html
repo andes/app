@@ -19,7 +19,27 @@
                 <label>
                     {{label}}
                 </label>
-                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.descripcion }}
+                <ng-container *ngIf="registro.valor?.id && registro.valor.id !== 'Otro'">
+                    {{ registro.valor.label }}
+                </ng-container>
+                <ng-container *ngIf="registro.valor?.id === 'Otro'">
+                    {{ registro.valor.descripcion }}
+                </ng-container>
+                <ng-container *ngIf="registro.valor && !registro.valor.id">
+                    <!-- casos que fueron registrados como un componente de texto -->
+                    <ng-container *ngIf="registro.valor.evolucion">
+                        <div class="col-8 readonly">
+                            <span>Evolución </span>
+                            <span [innerHTML]="registro.valor.evolucion"></span>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="!registro.valor.evolucion">
+                        {{ registro.valor }}
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!registro.valor">
+                    {{ 'Sin datos' }}
+                </ng-container>
             </ng-template>
         </div>
     </div>
