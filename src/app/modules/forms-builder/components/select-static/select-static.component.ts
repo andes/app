@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 
 @Component({
     selector: 'app-select-static',
     templateUrl: './select-static.component.html'
 })
-export class SelectStaticComponent implements OnInit {
+export class SelectStaticComponent implements OnChanges {
     @Input() fieldStatic: any;
 
     public columns = [
@@ -22,9 +22,14 @@ export class SelectStaticComponent implements OnInit {
         nombre: ''
     };
 
+    public esMultiple: boolean;
+
     constructor() { }
 
-    ngOnInit(): void { }
+    ngOnChanges(): void {
+        this.esMultiple= this.fieldStatic.multiple;
+    }
+
 
     addItem() {
         this.nuevoItem.id = this.nuevoItem.nombre.length > 16 ? this.nuevoItem.nombre.replace(/ /g, '').slice(0, 16).toLowerCase()
@@ -41,5 +46,9 @@ export class SelectStaticComponent implements OnInit {
         if (index >= 0) {
             this.fieldStatic.items.splice(index, 1);
         }
+    }
+
+    configMultiple(event) {
+        this.fieldStatic.multiple = event.value;
     }
 }

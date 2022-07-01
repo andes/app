@@ -50,7 +50,8 @@
                             </plex-select>
                             <plex-select *ngSwitchCase="'selectStatic'" [label]="field.label?field.label:field.key"
                                          grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                         [required]="field.required" [data]="field.items" [readonly]="!editFicha">
+                                         [required]="field.required" [data]="field.items" [readonly]="!editFicha" 
+                                         [multiple]="field.multiple">
                             </plex-select>
                         </ng-container>
                     </ng-container>

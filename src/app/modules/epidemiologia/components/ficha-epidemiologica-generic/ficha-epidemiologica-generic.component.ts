@@ -30,8 +30,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
         private formPresetResourceService: FormPresetResourcesService,
     ) { }
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void { }
 
     ngOnChanges() {
         this.formsService.search({ name: this.fichaName }).subscribe(res => {
