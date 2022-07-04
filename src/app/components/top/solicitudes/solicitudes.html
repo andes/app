@@ -166,7 +166,7 @@
                                                  *ngIf="botones.anular && permisoAnular"
                                                  (click)="$event.stopPropagation();anular(prestacion)" title="Anular">
                                     </plex-button>
-                                    <plex-button *ngIf="prestacion.estadoActual.tipo === 'ejecucion'" type="success"
+                                    <plex-button *ngIf="botones.continuarRegistro" type="success"
                                                  size="sm" (click)="setRouteToParams(['ejecucion', prestacion.id]); 
                                                  prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;
                                                  accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; 
