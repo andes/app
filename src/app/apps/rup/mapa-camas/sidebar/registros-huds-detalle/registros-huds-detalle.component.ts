@@ -26,10 +26,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public hasta: Date;
     public tipoPrestacion;
     public inProgress = true;
+    public prestacionesEliminadas = [];
 
     public desde$ = new BehaviorSubject(new Date());
     public hasta$ = new BehaviorSubject(new Date());
     public tipoPrestacion$ = new BehaviorSubject(null);
+    public id$ = new BehaviorSubject(null);
 
     public cama$ = this.mapaCamasService.selectedCama;
     public estadoCama$: Observable<IMAQEstado>;
@@ -96,7 +98,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             })
         );
 
-
         this.max$ = this.mapaCamasService.historialInternacion$.pipe(
             map(movimientos => {
                 const egreso = movimientos.find(m => m.extras && m.extras.egreso);
@@ -115,8 +116,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             this.hasta$,
             this.tipoPrestacion$,
             this.min$,
+            this.id$
         ).pipe(
-            map(([prestaciones, desde, hasta, tipoPrestacion, min]) => {
+            map(([prestaciones, desde, hasta, tipoPrestacion, min, idPrestacion]) => {
+                if (idPrestacion) {
+                    this.prestacionesEliminadas.push(idPrestacion);
+                }
                 if (!desde) {
                     desde = moment().subtract(7, 'd').toDate();
                 }
@@ -128,7 +133,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     if (tipoPrestacion) {
                         return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
                     }
-                    return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
+                    return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
                 });
             })
         );
@@ -205,6 +210,10 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 this.prestacionService.romperValidacion(prestacion).subscribe(() => {
                     this.ejecutar(prestacion);
                 });
+                break;
+            case 'anular-validacion':
+                this.prestacionService.invalidarPrestacion(prestacion).subscribe();
+                this.id$.next(prestacion.id);
                 break;
         }
     }

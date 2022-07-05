@@ -14,14 +14,22 @@
         {{ prestacion.solicitud.profesional | nombre }}
     </small>
 </td>
-<td justify="end">
-    <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" tooltip="Ver" titlePosition="left"
-                 *ngIf="!esEjecucion"></plex-button>
+<td>
+    <div class="d-flex flex-rows align-items-center">
+        <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" tooltip="Ver" titlePosition="left"
+                     *ngIf="!esEjecucion"></plex-button>
 
-    <plex-dropdown *ngIf="!esEjecucion && esMiPrestacion" right="true" size="sm" icon="dots-vertical" [items]="items">
-    </plex-dropdown>
+        <plex-dropdown *ngIf="!esEjecucion && esMiPrestacion" right="true" size="sm" icon="dots-vertical"
+                       [items]="items">
+        </plex-dropdown>
+    </div>
 
-    <plex-button size="sm" label="Continuar" (click)="emit('continuar', $event)" type="success"
-                 tooltip="Continua registro" titlePosition="left" *ngIf="esEjecucion">
-    </plex-button>
+    <div>
+        <plex-button size="sm" label="Continuar" (click)="emit('continuar', $event)" type="success"
+                     tooltip="Continua registro" titlePosition="left" *ngIf="esEjecucion">
+        </plex-button>
+        <plex-button size="sm" label="Anular" (click)="invalidarPrestacion('anular-validacion', $event)" type="danger"
+                     tooltip="Anular registro" titlePosition="left" *ngIf="esEjecucion">
+        </plex-button>
+    </div>
 </td>
