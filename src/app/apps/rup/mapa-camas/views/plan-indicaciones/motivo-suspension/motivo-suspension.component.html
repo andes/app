@@ -1,10 +1,10 @@
 <form #formMotivoSuspension="ngForm">
     <plex-title titulo="Suspender indicación" size="md">
-        <plex-button label="CANCELAR" type="danger" (click)="cancelarSuspension()"></plex-button>
-        <plex-button [disabled]="!motivo" label="GUARDAR" type="success" (click)="guardarSuspension()">
+        <plex-button class="mr-1" type="danger" icon="arrow-left" size="sm" (click)="cancelarSuspension()"></plex-button>
+        <plex-button [disabled]="!motivo" icon="check" size="sm" type="success" (click)="guardarSuspension()">
         </plex-button>
     </plex-title>
-        <plex-text label="Ingrese motivo de suspensión" [(ngModel)]="motivo" name="motivo" grow="full" [required]="true"
-            multiline="true">
-        </plex-text>
+    <plex-text label="Ingrese motivo de suspensión" [(ngModel)]="motivo" name="motivo" grow="full" [required]="true"
+                [multiline]="true">
+    </plex-text>
 </form>

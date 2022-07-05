@@ -3,9 +3,8 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
-import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
@@ -25,11 +24,9 @@ import { InternacionResumenHTTP } from '../../services/resumen-internacion.http'
     ],
 })
 export class PlanIndicacionesComponent implements OnInit {
-    private capa: string;
-    private ambito: string;
-    private idInternacion: string;
-    public paciente: any;
+
     public indicacion;
+    public paciente: any;
     public fecha = new Date();
     public hoy = new Date();
     public suspenderAnterior = false;
@@ -40,6 +37,25 @@ export class PlanIndicacionesComponent implements OnInit {
     public suspenderIndicacion: Boolean;
     public showSecciones = {};
     public isToday = true;
+    public hayDraft = 0;
+    public eventos = {};
+    public indicacionView = null;
+    public nuevaIndicacion = false;
+    public seccionSelected = null;
+    public indicacionEventoSelected = null;
+    public horaSelected: Date;
+    public tipoPrestacion = {
+        'conceptId': '4981000013105',
+        'term': 'plan de indicaciones médicas',
+        'fsn': 'plan de indicaciones médicas (procedimiento)',
+        'semanticTag': 'procedimiento'
+    };
+    public secciones: any[] = [];
+    public seccionesActivas: any[] = [];
+
+    private capa: string;
+    private ambito: string;
+    private idInternacion: string;
     private selectedBuffer = new BehaviorSubject({});
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
@@ -64,30 +80,6 @@ export class PlanIndicacionesComponent implements OnInit {
     public continuar$ = this.botones$.pipe(
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending'))
     );
-
-
-    public hayDraft = 0;
-
-
-    eventos = {};
-
-    indicacionView = null;
-
-    nuevaIndicacion = false;
-    seccionSelected = null;
-
-    indicacionEventoSelected = null;
-    horaSelected: Date;
-
-    tipoPrestacion = {
-        'conceptId': '4981000013105',
-        'term': 'plan de indicaciones médicas',
-        'fsn': 'plan de indicaciones médicas (procedimiento)',
-        'semanticTag': 'procedimiento'
-    };
-
-    secciones: any[] = [];
-    seccionesActivas: any[] = [];
 
     constructor(
         private prestacionService: PrestacionesService,
@@ -116,6 +108,18 @@ export class PlanIndicacionesComponent implements OnInit {
             });
             this.actualizar();
         });
+        this.getInternacion().pipe(
+            switchMap(resumen => {
+                this.internacion = resumen;
+                return this.pacienteService.getById(resumen.paciente.id).pipe(
+                    map(paciente => {
+                        this.paciente = paciente;
+                        this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
+                    })
+                );
+            })
+        ).subscribe(() => this.actualizar());
+
 
         this.maquinaEstadoService.getAll(
             this.auth.organizacion.id,

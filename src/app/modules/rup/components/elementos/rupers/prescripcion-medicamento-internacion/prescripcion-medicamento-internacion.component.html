@@ -1,10 +1,10 @@
 <form #form="ngForm" *ngIf="!soloValores">
     <plex-title size="sm" titulo="Principio Activo">
         <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
-                    tooltipPosition="left">
+                     tooltipPosition="left">
         </plex-button>
         <plex-button size="sm" icon="delete" type="danger" (click)="deleteSustancia()" tooltip="Eliminar último item"
-                    tooltipPosition="left" [disabled]="registro.valor.sustancias.length === 1" class="ml-1">
+                     tooltipPosition="left" [disabled]="registro.valor.sustancias.length === 1" class="ml-1">
         </plex-button>
     </plex-title>
 
@@ -36,10 +36,10 @@
     <!-- FRECUENCIA -->
    <plex-title size="sm" titulo="Frecuencia">
         <plex-button size="sm" icon="plus" type="info" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
-                    tooltipPosition="left">
+                     tooltipPosition="left">
         </plex-button>
         <plex-button size="sm" icon="delete" type="danger" (click)="deleteFrecuencia()" tooltip="Eliminar último item"
-                    tooltipPosition="left" [disabled]="registro.valor.frecuencias.length === 1" class="ml-1">
+                     tooltipPosition="left" [disabled]="registro.valor.frecuencias.length === 1" class="ml-1">
         </plex-button>
     </plex-title>
 
@@ -52,8 +52,17 @@
         <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad"></plex-text>
 
         <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
-                        (change)="valuesChange()">
+                       (change)="valuesChange()"
+                       [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
         </plex-datetime>
+
+        <plex-grid *ngIf="i === 0" cols="1">
+            <plex-bool class="mb-3" type="slide" justify="start" label="Única Vez" [(ngModel)]="registro.valor.unicaVez"
+                       (change)="onChangeUnicaVez($event)" grow="full"></plex-bool>
+            <plex-text *ngIf="registro.valor.unicaVez" [multiline]="true" [(ngModel)]="registro.valor.motivoUnicaVez"
+                       name="indicaciones">
+            </plex-text>
+        </plex-grid>
     </plex-wrapper>
     <plex-grid cols="1">
         <plex-bool class="mb-3" type="slide" justify="start" label="Única Vez" name="boolUnicaVez" [(ngModel)]="registro.valor.unicaVez" (change)="onChangeUnicaVez($event)" grow="full"></plex-bool>
@@ -80,14 +89,16 @@
     <plex-title size="sm" titulo="Frecuencia"></plex-title>
 
     <plex-grid cols="3" *ngFor="let frecuencia of registro.valor.frecuencias">
-        <plex-label titulo="Frecuencia" [subtitulo]="registro.valor.unicaVez ? 'Única vez' : frecuencia.frecuencia?.term || ''">
+        <plex-label titulo="Frecuencia"
+                    [subtitulo]="registro.valor.unicaVez ? 'Única vez' : frecuencia.frecuencia?.nombre || ''">
         </plex-label>
-        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidad || ''">
+        <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidad || 'Sin especificar'">
         </plex-label>
-        <plex-label titulo="Horario" [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : ''">
+        <plex-label titulo="Horario"
+                    [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : frecuencia.frecuencia?.nombre">
         </plex-label>
         <plex-label *ngIf="registro.valor.motivoUnicaVez" span="3" titulo="Motivo Única Vez" span="3"
-            [subtitulo]="registro.valor.motivoUnicaVez">
+                    [subtitulo]="registro.valor.motivoUnicaVez">
         </plex-label>
     </plex-grid>
 

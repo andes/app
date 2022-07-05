@@ -142,7 +142,7 @@
             </table>
         </div>
     </plex-layout-main>
-    <plex-layout-sidebar [type]="!nuevaIndicacion ? 'invert': null">
+    <plex-layout-sidebar [type]="!nuevaIndicacion ? 'invert': false">
 
         <ng-container *ngIf="nuevaIndicacion">
             <plan-indicaciones-nueva-indicacion [seccion]="seccionSelected" [tipoPrestacion]="tipoPrestacion"
