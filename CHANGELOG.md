@@ -1,3 +1,20 @@
+# [5.100.0](https://github.com/andes/app/compare/v5.99.1...v5.100.0) (2022-07-06)
+
+
+### Bug Fixes
+
+* **plan-indiciaciones:** scroll grilla ([#2695](https://github.com/andes/app/issues/2695)) ([b6e0a41](https://github.com/andes/app/commit/b6e0a41714f318856fc133daa6efa8643bc72187))
+
+
+### Features
+
+* **CITAS:** agrega nombre del dia en listado de agendas ([#2681](https://github.com/andes/app/issues/2681)) ([e1c2727](https://github.com/andes/app/commit/e1c27276d7b8e85c6fdd6bc7441ff69c60f22a9f))
+* **IN-430:** Permitir anular prestaciones de internacion ([#2658](https://github.com/andes/app/issues/2658)) ([c1ab483](https://github.com/andes/app/commit/c1ab483253f21718290cf75f7cd81e4577215065))
+* **IN-442:** Labels de resultados en pantalla de censos ([#2672](https://github.com/andes/app/issues/2672)) ([aef3a26](https://github.com/andes/app/commit/aef3a263b500ce9ebbba12aba5925d8131f8dbeb))
+* **INTERNACION:** cambio de lugar botones ([#2692](https://github.com/andes/app/issues/2692)) ([599039f](https://github.com/andes/app/commit/599039fb3d1be2a183585a36687329b022b12136))
+* **MISC-225:** Agregar filtro por conceptos en el reporte c2 ([#2634](https://github.com/andes/app/issues/2634)) ([a4b9904](https://github.com/andes/app/commit/a4b990412a0e91b23f05c0e0dc177eeb6a917d9e))
+* **RUP:** cambio condicion de required ([#2694](https://github.com/andes/app/issues/2694)) ([89ec7f6](https://github.com/andes/app/commit/89ec7f68979cf03868ba24b2acf6efc7ee8ae1c8))
+
 ## [5.99.1](https://github.com/andes/app/compare/v5.99.0...v5.99.1) (2022-06-29)
 
 
