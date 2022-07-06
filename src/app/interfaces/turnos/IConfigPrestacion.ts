@@ -1,8 +1,13 @@
-import { IPrestacion } from './IPrestacion';
-import { IUbicacion } from './../IUbicacion';
+export interface IDataPrestacion {
+    id: String;
+    nombre: String;
+    descripcion: String;
+    activo: Boolean;
+    fechaBaja: Date;
+}
 
 export interface IConfigPrestacion {
-    prestacion: IPrestacion;
+    prestacion: IDataPrestacion;
     deldiaAccesoDirecto: Boolean;
     deldiaReservado: Boolean;
     deldiaAutocitado: Boolean;

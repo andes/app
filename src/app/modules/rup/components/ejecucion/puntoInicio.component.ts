@@ -94,7 +94,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         private hudsService: HUDSService,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
-        public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
         public servicioTurnero: TurneroService,
@@ -408,7 +407,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.turno = turno;
             } else {
                 this.plex.confirm(
-                    `Paciente: <b> ${paciente.apellido}, ${paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
+                    `Paciente: <b> ${paciente.apellido}, ${paciente.alias || paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
                     '¿Iniciar Prestación?'
                 ).then(confirmacion => {
                     if (confirmacion) {
@@ -471,7 +470,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         const msg = operacion === 'noAsistio' ?
-            `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?` :
+            `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.alias || paciente.nombre} </b> ?` :
             '¿Está seguro que desea revertir los cambios?';
 
         this.plex.confirm(msg).then(confirmacion =>
