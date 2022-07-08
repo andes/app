@@ -84,13 +84,28 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     valuesChange() {
-        this.registro.valor.frecuencias.forEach(frec => {
-            frec.horario = frec.frecuencia && frec.frecuencia?.type === 'number' ? frec.horario : null;
-        });
         const nombre = this.registro.valor.sustancias.map(item => {
             return `${item.ingrediente?.term || ''} ${item.dosisValor || ''}${item.dosisUnidad?.term || ''}`;
         }).join(' y ');
         this.registro.valor.nombre = nombre;
+    }
+
+    onChangeUnicaVez(event) {
+        const frecuencias = this.registro.valor.frecuencias;
+        if (event.value) {
+            if (frecuencias.length > 1) {
+                this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
+                this.registro.valor.frecuencias = [{
+                    horario: frecuencias[0].horario,
+                    velocidad: frecuencias[0].velocidad
+                }];
+            }
+        } else {
+            delete this.registro.valor.motivoUnicaVez;
+            if (this.backUpFrecuencias.length) {
+                this.registro.valor.frecuencias = this.backUpFrecuencias;
+            }
+        }
     }
 
     @Unsubscribe()
@@ -137,24 +152,6 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
                     this.registro.valor.via = cts[0];
                 }
             });
-        }
-    }
-
-    onChangeUnicaVez(event) {
-        const frecuencias = this.registro.valor.frecuencias;
-        if (event.value) {
-            if (frecuencias.length > 1) {
-                this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
-                this.registro.valor.frecuencias = [{
-                    horario: frecuencias[0].horario,
-                    velocidad: frecuencias[0].velocidad
-                }];
-            }
-        } else {
-            delete this.registro.valor.motivoUnicaVez;
-            if (this.backUpFrecuencias.length) {
-                this.registro.valor.frecuencias = this.backUpFrecuencias;
-            }
         }
     }
 }

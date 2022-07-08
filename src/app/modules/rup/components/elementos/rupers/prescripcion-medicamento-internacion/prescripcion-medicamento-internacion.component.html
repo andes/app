@@ -51,16 +51,16 @@
 
         <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad"></plex-text>
 
-        <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
-                       (change)="valuesChange()"
-                       [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
-        </plex-datetime>
-
-        <plex-grid *ngIf="i === 0" cols="1">
+        <plex-grid *ngIf="i === 0" cols="2">
+            <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
+                           [required]="frecuencia.frecuencia?.type === 'number'" (change)="valuesChange()"
+                           [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
+            </plex-datetime>
             <plex-bool class="mb-3" type="slide" justify="start" label="Única Vez" [(ngModel)]="registro.valor.unicaVez"
-                       (change)="onChangeUnicaVez($event)" grow="full"></plex-bool>
+                       (change)="onChangeUnicaVez($event)" span="2">
+            </plex-bool>
             <plex-text *ngIf="registro.valor.unicaVez" [multiline]="true" [(ngModel)]="registro.valor.motivoUnicaVez"
-                       name="indicaciones">
+                       name="indicaciones" span="2">
             </plex-text>
         </plex-grid>
     </plex-wrapper>
