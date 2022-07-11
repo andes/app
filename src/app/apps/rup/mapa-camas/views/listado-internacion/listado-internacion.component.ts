@@ -202,6 +202,7 @@ export class InternacionListadoComponent implements OnInit {
 
     cancelar() {
         this.mapaCamasService.selectPrestacion(null);
+        this.mostrar = 'datosInternacion';
     }
 
     volver() {
