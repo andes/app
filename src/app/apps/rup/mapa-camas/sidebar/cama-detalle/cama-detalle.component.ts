@@ -60,7 +60,7 @@ export class CamaDetalleComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
     public editNota = false;
-
+    public relacionesYpermisos;
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
 
@@ -143,6 +143,10 @@ export class CamaDetalleComponent implements OnInit {
                 return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
+
+        this.relaciones$.subscribe(relacion => this.relacionesYpermisos = this.capa !== 'interconsultores' && ((relacion[0].accion !== 'internarPaciente' &&
+            relacion[0].nombre !== 'Bloquear') || (relacion[0].accion === 'internarPaciente' && this.permisosMapaCamasService.ingreso) ||
+            (relacion[0].nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !this.cama.sala)));
     }
 
     sector(cama: ISnapshot) {

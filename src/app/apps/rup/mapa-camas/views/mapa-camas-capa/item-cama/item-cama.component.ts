@@ -42,7 +42,7 @@ export class ItemCamaComponent implements OnChanges {
     constructor(
         public auth: Auth,
         private router: Router,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
     }

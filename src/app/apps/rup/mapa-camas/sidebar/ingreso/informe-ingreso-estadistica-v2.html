@@ -74,7 +74,7 @@
                          tooltip="Completar informe" icon="lapiz-documento" type="warning" size="sm" class="mr-1"
                          (click)="toggleEdit()">
             </plex-button>
-            <plex-button *ngIf="mapaCamasService.capa !== 'estadistica-v2' && permisosMapaCamasService.ingreso"
+            <plex-button *ngIf="mapaCamasService.capa !== 'estadistica-v2' && mapaCamasService.capa !== 'interconsultores' && permisosMapaCamasService.ingreso"
                          tooltip="Editar ingreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()"
                          class="mr-1">
             </plex-button>

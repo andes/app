@@ -4,31 +4,31 @@
             <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
-                        <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || 
-                                    (relacion.accion === 'internarPaciente' && permisosMapaCamasService.ingreso) || 
-                                    (relacion.nombre === 'Bloquear' && permisosMapaCamasService.bloqueo && !cama.sala)">
-                        <plex-button tooltip="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
-                                    size="sm" (click)="accion(relacion)">
-                        </plex-button>
+                        <ng-container *ngIf="relacionesYpermisos">
+                            <plex-button title="{{ relacion.nombre }} " [icon]="relacion.icon" [type]="relacion.color"
+                                         size="sm" (click)="accion(relacion)">
+                            </plex-button>
                         </ng-container>
                     </ng-container>
                 </ng-container>
-                <plex-button tooltip="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
-                             *ngIf="cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit">
+                <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
+                             *ngIf="capa !== 'interconsultores' && (cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit)">
                 </plex-button>
-                <ng-container *ngIf="!cama.sala && permisosMapaCamasService.camaPrestamo && ((organizacionV2$ | async) || cama.estado === 'disponible')">
-                    <plex-button tooltip="Prestar" icon="chevron-right" type="warning" size="sm"
-                                (click)="accion({accion: 'prestar'})"
-                                    *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">
+                <ng-container
+                              *ngIf="capa !== 'interconsultores' && !cama.sala && cama.estado === 'disponible' && permisosMapaCamasService.camaPrestamo">
+                    <plex-button title="Prestar" icon="chevron-right" type="warning" size="sm"
+                                 (click)="accion({accion: 'prestar'})"
+                                 *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">
                     </plex-button>
-                    <plex-button *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.unidadOrganizativa.conceptId" 
-                                tooltip="Devolver" icon="chevron-left" type="warning" size="sm" (click)="accion({accion: 'devolver'})">
+                    <plex-button title="Devolver" icon="chevron-left" type="warning" size="sm"
+                                 (click)="accion({accion: 'devolver'})"
+                                 *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.unidadOrganizativa.conceptId">
                     </plex-button>
-                    </ng-container>
+                </ng-container>
                 <plex-button tooltip="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>
             </plex-title>
-            
+
             <fieldset>
                 <plex-detail size="lg" direction="row">
                     <plex-icon name="{{ estadoCama.icon.substring(this.estadoCama.icon.indexOf('-') + 1) }}">
@@ -73,7 +73,7 @@
                 </plex-button>
                 <ng-container *feature="'planIndicaciones'">
                     <plex-button *ngIf="capa !== 'estadistica'" label="INDICACIONES" size="sm" type="info"
-                                (click)="onVerIndicaciones(cama)" class="mr-1">
+                                 (click)="onVerIndicaciones(cama)" class="mr-1">
                     </plex-button>
                 </ng-container>
 
@@ -84,17 +84,19 @@
                 </ng-container>
 
                 <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
-                    <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                    <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
+                    </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <plex-dropdown right="true" size="sm" icon="account-off" type="danger"
-                                tooltip="Deshacer Internacion" [items]="items">
+                    <plex-dropdown *ngIf="capa !== 'interconsultores'" right="true" size="sm" icon="account-off"
+                                   type="danger" tooltip="Deshacer Internacion" [items]="items">
                     </plex-dropdown>
                 </ng-container>
 
             </plex-title>
             <fieldset>
-                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields" [accesoHuds]="true">
+                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" [fields]="pacienteFields"
+                                  [accesoHuds]="true">
                     <plex-badge class="pr-1" type="warning" *ngIf="hayRespirador$ | async as respirador"
                                 tooltip="Desde {{ respirador.valor.fechaDesde | fecha }}">
                         Respirador
@@ -105,7 +107,7 @@
         <ng-container *ngIf="cama.estado === 'ocupada' && !cama.sala">
             <plex-title titulo="Nota" size="md">
                 <plex-button *ngIf="!editNota" size="sm" tooltip="Editar nota" type="warning" icon="documento"
-                            (click)="toggleEditNota(true, cama.nota)">
+                             (click)="toggleEditNota(true, cama.nota)">
                 </plex-button>
             </plex-title>
 
@@ -113,11 +115,11 @@
 
             <ng-container *ngIf="editNota">
                 <textarea class="form-control" [(ngModel)]="nota" id="nota" name="nota"
-                            placeholder="Agregar nota..."></textarea>
+                          placeholder="Agregar nota..."></textarea>
                 <plex-button class="float-right" size="sm" tooltip="Guardar nota" type="success" icon="check"
-                            (click)="guardarNota(cama)"></plex-button>
+                             (click)="guardarNota(cama)"></plex-button>
                 <plex-button class="float-right" size="sm" tooltip="Cancelar" type="danger" icon="close"
-                            (click)="toggleEditNota(false, cama.nota)">
+                             (click)="toggleEditNota(false, cama.nota)">
                 </plex-button>
             </ng-container>
         </ng-container>
