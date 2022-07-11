@@ -95,18 +95,24 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         this.camaOcupada$ = combineLatest([
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.snapshot$,
+            this.historial$
         ]).pipe(
-            map(([selectedCama, snapshots]) => {
-                const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
-                return (cama.estado !== 'ocupada' || cama.idInternacion !== selectedCama.idInternacion) && !cama.sala;
+            map(([selectedCama, snapshots, historial]) => {
+                // En caso de no haber seleccionado ninguna cama pasamos al segundo if donde vamos a verificar si
+                // la cama esta ocupada en el ultimo movimiento del historial de movimientos.
+                if (selectedCama.idCama) {
+                    const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
+                    return (cama.estado !== 'ocupada' || cama.idInternacion !== selectedCama.idInternacion) && !cama.sala;
+                } else if (historial[historial?.length - 1]?.idCama) {
+                    const cama = snapshots.find(snap => snap.idCama === historial[historial.length - 1].idCama);
+                    return (cama.estado !== 'ocupada' || cama.idInternacion !== historial[historial.length - 1].idInternacion) && !cama.sala;
+                }
             })
         );
 
         this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
             switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
         );
-
-
     }
 
     onType() {
