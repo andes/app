@@ -3,54 +3,54 @@
         <form #formCama="ngForm">
             <plex-title titulo="DATOS DE CAMA">
                 <plex-button class="mr-1" label="CANCELAR" type="danger" (click)="volver()"></plex-button>
-                <plex-button *ngIf="permisosMapaCamasService.camaBaja && cama?.idCama"
-                             class="mr-1" tooltip="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
-                             [disabled]="!verificarBaja() || disabled" label="INACTIVAR CAMA" type="warning"
+                <plex-button *ngIf="permisosMapaCamasService.camaBaja && cama?.idCama" class="mr-1"
+                             tooltip="{{ (verificarBaja$ | async) ? null : 'Cama utilizada' }}"
+                             [disabled]="!(verificarBaja$ | async) || disabled" label="INACTIVAR CAMA" type="warning"
                              (click)="darBaja()">
                 </plex-button>
                 <plex-button label="GUARDAR" title="{{ (puedeEditar) ? null : 'No tiene permisos para editar' }}"
-                            type="success" [validateForm]="formCama" (click)="save($event)"
-                            [disabled]="disabled || !puedeEditar">
+                             type="success" [validateForm]="formCama" (click)="save($event)"
+                             [disabled]="disabled || !puedeEditar">
                 </plex-button>
             </plex-title>
             <fieldset>
                 <plex-grid cols="3" type="full">
                     <plex-text type="text" [(ngModel)]="camaEditada.nombre" label="Nombre" name="nombre"
-                            placeholder="Nombre" [required]="true" span="2">
+                               placeholder="Nombre" [required]="true" span="2">
                     </plex-text>
                     <div span="1">
                         <plex-datetime *ngIf="!cama" type="datetime" [(ngModel)]="fecha" [required]="true"
-                                    name="fechaDisponible" label="Disponible desde:" [debounce]="600">
+                                       name="fechaDisponible" label="Disponible desde:" [debounce]="600">
                         </plex-datetime>
                     </div>
 
                     <plex-select [(ngModel)]="camaEditada.unidadOrganizativa" name="unidadOrganizativa"
-                                [required]="true" [data]="unidadesOrganizativas$ | async" idField="term"
-                                labelField="term" label="Unidad organizativa" [disabled]="cama?.estado === 'ocupada'">
+                                 [required]="true" [data]="unidadesOrganizativas$ | async" idField="term"
+                                 labelField="term" label="Unidad organizativa" [disabled]="cama?.estado === 'ocupada'">
                     </plex-select>
                     <plex-select name="tipoCama" [snomedExpression]="expr.TipoDeCama" [required]="true"
-                                [(ngModel)]="camaEditada.tipoCama" label="Tipo de cama">
+                                 [(ngModel)]="camaEditada.tipoCama" label="Tipo de cama">
                     </plex-select>
-                    <plex-bool class="ml-4"justify="start" type="slide" [(ngModel)]="camaEditada.esCensable" label="Es censable"
-                            name="censable">
+                    <plex-bool class="ml-4" justify="start" type="slide" [(ngModel)]="camaEditada.esCensable"
+                               label="Es censable" name="censable">
                     </plex-bool>
 
                     <plex-select name="equipamiento" [multiple]="true" [snomedExpression]="expr.Equipaminetos"
-                                [(ngModel)]="camaEditada.equipamiento" label="Equipamiento">
+                                 [(ngModel)]="camaEditada.equipamiento" label="Equipamiento">
                     </plex-select>
                     <plex-select name="especialidad" [required]="true" [snomedExpression]="expr.Especialidades"
-                                [preload]="false" [(ngModel)]="camaEditada.especialidades" [multiple]="true"
-                                label="Especialidad/es">
+                                 [preload]="false" [(ngModel)]="camaEditada.especialidades" [multiple]="true"
+                                 label="Especialidad/es">
                     </plex-select>
                     <plex-select [snomedExpression]="expr.Genero" name="genero" label="Genero"
-                                [(ngModel)]="camaEditada.genero">
+                                 [(ngModel)]="camaEditada.genero">
                     </plex-select>
 
                     <ng-container *ngIf="organizacion$ | async as organizacion">
                         <plex-select name="sectores" [data]="sectores$ | async" label="Ubicación" idField="_id"
-                                    labelField="nombre + sectorName" [required]="true"
-                                    [(ngModel)]="camaEditada.sectores" (change)="onSectorSelect($event, organizacion)"
-                                    span="2">
+                                     labelField="nombre + sectorName" [required]="true"
+                                     [(ngModel)]="camaEditada.sectores" (change)="onSectorSelect($event, organizacion)"
+                                     span="2">
                         </plex-select>
                     </ng-container>
                 </plex-grid>
@@ -58,7 +58,7 @@
         </form>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title titulo="MAPA DE ORGANIZACION">
+        <plex-title titulo="MAPA DE ORGANIZACION" size="md">
         </plex-title>
         <div>
             <sectores-item *ngFor="let unidad of mapaSectores$ | async" [root]="unidad" [actions]="false">

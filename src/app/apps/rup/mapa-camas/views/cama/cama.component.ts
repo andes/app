@@ -8,10 +8,10 @@ import { Plex } from '@andes/plex';
 import { SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
-import { map, pluck, switchMap } from 'rxjs/operators';
+import { map, pluck, switchMap, take } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
@@ -22,16 +22,14 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 
 export class CamaMainComponent implements OnInit {
     public disabled = false;
-
     public expr = SnomedExpression;
-
     public fecha;
     private ambito: string = this.mapaCamasService.ambito;
     public sectores$: Observable<any[]>;
     public mapaSectores$: Observable<any[]>;
     public unidadesOrganizativas$: Observable<any[]>;
     public organizacion$: Observable<any>;
-
+    public verificarBaja$: Observable<Boolean>;
     public cama: ISnapshot;
     public camaEditada = {
         nombre: null,
@@ -59,18 +57,36 @@ export class CamaMainComponent implements OnInit {
         private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private location: Location,
         public permisosMapaCamasService: PermisosMapaCamasService,
-    ) {
-
-    }
+    ) { }
 
     ngOnInit() {
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.permisosMapaCamasService.setAmbito(this.ambito);
+        // carga capas activas del efector
         this.capas$ = this.maquinaEstadosHTTP.getAll(this.auth.organizacion.id, this.ambito).pipe(
             map(estados => estados.map(estado => estado.capa)
-                .filter(capa => capa !== 'enfermeria' && capa !== 'estadistica-v2')
+                .filter(capa => capa !== 'enfermeria' && capa !== 'estadistica-v2' && capa !== 'interconsultores')
             )
         );
+        // verifica si la cama se encuentra disponible en todas las capas del efector
+        this.verificarBaja$ = this.capas$.pipe(
+            map(capas => {
+                let contador = 0;
+                capas.map(capa => {
+                    const maquinaEstados = this.infoCama[capa][0];
+                    const snap = this.infoCama[capa][1];
+                    if (maquinaEstados) {
+                        for (const relacion of maquinaEstados.relaciones) {
+                            if ((relacion.destino === 'inactiva') && (relacion.origen === snap?.estado)) {
+                                contador++;
+                            }
+                        }
+                    }
+                });
+                return (contador === capas.length);
+            })
+        );
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -114,10 +130,11 @@ export class CamaMainComponent implements OnInit {
                 this.puedeEditar = false;
             }
             this.capas$.pipe(
+                take(1),
                 map(capas => capas.map(capa => this.camasHTTP.snapshot(this.ambito, capa, moment().toDate(), null, null, id))),
                 switchMap(snaps => forkJoin(snaps).pipe(
-                    map(snapshotsArray => snapshotsArray.map(snapshots => snapshots[0]) )
-                ) )
+                    map(snapshotsArray => snapshotsArray.map(snapshots => snapshots[0]))
+                ))
             ).subscribe((snapshots: any) => {
                 snapshots.map((snap) => {
                     if (!this.infoCama[snap.capa]) {
@@ -132,7 +149,6 @@ export class CamaMainComponent implements OnInit {
             this.camaEditada.esCensable = true;
             this.fecha = moment().toDate();
         }
-
     }
 
     getCamaModel() {
@@ -152,11 +168,12 @@ export class CamaMainComponent implements OnInit {
 
     save(valid) {
         if (!valid.formValid) {
-            this.plex.info('danger', 'Reviso los datos ingresados');
+            this.plex.info('danger', 'Alguno de los datos ingresados es incorrecto o está incompleto');
             return;
         }
         this.disabled = true;
         if (this.cama) {
+            // edicion de cama
             const fecha = moment().toDate();
             const datosCama = {
                 _id: this.cama.idCama,
@@ -166,19 +183,18 @@ export class CamaMainComponent implements OnInit {
             const savedRequest = this.capas$.pipe(
                 switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, fecha))))
             );
-            savedRequest.subscribe(
-                () => null,
-                (err) => {
-                    this.disabled = false;
-                    this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
-                },
-                () => {
-                    this.disabled = false;
-                    this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                    this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
-                }
+            savedRequest.subscribe(() => {
+                this.disabled = false;
+                this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
+                this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
+            }, (err) => {
+                this.disabled = false;
+                this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+            },
+
             );
         } else {
+            // nueva cama
             const dtoCama = {
                 ...this.getCamaModel(),
                 esMovimiento: true
@@ -186,24 +202,18 @@ export class CamaMainComponent implements OnInit {
             this.guardarCambios(dtoCama, null, this.fecha).subscribe(() => {
                 this.disabled = false;
                 this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                // this.router.navigate([`/mapa-camas/${this.ambito}`]);
-                this.location.back();
+                this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
             }, () => {
                 this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
                 this.disabled = false;
             });
         }
-
     }
 
     darBaja() {
-        const puedeInactivar = this.verificarBaja();
-        // No me fio del disabled del boton.
-        if (!puedeInactivar) {
-            return;
-        }
-        const textoModal = `¿Dar de baja la cama "${this.cama.nombre}"?'`;
+        const textoModal = `¿Dar de baja la cama <b>${this.cama.nombre}</b>?`;
         const tituloModal = '¿Desea dar de baja?';
+
         this.plex.confirm(textoModal, tituloModal).then(confirmacion => {
             if (confirmacion) {
                 this.disabled = true;
@@ -213,45 +223,22 @@ export class CamaMainComponent implements OnInit {
                     esMovimiento: true
                 };
                 const hoy = moment().toDate();
-                const inactivarRequest = this.capas$.pipe(
+                this.capas$.pipe(
                     switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, hoy))))
-                );
-
-                inactivarRequest.subscribe(
-                    () => null,
-                    (err) => {
-                        this.disabled = false;
-                        this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
-                    },
-                    () => {
+                ).subscribe(response => {
+                    if (response) {
                         this.disabled = false;
                         this.plex.info('success', 'La cama fue dada de baja', 'Baja exitosa!');
-                        this.router.navigate([`/mapa-camas/${this.ambito}`]);
+                        this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
                     }
-                );
+                }, (err) => {
+                    this.disabled = false;
+                    this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+                });
             }
         });
     }
 
-    verificarBaja() {
-        let contador = 0;
-        return this.capas$.pipe(
-            map(capas => {
-                capas.map(capa => {
-                    const maquinaEstados = this.infoCama[capa][0];
-                    const snap = this.infoCama[capa][1];
-                    if (maquinaEstados) {
-                        for (const relacion of maquinaEstados.relaciones) {
-                            if ((relacion.destino === 'inactiva') && (relacion.origen === snap.estado)) {
-                                contador++;
-                            }
-                        }
-                    }
-                });
-                return (contador === capas.length);
-            })
-        );
-    }
 
     onSectorSelect($event, organizacion) {
         if ($event.value) {
