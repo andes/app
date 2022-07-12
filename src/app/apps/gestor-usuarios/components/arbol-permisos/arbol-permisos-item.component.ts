@@ -135,7 +135,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
-                                const srhPrest: any = { conceptIds: items };
+                                const srhPrest: any = { ids: items };
                                 if (this.item.subtype) {
                                     srhPrest.ambito = this.item.subtype;
                                 }
@@ -291,10 +291,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
                 const lists = [];
                 if (this.seleccionados) {
                     this.seleccionados.forEach(item => {
-                        const newPermission = this.makePermission() + ':' + item.conceptId;
-                        if (!lists.find(p => p === newPermission)) {
-                            lists.push(newPermission);
-                        }
+                        lists.push(this.makePermission() + ':' + item._id);
                     });
                 }
 
