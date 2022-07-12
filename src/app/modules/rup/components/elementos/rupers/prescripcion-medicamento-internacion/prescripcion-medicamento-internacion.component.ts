@@ -93,13 +93,11 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     onChangeUnicaVez(event) {
         const frecuencias = this.registro.valor.frecuencias;
         if (event.value) {
-            if (frecuencias.length > 1) {
-                this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
-                this.registro.valor.frecuencias = [{
-                    horario: frecuencias[0].horario,
-                    velocidad: frecuencias[0].velocidad
-                }];
-            }
+            this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
+            this.registro.valor.frecuencias = [{
+                horario: frecuencias[0].horario,
+                velocidad: frecuencias[0].velocidad
+            }];
         } else {
             delete this.registro.valor.motivoUnicaVez;
             if (this.backUpFrecuencias.length) {

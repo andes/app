@@ -173,6 +173,10 @@ export class PlanIndicacionesComponent implements OnInit {
             });
 
             const eventosMap = {};
+            // filtramos eventos por fecha y hora segun tablero
+            const comienzoTablero = moment(this.fecha).hours(6);
+            const finTablero = moment(this.fecha).add(1, 'days').hours(6);
+            eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[)'));
             eventos.forEach(evento => {
                 eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
                 const hora = moment(evento.fecha).hour();
