@@ -9,13 +9,12 @@ export class ListadoInternacionCapasService {
 
     public listaInternacion$: Observable<IResumenInternacion[]>;
     public listaInternacionFiltrada$: Observable<IResumenInternacion[]>;
-
     public pacienteText = new BehaviorSubject<string>(null);
     public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
     public fechaEgresoDesde = new BehaviorSubject<Date>(null);
     public fechaEgresoHasta = new BehaviorSubject<Date>(null);
-
+    public refresh = new BehaviorSubject<any>(null);
     public estado = new BehaviorSubject<any>(null);
 
     constructor(
@@ -27,9 +26,10 @@ export class ListadoInternacionCapasService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
+            this.refresh
         ]).pipe(
             auditTime(0),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
                 if (fechaIngresoDesde && fechaIngresoHasta) {
                     return this.resumenHTTP.search({
                         organizacion: this.auth.organizacion.id,

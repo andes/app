@@ -53,7 +53,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public resumen: IResumenInternacion;
     public capa: string;
     public fechaValida = true;
-    public pacientes = [];
     public paciente = null;
     public view;
     public disableButton = false;
@@ -279,7 +278,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
                 if (cama && this.view !== 'listado-internacion') {
                     camasDisponibles = [];
-                    this.plex.info('warning', `${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}, DNI: ${this.paciente.documento || this.paciente.numeroIdentificacion} tiene una internacion
+                    this.plex.info('warning', `${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}, DNI: ${this.paciente.documento || this.paciente.numeroIdentificacion} tiene una internación
                     en curso con fecha de ingreso el <b>${moment(cama.fechaIngreso).format('DD/MM/YYYY hh:mm')}</b>.`, 'Paciente ya internado');
                 }
                 return camasDisponibles;
