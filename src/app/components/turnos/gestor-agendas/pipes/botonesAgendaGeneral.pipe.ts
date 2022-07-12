@@ -83,7 +83,7 @@ export class BotonesAgendaGeneralPipe implements PipeTransform {
         });
         const nominalizada = !agendas.some((agenda: any) => (agenda.nominalizada === true));
 
-        return (enPlanificacion && turnosEspeciales) || nominalizada;
+        return (enPlanificacion && turnosEspeciales) || (enPlanificacion && nominalizada);
     }
 
     puedoBorrar(agendas) {
