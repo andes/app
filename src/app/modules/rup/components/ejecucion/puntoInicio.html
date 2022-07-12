@@ -13,7 +13,7 @@
         <div class="row">
             <div class="no-gutters col-4">
                 <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio" label="Fecha"
-                            [required]="true" skipBy="day">
+                               [required]="true" skipBy="day">
                 </plex-datetime>
             </div>
             <div class="no-gutters col-4">
@@ -22,8 +22,8 @@
             </div>
             <div class="no-gutters col-4">
                 <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
-                            label="Prestación" tmPrestaciones="rup:tipoPrestacion:?" (change)="filtrar()"
-                            [preload]="true">
+                             label="Prestación" tmPrestaciones="rup:tipoPrestacion:?" (change)="filtrar()"
+                             [preload]="true">
                 </plex-select>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                         {{agenda | espacioFisico}}
                                     </span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
-                                        class="text-danger">Espacio físico no
+                                          class="text-danger">Espacio físico no
                                         asignado</span>
                                 </div>
                             </td>
@@ -151,10 +151,10 @@
         <header *ngIf="!buscandoPaciente && !prestacionPendiente">
             <plex-title titulo="Detalles" size="md" *ngIf="agendaSeleccionada !== 'servicio-intermedio'">
                 <plex-button *ngIf="agendaSeleccionada && agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)"
-                            label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
+                             label="AGREGAR PACIENTE" type="primary" size="sm" (click)="buscarPaciente()">
                 </plex-button>
                 <plex-button *ngIf="agendaSeleccionada?.link" type="primary" name="link" size="sm"
-                            (click)="linkVideollamada(agendaSeleccionada.link)" tooltip="sala virtual">
+                             (click)="linkVideollamada(agendaSeleccionada.link)" tooltip="sala virtual">
                     <plex-icon name="monitor"></plex-icon>
                 </plex-button>
 
@@ -170,7 +170,7 @@
         <ng-container *ngIf="prestacionPendiente">
 
             <rup-servicio-intermedio-alta [turno]="turno" [prestacion]="prestacionPendiente"
-                                        (cancel)="onCancelPrestacion()">
+                                          (cancel)="onCancelPrestacion()">
             </rup-servicio-intermedio-alta>
 
         </ng-container>
@@ -247,8 +247,8 @@
 
                                         <span *ngIf="turno.asistencia === 'noAsistio'">
                                             <plex-button type="danger btn-sm" icon="backup-restore"
-                                                        (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
-                                                        title="Revertir cambios">
+                                                         (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
+                                                         title="Revertir cambios">
                                             </plex-button>
                                         </span>
 
@@ -256,7 +256,7 @@
                                     <ng-container *ngIf="mostrarBotonTurnero(agendaSeleccionada, turno)">
                                         <br />
                                         <plex-button (click)="llamarTurnero(turno)" size="sm" type="info"
-                                                    [disabled]="llamandoTurno" title="LLamar">
+                                                     [disabled]="llamandoTurno" title="LLamar">
                                             <plex-icon name="bell-ring-outline"></plex-icon>
                                         </plex-button>
                                     </ng-container>
@@ -316,44 +316,44 @@
                                 <td>
                                     <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
                                         <plex-button size="block" *ngIf="turno.botonera.huds"
-                                                    (click)="setRouteToParams(['paciente', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
-                                                    label="VER HUDS" type="primary btn-sm">
+                                                     (click)="setRouteToParams(['paciente', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
+                                                     label="VER HUDS" type="primary btn-sm">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.iniciar"
-                                                    label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                    (click)="iniciarPrestacion(turno)">
+                                                     label="INICIAR PRESTACIÓN" type="success btn-sm"
+                                                     (click)="iniciarPrestacion(turno)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.iniciarDisabled"
-                                                    label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                    title="Disponible {{diaAgenda(agendaSeleccionada)}}"
-                                                    titlePosition="top"></plex-button>
+                                                     label="INICIAR PRESTACIÓN" type="disabled btn-sm"
+                                                     title="Disponible {{diaAgenda(agendaSeleccionada)}}"
+                                                     titlePosition="top"></plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.continuar"
-                                                    label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                    (click)="setRouteToParams(['ejecucion', chequearPrestacion(turno).id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                     label="CONTINUAR REGISTRO" type="primary btn-sm"
+                                                     (click)="setRouteToParams(['ejecucion', chequearPrestacion(turno).id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.resumen" label="VER RESUMEN"
-                                                    type="success btn-sm"
-                                                    (click)="setRouteToParams(['validacion',  chequearPrestacion(turno).id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                     type="success btn-sm"
+                                                     (click)="setRouteToParams(['validacion',  chequearPrestacion(turno).id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.inasistencia"
-                                                    type="warning btn-sm" label="REGISTRAR INASISTENCIA"
-                                                    (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
+                                                     type="warning btn-sm" label="REGISTRAR INASISTENCIA"
+                                                     (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.anular"
-                                                    label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                                    (click)="invalidarPrestacion(chequearPrestacion(turno), agendaSeleccionada.dinamica ? turno.id : false)">
+                                                     label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                                     (click)="invalidarPrestacion(chequearPrestacion(turno), agendaSeleccionada.dinamica ? turno.id : false)">
                                         </plex-button>
                                         <plex-button size="block"
-                                                    *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== turno.link"
-                                                    label="ACCESO PLATAFORMA VIRTUAL"
-                                                    tooltip="acceso directo a video llamada" type="primary btn-sm"
-                                                    icon="monitor" (click)="linkVideollamada(turno.link)">
+                                                     *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== turno.link"
+                                                     label="ACCESO PLATAFORMA VIRTUAL"
+                                                     tooltip="acceso directo a video llamada" type="primary btn-sm"
+                                                     icon="monitor" (click)="linkVideollamada(turno.link)">
                                         </plex-button>
 
 
@@ -361,24 +361,24 @@
                                     <ng-container *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
                                         <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
                                         <plex-button size="block" *ngIf="turno.botonera.iniciar"
-                                                    label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                    (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
+                                                     label="INICIAR PRESTACIÓN" type="success btn-sm"
+                                                     (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.iniciarDisabled"
-                                                    label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                    title="Disponible {{diaAgenda(agendaSeleccionada)}}"
-                                                    titlePosition="top">
+                                                     label="INICIAR PRESTACIÓN" type="disabled btn-sm"
+                                                     title="Disponible {{diaAgenda(agendaSeleccionada)}}"
+                                                     titlePosition="top">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.continuar"
-                                                    label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                    (click)="routeTo('ejecucion', turno.prestaciones[0].id)">
+                                                     label="CONTINUAR REGISTRO" type="primary btn-sm"
+                                                     (click)="routeTo('ejecucion', turno.prestaciones[0].id)">
                                         </plex-button>
 
                                         <plex-button size="block" *ngIf="turno.botonera.resumen" label="VER RESUMEN"
-                                                    type="success btn-sm"
-                                                    (click)="routeTo('validacion', turno.prestaciones[0].id)">
+                                                     type="success btn-sm"
+                                                     (click)="routeTo('validacion', turno.prestaciones[0].id)">
                                         </plex-button>
 
 
@@ -424,8 +424,8 @@
                                             </plex-badge>
                                             <span *ngIf="sobreturno.asistencia === 'noAsistio'">
                                                 <plex-button type="danger btn-sm" icon="backup-restore"
-                                                            (click)="registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'sacarAsistencia')"
-                                                            title="Revertir cambios">
+                                                             (click)="registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'sacarAsistencia')"
+                                                             title="Revertir cambios">
                                                 </plex-button>
                                             </span>
 
@@ -475,7 +475,7 @@
                                             Suspendido</plex-badge>
                                         <span *ngIf="sobreturno && sobreturno.nota">
                                             <i title="{{sobreturno.nota}}"
-                                            class="text-warning warning mdi mdi-message"></i>
+                                               class="text-warning warning mdi mdi-message"></i>
                                         </span>
 
                                         <div *ngIf="sobreturno && sobreturno.confirmatedAt">
@@ -490,41 +490,41 @@
                                     <td>
                                         <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                             <plex-button size="block" *ngIf="sobreturno.botonera.huds"
-                                                        (click)="setRouteToParams(['paciente', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
-                                                        label="VER HUDS" type="primary btn-sm">
+                                                         (click)="setRouteToParams(['paciente', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
+                                                         label="VER HUDS" type="primary btn-sm">
                                             </plex-button>
                                             <plex-button size="block" *ngIf="sobreturno.botonera.iniciar"
-                                                        label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                        (click)="iniciarPrestacion(sobreturno)">
+                                                         label="INICIAR PRESTACIÓN" type="success btn-sm"
+                                                         (click)="iniciarPrestacion(sobreturno)">
                                             </plex-button>
 
                                             <plex-button size="block" *ngIf="sobreturno.botonera.iniciarDisabled"
-                                                        label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                        title="Disponible el {{diaAgenda(agendaSeleccionada)}}"
-                                                        titlePosition="top"></plex-button>
+                                                         label="INICIAR PRESTACIÓN" type="disabled btn-sm"
+                                                         title="Disponible el {{diaAgenda(agendaSeleccionada)}}"
+                                                         titlePosition="top"></plex-button>
 
                                             <plex-button size="block" *ngIf="sobreturno.botonera.continuar"
-                                                        label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                        (click)="setRouteToParams(['ejecucion',  chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                         label="CONTINUAR REGISTRO" type="primary btn-sm"
+                                                         (click)="setRouteToParams(['ejecucion',  chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                             </plex-button>
 
                                             <plex-button size="block" *ngIf="sobreturno.botonera.resumen"
-                                                        label="VER RESUMEN" type="success btn-sm"
-                                                        (click)="setRouteToParams(['validacion', chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                         label="VER RESUMEN" type="success btn-sm"
+                                                         (click)="setRouteToParams(['validacion', chequearPrestacion(sobreturno).id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                             </plex-button>
                                             <plex-button size="block" *ngIf="sobreturno.botonera.inasistencia"
-                                                        type="warning btn-sm" label="REGISTRAR INASISTENCIA"
-                                                        (click)=" registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'noAsistio')">
+                                                         type="warning btn-sm" label="REGISTRAR INASISTENCIA"
+                                                         (click)=" registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'noAsistio')">
                                             </plex-button>
                                             <plex-button size="block" *ngIf="sobreturno.botonera.anular"
-                                                        label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                                        (click)="invalidarPrestacion(chequearPrestacion(sobreturno))">
+                                                         label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                                         (click)="invalidarPrestacion(chequearPrestacion(sobreturno))">
                                             </plex-button>
                                             <plex-button size="block"
-                                                        *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== sobreturno.link"
-                                                        label="ACCESO PLATAFORMA VIRTUAL"
-                                                        tooltip="acceso directo a video llamada" type="primary btn-sm"
-                                                        icon="monitor" (click)="linkVideollamada(sobreturno.link)">
+                                                         *ngIf="agendaSeleccionada?.link && agendaSeleccionada.link !== sobreturno.link"
+                                                         label="ACCESO PLATAFORMA VIRTUAL"
+                                                         tooltip="acceso directo a video llamada" type="primary btn-sm"
+                                                         icon="monitor" (click)="linkVideollamada(sobreturno.link)">
                                             </plex-button>
 
                                         </ng-container>
@@ -572,37 +572,37 @@
                                 </small>
                                 <br />
                                 <small *ngIf="prestacion && !prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                        class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
-                                    <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                        class="text-muted">No nominalizada</small>
-                                    <ng-container *ngIf="prestacion?.solicitud?.profesional">
-                                        <br> Prof.: {{prestacion.solicitud.profesional | nombre}}
-                                    </ng-container>
-                                </td>
-                                <td>
-                                    <plex-button size="block"
-                                                *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
-                                                (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
-                                                label="VER HUDS" type="primary btn-sm">
-                                    </plex-button>
+                                       class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada"
+                                       class="text-muted">No nominalizada</small>
+                                <ng-container *ngIf="prestacion?.solicitud?.profesional">
+                                    <br> Prof.: {{prestacion.solicitud.profesional | nombre}}
+                                </ng-container>
+                            </td>
+                            <td>
+                                <plex-button size="block"
+                                             *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
+                                             (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                             label="VER HUDS" type="primary btn-sm">
+                                </plex-button>
 
-                                    <plex-button size="block"
-                                                *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
-                                                (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
-                                                label="CONTINUAR REGISTRO" type="success btn-sm">
-                                    </plex-button>
+                                <plex-button size="block"
+                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
+                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                             label="CONTINUAR REGISTRO" type="success btn-sm">
+                                </plex-button>
 
 
-                                    <plex-button size="block"
-                                                *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                                (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
-                                                type="success btn-sm">
-                                    </plex-button>
+                                <plex-button size="block"
+                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
+                                             (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
+                                             type="success btn-sm">
+                                </plex-button>
 
-                                    <plex-button size="block"
-                                                *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                                label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                                (click)="invalidarPrestacion(prestacion)">
+                                <plex-button size="block"
+                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
+                                             label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                             (click)="invalidarPrestacion(prestacion)">
                                 </plex-button>
 
                             </td>
@@ -653,33 +653,26 @@
                             </td>
                             <td>
                                 <plex-button size="block"
-                                            *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
-                                            (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
-                                            label="VER HUDS" type="primary btn-sm">
+                                             *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
+                                             (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                             label="VER HUDS" type="primary btn-sm">
                                 </plex-button>
 
                                 <plex-button size="block" label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                            *ngIf="prestacion.estadoActual.tipo === 'pendiente' || prestacion.estadoActual.tipo === 'auditoria'"
-                                            (click)="ejecutarPrestacion2(prestacion)">
+                                             *ngIf="prestacion.estadoActual.tipo === 'pendiente' || prestacion.estadoActual.tipo === 'auditoria'"
+                                             (click)="ejecutarPrestacion2(prestacion)">
                                 </plex-button>
 
                                 <plex-button size="block" *ngIf="prestacion.estadoActual.tipo === 'ejecucion'"
-                                            (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
-                                            label="CONTINUAR REGISTRO" type="success btn-sm">
+                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                             label="CONTINUAR REGISTRO" type="success btn-sm">
                                 </plex-button>
 
 
                                 <plex-button size="block" *ngIf="prestacion.estadoActual.tipo === 'validada'"
-                                            (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
-                                            type="success btn-sm">
+                                             (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
+                                             type="success btn-sm">
                                 </plex-button>
-
-                                <!--
-                                <plex-button size="block"
-                                            *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                            label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                            (click)="invalidarPrestacion(prestacion)">
-                                </plex-button> -->
 
                             </td>
                         </tr>
@@ -692,10 +685,10 @@
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
         <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary"
-                    (click)="verHuds()" class="mr-1">
+                     (click)="verHuds()" class="mr-1">
         </plex-button>
         <plex-button position="right" label="PACIENTE FUERA DE AGENDA" type="primary"
-                    (click)="crearPrestacion('fueraAgenda')" class="mr-1">
+                     (click)="crearPrestacion('fueraAgenda')" class="mr-1">
         </plex-button>
         <plex-button position="right" label="PACIENTE AUTOCITADO" type="primary" (click)="crearPrestacion('autocitar')">
         </plex-button>

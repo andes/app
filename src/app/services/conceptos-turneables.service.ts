@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Cache, cacheStorage, ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { ITipoPrestacion } from '../interfaces/ITipoPrestacion';
-
+import { switchMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion> {
@@ -20,6 +20,12 @@ export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion
         permisos = permisos || null;
         ambito = ambito || null;
         return this.search({ permisos, ambito }).pipe(
+            switchMap((conceptosPermisos: any) => {
+                conceptosPermisos = conceptosPermisos.map(c => c.conceptId);
+                return this.getAll().pipe(
+                    map(conceptos => conceptos.filter((c: any) => conceptosPermisos.includes(c.conceptId)))
+                );
+            }),
             cacheStorage({
                 key: 'conceptos-turneables-' + permisos + ambito,
                 until: this.auth.session(true)
