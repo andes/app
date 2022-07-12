@@ -1,8 +1,11 @@
-<plex-layout>
+<plex-layout [main]="addSection? 9 : 12">
     <plex-layout-main>
-      <plex-title main titulo="Listado de Formularios">
-        <plex-button type="danger" [routerLink]="'/home'"> Cancelar </plex-button>
-        <plex-button *ngIf="canCreate" type="info" [routerLink]="['create']"> Nuevo formulario </plex-button>
+      <iframe style="border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" 
+      src="https://charts.andes.gob.ar/mongodb-charts-zypoq/embed/charts?id=24612707-77bb-4f60-8809-868372e8cfb2&tenant=a9672a8c-ba22-4076-9434-24ca28422f56&timestamp=https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c&signature=https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"></iframe>
+        <plex-title main titulo="Listado de Formularios">
+        <plex-button type="danger" [routerLink]="'/home'" class="mr-1"> Cancelar </plex-button>
+        <plex-button *ngIf="canCreate" type="info" [routerLink]="['create']" class="mr-1"> Nuevo formulario </plex-button>
+        <plex-button type="warning" (click)="enableAddSection()">Nueva sección</plex-button>
       </plex-title>
       <div *ngxObserve="forms$ as forms; before: loadingTemplate; error: errorTemplate">
 
@@ -33,4 +36,15 @@
         <p>{{ error }}</p>
       </ng-template>
     </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+      <ng-container *ngIf="addSection">
+        <plex-title titulo="Nueva sección">
+          <plex-button size="sm" type="danger" icon="close" (click)="close()"></plex-button>
+        </plex-title>
+        <plex-text  label="Ingrese nombre de la sección" name="nombre" [(ngModel)]="nuevaSeccion">
+        </plex-text>
+        <plex-button type="success" size="sm" class="float-right mt-1" (click)="addSec()" 
+        [disabled]="!nuevaSeccion">AGREGAR</plex-button>
+      </ng-container>
+    </plex-layout-sidebar>
   </plex-layout>
