@@ -1,3 +1,11 @@
+## [5.100.1](https://github.com/andes/app/compare/v5.100.0...v5.100.1) (2022-07-13)
+
+
+### Bug Fixes
+
+* **CITAS:** sacar btn disponible cuando ya lo esta ([#2674](https://github.com/andes/app/issues/2674)) ([87a8f7c](https://github.com/andes/app/commit/87a8f7c6e68c99e210b1210a29adb5cf71d3c204))
+* **IN-448:** Error en consola en el listado de internacion ([#2687](https://github.com/andes/app/issues/2687)) ([e1a2186](https://github.com/andes/app/commit/e1a21864a67c9a4ba0edc354c748da78f0c6b4b0))
+
 # [5.100.0](https://github.com/andes/app/compare/v5.99.1...v5.100.0) (2022-07-06)
 
 

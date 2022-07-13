@@ -153,8 +153,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         Si es capa medica la que realiza el egreso, puede que estadistica-v2 aun no haya cargado el informe de ingreso.
                         En este caso particular, permitimos el egreso y obtenemos la fecha de ingreso desde el resumen.
                     */
-                    const fechaIngreso = prestacion?.ejecucion.registros[0].valor.informeIngreso.fechaIngreso || this.resumen.fechaIngreso;
-                    const paciente = prestacion?.paciente.id || this.resumen.paciente.id;
+                    const fechaIngreso = prestacion?.ejecucion.registros[0].valor.informeIngreso.fechaIngreso || this.resumen?.fechaIngreso;
+                    const paciente = prestacion?.paciente.id || this.resumen?.paciente.id;
                     const desde = moment(fechaIngreso).subtract(12, 'hours').toDate();
                     const hasta = moment(fechaIngreso).add(12, 'hours').toDate();
 
@@ -171,7 +171,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 }
                 return of(null);
             }),
-            map(resumen => resumen?.registros.filter(r => r.tipo === 'epicrisis')),
+            map(resumen => resumen?.registros?.filter(r => r.tipo === 'epicrisis')),
             cache()
         );
 
