@@ -6,9 +6,9 @@
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                     <div *ngIf="item.elementoRUP" class="pr-3">
                         <rup [ngClass]="{'readonly': valorManual}" [elementoRUP]="item.elementoRUP"
-                                [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                                [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
-                                (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
+                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
+                             (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
                         </rup>
                     </div>
                 </ng-container>
@@ -17,9 +17,9 @@
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                     <div *ngIf="item.elementoRUP" class="pr-3">
                         <rup [ngClass]="{'readonly': !valorManual}" [elementoRUP]="item.elementoRUP"
-                                [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                                [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
-                                (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
+                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
+                             (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
                         </rup>
                     </div>
                 </ng-container>
@@ -27,38 +27,43 @@
 
             <div class="d-flex align-items-center w-100">
                 <div class="w-100">
-                    <label> {{ registro.concepto.term}} </label>
                     <!-- Valor/resultado del cálculo -->
                     <ng-container *ngIf="soloValores || !valorEditable">
                         <p>
                             <ng-container *ngIf="!hasRules">
+                                <label>{{ registro.concepto.term}} </label>
                                 {{registro.valor}}
                             </ng-container>
                             <plex-badge [type]="mensaje.type" *ngIf="mensaje?.texto">
                                 {{ mensaje.texto }}
                                 <plex-button *ngIf="mensaje.add && !soloValores" (click)="addConcepto(mensaje.add)"
-                                            title="Registrar">
+                                             title="Registrar">
                                     <plex-icon name="plus"></plex-icon>
                                 </plex-button>
                             </plex-badge>
                         </p>
                     </ng-container>
                     <!-- Campo para ingreso manual del valor del registro -->
-                    <ng-container *ngIf="!soloValores && valorEditable">
-                        <plex-float *ngIf="valorManual" placeholder="Ingrese un valor" [(ngModel)]="registro.valor"
-                                    label='' name="valorCalculo" [readonly]="soloValores" (change)="emitChange2()"
-                                    [disabled]="!valorManual">
-                        </plex-float>
-                        <plex-float *ngIf="!valorManual" [(ngModel)]="registro.valor" required="true" [disabled]="true">
-                        </plex-float>
-                    </ng-container>
+                    <form #form="ngForm">
+                        <ng-container *ngIf="!soloValores && valorEditable">
+                            <plex-float [label]="params?.title || registro.concepto.term" *ngIf="valorManual"
+                                        placeholder="Ingrese un valor" [(ngModel)]="registro.valor" label=''
+                                        name="valorCalculo" (change)="emitChange2()" [disabled]="!valorManual"
+                                        [required]="true">
+                            </plex-float>
+                            <plex-float [label]="params?.title || registro.concepto.term" *ngIf="!valorManual"
+                                        [(ngModel)]="registro.valor" [disabled]="true"
+                                        [ngModelOptions]="{standalone: true}">
+                            </plex-float>
+                        </ng-container>
+                    </form>
                 </div>
                 <div *ngIf="!soloValores && valorEditable" class="d-flex align-items-start mt-2">
                     <plex-button *ngIf="!valorManual" type="warning" icon="pencil" (click)="changeValorManual(true)"
-                                tooltip="Agregar manualmente" tooltipPosition="left">
+                                 tooltip="Agregar manualmente" tooltipPosition="left">
                     </plex-button>
                     <plex-button *ngIf="valorManual" class="mr-1" type="danger" icon="close"
-                                (click)="changeValorManual(false)">
+                                 (click)="changeValorManual(false)">
                     </plex-button>
                 </div>
             </div>
