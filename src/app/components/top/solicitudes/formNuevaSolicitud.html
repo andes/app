@@ -3,7 +3,7 @@
                  (click)="cancelar()">
     </plex-button>
     <plex-button [size]="size? size : ''" position="right" class="float-right mr-1" type="success" label="Guardar"
-                 (click)="confirmGuardar($event)" [validateForm]="form"> </plex-button>
+                (click)="confirmGuardar($event)" [autodisabled]="true" [validateForm]="form"> </plex-button>
 </plex-title>
 <form #form="ngForm">
     <!-- SOLICITUD ENTRADA -->
