@@ -8,7 +8,7 @@ import { Plex } from '@andes/plex';
 import { SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 import { map, pluck, switchMap, take } from 'rxjs/operators';
@@ -84,7 +84,8 @@ export class CamaMainComponent implements OnInit {
                     }
                 });
                 return (contador === capas.length);
-            })
+            }),
+            cache()
         );
 
         this.plex.updateTitle([{
@@ -189,7 +190,7 @@ export class CamaMainComponent implements OnInit {
                 this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
             }, (err) => {
                 this.disabled = false;
-                this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+                this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
             },
 
             );
@@ -204,7 +205,7 @@ export class CamaMainComponent implements OnInit {
                 this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
                 this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
             }, () => {
-                this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+                this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
                 this.disabled = false;
             });
         }
@@ -233,7 +234,7 @@ export class CamaMainComponent implements OnInit {
                     }
                 }, (err) => {
                     this.disabled = false;
-                    this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+                    this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
                 });
             }
         });
