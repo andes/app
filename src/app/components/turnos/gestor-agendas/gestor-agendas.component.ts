@@ -39,8 +39,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public showGestorAgendas = true;
     public showTurnos = false;
     public showReasignarTurno = false;
-    public showReasignarTurnoAutomatico = false;
-    public showBotonesAgenda = false;
     public showClonar = false;
     public showDarTurnos = false;
     public showEditarAgenda = false;
@@ -56,8 +54,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public agenda: any = {};
     public modelo: any = {};
     public hoy = false;
-    public autorizado = false;
-    public mostrarMasOpciones = false;
     public estadosAgenda = enumerado.EstadosAgenda;
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
     public fechaDesde: any;
@@ -67,10 +63,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public espacioFisico: any = [];
     public estado: any = [];
     public parametros;
-    public soloLectura = false;
-    public btnDarTurnos = false;
-    public btnCrearAgendas = false;
-    public permisos: any;
     public prestacionesPermisos = [];
     public puedeCrearAgenda: Boolean;
     public puedeRevisarAgendas: Boolean;
@@ -153,22 +145,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.soloLectura = this.auth.getPermissions('turnos:agenda:read:?').length > 0;
-        this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
-        this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.puedeCrearAgenda = this.auth.check('turnos:crearAgendas');
         this.puedeRevisarAgendas = this.auth.check('turnos:agenda:puedeRevision');
 
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
-        if (!this.autorizado) {
+        if (!this.auth.check('turnos:agenda')) {
             this.redirect('inicio');
         }
-
-        // Verifica permisos para dar turnos
-        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
-        // Verifica permisos para crear agenda
-        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
 
         this.parametros = {
             fechaDesde: '',
@@ -200,7 +184,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 });
             }
             if (this.parametros.espacioFisico || this.parametros.idProfesional || this.parametros.estado) {
-                this.mostrarMasOpciones = true;
                 if (this.parametros.idProfesional) {
                     this.serviceProfesional.get({ id: this.parametros.idProfesional }).subscribe(rta => {
                         this.profesionales = rta[0];
@@ -372,7 +355,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showTurnos = false;
         this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
-        this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
     }
@@ -420,7 +402,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showClonar = false;
         this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
-        this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showCarpetas = false;
         if (this.parametros) {
@@ -469,7 +450,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.showRevisionFueraAgenda = false;
                 this.showReasignarTurno = false;
                 this.showListadoTurnos = false;
-                this.showReasignarTurnoAutomatico = false;
             } else {
                 this.plex.info('warning',
                     'Otro usuario ha modificado el estado de la Agenda seleccionada y la misma ya no es editable.',
@@ -553,7 +533,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // Si se presionó el boton suspender, no se muestran otras agendas hasta que se confirme o cancele la acción.
         if (!this.showSuspenderAgenda) {
             this.enableQueries = false;
-            this.showBotonesAgenda = false;
             this.showTurnos = false;
             this.showSuspendida = false;
             if (agenda && agenda.id) {
@@ -592,9 +571,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                         this.showAgregarNotaAgenda = false;
                         this.showTurnos = false;
                         this.showReasignarTurno = false;
-                        this.showReasignarTurnoAutomatico = false;
                         this.showListadoTurnos = false;
-                        this.showBotonesAgenda = true;
 
                         if (!this.hayAgendasSuspendidas() && !this.showSuspenderAgenda) {
                             this.showTurnos = true;
@@ -716,7 +693,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showAgregarNotaAgenda = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAgendas = false;
-            this.showReasignarTurnoAutomatico = false;
             this.showSuspenderAgenda = true;
         } else {
             this.showTurnos = false;
@@ -725,7 +701,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showAgregarNotaAgenda = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAgendas = false;
-            this.showReasignarTurnoAutomatico = false;
         }
 
         if (this.parametros) {
@@ -788,7 +763,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showReasignarTurno = false;
-        this.showReasignarTurnoAutomatico = true;
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = false;
         if (agenda) {
