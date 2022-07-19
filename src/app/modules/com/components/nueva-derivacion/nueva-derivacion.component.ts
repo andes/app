@@ -130,7 +130,7 @@ export class NuevaDerivacionComponent implements OnInit, OnDestroy {
     }
 
     seleccionarProfesional(idProfesional): void {
-        this.profesionalService.getProfesional({ id: idProfesional }).subscribe(
+        this.profesionalService.get({ id: idProfesional }).subscribe(
             profesional => {
                 this.modelo.profesionalSolicitante = profesional[0];
             },
