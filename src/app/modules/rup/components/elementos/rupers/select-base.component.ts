@@ -105,8 +105,16 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
             if (this.itemSelected) {
                 this.registro.valor = this.itemSelected;
                 if (this.params.addRegister) {
-                    // se agrega un registro por concepto seleccionado
-                    this.addConcepto(this.itemSelected);
+                    // verifico que no haya un listado de equivalencias para los conceptos
+                    if (this.params.registerMapping) {
+                        const mappedRegister = this.params.registerMapping.find(e => e.itemSelected === this.itemSelected.conceptId);
+                        if (mappedRegister) {
+                            this.addConcepto(mappedRegister.loadRegister);
+                        }
+                    } else {
+                        // se agrega un registro por concepto seleccionado
+                        this.addConcepto(this.itemSelected);
+                    }
                 }
             } else {
                 this.registro.valor = null;
@@ -119,7 +127,6 @@ export class SelectBaseComponent extends RUPComponent implements OnInit, AfterVi
         }
         this.emitChange();
         this.addFact('value', this.registro.valor);
-
     }
 
     addConcepto(concepto: ISnomedConcept) {
