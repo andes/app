@@ -55,8 +55,6 @@ export class CamaDetalleComponent implements OnInit {
     public titleColor;
     public tabIndex = 0;
     public editar = false;
-    public permisoIngreso = false;
-    canUndo = false;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
     public editNota = false;
@@ -106,10 +104,10 @@ export class CamaDetalleComponent implements OnInit {
             switchMap(cama => cama.paciente ? this.mapaCamasService.getPaciente(cama.paciente) : of(null))
         );
 
-        this.turnero$ = combineLatest(
+        this.turnero$ = combineLatest([
             this.cama$,
             this.mapaCamasService.maquinaDeEstado$
-        ).pipe(
+        ]).pipe(
             map(([cama, estado]) => {
                 if (cama.idInternacion) {
                     const turnero = estado.turnero || {};

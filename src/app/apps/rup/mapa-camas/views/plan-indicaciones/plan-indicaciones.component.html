@@ -17,17 +17,17 @@
                             <section *ngIf="capa !== 'interconsultores'" class="item-indicacion">
                                 <div class="item__container"></div>
                                 <div class="item__botonera">
-                                    <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
-                                                 (click)="onDetenerClick()" tooltip="Suspender"
-                                                 tooltipPosition="bottom">
+                                    <plex-button *ngIf="permisosMapaCamasService.indicacionesEjecutar && detener$ | async"
+                                                 type="danger" icon="stop" size="sm" (click)="onDetenerClick()"
+                                                 tooltip="Suspender" tooltipPosition="bottom">
                                     </plex-button>
                                     <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
                                                  (click)="onContinuarClick()" tooltip="Continuar"
                                                  tooltipPosition="bottom">
                                     </plex-button>
 
-                                    <plex-dropdown *ngIf="borradores.length" right="true" size="sm"
-                                                   label="Validar borradores" type="warning">
+                                    <plex-dropdown *ngIf="permisosMapaCamasService.indicacionesEjecutar && borradores.length"
+                                                   right="true" size="sm" label="Validar borradores" type="warning">
                                         <plex-button label="Seleccionadas" type="link"
                                                      [disabled]="!soloBorradoresSeleccionados"
                                                      (click)="onValidar(true)">
@@ -57,7 +57,8 @@
                                         <h6 class="item__title">{{ seccion.concepto.term }}</h6>
                                     </div>
                                     <div class="item__botonera">
-                                        <plex-button *ngIf="isToday() && puedeCrear" size="sm" type="info" icon="plus"
+                                        <plex-button *ngIf="isToday && permisosMapaCamasService.indicacionesCrear"
+                                                     size="sm" type="info" icon="plus"
                                                      (click)="onNuevaIndicacion(seccion)" tooltip="Agregar indicación">
                                         </plex-button>
                                         <plex-button type="info" size="sm"
@@ -153,12 +154,12 @@
                                                 <!-- Botones de aceptacion / rechazo -->
                                                 <ng-container *ngIf="!indicacion.estado.verificacion">
                                                     <ng-container *ngIf="capa === 'interconsultores'">
-                                                        <plex-button type="success" size="sm" icon="check" tooltip="Aceptar"
-                                                                     [autodisable]="true"
+                                                        <plex-button type="success" size="sm" icon="check"
+                                                                     tooltip="Aceptar" [autodisable]="true"
                                                                      (click)="onVerificar(indicacion, true)">
                                                         </plex-button>
-                                                        <plex-button type="danger" size="sm" icon="close" tooltip="Rechazar"
-                                                                     [autodisable]="true"
+                                                        <plex-button type="danger" size="sm" icon="close"
+                                                                     tooltip="Rechazar" [autodisable]="true"
                                                                      (click)="onVerificar(indicacion, false)">
                                                         </plex-button>
                                                     </ng-container>
@@ -170,7 +171,7 @@
                                                     </ng-container>
                                                 </ng-container>
 
-                                                <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
+                                                <div *ngIf="permisosMapaCamasService.indicacionesEjecutar && !indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
                                                      in-plan-indicacion-botonera [indicacion]="indicacion"
                                                      (refresh)="actualizar()"
                                                      (cancelIndicacion)="cancelIndicacion($event)">
@@ -210,8 +211,9 @@
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
-                <plex-button *ngIf="puedeEditar && indicacionView.estado.tipo !== 'cancelled' && indicacionView.estado.tipo !== 'active'" class="mr-1"
-                             type="warning" size="sm" icon="pencil" tooltip="Editar" (click)="editar(indicacionView)">
+                <plex-button *ngIf="puedeEditar && indicacionView.estado.tipo !== 'cancelled' && indicacionView.estado.tipo !== 'active'"
+                             class="mr-1" type="warning" size="sm" icon="pencil" tooltip="Editar"
+                             (click)="editar(indicacionView)">
                 </plex-button>
                 <plex-button type="danger" size="sm" icon="close" tooltip="Cerrar" (click)="onClose()">
                 </plex-button>

@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
@@ -22,7 +23,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
     styleUrls: [
         '../../../../../modules/rup/components/core/_rup.scss',
         './plan-indicaciones.scss'
-    ],
+    ]
 })
 export class PlanIndicacionesComponent implements OnInit {
 
@@ -32,7 +33,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public hoy;
     public suspenderAnterior = false;
     public indicacionAnterior;
-    public horas ;
+    public horas;
     public indicaciones = [];
     public selectedIndicacion = {};
     public loading = false;
@@ -40,7 +41,6 @@ export class PlanIndicacionesComponent implements OnInit {
     public showSecciones = {};
     public showMotivoRechazo = false; // interconsultores
     public indicacionAVerificar; // interconsultores
-    public hayDraft = 0;
     public soloBorradoresSeleccionados = false;
     public borradores = [];
     public eventos = {};
@@ -95,6 +95,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     constructor(
+        public permisosMapaCamasService: PermisosMapaCamasService,
         private prestacionService: PrestacionesService,
         private route: ActivatedRoute,
         private resumenInternacionService: InternacionResumenHTTP,
@@ -116,11 +117,11 @@ export class PlanIndicacionesComponent implements OnInit {
     ngOnInit() {
         this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
             tap(config => {
-                this.horaOrganizacion=config.planIndicaciones.horaInicio;
-                this.horas=this.getHorariosGrilla();
+                this.horaOrganizacion = config.planIndicaciones.horaInicio;
+                this.horas = this.getHorariosGrilla();
             })
         ).subscribe();
-        this.hoy=moment();
+        this.hoy = moment();
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
@@ -199,7 +200,7 @@ export class PlanIndicacionesComponent implements OnInit {
             const eventosMap = {};
             // filtramos eventos por fecha y hora segun tablero
             const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
-            const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion-1);
+            const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion - 1);
             eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
             eventos.forEach(evento => {
                 eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
@@ -458,14 +459,14 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     getHorariosGrilla() {
-        const res=[];
-        const horaIncio= this.horaOrganizacion;
+        const res = [];
+        const horaIncio = this.horaOrganizacion;
         res.push(horaIncio);
-        let horas = horaIncio+1;
-        while (horas!==horaIncio ) {
+        let horas = horaIncio + 1;
+        while (horas !== horaIncio) {
             res.push(horas);
             horas++;
-            if (horas===24) {
+            if (horas === 24) {
                 horas = 0;
             }
         }

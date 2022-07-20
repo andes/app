@@ -20,6 +20,11 @@ export class PermisosMapaCamasService {
     public censo = false;
     public descargarListado = false;
     public registros = false;
+    public indicacionesVer;
+    public indicacionesCrear;
+    public indicacionesEjecutar;
+    public indicacionesValidar;
+
     constructor(
         private auth: Auth,
     ) { }
@@ -43,6 +48,10 @@ export class PermisosMapaCamasService {
         this.bloqueo = this.auth.check(`${this.ambito}:bloqueo`);
         this.censo = this.auth.check(`${this.ambito}:censo`);
         this.descargarListado = this.auth.check(`${this.ambito}:descargarListado`);
+        this.indicacionesVer = this.auth.check(`${this.ambito}:indicaciones`);
+        this.indicacionesCrear = this.auth.check(`${this.ambito}:indicaciones:create`);
+        this.indicacionesEjecutar = this.auth.check(`${this.ambito}:indicaciones:ejecutar`);
+        this.indicacionesValidar = this.auth.check(`${this.ambito}:indicaciones:validar`);
         this.registros = this.auth.check('internacion:registros');
     }
 }
