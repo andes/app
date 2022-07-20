@@ -40,17 +40,19 @@ export class SuspenderAgendaComponent implements OnInit {
      */
     public turnos = [];
     ngOnInit() {
-        this.motivoSuspension = [{
-            id: 1,
-            nombre: 'edilicia'
-        }, {
-            id: 2,
-            nombre: 'profesional'
-        },
-                                 {
-                                     id: 3,
-                                     nombre: 'organizacion'
-                                 }];
+        this.motivoSuspension = [
+            {
+                id: 1,
+                nombre: 'edilicia'
+            },
+            {
+                id: 2,
+                nombre: 'profesional'
+            },
+            {
+                id: 3,
+                nombre: 'organizacion'
+            }];
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
 
         (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;

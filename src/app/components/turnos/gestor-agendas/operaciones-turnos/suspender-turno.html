@@ -1,28 +1,30 @@
-<fieldset *ngIf="showSuspenderTurno">
-    <plex-title titulo="Suspender turno" size="sm"></plex-title>
-    <!--<div class="alert alert-default small">-->
+<plex-title size="sm" titulo="SUSPENDER TURNO">
+    <plex-button *ngIf="!suspendio" size="sm" type="success" icon="check" (click)="suspenderTurno()"></plex-button>
+    <!--TODO: chequear que todos los mensajes a enviar tuvieron una respuesta-->
+</plex-title>
+<ng-container class="text-white" *ngIf="showSuspenderTurno">
     <div class="row">
-        <div class="col-2 text-center">
+        <div class="col-4">
             <label>Hora del Turno</label>
         </div>
-        <div class="col-7 text-center">
+        <div class="col-4">
             <label>Paciente</label>
         </div>
-        <div class="col-3 text-center">
+        <div class="col-4">
             <label>Enviar SMS</label>
         </div>
     </div>
 
     <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-        <div class="col-2 text-center">
+        <div class="col-4">
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
-        <div class="col-7 text-center">
+        <div class="col-4">
             <span *ngIf="turno.paciente?.id">{{turno.paciente | nombre }} {{turno.estado}}</span>
             <span *ngIf="!turno.paciente?.id && turno.estado !== 'turnoDoble'">sin paciente asignado</span>
             <span *ngIf="turno.estado === 'turnoDoble'">turno doble</span>
         </div>
-        <div class="col-3 text-center" (click)="seleccionarTurno(turno)">
+        <div class="col-4" (click)="seleccionarTurno(turno)">
             <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">
                 <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)"
                    class="mdi mdi-checkbox-marked"></i>
@@ -34,14 +36,11 @@
                 <i class="mdi mdi-checkbox-blank-outline"></i>
             </span>
         </div>
-        <!--TODO: Agregar botón para reintento de envío-->
     </div>
-    <!--</div>-->
-
     <div class="row">
         <div class="col-12">
             <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                        label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
+                         label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
             </plex-select>
         </div>
     </div>
@@ -52,15 +51,4 @@
             </div>
         </div>
     </div>
-
-    <div class="mt-3 float-right">
-        <plex-button *ngIf="!suspendio" type="danger" label="Cancelar" (click)="cancelar()">
-        </plex-button>
-        <plex-button *ngIf="!suspendio" type="success" label="Confirmar" (click)="suspenderTurno()"
-                    title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
-        </plex-button>
-        <!--TODO: chequear que todos los mensajes a enviar tuvieron una respuesta-->
-        <plex-button *ngIf="suspendio" type="info" label="Cerrar" (click)="cerrar()" title="Cerrar">
-        </plex-button>
-    </div>
-</fieldset>
+</ng-container>

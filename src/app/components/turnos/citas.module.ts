@@ -13,6 +13,7 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { BotonesAgendaPipe } from './gestor-agendas/pipes/botonesAgenda.pipe';
 import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGeneral.pipe';
+import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGe
         SortBloquesPipe,
         EspacioFisicoPipe,
         BotonesAgendaPipe,
-        BotonesAgendaGeneralPipe
+        BotonesAgendaGeneralPipe,
+        BotonesTurnosPipe,
     ],
     exports: [
         DarTurnosComponent,
@@ -39,7 +41,8 @@ import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGe
         EspacioFisicoPipe,
         CalendarioComponent,
         BotonesAgendaPipe,
-        BotonesAgendaGeneralPipe
+        BotonesAgendaGeneralPipe,
+        BotonesTurnosPipe
     ],
 })
 export class CITASLibModule {

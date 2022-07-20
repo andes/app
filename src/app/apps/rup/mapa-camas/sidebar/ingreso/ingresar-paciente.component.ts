@@ -87,10 +87,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private subscription2: Subscription;
 
-    public get esInternacionCensable() {
-        return this.prestacion?.ejecucion.registros[0]?.esCensable;
-    }
-
     constructor(
         private plex: Plex,
         private servicioProfesional: ProfesionalService,
@@ -567,10 +563,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
     }
 
-    setValueCensable() {
-        this.prestacion.ejecucion.registros[0].esCensable = !this.prestacion.ejecucion.registros[0].esCensable;
-    }
-
     crearPrestacion(paciente) {
         const nuevaPrestacion = this.datosBasicosPrestacion();
 
@@ -681,7 +673,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         });
     }
 
-
     checkEstadoCama() {
         this.checkMovimientos();
         if (this.cama?.idCama) {
@@ -732,6 +723,60 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             const elementoRUP_ = this.elementosRUPService.buscarElemento(elementoRequerido.concepto, false);
             const nuevoRegistro = new IPrestacionRegistro(elementoRUP_, elementoRequerido.concepto, this.prestacionFake);
             this.prestacionFake.ejecucion.registros.push(nuevoRegistro);
+        }
+    }
+
+    /**
+     * Retorna true si la prestacion de internación es censable.
+     * Una internación es cesable unicamente si posee flag 'esCensable'
+     * y el mismo posee valor true
+     */
+    public get esInternacionCensable() {
+        const reg = this.prestacion?.ejecucion.registros[0];
+        if (reg) {
+            return ('esCensable' in reg) && reg.esCensable === true;
+        }
+        return false;
+    }
+
+    /**
+     * Retorna true si la prestacion de internación es censable.
+     * Una internación es 'no censable' unicamente si posee flag 'esCensable'
+     * y el mismo posee valor false
+     */
+    public get esInternacionNoCensable() {
+        const reg = this.prestacion?.ejecucion.registros[0];
+        if (reg) {
+            return ('esCensable' in reg) && reg.esCensable === false;
+        }
+        return false;
+    }
+
+    /**
+     * Se marca una internación como 'censable' seteando el flag 'esCensable'
+     * en valor true.
+     * Se desmarca una internación como 'censable' eliminando el flag 'esCensable'
+     */
+    togglePrestacionCensable() {
+        const reg: any = this.prestacion.ejecucion.registros[0];
+        if ('esCensable' in reg) {
+            delete reg.esCensable;
+        } else {
+            reg.esCensable = true;
+        }
+    }
+
+    /**
+     * Se marca una internación como 'no censable' seteando el flag 'esCensable'
+     * en valor false.
+     * Se desmarca una internación como 'no censable' eliminando el flag 'esCensable'
+     */
+    togglePrestacionNoCensable() {
+        const reg: any = this.prestacion.ejecucion.registros[0];
+        if ('esCensable' in reg) {
+            delete reg.esCensable;
+        } else {
+            reg.esCensable = false;
         }
     }
 }

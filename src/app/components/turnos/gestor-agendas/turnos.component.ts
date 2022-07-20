@@ -30,24 +30,36 @@ export class TurnosComponent implements OnInit {
 
         this.arrayDelDia = [];
         this.bloques = this.agenda.bloques;
-        for (let i = 0; i < this.bloques.length; i++) {
-            this.turnos = this.agenda.bloques[i].turnos;
-            // Si la agenda es del día, resto los disponibles que ya pasaron
-            if (this.delDia) {
-                const bloque = this.agenda.bloques[i];
-                this.arrayDelDia[i] = this.contieneExclusivoGestion(this.agenda) ? 0 : bloque.restantesDelDia + bloque.restantesProgramados;
-            }
-            if (this.agenda.bloques[i].turnos) {
-                this.agenda.bloques[i].turnos.forEach((turno) => {
-                    // Si el turno está disponible pero ya paso la hora
-                    if (turno.estado === 'disponible' && this.delDia && this.agenda.horaFin < this.hoy) {
-                        this.arrayDelDia[i]--;
-                    }
-                });
-            }
-        }
+        let turnoAnterior = null;
+        const countBloques = [];
+        this.delDiaDisponibles = 0;
+        this.programadosDisponibles = 0;
+        this.gestionDisponibles = 0;
+        this.profesionalDisponibles = 0;
 
-        this.actualizarBotones();
+        this.bloques.forEach((bloque, indexBloque) => {
+            countBloques.push({
+                // Si la agenda es de hoy los programados se suman a los del día
+                delDia: this.delDia ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
+                programado: this.delDia ? 0 : bloque.restantesProgramados,
+                gestion: bloque.restantesGestion,
+                profesional: bloque.restantesProfesional
+            });
+            bloque.turnos.forEach((turno) => {
+                if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                    turno = turnoAnterior;
+                }
+                turnoAnterior = turno;
+            });
+
+            // Acumulado de todos los bloques clasificado x tipo de turno
+            this.delDiaDisponibles += countBloques[indexBloque].delDia;
+            this.programadosDisponibles += countBloques[indexBloque].programado;
+            this.gestionDisponibles += countBloques[indexBloque].gestion;
+            this.profesionalDisponibles += countBloques[indexBloque].profesional;
+            // contador de turnos por Bloque
+            this.countBloques = countBloques;
+        });
     }
     get agenda(): any {
         return this._agenda;
@@ -57,7 +69,6 @@ export class TurnosComponent implements OnInit {
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
-    @Output() actualizarBotonesAgendasEmiter = new EventEmitter<IAgenda>();
 
     // Propiedades públicas
     showSeleccionarTodos = true;
@@ -76,6 +87,10 @@ export class TurnosComponent implements OnInit {
     reasignar: any = {};
     horaInicio: any;
     bloques = [];
+    public items = [];
+    public mostrar = 0;
+    public bloqueSelected;
+
     hoy: Date;
     // Contiene el cálculo de la visualización de botones
     botones: any = {};
@@ -84,15 +99,53 @@ export class TurnosComponent implements OnInit {
     public delDia = false;
     public arrayDelDia = [];
 
+
+    // Permite :hover y click()
+    @Input() selectable = true;
+
+    // Muestra efecto de selección
+    @Input() selected = false;
+
+    public sortBy: string;
+    public sortOrder = 'desc';
+    botonera = true;
+
+    public columns = [
+        {
+            key: 'seleccionar',
+            label: '',
+        },
+        {
+            key: 'datosPrincipales',
+            label: 'Datos Principales',
+            sorteable: true,
+            opcional: false,
+        },
+        {
+            key: 'acciones',
+            label: 'Acciones',
+            sorteable: true,
+            opcional: true
+        },
+    ];
+
+    delDiaDisponibles: number;
+    programadosDisponibles: number;
+    gestionDisponibles: number;
+    profesionalDisponibles: number;
+    countBloques: any[];
+
     // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
 
     ngOnInit() {
-        this.turnosSeleccionados = [];
         const agendaActualizar = this.agenda;
-        // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
-        this.actualizarBotones();
-        this.showSeleccionarTodos = (this.turnos.length > 0);
+        for (let index = 0; index < this.agenda.bloques.length; index++) {
+            this.items.push({ label: 'Bloque ' + (index + 1), key: index });
+        }
+        this.bloqueSelected = this.agenda.bloques[this.mostrar];
+
+        this.showSeleccionarTodos = (this.bloqueSelected.turnos.length > 0);
     }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
@@ -112,14 +165,13 @@ export class TurnosComponent implements OnInit {
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
-        if (this.turnosSeleccionados.length < this.turnos.length) {
+        if (this.turnosSeleccionados.length < this.bloqueSelected.turnos.length) {
             this.todos = false;
         }
-        if (this.turnosSeleccionados.length === this.turnos.length) {
+        if (this.turnosSeleccionados.length === this.bloqueSelected.turnos.length) {
             this.todos = true;
         }
         this.cantSel = this.turnosSeleccionados.length;
-        this.actualizarBotones();
     }
 
     estaSeleccionado(turno: any) {
@@ -129,171 +181,31 @@ export class TurnosComponent implements OnInit {
     seleccionarTodos() {
         this.turnosSeleccionados = [];
 
-        for (let a = 0; a < this.agenda.bloques.length; a++) {
-            for (let b = 0; b < this.agenda.bloques[a].turnos.length; b++) {
-                if (!this.todos) {
-                    this.agenda.bloques[a].turnos[b].checked = true;
-                    this.turnosSeleccionados = [...this.turnosSeleccionados, this.agenda.bloques[a].turnos[b]];
-                } else {
-                    this.agenda.bloques[a].turnos[b].checked = false;
-                }
-            }
-        }
-
-        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
+        this.bloqueSelected.turnos.map(turno => {
             if (!this.todos) {
-                this.agenda.sobreturnos[i].checked = true;
-                this.turnosSeleccionados = [...this.turnosSeleccionados, this.agenda.sobreturnos[i]];
+                turno.checked = true;
+                this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
             } else {
-                this.agenda.sobreturnos[i].checked = false;
+                turno.checked = false;
             }
-        }
+        });
+
+        this.agenda.sobreturnos.map(sobreturno => {
+            if (!this.todos) {
+                sobreturno.checked = true;
+                this.turnosSeleccionados = [...this.turnosSeleccionados, sobreturno];
+            } else {
+                sobreturno.checked = false;
+            }
+        });
 
         this.todos = !this.todos;
         this.cantSel = this.turnosSeleccionados.length;
-        this.actualizarBotones();
     }
 
     // retorna true si algun bloque de la agenda es exclusivo de gestión
     contieneExclusivoGestion(agenda: IAgenda): boolean {
         return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
-    }
-
-    agendaNoSuspendida() {
-        return this.agenda.estado !== 'suspendida';
-    }
-
-    agendaNoCerrada() {
-        return this.agenda.estado !== 'pendienteAuditoria' && this.agenda.estado !== 'pendienteAsistencia' && this.agenda.estado !== 'codificada' && this.agenda.estado !== 'auditada';
-    }
-
-    tienenPacientes() {
-        return this.turnosSeleccionados.filter((turno) => {
-            return (turno.paciente && turno.paciente.id);
-        }).length === this.turnosSeleccionados.length;
-    }
-
-    tienenAsistencia() {
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            if (this.turnosSeleccionados[x].asistencia !== 'asistio') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    noTienenAsistencia() {
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            if (this.turnosSeleccionados[x].asistencia === 'asistio') {
-                return false;
-            }
-        }
-        return this.turnosSeleccionados.length > 0;
-    }
-
-    /**
-     * Devuelve true si uno de los turnos seleccionados tiene un diagnóstico.
-     * Devuelve falso solo cuando ninguno de los turnos tiene diagnóstico.
-     * @returns {Boolean}
-     * @memberof TurnosComponent
-     */
-    tienenDiagnostico(): Boolean {
-        return this.turnosSeleccionados.some(x => {
-            return x.diagnostico.codificaciones.length > 0;
-        });
-    }
-
-    ningunoConEstado(estado) {
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            if (this.turnosSeleccionados[x].estado === estado) {
-                return false;
-            }
-        }
-        return this.turnosSeleccionados.length > 0;
-    }
-
-    todosConEstado(estado) {
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            if (this.turnosSeleccionados[x].estado !== estado) {
-                return false;
-            }
-        }
-        return this.turnosSeleccionados.length > 0;
-    }
-
-    hayTurnosTarde() {
-        // Si la Agenda actual tiene fecha de hoy...
-        if (moment(this.agenda.horaInicio).startOf('day').format() >= moment().startOf('day').format()) {
-            return this.turnosSeleccionados.filter((turno) => {
-                // hay turnos tarde (ya se les pasó la hora)
-                return moment(turno.horaInicio).format() < moment().format();
-            }).length;
-        }
-    }
-
-    siguienteDisponible() {
-        let index;
-        let bloqueTurno;
-        let turnoSeleccionado;
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            // Se busca la posición del turno y se verifica que el siguiente turno se encuentre disponible
-            turnoSeleccionado = this.turnosSeleccionados[x];
-            bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
-            if (bloqueTurno) {
-                index = bloqueTurno.turnos.findIndex(t => {
-                    return t._id === turnoSeleccionado._id;
-                });
-                if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'disponible')) || (index === (bloqueTurno.turnos.length - 1))) {
-                    return false;
-                }
-                if (bloqueTurno.citarPorBloque) {
-                    if (String(bloqueTurno.turnos[index].horaInicio) !== String(bloqueTurno.turnos[index + 1].horaInicio)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    agendaHoy() {
-        return moment(this.agenda.horaInicio).startOf('day').format() >= moment().startOf('day').format();
-    }
-
-    actualizarBotones() {
-        const puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia:').length > 0;
-        const puedeSuspenderTurno = this.auth.getPermissions('turnos:turnos:suspenderTurno:').length > 0;
-        const puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno:').length > 0;
-        const puedeEditarCarpeta = this.auth.getPermissions('turnos:turnos:editarCarpeta:').length > 0;
-        const puedeMarcarTurnDoble = this.auth.getPermissions('turnos:turnos:turnoDoble:').length > 0;
-        this.botones = {
-            // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy() && !this.tienenDiagnostico(),
-            // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
-            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes() && !this.tienenDiagnostico(),
-            // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
-            suspenderTurno: puedeSuspenderTurno && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble') && !this.tienenDiagnostico(),
-            // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-            liberarTurno: puedeLiberarTurno && this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')) && !this.tienenDiagnostico(),
-            // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
-            listaDeEspera: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
-            // Se verifica si el siguiente turno se encuentra disponible
-            turnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
-                && this.todosConEstado('asignado') && this.siguienteDisponible(),
-            // Se puede quitar turno doble sólo si está en ese estado
-            quitarTurnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido() && !this.tienenDiagnostico(),
-            // Enviar SMS
-            // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
-            nota: this.agendaNoCerrada() && this.turnosSeleccionados.length > 0,
-            // Se puede editar carpeta si el turno tiene paciente
-            editarCarpeta: puedeEditarCarpeta && this.agendaNoCerrada() && this.turnosSeleccionados.length === 1 && this.tienenPacientes()
-        };
-    }
-
-    isDobleSuspendido() {
-        const indiceTurnoPadre = this.turnos.indexOf(this.turnosSeleccionados[0]) - 1;
-        const response = (this.turnos[indiceTurnoPadre].estado === 'suspendido');
-        return response;
     }
 
     liberarTurno() {
@@ -321,10 +233,10 @@ export class TurnosComponent implements OnInit {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
         if (carpetas) {
             this.turnosSeleccionados[0].paciente.carpetaEfectores = carpetas;
-            // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
         }
         this.showCarpetaPaciente = false;
         this.showTurnos = true;
+        this.bloqueSelected = this.agenda.bloques[this.mostrar];
     }
 
     eventosTurno(operacion) {
@@ -337,13 +249,12 @@ export class TurnosComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.actualizarBotonesAgendasEmiter.emit(resultado);
             this.agenda.bloques = resultado.bloques;
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
 
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
-        this.actualizarBotones();
         this.turnos.forEach((turno, index) => {
             turno.checked = false;
         });
@@ -397,12 +308,13 @@ export class TurnosComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.agenda = resultado;
+            this.agenda.bloques = resultado.bloques;
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
+
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
-        this.actualizarBotones();
-        this.turnos.forEach((turno) => {
+        this.turnos.forEach((turno, index) => {
             turno.checked = false;
         });
         this.todos = false;
@@ -478,6 +390,7 @@ export class TurnosComponent implements OnInit {
             this.agenda = ag;
             this.showTurnos = true;
             this.showLiberarTurno = false;
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
     }
 
@@ -488,6 +401,7 @@ export class TurnosComponent implements OnInit {
             this.showSuspenderTurno = false;
             this.recargarAgendas.emit(true);
             this.recargarBotones.emit(true);
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
     }
 
@@ -501,32 +415,14 @@ export class TurnosComponent implements OnInit {
             this.turnos.forEach((turno, index) => {
                 turno.checked = false;
             });
+            this.bloqueSelected = this.agenda.bloques[this.mostrar];
             this.todos = false;
         });
     }
 
-
-    cancelaAgregarNota() {
-        this.turnosSeleccionados.length = 0;
-        this.showTurnos = true;
-        this.showAgregarNotaTurno = false;
-    }
-
-    cancelaLiberarTurno() {
-        this.turnosSeleccionados.length = 0;
-        this.showTurnos = true;
-        this.showLiberarTurno = false;
-    }
-
-    cancelaSuspenderTurno() {
-        this.turnosSeleccionados.length = 0;
-        this.showTurnos = true;
-        this.showSuspenderTurno = false;
-    }
-
-    saveCarpetaPaciente() {
-        this.showTurnos = true;
-        this.showCarpetaPaciente = false;
-        return true;
+    cambiarOpcion(opcion) {
+        this.mostrar = opcion;
+        this.bloqueSelected = this.agenda.bloques[opcion];
+        this.todos = false;
     }
 }
