@@ -88,12 +88,12 @@
                     <i *ngIf="estaSeleccionada(agenda) >= 0" class="mdi mdi-checkbox-marked"></i>
                     <i *ngIf="!(estaSeleccionada(agenda) >= 0)" class="mdi mdi-checkbox-blank-outline"></i>
                 </td>
-                <td *plTableCol="'fecha'" (click)="verAgenda(agenda, false, $event)">
+                <td *plTableCol="'fecha'" class="w-20" (click)="verAgenda(agenda, false, $event)">
                     <plex-label titulo="{{agenda.horaInicio | date: 'EEEE' | uppercase}}  {{agenda.horaInicio | fecha}}"
                                 subtitulo="{{agenda.horaInicio |
                         date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs"></plex-label>
                 </td>
-                <td *plTableCol="'tipoPrestacion'" (click)="verAgenda(agenda, false, $event)">
+                <td *plTableCol="'tipoPrestacion'" class="w-25" (click)="verAgenda(agenda, false, $event)">
                     <plex-label *ngIf="agenda.profesionales?.length" titulo="{{
                         agenda.tipoPrestaciones | enumerar:['term']:'/' }}" subtitulo="{{ agenda.profesionales |
                             enumerar:['apellido','nombre'] }}">
@@ -102,7 +102,7 @@
                     agenda.tipoPrestaciones | enumerar:['term']:'/' }}" subtitulo="Equipo de Salud no asignado">
                     </plex-label>
                 </td>
-                <td *plTableCol="'espacioFisico'" (click)="verAgenda(agenda, false, $event)">
+                <td *plTableCol="'espacioFisico'" class="w-25" (click)="verAgenda(agenda, false, $event)">
                     <span *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda |
                         espacioFisico}}</span>
                     <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre">Espacio físico no
