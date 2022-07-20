@@ -1,3 +1,18 @@
+# [5.101.0](https://github.com/andes/app/compare/v5.100.1...v5.101.0) (2022-07-20)
+
+
+### Bug Fixes
+
+* **CITAS:** deseleccionar agendas si se crea una ([#2690](https://github.com/andes/app/issues/2690)) ([e6577bb](https://github.com/andes/app/commit/e6577bb5a321cc9bc3d8ddbf344489820f17eb56))
+* **RUP-320:** campos oblicatorios en edad gestacional ([#2678](https://github.com/andes/app/issues/2678)) ([5141d7c](https://github.com/andes/app/commit/5141d7c62bcfa28cea6ac7d8973708d8e310fdf2))
+* **TOP:** se agrega autodisable a boton ([#2704](https://github.com/andes/app/issues/2704)) ([8277909](https://github.com/andes/app/commit/827790928084cd1c5a68d5cae07eee333720d026))
+
+
+### Features
+
+* **INT:** pasar a internacion no censable ([#2635](https://github.com/andes/app/issues/2635)) ([282c3f6](https://github.com/andes/app/commit/282c3f6932646c99f0c522f981057417209e8135))
+* **top:** agregar control en continuar prestacion ([#2693](https://github.com/andes/app/issues/2693)) ([fbd6268](https://github.com/andes/app/commit/fbd62686e56f1cc2112f5a10f667035ea1ff7545))
+
 ## [5.100.1](https://github.com/andes/app/compare/v5.100.0...v5.100.1) (2022-07-13)
 
 
