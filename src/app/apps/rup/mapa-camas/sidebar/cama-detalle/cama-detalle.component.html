@@ -4,8 +4,8 @@
             <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
-                        <ng-container *ngIf="relacionesYpermisos">
-                            <plex-button title="{{ relacion.nombre }} " [icon]="relacion.icon" [type]="relacion.color"
+                        <ng-container *ngIf="relacionesYcondiciones(relacion, cama)">
+                            <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                          size="sm" (click)="accion(relacion)">
                             </plex-button>
                         </ng-container>
@@ -15,7 +15,7 @@
                              *ngIf="capa !== 'interconsultores' && (cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit)">
                 </plex-button>
                 <ng-container
-                              *ngIf="capa !== 'interconsultores' && !cama.sala && cama.estado === 'disponible' && permisosMapaCamasService.camaPrestamo">
+                              *ngIf="capa !== 'interconsultores' && !cama.sala && permisosMapaCamasService.camaPrestamo  && ((organizacionV2$ | async) || cama.estado === 'disponible')">
                     <plex-button title="Prestar" icon="chevron-right" type="warning" size="sm"
                                  (click)="accion({accion: 'prestar'})"
                                  *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">

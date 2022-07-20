@@ -94,20 +94,18 @@
                 M
             </plex-badge>
         </td>
-        <td *ngIf="mapaCamasService.capa !== 'interconsultores'">
+        <td *ngIf="capa !== 'interconsultores'">
             <ng-container *ngIf="permisosMapaCamasService.movimientos">
                 <ng-container *ngFor="let relacion of relacionesPosibles">
                     <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
                                   || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
-                        <plex-button *ngIf="mapaCamasService.capa !== 'interconsultores'" title="{{ relacion.nombre }}"
-                                     [icon]="relacion.icon" [type]="relacion.color" size="sm"
-                                     (click)="accion(relacion, $event)">
+                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                     size="sm" (click)="accion(relacion, $event)">
                         </plex-button>
                     </ng-container>
                 </ng-container>
             </ng-container>
-            <plex-button *ngIf="canEdit && mapaCamasService.capa !== 'interconsultores'" title="Editar Cama"
-                         icon="pencil" type="warning" size="sm" (click)="goTo()">
+            <plex-button *ngIf="canEdit" title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
             </plex-button>
         </td>
     </ng-container>

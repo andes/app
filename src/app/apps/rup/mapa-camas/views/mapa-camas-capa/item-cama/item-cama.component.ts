@@ -27,6 +27,7 @@ export class ItemCamaComponent implements OnChanges {
             return columns;
         })
     );
+    public capa = this.mapaCamasService.capa;
 
     public equipos = {
         aporteOxigeno: false,
@@ -42,7 +43,7 @@ export class ItemCamaComponent implements OnChanges {
     constructor(
         public auth: Auth,
         private router: Router,
-        public mapaCamasService: MapaCamasService,
+        private mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) {
     }
