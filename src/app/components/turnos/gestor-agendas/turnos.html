@@ -68,8 +68,8 @@
 </plex-title>
 
 <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
-<div *ngIf="showTurnos && agenda.nominalizada && !agenda.dinamica">
-    <plex-list [selectable]="false">
+<div *ngIf="showTurnos && agenda.nominalizada">
+    <plex-list *ngIf="!agenda.dinamica" [selectable]="false">
         <plex-item>
             <plex-icon name="calendario-fecha-abajo" size="lg" type="warning"></plex-icon>
             <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{estadosAgenda[agenda.estado]?.nombre }}
@@ -89,19 +89,23 @@
             </plex-label>
         </plex-item>
     </plex-list>
-    <plex-options *ngIf="items.length>1" [items]="items" (activated)="cambiarOpcion($event)"></plex-options>
+    <plex-options *ngIf="items.length>1 && !agenda.dinamica" [items]="items" (activated)="cambiarOpcion($event)">
+    </plex-options>
     <!-- Tiene turnos disponibles -->
-    <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
-    <plex-grid class="turnos_disponibles" responsive type="full" cols="4">
-        <plex-label align="center" size="md" titulo="Del día" subtitulo="{{countBloques[mostrar]?.delDia}}">
-        </plex-label>
-        <plex-label align="center" size="md" titulo="Programados" subtitulo="{{countBloques[mostrar]?.programado}}">
-        </plex-label>
-        <plex-label align="center" size="md" titulo="Con llave" subtitulo="{{countBloques[mostrar]?.gestion}}">
-        </plex-label>
-        <plex-label align="center" size="md" titulo="Profesional" subtitulo="{{countBloques[mostrar]?.profesional}}">
-        </plex-label>
-    </plex-grid>
+    <ng-container *ngIf="!agenda.dinamica">
+        <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
+        <plex-grid class="turnos_disponibles" responsive type="full" cols="4">
+            <plex-label align="center" size="md" titulo="Del día" subtitulo="{{countBloques[mostrar]?.delDia}}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Programados" subtitulo="{{countBloques[mostrar]?.programado}}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Con llave" subtitulo="{{countBloques[mostrar]?.gestion}}">
+            </plex-label>
+            <plex-label align="center" size="md" titulo="Profesional"
+                        subtitulo="{{countBloques[mostrar]?.profesional}}">
+            </plex-label>
+        </plex-grid>
+    </ng-container>
     <plex-title class="titulo-bloque" size="sm"
                 titulo="BLOQUE | {{ bloqueSelected.horaInicio | date: 'HH:mm'}} a {{ bloqueSelected.horaFin |date:'HH:mm'}} hs">
         <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
@@ -131,7 +135,7 @@
                 </suspender-turno>
             </plex-help>
         </ng-container>
-        <plex-help type="help" icon="cog" titulo="Configuración inicial del bloque">
+        <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog" titulo="Configuración inicial del bloque">
             <div class="row">
                 <div class="col-12">
                     <div class="container mt-2 mb-2">
@@ -190,7 +194,7 @@
         Seleccionar Todo
     </div>
     <!--Listado de turnos-->
-    <plex-table [columns]="columns" #table2="plTable" [offset]="100" class="tabla-turnos">
+    <plex-table *ngIf="bloqueSelected.turnos.length" [columns]="columns" #table2="plTable" class="tabla-turnos">
         <plex-table-columns></plex-table-columns>
         <tr *ngFor="let turno of bloqueSelected.turnos; let i=index"
             [class.selected]="estaSeleccionado(bloqueSelected.turnos[i])" [class.selectable]="selectable">
