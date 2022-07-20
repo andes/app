@@ -13,7 +13,8 @@ export class BotonesSolicitudPipe implements PipeTransform {
             citarPaciente: false,
             darTurno: false,
             auditar: false,
-            anular: false
+            anular: false,
+            continuarRegistro: false
         };
         if (this.esProfesionalDestino(prestacion) && prestacion.paciente && prestacion.estadoActual.tipo === 'asignada') {
             botones.iniciarPrestacion = true;
@@ -35,8 +36,12 @@ export class BotonesSolicitudPipe implements PipeTransform {
                 botones.anular = true;
             }
         }
+        // Si el usuario tiene permisos para rup e inicio el registro de atencion medica o tiene permisos especiales podra continuar con la prestacion
+        if (this.auth.getPermissions('rup:?').length) {
+            botones.continuarRegistro = ((prestacion.estadoActual.tipo === 'ejecucion') &&
+                (prestacion.estadoActual.createdBy.username === this.auth.usuario.username)) || (this.auth.check(`rup:validacion:${prestacion.solicitud.tipoPrestacion.id}`));
+        }
         return botones;
-
     }
 
     esEfectorDestino(prestacion) {
