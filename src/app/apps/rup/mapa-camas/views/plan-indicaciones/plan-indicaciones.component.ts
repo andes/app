@@ -56,11 +56,11 @@ export class PlanIndicacionesComponent implements OnInit {
     };
     public secciones: any[] = [];
     public seccionesActivas: any[] = [];
-
     public capa: string;
     private ambito: string;
     private idInternacion: string;
     private selectedBuffer = new BehaviorSubject({});
+
     private botones$ = this.selectedBuffer.pipe(
         map(selected => {
             const indicaciones = Object.keys(selected)

@@ -17,11 +17,11 @@
                             <section *ngIf="capa !== 'interconsultores'" class="item-indicacion">
                                 <div class="item__container"></div>
                                 <div class="item__botonera">
-                                    <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
+                                    <plex-button *ngIf="isToday && (detener$ | async)" type="danger" icon="stop" size="sm"
                                                  (click)="onDetenerClick()" tooltip="Suspender"
                                                  tooltipPosition="bottom">
                                     </plex-button>
-                                    <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
+                                    <plex-button *ngIf="isToday && (continuar$ | async)" type="success" icon="play" size="sm"
                                                  (click)="onContinuarClick()" tooltip="Continuar"
                                                  tooltipPosition="bottom">
                                     </plex-button>
@@ -124,9 +124,7 @@
                                                 <plex-badge *ngIf="indicacion.estado.tipo === 'draft'" type="warning">
                                                     borrador
                                                 </plex-badge>
-
-                                                <ng-container
-                                                              *ngIf="indicacion.estado.verificacion?.estado as verificacion">
+                                                <ng-container *ngIf="indicacion.estado.verificacion?.estado as verificacion">
                                                     <plex-badge class="circle"
                                                                 tooltip="{{ verificacion === 'aceptada' ? 'Aceptada' : 'Rechazada' }}"
                                                                 type="{{ verificacion === 'aceptada' ? 'success' : 'danger' }}">
@@ -162,11 +160,9 @@
                                                                  (click)="onVerificar(indicacion, false)">
                                                     </plex-button>
                                                 </ng-container>
-
-                                                <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
-                                                     in-plan-indicacion-botonera [indicacion]="indicacion"
-                                                     (refresh)="actualizar()"
-                                                     (cancelIndicacion)="cancelIndicacion($event)">
+                                                <div *ngIf="isToday && !indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
+                                                    in-plan-indicacion-botonera [indicacion]="indicacion"
+                                                    (refresh)="actualizar()" (cancelIndicacion)="cancelIndicacion($event)">
                                                 </div>
                                             </div>
                                         </td>
