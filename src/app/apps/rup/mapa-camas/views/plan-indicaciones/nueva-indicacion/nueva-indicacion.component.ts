@@ -1,6 +1,8 @@
 import { Auth } from '@andes/auth';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RUPComponent } from 'src/app/modules/rup/components/core/rup.component';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IPrestacionRegistro } from 'src/app/modules/rup/interfaces/prestacion.registro.interface';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
@@ -12,6 +14,7 @@ import { PlantillasService } from 'src/app/modules/rup/services/plantillas.servi
 })
 export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
 
+    @ViewChild('prescripcion') prescripcion: RUPComponent;
     @Output() save = new EventEmitter();
     @Output() edit = new EventEmitter();
     private capa: string;
@@ -66,7 +69,8 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         private elementoRUPService: ElementosRUPService,
         public ps: PlantillasService,
         private route: ActivatedRoute,
-        private auth: Auth
+        private auth: Auth,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -99,6 +103,10 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     }
 
     onSave() {
+        if (!this.prescripcion.rupInstance.validateForm(true)) {
+            this.plex.toast('warning', 'Revise que todos los campos requeridos contengan datos válidos.', 'Acción denegada');
+            return;
+        }
         this.registro.valor.sustancias.forEach(s => {
             s.dosis = `${s.dosisValor}${s.dosisUnidad?.term}`;
         });

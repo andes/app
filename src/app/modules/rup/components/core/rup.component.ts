@@ -255,14 +255,15 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Busca una referencia al formulario, y lo valida.
     */
-    public validateForm() {
+    public validateForm(onlyRequired = false) {
         if (this.formulario) {
-
             for (const key in this.formulario.controls) {
                 const frm = this.formulario.controls[key];
-                frm.markAsTouched();
-                if (frm.validator) {
-                    frm.validator({ value: frm.value });
+                if (frm.errors?.required || !onlyRequired) {
+                    frm.markAsTouched();
+                    if (frm.validator) {
+                        frm.validator({ value: frm.value });
+                    }
                 }
             }
         }
