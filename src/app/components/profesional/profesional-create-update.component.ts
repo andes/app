@@ -1,7 +1,7 @@
 
 import { Matching } from '@andes/match';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -106,6 +106,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         private localidadService: LocalidadService,
         private validacionService: ValidacionService,
         private siisaService: SIISAService,
+        private cd: ChangeDetectorRef,
         public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
@@ -179,6 +180,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         } else {
             this.profesional.contactos = this.contactosCache;
         }
+        this.cd.detectChanges();
     }
 
     removeContacto(i) {
