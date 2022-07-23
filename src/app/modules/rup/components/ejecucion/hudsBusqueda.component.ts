@@ -72,7 +72,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     public todos: any = [];
     public solicitudes: any = [];
-    // public solicitudesTOP: any = [];
 
     /**
      * Listado de todos los trastornos
