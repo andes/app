@@ -2,13 +2,14 @@ import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { publishReplay, refCount, tap } from 'rxjs/operators';
 import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
 import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { QueriesService } from '../../../../services/query.service';
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
-
-
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { Server } from '@andes/shared';
 @Component({
     selector: 'app-bi-queries',
     templateUrl: './bi-queries.component.html',
@@ -16,7 +17,6 @@ import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.servi
 })
 export class BiQueriesComponent implements OnInit {
     @Input() queries;
-
     public consultaSeleccionada;
     public opciones = [];
     public queries$: Observable<any>;
@@ -29,14 +29,17 @@ export class BiQueriesComponent implements OnInit {
     public totalOrganizaciones = false;
     public permisosZonas: any[];
     public zonasSanitarias: IZonaSanitaria[] = [];
+    public orgs = [];
 
     constructor(
         private queryService: QueriesService,
         private profesionalService: ProfesionalService,
         private zonaSanitariaService: ZonaSanitariaService,
+        private servicioOrganizacion: OrganizacionService,
         private formsService: FormsService,
         private auth: Auth,
-        private router: Router
+        private router: Router,
+        private server: Server
     ) { }
 
     ngOnInit() {
@@ -75,7 +78,24 @@ export class BiQueriesComponent implements OnInit {
     getArgumentos() {
         if (this.consultaSeleccionada) {
             this.argumentos = this.consultaSeleccionada.argumentos;
-            this.organizaciones$ = this.auth.organizaciones();
+            this.organizaciones$ = this.server.get('/auth/bi-queries/organizaciones').pipe(
+                tap((data) => {
+                    this.orgs = data;
+                }),
+                publishReplay(1),
+                refCount()
+            );
+        }
+    }
+
+    loadUnidadesOrganizativas(event) {
+        if (this.argumentos?.organizacion && event.query) {
+            const organizacion = this.argumentos.organizacion.id;
+            this.servicioOrganizacion.unidadesOrganizativas(organizacion).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        } else {
+            event.callback([]);
         }
     }
 
