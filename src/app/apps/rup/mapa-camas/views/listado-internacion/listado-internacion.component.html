@@ -54,7 +54,7 @@
             </plex-layout-main>
 
             <plex-layout-sidebar type="invert">
-                <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES">
+                <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES" size="md">
                     <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
                                  [disabled]="!puedeValidar || editando"
                                  (click)="validar(selectedPrestacion, fechaHasta)">

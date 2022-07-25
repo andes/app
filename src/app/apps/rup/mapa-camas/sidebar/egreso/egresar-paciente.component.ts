@@ -194,6 +194,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
+            this.fechaEgresoOriginal = null;
 
             this.view = view;
             this.capa = capa;
@@ -293,6 +294,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     egresoSimplificado(estado) {
+        // Se configura nuevo estado con datos del egreso
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
             let estadoPatch = {};
             if (!this.cama.sala) {// si no es sala comun
@@ -333,7 +335,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             saveInternacion().pipe(
                 switchMap(() => this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso))
             ).subscribe(() => {
-                this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                this.plex.toast('success', 'Egreso guardado correctamente', 'Prestacion guardada', 100);
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
                 } else if (this.view === 'mapa-camas') {
@@ -349,14 +351,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     cambiarEstado() {
         if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
-            this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
-                this.prestacion.id).subscribe((snapshot) => {
-                const ultimaCama = snapshot[0];
-                this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
-
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.listadoInternacionService.setFechaHasta(moment().toDate());
-                });
+            this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(), this.prestacion.id).pipe(
+                switchMap(snapshot => {
+                    const ultimaCama = snapshot[0];
+                    return this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null);
+                })
+            ).subscribe(() => {
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
+                this.listadoInternacionService.setFechaHasta(moment().toDate());
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
             });

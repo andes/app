@@ -2,7 +2,7 @@
     <plex-title justify titulo="EGRESO" size="md">
         <plex-button title="{{ (!prestacionValidada) ? 'Guardar' : 'Prestacion validada' }}" tooltipPosition="left" icon="check" type="success"
                     size="sm" [validateForm]="formEgreso" (click)="guardar($event)"
-                    [disabled]="prestacionValidada || disableButton || inProgress || (disableButton$ | async)">
+                    [disabled]="formEgreso.invalid || prestacionValidada || disableButton || inProgress || (disableButton$ | async)">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>
