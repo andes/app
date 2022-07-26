@@ -1,4 +1,3 @@
-
 <plex-title [titulo]="selectedConcept ? selectedConcept.term : nombreSeccion" size="md">
     <plex-button class="mr-1" type="success" icon="check" size="sm" (click)="onSave()"></plex-button>
     <plex-button type="danger" icon="close" size="sm" (click)="onCancel()"></plex-button>
@@ -6,7 +5,7 @@
 
 <ng-container *ngIf="!selectedConcept">
     <rup-buscador [tipoPrestacion]="tipoPrestacion" [conceptoFrecuente]="tipoPrestacion"
-                (selected)="onConceptoSelect($event)" [semanticTags]="['planes']">
+                  (selected)="onConceptoSelect($event)" [semanticTags]="['planes']">
     </rup-buscador>
 </ng-container>
 
@@ -16,6 +15,6 @@
                        title="Seleccionar plantilla" titlePosition="left" *ngIf="plantillas.length > 0">
         </plex-dropdown>
     </ng-container>
-    <rup [elementoRUP]="elementoRUP" [registro]="registro" [prestacion]="prestacion">
+    <rup #prescripcion [elementoRUP]="elementoRUP" [registro]="registro" [prestacion]="prestacion">
     </rup>
 </ng-container>
