@@ -25,9 +25,10 @@
                 </plex-datetime>
                 <plex-select *ngSwitchCase="'organizacion'" [label]="argumento.label?argumento.label:argumento.key"
                              grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                             [required]="argumento.required && totalOrganizaciones" [data]="organizaciones$ |async">
+                             [required]="argumento.required" [data]="organizaciones$ |async">
                 </plex-select>
-                <plex-select *ngSwitchCase="'unidadOrganizativa'" [label]="argumento.key" grow="full"
+                <plex-select *ngSwitchCase="'unidadOrganizativa'"
+                             [label]="argumento.label?argumento.label:argumento.key" grow="full"
                              name="{{ argumento.key }}" labelField="term" [(ngModel)]="argumentos[argumento.key]"
                              [required]="argumento.required" (getData)="loadUnidadesOrganizativas($event)">
                 </plex-select>

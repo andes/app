@@ -9,7 +9,6 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { QueriesService } from '../../../../services/query.service';
 import { ZonaSanitariaService } from './../../../../services/zonaSanitaria.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { Server } from '@andes/shared';
 @Component({
     selector: 'app-bi-queries',
     templateUrl: './bi-queries.component.html',
@@ -39,7 +38,6 @@ export class BiQueriesComponent implements OnInit {
         private formsService: FormsService,
         private auth: Auth,
         private router: Router,
-        private server: Server
     ) { }
 
     ngOnInit() {
@@ -78,13 +76,7 @@ export class BiQueriesComponent implements OnInit {
     getArgumentos() {
         if (this.consultaSeleccionada) {
             this.argumentos = this.consultaSeleccionada.argumentos;
-            this.organizaciones$ = this.server.get('/auth/bi-queries/organizaciones').pipe(
-                tap((data) => {
-                    this.orgs = data;
-                }),
-                publishReplay(1),
-                refCount()
-            );
+            this.organizaciones$ = this.auth.getModuleOrganizaciones('60cce2a42e15361fe51b373d');
         }
     }
 
