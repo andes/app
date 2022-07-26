@@ -24,10 +24,18 @@
                                                  (click)="onContinuarClick()" tooltip="Continuar"
                                                  tooltipPosition="bottom">
                                     </plex-button>
-                                    <plex-button *ngIf="hayDraft" type="warning" size="sm" class="ml-2"
-                                                 (click)="onValidar()">
-                                        Validar Pendientes
-                                    </plex-button>
+
+                                    <ng-container *ngIf="borradores.length">
+                                        <plex-dropdown right="true" size="sm" label="Validar indicaciones"
+                                                       type="warning">
+                                            <plex-button label="Seleccionadas" type="link"
+                                                         [disabled]="!soloBorradoresSeleccionados"
+                                                         (click)="onValidar(true)">
+                                            </plex-button>
+                                            <plex-button label="Pendientes" type="link" (click)="onValidar(false)">
+                                            </plex-button>
+                                        </plex-dropdown>
+                                    </ng-container>
                                 </div>
                             </section>
                         </td>

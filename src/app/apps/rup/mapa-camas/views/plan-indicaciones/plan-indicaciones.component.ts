@@ -38,6 +38,8 @@ export class PlanIndicacionesComponent implements OnInit {
     public showSecciones = {};
     public isToday = true;
     public hayDraft = 0;
+    public soloBorradoresSeleccionados = false;
+    public borradores = [];
     public eventos = {};
     public indicacionView = null;
     public nuevaIndicacion = false;
@@ -131,7 +133,6 @@ export class PlanIndicacionesComponent implements OnInit {
                     );
                 }
             });
-
         });
     }
 
@@ -151,7 +152,12 @@ export class PlanIndicacionesComponent implements OnInit {
                 )
             })
         ]).subscribe(([datos, eventos]) => {
-            this.indicaciones = datos;
+            this.indicaciones = datos.filter(i => {
+                // se descartan borradores de dias anteriores
+                const inicioDia = moment(this.fecha).hours(6);
+                const finDia = moment(inicioDia).add(1, 'days');
+                return i.estadoActual.tipo !== 'draft' || moment(i.createdAt).isBetween(inicioDia, finDia, null, '[)');
+            });
             this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
             this.indicaciones.forEach((indicacion) => {
                 const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
@@ -176,9 +182,7 @@ export class PlanIndicacionesComponent implements OnInit {
             });
 
             this.eventos = eventosMap;
-
-            this.hayDraft = this.indicaciones.filter(i => i.estado.tipo === 'draft').length;
-
+            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
         });
     }
 
@@ -202,6 +206,8 @@ export class PlanIndicacionesComponent implements OnInit {
     onSelectedChange() {
         this.suspenderIndicacion = false;
         this.selectedBuffer.next(this.selectedIndicacion);
+        const arraySeleccion = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k] === true);
+        this.soloBorradoresSeleccionados = arraySeleccion.length > 0 && arraySeleccion?.every(seleccionado => this.borradores.some(b => b.id === seleccionado));
     }
 
     onClose() {
@@ -348,8 +354,9 @@ export class PlanIndicacionesComponent implements OnInit {
         this.showSecciones[seccion.term] = !this.showSecciones[seccion.term];
     }
 
-    onValidar() {
-        const registros = this.indicaciones.filter(indicacion => indicacion.estado.tipo === 'draft').map((indicacion) => {
+    onValidar(seleccionadas: boolean) {
+        const indicaciones = seleccionadas ? Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k)) : this.indicaciones;
+        const registros = indicaciones.filter(indicacion => indicacion.estado.tipo === 'draft').map((indicacion) => {
             return {
                 _id: indicacion.idRegistro,
                 id: indicacion.idRegistro,
