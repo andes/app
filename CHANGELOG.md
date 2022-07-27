@@ -1,3 +1,16 @@
+# [5.102.0](https://github.com/andes/app/compare/v5.101.0...v5.102.0) (2022-07-27)
+
+
+### Bug Fixes
+
+* **CITAS:** visualizacion de turnos agenda dinamica ([#2711](https://github.com/andes/app/issues/2711)) ([a133273](https://github.com/andes/app/commit/a133273b83472123626b29e5dbc8bce04e68d440))
+* **IN-472:** boton volver en plan de indicaciones ([#2710](https://github.com/andes/app/issues/2710)) ([9cfa813](https://github.com/andes/app/commit/9cfa813c705c9d5963a7535651a3197f2d872cf0))
+
+
+### Features
+
+* **VAC-127:** Quitar control de dosis ([#2696](https://github.com/andes/app/issues/2696)) ([7f6d370](https://github.com/andes/app/commit/7f6d370072c2a9f59abce45c13328fdbfa2e27e0))
+
 # [5.101.0](https://github.com/andes/app/compare/v5.100.1...v5.101.0) (2022-07-20)
 
 
