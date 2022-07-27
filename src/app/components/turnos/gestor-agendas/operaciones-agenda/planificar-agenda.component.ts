@@ -11,6 +11,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import * as operaciones from './../../../../utils/operacionesJSON';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
     selector: 'planificar-agenda',
@@ -72,7 +73,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService,
         public servicioInstitucion: InstitucionService,
-        public auth: Auth
+        public auth: Auth,
+        private breakpointObserver: BreakpointObserver
     ) { }
 
     ngOnInit() {
@@ -957,5 +959,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
     cerrarModal() {
         this.showModal = false;
+    }
+
+    isMobile() {
+        return this.breakpointObserver.isMatched('(max-width: 599px)');
     }
 }
