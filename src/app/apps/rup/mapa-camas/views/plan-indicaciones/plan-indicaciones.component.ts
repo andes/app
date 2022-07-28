@@ -37,6 +37,8 @@ export class PlanIndicacionesComponent implements OnInit {
     public loading = false;
     public suspenderIndicacion: Boolean;
     public showSecciones = {};
+    public showMotivoRechazo = false; // interconsultores
+    public indicacionAVerificar; // interconsultores
     public hayDraft = 0;
     public soloBorradoresSeleccionados = false;
     public borradores = [];
@@ -436,5 +438,38 @@ export class PlanIndicacionesComponent implements OnInit {
 
     goTo() {
         this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
+    }
+
+    // capa interconsultories ------------------------------------
+
+    onVerificar(indicacion, flag: boolean) {
+        this.indicacionAVerificar = indicacion;
+        if (flag) {
+            this.saveVerificacion();
+        } else {
+            this.toggleShowMotivoRechazo();
+        }
+    }
+
+    deshacerVerificacion(indicacion) {
+        indicacion.verificacion = null;
+    }
+
+    toggleShowMotivoRechazo(indicacion = null) {
+        if (indicacion) {
+            this.indicacionAVerificar = indicacion;
+        }
+        this.showMotivoRechazo = !this.showMotivoRechazo;
+    }
+
+    saveVerificacion(motivo?: string) {
+        const verificacion = {
+            estado: motivo ? 'rechazada' : 'aceptada',
+            motivoRechazo: motivo || null
+        };
+        this.planIndicacionesServices.update(this.indicacionAVerificar.id, { verificacion }).subscribe(() => {
+            this.actualizar();
+            this.plex.toast('success', 'Verificación guardada exitosamente');
+        });
     }
 }
