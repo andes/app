@@ -1,6 +1,6 @@
 <plex-layout>
     <plex-layout-main>
-        <plex-title titulo="Generar Usuario">
+        <plex-title titulo="Generar Usuario ">
             <plex-button *ngIf="estaValidado" type="danger" (click)="resetForm()">
                 VOLVER</plex-button>
         </plex-title>
@@ -9,9 +9,11 @@
             </div>
             <form class="w-100" #formInscripcion="ngForm">
                 <plex-wrapper *ngIf="!estaValidado">
-                    <plex-text [(ngModel)]="profesional.nombre" name="nombre" label="Nombre" required="true" grow="full">
+                    <plex-text [(ngModel)]="profesional.nombre" name="nombre" label="Nombre" required="true"
+                               grow="full">
                     </plex-text>
-                    <plex-text [(ngModel)]="profesional.apellido" name="apellido" label="Apellido" required="true" grow="full">
+                    <plex-text [(ngModel)]="profesional.apellido" name="apellido" label="Apellido" required="true"
+                               grow="full">
                     </plex-text>
                     <plex-text [(ngModel)]="profesional.documento" name="documento" label="Documento" required="true"
                                grow="full">
@@ -19,6 +21,9 @@
                     <plex-select [(ngModel)]="profesional.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                  required="true" grow="full">
                     </plex-select>
+                    <plex-datetime [(ngModel)]="profesional.fechaNacimiento" name="fechaNacimiento"
+                                   label="Fecha de Nacimiento" type="date" required="true" grow="full">
+                    </plex-datetime>
                     <div class="mt-3" grow="full" *ngIf="captchaEnabled">
                         <re-captcha [(ngModel)]=" profesional.recaptcha" name="recaptcha" (resolved)="resolved($event)">
                         </re-captcha>
@@ -45,14 +50,14 @@
                     <plex-text [(ngModel)]="profesional.fechaNacimiento" name="fechaNacimiento"
                                label="Fecha de nacimiento" readonly="true" grow="full"></plex-text>
                     <plex-label titulo="{{formacion.profesion}}" *ngFor="let formacion of profesional.matriculas"
-                        subtitulo="matrícula {{ formacion.numeroMatricula }}"  grow="full" ></plex-label>
+                                subtitulo="matrícula {{ formacion.numeroMatricula }}" grow="full"></plex-label>
                     <plex-text email [(ngModel)]="profesional.email" name="email" label="Email"
                                [required]="!existeUsuario" grow="full">
                     </plex-text>
                     <plex-text [(ngModel)]="profesional.telefono" name="telefono" label="Telefono" grow="full">
                     </plex-text>
                     <plex-button class="mt-3" [disabled]="enProceso || formValidado.invalid" *ngIf="!existeUsuario"
-                                    type="success" (click)="createUser()" grow="full">
+                                 type="success" (click)="createUser()" grow="full">
                         Nuevo Usuario
                     </plex-button>
                 </plex-wrapper>

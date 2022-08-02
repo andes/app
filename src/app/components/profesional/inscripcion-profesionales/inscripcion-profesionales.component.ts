@@ -59,6 +59,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
             apellido: this.profesional.apellido,
             documento: this.profesional.documento,
             sexo: this.profesional.sexo.id,
+            fechaNacimiento: this.profesional.fechaNacimiento,
         }).subscribe(
             (datos) => {
                 if (datos.profesional) {
@@ -120,7 +121,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
         if (profesional.formacionGrado?.length) {
             return profesional.formacionGrado
                 .filter(m => m.matriculado)
-                .map( m => {
+                .map(m => {
                     const matricula = m.matriculacion[m.matriculacion.length - 1];
                     return {
                         numeroMatricula: matricula.matriculaNumero,
@@ -158,8 +159,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
                     }
                 });
             }
-        },
-        (error) => {
+        }, (error) => {
             this.plex.info('danger', error);
             this.enProceso = false;
         });
