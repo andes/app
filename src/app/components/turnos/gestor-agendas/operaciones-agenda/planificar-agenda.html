@@ -66,9 +66,11 @@
                                placeholder="Ingresar Link">
                     </plex-text>
                 </div>
-                <plex-bool [readonly]="!modelo.horaFin" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
-                           type="slide" (change)="seleccionarDinamica($event)">
-                </plex-bool>
+                <div>
+                    <plex-bool [readonly]="!modelo.horaFin" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
+                               type="slide" (change)="seleccionarDinamica($event)">
+                    </plex-bool>
+                </div>
             </plex-grid>
             <!-- Espacio Físico -->
             <plex-grid *ngIf="modelo.horaInicio && modelo.horaFin && showBloque && modelo.bloques?.length" type="full"
