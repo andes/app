@@ -1,4 +1,4 @@
-import { Server, Cache } from '@andes/shared';
+import { Server, Cache, cache } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest, EMPTY } from 'rxjs';
@@ -71,6 +71,17 @@ export class OrganizacionService {
 
     getGeoreferencia(id: String): Observable<any> {
         return this.server.get(this.organizacionUrl + '/georef/' + id, null);
+    }
+
+    /**
+     * retorna true si la organización usa capas unificadas en el módulo internación
+     * @param id String
+     */
+    usaCapasUnificadas(id: String): Observable<boolean> {
+        return this.getById(id).pipe(
+            map(org => org.usaEstadisticaV2 === true),
+            cache()
+        );
     }
 
     /**

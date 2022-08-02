@@ -7,7 +7,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { map } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { MapaCamaListadoColumns } from '../../interfaces/mapa-camas.internface';
@@ -144,10 +144,11 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
         this.mapaCamasService.select(null);
 
-        this.organizacion = this.auth.organizacion.id;
         this.columns = this.mapaCamasService.columnsMapa.getValue();
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion =>
-            this.organizacionv2 = organizacion.usaEstadisticaV2);
+        this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id).pipe(
+            take(1),
+            tap(resp => this.organizacionv2 = resp)
+        ).subscribe();
 
         this.estado$ = this.mapaCamasService.maquinaDeEstado$.pipe(
             map(estado => estado)
