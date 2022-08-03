@@ -231,7 +231,8 @@ export class PlanIndicacionesComponent implements OnInit {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
         const estadoParams = {
             tipo: estado,
-            fecha: new Date()
+            fecha: new Date(),
+            motivo
         };
         const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
         forkJoin(
