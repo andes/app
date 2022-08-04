@@ -1,4 +1,4 @@
-<ng-container *ngIf="!soloValores">
+<form #form="ngForm" *ngIf="!soloValores">
     <plex-title size="sm" titulo="Principio Activo">
         <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
                     tooltipPosition="left">
@@ -11,30 +11,30 @@
     <!-- PRINCIPIO ACTIVO -->
     <ng-container *ngFor="let sustancia of registro.valor.sustancias">
         <plex-grid cols="2" class="mr-3">
-            <plex-select [(ngModel)]="sustancia.ingrediente" name="conceptos2" [snomedExpression]="'<<312415009'"
-                        (change)="valuesChange()" label="Principio activo" [preload]="false" span="2">
+            <plex-select [(ngModel)]="sustancia.ingrediente" name="ingrediente" [snomedExpression]="'<<312415009'"
+                        (change)="valuesChange()" label="Principio activo" [preload]="false" required span="2">
             </plex-select>
 
-            <plex-text label="Valor Dosis" [(ngModel)]="sustancia.dosisValor" name="dosis" (change)="valuesChange()"></plex-text>
-            <plex-select label="Unidad Dosis" [(ngModel)]="sustancia.dosisUnidad" [snomedExpression]="unidadesSnomed" name="dosis" (change)="valuesChange()"></plex-select>
+            <plex-text label="Valor Dosis" [(ngModel)]="sustancia.dosisValor" name="vDosis" required (change)="valuesChange()"></plex-text>
+            <plex-select label="Unidad Dosis" [(ngModel)]="sustancia.dosisUnidad" [snomedExpression]="unidadesSnomed" name="uDosis" required (change)="valuesChange()"></plex-select>
         </plex-grid>
     </ng-container>
 
     <plex-wrapper>
-        <plex-select [(ngModel)]="registro.valor.via" name="conceptos2" [snomedExpression]="viasSnomed"
+        <plex-select [(ngModel)]="registro.valor.via" name="via" [snomedExpression]="viasSnomed"
                     (change)="valuesChange()" label="Vía de administración" [preload]="true">
         </plex-select>
 
-        <plex-select [(ngModel)]="registro.valor.presentacion" name="conceptos2" [snomedExpression]="formasFarmaceuticasSnomed"
+        <plex-select [(ngModel)]="registro.valor.presentacion" name="presentacion" [snomedExpression]="formasFarmaceuticasSnomed"
                     (change)="valuesChange()" label="Forma Farmacéutica" [preload]="true">
         </plex-select>
     </plex-wrapper>
-        <plex-text class="mb-2" *ngIf="afterInit" label="Preparación" [(ngModel)]="registro.valor.preparacion" name="indicaciones"
-                   [multiline]="true">
-        </plex-text>
+    <plex-text class="mb-2" *ngIf="afterInit" label="Preparación" [(ngModel)]="registro.valor.preparacion" name="indicaciones"
+                [multiline]="true">
+    </plex-text>
     
     <!-- FRECUENCIA -->
-    <plex-title size="sm" titulo="Frecuencia">
+   <plex-title size="sm" titulo="Frecuencia">
         <plex-button size="sm" icon="plus" type="info" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
                     tooltipPosition="left">
         </plex-button>
@@ -44,28 +44,28 @@
     </plex-title>
 
     <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias" >
-        <plex-select [(ngModel)]="frecuencia.frecuencia" name="conceptos2" [snomedExpression]="frecuenciaSnomed"
-                        (change)="valuesChange()" label="Frecuencia" [preload]="true"
+        <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia" [snomedExpression]="frecuenciaSnomed"
+                        (change)="valuesChange()" label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
                         [disabled]="registro.valor.unicaVez">
         </plex-select>
 
-        <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="dosis"></plex-text>
+        <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad"></plex-text>
 
         <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
                         (change)="valuesChange()">
         </plex-datetime>
     </plex-wrapper>
     <plex-grid cols="1">
-        <plex-bool class="mb-3" type="slide" justify="start" label="Única Vez" [(ngModel)]="registro.valor.unicaVez" (change)="onChangeUnicaVez($event)" grow="full"></plex-bool>
+        <plex-bool class="mb-3" type="slide" justify="start" label="Única Vez" name="boolUnicaVez" [(ngModel)]="registro.valor.unicaVez" (change)="onChangeUnicaVez($event)" grow="full"></plex-bool>
         <plex-text *ngIf="registro.valor.unicaVez" [multiline]="true" [(ngModel)]="registro.valor.motivoUnicaVez" name="indicaciones">
         </plex-text>
     </plex-grid>
     <plex-title size="sm" titulo="Aclaraciones y/o Comentarios"></plex-title>
     <div class="mr-3 mt-2">
-        <plex-text *ngIf="afterInit" [html]="true" height="100" [(ngModel)]="registro.valor.indicaciones" name="indicaciones">
+        <plex-text *ngIf="afterInit" [html]="true" height="100" [(ngModel)]="registro.valor.indicaciones" name="aclaraciones">
         </plex-text>
     </div> 
-</ng-container>
+</form>
 <ng-container *ngIf="soloValores">
     <plex-grid cols="3" size="sm">
         <plex-label titulo="Medicamento" [subtitulo]="registro.valor.nombre || '(no definido)'">

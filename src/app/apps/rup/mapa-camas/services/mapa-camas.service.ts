@@ -222,13 +222,13 @@ export class MapaCamasService {
                     return this.selectedCama;
                 }
                 // Para conseguir la cama de la internación desde el listado
-                return combineLatest(
+                return combineLatest([
                     this.selectedPrestacion,
                     this.selectedResumen
-                ).pipe(
+                ]).pipe(
                     switchMap(([prestacion, resumen]) => {
                         const internacion = {
-                            id: prestacion.id || resumen.id,
+                            id: this.capa === 'estadistica' ? prestacion.id : resumen.id,
                             fecha: this.fecha
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(

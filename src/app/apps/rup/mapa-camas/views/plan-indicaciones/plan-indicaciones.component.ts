@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
@@ -29,7 +29,6 @@ export class PlanIndicacionesComponent implements OnInit {
     private ambito: string;
     private idInternacion: string;
     private paciente: any;
-    private maquinaEsados: any[];
     public indicacion;
     public fecha = new Date();
     public hoy = new Date();
@@ -106,7 +105,8 @@ export class PlanIndicacionesComponent implements OnInit {
         private auth: Auth,
         private maquinaEstadoService: MaquinaEstadosHTTP,
         private elementoRUPService: ElementosRUPService,
-        public ejecucionService: RupEjecucionService
+        public ejecucionService: RupEjecucionService,
+        private router: Router
     ) { }
 
 
@@ -114,7 +114,6 @@ export class PlanIndicacionesComponent implements OnInit {
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
-
         this.getInternacion().subscribe((resumen) => {
             this.internacion = resumen;
             this.pacienteService.getById(resumen.paciente.id).subscribe(paciente => {
@@ -416,5 +415,9 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.nuevaIndicacion = false;
             });
         }
+    }
+
+    goTo() {
+        this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
     }
 }

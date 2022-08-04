@@ -1,6 +1,6 @@
 {
   "name": "@andes/app",
-  "version": "5.101.0",
+  "version": "5.102.1",
   "description": "Aplicación web para ANDES",
   "angular-cli": {},
   "scripts": {
@@ -32,7 +32,7 @@
     "@agm/core": "^1.0.0-beta.5",
     "@andes/icons": "^1.1.17",
     "@andes/match": "^1.1.12",
-    "@andes/plex": "^7.22.0",
+    "@andes/plex": "^7.24.0",
     "@angular-eslint/eslint-plugin": "^12.3.1",
     "@angular/animations": "9.1.12",
     "@angular/cdk": "^9.2.4",

@@ -899,6 +899,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     volver() {
         this.router.navigate(['/inicio']);
     }
+
     isMobile() {
         return this.breakpointObserver.isMatched('(max-width: 599px)');
     }
