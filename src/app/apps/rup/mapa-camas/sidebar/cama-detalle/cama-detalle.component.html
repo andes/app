@@ -16,7 +16,7 @@
                 <plex-button tooltip="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
                              *ngIf="cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit">
                 </plex-button>
-                <ng-container *ngIf="!cama.sala && permisosMapaCamasService.camaEdit && ((organizacionV2$ | async) || cama.estado === 'disponible')">
+                <ng-container *ngIf="!cama.sala && permisosMapaCamasService.camaPrestamo && ((organizacionV2$ | async) || cama.estado === 'disponible')">
                     <plex-button tooltip="Prestar" icon="chevron-right" type="warning" size="sm"
                                 (click)="accion({accion: 'prestar'})"
                                     *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">
