@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, map, auditTime } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { cache } from '@andes/shared';
@@ -19,42 +19,62 @@ export class ListadoInternacionService {
     public estado = new BehaviorSubject<any>(null);
     public obraSocial = new BehaviorSubject<any[]>(null);
     public refresh = new BehaviorSubject<any>(null);
+    public missingFilters$: Observable<boolean>;
 
     constructor(
         private mapaHTTP: MapaCamasHTTP,
     ) {
-        this.listaInternacion$ = combineLatest(
+        this.listaInternacion$ = combineLatest([
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
-            this.refresh
-        ).pipe(
+        ]).pipe(
             auditTime(1),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
-                if (fechaIngresoDesde && fechaIngresoHasta) {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+                if ((fechaIngresoDesde && fechaIngresoHasta) || (fechaEgresoDesde && fechaEgresoHasta)) {
                     const filtros = {
-                        fechaIngresoDesde, fechaIngresoHasta,
-                        fechaEgresoDesde, fechaEgresoHasta,
+                        fechaIngresoDesde,
+                        fechaIngresoHasta,
+                        fechaEgresoDesde,
+                        fechaEgresoHasta,
                     };
 
                     return this.mapaHTTP.getPrestacionesInternacion(filtros);
                 }
+
+                return of([]);
             }),
             cache()
         );
 
-        this.listaInternacionFiltrada$ = combineLatest(
+        this.listaInternacionFiltrada$ = combineLatest([
             this.listaInternacion$,
             this.pacienteText,
             this.estado,
             this.obraSocial,
             this.unidadOrganizativa
-        ).pipe(
+        ]).pipe(
             map(([listaInternacion, paciente, estado, obraSocial, unidad]) =>
                 this.filtrarListaInternacion(listaInternacion, paciente, estado, obraSocial, unidad)
             )
         );
+
+        this.missingFilters$ = combineLatest([
+            this.fechaIngresoDesde,
+            this.fechaIngresoHasta,
+            this.fechaEgresoDesde,
+            this.fechaEgresoHasta
+        ]).pipe(
+            map(([
+                ingresoDesde, ingresoHasta, egresoDesde, egresoHasta]) => {
+                return !(
+                    (moment(ingresoDesde).isValid() && moment(ingresoHasta).isValid()) ||
+                    (moment(egresoDesde).isValid() && moment(egresoHasta).isValid())
+                );
+            })
+        ),
+        cache();
     }
 
     filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string, obraSocial: any, unidad: any) {

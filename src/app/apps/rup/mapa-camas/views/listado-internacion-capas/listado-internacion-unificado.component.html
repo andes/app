@@ -1,56 +1,70 @@
 <plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'" class="mb-0 border-0">
-            <plex-title titulo="LISTADO INTERNACION ">
+            <plex-title titulo="LISTADO INTERNACION">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <app-filtros-listado-capas></app-filtros-listado-capas>
         </header>
 
-        <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'principal'">
-            <plex-title titulo="pacientes" size="md">
-                <plex-table-columns [selected]="columnsVisibles">
-                </plex-table-columns>
-            </plex-title>
-            <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
-                    [class.selected]="internacion.id === idInternacionSelected"
-                    (click)="seleccionarInternacion(internacion)">
-                <td *plTableCol="'nombre'">
-                    {{internacion.paciente | nombre }}
-                </td>
-                <td *plTableCol="'documento'">
-                    {{ internacion.paciente.documento }}
-                </td>
-                <td *plTableCol="'diagnostico'">
-                    <span *ngIf="internacion.diagnostico?.term">
-                        {{ internacion.diagnostico?.term}}
-                    </span>
-                </td>
-                <td *plTableCol="'fechaIngreso'">
-                    {{ internacion.fechaIngreso | fecha }}
-                    {{ internacion.fechaIngreso | hora }}
-                </td>
-                <td *plTableCol="'fechaEgreso'">
-                    <span *ngIf="internacion.fechaEgreso">
-                        {{ internacion.fechaEgreso | fecha }}
-                        {{ internacion.fechaEgreso | hora }}
-                    </span>
-                </td>
-                <td *plTableCol="'obraSocial'">
-                    {{ internacion.idPrestacion?.paciente?.obraSocial?.nombre }}
-                </td>
-                <td *plTableCol="'unidadOrganizativa'">
-                    {{ internacion.idPrestacion?.unidadOrganizativa?.term }}
-                </td>
-                <td *plTableCol="'estado'">
-                    {{internacion.idPrestacion?.estadoActual?.tipo }}
-                </td>
-                <td *plTableCol="'informe'">
-                    <plex-badge *ngIf="internacion.idPrestacion" type="success"> completo</plex-badge>
-                    <plex-badge *ngIf="!internacion.idPrestacion" type="danger"> incompleto</plex-badge>
-                </td>
-            </tr>
-        </plex-table>
+        <div *ngIf="listadoInternacionCapasService.missingFilters$ | async" justify="center" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                titulo="No hay resultados"
+                subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
+            </plex-label>
+        </div>
+        <ng-container *ngIf="!(listadoInternacionCapasService.missingFilters$ | async) && mainView === 'principal'">
+            <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
+                <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                    titulo="No hay resultados"
+                    subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
+                </plex-label>
+            </div>
+            <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
+                <plex-title titulo="pacientes" size="md">
+                    <plex-table-columns [selected]="columnsVisibles">
+                    </plex-table-columns>
+                </plex-title>
+                <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
+                        [class.selected]="internacion.id === idInternacionSelected"
+                        (click)="seleccionarInternacion(internacion)">
+                    <td *plTableCol="'nombre'">
+                        {{internacion.paciente | nombre }}
+                    </td>
+                    <td *plTableCol="'documento'">
+                        {{ internacion.paciente.documento }}
+                    </td>
+                    <td *plTableCol="'diagnostico'">
+                        <span *ngIf="internacion.diagnostico?.term">
+                            {{ internacion.diagnostico?.term}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'fechaIngreso'">
+                        {{ internacion.fechaIngreso | fecha }}
+                        {{ internacion.fechaIngreso | hora }}
+                    </td>
+                    <td *plTableCol="'fechaEgreso'">
+                        <span *ngIf="internacion.fechaEgreso">
+                            {{ internacion.fechaEgreso | fecha }}
+                            {{ internacion.fechaEgreso | hora }}
+                        </span>
+                    </td>
+                    <td *plTableCol="'obraSocial'">
+                        {{ internacion.idPrestacion?.paciente?.obraSocial?.nombre }}
+                    </td>
+                    <td *plTableCol="'unidadOrganizativa'">
+                        {{ internacion.idPrestacion?.unidadOrganizativa?.term }}
+                    </td>
+                    <td *plTableCol="'estado'">
+                        {{internacion.idPrestacion?.estadoActual?.tipo }}
+                    </td>
+                    <td *plTableCol="'informe'">
+                        <plex-badge *ngIf="internacion.idPrestacion" type="success"> completo</plex-badge>
+                        <plex-badge *ngIf="!internacion.idPrestacion" type="danger"> incompleto</plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
 
         <ng-container *ngIf="mainView !== 'principal'">
             <vista-prestacion [idPrestacion]="mainView.id">
