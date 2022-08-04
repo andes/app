@@ -215,24 +215,6 @@ export class DatosContactoComponent implements OnInit {
         }
     }
 
-    onFocusout(type, value) {
-        let item = null;
-        for (const elem of this.paciente.contacto) {
-            if (elem.tipo === type || elem.valor === value) {
-                item = elem;
-            }
-        }
-        if (!item) {
-            this.addContacto(type, value);
-        } else {
-            if (!item.valor) {
-                item.valor = value;
-            } else if (item.valor !== value) {
-                this.addContacto(type, value);
-            }
-        }
-    }
-
     // notificación para activar cuenta al guardar
     mobileNotify(data) {
         this.mobileApp.emit(data);

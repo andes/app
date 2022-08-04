@@ -187,25 +187,6 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         }
     }
 
-    onFocusout(type, value) {
-        let item = null;
-        for (const elem of this.profesional.contactos) {
-            if (elem.tipo === type || elem.valor === value) {
-                item = elem;
-            }
-        }
-        if (!item) {
-            this.addContacto(type, value);
-        } else {
-            if (!item.valor) {
-                item.valor = value;
-            } else if (item.valor !== value) {
-                this.addContacto(type, value);
-            }
-        }
-    }
-
-
     contactoTelefonico(index) {
         const tipoContacto = this.profesional.contactos[index].tipo;
         return tipoContacto === 'fijo' || tipoContacto?.id === 'fijo' || tipoContacto === 'celular' || tipoContacto?.id === 'celular';
@@ -249,6 +230,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     save($event) {
         if ($event.formValid) {
+            this.profesional.contactos.forEach(c => c.tipo = (typeof c.tipo === 'string') ? c.tipo : c.tipo.id );
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);

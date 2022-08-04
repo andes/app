@@ -15,7 +15,7 @@ const shiroTrie = require('shiro-trie');
     templateUrl: 'arbol-permisos-item.component.html'
 })
 
-export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewInit {
+export class ArbolPermisosItemComponent implements OnInit, OnChanges {
 
     private shiro = shiroTrie.new();
     public state = false;
@@ -34,9 +34,6 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
-
-    ngAfterViewInit() {
-    }
 
     constructor(
         private conceptosTurneablesService: ConceptosTurneablesService,
