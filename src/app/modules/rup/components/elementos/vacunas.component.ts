@@ -228,7 +228,7 @@ export class VacunasComponent extends RUPComponent implements OnInit {
     }
 
     controlEtareo(edadMinima, edadMaxima) {
-        return this.paciente.edad > edadMinima && (edadMaxima === 0 || this.paciente.edad < edadMaxima);
+        return this.paciente.edad >= edadMinima && (edadMaxima === 0 || this.paciente.edad < edadMaxima);
     }
 
     onValidate() {
