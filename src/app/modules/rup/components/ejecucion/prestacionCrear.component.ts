@@ -52,35 +52,19 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
-    get btnLabel() {
-        if (this.opcion === 'fueraAgenda') {
-            return 'INICIAR PRESTACIÓN';
-        } else {
-            return 'DAR TURNO AUTOCITADO';
-        }
-    }
-
-    btnClick() {
-        if (this.opcion === 'fueraAgenda') {
-            this.iniciarPrestacion();
-        } else {
-            this.darTurnoAutocitado();
-        }
-    }
-
-    constructor(private router: Router,
-                private route: ActivatedRoute,
-                private plex: Plex, public auth: Auth,
-                public servicioAgenda: AgendaService,
-                public servicioPrestacion: PrestacionesService,
-                private location: Location,
-                private osService: ObraSocialCacheService,
-                private pacienteService: PacienteService,
-                private hudsService: HUDSService) { }
+    constructor(
+        private router: Router, private route: ActivatedRoute,
+        private plex: Plex, public auth: Auth,
+        public servicioAgenda: AgendaService,
+        public servicioPrestacion: PrestacionesService,
+        private location: Location,
+        private osService: ObraSocialCacheService,
+        private pacienteService: PacienteService,
+        private hudsService: HUDSService
+    ) { }
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
-
 
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
@@ -122,7 +106,7 @@ export class PrestacionCrearComponent implements OnInit {
     /**
      * Vuelve a la página anterior
      */
-    cancelar() {
+    volver() {
         this.location.back();
     }
 
@@ -214,7 +198,6 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     darTurnoAutocitado() {
-
         // Hay paciente?
         this.existePaciente();
         const params = {
@@ -363,6 +346,7 @@ export class PrestacionCrearComponent implements OnInit {
             this.pacienteService.checkFallecido(paciente);
             this.paciente = paciente;
             this.buscandoPaciente = false;
+            this.darTurnoAutocitado();
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }

@@ -1,9 +1,10 @@
 <plex-layout main="8">
     <plex-layout-main>
         <plex-title main titulo="Crear Prestación">
-            <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
+            <plex-button type="danger" label="Volver" (click)="volver()">
             </plex-button>
-            <plex-button [label]="btnLabel" type="success" (click)="btnClick()"
+            <plex-button *ngIf="opcion === 'fueraAgenda'" label="INICIAR PRESTACIÓN" type="success"
+                         (click)="iniciarPrestacion()"
                          [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada" class="ml-1">
             </plex-button>
             <plex-wrapper>
@@ -39,7 +40,7 @@
             <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
             <!-- Lista de Agendas para dar turnos autocitados -->
-            <autocitar-turno *ngIf="showAutocitar && paciente" class="autocitar-turno"
+            <autocitar-turno *ngIf="opcion==='autocitar' && showAutocitar && paciente" class="autocitar-turno"
                              (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
                              [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar">
             </autocitar-turno>
