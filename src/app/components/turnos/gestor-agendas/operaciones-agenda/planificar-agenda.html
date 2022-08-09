@@ -8,13 +8,18 @@
                 </plex-bool>
                 <plex-button type="danger" label="Cancelar" size="md" (click)="cancelar()" size="sm">
                 </plex-button>
-                <plex-button class="mx-1" *ngIf="!hideGuardar && !alertas.length"
-                             [disabled]="!form.valid || !formSidebar.valid" label="Guardar" validateForm="true"
-                             type="success" (click)="onSave($event, false)" title="Guardar" size="sm">
+                <plex-button class="mx-1" [disabled]="!form.valid  || !formSidebar.valid || hideGuardar || alertas.length" label="Guardar" validateForm="true"
+                             autodisabled="true" type="success" (click)="onSave($event, false)" title="Guardar" size="sm">
                 </plex-button>
+<<<<<<< HEAD
                 <plex-button *ngIf="!hideGuardar && !alertas.length && !dinamica"
                              [disabled]="!form.valid || !formSidebar.valid" label="Guardar y clonar" validateForm="true"
                              type="primary" (click)="onSave($event, true)" size="sm">
+=======
+                <plex-button [disabled]="!form.valid || !formSidebar.valid || hideGuardar || alertas.length" 
+                             label="Guardar y clonar" autodisabled="true" validateForm="true" type="primary" (click)="onSave($event, true)"
+                             size="sm">
+>>>>>>> 4f2eb57af (feat(CIT): plan. agenda: filtrar prof por prestaciones)
                 </plex-button>
             </plex-title>
             <!-- Alertas de profesional y espacio físico -->
@@ -49,11 +54,12 @@
                              [multiple]="true" [required]="true" (change)="cambioPrestaciones()"
                              [closeAfterSelect]="true">
                 </plex-select>
-                <plex-select [disabled]="!modelo.horaFin" [(ngModel)]="modelo.profesionales" label="Equipo de Salud"
+                    <plex-select [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length" [(ngModel)]="modelo.profesionales" label="Equipo de Salud"
                              name="modelo.profesionales" (getData)="loadProfesionales($event)" [multiple]="true"
                              labelField="apellido + ' ' + nombre" (change)="verificarProfesional()"
-                             [closeAfterSelect]="true">
-                </plex-select>
+                             [closeAfterSelect]="true" hintType="info" >
+                    </plex-select>
+                
             </plex-grid>
             <!-- Tipo de agenda -->
             <plex-title titulo="Tipo de agenda" size="md"></plex-title>
