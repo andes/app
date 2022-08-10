@@ -57,7 +57,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public secciones: any[] = [];
     public seccionesActivas: any[] = [];
 
-    private capa: string;
+    public capa: string;
     private ambito: string;
     private idInternacion: string;
     private selectedBuffer = new BehaviorSubject({});
@@ -71,7 +71,7 @@ export class PlanIndicacionesComponent implements OnInit {
     );
 
     get sidebarOpen() {
-        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion;
+        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion || this.showMotivoRechazo;
     }
 
     public detener$ = this.botones$.pipe(
@@ -86,11 +86,11 @@ export class PlanIndicacionesComponent implements OnInit {
     );
 
     get puedeCrear() {
-        return this.capa === 'medica' || this.capa === 'interconsultores';
+        return this.capa === 'medica';
     }
 
     get puedeEditar() {
-        return this.indicacionView?.capa === this.capa;
+        return this.capa === 'medica';
     }
 
     constructor(
@@ -165,8 +165,7 @@ export class PlanIndicacionesComponent implements OnInit {
             })
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
-            if (this.capa === 'enfermeria') {
-                // solo indicaciones activas actuales
+            if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
                 this.indicaciones = datos.filter(i => i.estadoActual.tipo === 'active' && this.isToday(i.estadoActual.fecha));
             } else {
                 this.indicaciones = datos.filter(i => {
@@ -279,6 +278,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onSelectIndicacion(indicacion) {
         if (!this.nuevaIndicacion) {
+            this.showMotivoRechazo = false;
             this.indicacionEventoSelected = null;
             if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
                 this.indicacionView = indicacion;
@@ -289,7 +289,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onIndicacionesCellClick(indicacion, hora) {
-        if (indicacion.estado.tipo !== 'draft') {
+        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft') {
             this.indicacionEventoSelected = indicacion;
             this.horaSelected = hora;
             this.indicacionView = null;
@@ -440,13 +440,14 @@ export class PlanIndicacionesComponent implements OnInit {
         this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
     }
 
-    // capa interconsultories ------------------------------------
+    // capa interconsultores ------------------------------------
 
     onVerificar(indicacion, flag: boolean) {
         this.indicacionAVerificar = indicacion;
         if (flag) {
             this.saveVerificacion();
         } else {
+            this.indicacionView = false;
             this.toggleShowMotivoRechazo();
         }
     }
@@ -460,6 +461,7 @@ export class PlanIndicacionesComponent implements OnInit {
             this.indicacionAVerificar = indicacion;
         }
         this.showMotivoRechazo = !this.showMotivoRechazo;
+        this.onClose();
     }
 
     saveVerificacion(motivo?: string) {
