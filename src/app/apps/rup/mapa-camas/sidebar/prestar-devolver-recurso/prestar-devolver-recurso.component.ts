@@ -54,30 +54,27 @@ export class PrestarDevolverRecursoComponent implements OnInit {
         if (!this.accionPermitida) {
             return;
         }
-        const esMovimiento = this.esOrganizacionV2 && cama.estado === 'ocupada'; // organizaciones-v2 (usan capas unificadas)
         const datosCama: any = {
             _id: this.cama.id,
-            esMovimiento,
-            unidadOrganizativa: (this.accion === 'devolver') ? cama.unidadOrganizativaOriginal : this.selectedUnidadOrganizativa
+            esMovimiento: true,
+            unidadOrganizativa: (this.accion === 'devolver') ? cama.unidadOrganizativaOriginal : this.selectedUnidadOrganizativa,
+            estado: cama.estado
         };
         let saveRequest;
-        if (esMovimiento) { // Para organizaciones-v2 solo deberia modificar capa médica
-            const idMovimiento = new ObjectID().toString();
-            datosCama.extras = { idMovimiento };
-            datosCama.estado = cama.estado;
-            /** Como la cama está ocupada, se debe generar un estado nuevo con un idMovimiento
-             *  de manera que esta acción pueda ser rastreable y eliminarse en caso de ser necesario.
-            */
+        if (this.esOrganizacionV2) {
+            if (cama.estado === 'ocupada') {
+                /** Como la cama está ocupada, se debe generar un estado nuevo con un idMovimiento
+                 *  de manera que esta acción pueda ser rastreable y eliminarse en caso de ser necesario.
+                */
+                const idMovimiento = new ObjectID().toString();
+                datosCama.extras = { idMovimiento };
+            }
             saveRequest = this.camasHTTP.save(this.ambito, 'medica', this.fecha, datosCama);
         } else {
-            if (this.esOrganizacionV2) {
-                saveRequest = this.camasHTTP.save(this.ambito, 'medica', this.fecha, datosCama);
-            } else {
-                saveRequest = forkJoin([
-                    this.camasHTTP.save(this.ambito, 'estadistica', this.fecha, datosCama),
-                    this.camasHTTP.save(this.ambito, 'medica', this.fecha, datosCama)
-                ]);
-            }
+            saveRequest = forkJoin([
+                this.camasHTTP.save(this.ambito, 'estadistica', this.fecha, datosCama),
+                this.camasHTTP.save(this.ambito, 'medica', this.fecha, datosCama)
+            ]);
         }
         saveRequest.subscribe(() => {
             const title = this.accion === 'prestar' ? 'Recurso prestado' : 'Recurso devuelto';
