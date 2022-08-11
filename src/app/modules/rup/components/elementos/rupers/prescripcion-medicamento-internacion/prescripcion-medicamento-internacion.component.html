@@ -46,7 +46,7 @@
                      tooltipPosition="left" [disabled]="registro.valor.frecuencias.length === 1" class="ml-1">
         </plex-button>
     </plex-title>
-    
+
     <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
         <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia" [data]="frecuencias$ | async"
                      (change)="valuesChange()" label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
@@ -62,8 +62,8 @@
         </plex-datetime>
 
         <plex-grid *ngIf="i === 0" cols="2">
-            <plex-bool class="mb-3" type="slide" name="boolUnicaVez" justify="start" label="Única Vez" [(ngModel)]="registro.valor.unicaVez"
-                       (change)="onChangeUnicaVez($event)" span="2">
+            <plex-bool class="mb-3" type="slide" name="boolUnicaVez" justify="start" label="Única Vez"
+                       [(ngModel)]="registro.valor.unicaVez" (change)="onChangeUnicaVez($event)" span="2">
             </plex-bool>
             <plex-text *ngIf="registro.valor.unicaVez" [multiline]="true" [(ngModel)]="registro.valor.motivoUnicaVez"
                        name="indicaciones" span="2">
@@ -81,12 +81,13 @@
 
 <ng-container *ngIf="soloValores">
     <plex-grid cols="3" size="sm">
-        <plex-label titulo="Medicamento" [subtitulo]="registro.valor.nombre || '(no definido)'">
+        <plex-label titulo="Medicamento" [subtitulo]="registro.valor.nombre || 'Sin especificar'">
         </plex-label>
-        <plex-label *ngIf="registro.valor.via" titulo="Via de Administración" [subtitulo]="registro.valor.via.term ">
+        <plex-label *ngIf="registro.valor.via" titulo="Via de Administración"
+                    [subtitulo]="registro.valor.via.term || 'Sin especificar'">
         </plex-label>
         <plex-label *ngIf="registro.valor.presentacion" titulo="Unidad de presentación"
-                    [subtitulo]="registro.valor.presentacion.term">
+                    [subtitulo]="registro.valor.presentacion.term || 'Sin especificar'">
         </plex-label>
     </plex-grid>
 
@@ -98,7 +99,7 @@
         </plex-label>
         <plex-label titulo="Velocidad Infusión" [subtitulo]="frecuencia.velocidad || 'Sin especificar'">
         </plex-label>
-        <plex-label titulo="Horario"
+        <plex-label *ngIf="frecuencia.horario" titulo="Horario"
                     [subtitulo]="frecuencia.horario ? (frecuencia.horario | hora) : frecuencia.frecuencia?.nombre">
         </plex-label>
         <plex-label *ngIf="registro.valor.motivoUnicaVez" span="3" titulo="Motivo Única Vez" span="3"

@@ -101,16 +101,8 @@ export class PlanIndicacionesComponent implements OnInit {
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
-        this.getInternacion().subscribe((resumen) => {
-            this.pacienteService.getById(resumen.paciente.id).subscribe(paciente => {
-                this.paciente = paciente;
-                this.plex.setNavbarItem(HeaderPacienteComponent, { paciente });
-            });
-            this.actualizar();
-        });
         this.getInternacion().pipe(
             switchMap(resumen => {
-                this.internacion = resumen;
                 return this.pacienteService.getById(resumen.paciente.id).pipe(
                     map(paciente => {
                         this.paciente = paciente;
