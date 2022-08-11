@@ -2,7 +2,19 @@ import { Component, Input, OnChanges } from '@angular/core';
 
 @Component({
     selector: 'in-indicacion-detalle',
-    templateUrl: './indicacion-detalle.component.html'
+    templateUrl: './indicacion-detalle.component.html',
+    styles: [`
+        .light {
+            background-color: #003a51;
+            padding: 1em 0.5em;
+            margin: 3px 0;
+        }
+        .dark {
+            background-color: #003449;
+            padding: 1em 0.5em;
+            margin: 3px 0;
+        }
+    `]
 })
 export class IndicacionDetalleComponent implements OnChanges {
     init = false;

@@ -35,16 +35,20 @@
 
 <plex-title titulo="historial de estados" size="sm"></plex-title>
 
-<plex-list>
-    <plex-item *ngFor="let estado of indicacion.estados">
+<ng-container *ngFor="let estado of indicacion.estados; let i = index">
+    <plex-grid type="full" size="lg" cols="7" class="{{ i % 2 === 0 ? 'light' : 'dark' }}">
         <plex-label size="md" case="capitalize" titulo="fecha" subtitulo="{{ estado.fecha | fecha }}"></plex-label>
         <plex-label size="md" case="capitalize" titulo="hora" subtitulo="{{ estado.fecha | hora }}"></plex-label>
-        <plex-label size="md" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}">
+        <plex-label size="md" case="capitalize" titulo="equipo de salud" subtitulo="{{ estado.createdBy | nombre }}"
+                    span="2">
         </plex-label>
-        <plex-label *ngIf="estado.motivo" size="md" case="capitalize" titulo="motivo" subtitulo="{{ estado.motivo }}">
-        </plex-label>
-        <plex-badge [color]="estado.tipo | indicacionColor">
+        <div span="2">
+            <plex-label *ngIf="estado.motivo" size="md" case="capitalize" titulo="motivo"
+                        subtitulo="{{ estado.motivo }}">
+            </plex-label>
+        </div>
+        <plex-badge align="center" [color]="estado.tipo | indicacionColor">
             {{ estado.tipo | indicacionLabel }}
         </plex-badge>
-    </plex-item>
-</plex-list>
+    </plex-grid>
+</ng-container>
