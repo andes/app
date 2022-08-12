@@ -21,7 +21,8 @@ export class PrestarDevolverRecursoComponent implements OnInit {
 
     public unidadesOrganizativas$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
         cache(),
-        pluck('unidadesOrganizativas')
+        pluck('unidadesOrganizativas'),
+        map(unidadesOrganizativas => unidadesOrganizativas.filter(uo => uo.id !== this.cama.unidadOrganizativa.id))
     );
 
     public fecha;
