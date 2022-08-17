@@ -51,10 +51,12 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
                 if (consultas.length) {
                     const fechaPrestacion = moment(this.prestacion.updatedAt || this.prestacion.createdAt);
                     // filtramos por consultas menores a 9 meses
-                    consultas = consultas.filter(c => moment(c.fecha).add(9, 'month').diff(fechaPrestacion) > 0 && c.registro.valor && !c.registro.valorManual)
-                        .sort((a, b) => {
-                            return moment(b.fecha).diff(moment(a.fecha));
-                        });
+                    if (consultas.length !== 1) {
+                        consultas = consultas.filter(c => moment(c.fecha).add(9, 'month').diff(fechaPrestacion) > 0 && c.registro.valor && !c.registro.valorManual)
+                            .sort((a, b) => {
+                                return moment(b.fecha).diff(moment(a.fecha));
+                            });
+                    }
                     const ultimaConsulta = consultas[0]?.registro;
                     const esFutura = moment(ultimaConsulta.updatedAt).diff(fechaPrestacion) > 0;
 
