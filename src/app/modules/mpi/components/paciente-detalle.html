@@ -40,45 +40,54 @@
                     <span *ngIf="!relaciones[0].numeroIdentificacion && !relaciones[0].documento">: Sin DNI</span>
                 </div>
 
-                <plex-label *ngIf="showDatosTutor()" titulo="" subtitulo="" justify="center">{{relaciones[0] | nombre}}
+                <plex-label *ngIf="showDatosTutor()" titulo="" subtitulo=""
+                            [direction]="orientacion === 'vertical' ? 'column' : 'row'">{{relaciones[0] | nombre}}
                 </plex-label>
 
                 <span *ngIf=" !showDatosTutor()">Sin DNI</span>
             </ng-container>
         </div>
 
-        <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}" justify="{{ justificado }}">
+        <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
-                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}" justify="{{ justificado }}">
+                    subtitulo="{{ (paciente.fechaNacimiento | fecha) || 'Desconocida' }}"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"
-                    justify="{{ justificado }}"></plex-label>
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
 
         <plex-label *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}"
-                    justify="{{ justificado }}"></plex-label>
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
 
         <plex-label *ngIf="showFinanciador && obraSocial" [titulo]="financiadorLabel"
-                    subtitulo="{{ obraSocial.financiador}}" justify="{{ justificado }}"></plex-label>
+                    subtitulo="{{ obraSocial.financiador}}" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
+
         <plex-label *ngIf="!obraSocial" [titulo]="financiadorLabel" subtitulo="{{ 'Sin obra social' }}"
-                    justify="{{ justificado }}">
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado"
-                    [subtitulo]="numeroAfiliado" justify="{{ justificado }}">
+                    [subtitulo]="numeroAfiliado" [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showLugarNacimiento" titulo="Lugar de Nacimiento"
-                    [subtitulo]="lugarNacimiento || 'No indica'" justify="{{ justificado }}">
+                    [subtitulo]="lugarNacimiento || 'No indica'"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
         <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion || 'Sin dirección'"
-                    justify="{{ justificado }}">
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
-        <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto" justify="{{ justificado }}">
+        <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
     </plex-detail>
 
