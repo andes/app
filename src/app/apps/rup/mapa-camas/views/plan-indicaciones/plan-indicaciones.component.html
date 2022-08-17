@@ -1,7 +1,8 @@
 <plex-layout [main]="sidebarOpen ? 8 : 12">
     <plex-layout-main>
         <plex-title titulo="Plan de indicaciones" main>
-            <alergias-paciente *ngIf="paciente" [paciente]="paciente" [cardSize]="sidebarOpen ? 'full' : 'half'"></alergias-paciente>
+            <alergias-paciente *ngIf="paciente" [paciente]="paciente" [cardSize]="sidebarOpen ? 'full' : 'half'">
+            </alergias-paciente>
             <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange()" [max]="hoy">
             </plex-datetime>
 
@@ -25,11 +26,11 @@
                                                  tooltipPosition="bottom">
                                     </plex-button>
 
-                                    <plex-dropdown *ngIf="borradores.length" right="true" size="sm" label="Validar borradores"
-                                                    type="warning">
+                                    <plex-dropdown *ngIf="borradores.length" right="true" size="sm"
+                                                   label="Validar borradores" type="warning">
                                         <plex-button label="Seleccionadas" type="link"
-                                                        [disabled]="!soloBorradoresSeleccionados"
-                                                        (click)="onValidar(true)">
+                                                     [disabled]="!soloBorradoresSeleccionados"
+                                                     (click)="onValidar(true)">
                                         </plex-button>
                                         <plex-button label="Todas" type="link" (click)="onValidar(false)">
                                         </plex-button>
@@ -56,7 +57,7 @@
                                         <h6 class="item__title">{{ seccion.concepto.term }}</h6>
                                     </div>
                                     <div class="item__botonera">
-                                        <plex-button *ngIf="isToday" size="sm" type="info" icon="plus"
+                                        <plex-button *ngIf="isToday() && puedeCrear" size="sm" type="info" icon="plus"
                                                      (click)="onNuevaIndicacion(seccion)" tooltip="Agregar indicación">
                                         </plex-button>
                                         <plex-button type="info" size="sm"
@@ -69,11 +70,10 @@
 
                             <ng-container *ngIf="getItems(seccion) as indicaciones$">
                                 <tr *ngIf="!indicaciones$.length && showSecciones[seccion.concepto.term]">
-                                    <td colspan="25">
-                                        No hay indicaciones
+                                    <td *ngIf="!loading" justify="center">
+                                        <plex-label size="md">No hay indicaciones a la fecha</plex-label>
                                     </td>
                                 </tr>
-
                                 <ng-container *ngIf="showSecciones[seccion.concepto.term]">
                                     <tr [ngClass]="indicacion.estado.tipo" *ngFor="let indicacion of indicaciones$">
                                         <td justify class="item-indicacion pointer">
@@ -144,6 +144,12 @@
                             </ng-container>
                         </ng-container>
                     </ng-container>
+                    <tr *ngIf="!seccionesActivas.length">
+                        <td justify="center">
+                            <plex-loader *ngIf="loading" type="ball-beat"></plex-loader>
+                            <plex-label *ngIf="!loading" size="md">Aún no hay secciones activas</plex-label>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -159,8 +165,8 @@
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
-                <plex-button *ngIf="indicacionView.estado.tipo !== 'cancelled'" class="mr-1" type="warning" size="sm"
-                             icon="pencil" (click)="editar(indicacionView)"></plex-button>
+                <plex-button *ngIf="puedeEditar && indicacionView.estado.tipo !== 'cancelled'" class="mr-1"
+                             type="warning" size="sm" icon="pencil" (click)="editar(indicacionView)"></plex-button>
                 <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
             </in-indicacion-detalle>
         </ng-container>

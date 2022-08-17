@@ -34,9 +34,9 @@ export class PlanIndicacionesComponent implements OnInit {
     public horas = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5];
     public indicaciones = [];
     public selectedIndicacion = {};
+    public loading = false;
     public suspenderIndicacion: Boolean;
     public showSecciones = {};
-    public isToday = true;
     public hayDraft = 0;
     public soloBorradoresSeleccionados = false;
     public borradores = [];
@@ -83,6 +83,14 @@ export class PlanIndicacionesComponent implements OnInit {
         map(indicaciones => indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending'))
     );
 
+    get puedeCrear() {
+        return this.capa === 'medica' || this.capa === 'interconsultores';
+    }
+
+    get puedeEditar() {
+        return this.indicacionView?.capa === this.capa;
+    }
+
     constructor(
         private prestacionService: PrestacionesService,
         private route: ActivatedRoute,
@@ -103,6 +111,7 @@ export class PlanIndicacionesComponent implements OnInit {
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
+        this.loading = true;
         this.getInternacion().pipe(
             switchMap(resumen => {
                 return this.pacienteService.getById(resumen.paciente.id).pipe(
@@ -141,6 +150,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     actualizar() {
+        this.loading = true;
         forkJoin([
             this.planIndicacionesServices.getIndicaciones(this.idInternacion, this.fecha, this.capa),
             this.indicacionEventosService.search({
@@ -152,12 +162,16 @@ export class PlanIndicacionesComponent implements OnInit {
                 )
             })
         ]).subscribe(([datos, eventos]) => {
-            this.indicaciones = datos.filter(i => {
-                // se descartan borradores de dias anteriores
-                const inicioDia = moment(this.fecha).hours(6);
-                const finDia = moment(inicioDia).add(1, 'days');
-                return i.estadoActual.tipo !== 'draft' || moment(i.createdAt).isBetween(inicioDia, finDia, null, '[)');
-            });
+            this.indicaciones = datos;
+            if (this.capa === 'enfermeria') {
+                // solo indicaciones activas actuales
+                this.indicaciones = datos.filter(i => i.estadoActual.tipo === 'active' && this.isToday(i.estadoActual.fecha));
+            } else {
+                this.indicaciones = datos.filter(i => {
+                    // se descartan borradores de dias anteriores
+                    return i.estadoActual.tipo !== 'draft' || this.isToday(i.estadoActual.fecha);
+                });
+            }
             this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
             this.indicaciones.forEach((indicacion) => {
                 const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
@@ -182,8 +196,8 @@ export class PlanIndicacionesComponent implements OnInit {
             });
 
             this.eventos = eventosMap;
-            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
-        });
+            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft'); this.loading = false;
+        }, error => { this.loading = false; });
     }
 
 
@@ -215,8 +229,11 @@ export class PlanIndicacionesComponent implements OnInit {
         this.indicacionEventoSelected = null;
     }
 
+    isToday(fecha: Date) {
+        return moment(fecha || this.fecha).isSame(new Date(), 'day');
+    }
+
     onDateChange() {
-        this.isToday = moment(this.fecha).isSame(new Date(), 'day');
         this.actualizar();
         this.resetSelection();
     }
