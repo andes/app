@@ -1,3 +1,21 @@
+# [5.104.0](https://github.com/andes/app/compare/v5.103.0...v5.104.0) (2022-08-17)
+
+
+### Bug Fixes
+
+* **in:** guarda motivo de suspencion ([#2724](https://github.com/andes/app/issues/2724)) ([5aab794](https://github.com/andes/app/commit/5aab7942f077de61c587638282037d9dd8e01629))
+* **misc:** alinieacion de datos en detalles de paciente ([#2725](https://github.com/andes/app/issues/2725)) ([3d46566](https://github.com/andes/app/commit/3d4656600ba6cfa5c95a25aed07c71e9cb63c404))
+
+
+### Features
+
+* **CIT:** limpieza de permisos basura ([#2706](https://github.com/andes/app/issues/2706)) ([58988a4](https://github.com/andes/app/commit/58988a4af3c3a3b15cea76a786ba5ee996a79c66))
+
+
+### Reverts
+
+* Revert "feat(CIT): limpieza de permisos basura (#2706)" (#2735) ([fcb61d5](https://github.com/andes/app/commit/fcb61d575d26e5c48591043f4cbe5ac5f4fd6084)), closes [#2706](https://github.com/andes/app/issues/2706) [#2735](https://github.com/andes/app/issues/2735)
+
 # [5.103.0](https://github.com/andes/app/compare/v5.102.1...v5.103.0) (2022-08-10)
 
 
