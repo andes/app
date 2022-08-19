@@ -1,6 +1,7 @@
-<plex-layout [main]="indicacionView || indicacionEventoSelected || nuevaIndicacion || suspenderIndicacion ? 8 : 12">
+<plex-layout [main]="sidebarOpen ? 8 : 12">
     <plex-layout-main>
         <plex-title titulo="Plan de indicaciones" main>
+            <alergias-paciente *ngIf="paciente" [paciente]="paciente" [cardSize]="sidebarOpen ? 'full' : 'half'"></alergias-paciente>
             <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange()" [max]="hoy">
             </plex-datetime>
 

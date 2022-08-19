@@ -1,0 +1,24 @@
+<ng-container *ngIf="(registrosAlergia$ | async) as alergias">
+    <div *ngIf="alergias.length" class="mr-1 bordered" justify="between">
+        <plex-label class="ml-2" titulo="Paciente alérgico" [tituloBold]="false" subtitulo="" type="warning" size="md">
+        </plex-label>
+        <plex-help size="md" btnType="warning" [cardSize]="cardSize" icon="alert-circle-outline">
+            <plex-table size="sm">
+                <tr *ngFor="let registro of alergias">
+                    <td>
+                        <plex-label grow="4" titulo="{{ registro.nombre }}" subtitulo="{{ registro.fechaInicio | fecha }}"></plex-label>
+                    </td>
+                    <td *ngIf="registro.evolucion?.length">
+                        <plex-label>
+                            <b class="mr-1">Evolución:</b>
+                            <div [innerHtml]="registro.evolucion"></div>
+                        </plex-label>
+                    </td>
+                    <td *ngIf="!registro.evolucion?.length">
+                        <plex-label>Sin observaciones</plex-label>
+                    </td>
+                </tr>
+            </plex-table> 
+        </plex-help> 
+    </div>
+</ng-container>
