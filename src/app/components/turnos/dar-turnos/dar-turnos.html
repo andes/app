@@ -134,10 +134,10 @@
                             </plex-grid>
                             <plex-grid *ngIf="!opciones.profesional && opciones.tipoPrestacion" class="m-0" type="full"
                                        justify="center">
-                                <plex-label *ngIf="agenda.profesionales.length" size="md" titulo="Equipo de Salud"
+                                <plex-label *ngIf="agenda.profesionales?.length" size="md" titulo="Equipo de Salud"
                                             subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
                                 </plex-label>
-                                <plex-label *ngIf="agenda.profesionales.length === 0" size="md" titulo="Equipo de Salud"
+                                <plex-label *ngIf="agenda.profesionales?.length === 0" size="md" titulo="Equipo de Salud"
                                             subtitulo="Equipo de Salud no asignado">
                                 </plex-label>
                             </plex-grid>
