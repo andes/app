@@ -11,7 +11,8 @@
                 <plex-bool *ngIf="!item.avoidAll" (change)="expand($event)" [(ngModel)]="allModule" type="slide">
                 </plex-bool>
 
-                <plex-badge type="info" *ngIf="!allModule && itemsCount > 0" title="Hay elementos marcados adentro">
+                <plex-badge type="info" *ngIf="!allModule && itemsCount > 0" tooltip="Hay elementos marcados adentro"
+                            tooltipPosition="left">
                     <plex-icon name="asterisk"></plex-icon>
                 </plex-badge>
 
