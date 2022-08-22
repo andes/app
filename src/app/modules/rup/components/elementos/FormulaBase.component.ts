@@ -100,7 +100,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.registro.registros.map(reg => reg.valor = null);
         } else {
             delete this.registro.valorManual;
-            this.registro.valor = 0;
+            this.registro.valor = null;
         }
     }
 }
