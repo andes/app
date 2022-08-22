@@ -31,6 +31,7 @@ export class ListadoPerinatalComponent implements OnInit {
     public collapse = false;
     public sortBy: string;
     public sortOrder = 'desc';
+    public estado;
     public columns = [
         {
             key: 'fechaInicio',
@@ -114,6 +115,7 @@ export class ListadoPerinatalComponent implements OnInit {
         this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
             map(resp => this.listadoActual = resp)
         );
+        this.estado = false;
     }
 
     filtrar() {
@@ -125,6 +127,7 @@ export class ListadoPerinatalComponent implements OnInit {
         this.carnetPerinatalService.profesional.next(this.profesional);
         this.carnetPerinatalService.fechaUltimoControl.next(this.fechaUltimoControl);
         this.carnetPerinatalService.fechaProximoControl.next(this.fechaCita);
+        this.carnetPerinatalService.estado.next(this.estado);
     }
 
     onScroll() {
@@ -160,7 +163,9 @@ export class ListadoPerinatalComponent implements OnInit {
             organizacion: this.organizacion?.id,
             paciente: this.paciente || ''
         };
-
+        if (this.estado) {
+            params['estado'] = 'AUSENTE';
+        }
         this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 

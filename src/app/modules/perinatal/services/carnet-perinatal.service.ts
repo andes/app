@@ -14,6 +14,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
     public profesional = new BehaviorSubject<string>(null);
     public fechaProximoControl = new BehaviorSubject<Date>(null);
     public fechaUltimoControl = new BehaviorSubject<Date>(null);
+    public estado = new BehaviorSubject<string>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
     private skip;
@@ -29,10 +30,11 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
             this.paciente,
             this.fechaProximoControl,
             this.fechaUltimoControl,
+            this.estado,
             this.lastResults
         ).pipe(
             auditTime(0),
-            switchMap(([fechaDesde, fechaHasta, organizacion, profesional, paciente, fechaProximoControl, fechaUltimoControl, lastResults]) => {
+            switchMap(([fechaDesde, fechaHasta, organizacion, profesional, paciente, fechaProximoControl, fechaUltimoControl, estado, lastResults]) => {
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -61,12 +63,19 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                 }
                 params.fechaControl = this.queryDateParams(fechaDesde, fechaHasta);
 
-
                 return this.search(params).pipe(
                     map(resultados => {
                         const listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.skip = listado.length;
-                        return listado;
+                        if (estado) {
+                            return listado.map(l => {
+                                if ((moment().diff(moment(l?.fechaProximoControl), 'days') >= 1) && !l?.fechaFinEmbarazo) {
+                                    return l;
+                                }
+                            });
+                        } else {
+                            return listado;
+                        }
                     })
                 );
             }

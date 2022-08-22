@@ -34,7 +34,9 @@
                 <plex-select [(ngModel)]="organizacion" name="organizacion" label="Organizacion" tmOrganizaciones
                              (change)="filtrar()">
                 </plex-select>
-
+                <plex-bool label="Ausente" [(ngModel)]="estado" name="estado" type="slide" (change)="filtrar()"
+                           style="margin-top: 30px;">
+                </plex-bool>
             </div>
         </plex-wrapper>
 
@@ -46,34 +48,34 @@
                 </plex-table-columns>
             </plex-title>
             <tr *ngFor="let carnet of (listado$| plSort:table| async)" (click)="showInSidebar(carnet)"
-                [class.selected]="carnet.id===carnetSelected?.id" [class.selectable]="selectable">
-                <td *plTableCol="'fechaInicio'">{{ carnet.fecha | fecha }}</td>
-                <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
-                <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
-                <td *plTableCol="'edad'">{{ carnet.paciente | edad }}</td>
-                <td *plTableCol="'ausente'">
-                    <plex-badge *ngIf="esAusente(carnet.fechaProximoControl,carnet.fechaFinEmbarazo)" size="sm"
-                                type="danger">AUSENTE
-                        <plex-icon name="alert-circle" type="danger" size="sm"></plex-icon>
-                    </plex-badge>
-                </td>
-                <td *plTableCol="'fechaCita'">
-                    <plex-badge *ngIf="carnet.fechaProximoControl" size="sm" type="success">
-                        {{ carnet.fechaProximoControl | fecha }}
-                        <plex-icon name="calendar-today" type="success" size="sm"></plex-icon>
-                    </plex-badge>
-                    <plex-badge *ngIf="!carnet.fechaProximoControl" size="sm" type="warning">No indica
-                    </plex-badge>
-                </td>
-                <td *plTableCol="'ultimoControl'">
-                    <plex-badge size="sm" type="info">{{ carnet.fechaUltimoControl | fecha }}
-                        <plex-icon name="calendar-today" type="info" size="sm"></plex-icon>
-                    </plex-badge>
-                </td>
-                <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?
-                    'Primer Embarazo': (carnet.cantidadEmbarazos)? carnet.embarazo.term + '
-                    ('+carnet.cantidadEmbarazos+') ' : carnet.embarazo.term}}
-                </td>
+                [class.selected]="carnet?.id===carnetSelected?.id" [class.selectable]="selectable">
+                <ng-container *ngIf="carnet">
+                    <td *plTableCol="'fechaInicio'">{{ carnet.fecha | fecha }}</td>
+                    <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
+                    <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
+                    <td *plTableCol="'edad'">{{ carnet.paciente | edad }}</td>
+                    <td *plTableCol="'ausente'">
+                        <plex-badge *ngIf="esAusente(carnet.fechaProximoControl,carnet.fechaFinEmbarazo)" size="sm"
+                                    type="danger">AUSENTE
+                            <plex-icon name="alert-circle" type="danger" size="sm"></plex-icon>
+                        </plex-badge>
+                    </td>
+                    <td *plTableCol="'fechaCita'">
+                        <plex-badge *ngIf="carnet.fechaProximoControl" size="sm" type="success">
+                            {{ carnet.fechaProximoControl | fecha }}
+                            <plex-icon name="calendar-today" type="success" size="sm"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="!carnet.fechaProximoControl" size="sm" type="warning">No indica
+                        </plex-badge>
+                    </td>
+                    <td *plTableCol="'ultimoControl'">
+                        <plex-badge size="sm" type="info">{{ carnet.fechaUltimoControl | fecha }}
+                            <plex-icon name="calendar-today" type="info" size="sm"></plex-icon>
+                        </plex-badge>
+                    </td>
+                    <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?
+                        'Primer Embarazo':carnet.embarazo.term }} </td>
+                </ng-container>
             </tr>
         </plex-table>
     </plex-layout-main>
