@@ -2,6 +2,8 @@ import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { IProfesional } from '../../../interfaces/IProfesional';
 
 @Injectable()
 export class CarnetPerinatalService extends ResourceBaseHttp {
@@ -10,11 +12,11 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
     public paciente = new BehaviorSubject<string>(null);
     public fechaDesde = new BehaviorSubject<Date>(null);
     public fechaHasta = new BehaviorSubject<Date>(null);
-    public organizacion = new BehaviorSubject<string>(null);
-    public profesional = new BehaviorSubject<string>(null);
+    public organizacion = new BehaviorSubject<IOrganizacion>(null);
+    public profesional = new BehaviorSubject<IProfesional>(null);
     public fechaProximoControl = new BehaviorSubject<Date>(null);
     public fechaUltimoControl = new BehaviorSubject<Date>(null);
-    public estado = new BehaviorSubject<string>(null);
+    public estado = new BehaviorSubject<boolean>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
     private limit = 15;
     private skip;
@@ -22,7 +24,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
 
     constructor(protected server: Server) {
         super(server);
-        this.carnetsFiltrados$ = combineLatest(
+        this.carnetsFiltrados$ = combineLatest([
             this.fechaDesde,
             this.fechaHasta,
             this.organizacion,
@@ -32,7 +34,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
             this.fechaUltimoControl,
             this.estado,
             this.lastResults
-        ).pipe(
+        ]).pipe(
             auditTime(0),
             switchMap(([fechaDesde, fechaHasta, organizacion, profesional, paciente, fechaProximoControl, fechaUltimoControl, estado, lastResults]) => {
                 if (!lastResults) {
@@ -47,7 +49,7 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     skip: this.skip
                 };
                 if (paciente) {
-                    params.paciente = '^' + paciente.toUpperCase();
+                    params.paciente = '^' + (paciente as string).toUpperCase();
                 }
                 if (fechaProximoControl) {
                     params.fechaProximoControl = moment(fechaProximoControl).format('YYYY-MM-DD');;
@@ -56,21 +58,21 @@ export class CarnetPerinatalService extends ResourceBaseHttp {
                     params.fechaUltimoControl = moment(fechaUltimoControl).format('YYYY-MM-DD');
                 }
                 if (organizacion) {
-                    params.organizacion = organizacion.id;
+                    params.organizacion = (organizacion as IOrganizacion).id;
                 }
                 if (profesional) {
-                    params.profesional = profesional.id;
+                    params.profesional = (profesional as IProfesional).id;
                 }
-                params.fechaControl = this.queryDateParams(fechaDesde, fechaHasta);
+                params.fechaControl = this.queryDateParams(fechaDesde as Date, fechaHasta as Date);
 
                 return this.search(params).pipe(
                     map(resultados => {
-                        const listado = lastResults ? lastResults.concat(resultados) : resultados;
+                        const listado = lastResults ? (lastResults as any[]).concat(resultados) : resultados;
                         this.skip = listado.length;
                         if (estado) {
-                            return listado.map(l => {
-                                if ((moment().diff(moment(l?.fechaProximoControl), 'days') >= 1) && !l?.fechaFinEmbarazo) {
-                                    return l;
+                            return listado.map(elemt_list => {
+                                if ((moment().diff(moment(elemt_list?.fechaProximoControl), 'days') >= 1) && !elemt_list?.fechaFinEmbarazo) {
+                                    return elemt_list;
                                 }
                             });
                         } else {

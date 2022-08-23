@@ -10,7 +10,8 @@ import { CarnetPerinatalService } from './../services/carnet-perinatal.service';
 
 @Component({
     selector: 'listado-perinatal',
-    templateUrl: './listado-perinatal.component.html'
+    templateUrl: './listado-perinatal.component.html',
+    styleUrls: ['listado-perinatal.scss'],
 })
 export class ListadoPerinatalComponent implements OnInit {
     public fechaDesdeEntrada;
@@ -31,7 +32,7 @@ export class ListadoPerinatalComponent implements OnInit {
     public collapse = false;
     public sortBy: string;
     public sortOrder = 'desc';
-    public estado;
+    public verAusente;
     public columns = [
         {
             key: 'fechaInicio',
@@ -115,7 +116,7 @@ export class ListadoPerinatalComponent implements OnInit {
         this.listado$ = this.carnetPerinatalService.carnetsFiltrados$.pipe(
             map(resp => this.listadoActual = resp)
         );
-        this.estado = false;
+        this.verAusente = false;
     }
 
     filtrar() {
@@ -127,7 +128,7 @@ export class ListadoPerinatalComponent implements OnInit {
         this.carnetPerinatalService.profesional.next(this.profesional);
         this.carnetPerinatalService.fechaUltimoControl.next(this.fechaUltimoControl);
         this.carnetPerinatalService.fechaProximoControl.next(this.fechaCita);
-        this.carnetPerinatalService.estado.next(this.estado);
+        this.carnetPerinatalService.estado.next(this.verAusente);
     }
 
     onScroll() {
@@ -161,11 +162,9 @@ export class ListadoPerinatalComponent implements OnInit {
             fechaHasta: this.fechaHastaEntrada,
             profesional: this.profesional?.id,
             organizacion: this.organizacion?.id,
-            paciente: this.paciente || ''
+            paciente: this.paciente || '',
+            estado: 'AUSENTE'
         };
-        if (this.estado) {
-            params['estado'] = 'AUSENTE';
-        }
         this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 
@@ -191,7 +190,7 @@ export class ListadoPerinatalComponent implements OnInit {
             } else {
                 this.plex.toast('success', 'Nota eliminada con éxito');
             }
-        }, error => {
+        }, () => {
             this.plex.toast('danger', 'El carnet no pudo ser actualizado');
         });
     }

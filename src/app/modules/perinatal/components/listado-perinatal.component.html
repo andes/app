@@ -34,8 +34,8 @@
                 <plex-select [(ngModel)]="organizacion" name="organizacion" label="Organizacion" tmOrganizaciones
                              (change)="filtrar()">
                 </plex-select>
-                <plex-bool label="Ausente" [(ngModel)]="estado" name="estado" type="slide" (change)="filtrar()"
-                           style="margin-top: 30px;">
+                <plex-bool class="bool-posicion" label="Ausente" [(ngModel)]="verAusente" name="estado" type="slide"
+                           (change)="filtrar()">
                 </plex-bool>
             </div>
         </plex-wrapper>
@@ -74,7 +74,9 @@
                         </plex-badge>
                     </td>
                     <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?
-                        'Primer Embarazo':carnet.embarazo.term }} </td>
+                        'Primer Embarazo': (carnet.cantidadEmbarazos)? carnet.embarazo.term + '
+                        ('+carnet.cantidadEmbarazos+') ' : carnet.embarazo.term}}
+                    </td>
                 </ng-container>
             </tr>
         </plex-table>
