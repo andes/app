@@ -1,4 +1,7 @@
-<plex-title titulo="Registrar evento"></plex-title>
+<plex-title titulo="Registrar evento" size="md">
+    <plex-button class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()"></plex-button>
+    <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()"></plex-button>
+</plex-title>
 
 <plex-detail>
     <plex-icon *ngIf="indicacion.seccion.term === ' - sin sección -'" name="documento" class="icon--noSeccion">
@@ -29,8 +32,3 @@
 
 <plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [required]="true" [html]="true">
 </plex-text>
-
-<div justify class="mt-2">
-    <plex-button type="danger" (click)="onCancelar()">Cancelar</plex-button>
-    <plex-button type="success" (click)="onGuardar()">Aceptar</plex-button>
-</div>

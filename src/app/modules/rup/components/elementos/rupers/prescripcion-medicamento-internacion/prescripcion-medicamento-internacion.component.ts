@@ -1,5 +1,7 @@
 import { Unsubscribe } from '@andes/shared';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 
@@ -17,15 +19,14 @@ import { RUPComponent } from '../../../core/rup.component';
 @RupElement('SolicitudPrescripcionMedicamentoInternacionComponent')
 export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPComponent implements OnInit, AfterViewInit {
 
-
     unidadesSnomed = '258684004 OR 258682000 OR 258685003 OR 258773002 OR 258989006 OR 439139003 OR 404218003';
-    frecuenciaSnomed = '422133006 OR 421355008 OR 255270004 OR 123035007 OR 123034006 Or 123033000 OR 123032005 OR 123031003 OR 123030002 OR 123027009 OR 73775008 OR 71997007 OR 27814009 OR  21029003';
     viasSnomed = '764295003 OR 761829007 OR 738987007 OR 738986003 OR 738983006 OR 738956005 OR 738952007 OR 738948007 OR 255560000 OR 255559005 OR 421606006';
     formasFarmaceuticasSnomed = `732997007 OR 732994000 OR 732987003 OR 732986007 OR 732981002 OR 732978007 OR 732937005 OR 732936001 OR 
-        739009002 OR 739006009 OR 738998008 OR 385099005 OR 739005008`;
-
+    739009002 OR 739006009 OR 738998008 OR 385099005 OR 739005008`;
+    frecuencias$: Observable<any>;
     afterInit = false;
     showModal = false;
+    backUpFrecuencias = [];
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -34,6 +35,7 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     ngOnInit() {
+        this.frecuencias$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         if (!this.registro.valor) {
             this.registro.valor = {
                 nombre: '',
@@ -88,6 +90,22 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         this.registro.valor.nombre = nombre;
     }
 
+    onChangeUnicaVez(event) {
+        const frecuencias = this.registro.valor.frecuencias;
+        if (event.value) {
+            this.backUpFrecuencias = frecuencias.slice(0, frecuencias.length);
+            this.registro.valor.frecuencias = [{
+                horario: frecuencias[0].horario,
+                velocidad: frecuencias[0].velocidad
+            }];
+        } else {
+            delete this.registro.valor.motivoUnicaVez;
+            if (this.backUpFrecuencias.length) {
+                this.registro.valor.frecuencias = this.backUpFrecuencias;
+            }
+        }
+    }
+
     @Unsubscribe()
     loadConceptos(event) {
         if (!event) { return; }
@@ -132,12 +150,6 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
                     this.registro.valor.via = cts[0];
                 }
             });
-        }
-    }
-
-    onChangeUnicaVez(event) {
-        if (!event.value) {
-            delete this.registro.valor.motivoUnicaVez;
         }
     }
 }
