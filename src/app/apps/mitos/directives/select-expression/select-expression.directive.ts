@@ -44,13 +44,16 @@ export class SelectExpressionDirective implements OnInit, OnChanges {
                 const inputText: string = $event.query;
 
                 if (inputText && inputText.length > 2) {
-                    if (this.text !== inputText.slice(0, 3)) {
-                        this.text = inputText.slice(0, 3);
+                    this.text = inputText.slice(0, 3);
 
+                    let cacheItem = window.localStorage.getItem(this.text);
+                    if (cacheItem) {
+                        cacheItem = JSON.parse(cacheItem).value;
+                        $event.callback(cacheItem);
+                    } else {
                         if (this.lastCallSubscription) {
                             this.lastCallSubscription.unsubscribe();
                         }
-
                         this.lastCallSubscription = this.snomed.getQuery({ expression: this.snomedExpression, words: this.text, type: 'inferred' }).pipe(
                             tap(results => $event.callback(results)),
                             map((results: any[]) => results.length ? results : null),
