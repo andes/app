@@ -70,8 +70,10 @@
                         <plex-icon name="calendar-today" type="info" size="sm"></plex-icon>
                     </plex-badge>
                 </td>
-                <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?'Primer
-                    Embarazo':carnet.embarazo.term }}</td>
+                <td *plTableCol="'numeroEmbarazo'" class="text-capitalize">{{ carnet.primeriza?
+                    'Primer Embarazo': (carnet.cantidadEmbarazos)? carnet.embarazo.term + '
+                    ('+carnet.cantidadEmbarazos+') ' : carnet.embarazo.term}}
+                </td>
             </tr>
         </plex-table>
     </plex-layout-main>
