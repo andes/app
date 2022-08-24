@@ -1,3 +1,15 @@
+# [5.105.0](https://github.com/andes/app/compare/v5.104.0...v5.105.0) (2022-08-24)
+
+
+### Bug Fixes
+
+* **citas:** agendas sin profesionales ([#2742](https://github.com/andes/app/issues/2742)) ([3bbdeba](https://github.com/andes/app/commit/3bbdeba77d9d430b08640ec348b4320020648da9))
+
+
+### Features
+
+* **GDU-50:** correccion de tooltip ([#2738](https://github.com/andes/app/issues/2738)) ([2ab8de6](https://github.com/andes/app/commit/2ab8de6603ec4350b09926d1ec82553c1ee1a9cb))
+
 # [5.104.0](https://github.com/andes/app/compare/v5.103.0...v5.104.0) (2022-08-17)
 
 
