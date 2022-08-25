@@ -166,11 +166,11 @@ export class PlanIndicacionesComponent implements OnInit {
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
             if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
-                this.indicaciones = datos.filter(i => i.estadoActual.tipo === 'active' && this.isToday(i.estadoActual.fecha));
+                this.indicaciones = datos.filter(i => i.estado.tipo === 'active' && this.isToday(i.estado.fecha));
             } else {
                 this.indicaciones = datos.filter(i => {
                     // se descartan borradores de dias anteriores
-                    return i.estadoActual.tipo !== 'draft' || this.isToday(i.estadoActual.fecha);
+                    return i.estado.tipo !== 'draft' || this.isToday(i.estado.fecha);
                 });
             }
             this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
@@ -453,7 +453,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     deshacerVerificacion(indicacion) {
-        indicacion.verificacion = null;
+        indicacion.estado.verificacion = null;
     }
 
     toggleShowMotivoRechazo(indicacion = null) {
@@ -465,11 +465,12 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     saveVerificacion(motivo?: string) {
-        const verificacion = {
+        const estadoVerificado = this.indicacionAVerificar.estado;
+        estadoVerificado.verificacion = {
             estado: motivo ? 'rechazada' : 'aceptada',
             motivoRechazo: motivo || null
         };
-        this.planIndicacionesServices.update(this.indicacionAVerificar.id, { verificacion }).subscribe(() => {
+        this.planIndicacionesServices.updateEstado(this.indicacionAVerificar.id, estadoVerificado).subscribe(() => {
             this.actualizar();
             this.plex.toast('success', 'Verificación guardada exitosamente');
         });
