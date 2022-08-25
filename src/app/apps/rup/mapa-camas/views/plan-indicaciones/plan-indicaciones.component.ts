@@ -37,6 +37,8 @@ export class PlanIndicacionesComponent implements OnInit {
     public loading = false;
     public suspenderIndicacion: Boolean;
     public showSecciones = {};
+    public showMotivoRechazo = false; // interconsultores
+    public indicacionAVerificar; // interconsultores
     public hayDraft = 0;
     public soloBorradoresSeleccionados = false;
     public borradores = [];
@@ -55,7 +57,7 @@ export class PlanIndicacionesComponent implements OnInit {
     public secciones: any[] = [];
     public seccionesActivas: any[] = [];
 
-    private capa: string;
+    public capa: string;
     private ambito: string;
     private idInternacion: string;
     private selectedBuffer = new BehaviorSubject({});
@@ -69,7 +71,7 @@ export class PlanIndicacionesComponent implements OnInit {
     );
 
     get sidebarOpen() {
-        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion;
+        return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion || this.showMotivoRechazo;
     }
 
     public detener$ = this.botones$.pipe(
@@ -84,11 +86,11 @@ export class PlanIndicacionesComponent implements OnInit {
     );
 
     get puedeCrear() {
-        return this.capa === 'medica' || this.capa === 'interconsultores';
+        return this.capa === 'medica';
     }
 
     get puedeEditar() {
-        return this.indicacionView?.capa === this.capa;
+        return this.capa === 'medica';
     }
 
     constructor(
@@ -163,13 +165,12 @@ export class PlanIndicacionesComponent implements OnInit {
             })
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
-            if (this.capa === 'enfermeria') {
-                // solo indicaciones activas actuales
-                this.indicaciones = datos.filter(i => i.estadoActual.tipo === 'active' && this.isToday(i.estadoActual.fecha));
+            if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
+                this.indicaciones = datos.filter(i => i.estado.tipo === 'active' && this.isToday(i.estado.fecha));
             } else {
                 this.indicaciones = datos.filter(i => {
                     // se descartan borradores de dias anteriores
-                    return i.estadoActual.tipo !== 'draft' || this.isToday(i.estadoActual.fecha);
+                    return i.estado.tipo !== 'draft' || this.isToday(i.estado.fecha);
                 });
             }
             this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
@@ -277,6 +278,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onSelectIndicacion(indicacion) {
         if (!this.nuevaIndicacion) {
+            this.showMotivoRechazo = false;
             this.indicacionEventoSelected = null;
             if (!this.indicacionView || this.indicacionView.id !== indicacion.id) {
                 this.indicacionView = indicacion;
@@ -287,7 +289,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onIndicacionesCellClick(indicacion, hora) {
-        if (indicacion.estado.tipo !== 'draft') {
+        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft') {
             this.indicacionEventoSelected = indicacion;
             this.horaSelected = hora;
             this.indicacionView = null;
@@ -436,5 +438,41 @@ export class PlanIndicacionesComponent implements OnInit {
 
     goTo() {
         this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
+    }
+
+    // capa interconsultores ------------------------------------
+
+    onVerificar(indicacion, flag: boolean) {
+        this.indicacionAVerificar = indicacion;
+        if (flag) {
+            this.saveVerificacion();
+        } else {
+            this.indicacionView = false;
+            this.toggleShowMotivoRechazo();
+        }
+    }
+
+    deshacerVerificacion(indicacion) {
+        indicacion.estado.verificacion = null;
+    }
+
+    toggleShowMotivoRechazo(indicacion = null) {
+        if (indicacion) {
+            this.indicacionAVerificar = indicacion;
+        }
+        this.showMotivoRechazo = !this.showMotivoRechazo;
+        this.onClose();
+    }
+
+    saveVerificacion(motivo?: string) {
+        const estadoVerificado = this.indicacionAVerificar.estado;
+        estadoVerificado.verificacion = {
+            estado: motivo ? 'rechazada' : 'aceptada',
+            motivoRechazo: motivo || null
+        };
+        this.planIndicacionesServices.updateEstado(this.indicacionAVerificar.id, estadoVerificado).subscribe(() => {
+            this.actualizar();
+            this.plex.toast('success', 'Verificación guardada exitosamente');
+        });
     }
 }

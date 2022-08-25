@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <td style="min-width: 500px;">
-                            <section class="item-indicacion">
+                            <section *ngIf="capa !== 'interconsultores'" class="item-indicacion">
                                 <div class="item__container"></div>
                                 <div class="item__botonera">
                                     <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
@@ -125,6 +125,44 @@
                                                     borrador
                                                 </plex-badge>
 
+                                                <ng-container
+                                                              *ngIf="indicacion.estado.verificacion?.estado as verificacion">
+                                                    <plex-badge class="circle"
+                                                                tooltip="{{ verificacion === 'aceptada' ? 'Aceptada' : 'Rechazada' }}"
+                                                                type="{{ verificacion === 'aceptada' ? 'success' : 'danger' }}">
+                                                        <plex-icon
+                                                                   name="{{ verificacion === 'aceptada' ? 'check' : 'close' }}">
+                                                        </plex-icon>
+                                                    </plex-badge>
+                                                    <div *ngIf="capa !== 'interconsultores' && verificacion === 'rechazada'"
+                                                         hint="Motivo: {{ indicacion.estado.verificacion.motivoRechazo }}"
+                                                         hintType="info" hintIcon="eye">
+                                                    </div>
+                                                    <ng-container *ngIf="capa === 'interconsultores'">
+                                                        <plex-button *ngIf="verificacion === 'rechazada'" type="info"
+                                                                     size="sm" icon="eye"
+                                                                     tooltip="Ver motivo de rechazo"
+                                                                     (click)="toggleShowMotivoRechazo(indicacion)">
+                                                        </plex-button>
+                                                        <plex-button type="warning" size="sm" icon="undo"
+                                                                     tooltip="Volver a verificar"
+                                                                     (click)="deshacerVerificacion(indicacion)">
+                                                        </plex-button>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <!-- Botones de aceptacion / rechazo -->
+                                                <ng-container
+                                                              *ngIf="capa === 'interconsultores' && !indicacion.estado.verificacion">
+                                                    <plex-button type="success" size="sm" icon="check" tooltip="Aceptar"
+                                                                 [autodisable]="true"
+                                                                 (click)="onVerificar(indicacion, true)">
+                                                    </plex-button>
+                                                    <plex-button type="danger" size="sm" icon="close" tooltip="Rechazar"
+                                                                 [autodisable]="true"
+                                                                 (click)="onVerificar(indicacion, false)">
+                                                    </plex-button>
+                                                </ng-container>
+
                                                 <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
                                                      in-plan-indicacion-botonera [indicacion]="indicacion"
                                                      (refresh)="actualizar()"
@@ -177,8 +215,14 @@
             </in-plan-indicacion-evento>
         </ng-container>
         <ng-container *ngIf="suspenderIndicacion && !indicacionView && !indicacionEventoSelected">
-            <suspension-indicacion (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()">
-            </suspension-indicacion>
+            <motivo-suspension (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()">
+            </motivo-suspension>
+        </ng-container>
+
+        <ng-container *ngIf="showMotivoRechazo">
+            <motivo-suspension [motivo]="indicacionAVerificar?.estado.verificacion?.motivoRechazo"
+                               (guardar)="saveVerificacion($event)" (cancelar)="toggleShowMotivoRechazo()">
+            </motivo-suspension>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

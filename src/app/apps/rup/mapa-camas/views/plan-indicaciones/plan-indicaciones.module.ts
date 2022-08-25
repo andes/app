@@ -14,7 +14,7 @@ import { PlanIndicacionEventoComponent } from './indicacion-eventos/indicacion-e
 import { PlanIndicacionesBotoneraComponent } from './indicaciones-botonera/indicaciones-botonera.component';
 import { PlanIndicacionesNuevaIndicacionComponent } from './nueva-indicacion/nueva-indicacion.component';
 import { PlanIndicacionesComponent } from './plan-indicaciones.component';
-import { SuspensionIndicacionComponent } from './motivo-suspension/motivo-suspension.component';
+import { MotivoSuspensionComponent } from './motivo-suspension/motivo-suspension.component';
 import { AlergiasPacienteComponent } from './alergias-paciente.component';
 
 @NgModule({
@@ -35,16 +35,14 @@ import { AlergiasPacienteComponent } from './alergias-paciente.component';
         PlanIndicacionesResumenComponent,
         PlanIndicacionesBotoneraComponent,
         PlanIndicacionesNuevaIndicacionComponent,
-        SuspensionIndicacionComponent,
+        MotivoSuspensionComponent,
         DetalleIndicacionPipe,
         AlergiasPacienteComponent
     ],
     exports: [
         IndicacionColorPipe,
         IndicacionLabelPipe,
-        PlanIndicacionesResumenComponent,
-        AlergiasPacienteComponent,
-        SuspensionIndicacionComponent
+        PlanIndicacionesResumenComponent
     ],
     providers: [
         { provide: RupEjecucionService, useClass: PlanIndicacionesServices }
