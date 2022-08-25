@@ -135,7 +135,10 @@
                 </suspender-turno>
             </plex-help>
         </ng-container>
-        <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog" titulo="Configuración inicial del bloque">
+        <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog">
+            <plex-title titulo="Prestaciones asociadas" size="sm"></plex-title>
+            <plex-label titulo="{{prestacionTerm}}"></plex-label>
+            <plex-title titulo="Configuración inicial del bloque" size="sm"></plex-title>
             <div class="row">
                 <div class="col-12">
                     <div class="container mt-2 mb-2">

@@ -19,6 +19,8 @@ import * as moment from 'moment';
 export class TurnosComponent implements OnInit {
     private _agenda: IAgenda;
     public idOrganizacion = this.auth.organizacion.id;
+    public prestacion;
+    public prestacionTerm;
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
@@ -144,7 +146,6 @@ export class TurnosComponent implements OnInit {
             this.items.push({ label: 'Bloque ' + (index + 1), key: index });
         }
         this.bloqueSelected = this.agenda.bloques[this.mostrar];
-
         this.showSeleccionarTodos = (this.bloqueSelected.turnos.length > 0);
     }
 
@@ -421,8 +422,11 @@ export class TurnosComponent implements OnInit {
     }
 
     cambiarOpcion(opcion) {
+        this.prestacion = '';
         this.mostrar = opcion;
         this.bloqueSelected = this.agenda.bloques[opcion];
+        this.bloqueSelected.tipoPrestaciones.forEach(prest => this.prestacion = this.prestacion.concat(prest.term + ' - '));
+        this.prestacionTerm = this.prestacion.slice(0, -2);
         this.todos = false;
     }
 }
