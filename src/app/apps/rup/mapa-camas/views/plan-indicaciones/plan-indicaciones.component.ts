@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 import { PlanIndicacionesEventosServices } from '../../services/plan-indicaciones-eventos.service';
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
 
 @Component({
     selector: 'in-plan-indicacion',
@@ -28,10 +29,10 @@ export class PlanIndicacionesComponent implements OnInit {
     public indicacion;
     public paciente: any;
     public fecha = new Date();
-    public hoy = new Date();
+    public hoy;
     public suspenderAnterior = false;
     public indicacionAnterior;
-    public horas = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5];
+    public horas ;
     public indicaciones = [];
     public selectedIndicacion = {};
     public loading = false;
@@ -56,7 +57,7 @@ export class PlanIndicacionesComponent implements OnInit {
     };
     public secciones: any[] = [];
     public seccionesActivas: any[] = [];
-
+    public horaOrganizacion;
     public capa: string;
     private ambito: string;
     private idInternacion: string;
@@ -104,12 +105,22 @@ export class PlanIndicacionesComponent implements OnInit {
         private hudsService: HUDSService,
         private auth: Auth,
         private maquinaEstadoService: MaquinaEstadosHTTP,
+        private organizacionService: OrganizacionService,
         private router: Router,
-        public ejecucionService: RupEjecucionService
-    ) { }
+        public ejecucionService: RupEjecucionService,
+        private cd: ChangeDetectorRef,
+    ) {
+    }
 
 
     ngOnInit() {
+        this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
+            tap(config => {
+                this.horaOrganizacion=config.planIndicaciones.horaInicio;
+                this.horas=this.getHorariosGrilla();
+            })
+        ).subscribe();
+        this.hoy=moment();
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
@@ -158,8 +169,8 @@ export class PlanIndicacionesComponent implements OnInit {
             this.indicacionEventosService.search({
                 internacion: this.idInternacion,
                 fecha: this.indicacionEventosService.queryDateParams(
-                    moment(this.fecha).startOf('day').add(6, 'h').toDate(),
-                    moment(this.fecha).startOf('day').add(6 + 24, 'h').toDate(),
+                    moment(this.fecha).startOf('day').add(this.horaOrganizacion, 'h').toDate(),
+                    moment(this.fecha).startOf('day').add(this.horaOrganizacion + 24, 'h').toDate(),
                     false
                 )
             })
@@ -187,9 +198,9 @@ export class PlanIndicacionesComponent implements OnInit {
 
             const eventosMap = {};
             // filtramos eventos por fecha y hora segun tablero
-            const comienzoTablero = moment(this.fecha).hours(6);
-            const finTablero = moment(this.fecha).add(1, 'days').hours(6);
-            eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[)'));
+            const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
+            const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion-1);
+            eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
             eventos.forEach(evento => {
                 eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
                 const hora = moment(evento.fecha).hour();
@@ -289,15 +300,26 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onIndicacionesCellClick(indicacion, hora) {
-        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft') {
-            this.indicacionEventoSelected = indicacion;
-            this.horaSelected = hora;
-            this.indicacionView = null;
+        const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
+        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft' && fechaHora.isSame(moment(), 'day')) {
+            this.onIndicaciones(indicacion, hora);
+        } else {
+            if (fechaHora.isSame(moment(), 'day')) {
+                this.onIndicaciones(indicacion, hora);
+            }
         }
+    }
+
+    private onIndicaciones(indicacion, hora) {
+        this.indicacionEventoSelected = indicacion;
+        this.horaSelected = hora;
+        this.indicacionView = null;
+        this.cd.detectChanges();
     }
 
     onEventos(debeActualizar: boolean) {
         this.indicacionEventoSelected = null;
+        this.cd.detectChanges();
         this.horaSelected = null;
         if (debeActualizar) {
             this.actualizar();
@@ -438,6 +460,21 @@ export class PlanIndicacionesComponent implements OnInit {
 
     goTo() {
         this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
+    }
+
+    getHorariosGrilla() {
+        const res=[];
+        const horaIncio= this.horaOrganizacion;
+        res.push(horaIncio);
+        let horas = horaIncio+1;
+        while (horas!==horaIncio ) {
+            res.push(horas);
+            horas++;
+            if (horas===24) {
+                horas = 0;
+            }
+        }
+        return res;
     }
 
     // capa interconsultores ------------------------------------
