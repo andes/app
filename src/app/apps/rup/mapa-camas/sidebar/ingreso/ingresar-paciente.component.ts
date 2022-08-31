@@ -626,7 +626,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.snapshot$.subscribe(camas => {
                 //  si para la nueva fecha la cama seleccionada se encuentra ocupada, anulamos la seleccion
                 const camaSeleccionada = camas.filter(cama => cama.id === this.cama?.id)?.shift();
-                if (camaSeleccionada?.estado === 'ocupada') {
+                if (!camaSeleccionada || camaSeleccionada?.estado === 'ocupada') {
                     this.plex.toast('danger', 'La cama seleccionada no está disponible en la fecha indicada');
                     this.mapaCamasService.select(null);
                 }

@@ -48,6 +48,9 @@ export class HistorialDetalleComponent implements OnInit {
                     const timeB = new Date(b.fecha).getTime();
                     return (timeB - timeA) !== 0 ? (timeB - timeA) : (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
                 });
+            }),
+            map((historial: ISnapshot[]) => {
+                return historial.filter(h => h.esMovimiento !== false);
             })
         );
     }
