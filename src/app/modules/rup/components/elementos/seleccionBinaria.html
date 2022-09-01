@@ -19,7 +19,7 @@
                 <label>
                     {{label}}
                 </label>
-                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.descripcion }}
+                {{ registro | RUPSoloValor }}
             </ng-template>
         </div>
     </div>

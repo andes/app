@@ -81,7 +81,7 @@
         <div class="row" *ngIf="registro.valor.evolucion">
             <div class="col-8 readonly">
                 <span>Evolución </span>
-                <span [innerHTML]="registro.valor.evolucion"></span>
+                <span [innerHTML]="registro | RUPSoloValor"></span>
             </div>
             <div class="col-4 readonly" *ngIf="registro.concepto.semanticTag === 'trastorno'">
                 <span>Inicio aproximado </span>
