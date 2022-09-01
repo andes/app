@@ -2,11 +2,10 @@
     <plex-text (change)="filtrar()" [(ngModel)]="filtros.paciente" label="paciente">
     </plex-text>
     <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaIngresoDesde"
-                   name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600"
-                   [required]="true">
+                   name="fechaIngresoDesde" label="Ingreso desde" [max]="filtros.fechaIngresoHasta" [debounce]="600" >
     </plex-datetime>
     <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta' label="Ingreso hasta"
-                   (change)="filtrarFecha()" [min]="filtros.fechaIngresoDesde" [debounce]="600" [required]="true">
+                   (change)="filtrarFecha()" [min]="filtros.fechaIngresoDesde" [debounce]="600" >
     </plex-datetime>
     <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaEgresoDesde" name="fechaIngresoDesde"
                    label="Egreso desde" [max]="filtros.fechaEgresoHasta" [debounce]="600">

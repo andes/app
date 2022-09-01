@@ -68,22 +68,18 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrarFecha() {
-        if (moment(this.filtros.fechaIngresoDesde).isValid()) {
-            this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
-        }
-
-        if (moment(this.filtros.fechaIngresoHasta).isValid()) {
-            this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
-        }
-
+        this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
+        this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
         this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
         this.listadoInternacionService.fechaEgresoHasta.next(this.filtros.fechaEgresoHasta);
     }
 
     reporteInternaciones() {
         const params = {
-            desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
-            hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
+            desde: this.filtros.fechaIngresoDesde ? moment(this.filtros.fechaIngresoDesde).startOf('d').format() : undefined,
+            hasta: this.filtros.fechaIngresoHasta ? moment(this.filtros.fechaIngresoHasta).startOf('d').format() : undefined,
+            egresoDesde: this.filtros.fechaEgresoDesde ? moment(this.filtros.fechaEgresoDesde).startOf('d').format() : undefined,
+            egresoHasta: this.filtros.fechaEgresoHasta ? moment(this.filtros.fechaEgresoHasta).endOf('d').format() : undefined,
             organizacion: this.auth.organizacion.id
         };
         this.requestInProgress = true;

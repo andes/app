@@ -1,4 +1,5 @@
 import { Plex } from '@andes/plex';
+import { cache } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -17,13 +18,6 @@ export class ListadoInternacionCapasComponent implements OnInit {
     selectedPrestacion$: Observable<IPrestacion>;
 
     idInternacionSelected: string = null;
-
-    // VARIABLES
-    public listaInternacion;
-    public listaInternacionAux;
-    public cambiarUO = false;
-    public puedeValidar = false;
-    public puedeRomper = false;
 
     mainView$ = this.mapaCamasService.mainView;
 
@@ -98,7 +92,7 @@ export class ListadoInternacionCapasComponent implements OnInit {
             name: 'Listado de Internacion Medica'
         }]);
 
-        this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$;
+        this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
     }
 
     seleccionarPrestacion(resumen: IResumenInternacion) {

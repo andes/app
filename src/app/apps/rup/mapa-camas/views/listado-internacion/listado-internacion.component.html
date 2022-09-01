@@ -1,82 +1,96 @@
-<ng-container *ngIf="fechaIngresoHasta$ | async as fechaHasta">
-    <ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
-        <plex-layout [main]="selectedPrestacion.id !== null ? 8 : 12">
-            <plex-layout-main *ngIf="mainView$ | async as mainView">
-                <header *ngIf="mainView === 'principal'">
-                    <plex-title titulo="LISTADO DE INTERNACION">
-                        <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
-                    </plex-title>
-
-                    <app-filtros-internacion></app-filtros-internacion>
-                </header>
-
-                <plex-table *ngIf="mainView === 'principal'" [columns]="columns" #table="plTable" [offset]="0">
-                    <plex-table-columns>
-                    </plex-table-columns>
-                    <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
-                        (click)="seleccionarPrestacion(internacion, selectedPrestacion)" class="selectable"
-                        [class.selected]=" internacion.id === selectedPrestacion.id">
-                        <td *plTableCol="'apellido-nombre'">
-                            {{ internacion.paciente | nombre }}
-                        </td>
-                        <td *plTableCol="'documento'">
-                            {{ internacion.paciente.documento }}
-                        </td>
-                        <td *plTableCol="'fechaIngreso'">
-                            {{ devuelveFecha(internacion,"ingreso") | fecha }}
-                            {{ devuelveFecha(internacion,"ingreso") | hora }}
-                        </td>
-                        <td *plTableCol="'fechaEgreso'">
-                            <span *ngIf="devuelveFecha(internacion, 'egreso') as fechaEgreso">
-                                {{ fechaEgreso | fecha }}
-                                {{ fechaEgreso | hora }}
-                            </span>
-                        </td>
-                        <td class="w-25" *plTableCol="'obraSocial'">
-                            {{ internacion.paciente.obraSocial?.nombre }}
-                        </td>
-                        <td *plTableCol="'unidadOrganizativa'">
-                            {{ internacion.unidadOrganizativa?.term }}
-                        </td>
-                        <td *plTableCol="'estado'">
-                            {{internacion.estadoActual.tipo }}
-                        </td>
-                    </tr>
-                </plex-table>
-
-                <ng-container *ngIf="mainView !== 'principal'">
-                    <vista-prestacion [idPrestacion]="mainView.id">
-                        <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()">
-                        </plex-button>
-                    </vista-prestacion>
-                </ng-container>
-
-            </plex-layout-main>
-
-            <plex-layout-sidebar type="invert">
-                <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES" size="md">
-                    <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
-                                 [disabled]="!puedeValidar || editando"
-                                 (click)="validar(selectedPrestacion, fechaHasta)">
-                    </plex-button>
-                    <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACION" type="warning" size="sm"
-                                 (click)="romperValidacion(selectedPrestacion, fechaHasta)">
-                    </plex-button>
-                    <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
-                    </plex-button>
+<ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
+    <plex-layout [main]="selectedPrestacion.id !== null ? 8 : 12">
+        <plex-layout-main *ngIf="mainView$ | async as mainView">
+            <header *ngIf="mainView === 'principal'">
+                <plex-title titulo="LISTADO DE INTERNACION">
+                    <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
                 </plex-title>
-                <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (accion)="onAccion($event)"
-                                         (cambiarCama)="cambiarCama()">
-                </app-internacion-detalle>
-                <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
-                                    (accionDesocupar)="accionDesocupar($event)">
-                    <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+
+            </header>
+
+            <ng-container *ngIf="mainView === 'principal'">
+                <app-filtros-internacion></app-filtros-internacion>
+                <div *ngIf="listadoInternacionService.missingFilters$ | async" justify="center" class="mt-5">
+                    <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                                titulo="No hay resultados"
+                                subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
+                    </plex-label>
+                </div>
+                <ng-container *ngIf="!(listadoInternacionService.missingFilters$ | async)">
+                    <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
+                        <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                                    titulo="No hay resultados"
+                                    subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
+                        </plex-label>
+                    </div>
+                    <plex-table *ngIf="(listaInternacion$ | async)?.length" [columns]="columns" #table="plTable" [offset]="0">
+                        <plex-table-columns>
+                        </plex-table-columns>
+                        <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
+                            (click)="seleccionarPrestacion(internacion, selectedPrestacion)" class="selectable"
+                            [class.selected]=" internacion.id === selectedPrestacion.id">
+                            <td *plTableCol="'apellido-nombre'">
+                                {{ internacion.paciente | nombre }}
+                            </td>
+                            <td *plTableCol="'documento'">
+                                {{ internacion.paciente.documento }}
+                            </td>
+                            <td *plTableCol="'fechaIngreso'">
+                                {{ devuelveFecha(internacion,"ingreso") | fecha }}
+                                {{ devuelveFecha(internacion,"ingreso") | hora }}
+                            </td>
+                            <td *plTableCol="'fechaEgreso'">
+                                <span *ngIf="devuelveFecha(internacion, 'egreso') as fechaEgreso">
+                                    {{ fechaEgreso | fecha }}
+                                    {{ fechaEgreso | hora }}
+                                </span>
+                            </td>
+                            <td class="w-25" *plTableCol="'obraSocial'">
+                                {{ internacion.paciente.obraSocial?.nombre }}
+                            </td>
+                            <td *plTableCol="'unidadOrganizativa'">
+                                {{ internacion.unidadOrganizativa?.term }}
+                            </td>
+                            <td *plTableCol="'estado'">
+                                {{internacion.estadoActual.tipo }}
+                            </td>
+                        </tr>
+                    </plex-table>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="mainView !== 'principal'">
+                <vista-prestacion [idPrestacion]="mainView.id">
+                    <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()">
                     </plex-button>
-                </app-desocupar-cama>
-                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
-                                  (cancel)="volverADetalle()">
-                </app-cambiar-cama>
-            </plex-layout-sidebar>
-        </plex-layout>
-    </ng-container>
+                </vista-prestacion>
+            </ng-container>
+
+        </plex-layout-main>
+
+        <plex-layout-sidebar type="invert">
+            <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES" size="md">
+                <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
+                                [disabled]="!puedeValidar || editando"
+                                (click)="validar(selectedPrestacion, fechaHasta)">
+                </plex-button>
+                <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACION" type="warning" size="sm"
+                                (click)="romperValidacion(selectedPrestacion, fechaHasta)">
+                </plex-button>
+                <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
+                </plex-button>
+            </plex-title>
+            <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (accion)="onAccion($event)"
+                                        (cambiarCama)="cambiarCama()">
+            </app-internacion-detalle>
+            <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
+                                (accionDesocupar)="accionDesocupar($event)">
+                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+                </plex-button>
+            </app-desocupar-cama>
+            <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
+                                (cancel)="volverADetalle()">
+            </app-cambiar-cama>
+        </plex-layout-sidebar>
+    </plex-layout>
 </ng-container>

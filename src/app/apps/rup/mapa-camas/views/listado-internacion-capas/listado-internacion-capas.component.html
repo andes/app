@@ -1,46 +1,61 @@
 <plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'">
-            <plex-title titulo="HISTORIAL MOVIMIENTOS ">
+            <plex-title titulo="HISTORIAL MOVIMIENTOS">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
-            <app-filtros-listado-capas></app-filtros-listado-capas>
         </header>
-
-        <plex-table [columns]="columns" #table="plTable" *ngIf="mainView === 'principal'">
-            <plex-title titulo="Listado Internacion">
-                <plex-table-columns>
-                </plex-table-columns>
-            </plex-title>
-
-            <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
-                [class.selected]="internacion.id === idInternacionSelected"
-                (click)="seleccionarPrestacion(internacion)">
-                <td *plTableCol="'nombre'">
-                    {{internacion.paciente | nombre }}
-                </td>
-                <td *plTableCol="'documento'">
-                    {{ internacion.paciente.documento }}
-                </td>
-                <td *plTableCol="'diagnostico'">
-                    <span *ngIf="internacion.diagnostico?.term">
-                        {{ internacion.diagnostico?.term}}
-                    </span>
-                </td>
-                <td *plTableCol="'fechaIngreso'">
-                    {{ internacion.fechaIngreso | fecha }}
-                    {{ internacion.fechaIngreso | hora }}
-                </td>
-                <td *plTableCol="'fechaEgreso'">
-                    <span *ngIf="internacion.fechaEgreso">
-                        {{ internacion.fechaEgreso | fecha }}
-                        {{ internacion.fechaEgreso | hora }}
-                    </span>
-                </td>
-
-            </tr>
-        </plex-table>
-
+        <app-filtros-listado-capas></app-filtros-listado-capas>
+        <ng-container *ngIf="mainView === 'principal'">
+            <div *ngIf="listadoInternacionCapasService.missingFilters$ | async" justify="center" class="mt-5">
+                <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                            titulo="No hay resultados"
+                            subtitulo="Debe ingresar un rango valido de fechas de ingreso o egreso">
+                </plex-label>
+            </div>
+            <ng-container *ngIf="!(listadoInternacionCapasService.missingFilters$ | async)">
+                <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
+                    <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                                titulo="No hay resultados"
+                                subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
+                    </plex-label>
+                </div>
+                <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
+                    <plex-title titulo="Listado Internacion">
+                        <plex-table-columns>
+                        </plex-table-columns>
+                    </plex-title>
+        
+                    <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
+                        [class.selected]="internacion.id === idInternacionSelected"
+                        (click)="seleccionarPrestacion(internacion)">
+                        <td *plTableCol="'nombre'">
+                            {{internacion.paciente | nombre }}
+                        </td>
+                        <td *plTableCol="'documento'">
+                            {{ internacion.paciente.documento }}
+                        </td>
+                        <td *plTableCol="'diagnostico'">
+                            <span *ngIf="internacion.diagnostico?.term">
+                                {{ internacion.diagnostico?.term}}
+                            </span>
+                        </td>
+                        <td *plTableCol="'fechaIngreso'">
+                            {{ internacion.fechaIngreso | fecha }}
+                            {{ internacion.fechaIngreso | hora }}
+                        </td>
+                        <td *plTableCol="'fechaEgreso'">
+                            <span *ngIf="internacion.fechaEgreso">
+                                {{ internacion.fechaEgreso | fecha }}
+                                {{ internacion.fechaEgreso | hora }}
+                            </span>
+                        </td>
+                    </tr>
+                </plex-table>
+            </ng-container>
+    
+        </ng-container>
+        
         <ng-container *ngIf="mainView !== 'principal'">
             <vista-prestacion [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>

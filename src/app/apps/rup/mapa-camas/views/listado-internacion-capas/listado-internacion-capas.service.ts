@@ -1,4 +1,5 @@
 import { Auth } from '@andes/auth';
+import { cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
@@ -15,6 +16,7 @@ export class ListadoInternacionCapasService {
     public fechaEgresoDesde = new BehaviorSubject<Date>(null);
     public fechaEgresoHasta = new BehaviorSubject<Date>(null);
     public refresh = new BehaviorSubject<any>(null);
+    public missingFilters$: Observable<boolean>;
     public estado = new BehaviorSubject<any>(null);
 
     constructor(
@@ -25,12 +27,11 @@ export class ListadoInternacionCapasService {
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
-            this.fechaEgresoHasta,
-            this.refresh
+            this.fechaEgresoHasta
         ]).pipe(
             auditTime(0),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
-                if (fechaIngresoDesde && fechaIngresoHasta) {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+                if ((fechaIngresoDesde && fechaIngresoHasta) || fechaEgresoDesde && fechaEgresoHasta) {
                     return this.resumenHTTP.search({
                         organizacion: this.auth.organizacion.id,
                         ingreso: this.resumenHTTP.queryDateParams(fechaIngresoDesde, fechaIngresoHasta),
@@ -50,15 +51,30 @@ export class ListadoInternacionCapasService {
             })
         );
 
-        this.listaInternacionFiltrada$ = combineLatest(
+        this.listaInternacionFiltrada$ = combineLatest([
             this.listaInternacion$,
             this.pacienteText,
             this.estado
-        ).pipe(
+        ]).pipe(
             map(([listaInternacion, paciente, estado]) =>
                 this.filtrarListaInternacion(listaInternacion, paciente)
             )
         );
+
+        this.missingFilters$ = combineLatest([
+            this.fechaIngresoDesde,
+            this.fechaIngresoHasta,
+            this.fechaEgresoDesde,
+            this.fechaEgresoHasta
+        ]).pipe(
+            map(([ingresoDesde, ingresoHasta, egresoDesde, egresoHasta]) => {
+                return !(
+                    (moment(ingresoDesde).isValid() && moment(ingresoHasta).isValid()) ||
+                    (moment(egresoDesde).isValid() && moment(egresoHasta).isValid())
+                );
+            })
+        ),
+        cache();
 
     }
 
