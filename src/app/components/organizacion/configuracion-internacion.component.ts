@@ -25,6 +25,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
     @ViewChild('form', { static: true }) form: NgForm;
 
     private capasOrganizacionActual: IMaquinaEstados[] = [];
+    private accionesInternacion;
     public organizacionActual;
     public usaCapasUnificadas = false;
     public capasTotales: ICapaRef[] = [];
@@ -34,6 +35,12 @@ export class ConfiguracionInternacionComponent implements OnInit {
     private expression = '<<284548004'; // con esta query de snomed se traen todos los servicios
     public columns = [
         {
+            key: 'concepto',
+            label: 'Concepto',
+            sorteable: false,
+            opcional: false
+        },
+        {
             key: 'registro',
             label: 'Registro',
             sorteable: false,
@@ -42,12 +49,6 @@ export class ConfiguracionInternacionComponent implements OnInit {
         {
             key: 'unidadOrganizativa',
             label: 'Unidad Organizativa',
-            sorteable: false,
-            opcional: false
-        },
-        {
-            key: 'concepto',
-            label: 'Concepto',
             sorteable: false,
             opcional: false
         },
@@ -67,12 +68,12 @@ export class ConfiguracionInternacionComponent implements OnInit {
         public snomed: SnomedService,
         public auth: Auth,
         private plex: Plex
-    ) {}
+    ) { }
 
     ngOnInit() {
         const idOrganizacionActual = this.route.snapshot.params['id'];
 
-        this.organizacionService.get({ internacionDefault : true }).pipe(
+        this.organizacionService.get({ internacionDefault: true }).pipe(
             switchMap(organizaciones => {
                 if (!organizaciones[0]) {
                     return throwError('no hay organizacion por defecto');
@@ -88,6 +89,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
         ).subscribe(([capasOrgActual, capasOrgReferencia, orgActual, orgReferencia]: [IMaquinaEstados[], IMaquinaEstados[], IOrganizacion, IOrganizacion]) => {
             this.organizacionActual = orgActual;
             this.usaCapasUnificadas = orgActual.usaEstadisticaV2;
+            this.accionesInternacion = capasOrgReferencia.find(item => item.capa === 'medica').estados[1].acciones;
             this.capasTotales = capasOrgReferencia.map(capa => ({ id: capa.capa, nombre: capa.capa }))
                 .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
@@ -162,12 +164,14 @@ export class ConfiguracionInternacionComponent implements OnInit {
             });
         }
     }
+
     loadConceptos(event) {
+        const conceptosInternacion = this.accionesInternacion.map(accion => accion.parametros.concepto);
         if (event.query) {
             this.snomed.get({
                 search: event.query,
                 semanticTag: ['procedimiento']
-            }).subscribe(result => event.callback(result));
+            }).subscribe(result => event.callback(result.concat(conceptosInternacion)));
         } else {
             event.callback([]);
         }

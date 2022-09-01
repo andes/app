@@ -40,6 +40,11 @@
                             <plex-table-columns>
                             </plex-table-columns>
                             <tr *ngFor="let accion of acciones; let i = index">
+                                <td *plTableCol="'concepto'">
+                                    <plex-select name="concepto-{{acciones.length - i}}" placeholder="Ingrese un concepto..." idField="conceptId"
+                                                labelField="term" (getData)="loadConceptos($event)"
+                                                [(ngModel)]="accion.parametros.concepto" [required]="true"></plex-select>
+                                </td>
                                 <td *plTableCol="'registro'">
                                     <plex-text name="nombre-{{acciones.length - i}}" label="" [(ngModel)]="accion.label" [required]="true">
                                     </plex-text>
@@ -53,11 +58,6 @@
                                                     [(ngModel)]="accion?.parametros.unidadOrg" span="2">
                                         </plex-select>
                                     </plex-grid>
-                                </td>
-                                <td *plTableCol="'concepto'">
-                                    <plex-select name="concepto-{{acciones.length - i}}" placeholder="Ingrese un concepto..." idField="conceptId"
-                                                labelField="term" (getData)="loadConceptos($event)"
-                                                [(ngModel)]="accion.parametros.concepto" [required]="true"></plex-select>
                                 </td>
                                 <td *plTableCol="'acciones'">
                                     <plex-button class="w-10" label="" size="sm" type="danger" icon="delete"
