@@ -1,0 +1,32 @@
+<ng-container *ngIf="registro.concepto.semanticTag === 'trastorno'">
+    <form #form="ngForm" *ngIf="paciente">
+        <div *ngIf="elementoRUP && registro">
+            <plex-label *ngIf="evoluciones?.length"
+                        titulo="Fecha de inicio de los síntomas: {{ (consultaTrastornoOriginal?.registros[0]?.valor | fecha) || 'Sin registro' }}"
+                        [tituloBold]="true">
+            </plex-label>
+            <ng-container *ngIf="elementoRUP.requeridos?.length">
+                <plex-grid size="sm" type="full" cols="{{ elementoRUP.style.columns }}">
+                    <div span="4">
+                        <plex-label titulo="Estado actual" [tituloBold]="true"></plex-label>
+                        <plex-select *ngIf="!soloValores" [(ngModel)]="registro.valor.estado" name="estadoActual"
+                                     [data]="estados" [required]="true" (change)="formatearEstado()">
+                        </plex-select>
+                        <plex-label *ngIf="soloValores" case="capitalize">{{ registro.valor.estado }}</plex-label>
+                    </div>
+                    <ng-container *ngFor=" let item of elementoRUP.requeridos; let i=index">
+                        <div *ngIf="item.elementoRUP" span="{{item.style.columns}}">
+                            <ng-conteiner *ngIf="!evoluciones?.length || item.concepto.conceptId === '229059009'">
+                                <!-- Si se esta evolucionando, solo se muestra el campo 'evolucion' -->
+                                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                                     [prestacion]="prestacion" [registro]="registro.registros[i]"
+                                     [soloValores]="soloValores" span="{{ item.style.columns }}">
+                                </rup>
+                            </ng-conteiner>
+                        </div>
+                    </ng-container>
+                </plex-grid>
+            </ng-container>
+        </div>
+    </form>
+</ng-container>

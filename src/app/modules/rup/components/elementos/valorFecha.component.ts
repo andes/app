@@ -13,9 +13,9 @@ export class ValorFechaComponent extends RUPComponent implements OnInit {
             case 'date':
                 return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY') : 'Sin fecha';
             case 'datetime':
-                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY hh:mm') : 'Sin fecha';
+                return (this.registro.valor) ? moment(this.registro.valor).format('DD/MM/YYYY HH:mm') : 'Sin fecha';
             case 'time':
-                return (this.registro.valor) ? moment(this.registro.valor).format('hh:mm') : 'Sin hora';
+                return (this.registro.valor) ? moment(this.registro.valor).format('HH:mm') : 'Sin hora';
             default:
                 break;
         }
