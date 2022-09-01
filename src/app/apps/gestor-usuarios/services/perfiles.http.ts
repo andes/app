@@ -29,7 +29,7 @@ export class PerfilesHttp {
             .pipe(
                 merge(this.searchReset$),
                 switchMap((query) => {
-                    return this.find(query);
+                    return this.find({ sort: 'nombre' });
                 }),
                 cache()
             );
