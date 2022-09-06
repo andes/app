@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaciones-eventos.service';
-
 @Component({
     selector: 'in-plan-indicacion-evento',
     templateUrl: './indicacion-eventos.component.html'
@@ -12,20 +11,20 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     @Input() fecha: Date;
 
     fechaHora: Date;
-
+    editando: boolean;
     estadoItems = [
         { id: 'realizado', nombre: 'Realizado' },
         { id: 'no-realizado', nombre: 'No realizado' },
         { id: 'incompleto', nombre: 'Incompleto' },
     ];
-
     estado = null;
     observaciones = '';
+    horarioEjecucion;
+    estadoType;
 
     @Output() events = new EventEmitter();
 
     constructor(private indicacionEventosService: PlanIndicacionesEventosServices) {
-
     }
 
     ngOnChanges() {
@@ -33,25 +32,30 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
             this.observaciones = this.evento.observaciones;
+            this.editando = this.evento.estado === 'on-hold';
+            this.horarioEjecucion = this.evento.updatedAt ? this.evento.updatedAt : this.evento.createdAt;
+            this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
     }
 
     onCancelar() {
         this.events.emit(false);
+    }
 
+    onEdit() {
+        this.editando = true;
     }
 
     onGuardar() {
+        let saveRequest;
         if (this.evento) {
-            this.indicacionEventosService.update(
+            saveRequest = this.indicacionEventosService.update(
                 this.evento.id,
                 {
                     estado: this.estado.id,
                     observaciones: this.observaciones
                 }
-            ).subscribe(() => {
-                this.events.emit(true);
-            });
+            );
         } else {
             const evento = {
                 idInternacion: this.indicacion.idInternacion,
@@ -60,9 +64,11 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 estado: this.estado.id,
                 observaciones: this.observaciones
             };
-            this.indicacionEventosService.create(evento).subscribe(() => {
-                this.events.emit(true);
-            });
+            saveRequest = this.indicacionEventosService.create(evento);
         }
+        saveRequest.subscribe(() => {
+            this.events.emit(true);
+            this.editando = false;
+        });
     }
 }

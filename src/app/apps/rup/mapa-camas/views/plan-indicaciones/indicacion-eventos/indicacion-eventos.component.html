@@ -1,5 +1,6 @@
 <plex-title titulo="Registrar evento" size="md">
-    <plex-button class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()"></plex-button>
+    <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()"></plex-button>
+    <plex-button *ngIf="!editando && evento" class="mr-1" type="warning" size="sm" icon="pencil" (click)="onEdit()"></plex-button>
     <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()"></plex-button>
 </plex-title>
 
@@ -26,9 +27,19 @@
     </div>
 </plex-detail>
 
-<plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora"></plex-datetime>
+<ng-container *ngIf="editando || !evento">
+    <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora"></plex-datetime>
+    <plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado"></plex-select>
+    <plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [required]="true" [html]="true">
+    </plex-text>
+</ng-container>
 
-<plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado"></plex-select>
+<ng-container *ngIf="!editando && evento">
+    <plex-badge [type]="estadoType">{{ evento.estado }} a las {{ horarioEjecucion | date:'HH:mm' }}</plex-badge>
+    <plex-label *ngIf="evento.createdBy" titulo="Creado por" subtitulo="{{ evento.createdBy.nombreCompleto || 'Automáticamente por prescripción' }}"></plex-label>
+    <plex-label *ngIf="evento.updatedBy" titulo="Actualizado por" subtitulo="{{ evento.updatedBy?.nombreCompleto }}"></plex-label>
+    <b>Observaciones</b><br>
+    <div [innerHtml]="observaciones"></div>
+</ng-container>
 
-<plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [required]="true" [html]="true">
-</plex-text>
+
