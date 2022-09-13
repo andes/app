@@ -2,7 +2,7 @@
     <form #form="ngForm" *ngIf="paciente">
         <div *ngIf="elementoRUP && registro">
             <plex-label *ngIf="evoluciones?.length"
-                        titulo="Fecha de inicio de los síntomas: {{ (consultaTrastornoOriginal?.registros[0]?.valor | fecha) || 'Sin registro' }}"
+                        titulo="Fecha de inicio de los síntomas: {{ (consultaTrastornoOriginal?.registros[0]?.valor | date: 'dd/MM/yyyy hh:mm a') || 'Sin registro' }}"
                         [tituloBold]="true">
             </plex-label>
             <ng-container *ngIf="elementoRUP.requeridos?.length">
@@ -20,7 +20,8 @@
                                 <!-- Si se esta evolucionando, solo se muestra el campo 'evolucion' -->
                                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
                                      [prestacion]="prestacion" [registro]="registro.registros[i]"
-                                     [soloValores]="soloValores" span="{{ item.style.columns }}">
+                                     [soloValores]="soloValores" span="{{ item.style.columns }}"
+                                     (change)="onChange($event)">
                                 </rup>
                             </ng-conteiner>
                         </div>
@@ -29,4 +30,29 @@
             </ng-container>
         </div>
     </form>
+</ng-container>
+<ng-container *ngIf="registro.concepto.semanticTag !== 'trastorno'">
+    <div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && !validacion" class="row bg-faded"
+         class="d-flex justify-content-start">
+        <div class="col m-0 p-0 bg-registro-anterior">
+            <span>
+                Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }},
+                por
+                {{ ultimaConsulta.createdBy | nombre }}</span>
+        </div>
+    </div>
+    <!-- Moléculas -->
+    <ng-container *ngIf="contentLoaded && elementoRUP.requeridos && elementoRUP.requeridos.length">
+        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+            <ng-container *ngFor="let item of requeridos; let i = index">
+                <div *ngIf="item.elementoRUP"
+                     class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                         [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                         [style]="item.style" (change)="emitChange($event)">
+                    </rup>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
 </ng-container>

@@ -23,7 +23,12 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
             if (!this.registro.valor) {
                 this.registro.valor = { estado: 'activo' };
             }
-            this.registro.valor.fechaInicio = this.registro.registros.find(reg => reg.concepto.conceptId === '298059007').valor;
+            const regFechaInicio = this.registro.registros.find(reg => reg.concepto.conceptId === '298059007');
+            const regHhoraInicio = this.registro.registros.find(reg => reg.concepto.conceptId === '405795006');
+            if (regFechaInicio?.valor && regHhoraInicio?.valor) {
+                const inicio = moment(regHhoraInicio.valor).date(moment(regFechaInicio.valor).date()).toDate();
+                this.registro.valor.fechaInicio = inicio;
+            }
             // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
             // tenemos que mostrar las evoluciones anteriores
             if (this.registro.valor.idRegistroOrigen) {
@@ -62,6 +67,19 @@ export class MoleculaBaseComponent extends RUPComponent implements OnInit {
             this.contentLoaded = true;
         }
         this.createRules();
+    }
+
+    onChange(value) {
+        if (this.registro.concepto.semanticTag === 'trastorno') {
+            const regFechaInicio = this.registro.registros.find(reg => reg.concepto.conceptId === '298059007');
+            const regHhoraInicio = this.registro.registros.find(reg => reg.concepto.conceptId === '405795006');
+            if (regFechaInicio?.valor && regHhoraInicio?.valor && (value.concepto.conceptId === '298059007' || value.concepto.conceptId === '405795006')) {
+                // para mantener el registro 'horaInicio' consistente con la fecha, ya que desde la molecula solo podemos setear la hora
+                regHhoraInicio.valor = moment(regHhoraInicio.valor).date(moment(regFechaInicio.valor).date()).toDate();
+                regFechaInicio.valor = moment(regHhoraInicio.valor).date(moment(regFechaInicio.valor).date()).toDate();
+                this.registro.valor.fechaInicio = regHhoraInicio.valor;
+            }
+        }
     }
 
     getRegistrosAnteriores(idOrigen) {
