@@ -49,6 +49,13 @@ export class VisualizacionReglasComponent implements OnInit {
      * @memberof VisualizacionReglasComponent
      */
     filas: any[];
+    public arrayReglas: any = [];
+    private scrollEnd = false;
+    reglas: [IRegla];
+    public parametros;
+    public skip = 0;
+    public limit = 15;
+    loader = false;
 
     constructor(
         private servicioReglas: ReglaService,
@@ -58,6 +65,15 @@ export class VisualizacionReglasComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.parametros = {
+            organizacionOrigen: '',
+            organizacionDestino: '',
+            prestacionDestino: '',
+            prestacionOrigen: '',
+            skip: 0,
+            limit: 15
+        };
+
         if (this.esParametrizado) {
             this.organizacionOrigen = this.auth.organizacion as any;
             this.actualizarTabla();
@@ -68,42 +84,43 @@ export class VisualizacionReglasComponent implements OnInit {
         return this.organizacionOrigen || this.organizacionDestino || this.prestacionOrigen || this.prestacionDestino;
     }
 
+
+
+    refrescarFiltro() {
+        this.parametros['organizacionOrigen'] = this.organizacionOrigen ? this.organizacionOrigen.id : '';
+        this.parametros['organizacionDestino'] = this.organizacionDestino ? this.organizacionDestino.id : '';
+        this.parametros['prestacionDestino'] = this.prestacionDestino ? this.prestacionDestino.conceptId : '';
+
+        if (this.esParametrizado) {
+            this.parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
+        } else {
+            this.parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
+        }
+
+        // cada vez que se modifican los filtros seteamos el skip en 0
+        this.parametros.skip = 0;
+        this.scrollEnd = false;
+        this.arrayReglas = [];
+        this.filas = [];
+        this.actualizarTabla();
+    }
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
      * se actualice la tabla
      * @memberof VisualizacionReglasComponent
      */
     actualizarTabla() {
-        if (this.filtroIngresado()) {
-            const parametros = {
-                organizacionOrigen: this.organizacionOrigen ? this.organizacionOrigen.id : '',
-                organizacionDestino: this.organizacionDestino ? this.organizacionDestino.id : '',
-                prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
-            };
-            if (this.esParametrizado) {
-                parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
-            } else {
-                parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
-            }
-
-            this.servicioReglas.get(parametros).subscribe((reglas: [IRegla]) => {
-                this.obtenerFilasTabla(reglas);
-            });
-        } else {
-            this.filas = null;
+        if (this.parametros.skip === 0) {
+            this.arrayReglas = [];
+            this.filas = [];
+            this.loader = true;
         }
-    }
+        this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
+            this.reglas = reglas;
+            this.loader = false;
+            this.obtenerFilasTabla();
 
-    /**
-     * Devuelve si se ha cargado uno de los filtros
-     * @returns {boolean}
-     * @memberof VisualizacionReglasComponent
-     */
-    filtroIngresado(): boolean {
-        return (this.organizacionOrigen !== null && this.organizacionOrigen !== undefined) ||
-            (this.organizacionDestino !== null && this.organizacionDestino !== undefined) ||
-            (this.prestacionOrigen !== null && this.prestacionOrigen !== undefined) ||
-            (this.prestacionDestino !== null && this.prestacionDestino !== undefined);
+        });
     }
 
     /**
@@ -111,9 +128,9 @@ export class VisualizacionReglasComponent implements OnInit {
      *
      * @memberof VisualizacionReglasComponent
      */
-    obtenerFilasTabla(reglas: [IRegla]) {
-        this.filas = [];
-        for (const regla of reglas) {
+    obtenerFilasTabla() {
+        for (const regla of this.reglas) {
+            this.arrayReglas.push(regla);
             regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
@@ -131,6 +148,13 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
             });
         }
+
+        this.parametros.skip = this.arrayReglas.length;
+
+        if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
+            this.scrollEnd = true;
+        }
+
         if (this.esParametrizado) {
             this.filas.sort((fila1, fila2) => {
                 if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
@@ -157,6 +181,12 @@ export class VisualizacionReglasComponent implements OnInit {
         };
 
         this.documentosService.descargarReglasGlobales(params, `reglasGlobales ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
+    }
+
+    onScroll() {
+        if (!this.scrollEnd) {
+            this.actualizarTabla();
+        }
     }
 }
 
