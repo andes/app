@@ -45,7 +45,8 @@
             </plex-select>
         </plex-grid>
 
-        <plex-badge type="info">{{ unaRel | sexo }}</plex-badge>
+        <!-- Se muestra con un 'OR' porque no todas las relaciones guardan el genero -->
+        <plex-badge type="info">{{ unaRel.genero || unaRel.sexo }}</plex-badge>
 
         <plex-badge *ngIf="unaRel.estado" type="" class=""
                     [ngClass]="{'text-success' : unaRel.estado === 'validado' , 'text-warning' : unaRel.estado === 'temporal'} ">

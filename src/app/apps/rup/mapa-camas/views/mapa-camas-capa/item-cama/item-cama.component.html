@@ -55,8 +55,9 @@
             </span>
         </td>
         <td *ngIf="columns.sexo">
+            <!-- Por ahora se muestra la identidad de genero -->
             <span>
-                {{cama.paciente ? (cama.paciente | sexo) : 'Sin Paciente'}}
+                {{cama.paciente ? cama.paciente.genero : 'Sin Paciente'}}
             </span>
         </td>
         <td>

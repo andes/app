@@ -36,7 +36,9 @@
                                 <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de
                                     nacimiento</span> |
                                 <b>Sexo </b>
-                                <span>{{paciente | sexo}}</span>
+                                <span>{{paciente.sexo}}</span>
+                                <b>Identidad de género </b>
+                                <span>{{paciente.genero}}</span>
                             </td>
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado && puedeDarTurno" title="Dar Turno"

@@ -12,7 +12,6 @@ import { FromNowPipe } from './pipes/fromNow.pipe';
 import { Html2TextPipe } from './pipes/html.pipe';
 import { NombrePipe } from './pipes/nombre.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
-import { SexoPipe } from './pipes/sexo.pipe';
 import { FormAutoSaveDirective } from './directives/autosave.directives';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
@@ -35,7 +34,6 @@ import { DocumentoPipe } from './pipes/documento.pipe';
         Html2TextPipe,
         NombrePipe,
         PluralizarPipe,
-        SexoPipe,
         FormAutoSaveDirective,
         PopoverAuditComponent,
         GaleriaArchivosComponent,
@@ -52,7 +50,6 @@ import { DocumentoPipe } from './pipes/documento.pipe';
         Html2TextPipe,
         NombrePipe,
         PluralizarPipe,
-        SexoPipe,
         FormAutoSaveDirective,
         PopoverAuditComponent,
         GaleriaArchivosComponent,

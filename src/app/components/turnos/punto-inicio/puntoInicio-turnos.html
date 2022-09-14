@@ -43,7 +43,12 @@
                                 nacimiento</span>
                             <br>
                             <b>Sexo: </b>
-                            <span>{{paciente| sexo}}</span>
+                            <span>{{paciente.sexo}}</span>
+                            <ng-container *ngIf="paciente.sexo !== paciente.genero">
+                                <br>
+                                <b>Identidad de género: </b>
+                                <span>{{paciente.genero}}</span>
+                            </ng-container> 
                         </td>
                         <td class="align-middle">
                             <plex-button *ngIf="puedeDarTurno" type="info" tooltip="Dar Turno" icon="calendar-plus"

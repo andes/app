@@ -38,10 +38,10 @@
                 [direction]="direction">
     </plex-label>
 
-    <plex-label *ngIf="paciente.sexo" titulo="Sexo" subtitulo="{{ paciente | sexo }}" [direction]="direction">
+    <plex-label *ngIf="paciente.sexo" titulo="Sexo" subtitulo="{{ paciente.sexo }}" [direction]="direction">
     </plex-label>
 
-    <plex-label *ngIf="paciente.genero" titulo="Género" subtitulo="{{ paciente.genero }}" [direction]="direction">
+    <plex-label *ngIf="paciente.genero" titulo="Identidad de género" subtitulo="{{ paciente.genero }}" [direction]="direction">
     </plex-label>
 </plex-detail>
 

@@ -55,6 +55,7 @@
                                 <th>Apellidos y Nombres</th>
                                 <th>Fecha Nac</th>
                                 <th>Sexo</th>
+                                <th>Identidad de género</th>
                                 <th>Diagnóstico</th>
                                 <th>Primera Vez</th>
                                 <th>Ulterior</th>
@@ -110,8 +111,10 @@
                                         turno.paciente.fechaNacimiento | fecha:'utc' }}</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente |
-                                        sexo }}</small>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente.sexo }}</small>
+                                </td>
+                                <td>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.genero">{{ turno.paciente.genero }}</small>
                                 </td>
                                 <td style="width:350px"></td>
                                 <td></td>
@@ -135,6 +138,7 @@
                                 <th>Apellidos y Nombres</th>
                                 <th>Fecha Nacimiento</th>
                                 <th>Sexo</th>
+                                <th>Identidad de género</th>
                                 <th>Diagnóstico</th>
                                 <th>Primera Vez</th>
                                 <th>Ulterior</th>
@@ -184,7 +188,11 @@
                                 </td>
                                 <td>
                                     <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{
-                                        sobreturno.paciente | sexo }}</small>
+                                        sobreturno.paciente.sexo }}</small>
+                                </td>
+                                <td>
+                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.genero">{{
+                                        sobreturno.paciente.genero }}</small>
                                 </td>
                                 <td style="width:350px"></td>
                                 <td></td>

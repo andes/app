@@ -48,7 +48,11 @@
             </ng-container>
         </div>
 
-        <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"
+        <plex-label *ngIf="showSexo" titulo="Sexo" subtitulo="{{ paciente.sexo }}"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
+
+        <plex-label *ngIf="showSexo" titulo="Identidad de género" subtitulo="{{ paciente.genero }}"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 
