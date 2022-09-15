@@ -13,6 +13,7 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -37,15 +38,15 @@ export class RupAsignarTurnoComponent implements OnInit {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private plex: Plex,
+        public auth: Auth,
         private router: Router,
         public serviceTurno: TurnoService,
         public servicioPrestacion: PrestacionesService,
+        private plex: Plex,
         private obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
         private serviceAgenda: AgendaService
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
         this.getPrestacionesAgendaDinamicas();
@@ -124,9 +125,13 @@ export class RupAsignarTurnoComponent implements OnInit {
      */
     getPrestacionesAgendaDinamicas() {
         let listaPrestaciones = [];
+
+        const prestacionesProfesional = this.auth.getPermissions('rup:tipoPrestacion:?');
+
         this.agenda.bloques.forEach(unBloque => {
-            listaPrestaciones = listaPrestaciones.concat(unBloque.tipoPrestaciones);
+            listaPrestaciones = unBloque.tipoPrestaciones.filter((prestacion: any) => prestacionesProfesional.includes(prestacion.id));
         });
+
         this.prestaciones = listaPrestaciones.filter((elem, pos, arr) => {
             return arr.indexOf(elem) === pos;
         });
