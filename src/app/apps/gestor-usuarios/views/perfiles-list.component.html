@@ -8,7 +8,7 @@
         </div>
         <plex-wrapper>
             <plex-grid type="full" cols="1">
-                <plex-text [(ngModel)]="search" (change)="buscar($event)" [debounce]="500"
+                <plex-text [(ngModel)]="searchName" (change)="buscar($event)" [debounce]="500"
                            placeholder="Buscar por nombre">
                     <plex-icon name="account-search"></plex-icon>
                 </plex-text>

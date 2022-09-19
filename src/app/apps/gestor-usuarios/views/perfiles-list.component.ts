@@ -12,6 +12,7 @@ import { Auth } from '@andes/auth';
 
 export class PerfilListComponent implements OnInit {
     private selectedId;
+    public searchName = '';
 
     constructor(
         public perfilesHttp: PerfilesHttp,
