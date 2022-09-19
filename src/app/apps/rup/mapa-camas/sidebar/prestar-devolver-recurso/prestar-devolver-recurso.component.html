@@ -23,7 +23,7 @@
                 </plex-select>
             </ng-container>
         </plex-wrapper>
-        <div *ngIf="!accionPermitida">
+        <div *ngIf="!inProgress && !accionPermitida">
             El recurso seleccionado no se encuentra disponible en la fecha seleccionada. Esta ocupado o presenta
             movimientos posteriores.
         </div>
