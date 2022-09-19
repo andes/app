@@ -39,4 +39,11 @@ export class MaquinaEstadosHTTP {
     }
 
 
+    save(data: any): Observable<IMaquinaEstados> {
+        if (data.id) {
+            return this.server.patch(`${this.url}/estados/${data.id}`, data);
+        } else {
+            return this.server.post(`${this.url}/estados/`, data);
+        }
+    }
 }

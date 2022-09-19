@@ -12,6 +12,8 @@ import { OrganizacionOfertaPrestacionalComponent } from './organizacion-prestaci
 import { OrganizacionCreateEmailComponent } from './organizacion-create-email.component';
 import { OrganizacionCreateUpdateComponent } from './organizacion-create-update.component';
 import { MitosModule } from '../../apps/mitos';
+import { ConfiguracionInternacionComponent } from './configuracion-internacion.component';
+import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina-estados.http';
 
 @NgModule({
     imports: [
@@ -27,6 +29,7 @@ import { MitosModule } from '../../apps/mitos';
             { path: ':id/sectores', component: OrganizacionSectoresComponent, },
             { path: ':id/ofertas_prestacionales', component: OrganizacionOfertaPrestacionalComponent, },
             { path: ':id/configuracion', component: OrganizacionCreateEmailComponent },
+            { path: ':id/configuracion_internacion', component: ConfiguracionInternacionComponent }
         ])
     ],
     declarations: [
@@ -34,7 +37,11 @@ import { MitosModule } from '../../apps/mitos';
         OrganizacionSectoresComponent,
         OrganizacionOfertaPrestacionalComponent,
         OrganizacionCreateEmailComponent,
-        OrganizacionCreateUpdateComponent
+        OrganizacionCreateUpdateComponent,
+        ConfiguracionInternacionComponent
+    ],
+    providers: [
+        MaquinaEstadosHTTP
     ]
 })
 export class OrganizacionesModule {
