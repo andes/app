@@ -34,8 +34,8 @@ export class FiltrosInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.resetFiltros();
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
-
         this.obraSociales$ = this.listadoInternacionService.listaInternacion$.pipe(
             map((prestaciones) => {
                 const rs = arrayToSet(prestaciones, 'nombre', (item) => item.paciente.obraSocial);
@@ -58,6 +58,14 @@ export class FiltrosInternacionComponent implements OnInit {
                 return unidades;
             })
         );
+    }
+
+    resetFiltros() {
+        this.listadoInternacionService.pacienteText.next(null);
+        this.listadoInternacionService.estado.next(null);
+        this.listadoInternacionService.obraSocial.next(null);
+        this.listadoInternacionService.unidadOrganizativa.next(null);
+        this.filtrarFecha();
     }
 
     filtrar() {

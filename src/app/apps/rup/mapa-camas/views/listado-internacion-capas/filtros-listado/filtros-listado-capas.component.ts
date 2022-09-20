@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import * as enumerados from '../../../../../../utils/enumerados';
-import { Auth } from '@andes/auth';
-import { DocumentosService } from '../../../../../../services/documentos.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../listado-internacion-capas.service';
 
@@ -21,13 +19,19 @@ export class FiltrosListadoCapasComponent implements OnInit {
     requestInProgress: boolean;
 
     constructor(
-        private auth: Auth,
         private listadoInternacionService: ListadoInternacionCapasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }
 
     ngOnInit() {
+        this.resetFiltros();
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
+    }
+
+    resetFiltros() {
+        this.listadoInternacionService.pacienteText.next(null);
+        this.listadoInternacionService.estado.next(null);
+        this.filtrarFecha();
     }
 
     filtrar() {
