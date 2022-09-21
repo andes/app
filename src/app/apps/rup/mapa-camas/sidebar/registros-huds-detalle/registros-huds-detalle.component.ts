@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
@@ -11,14 +11,16 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-registros-huds-detalle',
     templateUrl: './registros-huds-detalle.component.html'
 })
 export class RegistrosHudsDetalleComponent implements OnInit {
-    public historial = new Subject();
+    @ViewChild('formulario', { static: true }) formulario: NgForm;
 
+    public historial = new Subject();
     public historial$: Observable<any>;
     public historialFiltrado$: Observable<any>;
 
@@ -60,12 +62,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.hasta$ = new BehaviorSubject(this.hasta);
 
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
-
+        let estaPrestacion; // internacion que estamos viendo en el listado
         this.historial$ = combineLatest(
             this.cama$,
             this.mapaCamasService.selectedPrestacion
         ).pipe(
             switchMap(([cama, prestacion]) => {
+                estaPrestacion = prestacion;
                 const paciente = cama?.paciente || prestacion?.paciente;
                 return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
             }),
@@ -73,7 +76,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 return this.getHUDS(paciente);
             }),
             map(prestaciones => {
-                return prestaciones.filter(p => this.validadaCreadasPorMi(p));
+                return prestaciones.filter(p => this.validadaCreadasPorMi(p) && p.id !== estaPrestacion.id);
             }),
             catchError((e) => {
                 this.accion.emit(null);
@@ -219,13 +222,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     onChangeDesde() {
-        this.inProgress = true;
-        this.desde$.next(this.desde);
+        if (this.formulario.valid) {
+            this.inProgress = true;
+            this.desde$.next(this.desde);
+        }
     }
 
     onChangeHasta() {
-        this.inProgress = true;
-        this.hasta$.next(this.hasta);
+        if (this.formulario.valid) {
+            this.inProgress = true;
+            this.hasta$.next(this.hasta);
+        }
     }
 
     onChangeTipoPrestacion() {
