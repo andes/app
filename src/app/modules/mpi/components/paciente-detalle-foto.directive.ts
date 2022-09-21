@@ -11,17 +11,18 @@ export class FotoDirective implements OnDestroy {
     private io: IntersectionObserver;
 
     @Input() set mpiFotoPaciente(paciente: IPaciente) {
-        if (this.io) {
-            this.io.disconnect();
-        }
-        if (paciente && paciente.id && paciente.fotoId) {
-            this.fileService.token$.subscribe((data: any) => {
-                const { token } = data;
-                this.watchVisibility(paciente, token);
-            });
-        } else {
-            this.setSource(PROFILE_PICTURE);
-        }
+        this.setSource(PROFILE_PICTURE);
+        // if (this.io) {
+        //     this.io.disconnect();
+        // }
+        // if (paciente && paciente.id && paciente.fotoId) {
+        //     this.fileService.token$.subscribe((data: any) => {
+        //         const { token } = data;
+        //         this.watchVisibility(paciente, token);
+        //     });
+        // } else {
+        //     this.setSource(PROFILE_PICTURE);
+        // }
     }
 
     constructor(
