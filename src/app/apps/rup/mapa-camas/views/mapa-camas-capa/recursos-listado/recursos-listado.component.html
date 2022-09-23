@@ -19,8 +19,8 @@
                                name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}">
                     </plex-icon>
                     <div class="mb-3">
-                        <plex-label direction="column" titulo="{{ cama.nombre }}" size="lg" subtitulo="{{ sector.nombre }}"></plex-label>
-                        <plex-label justify="center" titulo="Unidad organizativa" subtitulo="{{ cama.unidadOrganizativa?.term }}"></plex-label>
+                        <plex-label justify="center" direction="column" titulo="{{ cama.nombre }}" size="lg" subtitulo="{{ sector.nombre }}"></plex-label>
+                        <plex-label justify="center" direction="column" titulo="Unidad organizativa" subtitulo="{{ cama.unidadOrganizativa?.term }}"></plex-label>
                     </div>
                     <ng-container *ngIf="cama.paciente">
                         <plex-label aligned="center" icon="paciente" size="sm" direction="column"
