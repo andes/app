@@ -569,7 +569,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     reloadPuedeDarSobreturno(agenda) {
         const esDeHoy = moment().isSame(agenda.horaInicio, 'day');
         const esNominalizadaNoDinamica = !agenda.dinamica && agenda.nominalizada;
-        const esDelUsuario = agenda.profesionales.some(p => p.id === this.auth.profesional);
+        const esDelUsuario = agenda?.profesionales?.some(p => p.id === this.auth.profesional);
         this.puedeDarSobreturno = esDeHoy && esNominalizadaNoDinamica && esDelUsuario;
     }
 
