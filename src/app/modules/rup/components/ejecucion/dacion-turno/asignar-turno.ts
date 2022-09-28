@@ -35,13 +35,14 @@ export class RupAsignarTurnoComponent implements OnInit {
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex,
-                private router: Router,
-                public serviceTurno: TurnoService,
-                public servicioPrestacion: PrestacionesService,
-                private obraSocialService: ObraSocialService,
-                private pacienteService: PacienteService,
-                private serviceAgenda: AgendaService
+    constructor(
+        private plex: Plex,
+        private router: Router,
+        public serviceTurno: TurnoService,
+        public servicioPrestacion: PrestacionesService,
+        private obraSocialService: ObraSocialService,
+        private pacienteService: PacienteService,
+        private serviceAgenda: AgendaService
     ) {
     }
 
@@ -158,8 +159,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     guardarDatosTurno() {
         const paciente = this.datosTurno.paciente;
         if (this.agenda.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
-                '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
                 let fechaTurno;
                 if (confirmacion) {
                     const datosConfirma = {
@@ -169,18 +169,16 @@ export class RupAsignarTurnoComponent implements OnInit {
                         paciente: paciente,
                         idAgenda: this.agenda.id
                     };
-                        // guardamos el turno
+                    // guardamos el turno
                     this.serviceTurno.saveDinamica(datosConfirma).pipe(
                         map(turnoDado => {
                             fechaTurno = turnoDado.horaInicio;
                             return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
-                        }),
-                        switchMap(idturnoDado => {
+                        }), switchMap(idturnoDado => {
                             if (idturnoDado) {
-                                return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(
-                                    tap(prestacion => {
-                                        this.router.navigate(['rup/ejecucion/', prestacion.id]);
-                                    })
+                                return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
+                                    this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                                })
                                 );
                             } else {
                                 this.plex.info('danger', 'No fue posible crear la prestación');
@@ -206,20 +204,18 @@ export class RupAsignarTurnoComponent implements OnInit {
                 }
             };
 
-            this.serviceAgenda.patch(this.agenda.id, patch).pipe(
-                map(agenda => {
-                    const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
-                    if (sobreTurno) {
-                        return this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
-                            prestacion => {
-                                this.router.navigate(['rup/ejecucion/', prestacion.id]);
-                            }
-                        );
-                    } else {
-                        this.plex.info('danger', 'No fue posible crear la prestación');
-                        return EMPTY;
-                    }
-                }));
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(agenda => {
+                const sobreTurno = agenda.sobreturnos[agenda.sobreturnos.length - 1];
+                if (sobreTurno) {
+                    this.servicioPrestacion.crearPrestacion(paciente, sobreTurno.tipoPrestacion, 'ejecucion', sobreTurno.horaInicio, sobreTurno.id).subscribe(
+                        prestacion => {
+                            this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                        }
+                    );
+                } else {
+                    this.plex.info('danger', 'No fue posible crear la prestación');
+                }
+            });
         }
         this.searchClear();
     }
