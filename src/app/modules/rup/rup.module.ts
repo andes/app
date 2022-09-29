@@ -12,11 +12,11 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { PlantillasRUPComponent } from '../../apps/rup/plantillas-rup/plantillas-rup.component';
 import { TOPLibModule } from '../../components/top/top.module';
 import { AutocitarTurnoAgendasComponent } from '../../components/turnos/autocitar/autocitar.component';
-import { DinamicaFormComponent } from '../../components/turnos/autocitar/dinamica.component';
 import { CITASLibModule } from '../../components/turnos/citas.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
 import { EpidemiologiaModule } from '../epidemiologia/epidemiologia.module';
 import { MPILibModule } from '../mpi/mpi-lib.module';
+import { RupAsignarTurnoComponent } from './components/ejecucion/dacion-turno/asignar-turno';
 import { HelpSolicitudComponent } from './components/ejecucion/help-solicitud.component';
 import { PrestacionCrearComponent } from './components/ejecucion/prestacionCrear.component';
 import { PrestacionEjecucionComponent } from './components/ejecucion/prestacionEjecucion.component';
@@ -36,7 +36,7 @@ export const RUP_COMPONENTS = [
     PrestacionValidacionComponent,
     PlantillasRUPComponent,
     HelpSolicitudComponent,
-    DinamicaFormComponent,
+    RupAsignarTurnoComponent,
     AutocitarTurnoAgendasComponent,
     RupRelacionesComponent,
     RUPServicioIntermedioAltaComponent
