@@ -147,32 +147,29 @@
             </plex-wrapper>
         </ng-container>
         <plex-title justify size="sm" titulo="Procedimientos Quirurgicos">
-            <plex-label class="mr-2" titulo="Nuevo Procedimiento"></plex-label>
-            <plex-button type="success" icon="plus" size="sm" [disabled]="prestacionValidada"
+            <plex-button type="success" icon="plus" size="sm" tooltip="Nuevo Procedimiento" tooltipPosition="left" [disabled]="prestacionValidada"
                         (click)="addProcedimientoQuirurgico()">
             </plex-button>
         </plex-title>
         <ng-container *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
-            <div *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
-                <plex-wrapper>
+            <ng-container *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
+                <plex-grid size="sm" type="full" cols="6">
                     <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
                                 name="InformeEgreso.procedimientoQuirurgico-{{i}}"
                                 (getData)="getListaProcedimientosQuirurgicos($event)" placeholder="Seleccione..."
-                                labelField="nom">
+                                labelField="nom" span="6">
                     </plex-select>
 
-
                     <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
-                                [max]="fechaMaxProcedimiento" [(ngModel)]="procedimiento.fecha" [debounce]="600"
-                                grow="full">
+                                [max]="fechaMaxProcedimiento" [(ngModel)]="procedimiento.fecha" [debounce]="600" span="5">
                     </plex-datetime>
 
-                    <plex-button type="danger" size="md" icon="trash-can"
+                    <plex-button align="end" type="danger" size="md" icon="trash-can"
                                 ariaLabel="Borrar nuevo procedimiento quirúrgico" [disabled]="prestacionValidada"
                                 (click)="removeProcedimiento(i)">
                     </plex-button>
-                </plex-wrapper>
-            </div>
+                </plex-grid>
+            </ng-container>
         </ng-container>
     </ng-container>
 </form>
