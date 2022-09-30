@@ -60,7 +60,6 @@ export class CamaDetalleComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
     public editNota = false;
-
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
 
@@ -273,5 +272,11 @@ export class CamaDetalleComponent implements OnInit {
 
     registraRespirador(respirador) {
         return respirador?.fechaDesde && !respirador.fechaHasta;
+    }
+
+    relacionesYcondiciones(relacion, cama) {
+        return this.capa !== 'interconsultores' && ((relacion.accion !== 'internarPaciente' &&
+            relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && this.permisosMapaCamasService.ingreso) ||
+            (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
 }

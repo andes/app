@@ -27,6 +27,7 @@ export class ItemCamaComponent implements OnChanges {
             return columns;
         })
     );
+    public capa = this.mapaCamasService.capa;
 
     public equipos = {
         aporteOxigeno: false,
