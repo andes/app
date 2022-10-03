@@ -17,7 +17,7 @@
                 <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
                 <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
                 <td *plTableCol="'apellido-nombre'"> {{ paciente | nombre }} </td>
-                <td *plTableCol="'sexo'"> {{ inscripto.sexo }} </td>
+                <td *plTableCol="'sexo'"> {{ paciente.sexo }} </td>
                 <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
                 <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
                 <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>

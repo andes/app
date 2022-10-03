@@ -279,7 +279,7 @@ export class TimelineMapaCamasComponent implements OnInit {
                 return {
                     group: d.cama,
                     id: c++,
-                    content: d.paciente ? `${d.paciente.documento || d.paciente.numeroIdentificacion} | ${d.paciente.apellido} ${d.paciente.alias || d.paciente.nombre}` : 'BLOQUEADA',
+                    content: d.paciente ? `${d.paciente.documento || d.paciente.numeroIdentificacion || 'Sin DNI'} | ${d.paciente.apellido} ${d.paciente.alias || d.paciente.nombre}` : 'BLOQUEADA',
                     start: d.desde,
                     end: d.hasta,
                     className: d.className,

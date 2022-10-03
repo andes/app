@@ -33,7 +33,7 @@
                             {{internacion.paciente | nombre }}
                         </td>
                         <td *plTableCol="'documento'">
-                            {{ internacion.paciente.documento }}
+                            {{ internacion.paciente | documento }}
                         </td>
                         <td *plTableCol="'diagnostico'">
                             <span *ngIf="internacion.diagnostico?.term">

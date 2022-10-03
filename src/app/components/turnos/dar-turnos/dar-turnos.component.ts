@@ -9,7 +9,7 @@ import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
@@ -1185,13 +1185,16 @@ export class DarTurnosComponent implements OnInit {
             nombre: this.opciones.profesional.nombre,
             apellido: this.opciones.profesional.apellido
         };
-        const datosPaciente = !this.paciente ? null : {
+        const datosPaciente: IPacienteBasico = !this.paciente ? null : {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
             alias: this.paciente.alias,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento,
             numeroIdentificacion: this.paciente.numeroIdentificacion,
+            fechaNacimiento: this.paciente.fechaFallecimiento,
+            sexo: this.paciente.sexo,
+            genero: this.paciente.genero
         };
         const organizacion = !this.organizacion ? null : {
             id: this.organizacion.id,

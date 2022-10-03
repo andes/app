@@ -34,7 +34,7 @@
                                 {{ internacion.paciente | nombre }}
                             </td>
                             <td *plTableCol="'documento'">
-                                {{ internacion.paciente.documento }}
+                                {{ internacion.paciente | documento }}
                             </td>
                             <td *plTableCol="'fechaIngreso'">
                                 {{ devuelveFecha(internacion,"ingreso") | fecha }}
