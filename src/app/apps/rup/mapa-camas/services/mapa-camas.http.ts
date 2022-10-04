@@ -56,19 +56,23 @@ export class MapaCamasHTTP {
         });
     }
 
-    // [TODO] ver interfaz e ID
-    save(ambito: string, capa: string, fecha: Date, data): Observable<ICama> {
+    save(data): Observable<ICama> {
         if (data._id) {
-            const params = {
-                ...data,
-                ambito: ambito,
-                capa: capa,
-                fecha
-            };
-            return this.server.patch(`${this.url}/camas/${data._id}`, params);
+            return this.server.patch(`${this.url}/camas/${data._id}`, data);
         } else {
-            return this.server.post(`${this.url}/camas`, { ...data, ambito, fecha });
+            return this.server.post(`${this.url}/camas`, data);
         }
+    }
+
+    // [TODO] ver interfaz e ID
+    updateEstados(ambito: string, capa: string, fecha: Date, data): Observable<ICama> {
+        const params = {
+            ...data,
+            ambito: ambito,
+            capa: capa,
+            fecha
+        };
+        return this.server.patch(`${this.url}/camaEstados/${data._id}`, params);
     }
 
     deshacerInternacion(ambito: string, capa: string, idInternacion: string, completo: boolean): Observable<{ status: boolean }> {

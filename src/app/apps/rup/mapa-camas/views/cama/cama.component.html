@@ -19,7 +19,7 @@
                                placeholder="Nombre" [required]="true" span="2">
                     </plex-text>
                     <div span="1">
-                        <plex-datetime *ngIf="!cama" type="datetime" [(ngModel)]="fecha" [required]="true"
+                        <plex-datetime *ngIf="!cama" type="datetime" [(ngModel)]="camaEditada.fecha" [required]="true"
                                        name="fechaDisponible" label="Disponible desde:" [debounce]="600">
                         </plex-datetime>
                     </div>

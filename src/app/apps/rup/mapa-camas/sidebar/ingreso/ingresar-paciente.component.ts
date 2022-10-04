@@ -255,7 +255,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             auditTime(1),
             map((snapshot) => {
                 this.inProgress = false;
-                let camasDisponibles = [];
+                const camasDisponibles = [];
                 let cama = null;
 
                 snapshot.map(snap => {
@@ -272,11 +272,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     }
                 });
 
-                if (cama && this.view !== 'listado-internacion') {
-                    camasDisponibles = [];
-                    this.plex.info('warning', `${this.paciente.apellido}, ${this.paciente.alias || this.paciente.nombre}, DNI: ${this.paciente.documento || this.paciente.numeroIdentificacion} tiene una internación
-                    en curso con fecha de ingreso el <b>${moment(cama.fechaIngreso).format('DD/MM/YYYY hh:mm')}</b>.`, 'Paciente ya internado');
-                }
                 return camasDisponibles;
             })
         );

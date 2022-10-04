@@ -62,7 +62,7 @@ export class InternacionListaEsperaComponent implements OnInit {
 
             this.route.params.pipe(
                 switchMap((params: any) => {
-                    return this.mapaCamasHTTP.save(params.ambito, params.capa, fecha, this.camaSelected);
+                    return this.mapaCamasHTTP.updateEstados(params.ambito, params.capa, fecha, this.camaSelected);
                 })
             ).subscribe(() => {
                 this.camaSelected = null;

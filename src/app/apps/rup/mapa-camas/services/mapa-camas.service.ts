@@ -553,7 +553,7 @@ export class MapaCamasService {
     save(data, fecha, esMovimiento = true): Observable<any> {
         if (!data.sala) {
             data.esMovimiento = esMovimiento;
-            return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
+            return this.camasHTTP.updateEstados(this.ambito, this.capa, fecha, data);
         } else {
             if (data.estado === 'ocupada') {
                 return this.salaComunService.ingresarPaciente(data, fecha);

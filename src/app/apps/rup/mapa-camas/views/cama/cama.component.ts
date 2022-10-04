@@ -8,7 +8,7 @@ import { Plex } from '@andes/plex';
 import { SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 import { map, pluck, switchMap, take } from 'rxjs/operators';
@@ -23,7 +23,6 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 export class CamaMainComponent implements OnInit {
     public disabled = false;
     public expr = SnomedExpression;
-    public fecha;
     private ambito: string = this.mapaCamasService.ambito;
     public sectores$: Observable<any[]>;
     public mapaSectores$: Observable<any[]>;
@@ -148,7 +147,6 @@ export class CamaMainComponent implements OnInit {
             });
         } else {
             this.camaEditada.esCensable = true;
-            this.fecha = moment().toDate();
         }
     }
 
@@ -173,42 +171,42 @@ export class CamaMainComponent implements OnInit {
             return;
         }
         this.disabled = true;
+        let saveRequest;
+        const datosCama: any = {
+            ...this.getCamaModel(),
+            ambito: this.ambito
+        };
+
         if (this.cama) {
             // edicion de cama
-            const fecha = moment().toDate();
-            const datosCama = {
-                _id: this.cama.idCama,
-                ...this.getCamaModel(),
-                esMovimiento: false
-            };
-            const savedRequest = this.capas$.pipe(
-                switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, fecha))))
-            );
-            savedRequest.subscribe(() => {
-                this.disabled = false;
-                this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
-            }, (err) => {
-                this.disabled = false;
-                this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
-            },
-
+            datosCama._id = this.cama.idCama;
+            datosCama.esMovimiento = false;
+            saveRequest = this.capas$.pipe(
+                switchMap(capas => this.camasHTTP.save(datosCama).pipe(
+                    switchMap(camaUpdated => {
+                        const editUO = this.cama.unidadOrganizativaOriginal.conceptId !== datosCama.unidadOrganizativaOriginal.conceptId;
+                        const editCensable = this.cama.esCensable !== datosCama.esCensable;
+                        if (editUO || editCensable) {
+                            return forkJoin(capas.map(capa => this.camasHTTP.updateEstados(this.ambito, capa, moment().toDate(), datosCama)));
+                        }
+                        return of(camaUpdated);
+                    }
+                    ))
+                )
             );
         } else {
             // nueva cama
-            const dtoCama = {
-                ...this.getCamaModel(),
-                esMovimiento: true
-            };
-            this.guardarCambios(dtoCama, null, this.fecha).subscribe(() => {
-                this.disabled = false;
-                this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
-                this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
-            }, () => {
-                this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
-                this.disabled = false;
-            });
+            datosCama.esMovimiento = true;
+            saveRequest = this.camasHTTP.save(datosCama);
         }
+        saveRequest.subscribe(() => {
+            this.disabled = false;
+            this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
+            this.router.navigate([`/mapa-camas/${this.ambito}/${this.mapaCamasService.capa}`]);
+        }, () => {
+            this.plex.info('danger', 'ERROR: Ocurrio un problema al guardar la cama');
+            this.disabled = false;
+        });
     }
 
     darBaja() {
@@ -225,7 +223,7 @@ export class CamaMainComponent implements OnInit {
                 };
                 const hoy = moment().toDate();
                 this.capas$.pipe(
-                    switchMap(capas => forkJoin(capas.map(capa => this.guardarCambios(datosCama, capa, hoy))))
+                    switchMap(capas => forkJoin(capas.map(capa => this.camasHTTP.updateEstados(this.ambito, capa, hoy, datosCama))))
                 ).subscribe(response => {
                     if (response) {
                         this.disabled = false;
@@ -247,10 +245,6 @@ export class CamaMainComponent implements OnInit {
         } else {
             this.camaEditada.sectores = null;
         }
-    }
-
-    guardarCambios(datosCama, capa, fecha) {
-        return this.camasHTTP.save(this.ambito, capa, fecha, datosCama);
     }
 
     volver() {
