@@ -9,34 +9,37 @@
             <plex-button *ngIf="puedeCrearAgenda" type="success" label="Crear agenda" (click)="insertarAgenda()">
             </plex-button>
         </plex-title>
-        <plex-wrapper (change)="changeCollapse($event)">
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
-                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
-            </plex-datetime>
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
-                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
-            </plex-datetime>
-            <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
-                         tmPrestaciones="turnos:planificarAgenda:prestacion:?" ambito="ambulatorio" preload="true"
-                         name="prestaciones" label="Prestación">
-            </plex-select>
-            <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="estadosAgendaArray"
-                         name="estado" label="Estado" ngModelOptions="{standalone: true}">
-            </plex-select>
-            <div collapse>
-                <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                             (getData)="loadProfesionales($event)" name="profesionales" label="Equipo de Salud"
-                             placeholder="Buscar un equipo de salud" labelField="apellido+' '+nombre"
+        <form #formu="ngForm">
+            <plex-wrapper (change)="changeCollapse($event)">
+                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
+                               name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta" [required]="true">
+                </plex-datetime>
+                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
+                               name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde" [required]="true">
+                </plex-datetime>
+                <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
+                             tmPrestaciones="turnos:planificarAgenda:prestacion:?" ambito="ambulatorio" preload="true"
+                             name="prestaciones" label="Prestación" [multiple]="true">
+                </plex-select>
+                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')"
+                             [data]="estadosAgendaArray" name="estado" label="Estado"
                              ngModelOptions="{standalone: true}">
                 </plex-select>
-                <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')"
-                             name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-                             placeholder="Buscar un espacio físico"
-                             labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio ? edificio.descripcion : '' + ')'"
-                             ngModelOptions="{standalone: true}">
-                </plex-select>
-            </div>
-        </plex-wrapper>
+                <div collapse>
+                    <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
+                                 (getData)="loadProfesionales($event)" name="profesionales" label="Equipo de Salud"
+                                 placeholder="Buscar un equipo de salud" labelField="apellido+' '+nombre"
+                                 ngModelOptions="{standalone: true}">
+                    </plex-select>
+                    <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')"
+                                 name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                                 placeholder="Buscar un espacio físico"
+                                 labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio ? edificio.descripcion : '' + ')'"
+                                 ngModelOptions="{standalone: true}">
+                    </plex-select>
+                </div>
+            </plex-wrapper>
+        </form>
         <plex-title *ngIf="agendas?.length" titulo="Listado de agendas creadas" size="sm">
             <ng-container *ngIf="agendasSeleccionadas | botonesAgendaGeneral as botones">
                 <plex-button class="mr-1" [disabled]="!botones.publicar || agendasSeleccionadas?.length===0"
