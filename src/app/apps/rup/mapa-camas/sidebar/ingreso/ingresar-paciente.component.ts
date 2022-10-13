@@ -22,6 +22,7 @@ import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resu
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { cache } from '@andes/shared';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -169,7 +170,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         );
 
 
-        this.subscription = combineLatest(
+        this.subscription = combineLatest([
             this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
@@ -181,8 +182,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 switchMap((pacID) => {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
-            )
-        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]) => {
+            )]
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, IPaciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
@@ -199,7 +200,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.fechaIngresoOriginal = this.informeIngreso.fechaIngreso;
                 this.paciente.obraSocial = this.prestacion.paciente.obraSocial;
             } else {
-                // capa medica/enfermeria o carga de nueva prestacion en capas estadistica y estadistica-v2
+                // capa medica/enfermeria, ingreso en estadistica o carga de prestacion en estadistica-v2
                 if (paciente.id) {
                     const fechaIngresoInicial = resumen?.fechaIngreso || this.mapaCamasService.fecha;
                     this.informeIngreso.fechaIngreso = fechaIngresoInicial;
@@ -255,23 +256,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             auditTime(1),
             map((snapshot) => {
                 this.inProgress = false;
-                const camasDisponibles = [];
-                let cama = null;
-
-                snapshot.map(snap => {
-                    if (snap.estado === 'ocupada' && !snap.sala) {
-                        if (snap.paciente.id === this.paciente.id) {
-                            if (!this.cama) {
-                                cama = snap;
-                            } else if (this.cama.id !== snap.id) {
-                                cama = snap;
-                            }
-                        }
-                    } else if (snap.estado === 'disponible' || snap.sala) {
-                        camasDisponibles.push(snap);
-                    }
-                });
-
+                // filtra por cama disponible / ocupada por el mismo paciente (edicion) / cama de sala
+                const camasDisponibles = snapshot.filter(snap => snap.estado === 'ocupada' && snap.paciente.id === this.paciente.id || snap.estado === 'disponible' || snap.sala);
+                if (this.cama && !camasDisponibles.find(cama => cama.id === this.cama.id)) {
+                    // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
+                    this.cama = null;
+                }
                 return camasDisponibles;
             })
         );
@@ -551,7 +541,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            const idInternacion = this.capa === 'estadistica' ? prestacion._id : this.cama.idInternacion;
+            const idInternacion = this.capa === 'estadistica' ? prestacion._id : this.resumen.id;
             this.ingresoSimplificado('ocupada', paciente, idInternacion);
         }, (err) => {
             this.plex.info('danger', err);

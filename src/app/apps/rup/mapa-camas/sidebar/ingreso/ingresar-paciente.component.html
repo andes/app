@@ -2,7 +2,7 @@
     <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO" size="md">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
-                        (click)="guardar($event)" [disabled]="disableButton || inProgress">
+                        (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
@@ -13,7 +13,7 @@
             </carpeta-paciente>
         </ng-container>
         <plex-title size="sm" justify titulo="DATOS DE INTERNACIÓN">
-            <ng-container *ngIf="prestacion?.id && !cama.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+            <ng-container *ngIf="prestacion?.id && !cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
                 <plex-button *ngIf="!esInternacionCensable" type="warning"
                             label="Convertir en censable" size="sm" (click)="togglePrestacionCensable()">
                 </plex-button>
@@ -23,7 +23,7 @@
                 </plex-badge>
             </ng-container>
 
-            <ng-container *ngIf="prestacion?.id && cama.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
+            <ng-container *ngIf="prestacion?.id && cama?.esCensable && (capa === 'estadistica' || capa === 'estadistica-v2')">
                 <plex-button *ngIf="!esInternacionNoCensable" type="warning"
                             label="Convertir en no censable" size="sm" (click)="togglePrestacionNoCensable()">
                 </plex-button>
