@@ -151,16 +151,23 @@
                                                     </ng-container>
                                                 </ng-container>
                                                 <!-- Botones de aceptacion / rechazo -->
-                                                <ng-container
-                                                              *ngIf="capa === 'interconsultores' && !indicacion.estado.verificacion">
-                                                    <plex-button type="success" size="sm" icon="check" tooltip="Aceptar"
-                                                                 [autodisable]="true"
-                                                                 (click)="onVerificar(indicacion, true)">
-                                                    </plex-button>
-                                                    <plex-button type="danger" size="sm" icon="close" tooltip="Rechazar"
-                                                                 [autodisable]="true"
-                                                                 (click)="onVerificar(indicacion, false)">
-                                                    </plex-button>
+                                                <ng-container *ngIf="!indicacion.estado.verificacion">
+                                                    <ng-container *ngIf="capa === 'interconsultores'">
+                                                        <plex-button type="success" size="sm" icon="check" tooltip="Aceptar"
+                                                                     [autodisable]="true"
+                                                                     (click)="onVerificar(indicacion, true)">
+                                                        </plex-button>
+                                                        <plex-button type="danger" size="sm" icon="close" tooltip="Rechazar"
+                                                                     [autodisable]="true"
+                                                                     (click)="onVerificar(indicacion, false)">
+                                                        </plex-button>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="capa !== 'interconsultores'">
+                                                        <plex-badge tooltip="Indicación aún no aceptada" type="info">
+                                                            <plex-icon name="informacion"></plex-icon>
+                                                        </plex-badge>
+                                                    </ng-container>
                                                 </ng-container>
 
                                                 <div *ngIf="!indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"

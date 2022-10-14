@@ -301,7 +301,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onIndicacionesCellClick(indicacion, hora) {
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
-        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft' && fechaHora.isSame(moment(), 'day')) {
+        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft' && indicacion.estado.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
             this.onIndicaciones(indicacion, hora);
         }
     }
