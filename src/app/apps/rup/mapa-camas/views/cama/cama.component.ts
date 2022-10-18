@@ -181,6 +181,7 @@ export class CamaMainComponent implements OnInit {
             // edicion de cama
             datosCama._id = this.cama.idCama;
             datosCama.esMovimiento = false;
+            datosCama.extras = { edicionCama: true };
             saveRequest = this.capas$.pipe(
                 switchMap(capas => this.camasHTTP.save(datosCama).pipe(
                     switchMap(camaUpdated => {
