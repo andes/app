@@ -32,7 +32,6 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
         }
         this.hasRules = this.elementoRUP.rules?.length > 0;
         this.valorEditable = this.elementoRUP.params?.valorEditable;
-        this.emitChange2();
 
         this.addFact('value', this.registro.valor);
 
@@ -58,7 +57,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
                             });
                     }
                     const ultimaConsulta = consultas[0]?.registro;
-                    const esFutura = moment(ultimaConsulta.updatedAt).diff(fechaPrestacion) > 0;
+                    const esFutura = moment(ultimaConsulta?.updatedAt).diff(fechaPrestacion) > 0;
 
                     if (!esFutura) {
                         this.registro.registros.map(reg => {
@@ -81,8 +80,14 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
 
     emitChange2() {
         if (!this.valorManual) {
-            this.resultado = this.formulaProvider.calcular(this.paciente, this.prestacion, this.registro.registros);
-            this.registro.valor = this.resultado.value;
+            const conceptosRequeridos = this.elementoRUP.requeridos.map(elem => elem.concepto.conceptId);
+            // si todos los campos requeridos estan completos, entonces realiza el cálculo
+            if (conceptosRequeridos.every(requerido => this.registro.registros.find(reg => reg.concepto.conceptId === requerido && reg.valor))) {
+                this.resultado = this.formulaProvider.calcular(this.paciente, this.prestacion, this.registro.registros);
+                this.registro.valor = this.resultado.value;
+            } else {
+                this.registro.valor = null;
+            }
         }
         this.onChange();
     }
