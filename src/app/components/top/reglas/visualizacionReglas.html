@@ -21,12 +21,12 @@
         <div *ngIf="!loader && hayFiltro && !filas?.length" class="alert alert-danger">
             No hay resultados que coincidan con los filtros de búsqueda
         </div>
-        <div *ngIf="!loader && (!filtroIngresado() || !filas?.length)" justify="center" class="mt-5">
+        <div *ngIf="!loader && (!filas?.length)" justify="center" class="mt-5">
             <plex-label class="flex-column" icon="magnify" size="xl" direction="column" titulo="Realice una búsqueda"
                         subtitulo="Complete los filtros deseados">
             </plex-label>
         </div>
-        <ng-container *ngIf="filtroIngresado() && filas?.length">
+        <ng-container *ngIf="filas?.length">
             <plex-list [striped]="true" height="calc(100vh - 247px)" (scrolled)="onScroll()">
                 <plex-item>
                     <b *ngIf="!esParametrizado">Organización origen</b>

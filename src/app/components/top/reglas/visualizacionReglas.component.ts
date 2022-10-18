@@ -27,20 +27,20 @@ export class VisualizacionReglasComponent implements OnInit {
      * @type {IOrganizacion}
      * @memberof VisualizacionReglasComponent
      */
-    organizacionOrigen: IOrganizacion;
-    prestacionOrigen: ITipoPrestacion;
+    public organizacionOrigen: IOrganizacion;
+    public prestacionOrigen: ITipoPrestacion;
     /**
      * Organización ingresada en el filtro de organización destino
      * @type {IOrganizacion}
      * @memberof VisualizacionReglasComponent
      */
-    organizacionDestino: IOrganizacion;
+    public organizacionDestino: IOrganizacion;
     /**
      * Prestación ingresada en el filtro de prestación destino
      * @type {ITipoPrestacion}
      * @memberof VisualizacionReglasComponent
      */
-    prestacionDestino: ITipoPrestacion;
+    public prestacionDestino: ITipoPrestacion;
     /**
      * Datos de las filas de la tabla resultados. Se realiza en typescript por ser
      * más sencillo que en HTML
@@ -48,14 +48,12 @@ export class VisualizacionReglasComponent implements OnInit {
      * @type {any[]}
      * @memberof VisualizacionReglasComponent
      */
-    filas: any[];
+    public filas: any[];
     public arrayReglas: any = [];
     private scrollEnd = false;
-    reglas: [IRegla];
+    public reglas: [IRegla];
     public parametros;
-    public skip = 0;
-    public limit = 15;
-    loader = false;
+    public loader = false;
 
     constructor(
         private servicioReglas: ReglaService,
@@ -71,7 +69,7 @@ export class VisualizacionReglasComponent implements OnInit {
             prestacionDestino: '',
             prestacionOrigen: '',
             skip: 0,
-            limit: 15
+            limit: 10
         };
 
         if (this.esParametrizado) {
@@ -87,14 +85,14 @@ export class VisualizacionReglasComponent implements OnInit {
 
 
     refrescarFiltro() {
-        this.parametros['organizacionOrigen'] = this.organizacionOrigen ? this.organizacionOrigen.id : '';
-        this.parametros['organizacionDestino'] = this.organizacionDestino ? this.organizacionDestino.id : '';
-        this.parametros['prestacionDestino'] = this.prestacionDestino ? this.prestacionDestino.conceptId : '';
+        this.parametros['organizacionOrigen'] = this.organizacionOrigen?.id || undefined;
+        this.parametros['organizacionDestino'] = this.organizacionDestino?.id || undefined;
+        this.parametros['prestacionDestino'] = this.prestacionDestino?.conceptId || undefined;
 
         if (this.esParametrizado) {
             this.parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
         } else {
-            this.parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
+            this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
         }
 
         // cada vez que se modifican los filtros seteamos el skip en 0
@@ -102,7 +100,9 @@ export class VisualizacionReglasComponent implements OnInit {
         this.scrollEnd = false;
         this.arrayReglas = [];
         this.filas = [];
-        this.actualizarTabla();
+        if (this.parametros.organizacionOrigen || this.parametros.organizacionDestino || this.parametros.prestacionOrigen || this.parametros.prestacionDestino) {
+            this.actualizarTabla();
+        }
     }
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
@@ -119,7 +119,6 @@ export class VisualizacionReglasComponent implements OnInit {
             this.reglas = reglas;
             this.loader = false;
             this.obtenerFilasTabla();
-
         });
     }
 
