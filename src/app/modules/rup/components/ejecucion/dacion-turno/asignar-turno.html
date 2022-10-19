@@ -1,15 +1,17 @@
 <form #formulario="ngForm">
     <plex-title titulo="Datos del turno" size="md">
         <!-- Botonera-->
-            <plex-button icon="check" title="Guardar" type="success"  [validateForm]="formulario" (click)="guardar($event)">
-            </plex-button>
-            <plex-button icon="close" type=""title="Cancelar" type="danger" (click)="cancelar($event)"></plex-button>
-    
+        <plex-button class="mr-1" icon="check" size="sm" title="Guardar" type="success" [validateForm]="formulario"
+                     [disabled]="guardado" (click)="guardar($event)">
+        </plex-button>
+        <plex-button icon="close" size="sm" title="Cancelar" type="danger" (click)="cancelar($event)"></plex-button>
+
     </plex-title>
     <!-- Row sólo puede tener hijos de tipo col-*/col-*-* -->
     <!-- Todos los col deben sumar 12 o usar 'col' para un ancho automático -->
-    
-    <paciente-buscar *ngIf="!pacienteActivo" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+
+    <paciente-buscar *ngIf="!pacienteActivo" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                     (searchClear)="searchClear()">
     </paciente-buscar>
     <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [offset]="150"
                       (selected)="onPacienteSelected($event)">
@@ -41,7 +43,7 @@
                         <label *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
                             Social </label>
                         <label
-                            *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
+                               *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
                         </label>
                         <div>{{obraSocialPaciente.financiador}}</div>
                     </ng-container>
@@ -57,13 +59,13 @@
     </fieldset>
     <div class="row" *ngIf="pacienteActivo">
         <div class="col-3">
-            <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true" name="horaTurno"
-                           label="Hora Turno">
+            <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
+                           name="horaTurno" label="Hora Turno">
             </plex-datetime>
         </div>
         <div *ngIf="agenda.link" class="col">
-            <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true" name="turno_link"
-                       label="Link">
+            <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
+                       name="turno_link" label="Link">
             </plex-text>
         </div>
     </div>

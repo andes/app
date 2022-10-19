@@ -29,6 +29,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     public hoy = new Date();
     public inicio: Date;
     public fin: Date;
+    public guardado = false;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -217,7 +218,7 @@ export class RupAsignarTurnoComponent implements OnInit {
                 }
             });
         }
-        this.searchClear();
+        this.guardado = true;
     }
 
     combinarFechas(fecha1, fecha2) {
