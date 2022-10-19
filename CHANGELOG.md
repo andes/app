@@ -1,3 +1,10 @@
+## [5.105.1](https://github.com/andes/app/compare/v5.105.0...v5.105.1) (2022-10-19)
+
+
+### Bug Fixes
+
+* **in:** ingreso en cama bloqueada ([#2766](https://github.com/andes/app/issues/2766)) ([139f396](https://github.com/andes/app/commit/139f396d7baed039ae3b096cfdf62ed2aca1c5be))
+
 # [5.105.0](https://github.com/andes/app/compare/v5.104.0...v5.105.0) (2022-08-24)
 
 
