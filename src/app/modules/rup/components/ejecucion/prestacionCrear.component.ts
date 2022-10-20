@@ -40,12 +40,11 @@ export class PrestacionCrearComponent implements OnInit {
     public tipoPrestacionSeleccionada: ITipoPrestacion;
     // Paciente sleccionado
     public paciente: IPaciente;
-    public buscandoPaciente = false;
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
     public loading = false;
     public disableGuardar = false;
-    public resultadoBusqueda = [];
+    public resultadoBusqueda = null;
     public tieneAccesoHUDS: Boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
@@ -82,11 +81,6 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
 
-
-    onPacienteCancel() {
-        this.buscandoPaciente = false;
-    }
-
     cancelarAutocitar() {
         this.showAutocitar = false;
         this.paciente = null;
@@ -97,11 +91,6 @@ export class PrestacionCrearComponent implements OnInit {
         this.onSearchClear();
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
-
-    showBuscarPaciente() {
-        this.buscandoPaciente = true;
-    }
-
 
     /**
      * Vuelve a la página anterior
@@ -331,7 +320,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
+        this.resultadoBusqueda = null;
         this.paciente = null;
     }
 
@@ -345,11 +334,10 @@ export class PrestacionCrearComponent implements OnInit {
             // Si se seleccionó por error un paciente fallecido
             this.pacienteService.checkFallecido(paciente);
             this.paciente = paciente;
-            this.buscandoPaciente = false;
+            this.resultadoBusqueda = [this.paciente];
             this.darTurnoAutocitado();
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
-        this.resultadoBusqueda = [];
     }
 }

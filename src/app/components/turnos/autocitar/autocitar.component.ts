@@ -6,7 +6,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import * as moment from 'moment';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 

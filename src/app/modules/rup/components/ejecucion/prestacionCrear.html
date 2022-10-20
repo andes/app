@@ -29,14 +29,15 @@
                               [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
             </paciente-listado>
 
-            <div *ngIf="buscandoPaciente && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                ¡No se encontró ningún paciente!
+            <div *ngIf="!loading && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>
+            <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <ng-container *ngIf="paciente && paciente.id">
-            <plex-title titulo="Datos del Paciente"></plex-title>
+            <plex-title titulo="Datos del Paciente" size="md"></plex-title>
             <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
             </paciente-detalle>
             <!-- Lista de Agendas para dar turnos autocitados -->
