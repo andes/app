@@ -392,7 +392,7 @@ export class MapaCamasService {
         }
 
         if (sector) {
-            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.sectores.some(sect => sect.nombre === sector.nombre));
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.sectorName === sector.nombre);
         }
 
         if (tipoCama) {

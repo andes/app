@@ -37,9 +37,8 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.sectorList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
-            map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores))
+            map((camas) => camas.map((elem: any) => ({ _id: elem._id, nombre: elem.sectorName })))
         );
-
         this.tipoCamaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
         );
