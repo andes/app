@@ -9,8 +9,8 @@
         </div>
         <plex-grid size="md" cols="3">
             <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
-
-                <plex-card *ngFor="let cama of sector.camasSector" [selectable]="true" [selected]="cama.id === selectedCama?.id"
+                <plex-card *ngFor="let cama of sector.camasSector" [selectable]="true"
+                           [selected]="cama.id === selectedCama?.id"
                            (click)="cama.selected = !cama.selected ; verDetalle(cama, selectedCama)">
                     <plex-badge [type]="(mapaCamasService.getEstadoCama(cama) | async).color">
                         {{ cama.estado}}
@@ -19,8 +19,10 @@
                                name="{{ cama.estado === 'ocupada' ? 'cama-paciente' : 'cama'}}">
                     </plex-icon>
                     <div class="mb-3">
-                        <plex-label justify="center" direction="column" titulo="{{ cama.nombre }}" size="lg" subtitulo="{{ sector.nombre }}"></plex-label>
-                        <plex-label justify="center" direction="column" titulo="Unidad organizativa" subtitulo="{{ cama.unidadOrganizativa?.term }}"></plex-label>
+                        <plex-label justify="center" direction="column" titulo="{{ cama.nombre }}" size="lg"
+                                    subtitulo="{{ sector.nombre }}"></plex-label>
+                        <plex-label justify="center" direction="column" titulo="Unidad organizativa"
+                                    subtitulo="{{ cama.unidadOrganizativa?.term }}"></plex-label>
                     </div>
                     <ng-container *ngIf="cama.paciente">
                         <plex-label aligned="center" icon="paciente" size="sm" direction="column"
@@ -33,7 +35,7 @@
                     <ng-container ngProjectAs="plex-button" *ngIf="permisosMapaCamasService.movimientos">
                         <ng-container *ngFor="let relacion of mapaCamasService.getRelacionesPosibles(cama) | async">
                             <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
-                                  || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
+                                || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
                                 <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon"
                                              [type]="relacion.color" size="sm"
                                              (click)="selectCama(cama,relacion,$event)">
