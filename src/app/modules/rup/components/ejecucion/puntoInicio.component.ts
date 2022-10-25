@@ -171,7 +171,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
-                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
+                tipoPrestaciones: this.tiposPrestacion.map(t => t.id)
             }),
             // Prestaciones
             this.getPrestaciones(),
@@ -531,12 +531,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      */
     tienePermisos(turno) {
         const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion?._id));
-        // if (existe) {
-        //     return this.chequearMultiprestacion(existe);
-        // }
         if (turno.prestaciones[0]) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
-
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
             if (estado.tipo !== 'pendiente' && !(estado.createdBy.username === this.auth.usuario.username || permisoValidar)) {
                 return false;
@@ -616,24 +612,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 return turno.prestaciones?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
             }
             return turno.prestaciones.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
-
         }
         return turno.prestaciones ? turno.prestaciones[0] : null;
     }
 
     chequearEstados(turno, estado) {
-
         const prestacion = this.chequearPrestacion(turno);
-
         if (prestacion) {
-
             return prestacion.estados[prestacion.estados.length - 1].tipo === estado;
         }
-
     }
 
     cargarPrestacionesTurnos(agenda) {
-        // if (agenda) {
         // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
         agenda['cantidadTurnos'] = 0;
         agenda.bloques.forEach(bloques => {
@@ -661,8 +651,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                         anular: turno.paciente && turno.estado !== 'suspendido' && this.chequearPrestacion(turno) && this.chequearEstados(turno, 'ejecucion') && this.tienePermisos(turno) && this.verificarAsistencia(turno)
                     };
                 }
-
-
             });
         });
 
@@ -689,7 +677,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 };
             });
         }
-        // }
     }
 
     intervalAgendaRefresh() {
