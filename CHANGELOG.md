@@ -1,3 +1,15 @@
+# [5.106.0](https://github.com/andes/app/compare/v5.105.1...v5.106.0) (2022-10-26)
+
+
+### Bug Fixes
+
+* **CIT-195:** sobreturnos sin pacientes ([#2769](https://github.com/andes/app/issues/2769)) ([3d86b55](https://github.com/andes/app/commit/3d86b55267e8f4872bad1ac4c24c960af074c4f2))
+
+
+### Features
+
+* **INT:** cambios en el filtro de sector ([#2751](https://github.com/andes/app/issues/2751)) ([06b4eaa](https://github.com/andes/app/commit/06b4eaa2906a90c55a0ab6b1fe6914a1af9c303d))
+
 ## [5.105.1](https://github.com/andes/app/compare/v5.105.0...v5.105.1) (2022-10-19)
 
 
