@@ -44,8 +44,8 @@
 
     <ng-container *ngIf="mostrar === 'egreso'">
         <app-informe-egreso *ngIf="!editar && (existeEgreso$ | async)" (cancel)="activateOption('egreso')">
-            <plex-button *ngIf="permisosMapaCamasService.egreso" tooltip="Editar egreso" tooltipPosition="left"
-                         icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+            <plex-button *ngIf="permisosMapaCamasService.egreso && puedeEditar" tooltip="Editar egreso"
+                         tooltipPosition="left" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-informe-egreso>
         <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !(existeEgreso$ | async))"

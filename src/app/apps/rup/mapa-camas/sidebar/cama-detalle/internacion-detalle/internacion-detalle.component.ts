@@ -1,5 +1,5 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, Input, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { combineLatest, Observable, Subscription, of } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -24,6 +24,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
 
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
+    @Input() puedeEditar;
 
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
@@ -69,7 +70,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
 
         this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
             this.capa = this.mapaCamasService.capa;
-            if ( this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+            if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                 if (resumen?.ingreso) {
                     this.items = [
                         { key: 'ingreso-dinamico', label: 'INGRESO' },

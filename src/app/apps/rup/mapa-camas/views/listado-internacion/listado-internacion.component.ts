@@ -28,6 +28,7 @@ export class InternacionListadoComponent implements OnInit {
     public cambiarUO = false;
     public puedeValidar = false;
     public puedeRomper = false;
+    public puedeEditar = false;
     public editando = false;
     public columns = [
         {
@@ -148,6 +149,7 @@ export class InternacionListadoComponent implements OnInit {
             map((prestacion) => {
                 this.puedeValidar = false;
                 this.puedeRomper = false;
+                this.puedeEditar = false;
                 if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {
                     const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     this.puedeValidar = prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
@@ -155,6 +157,7 @@ export class InternacionListadoComponent implements OnInit {
                         informeEgreso.tipoEgreso &&
                         informeEgreso.diagnosticoPrincipal;
                     this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
+                    this.puedeEditar = !this.puedeRomper;
                 }
                 return prestacion;
             })
