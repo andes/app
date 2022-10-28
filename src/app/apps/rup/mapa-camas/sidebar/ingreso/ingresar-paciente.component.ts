@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
@@ -36,6 +36,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
+    @Input() editar = false;
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
@@ -259,8 +260,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 // filtra por cama disponible / ocupada por el mismo paciente (edicion) / cama de sala
                 const camasDisponibles = snapshot.filter(snap => snap.estado === 'ocupada' && snap.paciente.id === this.paciente.id || snap.estado === 'disponible' || snap.sala);
                 if (this.cama && !camasDisponibles.find(cama => cama.id === this.cama.id)) {
-                    // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
-                    this.cama = null;
+                    // Verificamos si se edita un paciente que ya fue ingresado con anterioridad
+                    if (!this.editar) {
+                        // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
+                        this.cama = null;
+                    }
                 }
                 return camasDisponibles;
             })
@@ -668,8 +672,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     // como la cama esta ocupada, se controla que sea por la misma internación
                     if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
                         this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
-                        this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
-                            'Cama no dosponible');
+                        this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre.bold()} no se encuentra disponible`,
+                            'Cama no disponible');
                     }
                 }
             });

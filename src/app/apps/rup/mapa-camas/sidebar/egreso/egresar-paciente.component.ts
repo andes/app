@@ -646,8 +646,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id) && this.capa !== 'estadistica-v2') {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
                     this.fecha = this.fechaEgresoOriginal;
-                    this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
-                        'Cama no dosponible');
+                    this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre.bold()} no se encuentra disponible`,
+                        'Cama no disponible');
                 }
 
             }
