@@ -516,14 +516,14 @@ export class MapaCamasService {
     }
 
     historial(type: 'cama' | 'internacion', desde: Date, hasta: Date = null, cama: ISnapshot = null): Observable<ISnapshot[]> {
-        return combineLatest(
+        return combineLatest([
             this.ambito2,
             this.capa2,
             this.selectedCama,
             this.selectedPrestacion,
             this.selectedResumen,
             this.view
-        ).pipe(
+        ]).pipe(
             switchMap(([ambito, capa, selectedCama, selectedPrestacion, selectedResumen, view]) => {
                 hasta = hasta || new Date();
                 if (type === 'cama') {
