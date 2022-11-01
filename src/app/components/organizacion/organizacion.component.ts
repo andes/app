@@ -74,6 +74,7 @@ export class OrganizacionComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
         this.updateTitle('Organizaciones');
+        this.filtrar();
         this.listado$ = this.organizacionService.organizacionesFiltradas$.pipe(
             map(resp => {
                 this.listadoActual = resp;

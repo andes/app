@@ -25,16 +25,21 @@
                                     (click)="changeCapasActivas()" justify="center">
                         </plex-bool>
                     </plex-card>
+                    <plex-bool *ngIf="capaModel" type="slide" name="historial"
+                                label="Historial médico (Si está activo se podrán visualizar internaciones de la capa médica)"
+                                [(ngModel)]="capaModel.historialMedico" span="6">
+                    </plex-bool>
+                    <plex-bool *ngIf="capaSelected?.nombre === 'interconsultores'" class="mb-2" type="slide" name="checkRupTiposPrestacion"
+                                label="Cargar registros de internación (Según permisos de prestación)"
+                                [(ngModel)]="capaModel.estados[1].checkRupTiposPrestacion" span="6">
+                    </plex-bool>
                 </plex-grid> 
-                <plex-bool *ngIf="capaModel" class="mb-2" type="slide" name="historial"
-                            label="Historial médico (Si está activo se podrán visualizar internaciones de la capa médica)"
-                            [(ngModel)]="capaModel.historialMedico">
-                </plex-bool>
     
                 <ng-container *ngIf="capaSelected">
                     <div class="pt-2" *ngIf="capaModel?.estados[1]?.acciones as acciones">
                         <plex-title titulo="Acciones" size="sm">
-                            <plex-button type="info" size="sm" label="Agregar acción" (click)="nuevaAccion()"></plex-button>
+                            <plex-button class="mr-1" type="info" size="sm" label="Reiniciar valores" (click)="setDefault()"></plex-button>
+                            <plex-button class="mr-1" type="info" size="sm" label="Agregar registro" (click)="nuevaAccion()"></plex-button>
                         </plex-title>
                         <plex-table [columns]="columns" #table="plTable" *ngIf="acciones.length">
                             <plex-table-columns>
