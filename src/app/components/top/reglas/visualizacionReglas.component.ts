@@ -98,10 +98,11 @@ export class VisualizacionReglasComponent implements OnInit {
         // cada vez que se modifican los filtros seteamos el skip en 0
         this.parametros.skip = 0;
         this.scrollEnd = false;
-        this.arrayReglas = [];
-        this.filas = [];
         if (this.parametros.organizacionOrigen || this.parametros.organizacionDestino || this.parametros.prestacionOrigen || this.parametros.prestacionDestino) {
             this.actualizarTabla();
+        } else {
+            this.arrayReglas = [];
+            this.filas = null;
         }
     }
     /**
