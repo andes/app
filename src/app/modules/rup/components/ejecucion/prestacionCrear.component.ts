@@ -15,20 +15,22 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
-    templateUrl: 'prestacionCrear.html'
+    templateUrl: 'prestacionCrear.html',
+    styles: [`
+        .autocitar-turno {
+            height: calc(100% - 302px);
+        }
+    `]
 })
 export class PrestacionCrearComponent implements OnInit {
+    pacienteFields = ['sexo', 'financiador', 'lugarNacimiento'];
     prestacionAutocitar: any;
     showAutocitar = false;
     agendasAutocitar: IAgenda[];
-    // solicitudPrestacion: {
-    //     paciente: IPaciente;
-    //     registros: { nombre: String; concepto: any; valor: { solicitudPrestacion: any; }; tipo: string; }; solicitudPrestacion: ITipoPrestacion; };
     solicitudPrestacion: any;
     solicitudTurno: any;
     agendasAutocitacion: IAgenda[];
     opcion: any;
-    // @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
     public fecha: Date = new Date();
@@ -38,47 +40,30 @@ export class PrestacionCrearComponent implements OnInit {
     public tipoPrestacionSeleccionada: ITipoPrestacion;
     // Paciente sleccionado
     public paciente: IPaciente;
-    public buscandoPaciente = false;
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
     public loading = false;
     public disableGuardar = false;
-    public resultadoBusqueda = [];
+    public resultadoBusqueda = null;
     public tieneAccesoHUDS: Boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
     public showDarTurnos = false;
 
-    get btnLabel() {
-        if (this.opcion === 'fueraAgenda') {
-            return 'INICIAR PRESTACIÓN';
-        } else {
-            return 'DAR TURNO AUTOCITADO';
-        }
-    }
-
-    btnClick() {
-        if (this.opcion === 'fueraAgenda') {
-            this.iniciarPrestacion();
-        } else {
-            this.darTurnoAutocitado();
-        }
-    }
-
-    constructor(private router: Router,
-                private route: ActivatedRoute,
-                private plex: Plex, public auth: Auth,
-                public servicioAgenda: AgendaService,
-                public servicioPrestacion: PrestacionesService,
-                private location: Location,
-                private osService: ObraSocialCacheService,
-                private pacienteService: PacienteService,
-                private hudsService: HUDSService) { }
+    constructor(
+        private router: Router, private route: ActivatedRoute,
+        private plex: Plex, public auth: Auth,
+        public servicioAgenda: AgendaService,
+        public servicioPrestacion: PrestacionesService,
+        private location: Location,
+        private osService: ObraSocialCacheService,
+        private pacienteService: PacienteService,
+        private hudsService: HUDSService
+    ) { }
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
-
 
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
@@ -96,11 +81,6 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
 
-
-    onPacienteCancel() {
-        this.buscandoPaciente = false;
-    }
-
     cancelarAutocitar() {
         this.showAutocitar = false;
         this.paciente = null;
@@ -112,15 +92,10 @@ export class PrestacionCrearComponent implements OnInit {
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
-    showBuscarPaciente() {
-        this.buscandoPaciente = true;
-    }
-
-
     /**
      * Vuelve a la página anterior
      */
-    cancelar() {
+    volver() {
         this.location.back();
     }
 
@@ -212,7 +187,6 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     darTurnoAutocitado() {
-
         // Hay paciente?
         this.existePaciente();
         const params = {
@@ -346,7 +320,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     onSearchClear() {
-        this.resultadoBusqueda = [];
+        this.resultadoBusqueda = null;
         this.paciente = null;
     }
 
@@ -360,10 +334,10 @@ export class PrestacionCrearComponent implements OnInit {
             // Si se seleccionó por error un paciente fallecido
             this.pacienteService.checkFallecido(paciente);
             this.paciente = paciente;
-            this.buscandoPaciente = false;
+            this.resultadoBusqueda = [this.paciente];
+            this.darTurnoAutocitado();
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
-        this.resultadoBusqueda = [];
     }
 }
