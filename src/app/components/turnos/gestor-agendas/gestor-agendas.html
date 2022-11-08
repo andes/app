@@ -166,7 +166,8 @@
                 </td>
             </tr>
         </plex-table>
-        <div *ngIf="!agendas?.length" justify="center" class="mt-5">
+        <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+        <div *ngIf="!loader && !agendas?.length" justify="center" class="mt-5">
             <plex-label class="flex-column" icon="calendar" size="xl" direction="column"
                         titulo="No hay agendas que coincidan con los filtros de búsqueda">
             </plex-label>

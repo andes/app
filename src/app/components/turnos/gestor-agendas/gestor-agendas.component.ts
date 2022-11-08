@@ -78,6 +78,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public enableQueries = false;
     queries = [];
     public collapse = false;
+    loader = true;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -297,6 +298,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // cada vez que se modifican los filtros seteamos el skip en 0
         this.parametros.skip = 0;
         this.scrollEnd = false;
+        this.loader = true;
         this.getAgendas();
     }
 
@@ -328,7 +330,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.agendas.push(agenda);
             });
 
-
+            this.loader = false;
             this.hoy = false;
             this.parametros.skip = this.agendas.length;
 
@@ -337,10 +339,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 this.scrollEnd = true;
             }
 
-        }, err => {
-            if (err) {
-            }
-        });
+        }, err => this.loader = false
+        );
     }
 
     loadAgendas() {
