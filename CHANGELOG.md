@@ -1,3 +1,10 @@
+# [5.107.0](https://github.com/andes/app/compare/v5.106.0...v5.107.0) (2022-11-09)
+
+
+### Features
+
+* **CITAS:** agrega loader en gestor de agendas ([#2748](https://github.com/andes/app/issues/2748)) ([fc769e4](https://github.com/andes/app/commit/fc769e433961c5a8e200d592bfb9b2015edf97fe))
+
 # [5.106.0](https://github.com/andes/app/compare/v5.105.1...v5.106.0) (2022-10-26)
 
 
