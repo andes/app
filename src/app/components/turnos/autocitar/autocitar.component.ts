@@ -11,7 +11,17 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'autocitar-turno',
-    templateUrl: 'autocitar.html'
+    templateUrl: 'autocitar.html',
+    styles: [`
+        .rounded {
+            border: #00a8e0 solid 3px;
+            border-radius: 50%;
+            text-align: center;
+            width: 60px;
+            height: 60px;
+            font-size: 3rem;
+        }
+    `]
 })
 
 export class AutocitarTurnoAgendasComponent implements OnInit {
