@@ -41,25 +41,27 @@
     </plex-grid>
 </div>
 <plex-modal size="sm" #modal [allowEscClose]="false" [allowBackdropClose]="false" (closed)="cerrarModal()">
-    <plex-icon class="icono-help rounded-circle" name="help"></plex-icon>
+    <plex-modal-title class="mb-2" type="info">
+        <div class="rounded" align="center">?</div> 
+    </plex-modal-title>
     <plex-modal-subtitle class="text-center">¿Desea confirmar el turno para paciente autocitado?
     </plex-modal-subtitle>
 
     <main>
         <div>
             <plex-title size="md" titulo="Datos del turno"></plex-title>
-            <plex-grid type="full" cols="2">
-                <plex-label *ngIf="agendaSeleccionada && turnoSeleccionado" type="info" size="sm"
+            <plex-grid type="auto" cols="2">
+                <plex-label *ngIf="agendaSeleccionada && turnoSeleccionado" type="info" size="md"
                             titulo="{{ agendaSeleccionada.horaInicio | fecha }}" icon="calendario"
                             subtitulo="{{turnoSeleccionado.horaInicio | date: 'HH:mm'}}hs">
                 </plex-label>
-                <plex-label *ngIf="paciente" type="info" size="sm" titulo="{{ paciente | nombre}}" icon="paciente"
+                <plex-label *ngIf="paciente" type="info" size="md" titulo="{{ paciente | nombre}}" icon="paciente"
                             subtitulo="{{ paciente.documento }}">
                 </plex-label>
-                <plex-label *ngIf="agendaSeleccionada && bloqueAgenda" type="info" size="sm" titulo="Prestación "
+                <plex-label *ngIf="agendaSeleccionada && bloqueAgenda" type="info" size="md" titulo="Prestación "
                             icon="mano-corazon" subtitulo="{{ bloqueAgenda.tipoPrestaciones | enumerar:['term'] }}">
                 </plex-label>
-                <plex-label *ngIf="agendaSeleccionada" type="info" size="sm" titulo="Equipo de Salud"
+                <plex-label *ngIf="agendaSeleccionada" type="info" size="md" titulo="Equipo de Salud"
                             icon="circulo-medico"
                             subtitulo="{{agendaSeleccionada.profesionales | enumerar:['apellido','nombre']}}">
                 </plex-label>
