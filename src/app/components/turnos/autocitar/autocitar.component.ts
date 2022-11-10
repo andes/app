@@ -50,7 +50,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService,
     ) {
-        this.autorizado = this.auth.check('turnos:darTurnos:?');
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
     ngOnInit() {
