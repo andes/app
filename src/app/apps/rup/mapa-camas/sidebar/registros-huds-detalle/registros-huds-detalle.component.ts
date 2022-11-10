@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
@@ -11,16 +11,18 @@ import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-ite
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-registros-huds-detalle',
     templateUrl: './registros-huds-detalle.component.html'
 })
 export class RegistrosHudsDetalleComponent implements OnInit {
-    public historial = new Subject();
+    @ViewChild('formulario', { static: true }) formulario: NgForm;
 
     public historial$: Observable<any>;
     public historialFiltrado$: Observable<any>;
+    private historialInternacion$: Observable<any>;
 
     public desde: Date;
     public hasta: Date;
@@ -28,8 +30,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public inProgress = true;
     public prestacionesEliminadas = [];
 
-    public desde$ = new BehaviorSubject(new Date());
-    public hasta$ = new BehaviorSubject(new Date());
+    public refreshFecha$ = new BehaviorSubject(null);
     public tipoPrestacion$ = new BehaviorSubject(null);
     public id$ = new BehaviorSubject(null);
 
@@ -56,16 +57,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
         this.hasta = moment(this.mapaCamasService.fecha).toDate();
 
-        this.desde$ = new BehaviorSubject(this.desde);
-        this.hasta$ = new BehaviorSubject(this.hasta);
+        this.historialInternacion$ = this.mapaCamasService.historialInternacion$.pipe(cache());
 
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
-
-        this.historial$ = combineLatest(
+        let estaPrestacionId; // id de prestacion correspondiente a la internacion actual
+        this.historial$ = combineLatest([
             this.cama$,
-            this.mapaCamasService.selectedPrestacion
-        ).pipe(
-            switchMap(([cama, prestacion]) => {
+            this.mapaCamasService.selectedPrestacion,
+            this.mapaCamasService.resumenInternacion$
+        ]).pipe(
+            switchMap(([cama, prestacion, resumen]) => {
+                estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
                 const paciente = cama?.paciente || prestacion?.paciente;
                 return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
             }),
@@ -73,7 +75,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 return this.getHUDS(paciente);
             }),
             map(prestaciones => {
-                return prestaciones.filter(p => this.validadaCreadasPorMi(p));
+                // descarta la propia prestación de la internación actual
+                return prestaciones.filter(p => this.validadaCreadasPorMi(p) && p.id !== estaPrestacionId);
             }),
             catchError((e) => {
                 this.accion.emit(null);
@@ -82,7 +85,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             cache()
         );
 
-        this.min$ = this.mapaCamasService.historialInternacion$.pipe(
+        this.min$ = this.historialInternacion$.pipe(
             map(movimientos => {
                 if (movimientos.length > 0) {
                     const lastIndex = movimientos.length - 1;
@@ -93,47 +96,45 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             tap((date) => {
                 if (moment(this.desde).isSameOrBefore(moment(date))) {
                     this.desde = date;
-                    this.onChangeDesde();
+                    this.onChangeFecha();
                 }
             })
         );
 
-        this.max$ = this.mapaCamasService.historialInternacion$.pipe(
+        this.max$ = this.historialInternacion$.pipe(
             map(movimientos => {
                 const egreso = movimientos.find(m => m.extras && m.extras.egreso);
                 if (egreso) {
                     this.hasta = egreso.fecha;
-                    this.onChangeHasta();
+                    this.onChangeFecha();
                     return egreso.fecha;
                 }
                 return null;
             })
         );
 
-        this.historialFiltrado$ = combineLatest(
+        this.historialFiltrado$ = combineLatest([
             this.historial$,
-            this.desde$,
-            this.hasta$,
+            this.refreshFecha$,
             this.tipoPrestacion$,
             this.min$,
             this.id$
-        ).pipe(
-            map(([prestaciones, desde, hasta, tipoPrestacion, min, idPrestacion]) => {
+        ]).pipe(
+            map(([prestaciones, refreshFecha, tipoPrestacion, min, idPrestacion]) => {
                 if (idPrestacion) {
                     this.prestacionesEliminadas.push(idPrestacion);
                 }
-                if (!desde) {
-                    desde = moment().subtract(7, 'd').toDate();
+                if (!this.desde) {
+                    this.desde = moment().subtract(7, 'd').toDate();
                 }
-                desde = desde.getTime() < min.getTime() ? min : desde;
-                desde = moment(desde);
+                this.desde = this.desde.getTime() < min.getTime() ? moment(min) : this.desde;
                 this.inProgress = false;
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
                     if (tipoPrestacion) {
-                        return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                        return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
                     }
-                    return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
+                    return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
                 });
             })
         );
@@ -218,14 +219,11 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         }
     }
 
-    onChangeDesde() {
-        this.inProgress = true;
-        this.desde$.next(this.desde);
-    }
-
-    onChangeHasta() {
-        this.inProgress = true;
-        this.hasta$.next(this.hasta);
+    onChangeFecha() {
+        if (this.formulario.valid) {
+            this.inProgress = true;
+            this.refreshFecha$.next(true);
+        }
     }
 
     onChangeTipoPrestacion() {
