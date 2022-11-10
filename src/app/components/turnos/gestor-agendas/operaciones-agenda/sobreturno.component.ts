@@ -288,7 +288,8 @@ export class AgregarSobreturnoComponent implements OnInit {
             };
 
             // Si cambió el teléfono lo actualizo en el MPI
-            if (this.cambioTelefono) {
+            // Pero si borra, no actualiza en MPI.
+            if (this.cambioTelefono && this.telefono !== undefined && this.telefono !== null) {
                 const nuevoCel = {
                     'tipo': 'celular',
                     'valor': this.telefono,

@@ -769,8 +769,10 @@ export class DarTurnosComponent implements OnInit {
         this.actualizar();
     }
 
-    cambiarTelefono() {
-        this.cambioTelefono = true;
+    cambiarTelefono(event) {
+        if (event.value !== undefined && event.value !== null) {
+            this.cambioTelefono = true;
+        }
     }
 
     primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {

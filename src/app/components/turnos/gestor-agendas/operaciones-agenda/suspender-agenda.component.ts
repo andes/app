@@ -9,6 +9,9 @@ import * as moment from 'moment';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
+import { forkJoin } from 'rxjs';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+
 @Component({
     selector: 'suspender-agenda',
     templateUrl: 'suspender-agenda.html'
@@ -23,7 +26,7 @@ export class SuspenderAgendaComponent implements OnInit {
     @Output() returnSuspenderAgenda = new EventEmitter<any>();
 
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
+    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService, public pacienteService: PacienteService) { }
 
     public mostrarHeaderCompleto = false; // Pongo false por defecto, estipo que arranca así. [Agregado para AOT]
     public motivoSuspensionSelect = { select: null };
@@ -32,7 +35,7 @@ export class SuspenderAgendaComponent implements OnInit {
     public ag;
     public showData = false;
     public showConfirmar = false;
-
+    public telefonos = [];
     /**
      * Array con todos los turnos de la agenda.
      *
@@ -54,7 +57,44 @@ export class SuspenderAgendaComponent implements OnInit {
                 nombre: 'organizacion'
             }];
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        if (this.agenda.estado === 'suspendida') {
+            let sinTelefono = [];
+            this.agenda.bloques.forEach(bloque => {
+                const sinTel = bloque.turnos.filter(turno => turno.paciente && (turno.paciente.telefono === null || !turno.paciente.telefono.length));
+                sinTelefono = sinTelefono.concat(sinTel);
+            });
 
+            const sinTel = this.agenda.sobreturnos.filter(sobreTurno => sobreTurno.paciente && (sobreTurno.paciente.telefono === null || !sobreTurno.paciente.telefono.length));
+            sinTelefono = sinTelefono.concat(sinTel);
+
+            if (sinTelefono.length) {
+                const request = sinTelefono.map(turno => this.pacienteService.getById(turno.paciente.id));
+                forkJoin(request).subscribe(response => {
+                    response.forEach(paciente => {
+                        const telefono = paciente.contacto.find(contacto => contacto.tipo !== 'email');
+                        if (telefono && telefono.valor && telefono.valor !== '') {
+                            const pacientesEncontrado = sinTelefono.filter(turno => turno.paciente.id === paciente.id);
+                            pacientesEncontrado.map(pac => {
+                                const telefonos = (paciente.contacto.filter(numero => numero.tipo !== 'email'));
+                                this.telefonos.push(telefonos);
+                                pac.paciente.telefono = '';
+                                telefonos.forEach(tel => pac.paciente.telefono = `${pac.paciente.telefono} ${tel.valor} ( ${tel.tipo} ) - `);
+                                pac.paciente.telefono = pac.paciente.telefono.slice(0, -2);
+                                const email = paciente.contacto.find(contacto => contacto.tipo === 'email');
+                                if (email?.valor) {
+                                    pac.paciente.email = email.valor;
+                                }
+                                pac.paciente.apellido = paciente.apellido;
+                                pac.paciente.nombre = paciente.nombre;
+                                pac.paciente.documento = paciente.documento;
+                                pac.paciente.fechaNacimiento = paciente.fechaNacimiento;
+                                pac.paciente.sexo = paciente.sexo;
+                            });
+                        }
+                    });
+                });
+            }
+        }
         (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;
         this.agenda.bloques.forEach(bloque => {
             bloque.turnos.forEach(turno => {

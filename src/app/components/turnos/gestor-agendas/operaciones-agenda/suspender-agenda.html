@@ -107,8 +107,19 @@
                             nombre }}
                         </small>
                         <small *ngIf="turno?.paciente?.id">
-                            <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
-                                <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                            <span
+                                  *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                                <br>
+                                Teléfono: {{ turno.paciente.telefono }}
+                            </span>
+                            <ng-template #variosTelefono>
+                                <span
+                                      *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== ''; else noTelefono">
+                                    <br>
+                                    Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))
+                                    }}
+                                </span>
+                            </ng-template>
                             <ng-template #noTelefono>
                                 <br>
                                 <span>Sin teléfono registrado</span>
@@ -132,6 +143,53 @@
                     <td>
                         <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
                                     type="info">Reasignado</plex-badge>
+                    </td>
+                    <!-- Ver detalle del paciente -->
+                    <td>
+                        <plex-help *ngIf="turno.paciente" class="mr-1" type="help" icon="account-details"
+                                   titulo="Detalle del paciente" tooltip="Detalle">
+                            <div class="container mb-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Apellido</label> {{ turno.paciente.apellido }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Nombre</label> {{ turno.paciente.nombre }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Documento / Identificacion extranjera</label>
+                                        {{ turno.paciente.documento }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Fecha de nacimiento</label> {{ turno.paciente.fechaNacimiento |
+                                        date:'dd/MM/yyyy' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Sexo / Genero</label> {{ turno.paciente.sexo }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Teléfono de contacto</label>
+                                        {{ turno.paciente.telefono || 'Sin teléfono registrado' }}
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="turno.paciente.email">
+                                    <div class=" col-12">
+                                        <label>Mail de contacto</label> {{ turno.paciente.email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </plex-help>
                     </td>
                 </tr>
             </tbody>
@@ -168,8 +226,18 @@
                             nombre }}
                         </small>
                         <small *ngIf="turno?.paciente?.id">
-                            <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
-                                <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                            <span
+                                  *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                                <br>
+                                Teléfono: {{ turno.paciente.telefono}}
+                            </span>
+                            <ng-template #variosTelefono>
+                                <span
+                                      *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== ''; else noTelefono">
+                                    <br>
+                                    Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))}}
+                                </span>
+                            </ng-template>
                             <ng-template #noTelefono>
                                 <br>
                                 <span>Sin teléfono registrado</span>
@@ -191,6 +259,52 @@
                     <td>
                         <small class="badge-info float-right"
                                *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                    </td>
+                    <!-- Ver detalle del paciente -->
+                    <td>
+                        <plex-help *ngIf="turno.paciente" class="mr-1" type="help" icon="account-details"
+                                   titulo="Detalle del paciente" tooltip="Detalle">
+                            <div class="container mb-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Apellido</label> {{ turno.paciente.apellido }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Nombre</label> {{ turno.paciente.nombre }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Documento / Identificacion extranjera</label>
+                                        {{ turno.paciente.documento }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Fecha de nacimiento</label> {{ turno.paciente.fechaNacimiento |
+                                        date:'dd/MM/yyyy' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Sexo / Genero</label> {{ turno.paciente.sexo}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Teléfono de contacto</label>
+                                        {{ turno.paciente.telefono || 'Sin teléfono registrado' }}
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="turno.paciente.email">
+                                    <div class=" col-12">
+                                        <label>Mail de contacto</label> {{ turno.paciente.email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </plex-help>
                     </td>
                 </tr>
             </tbody>
