@@ -210,9 +210,11 @@
 
         <ng-container *ngIf="indicacionView">
             <in-indicacion-detalle [indicacion]="indicacionView">
-                <plex-button *ngIf="puedeEditar && indicacionView.estado.tipo !== 'cancelled'" class="mr-1"
-                             type="warning" size="sm" icon="pencil" (click)="editar(indicacionView)"></plex-button>
-                <plex-button type="danger" size="sm" icon="close" (click)="onClose()"></plex-button>
+                <plex-button *ngIf="puedeEditar && indicacionView.estado.tipo !== 'cancelled' && indicacionView.estado.tipo !== 'active'" class="mr-1"
+                             type="warning" size="sm" icon="pencil" tooltip="Editar" (click)="editar(indicacionView)">
+                </plex-button>
+                <plex-button type="danger" size="sm" icon="close" tooltip="Cerrar" (click)="onClose()">
+                </plex-button>
             </in-indicacion-detalle>
         </ng-container>
         <ng-container *ngIf="indicacionEventoSelected">
