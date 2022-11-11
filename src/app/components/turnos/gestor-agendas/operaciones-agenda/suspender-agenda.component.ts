@@ -60,7 +60,7 @@ export class SuspenderAgendaComponent implements OnInit {
         if (this.agenda.estado === 'suspendida') {
             let sinTelefono = [];
             this.agenda.bloques.forEach(bloque => {
-                const sinTel = bloque.turnos.filter(turno => turno.paciente && (turno.paciente.telefono === null || !turno.paciente.telefono.length));
+                const sinTel = bloque.turnos.filter(turno => turno.paciente && (!turno.paciente.telefono || (turno.paciente.telefono && turno.paciente.telefono === '')));
                 sinTelefono = sinTelefono.concat(sinTel);
             });
 

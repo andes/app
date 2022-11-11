@@ -108,13 +108,13 @@
                         </small>
                         <small *ngIf="turno?.paciente?.id">
                             <span
-                                  *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                                  *ngIf="turno.paciente.telefono && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
                                 <br>
                                 Teléfono: {{ turno.paciente.telefono }}
                             </span>
                             <ng-template #variosTelefono>
                                 <span
-                                      *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== ''; else noTelefono">
+                                      *ngIf="turno.paciente.telefono && turno.paciente.telefono !== ''; else noTelefono">
                                     <br>
                                     Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))
                                     }}
@@ -147,7 +147,7 @@
                     <!-- Ver detalle del paciente -->
                     <td>
                         <plex-help *ngIf="turno.paciente" class="mr-1" type="help" icon="account-details"
-                                   titulo="Detalle del paciente" tooltip="Detalle">
+                                   titulo="Detalle del paciente" tooltip="Detalle del paciente">
                             <div class="container mb-4">
                                 <div class="row">
                                     <div class="col-12">
@@ -227,13 +227,13 @@
                         </small>
                         <small *ngIf="turno?.paciente?.id">
                             <span
-                                  *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                                  *ngIf="turno.paciente.telefono && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
                                 <br>
                                 Teléfono: {{ turno.paciente.telefono}}
                             </span>
                             <ng-template #variosTelefono>
                                 <span
-                                      *ngIf="turno.paciente.telefono !==null && turno.paciente.telefono !== ''; else noTelefono">
+                                      *ngIf="turno.paciente.telefono && turno.paciente.telefono !== ''; else noTelefono">
                                     <br>
                                     Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))}}
                                 </span>
@@ -263,7 +263,7 @@
                     <!-- Ver detalle del paciente -->
                     <td>
                         <plex-help *ngIf="turno.paciente" class="mr-1" type="help" icon="account-details"
-                                   titulo="Detalle del paciente" tooltip="Detalle">
+                                   titulo="Detalle del paciente" tooltip="Detalle del paciente">
                             <div class="container mb-4">
                                 <div class="row">
                                     <div class="col-12">
