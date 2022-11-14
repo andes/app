@@ -37,7 +37,7 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.sectorList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
-            map((camas) => camas.map((elem: any) => ({ _id: elem._id, nombre: elem.sectorName })))
+            map(cama => this.arraySectores(cama))
         );
         this.tipoCamaList$ = this.mapaCamasService.snapshotFiltrado$.pipe(
             map((camas) => arrayToSet(camas.filter(snap => !snap.sala), 'conceptId', (item) => item.tipoCama))
@@ -63,5 +63,20 @@ export class FiltrosCamasComponent implements OnInit {
 
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
         this.mapaCamasService.estadoSelected.next(this.filtro.estado);
+    }
+
+    // Función que nos devuelve un array de jerarquía de sectores que no estan repetidos
+    arraySectores(camas) {
+        const listado = [];
+        camas.forEach(elem => {
+            for (let i = 0; i < elem.jerarquiaSectores.length; i++) {
+                const sect = { _id: elem.sectores[i]._id, nombre: elem.jerarquiaSectores[i] };
+                const index = listado.findIndex(ind => ind._id === elem.sectores[i]._id);
+                if (index < 0) {
+                    listado.push(sect);
+                }
+            }
+        });
+        return listado;
     }
 }

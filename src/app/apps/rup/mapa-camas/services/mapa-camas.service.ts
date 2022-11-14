@@ -113,8 +113,17 @@ export class MapaCamasService {
                 snapshot = snapshot.filter(snap => snap.estado !== 'inactiva');
                 snapshot.forEach((snap) => {
                     const sectores = snap.sectores || [];
+                    let sector = '';
+                    let nombreSectores = '';
                     const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
+                    const arraySectores = [];
+                    sectores.forEach(s => {
+                        sector = sector + s.nombre + ' - ';
+                        nombreSectores = sector.slice(0, -3);
+                        arraySectores.push(nombreSectores);
+                    });
                     (snap as any).sectorName = sectorName;
+                    (snap as any).jerarquiaSectores = arraySectores;
 
                     snap._key = snap.id + '-' + snap.idInternacion;
 
@@ -391,7 +400,7 @@ export class MapaCamasService {
         }
 
         if (sector) {
-            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.sectorName === sector.nombre);
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.jerarquiaSectores.some(sect => sect === sector.nombre));
         }
 
         if (tipoCama) {

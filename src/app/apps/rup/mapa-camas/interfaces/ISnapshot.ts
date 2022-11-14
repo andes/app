@@ -22,6 +22,7 @@ export interface ISnapshot {
     sectorName?: String;
     diaEstada?: number;
     sectores: ISectores[];
+    jerarquiaSectores?: any[];
     nombre: String;
     tipoCama: ISnomedConcept;
     equipamiento: ISnomedConcept[];
