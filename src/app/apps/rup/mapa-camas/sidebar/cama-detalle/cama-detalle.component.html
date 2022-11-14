@@ -4,10 +4,7 @@
             <plex-title titulo="DATOS DE CAMA" size="md">
                 <ng-container *ngIf="permisosMapaCamasService.movimientos">
                     <ng-container *ngFor="let relacion of relaciones$ | async">
-                        <ng-container
-                                      *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || 
-                                    (relacion.accion === 'internarPaciente' && permisosMapaCamasService.ingreso) || 
-                                    (relacion.nombre === 'Bloquear' && permisosMapaCamasService.bloqueo && !cama.sala)">
+                        <ng-container *ngIf="relacionesYcondiciones(relacion, cama)">
                             <plex-button tooltip="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
                                          size="sm" (click)="accion(relacion)">
                             </plex-button>
@@ -91,8 +88,9 @@
                     </plex-button>
                 </ng-container>
                 <ng-container *ngIf="!cama.sala && hayMovimientosAt$ | async">
-                    <plex-dropdown class="ml-1" right="true" size="sm" icon="account-off" type="danger"
-                                   tooltip="Deshacer Internacion" tooltipPosition="left" [items]="items">
+                    <plex-dropdown *ngIf="capa !== 'interconsultores'" class="ml-1" right="true" size="sm"
+                                   icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                   tooltipPosition="left" [items]="items">
                     </plex-dropdown>
                 </ng-container>
 
