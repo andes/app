@@ -4,7 +4,8 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { Auth } from '@andes/auth';
 import { tap } from 'rxjs/operators';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-
+import * as moment from 'moment';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'in-plan-indicacion-evento',
@@ -19,7 +20,8 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     fechaHora: Date;
     editando: boolean;
     horaOrganizacion;
-
+    horaMin;
+    horaMax;
     estadoItems = [
         { id: 'realizado', nombre: 'Realizado' },
         { id: 'no-realizado', nombre: 'No realizado' },
@@ -37,13 +39,14 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         private indicacionEventosService: PlanIndicacionesEventosServices,
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private mapaCamasService: MapaCamasService
-    ) {}
+        private mapaCamasService: MapaCamasService,
+        private plex: Plex
+    ) { }
 
     ngOnChanges() {
         this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
             tap(config => {
-                this.horaOrganizacion=config.planIndicaciones.horaInicio;
+                this.horaOrganizacion = config.planIndicaciones.horaInicio;
             })
         ).subscribe(
             () => {
@@ -55,6 +58,9 @@ export class PlanIndicacionEventoComponent implements OnChanges {
         );
         this.puedeEditar = this.mapaCamasService.capa2.getValue() === 'enfermeria';
         this.editando = this.evento?.estado === 'on-hold'; // Para nuevos eventos
+        this.horaMin = moment(this.fechaHora).minutes(0);
+        this.horaMax = moment(this.fechaHora).minutes(59);
+
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
             this.observaciones = this.evento.observaciones;
@@ -72,15 +78,17 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     }
 
     onGuardar() {
-        let saveRequest;
         if (this.evento) {
-            saveRequest = this.indicacionEventosService.update(
+            this.indicacionEventosService.update(
                 this.evento.id,
                 {
                     estado: this.estado.id,
                     observaciones: this.observaciones
                 }
-            );
+            ).subscribe(() => {
+                this.events.emit(true);
+                this.editando = false;
+            });
         } else {
             const evento = {
                 idInternacion: this.indicacion.idInternacion,
@@ -89,11 +97,17 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 estado: this.estado.id,
                 observaciones: this.observaciones
             };
-            saveRequest = this.indicacionEventosService.create(evento);
+            const createReq = this.indicacionEventosService.create(evento);
+            if (this.estado.id === 'realizado') {
+                this.plex.confirm('El horario seleccionado no coincide con la frecuencia de la indicación. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
+                    if (response) {
+                        createReq.subscribe(() => {
+                            this.events.emit(true);
+                            this.editando = false;
+                        });
+                    }
+                });
+            }
         }
-        saveRequest.subscribe(() => {
-            this.events.emit(true);
-            this.editando = false;
-        });
     }
 }

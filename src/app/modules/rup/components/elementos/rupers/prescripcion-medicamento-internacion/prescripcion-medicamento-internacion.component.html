@@ -39,7 +39,7 @@
 
     <!-- FRECUENCIA -->
     <plex-title size="sm" titulo="Frecuencia">
-        <plex-button size="sm" icon="plus" type="info" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
+        <plex-button *ngIf="!registro.valor.unicaVez" size="sm" icon="plus" type="info" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
                      tooltipPosition="left">
         </plex-button>
         <plex-button size="sm" icon="delete" type="danger" (click)="deleteFrecuencia()" tooltip="Eliminar último item"
