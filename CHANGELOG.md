@@ -1,3 +1,15 @@
+# [5.108.0](https://github.com/andes/app/compare/v5.107.0...v5.108.0) (2022-11-16)
+
+
+### Bug Fixes
+
+* **rup:** control de permisos autocitacion ([#2774](https://github.com/andes/app/issues/2774)) ([090fee9](https://github.com/andes/app/commit/090fee9b5baaa3a41d78d2a06c8eb55681c9543f))
+
+
+### Features
+
+* **PER:** agrega param para elegir addRegister ([#2705](https://github.com/andes/app/issues/2705)) ([b482710](https://github.com/andes/app/commit/b482710f7cf835b560ec3fe0fe6bba5728e304f2))
+
 # [5.107.0](https://github.com/andes/app/compare/v5.106.0...v5.107.0) (2022-11-09)
 
 
