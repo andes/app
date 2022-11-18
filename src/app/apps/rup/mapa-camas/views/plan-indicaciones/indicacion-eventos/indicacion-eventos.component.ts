@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaciones-eventos.service';
+import { OrganizacionService } from '../../../../../../services/organizacion.service';
+import { Auth } from '@andes/auth';
+import { tap } from 'rxjs/operators';
+
+
 @Component({
     selector: 'in-plan-indicacion-evento',
     templateUrl: './indicacion-eventos.component.html'
@@ -12,6 +17,8 @@ export class PlanIndicacionEventoComponent implements OnChanges {
 
     fechaHora: Date;
     editando: boolean;
+    horaOrganizacion;
+
     estadoItems = [
         { id: 'realizado', nombre: 'Realizado' },
         { id: 'no-realizado', nombre: 'No realizado' },
@@ -24,11 +31,25 @@ export class PlanIndicacionEventoComponent implements OnChanges {
 
     @Output() events = new EventEmitter();
 
-    constructor(private indicacionEventosService: PlanIndicacionesEventosServices) {
-    }
+    constructor(
+        private indicacionEventosService: PlanIndicacionesEventosServices,
+        private organizacionService: OrganizacionService,
+        private auth: Auth
+    ) {}
 
     ngOnChanges() {
-        this.fechaHora = moment(this.fecha).startOf('day').add(this.hora <= 5 ? this.hora + 24 : this.hora, 'h').toDate();
+        this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
+            tap(config => {
+                this.horaOrganizacion=config.planIndicaciones.horaInicio;
+            })
+        ).subscribe(
+            () => {
+                this.fechaHora = moment(this.fecha).startOf('day').add(this.hora < this.horaOrganizacion ? this.hora + 24 : this.hora, 'h').toDate();
+                if (!moment(this.fechaHora).isSame(moment(), 'day')) {
+                    this.events.emit(false);
+                }
+            }
+        );
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
             this.observaciones = this.evento.observaciones;
