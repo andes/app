@@ -20,8 +20,8 @@ export class PrestarDevolverRecursoComponent implements OnInit {
     @Output() onSave = new EventEmitter<any>();
 
     public unidadesOrganizativas$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
-        cache(),
-        pluck('unidadesOrganizativas')
+        pluck('unidadesOrganizativas'),
+        map(unidadesOrganizativas => unidadesOrganizativas.filter(uo => uo.id !== (this.cama.unidadOrganizativa as any)._id))
     );
 
     public fecha;
