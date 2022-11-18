@@ -1,4 +1,4 @@
-<ng-container *ngIf="!soloValores">
+<form #form="ngForm" *ngIf="!soloValores">
     <plex-title size="sm" titulo="Principio Activo">
         <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
                      tooltipPosition="left">
@@ -19,7 +19,7 @@
                        (change)="valuesChange()">
             </plex-text>
             <plex-select label="Unidad Dosis" [(ngModel)]="sustancia.dosisUnidad" [snomedExpression]="unidadesSnomed"
-                         name="uDosis" (change)="valuesChange()"></plex-select>
+                         name="uDosis" required (change)="valuesChange()"></plex-select>
         </plex-grid>
     </ng-container>
 
@@ -77,7 +77,7 @@
                    name="aclaraciones">
         </plex-text>
     </div>
-</ng-container>
+</form>
 
 <ng-container *ngIf="soloValores">
     <plex-grid cols="3" size="sm">

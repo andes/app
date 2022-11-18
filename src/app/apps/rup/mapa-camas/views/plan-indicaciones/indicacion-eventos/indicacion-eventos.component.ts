@@ -99,7 +99,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
             };
             const createReq = this.indicacionEventosService.create(evento);
             if (this.estado.id === 'realizado') {
-                this.plex.confirm('El horario seleccionado no coincide con la frecuencia de la indicación. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
+                this.plex.confirm('El horario seleccionado no coincide con la planificación. Si continúa, los próximos eventos se modificarán. ¿Deséa registrarlo de todas formas?', 'Atención', 'Si', 'No').then(response => {
                     if (response) {
                         createReq.subscribe(() => {
                             this.events.emit(true);
