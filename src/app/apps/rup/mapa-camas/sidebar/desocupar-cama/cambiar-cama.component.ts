@@ -122,6 +122,7 @@ export class CambiarCamaComponent implements OnInit {
             _id: camaNueva.id,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
+            idCamaAnterior: camaActual.id,
             paciente: camaActual.paciente,
             fechaIngreso: camaActual.fechaIngreso,
             nota: (!camaActual.sala) ? camaActual.nota : null,
