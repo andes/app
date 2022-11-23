@@ -1,3 +1,10 @@
+# [5.109.0](https://github.com/andes/app/compare/v5.108.0...v5.109.0) (2022-11-23)
+
+
+### Features
+
+* **in:** muestra profesional que crea/edita un evento ([#2753](https://github.com/andes/app/issues/2753)) ([21dc74e](https://github.com/andes/app/commit/21dc74e0b64d368c37d1917c58e4aaf011968bfd))
+
 # [5.108.0](https://github.com/andes/app/compare/v5.107.0...v5.108.0) (2022-11-16)
 
 
