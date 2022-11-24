@@ -81,10 +81,11 @@
         <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT === 'dinamica'">
             <plex-title titulo="Dar turno" size="sm"></plex-title>
             <div class="contenedor-slider">
-                <div class="btn-prev" aria-role="button" (click)="verAgenda('izq')"
-                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice-1]}">
-                    <plex-icon name="pico-izquierda"></plex-icon>
-                </div>
+                <plex-button align="middle" tooltip="Agenda anterior" name="agendaAnterior" class="btn-prev" size="sm"
+                             type="primary" (click)="verAgenda('izq')"
+                             [disabled]="agendasDelDia && !agendasDelDia[indice-1]">
+                    <plex-icon justify="center" size="md" name="pico-izquierda"></plex-icon>
+                </plex-button>
                 <div class="contenido-agenda">
                     <plex-grid type="full" cols="2" justify="start">
                         <plex-badge type="info">
@@ -137,8 +138,8 @@
                                 <plex-label *ngIf="agenda.profesionales?.length" size="md" titulo="Equipo de Salud"
                                             subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
                                 </plex-label>
-                                <plex-label *ngIf="agenda.profesionales?.length === 0" size="md" titulo="Equipo de Salud"
-                                            subtitulo="Equipo de Salud no asignado">
+                                <plex-label *ngIf="agenda.profesionales?.length === 0" size="md"
+                                            titulo="Equipo de Salud" subtitulo="Equipo de Salud no asignado">
                                 </plex-label>
                             </plex-grid>
                             <plex-grid *ngIf="opciones.profesional && opciones.tipoPrestacion" class="m-0" type="full"
@@ -152,10 +153,11 @@
                         </plex-grid>
                     </plex-grid>
                 </div>
-                <div class="btn-next" aria-role="button" (click)="verAgenda('der')"
-                     [ngClass]="{'disabled':agendasDelDia && !agendasDelDia[indice+1]}">
-                    <plex-icon name="pico-derecha"></plex-icon>
-                </div>
+                <plex-button align="middle" tooltip="Agenda siguiente" tooltipPosition="left" name="agendaSiguiente"
+                             class="btn-next" size="sm" type="primary" (click)="verAgenda('der')"
+                             [disabled]="agendasDelDia && !agendasDelDia[indice+1]">
+                    <plex-icon justify="center" size="md" name="pico-derecha"></plex-icon>
+                </plex-button>
             </div>
 
             <!--Paciente detalle -->

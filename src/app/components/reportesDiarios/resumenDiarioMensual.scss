@@ -1,11 +1,14 @@
+th,
+td {
+    text-align: center;
+    width: 25px;
+}
 
-    th,td{
-        text-align: center;
-        width: 25px;
-    }
+.table th,
+.table td {
+    padding: 0.2rem;
+}
 
-
-
-    .table th, .table td {
-        padding: 0.2rem;
-    }
+.align-middle {
+    vertical-align: middle;
+}

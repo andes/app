@@ -14,26 +14,7 @@ $orange: #ff8d22;
     .btn-prev,
     .btn-next {
         width: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        background: $blue;
-        color: lightblue;
-
-        &:hover {
-            plex-icon {
-                color: $dark-blue;
-            }
-        }
-
-        &.disabled {
-            background: #35474e;
-
-            plex-icon {
-                color: $dark-grey;
-            }
-        }
+        margin-bottom: 0.25rem;
     }
 
     .contenido-agenda {
