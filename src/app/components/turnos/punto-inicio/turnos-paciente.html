@@ -17,9 +17,9 @@
 
                                 <div>
                                     <plex-badge *ngIf="turno.asistencia === 'asistio' && turno.estado !== 'suspendido'"
-                                                type="success">{{turno.asistencia}}</plex-badge>
+                                                type="success">ASISTIÓ</plex-badge>
                                     <plex-badge *ngIf="turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
-                                                type="danger">{{turno.asistencia}}</plex-badge>
+                                                type="danger">NO ASISTIÓ</plex-badge>
                                     <plex-badge *ngIf="turno.estado === 'suspendido'" type="danger">{{turno.estado}}
                                     </plex-badge>
                                     | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}

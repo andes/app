@@ -21,9 +21,11 @@
                     [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
+                            <plex-badge *ngIf="turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
+                                        type="danger">NO ASISTIÓ</plex-badge>
                             <plex-badge *ngIf="turno.estado === 'fuera-agenda'" type="warning">
                                 FUERA DE AGENDA</plex-badge>
-                            <plex-badge *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
+                            <plex-badge *ngIf="turno.asistencia !== 'noAsistio' && (turno.estado === 'asignado' || turno.estado === 'turnoDoble')"
                                         type="success">
                                 ASIGNADO</plex-badge>
                             <plex-badge *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
