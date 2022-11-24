@@ -25,11 +25,12 @@
                 <tbody>
                     <tr class="hover">
                         <td (click)="showDatos()">
-                            <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
-                            <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
+                            <plex-badge *ngIf="paciente.estado == 'validado'" type="success" class="mr-1">Validado
+                            </plex-badge>
+                            <plex-badge *ngIf="paciente.estado != 'validado'" type="warning" class="mr-1"
                                         title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
                                 Temporal</plex-badge>
-                            <plex-badge type="danger" *ngIf="paciente.fechaFallecimiento"> Fallecido
+                            <plex-badge type="danger" *ngIf="paciente.fechaFallecimiento" class="mr-1"> Fallecido
                             </plex-badge>
                             {{ paciente | nombre }}
                             <br>
@@ -48,17 +49,20 @@
                             <b>Sexo: </b>
                             <span>{{paciente.sexo}}</span>
                         </td>
-                        <td>
-                            <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus"
-                                         (click)="verificarOperacion('darTurno', paciente)"></plex-button>
+                        <td class="align-middle">
+                            <plex-button *ngIf="puedeDarTurno" type="info" tooltip="Dar Turno" icon="calendar-plus"
+                                         (click)="verificarOperacion('darTurno', paciente)">
+                            </plex-button>
                         </td>
-                        <td>
-                            <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
-                                         (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
+                        <td class="align-middle">
+                            <plex-button *ngIf="puedeCrearSolicitud" type="info" tooltip="Solicitudes"
+                                         icon="open-in-app" (click)="verificarOperacion('ingresarSolicitud', paciente)">
+                            </plex-button>
                         </td>
-                        <td>
-                            <plex-button *ngIf="puedeActivarAppMobile" title="Activar App" icon="cellphone-android"
-                                         (click)="verificarOperacion('activarApp', paciente)"></plex-button>
+                        <td class="align-middle">
+                            <plex-button *ngIf="puedeActivarAppMobile" type="info" tooltip="Activar App"
+                                         icon="cellphone-android" (click)="verificarOperacion('activarApp', paciente)">
+                            </plex-button>
                         </td>
                     </tr>
                 </tbody>
