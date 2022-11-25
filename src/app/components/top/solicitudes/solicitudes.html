@@ -24,19 +24,23 @@
                 <plex-tab label="Entrada" (click)="panelIndex = 0">
                     <form #formEntrada="ngForm">
                         <plex-wrapper>
-                            <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date" [(ngModel)]="fechaDesdeEntrada"
-                                            (change)="cambioFechaDesde()" name="fechaDesdeLimitada" label="Desde" class="fechas" required>
+                            <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date"
+                                           [(ngModel)]="fechaDesdeEntrada" (change)="cambioFechaDesde()"
+                                           name="fechaDesdeLimitada" label="Desde" class="fechas" required>
                             </plex-datetime>
-                            <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date" [(ngModel)]="fechaHastaEntrada"
-                                            (change)="cambioFechaHasta()" name="fechaHastaLimitada" label="Hasta" class="fechas" required>
+                            <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada'" type="date"
+                                           [(ngModel)]="fechaHastaEntrada" (change)="cambioFechaHasta()"
+                                           name="fechaHastaLimitada" label="Hasta" class="fechas" required>
                             </plex-datetime>
-                            <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date" [(ngModel)]="fechaDesdeEntrada"
-                                            (change)="cargarSolicitudes()" name="fechaDesde" label="Desde" class="fechas"
-                                            [max]="fechaHastaEntrada" required>
+                            <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date"
+                                           [(ngModel)]="fechaDesdeEntrada" (change)="cargarSolicitudes()"
+                                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHastaEntrada"
+                                           required>
                             </plex-datetime>
-                            <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date" [(ngModel)]="fechaHastaEntrada"
-                                            (change)="cargarSolicitudes()" name="fechaHasta" label="Hasta" class="fechas"
-                                            [min]="fechaDesdeEntrada" required>
+                            <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')" type="date"
+                                           [(ngModel)]="fechaHastaEntrada" (change)="cargarSolicitudes()"
+                                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesdeEntrada"
+                                           required>
                             </plex-datetime>
                             <plex-select [(ngModel)]="prestacionesDestinoEntrada" name="nombrePrestacion"
                                          label="Prestación destino" name="prestacionDestino"
@@ -54,9 +58,10 @@
                                              label="Organización origen" placeholder="Seleccione la organización"
                                              labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                                 </plex-select>
-                                <plex-select *ngIf="!asignadas" [(ngModel)]="profesionalDestino" name="Equipo de salud" tmProfesionales
-                                                label="Equipo de salud" placeholder="Buscar por equipo de salud"
-                                                (change)="cargarSolicitudes()" [closeAfterSelect]="true">
+                                <plex-select *ngIf="!asignadas" [(ngModel)]="profesionalDestino" name="Equipo de salud"
+                                             tmProfesionales label="Equipo de salud"
+                                             placeholder="Buscar por equipo de salud" (change)="cargarSolicitudes()"
+                                             [closeAfterSelect]="true">
                                 </plex-select>
                                 <plex-select [(ngModel)]="prioridadEntrada" [data]="prioridades" name="prioridad"
                                              label="Prioridad" ngModelOptions="{standalone: true}"
@@ -66,7 +71,8 @@
                         </plex-wrapper>
                     </form>
                     <span class="text-danger" *ngIf='mostrarAlertaRangoDias'>
-                        El rango de fecha no puede superar los {{ diasIntervalo }} días, se reajustará la fecha en forma automática</span>
+                        El rango de fecha no puede superar los {{ diasIntervalo }} días, se reajustará la fecha en forma
+                        automática</span>
                     <div *ngIf="!(prestacionesEntrada?.length)" class="mt-1 alert alert-default">
                         No hay solicitudes de entrada programadas en ese rango de fechas
                     </div>
@@ -98,8 +104,8 @@
                                         titulo="{{prestacion.solicitud.organizacionOrigen? prestacion.solicitud.organizacionOrigen.nombre : 'Sin organización de origen'}}"
                                         subtitulo="{{prestacion.solicitud.profesionalOrigen?(prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}">
                             </plex-label>
-                            <plex-label [tituloBold]="true"
-                                        titulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion.term}}"
+                            <plex-label justify="center" [tituloBold]="true"
+                                        titulo="{{prestacion.solicitud.tipoPrestacion.term}}"
                                         subtitulo="{{prestacion.solicitud.profesional? (prestacion.solicitud.profesional | nombre):'Sin profesional de destino'}}">
                             </plex-label>
                             <!-- Botones -->
@@ -134,51 +140,23 @@
                                         </span>
                                     </plex-badge>
                                 </ng-container>
- 
+
                                 <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                             type="success">Registro en HUDS</plex-badge>
                                 <plex-badge *ngIf="estado === 'referida'" type="warning">
                                     REFERIDA
                                 </plex-badge>
-                                <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" class="mr-1" type="info" tooltip="Agenda Virtual"
-                                            tooltipPosition="top">
+                                <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" class="mr-1"
+                                            type="info" tooltip="Agenda Virtual" tooltipPosition="top">
                                     <plex-icon name="monitor" size="md"></plex-icon>
                                 </plex-badge>
                                 <ng-container *ngIf="prestacion | botonesSolicitud as botones">
-                                    <plex-button size="sm" *ngIf="botones.auditar" icon="lock-alert" type="info"
-                                                 (click)="$event.stopPropagation();auditar(prestacion)"
-                                                 title="Auditar Solicitud">
-                                    </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.darTurno" icon="calendar-plus" type="success"
-                                                 (click)="$event.stopPropagation();darTurno(prestacion)"
-                                                 title="Dar Turno">
-                                    </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.iniciarPrestacion && isPresentationEnabled(prestacion)" icon="check" type="success"
-                                                 (click)="$event.stopPropagation();onIniciarPrestacionClick(prestacion)"
-                                                 title="Iniciar prestación">
-                                    </plex-button>
-                                    <plex-button size="sm" *ngIf="botones.citarPaciente" icon="calendar" type="warning"
-                                                 (click)="$event.stopPropagation();citar(prestacion)"
-                                                 title="Citar paciente">
-                                    </plex-button>
-                                    <plex-button type="danger" icon="delete" size="sm"
-                                                 *ngIf="botones.anular && permisoAnular"
-                                                 (click)="$event.stopPropagation();anular(prestacion)" title="Anular">
-                                    </plex-button>
-                                    <plex-button *ngIf="botones.continuarRegistro" type="success"
-                                                 size="sm" (click)="setRouteToParams(['ejecucion', prestacion.id]); 
-                                                 prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;
-                                                 accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; 
-                                                 accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; 
-                                                 preAccesoHuds(motivoVerContinuarPrestacion)">
-                                        CONTINUAR REGISTRO
-                                    </plex-button>
+                                    <plex-dropdown #drop *ngIf="verificarBotones(botones, prestacion)" [right]="true"
+                                                   class="ml-1" [items]="itemsDropdown" size="sm" icon="dots-vertical"
+                                                   (onOpen)="setDropDown(prestacion, drop, botones)">
+                                    </plex-dropdown>
                                 </ng-container>
-                                <plex-dropdown #drop *ngIf="estado === 'asignada'" class="pl-2 mr-0" [right]="true"
-                                               [items]="itemsDropdown" size="sm" icon="dots-vertical" label=""
-                                               (onOpen)="setDropDown(prestacion, drop)">
-                                </plex-dropdown>
                             </ng-container>
                         </plex-item>
                     </plex-list>
@@ -244,7 +222,7 @@
                                         subtitulo=" {{prestacion.solicitud.profesional?(prestacion.solicitud.profesional | nombre) : 'Sin profesional de destino'}}">
                             </plex-label>
                             <plex-label [tituloBold]="true"
-                                        titulo="Tipo de prestación: {{prestacion.solicitud.tipoPrestacion? prestacion.solicitud.tipoPrestacion.term : 'No indica'}}"
+                                        titulo="{{prestacion.solicitud.tipoPrestacion? prestacion.solicitud.tipoPrestacion.term : 'No indica'}}"
                                         subtitulo=" {{prestacion.solicitud.profesionalOrigen?(prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}">
                             </plex-label>
                             <!-- Bagges -->
@@ -274,8 +252,8 @@
                                                  prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;
                                                  accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; 
                                                  accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; 
-                                                 preAccesoHuds(motivoVerContinuarPrestacion)">
-                                CONTINUAR REGISTRO
+                                                 preAccesoHuds(motivoVerContinuarPrestacion)" icon="flecha-derecha"
+                                         tooltip="Continuar Registro">
                             </plex-button>
                         </plex-item>
                     </plex-list>

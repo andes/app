@@ -84,6 +84,7 @@ export class SolicitudesComponent implements OnInit {
     public showModalMotivo = false;
     public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
     public routeToParams = [];
+    public prestacionNominalizada = null;
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
@@ -108,6 +109,7 @@ export class SolicitudesComponent implements OnInit {
     public mostrarMasOpcionesSalida = false;
     public mostrarMasOpcionesEntrada = false;
     public mostrarAlertaRangoDias = false;
+    public seleccionado;
 
     constructor(
         public auth: Auth,
@@ -236,18 +238,23 @@ export class SolicitudesComponent implements OnInit {
     }
 
     seleccionar(prestacion) {
-        (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
-
-        prestacion.seleccionada = true;
-        this.prestacionSeleccionada = prestacion;
-        if (prestacion.solicitud && prestacion.solicitud.turno) {
-            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
-                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
-                this.setShowDetallesFlags();
-            });
+        if (this.seleccionado && this.seleccionado.id === prestacion.id) {
+            this.seleccionado = null;
         } else {
-            this.turnoSeleccionado = null;
-            this.setShowDetallesFlags();
+            this.seleccionado = prestacion;
+            (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
+
+            prestacion.seleccionada = true;
+            this.prestacionSeleccionada = prestacion;
+            if (prestacion.solicitud && prestacion.solicitud.turno) {
+                this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
+                    this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
+                    this.setShowDetallesFlags();
+                });
+            } else {
+                this.turnoSeleccionado = null;
+                this.setShowDetallesFlags();
+            }
         }
     }
 
@@ -734,12 +741,13 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    setDropDown(prestacion, drop) {
+    setDropDown(prestacion, drop, botones) {
         if (this.openedDropDown) {
             this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
         }
         if (prestacion.id) {
             this.openedDropDown = drop;
+            this.seleccionado = prestacion;
             this.itemsDropdown = [];
             if (prestacion.estadoActual.tipo === 'asignada') {
                 this.itemsDropdown[0] = {
@@ -755,7 +763,44 @@ export class SolicitudesComponent implements OnInit {
                         }
                     };
                 }
+            } else {
+                if (botones.auditar) {
+                    this.itemsDropdown.push({ icon: 'lock-alert', label: 'Auditar Solicitud', type: 'info', handler: () => { this.auditar(prestacion); } });
+                }
+                if (botones.darTurno) {
+                    this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
+                }
+                if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
+                    this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.onIniciarPrestacionClick(prestacion); } });
+                }
+                if (botones.citarPaciente) {
+                    this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(prestacion); } });
+                }
+                if (botones.anular && this.permisoAnular) {
+                    this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
+                }
+                if (botones.continuarRegistro) {
+                    this.itemsDropdown.push({
+                        icon: 'flecha-derecha', label: 'Continuar Registro', handler: () => {
+                            this.setRouteToParams(['ejecucion', prestacion.id]);
+                            this.preAccesoHuds(this.motivoVerContinuarPrestacion);
+                            this.accesoHudsPaciente = prestacion.paciente;
+                            this.accesoHudsTurno = null;
+                            this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
+                            this.prestacionNominalizada = prestacion.solicitud.tipoPrestacion.noNominalizada;
+                        }
+                    });
+                }
             }
+        }
+    }
+
+    verificarBotones(botones, prestacion) {
+        if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) || botones.citarPaciente
+            || (botones.anular && this.permisoAnular) || botones.continuarRegistro || prestacion.estadoActual.tipo === 'asignada') {
+            return true;
+        } else {
+            return false;
         }
     }
 
