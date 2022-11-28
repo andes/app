@@ -241,7 +241,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     refreshSelection(value, tipo) {
-        if (this.formu.invalid || typeof value.value === 'undefined') {
+        if (this.formu.invalid) {
             this.agendas = [];// retornar vacio
             return null;
         }
