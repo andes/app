@@ -1,6 +1,5 @@
 import { Input, Component, SimpleChanges, OnChanges } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
-
 @Component({
     selector: 'detalle-solicitud',
     templateUrl: './detalleSolicitud.html',
@@ -8,26 +7,21 @@ import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service'
 })
 export class DetalleSolicitudComponent implements OnChanges {
 
-
     @Input() prestacionSeleccionada: any;
-
     @Input() turnoSeleccionado: any;
-
     @Input() tipoSolicitud: string;
-
 
     public items = [
         { key: 'solicitud', label: 'SOLICITUD' },
         { key: 'historial', label: 'HISTORIAL' }
     ];
     public mostrar;
-
+    public fotos: any[] = [];
 
     constructor(
         public adjuntosService: AdjuntosService
     ) { }
 
-    fotos: any[] = [];
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.prestacionSeleccionada) {
@@ -48,5 +42,4 @@ export class DetalleSolicitudComponent implements OnChanges {
     cambiarOpcion(opcion) {
         this.mostrar = opcion;
     }
-
 }

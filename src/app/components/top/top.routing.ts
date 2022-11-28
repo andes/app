@@ -17,12 +17,10 @@ import { NuevaSolicitudComponent } from './solicitudes/nuevaSolicitud.component'
 import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 import { ListaReglasComponent } from './reglas/listaReglas.component';
 import { ReglasComponent } from './reglas/reglas.component';
-import { AnularSolicitudComponent } from './solicitudes/anularSolicitud.component';
 import { AuditarSolicitudComponent } from './solicitudes/auditarSolicitud.component';
 import { NotificarPacienteComponent } from './solicitudes/notificar-paciente.component';
 import { BusquedaPacienteComponent } from './solicitudes/busquedaPaciente.component';
 import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.component';
-import { PrestacionSolicitudComponent } from './solicitudes/prestacionSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
 import { EstadoSolicitudPipe } from './pipes/estado-solicitud.pipe';
 import { EstadoPrestacionPipe } from './pipes/estado-prestacion.pipe';
@@ -61,10 +59,8 @@ export const TOP_ROUTES = [
         NuevaSolicitudComponent,
         SolicitudesComponent,
         DetalleSolicitudComponent,
-        PrestacionSolicitudComponent,
         AuditarSolicitudComponent,
         NotificarPacienteComponent,
-        AnularSolicitudComponent,
         ReglasComponent,
         ListaReglasComponent,
         BusquedaPacienteComponent,

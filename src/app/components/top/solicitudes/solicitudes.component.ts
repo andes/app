@@ -1,5 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Unsubscribe } from '@andes/shared';
 import { Component, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
@@ -14,12 +15,25 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 @Component({
     selector: 'solicitudes',
     templateUrl: './solicitudes.html',
-    styleUrls: ['solicitudes.scss']
+    styles: [`
+        .rounded {
+            border: #00a8e0 solid 3px;
+            border-radius: 50%;
+            text-align: center;
+            width: 60px;
+            height: 60px;
+            font-size: 3rem;
+        }
+    `]
 })
 
 export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
+    @ViewChild('modalDevolver', { static: true }) modalDevolver: PlexModalComponent;
+    @ViewChild('modalIniciar', { static: true }) modalIniciar: PlexModalComponent;
+    @ViewChild('helpIniciar', { static: false }) helpIniciar: PlexHelpComponent;
+    @ViewChild('helpAnular', { static: false }) helpAnular: PlexHelpComponent;
+    @ViewChild('helpCitar', { static: false }) helpCitar: PlexHelpComponent;
 
     fecha: any;
     turnoSeleccionado: any;
@@ -37,7 +51,6 @@ export class SolicitudesComponent implements OnInit {
     public showBotonCargarSolicitud = true;
 
     public prestaciones = [];
-    public showIniciarPrestacion = false;
     public tipoSolicitud = 'entrada';
     public prestacionesSalida = [];
     public prestacionesEntrada = [];
@@ -48,8 +61,6 @@ export class SolicitudesComponent implements OnInit {
     public prestacionesPermisos = [];
     public permisosReglas;
     public permisoAnular = false;
-    public showAnular = false;
-    public showCitar = false;
     public showDetalle = false;
     public showNuevaSolicitud = false;
     public showNotificarPaciente = false;
@@ -84,6 +95,11 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsTurno = null;
     public motivoRespuesta: String;
     public prestacionDevolver: any;
+    public observacionesCitar;
+    public observacionesAnular;
+    public observacionesIniciarPrestacion;
+    public fechaInicioPrestacion = new Date();
+
     // filtros
     public prioridadEntrada;
     public prioridadSalida;
@@ -269,13 +285,9 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    cerrar() {
-        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+    closeSidebar() {
         this.showDetalle = false;
-        this.showAnular = false;
         this.showAuditar = false;
-        this.showCitar = false;
-        this.showIniciarPrestacion = false;
         this.showSidebar = false;
         this.showNuevaSolicitud = false;
         this.showNotificarPaciente = false;
@@ -286,7 +298,6 @@ export class SolicitudesComponent implements OnInit {
         if (prestacion) {
             this.prestacionSelected = prestacion;
         }
-
         if (this.seleccionado && this.seleccionado.id === prestacion.id) {
             this.seleccionado = null;
         } else {
@@ -303,20 +314,8 @@ export class SolicitudesComponent implements OnInit {
                     this.setShowDetallesFlags();
                 });
             } else {
-                this.seleccionado = prestacion;
-                (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
-
-                prestacion.seleccionada = true;
-                this.prestacionSeleccionada = prestacion;
-                if (prestacion.solicitud && prestacion.solicitud.turno) {
-                    this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
-                        this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
-                        this.setShowDetallesFlags();
-                    });
-                } else {
-                    this.turnoSeleccionado = null;
-                    this.setShowDetallesFlags();
-                }
+                this.turnoSeleccionado = null;
+                this.setShowDetallesFlags();
             }
         }
     }
@@ -324,9 +323,7 @@ export class SolicitudesComponent implements OnInit {
     private setShowDetallesFlags() {
         this.showDetalle = true;
         this.showSidebar = true;
-        this.showAnular = false;
         this.showAuditar = false;
-        this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
         this.showNotificarPaciente = false;
     }
@@ -363,44 +360,9 @@ export class SolicitudesComponent implements OnInit {
         });
     }
 
-    anular(prestacion) {
-        const arreColumns = this.columns.filter(c => c.key !== 'paciente');
-        this.columns = arreColumns;
-        this.prestacionSeleccionada = prestacion;
-        this.showAnular = true;
-        this.showSidebar = true;
-        this.showAuditar = false;
-        this.showDetalle = false;
-        this.showCitar = false;
-        this.showNuevaSolicitud = false;
-        this.showIniciarPrestacion = false;
-    }
-
-    citar(prestacion) {
-        this.prestacionSeleccionada = prestacion;
-        this.showCitar = true;
-        this.showSidebar = true;
-        this.showAnular = false;
-        this.showAuditar = false;
-        this.showDetalle = false;
-        this.showNuevaSolicitud = false;
-        this.showIniciarPrestacion = false;
-    }
-
     // verifica que el tipo de prestación este entre las autorizadas para el profesional
     isPresentationEnabled(prestacion) {
         return this.auth.check('rup:tipoPrestacion:' + prestacion.solicitud.tipoPrestacion.id);
-    }
-
-    onIniciarPrestacionClick(prestacion) {
-        this.prestacionSeleccionada = prestacion;
-        this.showIniciarPrestacion = true;
-        this.showSidebar = true;
-        this.showCitar = false;
-        this.showAnular = false;
-        this.showAuditar = false;
-        this.showDetalle = false;
-        this.showNuevaSolicitud = false;
     }
 
     volverDarTurno() {
@@ -420,10 +382,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.showAuditar = true;
         this.showSidebar = true;
-        this.showAnular = false;
         this.showDetalle = false;
-        this.showCitar = false;
-        this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
     }
 
@@ -433,10 +392,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.showAuditar = false;
         this.showSidebar = true;
-        this.showAnular = false;
         this.showDetalle = false;
-        this.showCitar = false;
-        this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
         this.showNotificarPaciente = true;
     }
@@ -453,7 +409,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-        this.guardarFechas();
+        this.closeSidebar();
 
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
@@ -618,11 +574,8 @@ export class SolicitudesComponent implements OnInit {
 
     afterDetalleSolicitud(event) {
         this.showSidebar = false;
-        this.showAnular = false;
         this.showAuditar = false;
         this.showDetalle = false;
-        this.showCitar = false;
-        this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
     }
 
@@ -683,27 +636,21 @@ export class SolicitudesComponent implements OnInit {
         }, error => {
             this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
         });
-        this.cerrar();
+        this.closeSidebar();
     }
 
-    returnAnular(event) {
-        this.showAnular = false;
-        this.showSidebar = false;
-        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
-        if (event.status === false) {
-            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                const patch = {
-                    op: 'estadoPush',
-                    estado: {
-                        tipo: 'anulada',
-                        motivoRechazo: event.motivo, // 'motivoRechazo' se reemplaza con 'observaciones'
-                        observaciones: event.motivo
-                    }
-                };
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => this.cargarSolicitudes()
-                );
-            }
+    anular(event) {
+        if (this.prestacionSeleccionada.estados?.length) {
+            const patch = {
+                op: 'estadoPush',
+                estado: {
+                    tipo: 'anulada',
+                    observaciones: this.observacionesAnular
+                }
+            };
+            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                () => this.cargarSolicitudes()
+            );
         }
     }
 
@@ -713,22 +660,18 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    returnCitar(event) {
-        this.showCitar = false;
-        this.showSidebar = false;
-        if (event.status === false) {
-            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                const patch = {
-                    op: 'citar',
-                    estado: {
-                        tipo: 'pendiente',
-                        observaciones: event.motivo
-                    }
-                };
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => this.cargarSolicitudes()
-                );
-            }
+    citar() {
+        if (this.prestacionSeleccionada.estados?.length) {
+            const patch = {
+                op: 'citar',
+                estado: {
+                    tipo: 'pendiente',
+                    observaciones: this.observacionesCitar
+                }
+            };
+            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                () => this.cargarSolicitudes()
+            );
         }
     }
 
@@ -779,67 +722,56 @@ export class SolicitudesComponent implements OnInit {
         this.showModalMotivo = true;
     }
 
-    returnPrestacion(event) {
-        this.showIniciarPrestacion = false;
-        this.showSidebar = false;
-        if (event.status === false) {
-            this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.alias || this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
-                .then(confirmacion => {
-                    if (confirmacion) {
-                        this.confirmarIniciarPrestacion(event);
-                    }
-                });
-        }
-    }
-
-    private confirmarIniciarPrestacion(data) {
+    confirmarIniciarPrestacion() {
         concat(
             // token HUDS
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.prestacionSeleccionada.paciente, 'Fuera de agenda', this.auth.profesional, null, this.prestacionSeleccionada.solicitud.tipoPrestacion.id),
             // PATCH pasar prestacion a ejecución
-            this.iniciarPrestacion(data.fecha, data.observaciones)
+            this.iniciarPrestacion()
         ).subscribe(
             () => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]),
             (err) => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err)
         );
     }
 
-    private iniciarPrestacion(fecha, observaciones?) {
+
+    private iniciarPrestacion() {
         const patch: any = {
             op: 'estadoPush',
             ejecucion: {
-                fecha,
+                fecha: this.fechaInicioPrestacion,
                 organizacion: this.auth.organizacion
             },
             estado: {
                 fecha: new Date(),
-                tipo: 'ejecucion'
+                tipo: 'ejecucion',
+                observaciones: this.observacionesIniciarPrestacion || undefined
             }
         };
-
-        if (observaciones) {
-            patch.estado.observaciones = observaciones;
-        }
         return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch);
+    }
+
+    toggleModal(modal: string, flag: boolean) {
+        switch (modal) {
+            case 'iniciar': this.modalIniciar.showed = flag;
+                break;
+            case 'devolver': this.modalDevolver.showed = flag;
+                break;
+        }
     }
 
     devolver(prestacion) {
         this.prestacionDevolver = prestacion;
-        this.modal.showed = true;
+        this.modalDevolver.showed = true;
     }
 
     confirmarDevolver() {
         this.servicioPrestacion.patch(this.prestacionDevolver.id, { op: 'devolver', observaciones: this.motivoRespuesta }).subscribe(() => {
-            this.cerrarDevolver();
+            this.toggleModal('devolver', false);
             this.cargarSolicitudes();
         });
     }
 
-    cerrarDevolver() {
-        this.modal.showed = false;
-        this.prestacionDevolver = null;
-        this.motivoRespuesta = null;
-    }
 
     nuevaSolicitud() {
         const arreColumns = this.columns.filter(col => col.key !== 'paciente');
@@ -847,10 +779,7 @@ export class SolicitudesComponent implements OnInit {
         this.showNuevaSolicitud = true;
         this.showAuditar = false;
         this.showSidebar = true;
-        this.showAnular = false;
         this.showDetalle = false;
-        this.showCitar = false;
-        this.showIniciarPrestacion = false;
     }
 
     returnBusqueda(event) {
@@ -938,10 +867,10 @@ export class SolicitudesComponent implements OnInit {
                 this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
             }
             if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
-                this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.onIniciarPrestacionClick(prestacion); } });
+                this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.confirmarIniciarPrestacion(); } });
             }
             if (botones.citarPaciente) {
-                this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(prestacion); } });
+                this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(); } });
             }
             if (botones.anular && this.permisoAnular && this.tipoSolicitud === 'entrada') {
                 this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
