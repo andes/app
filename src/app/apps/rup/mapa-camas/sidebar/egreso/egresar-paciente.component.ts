@@ -462,11 +462,20 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     }
 
-    codigoCIE10(event) {
+    codigoCIE10(event, tipo) {
+        const filtro = [{
+            desde: 'A00',
+            hasta: 'V00'
+        }, {
+            desde: 'Z00',
+            hasta: 'Z99'
+        }];
         if (event && event.query) {
             const query = {
-                nombre: event.query
+                nombre: event.query,
+                filtroRango: (tipo === 'diagnostico') ? JSON.stringify(filtro) : undefined
             };
+
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
                 datos.map(dato => {
@@ -474,7 +483,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 });
                 event.callback(datos);
             });
-
         } else {
             const callback = [];
             if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
@@ -548,7 +556,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             switch (this.registro.valor.InformeEgreso.causaExterna.producidaPor.id) {
                 case 'Accidente':
-                    filtro = [{ desde: 'V01', hasta: 'X60' }];
+                    filtro = [{ desde: 'V01', hasta: 'X60' }, { desde: 'Y40', hasta: 'Y98' }];
                     break;
                 case 'lesionAutoinfligida':
                     filtro = [{ desde: 'X60', hasta: 'X85' }];
