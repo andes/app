@@ -464,7 +464,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     codigoCIE10(event, tipo) {
         const filtro = [{
-            desde: 'V00',
+            desde: 'A00',
+            hasta: 'V00'
+        }, {
+            desde: 'Z00',
             hasta: 'Z99'
         }];
         if (event && event.query) {
