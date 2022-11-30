@@ -1,3 +1,10 @@
+# [5.110.0](https://github.com/andes/app/compare/v5.109.0...v5.110.0) (2022-11-30)
+
+
+### Features
+
+* **CIT-190:** mostrar prestaciones del bloque en el gestor de agendas ([#2747](https://github.com/andes/app/issues/2747)) ([aaf10c1](https://github.com/andes/app/commit/aaf10c12d3201869b91dc41010259551c39ac6a9))
+
 # [5.109.0](https://github.com/andes/app/compare/v5.108.0...v5.109.0) (2022-11-23)
 
 
