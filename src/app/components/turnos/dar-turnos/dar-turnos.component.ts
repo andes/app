@@ -770,7 +770,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     cambiarTelefono(event) {
-        if (event.value !== undefined && event.value !== null) {
+        if (event.value) {
             this.cambioTelefono = true;
         }
     }
