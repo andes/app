@@ -2,6 +2,7 @@ import { CommonNovedadesService } from './../common-novedades.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { environment } from '../../../../environments/environment';
 export class ListaNovedadesComponent implements OnInit {
     selectedId: number;
     public novedades$ = [];
+    public cacheNovedades = [];
     public modulo;
 
     constructor(
@@ -27,6 +29,8 @@ export class ListaNovedadesComponent implements OnInit {
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
             this.novedades$ = novedades;
         });
+
+        this.cacheNovedades = Object.values(JSON.parse(localStorage.getItem('novedades')) || []).reverse();
     }
 
     verDetalleNovedad() {
@@ -56,5 +60,4 @@ export class ListaNovedadesComponent implements OnInit {
             this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
         }
     }
-
 }
