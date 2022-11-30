@@ -38,7 +38,11 @@ export class CatalogoNovedadesComponent implements OnInit {
         }
 
         this.novedades = novedades;
+<<<<<<< HEAD
         this.modulos = Object.values(this.listadoModulos).map(({ _id, nombre, descripcion }) => ({ _id, nombre, descripcion }));
+=======
+        this.modulos = Object.values(this.listadoModulos).map(({ _id, nombre }) => ({ _id, nombre }));
+>>>>>>> 7f676c4c7300a7bcfbd523bc0e9d8aacb1fd1d57
         this.selectModulo = this.modulos[0];
     }
 
@@ -49,8 +53,11 @@ export class CatalogoNovedadesComponent implements OnInit {
     public verDetalleNovedad(novedad: INovedad) {
         this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
     }
+<<<<<<< HEAD
 
     public volver() {
         this.router.navigate(['/novedades'], { relativeTo: this.route });
     }
+=======
+>>>>>>> 7f676c4c7300a7bcfbd523bc0e9d8aacb1fd1d57
 }
