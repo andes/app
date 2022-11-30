@@ -1,13 +1,18 @@
-<plex-layout *ngIf="!novedad">
+<plex-layout>
     <plex-layout-main>
-        <plex-title titulo="Recientes">
-        </plex-title>
-        <section class="filtro-novedades">
-            <plex-select name="selectModulo" [data]="modulos" [(ngModel)]="selectModulo" labelField="nombre"
-                         (ngModelChange)="filtrarPorModulo();" idField="_id">
-            </plex-select>
+        <section class="titulo">
+            <plex-title titulo="Recientes" class="catalogo-novedades">
+                <plex-button *ngIf="novedad" type="info" size="sm" (click)="volver()">Volver</plex-button>
+            </plex-title>
         </section>
-        <section class="catalogo-novedades">
+
+        <section *ngIf="!novedad">
+            <section class="filtro-novedades">
+                <plex-select name="selectModulo" [data]="modulos" [(ngModel)]="selectModulo"
+                             labelField="nombre + ':' + descripcion" (ngModelChange)="filtrarPorModulo();"
+                             idField="_id">
+                </plex-select>
+            </section>
             <ng-container>
                 <plex-title *ngIf="selectModulo" titulo="Novedades {{selectModulo.nombre}}">
                 </plex-title>
@@ -20,6 +25,9 @@
                     </plex-card>
                 </plex-grid>
             </ng-container>
+
         </section>
+
+        <detalle-novedad></detalle-novedad>
     </plex-layout-main>
 </plex-layout>
