@@ -27,9 +27,6 @@ export class DetalleNovedadComponent implements OnInit {
                 if (novedad) {
                     this.novedad = novedades.filter(n => n._id === novedad)[0];
                     this.fotos = this.getFotos(this.novedad);
-                } else {
-                    this.novedad = novedades[0];
-                    this.fotos = this.getFotos(this.novedad);
                 }
             });
         });

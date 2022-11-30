@@ -1,0 +1,25 @@
+<plex-layout *ngIf="!novedad">
+    <plex-layout-main>
+        <plex-title titulo="Recientes">
+        </plex-title>
+        <section class="filtro-novedades">
+            <plex-select name="selectModulo" [data]="modulos" [(ngModel)]="selectModulo" labelField="nombre"
+                         (ngModelChange)="filtrarPorModulo();" idField="_id">
+            </plex-select>
+        </section>
+        <section class="catalogo-novedades">
+            <ng-container>
+                <plex-title *ngIf="selectModulo" titulo="Novedades {{selectModulo.nombre}}">
+                </plex-title>
+                <plex-grid type="auto" size="md" [cols]="2">
+                    <plex-card *ngFor="let novedad of filtroNovedades" type="light" mode="filled">
+                        <plex-badge color="{{novedad.modulo.color}}">{{novedad.titulo}}</plex-badge>
+                        <article [innerHTML]="novedad.descripcion"></article>
+                        <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
+                        </plex-button>
+                    </plex-card>
+                </plex-grid>
+            </ng-container>
+        </section>
+    </plex-layout-main>
+</plex-layout>
