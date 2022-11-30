@@ -1,8 +1,9 @@
 <div *ngIf="showData">
     <plex-title titulo="Turnos suspendidos" size="md">
-        <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{
+        <plex-badge [type]="estadosAgenda[agenda.estado]?.class" class="mr-1">{{
             estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
-        <plex-help class="mr-1" type="help" icon="information-variant" titulo="Detalle de agenda">
+        <plex-help class="mr-1" type="help" icon="information-variant" tooltip="Detalle de agenda"
+                   titulo="Detalle de agenda">
             <div class="container mb-4">
                 <div class="row">
                     <div class="col-12">
