@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonNovedadesService } from './common-novedades.service';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'novedades',
@@ -17,13 +17,9 @@ export class NovedadesComponent implements OnInit {
         let modulo;
         this.route.params.subscribe(params => {
             modulo = params['modulo'];
+
             this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
-                if (modulo) {
-                    const novedadesFiltradas = novedades.filter(n => n.modulo && n.modulo._id === modulo);
-                    this.commonNovedadesService.setNovedades(novedadesFiltradas);
-                } else {
-                    this.commonNovedadesService.setNovedades(novedades);
-                }
+                this.commonNovedadesService.setNovedades(novedades);
             });
         });
     }
