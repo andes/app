@@ -171,7 +171,10 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                                 vacuna: r.registro.valor.vacuna.vacuna.nombre,
                                 condicion: r.registro.valor.vacuna.condicion.nombre,
                                 esquema: r.registro.valor.vacuna.esquema.nombre,
-                                dosis: r.registro.valor.vacuna.dosis.nombre,
+                                dosis: {
+                                    orden: r.registro.valor.vacuna.dosis.orden,
+                                    nombre: r.registro.valor.vacuna.dosis.nombre
+                                },
                                 lote: r.registro.valor.vacuna.lote,
                                 orden: r.registro.valor.vacuna.dosis.orden
                             };
@@ -213,10 +216,12 @@ export class VacunasComponent extends RUPComponent implements OnInit {
                 return;
             }
             if (this.vacunasEncontradas && this.vacunasEncontradas.length) {
-                const ultimoRegistro = this.vacunasEncontradas[0];
+                const dosisAnterior = this.vacunasEncontradas
+                    .sort((a, b) => a.dosis.orden > b.dosis.orden ? -1 : 1)
+                    .find(vac => vac.dosis.orden <= vacuna.dosis.orden);
                 const tiempoInterdosis = vacuna.dosis.tiempoInterdosis;
-                if (tiempoInterdosis > 0) {
-                    const diasdiferencia = vacuna.fechaAplicacion.getTime() - ultimoRegistro.fechaAplicacion.getTime();
+                if (dosisAnterior && tiempoInterdosis > 0) {
+                    const diasdiferencia = vacuna.fechaAplicacion.getTime() - dosisAnterior.fechaAplicacion.getTime();
                     const contdias = Math.round(diasdiferencia / (1000 * 60 * 60 * 24));
                     if (contdias < tiempoInterdosis) {
                         this.plex.info('warning', 'No se cumple el tiempo interdosis', 'Problemas con la dosis seleccionada');
