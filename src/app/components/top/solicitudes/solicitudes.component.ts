@@ -13,7 +13,8 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 
 @Component({
     selector: 'solicitudes',
-    templateUrl: './solicitudes.html'
+    templateUrl: './solicitudes.html',
+    styleUrls: ['solicitudes.scss']
 })
 
 export class SolicitudesComponent implements OnInit {
@@ -102,6 +103,10 @@ export class SolicitudesComponent implements OnInit {
     public fechaHastaEntrada: Date = moment().startOf('day').toDate();
     public fechaDesdeSalida: Date = moment().startOf('day').toDate();
     public fechaHastaSalida: Date = moment().startOf('day').toDate();
+    public fechaDesdeEntradaActualizacion: Date = null;
+    public fechaHastaEntradaActualizacion: Date = null;
+    public fechaDesdeSalidaActualizacion: Date = null;
+    public fechaHastaSalidaActualizacion: Date = null;
     public pacienteEntrada: any;
     public pacienteSalida: any;
     public prestacionesDestinoEntrada = [];
@@ -110,6 +115,36 @@ export class SolicitudesComponent implements OnInit {
     public mostrarMasOpcionesEntrada = false;
     public mostrarAlertaRangoDias = false;
     public seleccionado;
+    public actualizacion = false;
+    public check;
+    public collapse = false;
+    public loader = true;
+    public columns = [
+        {
+            key: 'fecha',
+            label: 'Fecha',
+        },
+        {
+            key: 'paciente',
+            label: 'Paciente',
+        },
+        {
+            key: 'origen',
+            label: 'Datos de origen',
+        },
+        {
+            key: 'destino',
+            label: 'Datos de destino',
+        },
+        {
+            key: 'actualizacion',
+            label: 'actualización',
+        },
+        {
+            key: 'EstadoAcciones',
+            label: ''
+        },
+    ];
 
     constructor(
         public auth: Auth,
@@ -220,14 +255,22 @@ export class SolicitudesComponent implements OnInit {
 
     cambio(activeTab) {
         if (activeTab !== this.activeTab) {
+            this.actualizacion = false;
+            this.check = false;
+            this.actualizarFechas();
             this.activeTab = activeTab;
             this.showSidebar = false;
             this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
+            const index = this.columns.findIndex(col => col.key === 'paciente');
+            if (index === -1) {
+                this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+            }
             this.cargarSolicitudes();
         }
     }
 
     cerrar() {
+        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
         this.showDetalle = false;
         this.showAnular = false;
         this.showAuditar = false;
@@ -235,12 +278,15 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
         this.showNuevaSolicitud = false;
+        this.seleccionado = null;
     }
 
     seleccionar(prestacion) {
         if (this.seleccionado && this.seleccionado.id === prestacion.id) {
             this.seleccionado = null;
         } else {
+            const arreColumns = this.columns.filter(col => col.key !== 'paciente');
+            this.columns = arreColumns;
             this.seleccionado = prestacion;
             (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
 
@@ -252,8 +298,20 @@ export class SolicitudesComponent implements OnInit {
                     this.setShowDetallesFlags();
                 });
             } else {
-                this.turnoSeleccionado = null;
-                this.setShowDetallesFlags();
+                this.seleccionado = prestacion;
+                (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
+
+                prestacion.seleccionada = true;
+                this.prestacionSeleccionada = prestacion;
+                if (prestacion.solicitud && prestacion.solicitud.turno) {
+                    this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
+                        this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
+                        this.setShowDetallesFlags();
+                    });
+                } else {
+                    this.turnoSeleccionado = null;
+                    this.setShowDetallesFlags();
+                }
             }
         }
     }
@@ -300,6 +358,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     anular(prestacion) {
+        const arreColumns = this.columns.filter(c => c.key !== 'paciente');
+        this.columns = arreColumns;
         this.prestacionSeleccionada = prestacion;
         this.showAnular = true;
         this.showSidebar = true;
@@ -349,6 +409,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     auditar(prestacion) {
+        const arregloColumnas = this.columns.filter(c => c.key !== 'paciente');
+        this.columns = arregloColumnas;
         this.prestacionSeleccionada = prestacion;
         this.showAuditar = true;
         this.showSidebar = true;
@@ -365,6 +427,7 @@ export class SolicitudesComponent implements OnInit {
 
     onPacienteChange() {
         if ((!this.pacienteSalida || this.pacienteSalida.length >= 3) || (!this.pacienteEntrada || this.pacienteEntrada.length >= 3)) {
+            this.loader = true;
             this.cargarSolicitudes();
         }
     }
@@ -376,18 +439,21 @@ export class SolicitudesComponent implements OnInit {
         this.skip = 0;
         this.scrollEnd = false;
 
-        if (this.tipoSolicitud === 'entrada' && this.fechaDesdeEntrada && this.fechaHastaEntrada) {
+        if ((this.tipoSolicitud === 'entrada' && (this.fechaDesdeEntrada && this.fechaHastaEntrada)) ||
+            (this.tipoSolicitud === 'entrada' && (this.fechaDesdeEntradaActualizacion && this.fechaHastaEntradaActualizacion))) {
+            this.loader = true;
             this.buscarSolicitudes();
         }
 
-        if (this.tipoSolicitud === 'salida' && this.fechaDesdeSalida && this.fechaHastaSalida) {
+        if ((this.tipoSolicitud === 'salida' && this.fechaDesdeSalida && this.fechaHastaSalida) ||
+            (this.tipoSolicitud === 'salida' && this.fechaDesdeSalidaActualizacion && this.fechaHastaSalidaActualizacion)) {
+            this.loader = true;
             this.buscarSolicitudes();
         }
     }
 
     getParams() {
         const params: any = {
-            ordenFechaDesc: true,
             estados: [
                 'auditoria',
                 'pendiente',
@@ -398,8 +464,15 @@ export class SolicitudesComponent implements OnInit {
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
-            params['solicitudDesde'] = this.fechaDesdeEntrada;
-            params['solicitudHasta'] = this.fechaHastaEntrada;
+            if (this.fechaDesdeEntrada && this.fechaHastaEntrada) {
+                params['solicitudDesde'] = this.fechaDesdeEntrada;
+                params['solicitudHasta'] = this.fechaHastaEntrada;
+                params['ordenFechaDesc'] = true;
+            } else {
+                params['solicitudDesdeActualizacion'] = this.fechaDesdeEntradaActualizacion;
+                params['solicitudHastaActualizacion'] = this.fechaHastaEntradaActualizacion;
+                params['ordenFechaDescAct'] = true;
+            }
             /*
                 TODO: Se remueve temporalmente la inclusión de referidas en la búsqueda de prestaciones.
                 Se verá de agregar un checkbox para búsueda de referidas a demanda.
@@ -440,8 +513,15 @@ export class SolicitudesComponent implements OnInit {
                 params['paciente'] = this.pacienteEntrada;
             }
         } else {
-            params['solicitudDesde'] = this.fechaDesdeSalida;
-            params['solicitudHasta'] = this.fechaHastaSalida;
+            if (this.fechaDesdeSalida && this.fechaHastaSalida) {
+                params['solicitudDesde'] = this.fechaDesdeSalida;
+                params['solicitudHasta'] = this.fechaHastaSalida;
+                params['ordenFechaDesc'] = true;
+            } else {
+                params['solicitudDesdeActualizacion'] = this.fechaDesdeSalidaActualizacion;
+                params['solicitudHastaActualizacion'] = this.fechaHastaSalidaActualizacion;
+                params['ordenFechaDescAct'] = true;
+            }
             if (this.asignadas) {
                 params['idProfesionalOrigen'] = this.auth.profesional;
             }
@@ -512,6 +592,7 @@ export class SolicitudesComponent implements OnInit {
             if (!resultado.length || resultado.length < this.limit) {
                 this.scrollEnd = true;
             }
+            this.loader = false;
         });
     }
 
@@ -528,6 +609,7 @@ export class SolicitudesComponent implements OnInit {
     returnAuditoria(event) {
         this.showAuditar = false;
         this.showSidebar = false;
+        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
         if (event.status !== false) {
             const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
             if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
@@ -570,6 +652,7 @@ export class SolicitudesComponent implements OnInit {
     returnAnular(event) {
         this.showAnular = false;
         this.showSidebar = false;
+        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
                 const patch = {
@@ -729,6 +812,8 @@ export class SolicitudesComponent implements OnInit {
         this.showDetalle = false;
         this.showCitar = false;
         this.showIniciarPrestacion = false;
+        const arreColumns = this.columns.filter(col => col.key !== 'paciente');
+        this.columns = arreColumns;
     }
 
     returnBusqueda(event) {
@@ -741,6 +826,48 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    onChange() {
+        const index = this.columns.findIndex(col => col.key === 'paciente');
+        if (index === -1) {
+            this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        }
+        this.showSidebar = false;
+        this.actualizacion = !this.actualizacion;
+        this.actualizarFechas();
+        this.loader = true;
+        this.buscarSolicitudes();
+    }
+
+    actualizarFechas() {
+        if (this.tipoSolicitud === 'entrada') {
+            this.prestacionesEntrada = [];
+            if (this.actualizacion) {
+                this.fechaDesdeEntrada = null;
+                this.fechaHastaEntrada = null;
+                this.fechaDesdeEntradaActualizacion = moment().startOf('day').toDate();
+                this.fechaHastaEntradaActualizacion = moment().startOf('day').toDate();
+            } else {
+                this.fechaDesdeEntrada = moment().startOf('day').toDate();
+                this.fechaHastaEntrada = moment().startOf('day').toDate();
+                this.fechaDesdeEntradaActualizacion = null;
+                this.fechaHastaEntradaActualizacion = null;
+            }
+        } else {
+            this.prestacionesSalida = [];
+            if (this.actualizacion) {
+                this.fechaDesdeSalida = null;
+                this.fechaHastaSalida = null;
+                this.fechaDesdeSalidaActualizacion = moment().startOf('day').toDate();
+                this.fechaHastaSalidaActualizacion = moment().startOf('day').toDate();
+            } else {
+                this.fechaDesdeSalida = moment().startOf('day').toDate();
+                this.fechaHastaSalida = moment().startOf('day').toDate();
+                this.fechaDesdeSalidaActualizacion = null;
+                this.fechaHastaSalidaActualizacion = null;
+            }
+        }
+    }
+
     setDropDown(prestacion, drop, botones) {
         if (this.openedDropDown) {
             this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
@@ -749,59 +876,65 @@ export class SolicitudesComponent implements OnInit {
             this.openedDropDown = drop;
             this.seleccionado = prestacion;
             this.itemsDropdown = [];
+            if (prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno && this.tipoSolicitud === 'salida') {
+                this.itemsDropdown.push({ icon: 'delete', label: 'Cancelar', handler: () => { this.cancelar(prestacion); } });
+            }
             if (prestacion.estadoActual.tipo === 'asignada') {
-                this.itemsDropdown[0] = {
+                this.itemsDropdown.push({
                     icon: 'clipboard-arrow-left', label: prestacion.solicitud.profesional?.id === this.auth.profesional ? 'Devolver' : 'Deshacer', handler: () => {
                         this.devolver(prestacion);
                     }
-                };
+                });
                 if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id && prestacion.solicitud.profesional?.id === this.auth.profesional && prestacion.paciente) {
-                    this.itemsDropdown[1] = {
+                    this.itemsDropdown.push({
                         icon: 'contacts', label: 'Ver Huds', handler: () => {
                             this.setRouteToParams(['paciente', prestacion.paciente.id]);
                             this.setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id);
                         }
-                    };
-                }
-            } else {
-                if (botones.auditar) {
-                    this.itemsDropdown.push({ icon: 'lock-alert', label: 'Auditar Solicitud', type: 'info', handler: () => { this.auditar(prestacion); } });
-                }
-                if (botones.darTurno) {
-                    this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
-                }
-                if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
-                    this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.onIniciarPrestacionClick(prestacion); } });
-                }
-                if (botones.citarPaciente) {
-                    this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(prestacion); } });
-                }
-                if (botones.anular && this.permisoAnular) {
-                    this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
-                }
-                if (botones.continuarRegistro) {
-                    this.itemsDropdown.push({
-                        icon: 'flecha-derecha', label: 'Continuar Registro', handler: () => {
-                            this.setRouteToParams(['ejecucion', prestacion.id]);
-                            this.preAccesoHuds(this.motivoVerContinuarPrestacion);
-                            this.accesoHudsPaciente = prestacion.paciente;
-                            this.accesoHudsTurno = null;
-                            this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
-                            this.prestacionNominalizada = prestacion.solicitud.tipoPrestacion.noNominalizada;
-                        }
                     });
                 }
+            }
+            if (botones.auditar) {
+                this.itemsDropdown.push({ icon: 'lock-alert', label: 'Auditar Solicitud', handler: () => { this.auditar(prestacion); } });
+            }
+            if (botones.darTurno && this.tipoSolicitud === 'entrada') {
+                this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
+            }
+            if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
+                this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.onIniciarPrestacionClick(prestacion); } });
+            }
+            if (botones.citarPaciente) {
+                this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(prestacion); } });
+            }
+            if (botones.anular && this.permisoAnular && this.tipoSolicitud === 'entrada') {
+                this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
+            }
+            if (botones.continuarRegistro || prestacion.estadoActual.tipo === 'ejecucion') {
+                this.itemsDropdown.push({
+                    icon: 'flecha-izquierda', label: ' Continuar Registro', handler: () => {
+                        this.setRouteToParams(['ejecucion', prestacion.id]);
+                        this.preAccesoHuds(this.motivoVerContinuarPrestacion);
+                        this.accesoHudsPaciente = prestacion.paciente;
+                        this.accesoHudsTurno = null;
+                        this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
+                        this.prestacionNominalizada = prestacion.solicitud.tipoPrestacion.noNominalizada;
+                    }
+                });
             }
         }
     }
 
     verificarBotones(botones, prestacion) {
-        if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) || botones.citarPaciente
-            || (botones.anular && this.permisoAnular) || botones.continuarRegistro || prestacion.estadoActual.tipo === 'asignada') {
-            return true;
+        if (this.tipoSolicitud === 'entrada') {
+            if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) || botones.citarPaciente
+                || (botones.anular && this.permisoAnular) || botones.continuarRegistro || prestacion.estadoActual.tipo === 'asignada') {
+                return true;
+            }
         } else {
-            return false;
+            if ((prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) || prestacion.estadoActual.tipo === 'ejecucion') {
+                return true;
+            }
         }
+        return false;
     }
-
 }
