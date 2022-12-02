@@ -1,7 +1,16 @@
-.filtro-novedades {
-    margin-bottom: 40px;
+.titulo {
+    width: 100%;
 }
 
-.titulo {
-    margin-bottom: 40px;
+.itemCatalogo {
+    margin-top: 40px;
+
+    &:first-child {
+        margin-top: 0,
+    }
+}
+
+.cardNovedad {
+    max-width: 280px;
+    text-align: center;
 }

@@ -216,6 +216,7 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { CatalogoNovedadesComponent } from './components/novedades/catalogo-novedades/catalogo-novedades-component';
+import { FiltroNovedadesComponent } from './components/novedades/catalogo-novedades/filtro-novedades/filtro-novedades-component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -293,6 +294,7 @@ registerLocaleData(localeEs, 'es');
         DevolverHcComponent,
         NovedadesComponent,
         CatalogoNovedadesComponent,
+        FiltroNovedadesComponent,
         HeaderNovedadesComponent,
         ListaNovedadesComponent,
         DetalleNovedadComponent,
