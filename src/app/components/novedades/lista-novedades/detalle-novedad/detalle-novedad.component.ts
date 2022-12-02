@@ -43,8 +43,8 @@ export class DetalleNovedadComponent implements OnInit {
         this.vistaNovedades = JSON.parse(localStorage.getItem('novedades')) || [];
     }
 
-    existeVistaNovedad(novedad: INovedad) {
-        return this.vistaNovedades.some(elem => elem?._id === novedad?._id);
+    existeVistaNovedad(novedad?: INovedad) {
+        return novedad && this.vistaNovedades.some(elem => elem._id === novedad._id);
     }
 
     agregarVistaNovedad(novedad: INovedad) {
