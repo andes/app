@@ -1,10 +1,8 @@
-<!-- <plex-datetime label="Ingrese la fecha y la hora del evento" [(ngModel)]="fecha" type="date" name="fechaHora" required>
-</plex-datetime> -->
-<plex-title titulo="últimas vistas">
-</plex-title>
+<plex-title titulo="Calendario"></plex-title>
+<calendario-novedades></calendario-novedades>
+<plex-title titulo="últimas vistas"></plex-title>
 <plex-list>
     <plex-item *ngFor="let novedad of cacheNovedades" (click)="verDetalleNovedad(novedad)">
-        <!-- <plex-label titulo="{{novedad.titulo}}"></plex-label> -->
         <p>{{novedad.titulo}}</p>
         <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
         <plex-badge size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}} </plex-badge>

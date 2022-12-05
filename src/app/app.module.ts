@@ -217,6 +217,7 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { CatalogoNovedadesComponent } from './components/novedades/catalogo-novedades/catalogo-novedades-component';
 import { FiltroNovedadesComponent } from './components/novedades/catalogo-novedades/filtro-novedades/filtro-novedades-component';
+import { CalendarioNovedadesComponent } from './components/novedades/lista-novedades/calendario/calendario-novedades.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -295,6 +296,7 @@ registerLocaleData(localeEs, 'es');
         NovedadesComponent,
         CatalogoNovedadesComponent,
         FiltroNovedadesComponent,
+        CalendarioNovedadesComponent,
         HeaderNovedadesComponent,
         ListaNovedadesComponent,
         DetalleNovedadComponent,
