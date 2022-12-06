@@ -18,7 +18,6 @@ export class RecursosListadoComponent implements OnInit {
     @Output() accionRecurso = new EventEmitter<any>();
     @Input() permisoIngreso: boolean;
     @Input() permisoBloqueo: boolean;
-    selectedId;
     estadoRelacion: any;
     canEdit: Boolean;
     constructor(
@@ -30,7 +29,6 @@ export class RecursosListadoComponent implements OnInit {
 
     }
     ngOnInit() {
-
         this.selectedCama$ = this.mapaCamasService.selectedCama.pipe(
             map((cama) => {
                 return cama;
@@ -60,7 +58,6 @@ export class RecursosListadoComponent implements OnInit {
 
             })
         );
-
     }
 
     diasEstada(cama) {
@@ -80,12 +77,11 @@ export class RecursosListadoComponent implements OnInit {
     selectCama(cama, relacion, $event) {
         $event.stopPropagation();
         const data = {
-            selectCama: true,
+            selectedCama: true,
             cama: cama,
             relacion: relacion
         };
         this.accionRecurso.emit(data);
-
     }
 
     goTo(cama) {
