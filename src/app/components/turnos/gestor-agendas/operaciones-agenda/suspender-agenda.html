@@ -54,6 +54,12 @@
                         <span *ngIf="agenda.cupo == -1">Sin límite</span>
                     </div>
                 </div>
+                <div *ngIf="agenda.estado === 'suspendida'" class="row">
+                    <div class="col-12">
+                        <label>Motivo de suspensión</label>
+                        <span *ngIf="agenda.motivoDeSuspension">{{agenda.motivoDeSuspension}}</span>
+                    </div>
+                </div>
             </div>
         </plex-help>
         <plex-help *ngIf="agenda.nota" class="mr-1" type="help" icon="message">
@@ -194,18 +200,17 @@
 
 
 <ng-container *ngIf="showConfirmar">
-    <plex-title titulo="Suspender Agenda" size="md"></plex-title>
-    <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                 label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
-    </plex-select>
-    <ng-container class="bg-warning p-3 text-white" *ngIf="!motivoSuspensionSelect.select?.nombre">
-        Seleccione un motivo de suspensión
-    </ng-container>
-
-    <div class="mt-3 float-right">
-        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
-        </plex-button>
-        <plex-button type="success" label="Confirmar" (click)="suspenderAgenda()" title="Confirmar">
-        </plex-button>
-    </div>
+    <form #formulario="ngForm">
+        <plex-title titulo="Suspender Agenda" size="md"></plex-title>
+        <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
+                     label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión" [required]="true">
+        </plex-select>
+        <div class="mt-3 float-right">
+            <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button class="ml-1" [disabled]="!formulario.valid" type="success" label="Confirmar"
+                         (click)="suspenderAgenda()">
+            </plex-button>
+        </div>
+    </form>
 </ng-container>
