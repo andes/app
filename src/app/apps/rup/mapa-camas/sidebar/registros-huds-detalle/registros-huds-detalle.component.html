@@ -1,7 +1,7 @@
 <plex-title titulo="Registros" size="md">
     <ng-container *ngIf="esProfesional">
-        <plex-button *ngIf="puedeVerHuds" type="info" size="sm" (click)="verHuds()">
-            HUDS
+        <plex-button *ngIf="puedeVerHuds" type="info" size="sm" tooltip="Ver HUDS del paciente" tooltipPosition="left"
+                     icon="historial" (click)="verHuds()">
         </plex-button>
         <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
             <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
@@ -15,13 +15,13 @@
 <form #formulario="ngForm">
     <plex-grid type="full" cols="2" class="mt-0">
         <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min$ | async" [debounce]="600"
-                    (change)="onChangeFecha()">
+                       (change)="onChangeFecha()">
         </plex-datetime>
         <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [max]="max$ | async" [debounce]="600"
-                    (change)="onChangeFecha()">
+                       (change)="onChangeFecha()">
         </plex-datetime>
         <plex-select label="Prestacion" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId"
-                    labelField="term" [data]="prestacionesList$ | async" (change)="onChangeTipoPrestacion()" span="2">
+                     labelField="term" [data]="prestacionesList$ | async" (change)="onChangeTipoPrestacion()" span="2">
         </plex-select>
     </plex-grid>
 </form>

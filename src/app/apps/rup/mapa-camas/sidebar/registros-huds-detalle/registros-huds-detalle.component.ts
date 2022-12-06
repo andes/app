@@ -40,6 +40,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public prestacionesList$: Observable<any>;
     public min$: Observable<Date>;
     public max$: Observable<Date>;
+    public paciente;
 
     @Output() accion = new EventEmitter();
 
@@ -69,7 +70,11 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             switchMap(([cama, prestacion, resumen]) => {
                 estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
                 const paciente = cama?.paciente || prestacion?.paciente;
-                return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
+                this.paciente = paciente;
+                if (paciente) {
+                    return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
+                }
+                return [];
             }),
             switchMap(({ paciente }) => {
                 return this.getHUDS(paciente);
@@ -166,10 +171,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     verHuds() {
-        this.cama$.pipe(take(1)).subscribe((cama) => {
-            this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/mapa/${this.mapaCamasService.ambito}` });
-            this.router.navigate(['/huds/paciente/' + cama.paciente.id]);
-        });
+        this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: `/mapa-camas/mapa/${this.mapaCamasService.ambito}` });
+        this.router.navigate(['/huds/paciente/' + this.paciente.id]);
     }
 
     getHUDS(paciente) {
