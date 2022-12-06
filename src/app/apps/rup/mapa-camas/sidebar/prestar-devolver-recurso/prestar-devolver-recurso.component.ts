@@ -58,7 +58,8 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             _id: this.cama.id,
             esMovimiento: true,
             estado: cama.estado,
-            unidadOrganizativa: (this.accion === 'devolver') ? cama.unidadOrganizativaOriginal : this.selectedUnidadOrganizativa
+            unidadOrganizativa: (this.accion === 'devolver') ? cama.unidadOrganizativaOriginal : this.selectedUnidadOrganizativa,
+            extras: (this.accion === 'devolver') ? { devolucion: true } : { prestamo: true }
         };
         let saveRequest;
         if (this.esOrganizacionV2) { // Para organizaciones-v2 solo deberia modificar capa médica

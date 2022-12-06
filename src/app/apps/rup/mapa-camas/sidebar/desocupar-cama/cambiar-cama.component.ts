@@ -113,7 +113,8 @@ export class CambiarCamaComponent implements OnInit {
             fechaIngreso: null,
             sala: camaActual.sala,
             extras: {
-                idMovimiento: idMov
+                idMovimiento: idMov,
+                cambioDeCama: true
             }
         };
 
@@ -126,7 +127,8 @@ export class CambiarCamaComponent implements OnInit {
             nota: (!camaActual.sala) ? camaActual.nota : null,
             sala: camaNueva.sala,
             extras: {
-                idMovimiento: idMov
+                idMovimiento: idMov,
+                cambioDeCama: true
             }
         };
 
@@ -144,7 +146,8 @@ export class CambiarCamaComponent implements OnInit {
         if (this.cambiarUO) {
             camaOcupada['extras'] = {
                 unidadOrganizativaOrigen: camaActual.unidadOrganizativa,
-                idMovimiento: idMov
+                idMovimiento: idMov,
+                cambioDeCama: true
             };
         }
         return forkJoin(

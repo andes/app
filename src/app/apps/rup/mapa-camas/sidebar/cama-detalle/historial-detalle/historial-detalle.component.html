@@ -1,9 +1,11 @@
 <plex-title titulo="Historial de movimientos"></plex-title>
 <!--  HISTORIAL DE MOVIMIENTOS DE UNA CAMA -->
 <plex-grid size="sm" type="full" cols="2" class="mb-1 mt-0">
-    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600" (change)="onChange($event)">
+    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600"
+                   (change)="onChange($event)">
     </plex-datetime>
-    <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600" (change)="onChange($event)">
+    <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600"
+                   (change)="onChange($event)">
     </plex-datetime>
 </plex-grid>
 
@@ -11,7 +13,7 @@
     <thead>
         <tr>
             <th><small class="font-weight-bold">Fecha</small></th>
-            <th><small class="font-weight-bold">Paciente</small></th>
+            <th><small class="font-weight-bold">Detalle</small></th>
             <th><small class="font-weight-bold">U. Org.</small></th>
             <th><small class="font-weight-bold">Estado</small></th>
         </tr>
@@ -24,18 +26,32 @@
                     {{ item.fecha | hora }} hs
                 </small>
             </td>
-            <td *ngIf="item.paciente; else sinPaciente">
-                <small>
+            <td>
+                <small *ngIf="item.paciente">
                     {{ item.paciente | nombre }}
                 </small>
+                <small *ngIf="!item.paciente" class="text-danger">
+                    SIN PACIENTE
+                </small>
+                <small *ngIf="item.extras?.ingreso" class="text-info">
+                    / INGRESO
+                </small>
+                <small *ngIf="item.extras?.egreso" class="text-info">
+                    / EGRESO
+                </small>
+                <small *ngIf="item.extras?.prestamo" class="text-info">
+                    / PRÉSTAMO
+                </small>
+                <small *ngIf="item.extras?.devolucion" class="text-info">
+                    / DEVOLUCIÓN
+                </small>
+                <small *ngIf="item.extras?.edicionCama" class="text-info">
+                    / CAMA EDITADA
+                </small>
+                <small *ngIf="item.extras?.cambioDeCama" class="text-info">
+                    / CAMBIO DE CAMA
+                </small>
             </td>
-            <ng-template #sinPaciente>
-                <td class="text-danger">
-                    <small>
-                        SIN PACIENTE
-                    </small>
-                </td>
-            </ng-template>
             <td>
                 <small class="text-capitalize">
                     {{ item.unidadOrganizativa.term }}
@@ -50,7 +66,9 @@
             </td>
         </tr>
     </tbody>
-</table><div *ngIf="!(historial$ | async)?.length" justify="center">
+</table>
+<div *ngIf="!(historial$ | async)?.length" justify="center">
     <plex-label class="mt-2" direction="column" size="md" icon=""
-                titulo="No existen movimientos entre las fechas seleccionadas" icon="calendario-rango-bold"></plex-label>
+                titulo="No existen movimientos entre las fechas seleccionadas" icon="calendario-rango-bold">
+    </plex-label>
 </div>
