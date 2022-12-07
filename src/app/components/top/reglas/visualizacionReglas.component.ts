@@ -27,20 +27,20 @@ export class VisualizacionReglasComponent implements OnInit {
      * @type {IOrganizacion}
      * @memberof VisualizacionReglasComponent
      */
-    organizacionOrigen: IOrganizacion;
-    prestacionOrigen: ITipoPrestacion;
+    public organizacionOrigen: IOrganizacion;
+    public prestacionOrigen: ITipoPrestacion;
     /**
      * Organización ingresada en el filtro de organización destino
      * @type {IOrganizacion}
      * @memberof VisualizacionReglasComponent
      */
-    organizacionDestino: IOrganizacion;
+    public organizacionDestino: IOrganizacion;
     /**
      * Prestación ingresada en el filtro de prestación destino
      * @type {ITipoPrestacion}
      * @memberof VisualizacionReglasComponent
      */
-    prestacionDestino: ITipoPrestacion;
+    public prestacionDestino: ITipoPrestacion;
     /**
      * Datos de las filas de la tabla resultados. Se realiza en typescript por ser
      * más sencillo que en HTML
@@ -48,7 +48,12 @@ export class VisualizacionReglasComponent implements OnInit {
      * @type {any[]}
      * @memberof VisualizacionReglasComponent
      */
-    filas: any[];
+    public filas: any[];
+    public arrayReglas: any = [];
+    private scrollEnd = false;
+    public reglas: [IRegla];
+    public parametros;
+    public loader = false;
 
     constructor(
         private servicioReglas: ReglaService,
@@ -58,6 +63,15 @@ export class VisualizacionReglasComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.parametros = {
+            organizacionOrigen: '',
+            organizacionDestino: '',
+            prestacionDestino: '',
+            prestacionOrigen: '',
+            skip: 0,
+            limit: 10
+        };
+
         if (this.esParametrizado) {
             this.organizacionOrigen = this.auth.organizacion as any;
             this.actualizarTabla();
@@ -68,42 +82,45 @@ export class VisualizacionReglasComponent implements OnInit {
         return this.organizacionOrigen || this.organizacionDestino || this.prestacionOrigen || this.prestacionDestino;
     }
 
+
+
+    refrescarFiltro() {
+        this.parametros['organizacionOrigen'] = this.organizacionOrigen?.id || undefined;
+        this.parametros['organizacionDestino'] = this.organizacionDestino?.id || undefined;
+        this.parametros['prestacionDestino'] = this.prestacionDestino?.conceptId || undefined;
+
+        if (this.esParametrizado) {
+            this.parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
+        } else {
+            this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
+        }
+
+        // cada vez que se modifican los filtros seteamos el skip en 0
+        this.parametros.skip = 0;
+        this.scrollEnd = false;
+        if (this.parametros.organizacionOrigen || this.parametros.organizacionDestino || this.parametros.prestacionOrigen || this.parametros.prestacionDestino) {
+            this.actualizarTabla();
+        } else {
+            this.arrayReglas = [];
+            this.filas = null;
+        }
+    }
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
      * se actualice la tabla
      * @memberof VisualizacionReglasComponent
      */
     actualizarTabla() {
-        if (this.filtroIngresado()) {
-            const parametros = {
-                organizacionOrigen: this.organizacionOrigen ? this.organizacionOrigen.id : '',
-                organizacionDestino: this.organizacionDestino ? this.organizacionDestino.id : '',
-                prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
-            };
-            if (this.esParametrizado) {
-                parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
-            } else {
-                parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
-            }
-
-            this.servicioReglas.get(parametros).subscribe((reglas: [IRegla]) => {
-                this.obtenerFilasTabla(reglas);
-            });
-        } else {
-            this.filas = null;
+        if (this.parametros.skip === 0) {
+            this.arrayReglas = [];
+            this.filas = [];
+            this.loader = true;
         }
-    }
-
-    /**
-     * Devuelve si se ha cargado uno de los filtros
-     * @returns {boolean}
-     * @memberof VisualizacionReglasComponent
-     */
-    filtroIngresado(): boolean {
-        return (this.organizacionOrigen !== null && this.organizacionOrigen !== undefined) ||
-            (this.organizacionDestino !== null && this.organizacionDestino !== undefined) ||
-            (this.prestacionOrigen !== null && this.prestacionOrigen !== undefined) ||
-            (this.prestacionDestino !== null && this.prestacionDestino !== undefined);
+        this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
+            this.reglas = reglas;
+            this.loader = false;
+            this.obtenerFilasTabla();
+        });
     }
 
     /**
@@ -111,9 +128,9 @@ export class VisualizacionReglasComponent implements OnInit {
      *
      * @memberof VisualizacionReglasComponent
      */
-    obtenerFilasTabla(reglas: [IRegla]) {
-        this.filas = [];
-        for (const regla of reglas) {
+    obtenerFilasTabla() {
+        for (const regla of this.reglas) {
+            this.arrayReglas.push(regla);
             regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
@@ -131,6 +148,13 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
             });
         }
+
+        this.parametros.skip = this.arrayReglas.length;
+
+        if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
+            this.scrollEnd = true;
+        }
+
         if (this.esParametrizado) {
             this.filas.sort((fila1, fila2) => {
                 if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
@@ -157,6 +181,12 @@ export class VisualizacionReglasComponent implements OnInit {
         };
 
         this.documentosService.descargarReglasGlobales(params, `reglasGlobales ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
+    }
+
+    onScroll() {
+        if (!this.scrollEnd) {
+            this.actualizarTabla();
+        }
     }
 }
 
