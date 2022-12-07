@@ -8,6 +8,7 @@ import { CommonNovedadesService } from '../../common-novedades.service';
 @Component({
     selector: 'detalle-novedad',
     templateUrl: './detalle-novedad.component.html',
+    styleUrls: ['./detalle-novedad.scss']
 })
 
 export class DetalleNovedadComponent implements OnInit {
@@ -27,13 +28,13 @@ export class DetalleNovedadComponent implements OnInit {
 
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
             this.route.params.subscribe(params => {
-                const novedad = params['novedad'];
+                const idNovedad = params['novedad'];
 
-                if (novedad) {
-                    this.novedad = novedades.filter(n => n._id === novedad)[0];
+                if (idNovedad) {
+                    this.novedad = novedades.filter((novedad: INovedad) => novedad._id === idNovedad)[0];
                     this.fotos = this.getFotos(this.novedad);
 
-                    this.agregarVistaNovedad(this.novedad);
+                    if (this.novedad) { this.agregarVistaNovedad(this.novedad); }
                 }
             });
         });

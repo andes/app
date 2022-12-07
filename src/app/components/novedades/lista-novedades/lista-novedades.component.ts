@@ -9,12 +9,9 @@ import { CommonNovedadesService } from './../common-novedades.service';
 })
 
 export class ListaNovedadesComponent implements OnInit {
-    selectedId: number;
-    public novedades$ = [];
+    public novedades = [];
     public cacheNovedades = [];
-    public modulo;
-
-    public fecha = moment().subtract(7, 'd').toDate();
+    public modulo = null;
 
     constructor(
         private router: Router,
@@ -27,8 +24,9 @@ export class ListaNovedadesComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.modulo = params['modulo'];
         });
+
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
-            this.novedades$ = novedades;
+            this.novedades = novedades;
         });
 
         this.cacheNovedades = Object.values(JSON.parse(localStorage.getItem('novedades')) || []).reverse();

@@ -1,17 +1,27 @@
-<div class="select-novedades">
-    <plex-select *ngIf="!ocultar" name="selectModulo" [data]="modulos" [placeholder]="'Seleccione un módulo...'"
-                 [(ngModel)]="selectModulo" labelField="nombre + ':' + descripcion"
-                 (ngModelChange)="filtrarPorModulo();" idField="_id">
-    </plex-select>
+<div class="selectNovedades">
+
+    <plex-grid type="full" [cols]="2" class="selector" *ngIf="!ocultar">
+        <plex-select name="selectModulo" [data]="modulos" [placeholder]="'Seleccione un módulo...'"
+                     [(ngModel)]="selectModulo" labelField="nombre + ':' + descripcion"
+                     (ngModelChange)="filtrarPorModulo();" idField="_id">
+        </plex-select>
+        <div class="social">
+            <span>También podés ver nuestras novedades en <a href="https://www.youtube.com/@andesaulavirtual6712"
+                   target="_blank">
+                    <plex-icon size="md" name="logo-youtube" class="youtube"></plex-icon>
+                </a>
+            </span>
+        </div>
+    </plex-grid>
 </div>
 <ng-container *ngIf="!novedad">
-    <div class="titulo size-lg">
-        <plex-title *ngIf="selectModulo" titulo="Novedades {{selectModulo.nombre}}">
+    <div *ngIf="selectModulo" class="titulo size-lg itemCatalogo">
+        <plex-title titulo="Novedades {{selectModulo.nombre}}">
         </plex-title>
         <plex-grid type="auto" size="md" [cols]="4">
-            <plex-card *ngFor="let novedad of filtroNovedades">
-                <plex-badge color="{{novedad.modulo.color}}">{{novedad.titulo}}</plex-badge>
-                <article [innerHTML]="novedad.descripcion"></article>
+            <plex-card *ngFor="let novedad of filtroNovedades" class="cardNovedad">
+                <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+                <p>{{novedad.titulo}}</p>
                 <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
                 </plex-button>
             </plex-card>
