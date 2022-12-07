@@ -1,3 +1,11 @@
+# [5.111.0](https://github.com/andes/app/compare/v5.110.0...v5.111.0) (2022-12-07)
+
+
+### Features
+
+* **CIT-185:** guardar motivo suspension de agenda ([#2733](https://github.com/andes/app/issues/2733)) ([6f983cc](https://github.com/andes/app/commit/6f983cc06eea01bcfbc33d6a01052091048cd5dc))
+* **IN-499:** Registros de estado dentro de una cama ([#2768](https://github.com/andes/app/issues/2768)) ([6864788](https://github.com/andes/app/commit/6864788b0f160260012a32e08884b32bb9f3c49e))
+
 # [5.110.0](https://github.com/andes/app/compare/v5.109.0...v5.110.0) (2022-11-30)
 
 
