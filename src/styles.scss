@@ -63,7 +63,6 @@ $mdi-font-path: "~@mdi/font/fonts/";
 
 // Plex
 @import "~@andes/plex/src/lib/styles.scss";
-@import "./src/app/components/novedades/novedades.scss";
 
 // IMPORTS DE MÓDULOS
 // RUP
@@ -85,3 +84,4 @@ $mdi-font-path: "~@mdi/font/fonts/";
 // Novedades
 @import "./src/app/components/novedades/lista-novedades/calendario/bootstrap-datepicker/bootstrap-datepicker.scss";
 @import "./src/app/components/novedades/lista-novedades/calendario/calendario-novedades.scss";
+@import "./src/app/components/novedades/catalogo-novedades/catalogo-novedades.scss";

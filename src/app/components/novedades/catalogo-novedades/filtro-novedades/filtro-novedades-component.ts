@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
 
@@ -8,11 +8,11 @@ import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
     styleUrls: ['./filtro-novedades.scss']
 })
 
-export class FiltroNovedadesComponent implements OnInit {
+export class FiltroNovedadesComponent {
     @Input() novedades: any;
     @Input() modulos: any;
     @Input() ocultar: boolean;
-    @Output() filtroActivo = new EventEmitter<boolean>();
+    @Output() moduloActivo = new EventEmitter<boolean>();
 
     public listadoModulos = [];
     public selectModulo = null;
@@ -24,12 +24,8 @@ export class FiltroNovedadesComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
-        this.filtroActivo.emit(false);
-    }
-
     public filtrarPorModulo() {
-        this.filtroActivo.emit(!!(this.selectModulo?._id));
+        this.moduloActivo.emit(!!(this.selectModulo?._id));
         this.filtroNovedades = this.novedades.filter((novedad) => novedad.modulo._id === this.selectModulo?._id);
     }
 
