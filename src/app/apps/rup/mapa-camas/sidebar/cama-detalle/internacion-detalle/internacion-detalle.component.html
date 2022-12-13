@@ -43,17 +43,21 @@
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'egreso'">
-        <app-informe-egreso *ngIf="!editar && (existeEgreso$ | async)" (cancel)="activateOption('egreso')">
-            <plex-button *ngIf="permisosMapaCamasService.egreso && puedeEditar" tooltip="Editar egreso"
-                         tooltipPosition="left" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+
+        <app-informe-egreso *ngIf="!editar && (pacientePrestacion.estadoActual.tipo === 'validada' || informeEgreso)"
+                            (cancel)="activateOption('egreso')">
+            <plex-button *ngIf="permisosMapaCamasService.egreso && pacientePrestacion.estadoActual.tipo !== 'validada'"
+                         tooltip="Editar egreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
+                         (click)="toggleEdit()">
             </plex-button>
         </app-informe-egreso>
-        <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !(existeEgreso$ | async))"
+        <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && (editar || !informeEgreso)"
                               (onSave)="editar ? toggleEdit() : notificarEgreso()">
-            <plex-button *ngIf="(existeEgreso$ | async)" tooltip="Volver" tooltipPosition="left" icon="arrow-left"
-                         type="danger" size="sm" (click)="toggleEdit();" [autodisabled]="true">
+            <plex-button *ngIf="informeEgreso" tooltip="Volver" tooltipPosition="left" icon="arrow-left" type="danger"
+                         size="sm" (click)="toggleEdit();" [autodisabled]="true">
             </plex-button>
         </app-egresar-paciente>
+
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">

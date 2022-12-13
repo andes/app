@@ -1,6 +1,6 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, Input, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { combineLatest, Observable, Subscription, of } from 'rxjs';
+import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
@@ -16,20 +16,24 @@ import { ListadoInternacionCapasService } from '../../../views/listado-internaci
 export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
-    existeEgreso$: Observable<Boolean>;
-
+    public existeEgreso$: Observable<Boolean>;
+    public pacientePrestacion;
     public prestacion$: Observable<IPrestacion>;
+    public informeEgreso;
 
     view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
-    @Input() puedeEditar;
+    @Input('internacion')
+    set internacion(value: any) {
+        this.pacientePrestacion = value;
+        this.informeEgreso = value.ejecucion.registros[value.ejecucion.registros.length - 1].valor.InformeEgreso;
+    }
 
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public editar = false;
-    // public existeEgreso = false;
     public mostrar;
     public hayMovimientosAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
@@ -101,9 +105,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
             }
         });
 
+
         this.existeEgreso$ = this.mapaCamasService.historialInternacion$.pipe(
             map(historial => {
-                const a = this.accion;
                 return historial.findIndex(mov => mov.extras?.egreso) > -1;
             })
         );
