@@ -58,7 +58,6 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 import { InicioComponent } from './components/inicio/inicio.component';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
-import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
@@ -218,6 +217,7 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { CatalogoNovedadesComponent } from './components/novedades/catalogo-novedades/catalogo-novedades-component';
 import { FiltroNovedadesComponent } from './components/novedades/catalogo-novedades/filtro-novedades/filtro-novedades-component';
 import { CalendarioNovedadesComponent } from './components/novedades/lista-novedades/calendario/calendario-novedades.component';
+import { DetalleNovedadComponent } from './components/novedades/detalle-novedad/detalle-novedad.component';
 
 registerLocaleData(localeEs, 'es');
 

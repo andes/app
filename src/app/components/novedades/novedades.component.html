@@ -1,9 +1,9 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <catalogo-novedades [filtroFecha]="filtroFecha" (setFiltroFecha)="setFiltroFecha($event)"></catalogo-novedades>
+        <catalogo-novedades [fecha]="fecha" filtroModulo="filtroModulo"></catalogo-novedades>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <calendario-novedades [filtroFecha]="filtroFecha" (setFiltroFecha)="setFiltroFecha($event)">
+        <calendario-novedades [fecha]="fecha" (setFecha)="setFecha($event)">
         </calendario-novedades>
         <lista-novedades></lista-novedades>
     </plex-layout-sidebar>

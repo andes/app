@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
 import { CommonNovedadesService } from '../common-novedades.service';
@@ -8,16 +8,15 @@ import { CommonNovedadesService } from '../common-novedades.service';
     templateUrl: './catalogo-novedades.component.html',
 })
 
-export class CatalogoNovedadesComponent implements AfterViewInit, OnChanges {
-    @Input() filtroFecha: Date;
-    @Output() setFiltroFecha = new EventEmitter<Date>();
+export class CatalogoNovedadesComponent implements OnInit, OnChanges {
+    @Input() fecha: string;
 
     public novedad = undefined;
     public novedades = [];
     public modulos = [];
     public catalogo = [];
-    public moduloActivo = false;
-    public fecha = '';
+    public filtroModulo = false;
+    public fechaConFormato = '';
 
     constructor(
         private router: Router,
@@ -26,7 +25,7 @@ export class CatalogoNovedadesComponent implements AfterViewInit, OnChanges {
     ) {
     }
 
-    ngAfterViewInit(): void {
+    ngOnInit(): void {
         this.initNovedades();
 
         this.route.params.subscribe(params => {
@@ -35,12 +34,7 @@ export class CatalogoNovedadesComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: any): void {
-        if (changes.filtroFecha.currentValue) {
-            this.fecha = moment(this.filtroFecha).format('DD/MM/YYYY');
-            this.moduloActivo = false;
-        } else {
-            this.fecha = '';
-        }
+        this.fechaConFormato = moment(changes.fecha.currentValue).format('DD/MM/YYYY');
     }
 
     private initNovedades() {
@@ -77,17 +71,12 @@ export class CatalogoNovedadesComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    public activarFiltroModulo(event: any) {
-        this.moduloActivo = event;
+    public filtrar(id: string) {
+        this.filtroModulo = !!id;
     }
 
     public volver() {
         this.router.navigate(['/novedades'], { relativeTo: this.route });
-    }
-
-    public borrarFecha() {
-        this.filtroFecha = null;
-        this.setFiltroFecha.emit(null);
     }
 
     public verDetalleNovedad(novedad: INovedad) {

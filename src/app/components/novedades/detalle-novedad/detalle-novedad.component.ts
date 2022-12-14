@@ -1,9 +1,9 @@
 import { PlexVisualizadorService } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
-import { INovedad } from '../../../../interfaces/novedades/INovedad.interface';
-import { CommonNovedadesService } from '../../common-novedades.service';
+import { environment } from '../../../../environments/environment';
+import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
+import { CommonNovedadesService } from '../common-novedades.service';
 
 @Component({
     selector: 'detalle-novedad',
@@ -15,6 +15,7 @@ export class DetalleNovedadComponent implements OnInit {
     public novedad: INovedad;
     public vistaNovedades: INovedad[] = [];
     public fotos: [];
+    public fecha = undefined;
 
     constructor(
         private commonNovedadesService: CommonNovedadesService,
@@ -29,6 +30,7 @@ export class DetalleNovedadComponent implements OnInit {
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
             this.route.params.subscribe(params => {
                 const idNovedad = params['novedad'];
+                this.fecha = moment(params['fecha']).format('DD/MM/YYYY');
 
                 if (idNovedad) {
                     this.novedad = novedades.filter((novedad: INovedad) => novedad._id === idNovedad)[0];
