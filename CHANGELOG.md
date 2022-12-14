@@ -1,3 +1,10 @@
+## [5.111.1](https://github.com/andes/app/compare/v5.111.0...v5.111.1) (2022-12-14)
+
+
+### Bug Fixes
+
+* **CIT-200:** Visualizar badge No asistió en historial de turnos ([#2783](https://github.com/andes/app/issues/2783)) ([4082d03](https://github.com/andes/app/commit/4082d034ad25d066adc08cff6366e7c8ad65a737))
+
 # [5.111.0](https://github.com/andes/app/compare/v5.110.0...v5.111.0) (2022-12-07)
 
 
