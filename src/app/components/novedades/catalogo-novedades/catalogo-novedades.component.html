@@ -1,23 +1,22 @@
-<plex-title titulo="Recientes {{fecha !== '' ? '- ' + fecha : ''}}">
-    <plex-button *ngIf="novedad" type="info" size="sm" (click)="volver()">Volver</plex-button>
-    <plex-button *ngIf="filtroFecha" type="info" size="sm" (click)="borrarFecha()">Volver</plex-button>
+<plex-title class="titulo" titulo="Recientes {{fecha ? '- ' + fechaConFormato : ''}}">
+    <plex-button *ngIf="novedad || fecha" type="info" size="sm" (click)="volver()">Volver</plex-button>
 </plex-title>
 
-<div *ngIf="!filtroFecha && !novedad">
+<div *ngIf="!novedad && !fecha">
     <filtro-novedades *ngIf="novedades" [novedades]="novedades" [modulos]="modulos" [ocultar]="novedad"
-                      (moduloActivo)="activarFiltroModulo($event)">
+                      (filtrarPorModulo)="filtrar($event)">
     </filtro-novedades>
 </div>
 
 <ng-container>
     <div *ngIf="!novedades.length" justify="center" class="h-50">
-        <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                    [titulo]="'No hay resultados'" subtitulo="Elija otra fecha para buscar mas novedades">
+        <plex-label icon="magnify" type="info" size="xl" direction="column" [titulo]="'No hay resultados'"
+                    subtitulo="Elija otra fecha para buscar mas novedades">
         </plex-label>
     </div>
 </ng-container>
 
-<div *ngIf="!moduloActivo && !novedad">
+<div *ngIf="!filtroModulo && !novedad">
     <div *ngFor="let modulo of modulos" class="itemCatalogo">
         <plex-title titulo="{{modulo.nombre}}"></plex-title>
         <plex-slider size="xl" class="slider">
@@ -30,8 +29,5 @@
         </plex-slider>
     </div>
 </div>
-
-
-
 
 <detalle-novedad></detalle-novedad>

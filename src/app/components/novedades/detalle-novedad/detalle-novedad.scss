@@ -1,4 +1,6 @@
 .detalle-novedad {
+    margin-top: 15px;
+
     .contenedor-imagen {
         padding: 0 !important;
         background-color: transparent;
@@ -10,7 +12,6 @@
             object-fit: cover;
             max-height: 400px;
         }
-
 
         .jumbotron-text {
             width: 100%;

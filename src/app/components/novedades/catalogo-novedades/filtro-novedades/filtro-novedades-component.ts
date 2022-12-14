@@ -12,7 +12,7 @@ export class FiltroNovedadesComponent {
     @Input() novedades: any;
     @Input() modulos: any;
     @Input() ocultar: boolean;
-    @Output() moduloActivo = new EventEmitter<boolean>();
+    @Output() filtrarPorModulo = new EventEmitter<number>();
 
     public listadoModulos = [];
     public selectModulo = null;
@@ -24,9 +24,9 @@ export class FiltroNovedadesComponent {
     ) {
     }
 
-    public filtrarPorModulo() {
-        this.moduloActivo.emit(!!(this.selectModulo?._id));
-        this.filtroNovedades = this.novedades.filter((novedad) => novedad.modulo._id === this.selectModulo?._id);
+    public filtrar() {
+        this.filtrarPorModulo.emit(this.selectModulo?._id);
+        this.filtroNovedades = this.novedades.filter((novedad: INovedad) => novedad.modulo._id === this.selectModulo?._id);
     }
 
     public verDetalleNovedad(novedad: INovedad) {

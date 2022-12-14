@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, LOCALE_ID, OnChanges, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, LOCALE_ID, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 require('./bootstrap-datepicker/bootstrap-datepicker.js');
 require('./bootstrap-datepicker/bootstrap-datepicker.es.min.js');
@@ -11,27 +12,25 @@ const jQuery = window['jQuery'] = require('jquery/dist/jquery');
         provide: LOCALE_ID, useValue: 'es-AR'
     }]
 })
-export class CalendarioNovedadesComponent implements AfterViewInit, OnChanges {
-    @Input() filtroFecha: Date;
-    @Output() setFiltroFecha = new EventEmitter<Date>();
+export class CalendarioNovedadesComponent implements AfterViewInit {
+    @Input() fecha: string;
 
     private $input: any;
     private $div: any;
     private options: any = {};
-    private fechaActual = null;
 
     @ViewChild('input') input: ElementRef;
     @ViewChild('div') div: ElementRef;
 
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+    ) {
+    }
+
     ngAfterViewInit(): void {
         this.initCalendar();
         this.crearCalendario();
-    }
-
-    ngOnChanges(changes: any): void {
-        if (!changes.filtroFecha.currentValue) {
-            this.borrarSeleccion();
-        }
     }
 
     private initCalendar() {
@@ -44,28 +43,33 @@ export class CalendarioNovedadesComponent implements AfterViewInit, OnChanges {
     }
 
     private onChangeFecha(event: { date: Date }) {
-        this.fechaActual?.toString() === event.date.toString() ?
-            this.borrarSeleccion()
-            :
-            this.fechaActual = event.date;
+        const fecha = moment(event.date).format('YYYY-MM-DD');
 
-        this.setFiltroFecha.emit(this.fechaActual);
-    }
-
-    private borrarSeleccion() {
-        this.fechaActual = null;
-        if (this.$div) { this.$div.datepicker('update'); }
+        this.abrirFecha(fecha);
     }
 
     private crearCalendario() {
+        const fecha = this.fecha ? moment(this.fecha).toDate() : undefined;
+
         this.options = {
-            updateViewDate: false,
+            updateViewDate: true,
             weekStart: 1,
-            defaultViewDate: new Date(),
+            defaultViewDate: fecha,
             language: 'es',
-            todayHighlight: true
+            todayHighlight: false
         };
 
         this.$div.datepicker(this.options);
+        this.$div.datepicker('update');
+
+        if (fecha) { this.$div.datepicker('update', fecha); }
+    }
+
+    private abrirFecha(fecha: string) {
+        this.router.navigate(['/novedades/fecha/', fecha], { relativeTo: this.route });
+    }
+
+    public volver() {
+        this.router.navigate(['/novedades'], { relativeTo: this.route });
     }
 }
