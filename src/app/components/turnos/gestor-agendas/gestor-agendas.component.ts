@@ -16,6 +16,7 @@ import { AgendaService } from './../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
 import * as enumerado from './../enums';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgForm } from '@angular/forms';
 @Component({
     selector: 'gestor-agendas',
     templateUrl: 'gestor-agendas.html',
@@ -30,6 +31,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     @ViewChild('guardarAgendaPanel', { static: false }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
         this.guardarAgendaPanel = theElementRef;
     }
+    @ViewChild('formu', { static: false }) formu: NgForm;
     @ViewChildren(BiQueriesComponent) biQuery: QueryList<any>;
 
     agendasSeleccionadas: IAgenda[] = [];
@@ -239,7 +241,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     refreshSelection(value, tipo) {
-        if (typeof value.value === 'undefined') {
+        if (this.formu.invalid) {
+            this.agendas = [];// retornar vacio
             return null;
         }
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones?.length === 0) {
@@ -263,7 +266,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
-                this.parametros['tipoPrestacion'] = value.value.conceptId;
+                this.parametros['tipoPrestacion'] = value.value.map(tp => tp.conceptId);
                 delete this.parametros['tipoPrestaciones'];
             } else {
                 this.parametros['tipoPrestacion'] = '';
