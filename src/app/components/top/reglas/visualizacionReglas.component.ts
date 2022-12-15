@@ -74,7 +74,7 @@ export class VisualizacionReglasComponent implements OnInit {
 
         if (this.esParametrizado) {
             this.organizacionOrigen = this.auth.organizacion as any;
-            this.actualizarTabla();
+            this.refrescarFiltro();
         }
     }
 
