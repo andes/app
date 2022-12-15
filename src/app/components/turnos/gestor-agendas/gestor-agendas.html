@@ -19,7 +19,7 @@
                 </plex-datetime>
                 <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
                              tmPrestaciones="turnos:planificarAgenda:prestacion:?" ambito="ambulatorio" preload="true"
-                             name="prestaciones" label="Prestación" [multiple]="true">
+                             name="prestaciones" label="Prestación">
                 </plex-select>
                 <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')"
                              [data]="estadosAgendaArray" name="estado" label="Estado"
