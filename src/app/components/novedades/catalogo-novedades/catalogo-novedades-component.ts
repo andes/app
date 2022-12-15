@@ -52,7 +52,7 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
             this.modulos = { ...this.modulos, [modulo._id]: modulo };
         }
 
-        this.modulos = Object.values(this.modulos).map(({ _id, nombre, descripcion }) => ({ _id, nombre, descripcion }));
+        this.modulos = Object.values(this.modulos).map(({ _id, nombre, descripcion, color }) => ({ _id, nombre, descripcion, color }));
     }
 
     private crearCatalogo(novedades: INovedad[]) {

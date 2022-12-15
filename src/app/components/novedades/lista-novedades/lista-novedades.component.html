@@ -1,9 +1,12 @@
 <plex-title titulo="últimas vistas"></plex-title>
 <plex-list>
     <plex-item *ngFor="let novedad of cacheNovedades" (click)="verDetalleNovedad(novedad)">
+        <plex-badge class="novedadBadge" size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+        <plex-badge class="novedadBadge" size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}}
+        </plex-badge>
+        <plex-icon size="18" name="{{novedad.modulo.icono}}">
+        </plex-icon>
         <span>{{novedad.titulo}}</span>
-        <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
-        <plex-badge size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}} </plex-badge>
     </plex-item>
     <hr class="bg-white">
 </plex-list>

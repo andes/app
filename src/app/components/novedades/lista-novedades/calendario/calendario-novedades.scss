@@ -1,7 +1,7 @@
 @import '@andes/plex/src/lib/css/variables.scss';
 
 .datepicker {
-  margin: 20px 0;
+  margin-top: 20px;
 }
 
 .datepicker table,
@@ -73,6 +73,7 @@
   background-color: $dark-blue !important;
 }
 
+.datepicker table tr td.active.day:hover,
 .datepicker table th.prev:hover,
 .datepicker table th.next:hover,
 .datepicker table tr th:hover,
@@ -84,7 +85,6 @@
   background-color: $light-blue !important;
 }
 
-.datepicker table tr td.active.day:hover,
 .datepicker table tr td span.active.active {
   color: white !important;
 }
