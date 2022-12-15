@@ -19,7 +19,7 @@
     </plex-title>
     <plex-grid type="auto" size="md" [cols]="4">
         <plex-card *ngFor="let novedad of filtroNovedades" class="cardNovedad">
-            <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+            <plex-badge size="md" color="{{novedad.modulo.color}}">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
             <p>{{novedad.titulo}}</p>
             <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
             </plex-button>

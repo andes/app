@@ -6,6 +6,7 @@ import { CommonNovedadesService } from './../common-novedades.service';
 @Component({
     selector: 'lista-novedades',
     templateUrl: './lista-novedades.component.html',
+    styleUrls: ['./lista-novedades.scss']
 })
 
 export class ListaNovedadesComponent implements OnInit {
