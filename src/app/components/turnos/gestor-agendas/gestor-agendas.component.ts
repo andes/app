@@ -266,7 +266,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
-                this.parametros['tipoPrestacion'] = value.value.conceptId;
+                this.parametros['tipoPrestacion'] = value.value.map(tp => tp.conceptId);
                 delete this.parametros['tipoPrestaciones'];
             } else {
                 this.parametros['tipoPrestacion'] = '';

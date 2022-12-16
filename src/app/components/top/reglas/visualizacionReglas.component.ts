@@ -48,12 +48,11 @@ export class VisualizacionReglasComponent implements OnInit {
      * @type {any[]}
      * @memberof VisualizacionReglasComponent
      */
-    public filas: any[];
     public arrayReglas: any = [];
-    private scrollEnd = false;
-    public reglas: [IRegla];
+    public filas: any[];
     public parametros;
     public loader = false;
+    private scrollEnd = false;
 
     constructor(
         private servicioReglas: ReglaService,
@@ -64,17 +63,17 @@ export class VisualizacionReglasComponent implements OnInit {
 
     ngOnInit() {
         this.parametros = {
-            organizacionOrigen: '',
-            organizacionDestino: '',
-            prestacionDestino: '',
-            prestacionOrigen: '',
+            organizacionOrigen: undefined,
+            organizacionDestino: undefined,
+            prestacionDestino: undefined,
+            prestacionOrigen: undefined,
             skip: 0,
             limit: 10
         };
-
         if (this.esParametrizado) {
-            this.organizacionOrigen = this.auth.organizacion as any;
-            this.refrescarFiltro();
+            this.parametros['organizacionOrigen'] = this.auth.organizacion.id;
+            this.parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
+            this.actualizarTabla();
         }
     }
 
@@ -82,18 +81,11 @@ export class VisualizacionReglasComponent implements OnInit {
         return this.organizacionOrigen || this.organizacionDestino || this.prestacionOrigen || this.prestacionDestino;
     }
 
-
-
     refrescarFiltro() {
         this.parametros['organizacionOrigen'] = this.organizacionOrigen?.id || undefined;
         this.parametros['organizacionDestino'] = this.organizacionDestino?.id || undefined;
         this.parametros['prestacionDestino'] = this.prestacionDestino?.conceptId || undefined;
-
-        if (this.esParametrizado) {
-            this.parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
-        } else {
-            this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
-        }
+        this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
 
         // cada vez que se modifican los filtros seteamos el skip en 0
         this.parametros.skip = 0;
@@ -105,6 +97,7 @@ export class VisualizacionReglasComponent implements OnInit {
             this.filas = null;
         }
     }
+
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
      * se actualice la tabla
@@ -117,9 +110,12 @@ export class VisualizacionReglasComponent implements OnInit {
             this.loader = true;
         }
         this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
-            this.reglas = reglas;
             this.loader = false;
-            this.obtenerFilasTabla();
+            this.obtenerFilasTabla(reglas);
+            this.parametros.skip = this.arrayReglas.length;
+            if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
+                this.scrollEnd = true;
+            }
         });
     }
 
@@ -128,8 +124,8 @@ export class VisualizacionReglasComponent implements OnInit {
      *
      * @memberof VisualizacionReglasComponent
      */
-    obtenerFilasTabla() {
-        for (const regla of this.reglas) {
+    obtenerFilasTabla(reglas: IRegla[]) {
+        for (const regla of reglas) {
             this.arrayReglas.push(regla);
             regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
                 if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
@@ -148,13 +144,6 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
             });
         }
-
-        this.parametros.skip = this.arrayReglas.length;
-
-        if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
-            this.scrollEnd = true;
-        }
-
         if (this.esParametrizado) {
             this.filas.sort((fila1, fila2) => {
                 if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
