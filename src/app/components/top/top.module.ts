@@ -11,6 +11,7 @@ import { DirectiveLibModule } from 'src/app/directives/directives.module';
 import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.component';
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
+import { RouterService } from 'src/app/services/router.service';
 
 export const TOP_COMPONENTS = [
     VisualizacionReglasTopComponent,
@@ -20,6 +21,7 @@ export const TOP_COMPONENTS = [
 ];
 
 export const TOP_PROVIDERS = [
+    RouterService
 ];
 
 @NgModule({
