@@ -378,6 +378,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
+        this.showSuspenderAgenda = false;
+        this.showSuspendida = false;
     }
 
     agregarSobreturno(agenda) {

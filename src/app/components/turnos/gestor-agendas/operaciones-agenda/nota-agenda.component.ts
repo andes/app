@@ -36,11 +36,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.agendasSeleccionadas.forEach((agenda, index) => {
-            if (this.nota === '' || agenda.nota === this.nota) {
-                this.nota = agenda.nota;
-            } else {
-                this.nota = null;
-            }
+            this.nota = agenda.nota;
         });
     }
 
