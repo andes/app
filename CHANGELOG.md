@@ -1,3 +1,11 @@
+## [5.111.2](https://github.com/andes/app/compare/v5.111.1...v5.111.2) (2022-12-21)
+
+
+### Bug Fixes
+
+* **CITAS:** quita seleccion de multiple prestaciones ([#2790](https://github.com/andes/app/issues/2790)) ([3d44f97](https://github.com/andes/app/commit/3d44f977f2b98d2ac65c34f31916dd71b4e34da1))
+* **TOP:** corrige error al cargar reglas desde RUP ([#2789](https://github.com/andes/app/issues/2789)) ([a7ed5ce](https://github.com/andes/app/commit/a7ed5ce706113ed39fb75b1b36d98058e2ddef54))
+
 ## [5.111.1](https://github.com/andes/app/compare/v5.111.0...v5.111.1) (2022-12-14)
 
 
