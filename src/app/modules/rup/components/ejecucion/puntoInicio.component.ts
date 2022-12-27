@@ -50,7 +50,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public servicioIntermedioItemsFiltrados: any[] = [];
 
     // Tipos de prestacion que el usuario tiene permiso
-    public tiposPrestacion: any = [];
+    private tiposPrestacion: any = [];
     // Prestaciones que están fuera de la agenda
     public fueraDeAgenda: any = [];
     // estados a utilizarse en la agenda
@@ -530,7 +530,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     tienePermisos(turno) {
-        const existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion?._id));
+        const existe = this.tiposPrestacion.find(tp => tp.id === turno.tipoPrestacion?.id);
         if (turno.prestaciones[0]) {
             const permisoValidar = this.prestacionesValidacion.some(tt => tt === turno.prestaciones[0].solicitud.tipoPrestacion.id);
             const estado = turno.prestaciones[0].estados[turno.prestaciones[0].estados.length - 1];
@@ -571,9 +571,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     @Unsubscribe()
     reloadAgenda() {
-        return this.agendaSeleccionada.id ? observableForkJoin(
+        return this.agendaSeleccionada.id ? observableForkJoin([
             this.servicioAgenda.getById(this.agendaSeleccionada.id),
-        ).subscribe(data => {
+        ]).subscribe(data => {
             const agenda = data[0];
             this.cargarPrestacionesTurnos(agenda);
             this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
@@ -608,7 +608,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             if (!prestacionHijo) {
                 return false;
             }
-            if (!(turno.prestacion?.length === prestacion.multiprestacion?.length)) {
+            if (!(turno.prestaciones?.length === prestacion.multiprestacion?.length)) {
                 return turno.prestaciones?.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
             }
             return turno.prestaciones.find(p => p.solicitud.tipoPrestacion.conceptId === prestacionHijo.conceptId);
@@ -694,7 +694,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     mostrarBotonTurnero(agenda, turno) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0)) && turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente'));
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0)) && turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestaciones || (turno.prestaciones && turno.prestaciones.estados[turno.prestaciones.estados.length - 1].tipo === 'pendiente'));
     }
 
     routeTo(action, id) {
