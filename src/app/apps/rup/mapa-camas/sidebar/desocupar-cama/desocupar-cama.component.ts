@@ -41,7 +41,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public movimientoEgreso$: Observable<ISnapshot>;
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
-    public camaOcupada$: Observable<Boolean>;
+    public camaDesocupada$: Observable<Boolean>;
     public view$ = this.mapaCamasService.view;
 
     public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
@@ -92,21 +92,25 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.camaOcupada$ = combineLatest([
+        // Se verifica que la cama que vamos a desocupar no se encuentre disponible.
+        this.camaDesocupada$ = combineLatest([
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.snapshot$,
+            this.historial$,
         ]).pipe(
-            map(([selectedCama, snapshots]) => {
-                const cama = snapshots.find(snap => snap.idCama === selectedCama.idCama);
-                return (cama.estado !== 'ocupada' || cama.idInternacion !== selectedCama.idInternacion) && !cama.sala;
+            map(([selectedCama, snapshots, historial]) => {
+                const historialPaciente = historial[historial.length - 1];
+                const camaPaciente = (selectedCama.idCama) ? selectedCama : (historialPaciente) ? historialPaciente : null;
+                if (camaPaciente) {
+                    const cama = snapshots.find(snap => snap.idCama === camaPaciente.idCama);
+                    return (cama.estado !== 'ocupada' || cama.idInternacion !== camaPaciente.idInternacion) && !cama.sala;
+                }
             })
         );
 
         this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
             switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
         );
-
-
     }
 
     onType() {
@@ -114,7 +118,9 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     }
 
     verificarFecha() {
-        this.mapaCamasService.setFecha(this.fecha);
+        if (this.fecha) {
+            this.mapaCamasService.setFecha(this.fecha);
+        }
     }
 
     cambiarCama(cambiarUO: boolean) {
