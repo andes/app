@@ -631,12 +631,14 @@ export class DarTurnosComponent implements OnInit {
                         this.estadoT = 'noTurnos';
 
                         if (this.opciones.tipoPrestacion || this.opciones.profesional) {
-                            this.serviceAgenda.get({
+                            const params = {
                                 fechaDesde: moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                                 idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
                                 idProfesional: this.opciones.profesional ? this.opciones.profesional.id : null,
-                                estados: ['disponible', 'publicada']
-                            }).subscribe(alternativas => {
+                                estados: ['disponible', 'publicada'],
+                                organizacion: this.organizacion.id
+                            };
+                            this.serviceAgenda.get(params).subscribe(alternativas => {
                                 this.alternativas = alternativas;
                                 this.reqfiltros = false;
                             });
