@@ -23,4 +23,7 @@
     <plex-label *ngIf="carnet.fechaFinEmbarazo" titulo="Fecha Fin de Embarazo"
                 subtitulo="{{ carnet.fechaFinEmbarazo | fecha }}">
     </plex-label>
+    <plex-label *ngIf="carnet.cantidadEmbarazos" titulo="Cantidad de embarazos"
+                subtitulo="{{ carnet.cantidadEmbarazos }}">
+    </plex-label>
 </plex-grid>
