@@ -1,3 +1,11 @@
+## [5.111.3](https://github.com/andes/app/compare/v5.111.2...v5.111.3) (2022-12-28)
+
+
+### Bug Fixes
+
+* **CITAS:** Agrega filtro por efector en get agendas ([#2794](https://github.com/andes/app/issues/2794)) ([f8663b0](https://github.com/andes/app/commit/f8663b0317f9c6ba7b91973e0f5ece17bfc5f137))
+* **rup:** boton iniciar prestacion por conceptId de prestaciones ([#2787](https://github.com/andes/app/issues/2787)) ([fdaf590](https://github.com/andes/app/commit/fdaf590665bbcd2fe1997c67c67164dd7e1dfc09))
+
 ## [5.111.2](https://github.com/andes/app/compare/v5.111.1...v5.111.2) (2022-12-21)
 
 
