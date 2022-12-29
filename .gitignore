@@ -40,3 +40,6 @@ projects/portal/src/environments/configuracion.ts
 #System Files
 .DS_Store
 Thumbs.db
+
+#includes
+!/src/**/calendario/bootstrap-datepicker/*.js
