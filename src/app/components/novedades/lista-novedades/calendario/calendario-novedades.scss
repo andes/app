@@ -1,0 +1,90 @@
+@import '@andes/plex/src/lib/css/variables.scss';
+
+.datepicker {
+  margin-top: 20px;
+}
+
+.datepicker table,
+.table-condensed {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.datepicker table tr td,
+.datepicker table tr th,
+.datepicker table tr td span {
+  font-weight: 400;
+  font-size: 1rem;
+  height: calc(100% - 5rem) !important;
+  text-align: center;
+  border-radius: 0px !important;
+}
+
+.datepicker.datepicker-inline table th {
+
+  &.datepicker-switch,
+  &.next,
+  &.prev {
+    background: transparent;
+    color: #00a8e0;
+  }
+}
+
+.datepicker {
+  thead {
+    tr {
+      height: 40px !important;
+      border-bottom: 0.5px solid white;
+      text-transform: uppercase;
+
+      &:last-child {
+        text-transform: none;
+
+        th {
+          &:hover {
+            background: transparent !important;
+            color: white !important;
+          }
+        }
+      }
+
+      &:first-child {
+        height: auto !important;
+        border: none !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      height: 40px !important;
+    }
+  }
+}
+
+.datepicker table tr td.today {
+  color: white !important;
+  background-color: $dark-blue !important;
+}
+
+.datepicker table tr td.today:active,
+.datepicker table tr td.today.active {
+  color: black !important;
+  background-color: $dark-blue !important;
+}
+
+.datepicker table tr td.active.day:hover,
+.datepicker table th.prev:hover,
+.datepicker table th.next:hover,
+.datepicker table tr th:hover,
+.datepicker table tr td.day:hover,
+.datepicker table tr td.focused,
+.datepicker table tr td span:hover,
+.datepicker table tr td span.focused {
+  color: black !important;
+  background-color: $light-blue !important;
+}
+
+.datepicker table tr td span.active.active {
+  color: white !important;
+}

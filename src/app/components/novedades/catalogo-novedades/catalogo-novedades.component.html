@@ -1,0 +1,46 @@
+<plex-title class="titulo" titulo="Recientes {{fecha ? '- ' + fechaConFormato : ''}}">
+    <plex-button *ngIf="novedad || fecha" type="danger" size="sm" (click)="volver()">Volver</plex-button>
+</plex-title>
+
+<div *ngIf="!novedad && !fecha">
+    <filtro-novedades *ngIf="novedades" [novedades]="novedades" [modulos]="modulos" [ocultar]="novedad"
+                      (filtrarPorModulo)="filtrar($event)">
+    </filtro-novedades>
+</div>
+
+<ng-container>
+    <div *ngIf="!novedades.length" justify="center" class="h-50">
+        <plex-label icon="magnify" type="info" size="xl" direction="column" [titulo]="'No hay resultados'"
+                    subtitulo="Elija otra fecha para buscar mas novedades">
+        </plex-label>
+    </div>
+</ng-container>
+
+<div *ngIf="!filtroModulo && !novedad && !fecha">
+    <div *ngFor="let modulo of modulos" class="itemCatalogo">
+        <plex-title titulo="{{modulo.nombre}}"></plex-title>
+        <plex-slider size="xl" class="slider">
+            <plex-card *ngFor="let novedad of catalogo[modulo._id]" class="cardNovedad">
+                <plex-badge size="md" color="{{modulo.color}}">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+                <p>{{novedad.titulo}}</p>
+                <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
+                </plex-button>
+            </plex-card>
+        </plex-slider>
+    </div>
+</div>
+
+<div *ngIf="!filtroModulo && !novedad && fecha">
+    <plex-grid type="full" cols="4">
+        <div *ngFor="let modulo of modulos" class="itemCatalogo">
+            <plex-card *ngFor="let novedad of catalogo[modulo._id]" class="cardNovedad">
+                <plex-badge size="md" color="{{modulo.color}}">{{modulo.nombre}}</plex-badge>
+                <p>{{novedad.titulo}}</p>
+                <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
+                </plex-button>
+            </plex-card>
+        </div>
+    </plex-grid>
+</div>
+
+<detalle-novedad></detalle-novedad>

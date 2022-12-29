@@ -1,12 +1,5 @@
-@import "./src/app/components/novedades/lista-novedades/calendario/bootstrap-datepicker/bootstrap-datepicker.scss";
-@import "./src/app/components/novedades/lista-novedades/calendario/calendario-novedades.scss";
-@import "./src/app/components/novedades/catalogo-novedades/catalogo-novedades.scss";
-
-.novedades-home {
-    min-width: 500px;
-}
-
-section.detalle-novedad {
+.detalle-novedad {
+    margin-top: 15px;
 
     .contenedor-imagen {
         padding: 0 !important;
@@ -19,7 +12,6 @@ section.detalle-novedad {
             object-fit: cover;
             max-height: 400px;
         }
-
 
         .jumbotron-text {
             width: 100%;
@@ -65,7 +57,6 @@ section.detalle-novedad {
         grid-gap: 10px;
 
         .img-thumbnail {
-            height: 150px;
             object-fit: cover;
             width: 100%;
         }
@@ -75,10 +66,4 @@ section.detalle-novedad {
         border: solid 1px white;
     }
 
-}
-
-plex-help[icon=bell] {
-    div.jumbotron.info.open {
-        min-width: 500px;
-    }
 }

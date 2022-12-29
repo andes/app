@@ -1,10 +1,10 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <detalle-novedad>
-        </detalle-novedad>
+        <catalogo-novedades [fecha]="fecha" filtroModulo="filtroModulo"></catalogo-novedades>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <lista-novedades>
-        </lista-novedades>
+        <calendario-novedades [fecha]="fecha">
+        </calendario-novedades>
+        <lista-novedades></lista-novedades>
     </plex-layout-sidebar>
 </plex-layout>

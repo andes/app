@@ -1,30 +1,42 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
 import { CommonNovedadesService } from './common-novedades.service';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'novedades',
     templateUrl: './novedades.component.html',
 })
 export class NovedadesComponent implements OnInit {
+    public novedades = [];
+    public fecha = undefined;
+    public filtroModulo = false;
 
     constructor(
         private commonNovedadesService: CommonNovedadesService,
+        private router: Router,
         private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        let modulo;
         this.route.params.subscribe(params => {
-            modulo = params['modulo'];
+            this.fecha = params['fecha'] || undefined;
+
             this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
-                if (modulo) {
-                    const novedadesFiltradas = novedades.filter(n => n.modulo && n.modulo._id === modulo);
-                    this.commonNovedadesService.setNovedades(novedadesFiltradas);
-                } else {
-                    this.commonNovedadesService.setNovedades(novedades);
-                }
+                this.fecha ? this.filtrarPorFecha(this.fecha, novedades) : this.commonNovedadesService.setNovedades(novedades);
             });
         });
+    }
+
+    public filtrarPorFecha(fecha: string, novedades: any[]) {
+        if (novedades.length) {
+            const filtro = novedades.filter((novedad: INovedad) => moment(novedad.fecha).format('YYYY-MM-DD') === fecha);
+
+            filtro.length === 1 ? this.verDetalleNovedad(filtro[0]) : this.commonNovedadesService.setNovedades(filtro);
+        }
+    }
+
+    public verDetalleNovedad(novedad: INovedad) {
+        this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
     }
 }
