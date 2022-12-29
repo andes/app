@@ -66,7 +66,7 @@ export class VisualizacionReglasComponent implements OnInit {
             organizacionOrigen: undefined,
             organizacionDestino: undefined,
             prestacionDestino: undefined,
-            prestacionOrigen: undefined,
+            prestacionOrigen: this.prestacion?.conceptId || undefined,
             skip: 0,
             limit: 10
         };
