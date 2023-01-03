@@ -694,7 +694,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     mostrarBotonTurnero(agenda, turno) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0)) && turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestaciones || (turno.prestaciones?.length && turno.prestaciones.estados[turno.prestaciones.estados.length - 1].tipo === 'pendiente'));
+        const existeEFisico = agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0);
+        const validaTurno = turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido');
+        const validaPrestacion = (!turno.prestaciones || (turno.prestaciones.length && turno.prestaciones[0].estadoActual.tipo === 'pendiente'));
+        return existeEFisico && validaTurno && validaPrestacion;
     }
 
     routeTo(action, id) {
