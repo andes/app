@@ -1,8 +1,15 @@
-<auditoria-listado *ngIf="pacientesReportados && pacientesReportados.length" [pacientes]="pacientesReportados"
-                   [registroReportes]="reportes" [autoselect]="false" [errorTab]="true" (selected)="onSelect($event)">
-</auditoria-listado>
+<plex-text [(ngModel)]="filtroPaciente" (change)="filtrarPaciente()" name='filtrarPaciente' [debounce]="500"
+           [autoFocus]="autoFocus" placeholder="Escriba un documento / apellido / nombre">
+    <plex-icon name="account-search" left></plex-icon>
+</plex-text>
 
-<div *ngIf="pacientesReportados && !pacientesReportados.length" class="alert alert-default">
+<div *ngIf="pacientes.length">
+    <auditoria-listado [pacientes]="pacientes" [registroReportes]="reportes" [autoselect]="false" [errorTab]="true"
+                       (selected)="onSelect($event)">
+    </auditoria-listado>
+</div>
+
+<div *ngIf="!pacientes.length" class="alert alert-default">
     <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
 </div>
 
