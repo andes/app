@@ -80,7 +80,7 @@
                 <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
                 </plex-button>
             </plex-title>
-            <app-internacion-detalle *ngIf="mostrar === 'datosInternacion' && internacion" [internacion]="internacion"
+            <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" [inProgress]="inProgress"
                                      (accion)="onAccion($event)" (cambiarCama)="cambiarCama()">
             </app-internacion-detalle>
             <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"

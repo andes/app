@@ -17,23 +17,22 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
     public existeEgreso$: Observable<Boolean>;
-    public pacientePrestacion;
     public prestacion$: Observable<IPrestacion>;
-    public informeEgreso;
-
+    public estadoPrestacion;
+    public existeIngreso = false;
+    public loading;
+    public editar;
     view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
-    @Input('internacion')
-    set internacion(value: any) {
-        this.pacientePrestacion = value;
-        this.informeEgreso = value.ejecucion.registros[value.ejecucion.registros.length - 1].valor.InformeEgreso;
+    @Input('inProgress')
+    set inProgress(value: any) {
+        this.loading = true;
+        this.editar = false;
     }
-
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
-    public editar = false;
     public mostrar;
     public hayMovimientosAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
@@ -71,7 +70,17 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         this.mostrar = 'ingreso';
         this.editar = false;
         this.prestacion$ = this.mapaCamasService.prestacion$;
-
+        this.prestacion$.subscribe(prestacion => {
+            this.estadoPrestacion = '';
+            this.existeIngreso = false;
+            if (prestacion) {
+                this.estadoPrestacion = prestacion.estadoActual.tipo;
+                if (prestacion.ejecucion.registros[prestacion.ejecucion.registros.length - 1].valor.informeIngreso) {
+                    this.existeIngreso = true;
+                }
+                this.loading = false;
+            }
+        });
         this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
             this.capa = this.mapaCamasService.capa;
             if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
