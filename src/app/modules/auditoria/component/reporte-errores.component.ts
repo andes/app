@@ -18,13 +18,13 @@ export class ReporteErroresComponent implements OnInit {
     @Output() selected = new EventEmitter<any>();
 
     showSidebar = false;
-    filtroPaciente: string = null;
-    pacientesReportados = null;
-    corregirPaciente: Number = null;
+    filtroPaciente: string;
+    pacientesReportados;
+    corregirPaciente: Number;
     showReporteError = false; // se muestra en el sidebar datos del error reportado
     permisoEdicion: Boolean;
     permisoVincular: Boolean;
-    pacienteSelected: IPaciente = null;
+    pacienteSelected: IPaciente;
     reportes = [];
     pacientes = [];
 
