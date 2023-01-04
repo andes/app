@@ -177,9 +177,10 @@
             <plex-bool [(ngModel)]="paciente.reportarError" name="reportarError" type="slide"
                        label="Considero que los datos son incorrectos y quiero reportar el error">
             </plex-bool>
-
-            <plex-text *ngIf="paciente.reportarError" placeholder="Ingrese una descripción del error"
-                       [(ngModel)]="paciente.notaError" name="notaError"> </plex-text>
+            <div class="mt-2" *ngIf="paciente.reportarError">
+                <plex-text label="Descripción del error" [(ngModel)]="paciente.notaError" name="notaError"
+                           [required]="paciente.reportarError ? 'true' : 'false'"> </plex-text>
+            </div>
         </ng-container>
 
     </form>
