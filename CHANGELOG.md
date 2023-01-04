@@ -1,3 +1,16 @@
+# [5.112.0](https://github.com/andes/app/compare/v5.111.3...v5.112.0) (2023-01-04)
+
+
+### Bug Fixes
+
+* **RUP:** error boton turnero ([#2797](https://github.com/andes/app/issues/2797)) ([2150fb7](https://github.com/andes/app/commit/2150fb7c9ef40ccd5caa8d44e981520da8b93eaf))
+* **TOP:** Corrige visualización de reglas en RUP ejecución ([#2795](https://github.com/andes/app/issues/2795)) ([49edc3e](https://github.com/andes/app/commit/49edc3e4c8ac36e218d5f0019a7b1f276197577c))
+
+
+### Features
+
+* **PER-77:** Cantidad de embarazos ([#2745](https://github.com/andes/app/issues/2745)) ([0a0f395](https://github.com/andes/app/commit/0a0f395bdafc80937e01f442fc2fc9e8d96ee08c))
+
 ## [5.111.3](https://github.com/andes/app/compare/v5.111.2...v5.111.3) (2022-12-28)
 
 
