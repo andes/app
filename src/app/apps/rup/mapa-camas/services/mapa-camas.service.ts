@@ -86,11 +86,11 @@ export class MapaCamasService {
         private conceptosTurneablesService: ConceptosTurneablesService,
         public auth: Auth,
     ) {
-        this.maquinaDeEstado$ = combineLatest(
+        this.maquinaDeEstado$ = combineLatest([
             this.ambito2,
             this.capa2,
             this.organizacion2
-        ).pipe(
+        ]).pipe(
             switchMap(([ambito, capa, organizacion]) => {
                 return this.maquinaEstadosHTTP.getOne(ambito, capa, organizacion);
             }),
@@ -99,11 +99,11 @@ export class MapaCamasService {
         this.estado$ = this.maquinaDeEstado$.pipe(pluck('estados'));
         this.relaciones$ = this.maquinaDeEstado$.pipe(pluck('relaciones'));
 
-        this.snapshot$ = combineLatest(
+        this.snapshot$ = combineLatest([
             this.ambito2,
             this.capa2,
             this.fecha2
-        ).pipe(
+        ]).pipe(
             switchMap(([ambito, capa, fecha]) => {
                 return this.camasHTTP.snapshot(ambito, capa, fecha).pipe(
                     map(snapshot => [snapshot, fecha])
@@ -140,7 +140,7 @@ export class MapaCamasService {
             cache()
         );
 
-        this.snapshotFiltrado$ = combineLatest(
+        this.snapshotFiltrado$ = combineLatest([
             this.snapshot$,
             this.pacienteText,
             this.unidadOrganizativaSelected,
@@ -149,29 +149,29 @@ export class MapaCamasService {
             this.esCensable,
             this.estadoSelected,
             this.equipamientoSelected
-        ).pipe(
+        ]).pipe(
             map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable, estado, equipamiento]) =>
                 this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable, estado, equipamiento)
             )
         );
 
-        this.snapshotOrdenado$ = combineLatest(
+        this.snapshotOrdenado$ = combineLatest([
             this.snapshotFiltrado$,
             this.sortBy,
             this.sortOrder
-        ).pipe(
+        ]).pipe(
             map(([camas, sortBy, sortOrder]) =>
                 this.sortSnapshots(camas, sortBy, sortOrder)
             )
         );
 
         // Devuelve la prestación que contiene el informe de ingreso
-        this.prestacion$ = combineLatest(
+        this.prestacion$ = combineLatest([
             this.selectedPrestacion,
             this.selectedCama,
             this.view,
             this.capa2
-        ).pipe(
+        ]).pipe(
             switchMap(([prestacion, cama, view, capa]) => {
                 if (view === 'listado-internacion') {
                     // estadistica || estadistica-v2 (listadoInternacion || listadoInternacionUnificado)
@@ -300,7 +300,7 @@ export class MapaCamasService {
     }
 
     getRelacionesPosibles(cama: ISnapshot) {
-        return combineLatest(this.estado$, this.relaciones$).pipe(
+        return combineLatest([this.estado$, this.relaciones$]).pipe(
             map(([estados, relaciones]) => {
                 return this.getEstadosRelacionesCama(cama, estados, relaciones);
             })

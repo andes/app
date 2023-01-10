@@ -46,7 +46,11 @@ export interface ISnapshot {
         idInternacion?: String;
         tipo_egreso?: String;
         idMovimiento?: string;
-
+        prestamo?: boolean;
+        devolucion?: boolean;
+        edicionCama?: boolean;
+        cambioDeCama?: boolean;
+        desbloqueo?: boolean;
     };
     nota: String;
     prioridad?: {
