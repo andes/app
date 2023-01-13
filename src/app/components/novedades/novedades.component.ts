@@ -9,7 +9,7 @@ import { CommonNovedadesService } from './common-novedades.service';
 })
 export class NovedadesComponent implements OnInit {
     public novedades = [];
-    public fecha = undefined;
+    public fecha: string;
     public filtroModulo = false;
 
     constructor(
@@ -23,6 +23,7 @@ export class NovedadesComponent implements OnInit {
             this.fecha = params['fecha'] || undefined;
 
             this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
+                this.commonNovedadesService.setNovedades(novedades);
                 this.fecha ? this.filtrarPorFecha(this.fecha, novedades) : this.commonNovedadesService.setNovedades(novedades);
             });
         });

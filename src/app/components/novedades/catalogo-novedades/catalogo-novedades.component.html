@@ -3,7 +3,7 @@
 </plex-title>
 
 <div *ngIf="!novedad && !fecha">
-    <filtro-novedades *ngIf="novedades" [novedades]="novedades" [modulos]="modulos" [ocultar]="novedad"
+    <filtro-novedades *ngIf="novedades.length" [novedades]="novedades" [modulos]="modulos" [ocultar]="novedad"
                       (filtrarPorModulo)="filtrar($event)">
     </filtro-novedades>
 </div>

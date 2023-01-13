@@ -1,3 +1,5 @@
 <plex-title titulo="Calendario"></plex-title>
-<div #div class="datepicker"></div>
-<input #input type="hidden">
+<div class="mb-2">
+    <plex-datetime label="Fecha" type="date" [(ngModel)]="fecha"
+                   name="filtroFecha" (change)="onChangeFecha($event)"></plex-datetime>
+</div>

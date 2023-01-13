@@ -49,7 +49,9 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
         this.modulos = [];
 
         for (const { modulo } of novedades) {
-            this.modulos = { ...this.modulos, [modulo._id]: modulo };
+            if (modulo?._id) {
+                this.modulos = { ...this.modulos, [modulo._id]: modulo };
+            }
         }
 
         this.modulos = Object.values(this.modulos).map(({ _id, nombre, descripcion, color }) => ({ _id, nombre, descripcion, color }));
@@ -59,7 +61,7 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
         this.catalogo = [];
 
         for (const novedad of novedades) {
-            const idModulo = novedad.modulo._id;
+            const idModulo = novedad.modulo?._id;
             const arregloNovedades = this.catalogo[idModulo] || [];
 
             arregloNovedades.push(novedad);

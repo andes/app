@@ -26,7 +26,7 @@ export class FiltroNovedadesComponent {
 
     public filtrar() {
         this.filtrarPorModulo.emit(this.selectModulo?._id);
-        this.filtroNovedades = this.novedades.filter((novedad: INovedad) => novedad.modulo._id === this.selectModulo?._id);
+        this.filtroNovedades = this.novedades.filter((novedad: INovedad) => novedad.modulo?._id === this.selectModulo?._id);
     }
 
     public verDetalleNovedad(novedad: INovedad) {
