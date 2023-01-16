@@ -18,7 +18,8 @@ export class BotonesTurnosPipe implements PipeTransform {
             quitarTurnoDoble: false,
             nota: false,
             sms: false,
-            editarCarpeta: false
+            editarCarpeta: false,
+            cambiarDisponible: false
         };
 
         const puedeRegistrarAsistencia = this.auth.check('turnos:turnos:registrarAsistencia');
@@ -37,6 +38,7 @@ export class BotonesTurnosPipe implements PipeTransform {
             botones.suspender = puedeSuspenderTurno && this.agendaNoCerrada(agenda) && this.agendaNoSuspendida(agenda) && this.noTienenAsistencia(turnos) && this.ningunoConEstado('suspendido', turnos) && this.ningunoConEstado('turnoDoble', turnos) && !this.tienenDiagnostico(turnos);
             // Enviar SMS
             botones.sms = this.agendaNoSuspendida(agenda) && this.todosConEstado('asignado', turnos) && this.todosConEstado('suspendido', turnos) && this.noTienenAsistencia(turnos) && (!this.hayTurnosTarde(agenda, turnos));
+            botones.cambiarDisponible = !this.tienenPacientes(turnos) && this.todosConEstado('suspendido', turnos);
         }
         if (agenda && turnos.length === 1) {
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
