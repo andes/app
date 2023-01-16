@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterContentInit, Component, EventEmitter, Input, OnInit, Optional, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -332,7 +332,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             });
 
             this.servicioPrestacion.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-                // this.registrosTotales.trastorno = trastornos;
                 this.registrosTotalesCopia.trastorno = trastornos;
                 this.filtrarTrastornos();
             });
