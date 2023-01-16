@@ -386,6 +386,50 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    cambiarADisponible() {
+        this.plex.confirm('¿Está seguro que quiere pasar el/los turno/s a disponible?', 'Turno disponible').then(respuesta => {
+            if (respuesta) {
+                this.pasarADisponible();
+
+            }
+        });
+
+    }
+
+    pasarADisponible() {
+        let alertCount = 0;
+        this.turnosSeleccionados.forEach((turno, index) => {
+
+            const patch = {
+                'op': 'liberarTurno',
+                'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
+            };
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                this.saveLiberarTurno(this.agenda);
+                if (alertCount === 0) {
+                    if (this.turnosSeleccionados.length === 1) {
+                        this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
+                    } else {
+                        this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
+                    }
+                    alertCount++;
+                }
+
+                this.agenda = resultado;
+                if (index === this.turnosSeleccionados.length - 1) {
+                    this.saveLiberarTurno(this.agenda);
+                }
+
+            },
+            err => {
+                if (err) {
+                    this.plex.info('warning', 'Turno en ejecución', 'Error');
+                    this.cancelaLiberarTurno();
+                }
+            });
+        });
+    }
+
     saveLiberarTurno(agenda: any) {
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             this.agenda = ag;
@@ -393,6 +437,12 @@ export class TurnosComponent implements OnInit {
             this.showLiberarTurno = false;
             this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
+    }
+
+    cancelaLiberarTurno() {
+        this.turnosSeleccionados.length = 0;
+        this.showTurnos = true;
+        this.showLiberarTurno = false;
     }
 
     saveSuspenderTurno() {

@@ -134,6 +134,13 @@
                                  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
                 </suspender-turno>
             </plex-help>
+            <plex-button *ngIf="botones.cambiarDisponible  && turnosSeleccionados?.length" class="mr-1" type="warning"
+                         size="sm" icon="undo" tooltip="Cambiar a disponible" tooltipPosition="top"
+                         (click)="cambiarADisponible()">
+
+            </plex-button>
+
+
         </ng-container>
         <plex-help *ngIf="!agenda.dinamica" type="help" icon="cog">
             <plex-title titulo="Prestaciones asociadas" size="sm"></plex-title>
