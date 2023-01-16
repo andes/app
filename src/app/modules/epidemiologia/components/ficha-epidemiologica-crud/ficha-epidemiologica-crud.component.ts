@@ -67,9 +67,9 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         { id: 'rehabilitacion', nombre: 'Instituciones de rehabilitación/neurorehabilitación' },
         { id: 'otros', nombre: 'Otros' }
     ];
+
     public clasificacion = [
         { id: 'casoSospechoso', nombre: 'Caso sospechoso' },
-        { id: 'contactoEstrecho', nombre: 'Contacto estrecho' },
         { id: 'controlAlta', nombre: 'Control de alta' },
         { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
     ];
@@ -673,6 +673,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     }
 
     setCasoAsintomatico(event) {
+        if (!event.value) { return; }
         this.clearDependencias({ value: false }, 'clasificacionFinal', []);
         if (event.value.id === 'casoAsintomatico') {
             const seccionFinal = this.secciones.find(seccion => seccion.id === 'clasificacionFinal');
@@ -682,9 +683,7 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
             }
             this.asintomatico = true;
             this.clearDependencias({ value: false }, 'signosSintomas', []);
-            this.clearDependencias({ value: false }, 'antecedentesEpidemiologicos', ['sospechosoconantecedente',
-                                                                                     'sospechosoconcontacto', 'sospechosoconglomerado', 'sospechosoasistencial', 'apellidonombresospechoso',
-                                                                                     'sospechosodni', 'apellidonombrecontacto', 'dnicontacto', 'nombreasistencial']);
+            this.clearDependencias({ value: false }, 'antecedentesEpidemiologicos', ['sospechosoconantecedente', 'sospechosoconcontacto', 'sospechosoconglomerado', 'sospechosoasistencial', 'apellidonombresospechoso', 'sospechosodni', 'apellidonombrecontacto', 'dnicontacto', 'nombreasistencial']);
         } else {
             this.asintomatico = false;
             this.clearDependencias({ value: false }, 'clasificacion', ['situacionespecial']);
