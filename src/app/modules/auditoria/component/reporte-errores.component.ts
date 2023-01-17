@@ -1,11 +1,11 @@
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { LogPacienteService } from 'src/app/services/logPaciente.service';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { Auth } from '@andes/auth';
+import { LogPacienteService } from 'src/app/services/logPaciente.service';
 import { ModalCorreccionPacienteComponent } from './modal-correccion-paciente.component';
-import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'reporte-errores',
@@ -18,13 +18,15 @@ export class ReporteErroresComponent implements OnInit {
     @Output() selected = new EventEmitter<any>();
 
     showSidebar = false;
+    filtroPaciente: string;
     pacientesReportados;
-    corregirPaciente: Number = null;
+    corregirPaciente: Number;
     showReporteError = false; // se muestra en el sidebar datos del error reportado
     permisoEdicion: Boolean;
     permisoVincular: Boolean;
-    pacienteSelected: IPaciente = null;
+    pacienteSelected: IPaciente;
     reportes = [];
+    pacientes = [];
 
     constructor(
         public auth: Auth,
@@ -46,6 +48,8 @@ export class ReporteErroresComponent implements OnInit {
             this.pacientesReportados.forEach(pac => {
                 this.reportes[pac.id] = erroresReportados.filter((reg: any) => reg.paciente.id === pac.id);
             });
+
+            this.pacientes = this.pacientesReportados;
         });
     }
 
@@ -63,6 +67,17 @@ export class ReporteErroresComponent implements OnInit {
         } else {
             this.plex.info('warning', 'Usted no posee permisos para realizar esta acción.');
         }
+    }
+
+    filtrarPaciente() {
+        const resultados = this.pacientesReportados.filter((paciente: IPaciente) => {
+            const data = (paciente.nombre + paciente.apellido + paciente.documento).toLowerCase();
+            const filtros = (this.filtroPaciente || '').toLowerCase().split(' ');
+
+            return filtros.every(item => data.includes(item));
+        });
+
+        this.pacientes = this.filtroPaciente && this.filtroPaciente.length ? resultados : this.pacientesReportados;
     }
 
     savePatient(paciente: IPaciente) {
