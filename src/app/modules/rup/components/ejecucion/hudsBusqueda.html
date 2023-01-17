@@ -125,7 +125,7 @@
                [autoFocus]="true">
     </plex-text>
 
-    <div class="my-2">
+    <div class="my-2" *ngIf="filtroActual === 'trastorno' && registrosTotales.trastorno.length">
         <plex-bool [(ngModel)]="filtroTrastornos" name="filtroTrastornos" (change)="filtrarTrastornos()" type="slide"
                    label="{{filtroTrastornos ? 'Activos' : 'Todos'}}">
         </plex-bool>

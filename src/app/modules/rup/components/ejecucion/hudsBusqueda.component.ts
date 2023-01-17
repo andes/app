@@ -492,7 +492,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     getSemanticTagFiltros() {
-        // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
 
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
