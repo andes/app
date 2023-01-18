@@ -6,6 +6,7 @@ import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { concat } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
@@ -26,6 +27,7 @@ export class SolicitudesComponent implements OnInit {
     solicitudTurno: any;
     showAuditar = false;
     diasIntervalo = 15;
+
     private scrollEnd = false;
     private skip = 0;
     private limit = 15;
@@ -114,10 +116,14 @@ export class SolicitudesComponent implements OnInit {
         public servicioTurnos: TurnoService,
         public router: Router,
         private hudsService: HUDSService,
-        private pacienteService: PacienteService
-    ) { }
+        private pacienteService: PacienteService,
+        private routerService: RouterService
+    ) {
+    }
 
     ngOnInit() {
+        this.initFechas();
+
         if (!this.auth.getPermissions('solicitudes:?').length) {
             this.router.navigate([this.auth.profesional ? '/solicitudes/asignadas' : 'inicio']);
         } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*' && !this.auth.getPermissions('solicitudes:tipoPrestacion:?').length) {
@@ -129,15 +135,18 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         const currentUrl = this.router.url;
+
         if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
             ];
+
             this.fechaDesdeEntrada = null;
             this.fechaHastaEntrada = null;
             this.fechaDesdeSalida = null;
             this.fechaHastaSalida = null;
+
             if (this.tipoSolicitud === 'entrada') {
                 this.fechaHastaEntrada = moment().startOf('day').toDate();
                 this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
@@ -147,28 +156,64 @@ export class SolicitudesComponent implements OnInit {
         this.buscarSolicitudes();
     }
 
+    initFechas() {
+        const prevUrl = this.routerService.getPreviousUrl();
+
+        if (prevUrl === '/solicitudes') {
+            this.resetFechas();
+        } else {
+            if (prevUrl.includes('/solicitudes')) {
+                this.recuperarFechas();
+            }
+        }
+    }
+
+    recuperarFechas() {
+        const solicitudes = JSON.parse(localStorage.getItem('solicitudes'));
+        const fechaHoy = moment().startOf('day').toDate();
+
+        this.fechaDesdeEntrada = solicitudes.fechaDesdeEntrada || fechaHoy;
+        this.fechaHastaEntrada = solicitudes.fechaHastaEntrada || fechaHoy;
+        this.fechaDesdeSalida = solicitudes.fechaDesdeSalida || fechaHoy;
+        this.fechaHastaSalida = solicitudes.fechaHastaSalida || fechaHoy;
+    }
+
+    resetFechas() {
+        localStorage.setItem('solicitudes', JSON.stringify({}));
+    }
+
+    guardarFechas() {
+        localStorage.setItem('solicitudes', JSON.stringify({ fechaDesdeEntrada: this.fechaDesdeEntrada, fechaHastaEntrada: this.fechaHastaEntrada, fechaDesdeSalida: this.fechaDesdeSalida, fechaHastaSalida: this.fechaHastaSalida }));
+    }
+
     cambioFechaDesde() {
         const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+
         if (this.fechaDesdeEntrada) {
             this.mostrarAlertaRangoDias = false;
             if (!this.fechaHastaEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
                 this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days');
                 this.mostrarAlertaRangoDias = true;
             }
+
             this.cargarSolicitudes();
         }
     }
 
     cambioFechaHasta() {
         const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+
         if (this.fechaHastaEntrada) {
             this.mostrarAlertaRangoDias = false;
             if (!this.fechaDesdeEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
                 this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
                 this.mostrarAlertaRangoDias = true;
             }
+
             this.cargarSolicitudes();
         }
+
+        this.guardarFechas();
     }
 
     cambio(activeTab) {
@@ -318,6 +363,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cargarSolicitudes() {
+        this.guardarFechas();
+
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
         this.scrollEnd = false;
