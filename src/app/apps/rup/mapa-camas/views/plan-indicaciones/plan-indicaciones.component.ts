@@ -91,7 +91,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     get puedeEditar() {
-        return this.capa === 'medica';
+        return this.capa === 'medica' && this.indicacionView?.estadoActual.tipo === 'draft';
     }
 
     constructor(
@@ -369,7 +369,6 @@ export class PlanIndicacionesComponent implements OnInit {
             paciente, concepto, 'ejecucion', this.ambito, fecha
         );
         nuevaPrestacion.trackId = this.idInternacion;
-        // nuevaPrestacion.unidadOrganizativa = cama.unidadOrganizativa;
         return this.prestacionService.post(nuevaPrestacion);
     }
 

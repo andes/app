@@ -3,6 +3,7 @@ import { PlanIndicacionesEventosServices } from '../../../services/plan-indicaci
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { tap } from 'rxjs/operators';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 
 @Component({
@@ -28,13 +29,15 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     observaciones = '';
     horarioEjecucion;
     estadoType;
+    puedeEditar = false;
 
     @Output() events = new EventEmitter();
 
     constructor(
         private indicacionEventosService: PlanIndicacionesEventosServices,
         private organizacionService: OrganizacionService,
-        private auth: Auth
+        private auth: Auth,
+        private mapaCamasService: MapaCamasService
     ) {}
 
     ngOnChanges() {
@@ -50,10 +53,11 @@ export class PlanIndicacionEventoComponent implements OnChanges {
                 }
             }
         );
+        this.puedeEditar = this.mapaCamasService.capa2.getValue() === 'enfermeria';
+        this.editando = this.evento?.estado === 'on-hold'; // Para nuevos eventos
         if (this.evento) {
             this.estado = this.estadoItems.find(e => e.id === this.evento.estado);
             this.observaciones = this.evento.observaciones;
-            this.editando = this.evento.estado === 'on-hold';
             this.horarioEjecucion = this.evento.updatedAt ? this.evento.updatedAt : this.evento.createdAt;
             this.estadoType = this.evento.estado === 'realizado' ? 'info' : this.evento.estado === 'no-realizado' ? 'danger' : 'warning';
         }
