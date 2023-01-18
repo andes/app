@@ -63,6 +63,7 @@ export class CamaDetalleComponent implements OnInit {
 
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
+    public esProfesional = this.auth.profesional;
 
     items = [
         {
@@ -278,8 +279,7 @@ export class CamaDetalleComponent implements OnInit {
             (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
 
-    verIndicacion() {
-        return this.permisosMapaCamasService.indicacionesCrear || this.permisosMapaCamasService.indicacionesEjecutar ||
-            this.permisosMapaCamasService.indicacionesValidar || this.permisosMapaCamasService.indicacionesVer;
+    generarRegistro(acciones, permisos) {
+        return (acciones?.length && permisos && this.esProfesional) ? true : false;
     }
 }

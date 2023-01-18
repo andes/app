@@ -14,6 +14,7 @@ export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion' |
 export class RegistroHUDSItemComponent {
 
     capa$ = this.mapaCamasService.capa2;
+    public esProfesional = this.auth.profesional;
 
     items = [
         {

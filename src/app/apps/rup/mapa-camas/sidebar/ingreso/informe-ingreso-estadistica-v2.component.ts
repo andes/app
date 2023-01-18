@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, of } from 'rxjs';
+import { Auth } from '@andes/auth';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { notNull, cache } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
@@ -20,6 +21,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
+    public esProfesional = this.auth.profesional;
 
     // EVENTOS
     @Output() toggleEditar = new EventEmitter<any>();
@@ -28,7 +30,8 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     constructor(
         public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
-        private prestacionService: PrestacionesService
+        private prestacionService: PrestacionesService,
+        private auth: Auth,
     ) { }
 
     ngOnInit() {
@@ -68,5 +71,9 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
 
     onNuevoRegistrio() {
         this.accion.emit({ accion: 'nuevo-registro' });
+    }
+
+    generarRegistro(acciones, permisos) {
+        return (acciones?.length && permisos && this.esProfesional) ? true : false;
     }
 }
