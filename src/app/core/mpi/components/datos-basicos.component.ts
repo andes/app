@@ -1,13 +1,13 @@
-import { OnInit, Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { IPaciente } from '../interfaces/IPaciente';
-import * as enumerados from '../../../utils/enumerados';
 import { Plex } from '@andes/plex';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { ParentescoService } from '../../../services/parentesco.service';
-import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { ParentescoService } from '../../../services/parentesco.service';
+import * as enumerados from '../../../utils/enumerados';
+import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { PacienteService } from '../services/paciente.service';
     styleUrls: ['datos-basicos.scss']
 })
 
-export class DatosBasicosComponent implements OnInit {
+export class DatosBasicosComponent implements OnInit, OnChanges {
 
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
@@ -75,6 +75,7 @@ export class DatosBasicosComponent implements OnInit {
             this.noPoseeDNI = true;
             this.paciente.documento = '';
         }
+
         this.sexos = enumerados.getObjSexos();
         this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
         this.generos = enumerados.getObjGeneros();
@@ -83,6 +84,12 @@ export class DatosBasicosComponent implements OnInit {
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
+    }
+
+    ngOnChanges({ paciente }: SimpleChanges) {
+        if (!paciente.currentValue.notaError?.length) {
+            this.paciente.reportarError = false;
+        }
     }
 
     public checkForm() {
