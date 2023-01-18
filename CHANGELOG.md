@@ -1,3 +1,5 @@
+## [5.112.1](https://github.com/andes/app/compare/v5.112.0...v5.112.1) (2023-01-18)
+
 # [5.112.0](https://github.com/andes/app/compare/v5.111.3...v5.112.0) (2023-01-04)
 
 
