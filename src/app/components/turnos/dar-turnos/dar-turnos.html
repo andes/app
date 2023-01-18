@@ -286,7 +286,8 @@
                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [(ngModel)]="motivoConsulta">
                 </plex-text>
                 <plex-grid type="auto" size="md" cols="2">
-                    <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono">
+                    <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono($event)"
+                                name="telefono">
                     </plex-phone>
                     <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
                                [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>

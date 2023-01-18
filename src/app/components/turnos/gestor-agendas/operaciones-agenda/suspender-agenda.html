@@ -1,8 +1,9 @@
 <div *ngIf="showData">
     <plex-title titulo="Turnos suspendidos" size="md">
-        <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{
+        <plex-badge [type]="estadosAgenda[agenda.estado]?.class" class="mr-1">{{
             estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
-        <plex-help class="mr-1" type="help" icon="information-variant" titulo="Detalle de agenda">
+        <plex-help class="mr-1" type="help" icon="information-variant" tooltip="Detalle de agenda"
+                   titulo="Detalle de agenda">
             <div class="container mb-4">
                 <div class="row">
                     <div class="col-12">
@@ -84,117 +85,224 @@
             <span *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}</span>
             <plex-badge *ngIf="bloque.citarPorBloque" type="info">Citación por segmento</plex-badge>
         </div>
-        <table class="table table-striped">
-            <tbody>
-                <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)"
-                    [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
-                    <!-- Checkbox seleccion -->
-                    <td>
+        <plex-table>
+            <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)"
+                [ngClass]="{'text-white': estaSeleccionado(bloque.turnos[i])}">
+                <!-- Checkbox seleccion -->
+                <td>
+                    <span
+                          *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
+                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
+                        <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                    </span>
+                </td>
+                <!-- Hora turno -->
+                <td>
+                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                </td>
+                <!-- Teléfono del paciente, si tiene -->
+                <td>
+                    <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{
+                        turno.paciente |
+                        nombre }}
+                    </small>
+                    <small *ngIf="turno?.paciente?.id">
                         <span
-                              *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
-                            <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
-                            <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                              *ngIf="turno.paciente.telefono && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                            <br>
+                            Teléfono: {{ turno.paciente.telefono }}
                         </span>
-                    </td>
-                    <!-- Hora turno -->
-                    <td>
-                        <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                    </td>
-                    <!-- Teléfono del paciente, si tiene -->
-                    <td>
-                        <small *ngIf="turno?.paciente?.id"
-                               [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente |
-                            nombre }}
-                        </small>
-                        <small *ngIf="turno?.paciente?.id">
-                            <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
-                                <br>Teléfono: {{ turno.paciente.telefono }}</span>
-                            <ng-template #noTelefono>
+                        <ng-template #variosTelefono>
+                            <span *ngIf="turno.paciente.telefono && turno.paciente.telefono !== ''; else noTelefono">
                                 <br>
-                                <span>Sin teléfono registrado</span>
-                            </ng-template>
-                        </small>
-                    </td>
-                    <td>
-                        <div *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
-                            <plex-badge *ngIf="turno.avisoSuspension === 'fallido'" type="danger" title="SMS fallido">
-                                <plex-icon name="message-alert"></plex-icon>
-                            </plex-badge>
-                            <plex-badge *ngIf="turno.avisoSuspension ==='enviado'" type="success" title="SMS enviado">
-                                <plex-icon name="message-text-outline"></plex-icon>
-                            </plex-badge>
-                            <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info" title="SMS pendiente">
-                                <plex-icon name="message-processing"></plex-icon>
-                            </plex-badge>
+                                Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))
+                                }}
+                            </span>
+                        </ng-template>
+                        <ng-template #noTelefono>
+                            <br>
+                            <span>Sin teléfono registrado</span>
+                        </ng-template>
+                    </small>
+                    <!-- poner código de detalle. opcion 2-->
+                </td>
+                <td>
+                    <div *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
+                        <plex-badge *ngIf="turno.avisoSuspension === 'fallido'" type="danger" title="SMS fallido">
+                            <plex-icon name="message-alert"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="turno.avisoSuspension ==='enviado'" type="success" title="SMS enviado">
+                            <plex-icon name="message-text-outline"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info" title="SMS pendiente">
+                            <plex-icon name="message-processing"></plex-icon>
+                        </plex-badge>
+                    </div>
+                </td>
+                <!-- Badge que indica si el turno está reasignado a otra agenda -->
+                <td>
+                    <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
+                                type="info">Reasignado</plex-badge>
+                </td>
+                <!-- Ver detalle del paciente -->
+                <td>
+                    <plex-help *ngIf="turno.paciente" type="info" icon="account-details" titulo="Detalle del paciente"
+                               tooltip="Detalle del paciente" class="mr-3">
+                        <div class="container mb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Apellido</label> {{ turno.paciente.apellido }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Nombre</label> {{ turno.paciente.nombre }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Documento / Identificacion extranjera</label>
+                                    {{ turno.paciente.documento }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Fecha de nacimiento</label> {{ turno.paciente.fechaNacimiento |
+                                    date:'dd/MM/yyyy' }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Sexo / Genero</label> {{ turno.paciente.sexo }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Teléfono de contacto</label>
+                                    {{ turno.paciente.telefono || 'Sin teléfono registrado' }}
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="turno.paciente.email">
+                                <div class=" col-12">
+                                    <label>Email de contacto</label> {{ turno.paciente.email }}
+                                </div>
+                            </div>
                         </div>
-                    </td>
-                    <!-- Badge que indica si el turno está reasignado a otra agenda -->
-                    <td>
-                        <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
-                                    type="info">Reasignado</plex-badge>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </plex-help>
+                </td>
+            </tr>
+        </plex-table>
+        <plex-table>
+            <plex-title size="sm" titulo="Sobreturnos Suspendidos"
+                        *ngIf="agenda.sobreturnos && agenda.sobreturnos.length > 0">
 
-        <table class="table table-striped">
-            <thead *ngIf="agenda.sobreturnos && agenda.sobreturnos.length > 0">
-                <tr>
-                    <th colspan="4">Sobreturnos Suspendidos </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let turno of agenda.sobreturnos; let i=index" class="hover"
-                    (click)="seleccionarTurno(turno)"
-                    [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
-                    <!-- Checkbox seleccion -->
-                    <td>
+            </plex-title>
+            <tr *ngFor="let turno of agenda.sobreturnos; let i=index" class="hover" (click)="seleccionarTurno(turno)"
+                [ngClass]="{'text-white': estaSeleccionado(agenda.sobreturnos[i])}">
+                <!-- Checkbox seleccion -->
+                <td>
+                    <span
+                          *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
+                        <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
+                        <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                    </span>
+                </td>
+                <!-- Hora turno -->
+                <td>
+                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                </td>
+                <!-- Teléfono del paciente, si tiene -->
+                <td>
+                    <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{
+                        turno.paciente |
+                        nombre }}
+                    </small>
+                    <small *ngIf="turno?.paciente?.id">
                         <span
-                              *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
-                            <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
-                            <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])"
-                               class="mdi mdi-checkbox-blank-outline"></i>
+                              *ngIf="turno.paciente.telefono && turno.paciente.telefono !== '' && turno.paciente.telefono.indexOf('-')===-1 ; else variosTelefono">
+                            <br>
+                            Teléfono: {{ turno.paciente.telefono}}
                         </span>
-                    </td>
-                    <!-- Hora turno -->
-                    <td>
-                        <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                    </td>
-                    <!-- Teléfono del paciente, si tiene -->
-                    <td>
-                        <small *ngIf="turno?.paciente?.id"
-                               [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{
-                            turno.paciente |
-                            nombre }}
-                        </small>
-                        <small *ngIf="turno?.paciente?.id">
-                            <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
-                                <br>Teléfono: {{ turno.paciente.telefono }}</span>
-                            <ng-template #noTelefono>
+                        <ng-template #variosTelefono>
+                            <span *ngIf="turno.paciente.telefono && turno.paciente.telefono !== ''; else noTelefono">
                                 <br>
-                                <span>Sin teléfono registrado</span>
-                            </ng-template>
-                        </small>
-                    </td>
-                    <td>
-                        <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
-                            <i *ngIf="turno.avisoSuspension === 'fallido'" class="mdi mdi-message-alert text-danger"
-                               title="SMS fallido"></i>
-                            <i *ngIf="turno.avisoSuspension ==='enviado'"
-                               class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
-                            <i *ngIf="turno.avisoSuspension ==='no enviado'"
-                               class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
-                        </span>
-                    </td>
+                                Teléfono: {{ turno.paciente.telefono.slice(0,turno.paciente.telefono.indexOf('-'))}}
+                            </span>
+                        </ng-template>
+                        <ng-template #noTelefono>
+                            <br>
+                            <span>Sin teléfono registrado</span>
+                        </ng-template>
+                    </small>
+                </td>
+                <td>
+                    <div *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
+                        <plex-badge *ngIf="turno.avisoSuspension === 'fallido'" type="danger" title="SMS fallido">
+                            <plex-icon name="message-alert"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="turno.avisoSuspension ==='enviado'" type="success" title="SMS enviado">
+                            <plex-icon name="message-text-outline"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="turno.avisoSuspension ==='no enviado'" type="info" title="SMS pendiente">
+                            <plex-icon name="message-processing"></plex-icon>
+                        </plex-badge>
+                    </div>
+                </td>
+                <!-- Badge que indica si el turno está reasignado a otra agenda -->
+                <td>
+                    <small class="badge-info float-right"
+                           *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                </td>
+                <!-- Ver detalle del paciente -->
+                <td>
+                    <plex-help *ngIf="turno.paciente" class="mr-1" type="help" icon="account-details"
+                               titulo="Detalle del paciente" tooltip="Detalle del paciente" class="mr-3">
 
-                    <!-- Badge que indica si el turno está reasignado a otra agenda -->
-                    <td>
-                        <small class="badge-info float-right"
-                               *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="container mb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Apellido</label> {{ turno.paciente.apellido }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Nombre</label> {{ turno.paciente.nombre }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Documento / Identificacion extranjera</label>
+                                    {{ turno.paciente.documento }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Fecha de nacimiento</label> {{ turno.paciente.fechaNacimiento |
+                                    date:'dd/MM/yyyy' }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Sexo / Genero</label> {{ turno.paciente.sexo}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Teléfono de contacto</label>
+                                    {{ turno.paciente.telefono || 'Sin teléfono registrado' }}
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="turno.paciente.email">
+                                <div class=" col-12">
+                                    <label>Email de contacto</label> {{ turno.paciente.email }}
+                                </div>
+                            </div>
+                        </div>
+                    </plex-help>
+                </td>
+            </tr>
+        </plex-table>
     </ng-container>
 </div>
 
