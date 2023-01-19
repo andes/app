@@ -3,7 +3,6 @@ import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
 import { Subscription } from 'rxjs';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 interface PacienteEscaneado {
     documento: string;
