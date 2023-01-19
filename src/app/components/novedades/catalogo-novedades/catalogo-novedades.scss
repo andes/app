@@ -3,7 +3,7 @@
 }
 
 .cardNovedad {
-    max-width: 280px;
+    width: 280px;
     text-align: center;
 }
 
@@ -14,6 +14,10 @@
 }
 
 .slider {
+    plex-grid {
+        display: flex;
+    }
+
     .plex-dots-wrapper {
         left: 0 !important;
     }

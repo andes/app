@@ -1,9 +1,9 @@
-<plex-title class="titulo" titulo="Recientes {{fecha ? '- ' + fechaConFormato : ''}}">
-    <plex-button *ngIf="novedad || fecha" type="danger" size="sm" (click)="volver()">Volver</plex-button>
+<plex-title titulo="Recientes {{fecha ? '- ' + fechaConFormato : ''}}">
+    <plex-button *ngIf="fecha" type="danger" size="sm" (click)="volverInicio()">Volver</plex-button>
 </plex-title>
 
-<div *ngIf="!novedad && !fecha">
-    <filtro-novedades *ngIf="novedades.length" [novedades]="novedades" [modulos]="modulos" [ocultar]="novedad"
+<div *ngIf="!fecha">
+    <filtro-novedades *ngIf="novedades.length" [novedades]="novedades" (verDetalle)="verDetalle($event)" [modulos]="modulos" [ocultar]="novedad"
                       (filtrarPorModulo)="filtrar($event)">
     </filtro-novedades>
 </div>
@@ -16,31 +16,30 @@
     </div>
 </ng-container>
 
-<div *ngIf="!filtroModulo && !novedad && !fecha">
+<div *ngIf="!filtroModulo && !fecha">
     <div *ngFor="let modulo of modulos" class="itemCatalogo">
         <plex-title titulo="{{modulo.nombre}}"></plex-title>
         <plex-slider size="xl" class="slider">
             <plex-card *ngFor="let novedad of catalogo[modulo._id]" class="cardNovedad">
                 <plex-badge size="md" color="{{modulo.color}}">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
                 <p>{{novedad.titulo}}</p>
-                <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
+                <plex-button label="" type="info" icon="eye" (click)="verDetalle(novedad)">
                 </plex-button>
             </plex-card>
         </plex-slider>
     </div>
 </div>
 
-<div *ngIf="!filtroModulo && !novedad && fecha">
-    <plex-grid type="full" cols="4">
-        <div *ngFor="let modulo of modulos" class="itemCatalogo">
+<div *ngIf="!filtroModulo && fecha">
+    <div *ngFor="let modulo of modulos" class="itemCatalogo">
+        <plex-title titulo="{{modulo.nombre}}"></plex-title>
+        <plex-grid type="full" cols="4">
             <plex-card *ngFor="let novedad of catalogo[modulo._id]" class="cardNovedad">
                 <plex-badge size="md" color="{{modulo.color}}">{{modulo.nombre}}</plex-badge>
                 <p>{{novedad.titulo}}</p>
-                <plex-button label="" type="info" icon="eye" (click)="verDetalleNovedad(novedad)">
+                <plex-button label="" type="info" icon="eye" (click)="verDetalle(novedad)">
                 </plex-button>
             </plex-card>
-        </div>
-    </plex-grid>
+        </plex-grid>
+    </div>
 </div>
-
-<detalle-novedad></detalle-novedad>

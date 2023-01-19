@@ -1,5 +1,4 @@
-import { Component, Input, LOCALE_ID } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, LOCALE_ID, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
     selector: 'calendario-novedades',
@@ -8,26 +7,30 @@ import { ActivatedRoute, Router } from '@angular/router';
         provide: LOCALE_ID, useValue: 'es-AR'
     }]
 })
-export class CalendarioNovedadesComponent {
-    @Input() fecha: string;
+export class CalendarioNovedadesComponent implements OnInit, OnChanges {
+    @Input() fecha;
+    @Input() novedad;
+    @Output() setFecha = new EventEmitter<any>();
+    @Output() volver = new EventEmitter<any>();
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-    ) {
+    fechaSelector;
+
+    ngOnInit() {
+        this.fechaSelector = this.fecha || null;
     }
 
-    public onChangeFecha(event: { value: Date }) {
-        const fecha = moment(event.value).format('YYYY-MM-DD');
-
-        this.abrirFecha(fecha);
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.novedad?.currentValue) {
+            this.fechaSelector = null;
+        }
     }
 
-    private abrirFecha(fecha: string) {
-        this.router.navigate(['/novedades/fecha/', fecha], { relativeTo: this.route });
-    }
-
-    public volver() {
-        this.router.navigate(['/novedades'], { relativeTo: this.route });
+    onChangeFecha(event: { value: string }) {
+        if (event.value) {
+            const fecha = moment(event.value).format('YYYY-MM-DD');
+            this.setFecha.emit(fecha);
+        } else {
+            this.volver.emit();
+        }
     }
 }

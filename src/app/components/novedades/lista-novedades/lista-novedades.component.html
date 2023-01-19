@@ -1,6 +1,8 @@
-<plex-title titulo="últimas vistas"></plex-title>
+<div class="mt-2">
+    <plex-title titulo="últimas vistas"></plex-title>
+</div>
 <plex-list>
-    <plex-item *ngFor="let novedad of cacheNovedades" (click)="verDetalleNovedad(novedad)">
+    <plex-item *ngFor="let novedad of cacheNovedades.reverse()" (click)="verDetalle(novedad)">
         <plex-badge class="novedadBadge" size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
         <plex-badge class="novedadBadge" size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}}
         </plex-badge>

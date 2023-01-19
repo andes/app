@@ -1,5 +1,10 @@
 .detalle-novedad {
-    margin-top: 15px;
+    .titulo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 39.7px
+    }
 
     .contenedor-imagen {
         padding: 0 !important;

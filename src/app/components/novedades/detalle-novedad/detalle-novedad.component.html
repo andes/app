@@ -1,8 +1,11 @@
 <div class="detalle-novedad">
     <div *ngIf="novedad">
-        <div justify="start">
-            <plex-badge type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
-            <plex-badge type="warning">{{novedad.modulo? novedad.modulo.nombre : 'general'}}</plex-badge>
+        <div class="titulo">
+            <div>
+                <plex-badge type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+                <plex-badge type="warning">{{novedad.modulo? novedad.modulo.nombre : 'general'}}</plex-badge>
+            </div>
+            <plex-button type="danger" size="sm" (click)="volverInicio()">Volver</plex-button>
         </div>
         <div class="jumbotron-text">
             <h1 class="display-4">{{ novedad.titulo }}</h1>

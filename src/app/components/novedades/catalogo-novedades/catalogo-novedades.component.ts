@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
 import { CommonNovedadesService } from '../common-novedades.service';
 
@@ -10,31 +9,28 @@ import { CommonNovedadesService } from '../common-novedades.service';
 
 export class CatalogoNovedadesComponent implements OnInit, OnChanges {
     @Input() fecha: string;
+    @Input() novedad: INovedad;
+    @Output() volver = new EventEmitter<any>();
+    @Output() setNovedad = new EventEmitter<any>();
 
-    public novedad = undefined;
-    public novedades = [];
-    public modulos = [];
-    public catalogo = [];
-    public filtroModulo = false;
-    public fechaConFormato = '';
+    novedades = [];
+    modulos = [];
+    catalogo = [];
+    filtroModulo = false;
+    fechaConFormato = '';
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
         private commonNovedadesService: CommonNovedadesService,
     ) {
     }
 
     ngOnInit(): void {
         this.initNovedades();
-
-        this.route.params.subscribe(params => {
-            this.novedad = params['novedad'];
-        });
     }
 
     ngOnChanges(changes: any): void {
         this.fechaConFormato = moment(changes.fecha.currentValue).format('DD/MM/YYYY');
+        this.initNovedades();
     }
 
     private initNovedades() {
@@ -73,15 +69,15 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
         }
     }
 
-    public filtrar(id: string) {
-        this.filtroModulo = !!id;
+    filtrar(filtroModulo: boolean) {
+        this.filtroModulo = filtroModulo;
     }
 
-    public volver() {
-        this.router.navigate(['/novedades'], { relativeTo: this.route });
+    verDetalle(novedad: INovedad) {
+        this.setNovedad.emit(novedad);
     }
 
-    public verDetalleNovedad(novedad: INovedad) {
-        this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
+    volverInicio() {
+        this.volver.emit();
     }
 }

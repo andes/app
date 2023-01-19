@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
-import { CommonNovedadesService } from './../common-novedades.service';
 
 @Component({
     selector: 'lista-novedades',
@@ -9,31 +7,34 @@ import { CommonNovedadesService } from './../common-novedades.service';
     styleUrls: ['./lista-novedades.scss']
 })
 
-export class ListaNovedadesComponent implements OnInit {
-    public novedades = [];
-    public cacheNovedades = [];
-    public modulo = null;
+export class ListaNovedadesComponent implements OnInit, OnChanges {
+    @Input() novedad: INovedad;
+    @Output() setNovedad = new EventEmitter<any>();
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private commonNovedadesService: CommonNovedadesService
-    ) {
-    }
+    cacheNovedades = [];
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.modulo = params['modulo'];
-        });
-
-        this.commonNovedadesService.getNovedades().subscribe((novedades) => {
-            this.novedades = novedades;
-        });
-
         this.cacheNovedades = Object.values(JSON.parse(localStorage.getItem('novedades')) || []).reverse();
     }
 
-    verDetalleNovedad(novedad: INovedad) {
-        this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.novedad.currentValue) {
+            this.agregarVistaNovedad(changes.novedad.currentValue);
+        }
+    }
+
+    agregarVistaNovedad(novedad: INovedad) {
+        const existeVista = novedad && this.cacheNovedades.some(elem => elem._id === novedad._id);
+
+        if (!existeVista) {
+            if (this.cacheNovedades.length === 5) { this.cacheNovedades.shift(); }
+
+            this.cacheNovedades.push(this.novedad);
+            localStorage.setItem('novedades', JSON.stringify(this.cacheNovedades));
+        }
+    }
+
+    verDetalle(novedad: INovedad) {
+        this.setNovedad.emit(novedad);
     }
 }
