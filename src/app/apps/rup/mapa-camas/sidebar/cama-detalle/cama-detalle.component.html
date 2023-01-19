@@ -11,8 +11,8 @@
                         </ng-container>
                     </ng-container>
                 </ng-container>
-                <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
-                             *ngIf="capa !== 'interconsultores' && (cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit)">
+                <plex-button *ngIf="capa !== 'interconsultores' && cama.estado !== 'bloqueada' && (cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit)"
+                             title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)">
                 </plex-button>
                 <ng-container
                               *ngIf="capa !== 'interconsultores' && !cama.sala && permisosMapaCamasService.camaPrestamo  && ((organizacionV2$ | async) || cama.estado === 'disponible')">

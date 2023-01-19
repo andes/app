@@ -49,8 +49,13 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
             this.fechaMin = this.fecha;
             const camaSnap = snap.find(c => c.id === cama.id); // la cama seleccionada durante la fecha seleccionada
 
+            if (!camaSnap) {
+                // Puede pasar por error en la cama o durante el proceso de guardado con conexion lenta
+                this.disableGuardar$ = of(true);
+                return;
+            }
             // Se verifican los estados actual y destino (Al cambiar la fecha puede haber cambiado el estado de la cama)
-            const permiteAccion = camaSnap.estado === this.relacion.origen;
+            const permiteAccion = camaSnap?.estado === this.relacion.origen;
             if (!permiteAccion) {
                 this.inProgress = false;
                 this.disableGuardar$ = of(true);
@@ -64,7 +69,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
                     map(historial => {
                         this.inProgress = false;
                         // se permite el desbloqueo siempre que no se haya desbloqueado mas adelante
-                        const permiteAccion = historial.length && !historial[0].extras?.desbloqueo;
+                        const permiteAccion = !historial.length || !historial[0]?.extras?.desbloqueo;
                         if (!permiteAccion) {
                             this.mensaje = `No se puede realizar esta acción ya que la cama estará desbloqueada el ${moment(historial[0].fecha).format('DD/MM/YYYY [a las] hh:mm')}.`;
                         }
@@ -85,6 +90,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
 
     guardar(form) {
         if (form.formValid) {
+            this.disableGuardar$ = of(true);
             if (this.selectedCama) {
                 this.selectedCama.extras = null;
                 if (this.selectedCama.estado === 'bloqueada') {

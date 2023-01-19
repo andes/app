@@ -105,7 +105,8 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
-            <plex-button *ngIf="canEdit" title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
+            <plex-button *ngIf="canEdit && cama.estado !== 'bloqueada'" title="Editar Cama" icon="pencil" type="warning"
+                         size="sm" (click)="goTo()">
             </plex-button>
         </td>
     </ng-container>
