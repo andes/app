@@ -36,7 +36,11 @@ export class NuevoRegistroSaludComponent implements OnInit {
     }
     get horaMin() {
         if (this.dia && moment(this.dia).startOf('day').diff(this.fechaMin) === 0) {
-            return this.internacion.fechaIngreso;
+            if (moment(this.internacion.fechaIngreso).format('ss') === '00') {
+                return moment(this.internacion.fechaIngreso).toDate();
+            } else {
+                return moment(this.internacion.fechaIngreso).subtract(1, 'minutes').toDate();
+            }
         }
         return null;
     }
@@ -70,7 +74,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
         this.hora = moment(this.mapaCamasService.fecha).toDate();
         this.mapaCamasService.historialInternacion$.pipe(
             map(estados => {
-                this.internacion.fechaIngreso = moment(estados[0]?.fechaIngreso);
+                this.internacion.fechaIngreso = moment(estados[0]?.fechaIngreso || this.mapaCamasService.fecha);
                 const egreso = estados.find(e => e.extras?.egreso)?.fecha;
                 this.internacion.fechaEgreso = egreso ? moment(egreso) : undefined;
             })
