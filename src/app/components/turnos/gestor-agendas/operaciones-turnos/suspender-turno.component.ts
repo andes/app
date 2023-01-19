@@ -18,6 +18,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
     @Input() turnosSeleccionados: ITurno[];
+
     @Input() accion: any;
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
@@ -106,10 +107,11 @@ export class SuspenderTurnoComponent implements OnInit {
         }
 
         let patch: any;
+        let alertCount = 0;
         if (this.accion === 'suspenderTurno') {
             patch = {
                 op: this.accion,
-                turnos: this.turnos.map((resultado) => {
+                turnos: this.turnosSeleccionados.map((resultado) => {
                     return resultado.id;
                 }),
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
@@ -120,25 +122,25 @@ export class SuspenderTurnoComponent implements OnInit {
                 estado: this.accion
             };
         }
-
-
         // Patchea los turnosSeleccionados (1 o más)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(
-
             resultado => {
-                this.agenda = resultado;
-                if (this.turnos.length === 1) {
-                    this.plex.toast('warning', 'El turno seleccionado fue suspendido');
-                } else {
-                    this.plex.toast('warning', 'Los turnos seleccionados fueron suspendidos');
+                if (alertCount === 0) {
+                    if (this.turnosSeleccionados.length === 1) {
+                        this.plex.toast('success', 'El turno seleccionado fue suspendido.');
+                    } else {
+                        this.plex.toast('success', 'Los turnos seleccionados fueron suspendidos.');
+                    }
+                    alertCount++;
                 }
+
+                this.agenda = resultado;
                 this.suspendio = true;
                 this.saveSuspenderTurno.emit(this.agenda);
 
                 // Se envían SMS sólo en Producción
                 if (environment.production === true) {
                     for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-
                         const dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
                         const horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
                         const mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
@@ -148,13 +150,8 @@ export class SuspenderTurnoComponent implements OnInit {
                     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
                 }
             },
-            err => {
-                if (err) {
-
-                }
-            }
-
         );
+
     }
 
     agregarPacienteListaEspera() {
