@@ -201,4 +201,10 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/${this.mapaCamasService.capa}`]);
     }
 
+    cancelar() {
+        this.mapaCamasService.selectResumen(null);
+        this.mapaCamasService.selectPrestacion(null);
+        this.idInternacionSelected = null;
+    }
+
 }

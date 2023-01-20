@@ -68,8 +68,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             this.mapaCamasService.resumenInternacion$
         ]).pipe(
             switchMap(([cama, prestacion, resumen]) => {
+                if (resumen) {
+                    this.desde = resumen.fechaIngreso;
+                    this.hasta = resumen.fechaEgreso || moment().toDate();
+                }
                 estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
-                const paciente = cama?.paciente || prestacion?.paciente;
+                const paciente = cama?.paciente || (prestacion?.paciente || resumen?.paciente);
                 this.paciente = paciente;
                 if (paciente) {
                     return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
