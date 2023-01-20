@@ -351,7 +351,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
 
                 solicitudes.forEach(solicitud => {
-                    const prestacion = this.prestacionesTotales.find(p => solicitud.idPrestacion === p.solicitud.prestacionOrigen);
+                    const prestacion = this.prestacionesTotales.find(p => solicitud.idPrestacion === p.solicitud.prestacionOrigen && solicitud.concepto.conceptId === p.solicitud.tipoPrestacion.conceptId);
                     if (prestacion) {
                         solicitud['dataPrestacion'] = prestacion;
                         solicitud['estadoActual'] = prestacion.estadoActual;
