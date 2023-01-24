@@ -1,11 +1,9 @@
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
-import { Subscription } from 'rxjs';
-import { ProfesionalService } from 'src/app/services/profesional.service';
 import { IProfesional } from 'src/app/interfaces/IProfesional';
-
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'fuera-agenda',
@@ -19,15 +17,15 @@ export class RevisionFueraAgendaComponent implements OnInit {
     public prestaciones: ICodificacionPrestacion[];
     public prestacionSeleccionada: ICodificacionPrestacion;
     public profesional: IProfesional;
-    public showRegistros;
     public showReparo = false;
     public indiceReparo: number;
     public esAgendaOdonto = false;
     public auditadas = false;
     public diagnosticos = [];
-    private lastRequest: Subscription;
     public fechaDesde: Date;
     public fechaHasta: Date;
+    public prestacionSelect: any;
+    public prestacion: IPrestacion;
 
     // Eventos
     @Output() save: EventEmitter<ICodificacionPrestacion[]> = new EventEmitter<ICodificacionPrestacion[]>();
@@ -35,9 +33,8 @@ export class RevisionFueraAgendaComponent implements OnInit {
 
     // Constructor
     constructor(
-        private servicioProfesional: ProfesionalService,
+        private prestacionesService: PrestacionesService,
         private serviceCodificacion: CodificacionService,
-        private plex: Plex
     ) { }
 
     // Métodos
@@ -55,7 +52,8 @@ export class RevisionFueraAgendaComponent implements OnInit {
                 fechaDesde: moment(this.fechaDesde).startOf('day').toDate(),
                 fechaHasta: moment(this.fechaHasta).endOf('day').toDate(),
                 idProfesional: this.profesional?.id,
-                auditadas: this.auditadas
+                auditadas: this.auditadas,
+                idPrestacion: this.prestacionSelect?._id
             };
             this.serviceCodificacion.get(params).subscribe(datos => {
                 this.prestaciones = datos;
@@ -68,6 +66,7 @@ export class RevisionFueraAgendaComponent implements OnInit {
     }
 
     seleccionarPrestacion(prestacion: ICodificacionPrestacion) {
+        this.prestacionesService.getById(prestacion.idPrestacion).subscribe(prest => this.prestacion = prest);
         this.prestacionSeleccionada = prestacion;
         this.diagnosticos = [];
         this.showReparo = false;
@@ -123,6 +122,4 @@ export class RevisionFueraAgendaComponent implements OnInit {
     volver() {
         this.volverAlGestor.emit(true);
     }
-
-
 }
