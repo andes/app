@@ -24,7 +24,7 @@ export class MapaCamasService {
 
     public sortBy = new BehaviorSubject<string>(null);
     public sortOrder = new BehaviorSubject<string>(null);
-
+    public loading = new BehaviorSubject<boolean>(null);
     public ambito2 = new BehaviorSubject<string>(null);
     public capa2 = new BehaviorSubject<string>(null);
     public fecha2 = new BehaviorSubject<Date>(null);
@@ -268,6 +268,10 @@ export class MapaCamasService {
 
     resetView() {
         this.mainView.next('principal');
+    }
+
+    load(event) {
+        this.loading.next(event);
     }
 
     getEstadoCama(cama: ISnapshot) {

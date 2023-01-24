@@ -29,7 +29,6 @@ export class InternacionListadoComponent implements OnInit {
     public puedeValidar = false;
     public puedeRomper = false;
     public editando = false;
-    public inProgress = true;
     public columns = [
         {
             key: 'apellido-nombre',
@@ -197,8 +196,8 @@ export class InternacionListadoComponent implements OnInit {
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                 this.verificarPrestacion(prestacion);
+                this.mapaCamasService.load(true);
             }
-            this.inProgress = !this.inProgress;
         }
     }
 

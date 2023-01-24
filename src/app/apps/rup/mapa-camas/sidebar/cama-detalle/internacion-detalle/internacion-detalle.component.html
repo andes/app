@@ -36,23 +36,20 @@
     <ng-container *ngIf="mostrar === 'movimientos'">
         <app-movimientos-internacion>
             <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos)"
-                         [disabled]="(prestacion$ | async)?.ejecucion?.registros[1]" label="Cambiar cama" type="warning"
-                         size="sm" (click)="changeCama()">
+                         [disabled]="(mapaCamasService.prestacion$ | async)?.ejecucion?.registros[1]"
+                         label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
             </plex-button>
         </app-movimientos-internacion>
     </ng-container>
 
-    <ng-container *ngIf="mostrar === 'egreso' && !loading">
+    <ng-container *ngIf="mostrar === 'egreso' && !(mapaCamasService.loading | async)">
 
-        <app-informe-egreso *ngIf="!editar && (estadoPrestacion === 'validada' || !existeIngreso)"
-                            (cancel)="activateOption('egreso')">
-            <plex-button *ngIf="permisosMapaCamasService.egreso && estadoPrestacion !== 'validada'"
-                         tooltip="Editar egreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
-                         (click)="toggleEdit()">
+        <app-informe-egreso *ngIf="!editar && !existeIngreso" (cancel)="activateOption('egreso')">
+            <plex-button *ngIf="puedeEditar()" tooltip="Editar egreso" tooltipPosition="left" icon="pencil"
+                         type="warning" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-informe-egreso>
-        <app-egresar-paciente *ngIf="permisosMapaCamasService.egreso && estadoPrestacion !== 'validada' && (editar || existeIngreso)"
-                              (onSave)="editar ? toggleEdit() : notificarEgreso()">
+        <app-egresar-paciente *ngIf="puedeEgresar()" (onSave)="editar ? toggleEdit() : notificarEgreso()">
             <plex-button *ngIf="!existeIngreso" tooltip="Volver" tooltipPosition="left" icon="arrow-left" type="danger"
                          size="sm" (click)="toggleEdit();" [autodisabled]="true">
             </plex-button>

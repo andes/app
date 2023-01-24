@@ -3,7 +3,6 @@ import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, After
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
@@ -16,21 +15,13 @@ import { ListadoInternacionCapasService } from '../../../views/listado-internaci
 export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
-    public existeEgreso$: Observable<Boolean>;
-    public prestacion$: Observable<IPrestacion>;
     public estadoPrestacion;
-    public existeIngreso = false;
-    public loading;
+    public existeIngreso;
     public editar;
     view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
-    @Input('inProgress')
-    set inProgress(value: any) {
-        this.loading = true;
-        this.editar = false;
-    }
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public mostrar;
@@ -47,7 +38,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     private subscription: Subscription;
 
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         public permisosMapaCamasService: PermisosMapaCamasService,
         private mapaCamasHTTP: MapaCamasHTTP,
         private plex: Plex,
@@ -69,16 +60,16 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.editar = false;
-        this.prestacion$ = this.mapaCamasService.prestacion$;
-        this.prestacion$.subscribe(prestacion => {
+        this.mapaCamasService.prestacion$.subscribe(prestacion => {
             this.estadoPrestacion = '';
             this.existeIngreso = false;
             if (prestacion) {
+                this.editar = false;
                 this.estadoPrestacion = prestacion.estadoActual.tipo;
                 if (prestacion.ejecucion.registros[prestacion.ejecucion.registros.length - 1].valor.informeIngreso) {
                     this.existeIngreso = true;
                 }
-                this.loading = false;
+                this.mapaCamasService.load(false);
             }
         });
         this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
@@ -113,13 +104,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                 this.items.splice(registro, 1);
             }
         });
-
-
-        this.existeEgreso$ = this.mapaCamasService.historialInternacion$.pipe(
-            map(historial => {
-                return historial.findIndex(mov => mov.extras?.egreso) > -1;
-            })
-        );
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map(historial => {
@@ -208,5 +192,13 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                 });
             }
         });
+    }
+
+    puedeEgresar() {
+        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && (this.editar || this.existeIngreso)) ? true : false;
+    }
+
+    puedeEditar() {
+        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada') ? true : false;
     }
 }
