@@ -1,3 +1,19 @@
+# [5.113.0](https://github.com/andes/app/compare/v5.112.1...v5.113.0) (2023-01-25)
+
+
+### Bug Fixes
+
+* **HUDS:** badges solicitudes ([#2746](https://github.com/andes/app/issues/2746)) ([1c4ec8a](https://github.com/andes/app/commit/1c4ec8a9b98890892f71f2e8ce6b896ff0d8f8c8))
+* **IN-492:** control de fechas de registro ([#2761](https://github.com/andes/app/issues/2761)) ([cbcb21b](https://github.com/andes/app/commit/cbcb21bb34f9d8e251926261a9437160b74a9600))
+* **MPI:** error al asigna formulario de paciente extranjero ([#2803](https://github.com/andes/app/issues/2803)) ([01d4f65](https://github.com/andes/app/commit/01d4f65141d83ff7ff077c9a1e56870061c1998e))
+
+
+### Features
+
+* **CIT-199:** No se visualiza la prestacion al auditar fuera de agenda ([#2775](https://github.com/andes/app/issues/2775)) ([f32856f](https://github.com/andes/app/commit/f32856f12601fc85c8c5ed1c95fcc161893c1e61))
+* **in:** restricciones capa medica y visualizacion frecuencia ([#2780](https://github.com/andes/app/issues/2780)) ([4e5fc08](https://github.com/andes/app/commit/4e5fc0897ebb8b3667516144f964ac9be3105c3e))
+* **TOP:** cachear filtro de fechas para entrada/salida ([#2792](https://github.com/andes/app/issues/2792)) ([14ad3be](https://github.com/andes/app/commit/14ad3be735d3c05014861f8c6f4c1cc933a95ef4))
+
 ## [5.112.1](https://github.com/andes/app/compare/v5.112.0...v5.112.1) (2023-01-18)
 
 # [5.112.0](https://github.com/andes/app/compare/v5.111.3...v5.112.0) (2023-01-04)
