@@ -29,7 +29,6 @@ export class MapaCamasService {
     public capa2 = new BehaviorSubject<string>(null);
     public fecha2 = new BehaviorSubject<Date>(null);
     private organizacion2 = new BehaviorSubject<string>(null);
-
     public unidadOrganizativaSelected = new BehaviorSubject<ISnomedConcept>(null);
     public sectorSelected = new BehaviorSubject<ISectores>(null);
     public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
