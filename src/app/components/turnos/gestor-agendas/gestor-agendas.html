@@ -1,5 +1,6 @@
-<plex-layout *ngIf="showGestorAgendas" [main]="agendasSeleccionadas?.length > 0?8:12" resizable="true" [min]="4"
-             [max]="5" [steps]="2" foco="{{agendasSeleccionadas?.length > 0? 'sidebar' : (isMobile()?'main':'')}}">
+<plex-layout *ngIf="showGestorAgendas" [main]="(agendasSeleccionadas?.length===1 || showAgregarNotaAgenda)? 8:12"
+             resizable="true" [min]="4" [max]="5" [steps]="2"
+             foco="{{agendasSeleccionadas?.length > 0? 'sidebar' : (isMobile()?'main':'')}}">
     <plex-layout-main>
         <plex-title titulo="Gestor de Agendas" size="lg">
             <plex-button type="danger" label="Volver" (click)="volver()"></plex-button>
@@ -180,7 +181,7 @@
         <ng-container *ngIf="!enableQueries">
             <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
                 <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
-                        (recargarAgendas)="loadAgendas($event)"></turnos>
+                        (recargarAgendas)="loadAgendas($event)" (cerrarSidebar)="cerrarSidebarAgendas()"></turnos>
             </div>
             <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
                 <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]"
@@ -203,7 +204,8 @@
             </div>
             <!-- Panel Suspender Turno -->
             <div *ngIf="showSuspenderAgenda || showSuspendida">
-                <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)">
+                <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)"
+                                  (cerrarSidebar)="cerrarSidebarAgendas()">
                 </suspender-agenda>
             </div>
         </ng-container>

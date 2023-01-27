@@ -391,6 +391,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
+    cerrarSidebarAgendas() {
+        this.agendasSeleccionadas = [];
+    }
+
     saveAgregarNotaAgenda() {
         if (this.parametros) {
             this.getAgendas();

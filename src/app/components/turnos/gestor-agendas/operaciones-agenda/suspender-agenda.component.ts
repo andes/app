@@ -24,6 +24,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
     @Input() agenda: IAgenda;
     @Output() returnSuspenderAgenda = new EventEmitter<any>();
+    @Output() cerrarSidebar = new EventEmitter<any>();
 
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService, public pacienteService: PacienteService) { }
@@ -256,5 +257,8 @@ export class SuspenderAgendaComponent implements OnInit {
 
     tienePaciente(turno) {
         return turno.paciente != null && turno.paciente.id != null;
+    }
+    cerrarSidebarTurnos() {
+        this.cerrarSidebar.emit();
     }
 }

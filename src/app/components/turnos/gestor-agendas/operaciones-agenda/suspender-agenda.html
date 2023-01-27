@@ -67,6 +67,8 @@
             {{ agenda.nota }}
         </plex-help>
         <plex-button type="default" icon="email-outline" size="sm" (click)="notificar()"></plex-button>
+        <plex-button type="danger" icon="close" (click)="cerrarSidebarTurnos()" class="ml-1" size="sm">
+        </plex-button>
     </plex-title>
     <div class="py-2 d-flex align-items-center">
         <i *ngIf="todosSeleccionados" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()"
