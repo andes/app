@@ -54,14 +54,22 @@
                                     {{ registro.evoluciones[indice].estado }}
                                 </ng-container>
                             </plex-badge>
-                            <small *ngIf="registro?.evoluciones?.length">
-                                ({{ (registro.evoluciones[indice]?.fechaInicio ?
-                                registro.evoluciones[indice].fechaInicio :
-                                registro.evoluciones[indice].fechaCarga) | fromNow }})
-                            </small>
-                            <small *ngIf="registro?.valor?.fechaInicio">
-                                ({{ registro.valor.fechaInicio | fromNow }})
-                            </small>
+                            <ng-container *ngIf="registro.concepto.conceptId === '230690007'">
+                                <small *ngIf="registro?.evoluciones?.length">
+                                    ({{ (registro.evoluciones[indice]?.fechaInicio ||
+                                    registro.evoluciones[indice].fechaCarga) | fecha }})
+                                </small>
+                            </ng-container>
+                            <ng-container *ngIf="registro.concepto.conceptId !== '230690007'">
+                                <small *ngIf="registro?.evoluciones?.length">
+                                    ({{ (registro.evoluciones[indice]?.fechaInicio ||
+                                    registro.evoluciones[indice].fechaCarga) | fromNow }})
+                                </small>
+                                <small *ngIf="registro?.valor?.fechaInicio">
+                                    ({{ registro.valor.fechaInicio | fromNow }})
+                                </small>
+                            </ng-container>
+
                             <small *ngIf="!registro?.evoluciones?.length && !registro?.valor.fechaInicio">
                                 (Sin registro)
                             </small>
