@@ -5,7 +5,7 @@
 
                 <plex-button label="Volver" type="danger" position="left" (click)="cancel()">
                 </plex-button>
-                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
+                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni' || tipoPaciente === 'extranjero') && !showDeshacer"
                              label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
                              (click)="validarPaciente()">
                 </plex-button>
@@ -15,7 +15,7 @@
                              label="Ignorar y Guardar" type="warning" position="right" [validateForm]="formulario"
                              (click)="save($event,true)">
                 </plex-button>
-                <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
+                <plex-button [disabled]="disableGuardar || (registroDNI && !validado)" label="Guardar" type="success" position="right"
                              [validateForm]="formulario" (click)="save(false)">
                 </plex-button>
 
@@ -25,8 +25,6 @@
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}" class="h-100">
             <plex-tabs (change)="setMainSize($event)">
-
-
                 <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
                                    (changes)="datosBasicosForm($event)" name="datos basicos">
@@ -65,7 +63,7 @@
             <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
                 <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
                 <plex-list>
-                    <plex-item *ngFor="let elem of pacientesSimilares" class="">
+                    <plex-item label="Seleccionar" *ngFor="let elem of pacientesSimilares" (click)="onSelect(elem.paciente)">
 
                         <img [ngClass]="{'img-fallecido' : elem.paciente.fechaFallecimiento}"
                              [mpiFotoPaciente]="elem.paciente" />
@@ -97,8 +95,7 @@
                             {{ elem.paciente.estado }}
                         </plex-badge>
 
-                        <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem.paciente)">
-                        </plex-button>
+                        <plex-label titulo="Similitud: {{elem._score * 100}} %"></plex-label>
                     </plex-item>
                 </plex-list>
             </div>

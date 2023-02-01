@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
@@ -16,12 +16,13 @@ import { PacienteService } from '../services/paciente.service';
     styleUrls: ['datos-basicos.scss']
 })
 
-export class DatosBasicosComponent implements OnInit, OnChanges {
+export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('form', { static: false }) ngForm: NgForm;
+    @ViewChild('formBasico', { static: false }) formBasico: NgForm;
+    @ViewChild('formExtranjero', { static: false }) formExtranjero: NgForm;
     formChangesSubscription: Subscription;
 
     estados = [];
@@ -30,7 +31,11 @@ export class DatosBasicosComponent implements OnInit, OnChanges {
     estadosCiviles: any[];
     tipoIdentificacion: any[];
     noPoseeDNI = false;
+    botonRegistroDNI = false;
+    pacienteExtranjero: IPaciente;
 
+    public nuevoPaciente = false;
+    public disableRegistro = false;
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
     hoy = moment().endOf('day').toDate();
@@ -63,13 +68,37 @@ export class DatosBasicosComponent implements OnInit, OnChanges {
         fotoId: null
     };
 
-
     constructor(
         private plex: Plex,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService
     ) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.paciente) {
+            this.nuevoPaciente = changes.paciente.firstChange || !changes.paciente.currentValue.id;
+
+            if (!changes.paciente.previousValue?.id) {
+                this.pacienteExtranjero = Object.assign({}, this.paciente);
+            }
+        }
+
+        if (!changes.paciente.currentValue.notaError?.length) {
+            this.paciente.reportarError = false;
+        }
+    }
+
+    ngAfterViewInit() {
+        if (this.formExtranjero) {
+            this.formExtranjero.control.valueChanges.subscribe(
+                () => {
+                    this.changes.emit({ pacienteExtranjero: this.pacienteExtranjero });
+                    this.disableRegistro = this.formExtranjero.invalid;
+                }
+            );
+        }
     }
 
     ngOnInit() {
@@ -88,15 +117,14 @@ export class DatosBasicosComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges({ paciente }: SimpleChanges) {
-        if (!paciente.currentValue.notaError?.length) {
-            this.paciente.reportarError = false;
-        }
+    public checkFormExtranjero() {
+        this.formExtranjero.control.markAllAsTouched();
+        return this.formExtranjero.control.valid;
     }
 
     public checkForm() {
-        this.ngForm.control.markAllAsTouched();
-        return this.ngForm.control.valid;
+        this.formBasico.control.markAllAsTouched();
+        return this.formBasico.control.valid;
     }
 
     checkDisableValidar() {
@@ -116,6 +144,17 @@ export class DatosBasicosComponent implements OnInit, OnChanges {
 
     completarGenero() {
         this.paciente.genero = ((typeof this.paciente.sexo === 'string')) ? this.paciente.sexo : (Object(this.paciente.sexo).id);
+        this.paciente.genero = ((typeof this.pacienteExtranjero.sexo === 'string')) ? this.pacienteExtranjero.sexo : (Object(this.pacienteExtranjero.sexo).id);
+    }
+
+    registrarArgentino() {
+        if (this.botonRegistroDNI) {
+            this.disableRegistro = false;
+            this.formExtranjero.control.markAsPristine();
+            this.formExtranjero.control.markAsUntouched();
+        }
+
+        this.changes.emit({ registroDNI: this.botonRegistroDNI });
     }
 
 
