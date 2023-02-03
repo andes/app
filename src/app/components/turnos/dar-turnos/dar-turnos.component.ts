@@ -237,6 +237,7 @@ export class DarTurnosComponent implements OnInit {
             this.busquedas = this.busquedas.filter(busqueda => {
                 return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento && busqueda.organizacion.id === this.organizacion.id;
             });
+            this.busquedas = this.busquedas.slice(0, 5);
         }
         this.desplegarOS = this.desplegarObraSocial();
         // Si es solicitud con profesional asignado, lo carga por defecto la primera vez
@@ -350,17 +351,12 @@ export class DarTurnosComponent implements OnInit {
         this.prestacionSeleccionada = this.opciones.tipoPrestacion;
         this.profesionalSeleccionado = this.opciones.profesional;
 
-
         const search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null,
             'usuario': this.auth.usuario,
             'organizacion': this.organizacion || this.auth.organizacion
         };
-
-        if (this.busquedas.length >= 10) {
-            this.busquedas.pop();
-        }
 
         if (this.cacheBusquedas.length >= 100) {
             this.cacheBusquedas.pop(); // Limitamos a una cache global a las últimas 100 búsquedas globales en todos los efectores
@@ -372,11 +368,20 @@ export class DarTurnosComponent implements OnInit {
                     (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null) &&
                     (item.organizacion && search.organizacion ? item.organizacion.id === search.organizacion.id : search.organizacion === null)
             );
-            if (index < 0) {
-                this.cacheBusquedas.unshift(search);
-                this.busquedas.unshift(search);
-                localStorage.setItem('busquedas', JSON.stringify(this.cacheBusquedas));
+            if (index > 0) {
+                this.busquedas = this.cacheBusquedas.filter(p => ((p.tipoPrestacion?.term !== search.tipoPrestacion?.term) && (p.profesional?._id !== search.profesional?._id)));
+                this.cacheBusquedas = [...this.busquedas];
             }
+
+            if (index !== 0) {
+                this.busquedas.splice(0, 0, search);
+                this.cacheBusquedas.splice(0, 0, search);
+            }
+
+            if (this.busquedas.length > 5) {
+                this.busquedas = this.busquedas.slice(0, 5);
+            }
+            localStorage.setItem('busquedas', JSON.stringify(this.cacheBusquedas));
         }
         if (!this.solicitudPrestacion) {
             const regla: any = {
@@ -741,8 +746,8 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarBusqueda(indice: number) {
-        this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
-        this.opciones.profesional = this.busquedas[indice].profesional;
+        this.opciones.tipoPrestacion = this.cacheBusquedas[indice]?.tipoPrestacion;
+        this.opciones.profesional = this.cacheBusquedas[indice]?.profesional;
         this.filtrar();
     }
 
