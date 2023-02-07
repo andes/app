@@ -12,7 +12,8 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public reglasMatch = [];
     public reglaSelected = null;
     public formulario = null;
-
+    public profesionales = '';
+    public profesional;
     public organizaciones: any[] = [];
     afterInit = false;
 
@@ -59,6 +60,11 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 }
             });
         }
+        this.registro?.valor?.solicitudPrestacion?.profesionalesDestino?.forEach(p => {
+            this.profesionales = this.profesionales.concat(p.nombreCompleto + ' - ');
+        });
+        this.profesionales = this.profesionales.slice(0, -3);
+
     }
 
     onOrganizacionChange() {
@@ -87,14 +93,18 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     }
 
     loadProfesionales(event) {
-        if (event && event.query) {
+        if (this.registro.valor.solicitudPrestacion.profesionalesDestino) {
+            event.callback(this.registro.valor.solicitudPrestacion.profesionalesDestino);
+        }
+        if (event.query && event.query !== '' && event.query.length > 2) {
             const query = {
                 nombreCompleto: event.query
             };
-            this.serviceProfesional.get(query).subscribe(event.callback);
+            this.serviceProfesional.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
         } else {
-            const callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
-            event.callback(callback);
+            event.callback([]);
         }
     }
 

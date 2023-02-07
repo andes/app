@@ -1,13 +1,9 @@
 <ng-container *ngIf="!soloValores">
     <plex-text label="Diagnóstico/Motivo" multiline="true" [autoFocus]="true"
                [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
-    <plex-text label="Indicaciones" [html]="true" height=100
+    <plex-text label="Indicaciones" height=100 [html]="true"
                [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones" *ngIf="afterInit">
     </plex-text>
-
-    <!-- <plex-select [(ngModel)]="registro.valor?.solicitudPrestacion?Prestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
-        (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
-    </plex-select> -->
 
     <plex-select *ngIf="organizaciones.length || registro.valor.solicitudPrestacion.organizacionDestino"
                  [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino"
@@ -31,36 +27,25 @@
     </ng-container>
 
 </ng-container>
-<div class="row" *ngIf="soloValores">
-    <div class="col-12 readonly">
+<ng-container *ngIf="soloValores">
+    <plex-grid cols="3">
+        <plex-label titulo="Diagnóstico/Motivo"
+                    subtitulo="{{registro.valor.solicitudPrestacion.motivo || 'Sin diagnóstico'}}">
+        </plex-label>
         <div>
-            <span>Diagnóstico/Motivo</span>
-            {{ registro.valor.solicitudPrestacion.motivo || '(no definido)' }}
-        </div>
-        <div>
-            <span>Indicaciones</span>
+            <label>Indicaciones</label>
             <span [innerHTML]="registro.valor.solicitudPrestacion.indicaciones"></span>
         </div>
-        <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">
-            <span>Organización a la cual se solicita</span>
-            <ng-container
-                          *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
-                {{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}
-            </ng-container>
-        </div>
-        <div *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino">
-            <span>Profesional/es</span>
-            <ng-container
-                          *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino && registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
-                <ng-container *ngFor="let profesional of registro.valor?.solicitudPrestacion?.profesionalesDestino">
-                    {{ profesional.apellido }}, {{ profesional.nombre }}
-                </ng-container>
-            </ng-container>
-        </div>
+        <plex-label *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino?.id"
+                    titulo="Organización a la cual se solicita"
+                    subtitulo="{{registro.valor.solicitudPrestacion.organizacionDestino.nombre}}"></plex-label>
+        <plex-label *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino?.length" titulo="Profesional/es"
+                    subtitulo="{{profesionales}}">
+        </plex-label>
         <ng-container *ngIf="registro.valor.template">
             <lib-form-builder #template [template]="registro.valor.template"
                               [initial]="registro.valor.solicitudPrestacion" [readonly]="true">
             </lib-form-builder>
         </ng-container>
-    </div>
-</div>
+    </plex-grid>
+</ng-container>

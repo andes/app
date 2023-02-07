@@ -21,6 +21,10 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     private capa: string;
     private ambito: string;
     private idInternacion: string;
+    public seleccionado = false;
+    public motivoEditado;
+    public indicacionEditada;
+    public profesionalEditado;
 
     selectedConcept = null;
     elementoRUP = null;
@@ -75,6 +79,9 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.motivoEditado = this.indicacion?.valor.solicitudPrestacion.motivo;
+        this.indicacionEditada = this.indicacion?.valor.solicitudPrestacion.indicaciones;
+        this.profesionalEditado = this.indicacion?.valor.solicitudPrestacion.profesionalesDestino;
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
@@ -108,7 +115,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
             this.plex.toast('warning', 'Revise que todos los campos requeridos contengan datos válidos.', 'Acción denegada', 5000);
             return;
         }
-        this.registro.valor.sustancias.forEach(s => {
+        this.registro.valor.sustancias?.forEach(s => {
             s.dosis = `${s.dosisValor}${s.dosisUnidad?.term}`;
         });
         const nombre = this.registro.valor?.nombre || this.registro.concepto.term;
@@ -136,7 +143,6 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
                 fecha: new Date()
             }]
         };
-
         if (this.indicacion?.estadoActual.tipo === 'draft') {
             this.indicacion.fechaInicio = indicacion.fechaInicio;
             this.indicacion.ambito = indicacion.ambito;
@@ -153,9 +159,15 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         } else {
             this.save.emit(indicacion);
         }
+        this.seleccionado = true;
     }
 
     onCancel() {
+        if (this.indicacion) {
+            this.indicacion.valor.solicitudPrestacion.motivo = this.motivoEditado;
+            this.indicacion.valor.solicitudPrestacion.indicaciones = this.indicacionEditada;
+            this.indicacion.valor.solicitudPrestacion.profesionalesDestino = this.profesionalEditado;
+        }
         this.save.emit();
     }
 }
