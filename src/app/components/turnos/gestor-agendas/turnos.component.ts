@@ -17,10 +17,6 @@ import * as moment from 'moment';
 })
 
 export class TurnosComponent implements OnInit {
-    private _agenda: IAgenda;
-    public idOrganizacion = this.auth.organizacion.id;
-    public prestacion;
-    public prestacionTerm;
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
@@ -66,17 +62,22 @@ export class TurnosComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
+    private _agenda: IAgenda;
 
     @Input() reasturnos: IAgenda;
+    @Input() selectable = true; // Permite :hover y click()
+    @Input() selected = false;// Muestra efecto de selección
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
     @Output() cerrarSidebar = new EventEmitter<any>();
 
     // Propiedades públicas
+    public idOrganizacion = this.auth.organizacion.id;
+    public prestacion;
+    public prestacionTerm;
     showSeleccionarTodos = true;
     showTurnos = true;
-    showLiberarTurno = false;
     showSuspenderTurno = false;
     showAgregarNotaTurno = false;
     showCarpetaPaciente = false;
@@ -93,22 +94,12 @@ export class TurnosComponent implements OnInit {
     public items = [];
     public mostrar = 0;
     public bloqueSelected;
-
     hoy: Date;
-    // Contiene el cálculo de la visualización de botones
-    botones: any = {};
+    botones: any = {}; // Contiene el cálculo de la visualización de botones
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
     public delDia = false;
     public arrayDelDia = [];
-
-
-    // Permite :hover y click()
-    @Input() selectable = true;
-
-    // Muestra efecto de selección
-    @Input() selected = false;
-
     public sortBy: string;
     public sortOrder = 'desc';
     botonera = true;
@@ -208,11 +199,6 @@ export class TurnosComponent implements OnInit {
     // retorna true si algun bloque de la agenda es exclusivo de gestión
     contieneExclusivoGestion(agenda: IAgenda): boolean {
         return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
-    }
-
-    liberarTurno() {
-        this.showTurnos = false;
-        this.showLiberarTurno = true;
     }
 
     suspenderTurno() {
@@ -420,7 +406,6 @@ export class TurnosComponent implements OnInit {
                 if (index === this.turnosSeleccionados.length - 1) {
                     this.saveLiberarTurno(this.agenda);
                 }
-
             },
             err => {
                 if (err) {
@@ -435,7 +420,6 @@ export class TurnosComponent implements OnInit {
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             this.agenda = ag;
             this.showTurnos = true;
-            this.showLiberarTurno = false;
             this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
     }
@@ -443,7 +427,6 @@ export class TurnosComponent implements OnInit {
     cancelaLiberarTurno() {
         this.turnosSeleccionados.length = 0;
         this.showTurnos = true;
-        this.showLiberarTurno = false;
     }
 
     saveSuspenderTurno() {
