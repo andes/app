@@ -1,3 +1,10 @@
+# [5.114.0](https://github.com/andes/app/compare/v5.113.0...v5.114.0) (2023-02-08)
+
+
+### Features
+
+* **CIT:** se agrega boton cerrar, para el sidebar ([#2814](https://github.com/andes/app/issues/2814)) ([94b6710](https://github.com/andes/app/commit/94b67104b9e8b81ba0658570d99e9a0b2bd5c8ae))
+
 # [5.113.0](https://github.com/andes/app/compare/v5.112.1...v5.113.0) (2023-01-25)
 
 
