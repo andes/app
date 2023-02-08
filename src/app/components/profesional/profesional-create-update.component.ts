@@ -118,7 +118,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
             if (params && params['id']) {
                 this.seEstaCreandoProfesional = false;
-                this.profesionalService.getProfesional({ id: params['id'] }).subscribe(profesional => {
+                this.profesionalService.get({ id: params['id'] }).subscribe(profesional => {
                     this.profesional = profesional[0];
                     this.profesional.contactos = this.profesional.contactos.length ? this.profesional.contactos : [this.contacto];
                     if (this.profesional.validadoRenaper) {
@@ -234,7 +234,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
-            this.profesionalService.getProfesional({ documento: this.profesional.documento })
+            this.profesionalService.get({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
                         if (datos.length > 0) {
