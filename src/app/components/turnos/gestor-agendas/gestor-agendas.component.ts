@@ -772,12 +772,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurnoAgendas = true;
     }
 
-    listarTurnos(agenda) {
+    listarTurnos() {
         this.showGestorAgendas = false;
         this.showListadoTurnos = true;
     }
 
-    listarCarpetas(agenda) {
+    listarCarpetas() {
         this.showGestorAgendas = false;
         this.showCarpetas = true;
     }
