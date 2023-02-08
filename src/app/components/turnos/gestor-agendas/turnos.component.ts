@@ -17,10 +17,6 @@ import * as moment from 'moment';
 })
 
 export class TurnosComponent implements OnInit {
-    private _agenda: IAgenda;
-    public idOrganizacion = this.auth.organizacion.id;
-    public prestacion;
-    public prestacionTerm;
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
@@ -66,17 +62,22 @@ export class TurnosComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
+    private _agenda: IAgenda;
 
     @Input() reasturnos: IAgenda;
+    @Input() selectable = true; // Permite :hover y click()
+    @Input() selected = false;// Muestra efecto de selección
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
     @Output() cerrarSidebar = new EventEmitter<any>();
 
     // Propiedades públicas
+    public idOrganizacion = this.auth.organizacion.id;
+    public prestacion;
+    public prestacionTerm;
     showSeleccionarTodos = true;
     showTurnos = true;
-    showLiberarTurno = false;
     showSuspenderTurno = false;
     showAgregarNotaTurno = false;
     showCarpetaPaciente = false;
@@ -93,22 +94,12 @@ export class TurnosComponent implements OnInit {
     public items = [];
     public mostrar = 0;
     public bloqueSelected;
-
     hoy: Date;
-    // Contiene el cálculo de la visualización de botones
-    botones: any = {};
+    botones: any = {}; // Contiene el cálculo de la visualización de botones
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
     public delDia = false;
     public arrayDelDia = [];
-
-
-    // Permite :hover y click()
-    @Input() selectable = true;
-
-    // Muestra efecto de selección
-    @Input() selected = false;
-
     public sortBy: string;
     public sortOrder = 'desc';
     botonera = true;
@@ -208,11 +199,6 @@ export class TurnosComponent implements OnInit {
     // retorna true si algun bloque de la agenda es exclusivo de gestión
     contieneExclusivoGestion(agenda: IAgenda): boolean {
         return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
-    }
-
-    liberarTurno() {
-        this.showTurnos = false;
-        this.showLiberarTurno = true;
     }
 
     suspenderTurno() {
@@ -387,13 +373,60 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    cambiarADisponible() {
+        this.plex.confirm('¿Está seguro que quiere pasar el/los turno/s a disponible?', 'Turno disponible').then(respuesta => {
+            if (respuesta) {
+                this.pasarADisponible();
+
+            }
+        });
+
+    }
+
+    pasarADisponible() {
+        let alertCount = 0;
+        this.turnosSeleccionados.forEach((turno, index) => {
+
+            const patch = {
+                'op': 'liberarTurno',
+                'turnos': this.turnosSeleccionados.map(resultado => resultado._id)
+            };
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                this.saveLiberarTurno(this.agenda);
+                if (alertCount === 0) {
+                    if (this.turnosSeleccionados.length === 1) {
+                        this.plex.toast('success', 'El turno seleccionado fue cambiado a disponible.');
+                    } else {
+                        this.plex.toast('success', 'Los turnos seleccionados fueron cambiados a disponible.');
+                    }
+                    alertCount++;
+                }
+
+                this.agenda = resultado;
+                if (index === this.turnosSeleccionados.length - 1) {
+                    this.saveLiberarTurno(this.agenda);
+                }
+            },
+            err => {
+                if (err) {
+                    this.plex.info('warning', 'Turno en ejecución', 'Error');
+                    this.cancelaLiberarTurno();
+                }
+            });
+        });
+    }
+
     saveLiberarTurno(agenda: any) {
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             this.agenda = ag;
             this.showTurnos = true;
-            this.showLiberarTurno = false;
             this.bloqueSelected = this.agenda.bloques[this.mostrar];
         });
+    }
+
+    cancelaLiberarTurno() {
+        this.turnosSeleccionados.length = 0;
+        this.showTurnos = true;
     }
 
     saveSuspenderTurno() {
