@@ -1,7 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
@@ -36,11 +35,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.agendasSeleccionadas.forEach((agenda, index) => {
-            if (this.nota === '' || agenda.nota === this.nota) {
-                this.nota = agenda.nota;
-            } else {
-                this.nota = null;
-            }
+            this.nota = agenda.nota;
         });
     }
 
@@ -49,7 +44,6 @@ export class AgregarNotaAgendaComponent implements OnInit {
         this.agendasSeleccionadas.forEach((agenda, index) => {
             const patch = {
                 'op': 'notaAgenda',
-                // 'nota': agenda.nota
                 'nota': this.nota
             };
 
@@ -67,13 +61,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
                 if (index === this.agendasSeleccionadas.length - 1) {
                     this.saveAgregarNotaAgenda.emit(agenda);
                 }
-            },
-            err => {
-                if (err) {
-
-                }
             });
-
         });
     }
 

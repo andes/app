@@ -1,48 +1,39 @@
-<fieldset *ngIf="showAgregarNotaAgenda">
-    <legend>Agregar Nota</legend>
-    <div class="alert alert-default small">
-        <div class="row">
-            <div class="col-4">
-                <label>Fecha</label>
-            </div>
-            <div class="col-4">
-                <label>Tipos de prestación</label>
-            </div>
-            <div class="col-4">
-                <label>Equipo de Salud</label>
-            </div>
-        </div>
+<fieldset>
+    <plex-title *ngIf="showAgregarNotaAgenda" titulo="{{ nota ? 'Editar' : 'Agregar' }} Nota" size="md">
+        <plex-button type="danger" icon="close" (click)="cancelar()" class="mr-1" size="sm" tooltip="Cancelar"
+                     tooltipPosition="top">
+        </plex-button>
+        <plex-button type="success" icon="check" (click)="guardarNota()" size="sm" tooltip="Guardar"
+                     tooltipPosition="top">
+        </plex-button>
+    </plex-title>
+    <plex-list>
         <ng-container *ngFor="let agenda of agendasSeleccionadas; let i = index">
-            <div class="row">
-                <div class="col-4">
-                    {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | fecha}}
-                    {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
-                </div>
-                <div class="col-4">
-                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
-                </div>
-                <div class="col-4">
-                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
-                        asignado</span>
-                    <ng-container *ngIf="agenda.profesionales">
-                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | nombre}}</div>
-                    </ng-container>
-                </div>
-            </div>
+            <plex-item>
+                <plex-icon name="lapiz-documento" size="lg" type="info"></plex-icon>
+                <plex-label size="sm" case="capitalize" titulo="Fecha" subtitulo="{{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | fecha}}
+                    {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs">
+                </plex-label>
+                <plex-label *ngFor="let tipoPrestacion of agenda.tipoPrestaciones" size="sm" case="capitalize"
+                            titulo="Tipos de prestación" subtitulo="{{tipoPrestacion.nombre}}">
+                </plex-label>
+
+                <plex-label size="sm" case="capitalize" *ngIf="agenda.profesionales?.length == 0"
+                            titulo="Equipo de Salud" subtitulo="Equipo de Salud no
+                        asignado"></plex-label>
+
+                <ng-container *ngIf="agenda.profesionales">
+                    <plex-label size="sm" case="capitalize" *ngFor="let profesional of agenda.profesionales" size="sm"
+                                case="capitalize" titulo="Equipo de Salud" subtitulo="{{profesional | nombre}}">
+                    </plex-label>
+                </ng-container>
+            </plex-item>
         </ng-container>
-    </div>
+    </plex-list>
     <div class="row">
         <div class="col-12">
-            <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
+            <plex-text label="Ingrese nota" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
             </plex-text>
         </div>
-    </div>
-
-    <!--Botones-->
-    <div class="mt-3 float-right">
-        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
-        </plex-button>
-        <plex-button type="success" label="Guardar" (click)="guardarNota()" title="Guardar Nota">
-        </plex-button>
     </div>
 </fieldset>

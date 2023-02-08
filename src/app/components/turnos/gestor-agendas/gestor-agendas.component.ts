@@ -378,6 +378,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
+        this.showSuspenderAgenda = false;
+        this.showSuspendida = false;
     }
 
     agregarSobreturno(agenda) {
@@ -770,12 +772,12 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurnoAgendas = true;
     }
 
-    listarTurnos(agenda) {
+    listarTurnos() {
         this.showGestorAgendas = false;
         this.showListadoTurnos = true;
     }
 
-    listarCarpetas(agenda) {
+    listarCarpetas() {
         this.showGestorAgendas = false;
         this.showCarpetas = true;
     }
