@@ -71,6 +71,7 @@ export class TurnosComponent implements OnInit {
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
+    @Output() cerrarSidebar = new EventEmitter<any>();
 
     // Propiedades públicas
     showSeleccionarTodos = true;
@@ -428,5 +429,9 @@ export class TurnosComponent implements OnInit {
         this.bloqueSelected.tipoPrestaciones.forEach(prest => this.prestacion = this.prestacion.concat(prest.term + ' - '));
         this.prestacionTerm = this.prestacion.slice(0, -2);
         this.todos = false;
+    }
+
+    cerrarSidebarTurnos() {
+        this.cerrarSidebar.emit();
     }
 }

@@ -65,6 +65,9 @@
     <plex-help *ngIf="agenda.nota" class="mr-1" type="help" icon="message">
         {{ agenda.nota }}
     </plex-help>
+    <plex-button type="danger" icon="close" (click)="cerrarSidebarTurnos()" class="mr-1" size="sm">
+    </plex-button>
+
 </plex-title>
 
 <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
