@@ -32,6 +32,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual: any = 'planes';
+    filtroTrastornos = true;
 
     solicitudesMezcladas = [];
 
@@ -153,7 +154,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         setTimeout(() => {
             this.buscarCDAPacientes(token);
         }, 1000 * 30);
-
     }
 
     dragStart(e) {
@@ -329,12 +329,11 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe((hallazgos) => {
                 this.registrosTotales.hallazgo = hallazgos;
                 this.registrosTotalesCopia.hallazgo = hallazgos;
-                // this.hallazgos = hallazgos;
             });
 
             this.servicioPrestacion.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-                this.registrosTotales.trastorno = trastornos;
                 this.registrosTotalesCopia.trastorno = trastornos;
+                this.filtrarTrastornos();
             });
 
             this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id).subscribe((medicamentos) => {
@@ -407,7 +406,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             // filtramos las vacunas y laboratorios por ahora para que se listan por separado
             this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Vacunas_CDA_ID);
             this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_CDA_ID
-                                                    || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
+                || cda.prestacion.conceptId === ConceptosTurneablesService.Laboratorio_SISA_CDA_ID);
 
             // DEjamos el resto de los CDAS y los unimos a las prestaciones
             const filtro = this.cdas.filter(cda => {
@@ -483,8 +482,16 @@ export class HudsBusquedaComponent implements AfterContentInit {
         }
     }
 
+    filtrarTrastornos() {
+        !this.filtroTrastornos ?
+            this.registrosTotales.trastorno = this.registrosTotalesCopia.trastorno
+            :
+            this.registrosTotales.trastorno = this.registrosTotalesCopia.trastorno.filter((registro) => {
+                return registro.evoluciones[0].estado === 'activo';
+            });
+    }
+
     getSemanticTagFiltros() {
-        // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
 
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
@@ -545,13 +552,13 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     buscar() {
+        if (this.filtroActual !== 'trastorno') {
+            this.registrosTotales[this.filtroActual] = this.registrosTotalesCopia[this.filtroActual];
 
-        this.registrosTotales[this.filtroActual] = this.registrosTotalesCopia[this.filtroActual];
+            if (this.searchTerm) {
 
-        if (this.searchTerm) {
-
-            this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter
-            (p => this.filtrarPorTerm(p));
+                this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter(p => this.filtrarPorTerm(p));
+            }
         }
     }
 
