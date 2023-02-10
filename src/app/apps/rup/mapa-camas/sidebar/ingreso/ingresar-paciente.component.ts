@@ -1,5 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Router } from '@angular/router';
 import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap } from 'rxjs/operators';
@@ -97,6 +98,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth,
+        private router: Router,
         @Optional() private ingresoPacienteService: IngresoPacienteService,
         public elementosRUPService: ElementosRUPService,
         public internacionResumenService: InternacionResumenHTTP,
@@ -252,15 +254,21 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.camas$ = this.mapaCamasService.snapshot$.pipe(
+        this.camas$ = combineLatest([
+            this.mapaCamasService.snapshot$,
+            pacienteID$
+        ]).pipe(
             auditTime(1),
-            map((snapshot) => {
+            map(([snapshot, idPaciente]) => {
                 this.inProgress = false;
                 // filtra por cama disponible / ocupada por el mismo paciente (edicion) / cama de sala
-                const camasDisponibles = snapshot.filter(snap => snap.estado === 'ocupada' && snap.paciente.id === this.paciente.id || snap.estado === 'disponible' || snap.sala);
-                if (this.cama && !camasDisponibles.find(cama => cama.id === this.cama.id)) {
-                    // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
-                    this.cama = null;
+                const camasDisponibles = snapshot.filter(snap => snap.estado === 'ocupada' && snap.paciente.id === idPaciente || snap.estado === 'disponible' || snap.sala);
+                const currentUrl = this.router.url;
+                if (currentUrl.includes('listado-internacion-medico')) {
+                    if (this.cama && !camasDisponibles.find(cama => cama.id === this.cama.id)) {
+                        // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
+                        this.cama = null;
+                    }
                 }
                 return camasDisponibles;
             })
@@ -668,8 +676,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     // como la cama esta ocupada, se controla que sea por la misma internación
                     if (!cama.idInternacion || controlEstadistica || controlEstadisticaV2) {
                         this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
-                        this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
-                            'Cama no dosponible');
+                        this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre.bold()} no se encuentra disponible`,
+                            'Cama no disponible');
                     }
                 }
             });
