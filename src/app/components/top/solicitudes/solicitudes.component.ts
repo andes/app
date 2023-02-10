@@ -57,17 +57,8 @@ export class SolicitudesComponent implements OnInit {
     public asignadas = false;
     itemsDropdown: any = []; // Acciones del dropdown 'vincular
     openedDropDown = null;
-    public estadosEntrada = [
-        { id: 'auditoria', nombre: 'AUDITORIA' },
-        { id: 'pendiente', nombre: 'PENDIENTE' },
-        { id: 'asignada', nombre: 'ASIGNADA' },
-        { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
-        { id: 'ejecucion', nombre: 'EJECUCIÓN' },
-        { id: 'turnoDado', nombre: 'TURNO DADO' },
-        { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
-        { id: 'anulada', nombre: 'ANULADA' }
-    ];
-    public estadosSalida = [
+
+    public selectEstados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'asignada', nombre: 'ASIGNADA' },
@@ -175,7 +166,7 @@ export class SolicitudesComponent implements OnInit {
 
         if (currentUrl === '/solicitudes/asignadas') {
             this.asignadas = true;
-            this.estadosEntrada = [
+            this.selectEstados = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
             ];
 

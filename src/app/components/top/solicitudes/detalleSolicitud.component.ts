@@ -1,8 +1,6 @@
-import { Input, Component, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Input, Component, SimpleChanges, OnChanges } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
-import { environment } from '../../../../environments/environment';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Plex } from '@andes/plex';
+
 @Component({
     selector: 'detalle-solicitud',
     templateUrl: './detalleSolicitud.html',

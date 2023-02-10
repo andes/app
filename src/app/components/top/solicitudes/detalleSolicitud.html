@@ -5,23 +5,20 @@
     <plex-title size="sm" titulo="Solicitud">
         <plex-badge type="warning mr-1">
             {{prestacionSeleccionada.solicitud.fecha
-                                        | fecha}}
+            | fecha}}
         </plex-badge>
         <plex-badge type="danger mr-1"
                     *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
             {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
         </plex-badge>
-        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'validada'"
-                    type="success mr-1">Turno dado</plex-badge>
-        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'validada'"
-                    type="success mr-1">Registro en HUDS</plex-badge>
-        <plex-badge type="info"
-                    *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo !== 'rechazada'">
-            {{prestacionSeleccionada.estadoActual.tipo}}
-        </plex-badge>
-        <plex-badge type="danger"
-                    *ngIf="!prestacionSeleccionada.solicitud.turno && prestacionSeleccionada.estadoActual.tipo === 'rechazada'">
-            CONTRARREFERIDA
+        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno"
+                    type="{{prestacionSeleccionada | estadoPrestacion}}">{{prestacionSeleccionada.estadoActual.tipo ===
+            'validada' ?
+            'Registro en HUDS' : 'Turno dado'}} </plex-badge>
+        <plex-badge type="{{prestacionSeleccionada | estadoPrestacion}}"
+                    *ngIf="!prestacionSeleccionada.solicitud.turno">
+            {{prestacionSeleccionada.estadoActual.tipo !== 'rechazada' ? prestacionSeleccionada.estadoActual.tipo :
+            'CONTRARREFERIDA'}}
         </plex-badge>
     </plex-title>
     <plex-grid cols="3" size="md" direction="row">
