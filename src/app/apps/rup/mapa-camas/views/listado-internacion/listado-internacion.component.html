@@ -23,7 +23,8 @@
                                     subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
                         </plex-label>
                     </div>
-                    <plex-table *ngIf="(listaInternacion$ | async)?.length" [columns]="columns" #table="plTable" [offset]="0">
+                    <plex-table *ngIf="(listaInternacion$ | async)?.length" [columns]="columns" #table="plTable"
+                                [offset]="0">
                         <plex-table-columns>
                         </plex-table-columns>
                         <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
@@ -71,17 +72,16 @@
         <plex-layout-sidebar type="invert">
             <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES" size="md">
                 <plex-button *ngIf="!puedeRomper" class="mr-1" label="VALIDAR" type="success" size="sm"
-                                [disabled]="!puedeValidar || editando"
-                                (click)="validar(selectedPrestacion, fechaHasta)">
+                             [disabled]="!puedeValidar || editando" (click)="validar(selectedPrestacion, fechaHasta)">
                 </plex-button>
                 <plex-button *ngIf="puedeRomper" class="mr-1" label="ROMPER VALIDACION" type="warning" size="sm"
-                                (click)="romperValidacion(selectedPrestacion, fechaHasta)">
+                             (click)="romperValidacion(selectedPrestacion, fechaHasta)">
                 </plex-button>
                 <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
                 </plex-button>
             </plex-title>
             <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (accion)="onAccion($event)"
-                                        (cambiarCama)="cambiarCama()">
+                                     (cambiarCama)="cambiarCama()">
             </app-internacion-detalle>
             <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
                                 (accionDesocupar)="accionDesocupar($event)">
@@ -89,7 +89,7 @@
                 </plex-button>
             </app-desocupar-cama>
             <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="refresh()"
-                                (cancel)="volverADetalle()">
+                              (cancel)="volverADetalle()">
             </app-cambiar-cama>
         </plex-layout-sidebar>
     </plex-layout>

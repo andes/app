@@ -196,6 +196,7 @@ export class InternacionListadoComponent implements OnInit {
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                 this.verificarPrestacion(prestacion);
+                this.mapaCamasService.load(true);
             }
         }
     }
