@@ -130,7 +130,7 @@
                 </agregar-nota-turno>
             </plex-help>
             <plex-help *ngIf="botones.suspender && turnosSeleccionados?.length" class="mr-1" btnType="danger"
-                       icon="stop" tooltip="Suspender turnos" tooltipPosition="top">
+                       icon="stop" tooltip="Suspender turnos" tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
                                  [turnosSeleccionados]="turnosSeleccionados"
                                  (saveSuspenderTurno)="saveSuspenderTurno($event)"
