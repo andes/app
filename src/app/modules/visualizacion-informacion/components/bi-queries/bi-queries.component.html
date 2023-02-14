@@ -6,13 +6,12 @@
 </plex-title>
 <form #form="ngForm">
     <plex-grid type="full" size="sm">
-        <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="true"
-                        [data]="queries$ | async" labelField="nombre" idField="_id"
-                        placeholder="Seleccione consulta" (change)="getArgumentos()">
+        <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="true" [data]="queries$ | async"
+                     labelField="nombre" idField="_id" placeholder="Seleccione consulta" (change)="getArgumentos()">
         </plex-select>
         <ng-container *ngFor="let argumento of consultaSeleccionada?.argumentos">
             <plex-bool *ngIf="argumento.tipo==='salida'" [(ngModel)]="argumento.check"
-                        [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
+                       [label]="argumento.label?argumento.label:argumento.key" name={{argumento.key}}>
             </plex-bool>
         </ng-container>
     </plex-grid>
@@ -21,45 +20,43 @@
         <plex-wrapper>
             <ng-container *ngFor="let argumento of consultaSeleccionada.argumentos" [ngSwitch]="argumento.tipo">
                 <plex-datetime *ngSwitchCase="'date'" [label]="argumento.label?argumento.label:argumento.key"
-                                grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required">
+                               grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                               [required]="argumento.required">
                 </plex-datetime>
-                <plex-select *ngSwitchCase="'organizacion'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow="2"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required && totalOrganizaciones"
-                                [data]="organizaciones$ |async">
+                <plex-select *ngSwitchCase="'organizacion'" [label]="argumento.label?argumento.label:argumento.key"
+                             grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required" [data]="organizaciones$ |async">
                 </plex-select>
-                <plex-select *ngSwitchCase="'conceptoTurneable'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow="2"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                idField="conceptId" [required]="argumento.required" tmPrestaciones preload="true">>
+                <plex-select *ngSwitchCase="'unidadOrganizativa'"
+                             [label]="argumento.label?argumento.label:argumento.key" grow="full"
+                             name="{{ argumento.key }}" labelField="term" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required" (getData)="loadUnidadesOrganizativas($event)">
                 </plex-select>
-                <plex-text *ngSwitchCase="'string'" [label]="argumento.label?argumento.label:argumento.key"
-                            grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                            [required]="argumento.required">
+                <plex-select *ngSwitchCase="'conceptoTurneable'" [label]="argumento.label?argumento.label:argumento.key"
+                             grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             idField="conceptId" [required]="argumento.required" tmPrestaciones preload="true">>
+                </plex-select>
+                <plex-text *ngSwitchCase="'string'" [label]="argumento.label?argumento.label:argumento.key" grow="2"
+                           name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                           [required]="argumento.required">
                 </plex-text>
-                <plex-select *ngSwitchCase="'profesional'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required" labelField="nombreCompleto"
-                                (getData)="loadProfesionales($event)">
+                <plex-select *ngSwitchCase="'profesional'" [label]="argumento.label?argumento.label:argumento.key"
+                             grow=" 2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required" labelField="nombreCompleto"
+                             (getData)="loadProfesionales($event)">
                 </plex-select>
-                <plex-select *ngSwitchCase="'zonaSanitaria'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow="2"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required && permisosZonas.length > 0"
-                                [data]="zonasSanitarias">
+                <plex-select *ngSwitchCase="'zonaSanitaria'" [label]="argumento.label?argumento.label:argumento.key"
+                             grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required && permisosZonas.length > 0" [data]="zonasSanitarias">
                 </plex-select>
-                <plex-select *ngSwitchCase="'select-static'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow="auto"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required" [data]="argumento.items">
+                <plex-select *ngSwitchCase="'select-static'" [label]="argumento.label?argumento.label:argumento.key"
+                             grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required" [data]="argumento.items">
                 </plex-select>
                 <plex-select *ngSwitchCase="'formsEpidemiologia'"
-                                [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
-                                name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                                [required]="argumento.required" labelField="type" (getData)="loadFomTypes($event)">
+                             [label]="argumento.label?argumento.label:argumento.key" grow=" 2"
+                             name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                             [required]="argumento.required" labelField="type" (getData)="loadFomTypes($event)">
                 </plex-select>
             </ng-container>
         </plex-wrapper>
