@@ -52,6 +52,7 @@ export class SolicitudesComponent implements OnInit {
     public showCitar = false;
     public showDetalle = false;
     public showNuevaSolicitud = false;
+    public showNotificarPaciente = false;
     public prestacionesDestino = [];
     public estado;
     public asignadas = false;
@@ -95,10 +96,11 @@ export class SolicitudesComponent implements OnInit {
     public fechaHastaEntrada: Date = moment().startOf('day').toDate();
     public fechaDesdeSalida: Date = moment().startOf('day').toDate();
     public fechaHastaSalida: Date = moment().startOf('day').toDate();
-    public fechaDesdeEntradaActualizacion: Date = null;
-    public fechaHastaEntradaActualizacion: Date = null;
-    public fechaDesdeSalidaActualizacion: Date = null;
-    public fechaHastaSalidaActualizacion: Date = null;
+    public fechaDesdeEntradaActualizacion: Date = moment().startOf('day').toDate();
+    public fechaHastaEntradaActualizacion: Date = moment().startOf('day').toDate();
+    public fechaDesdeSalidaActualizacion: Date = moment().startOf('day').toDate();
+    public fechaHastaSalidaActualizacion: Date = moment().startOf('day').toDate();
+    public hoy: Date = moment().toDate();
     public pacienteEntrada: any;
     public pacienteSalida: any;
     public prestacionesDestinoEntrada = [];
@@ -276,6 +278,7 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
         this.showNuevaSolicitud = false;
+        this.showNotificarPaciente = false;
         this.seleccionado = null;
     }
 
@@ -325,6 +328,7 @@ export class SolicitudesComponent implements OnInit {
         this.showAuditar = false;
         this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
+        this.showNotificarPaciente = false;
     }
 
     darTurno(prestacionSolicitud) {
@@ -411,8 +415,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     auditar(prestacion) {
-        const arregloColumnas = this.columns.filter(c => c.key !== 'paciente');
-        this.columns = arregloColumnas;
+        const arreColumns = this.columns.filter(c => c.key !== 'paciente');
+        this.columns = arreColumns;
         this.prestacionSeleccionada = prestacion;
         this.showAuditar = true;
         this.showSidebar = true;
@@ -421,6 +425,20 @@ export class SolicitudesComponent implements OnInit {
         this.showCitar = false;
         this.showIniciarPrestacion = false;
         this.showNuevaSolicitud = false;
+    }
+
+    notificarPaciente(prestacion) {
+        const arreColumns = this.columns.filter(c => c.key !== 'paciente');
+        this.columns = arreColumns;
+        this.prestacionSeleccionada = prestacion;
+        this.showAuditar = false;
+        this.showSidebar = true;
+        this.showAnular = false;
+        this.showDetalle = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
+        this.showNuevaSolicitud = false;
+        this.showNotificarPaciente = true;
     }
 
     editarReglas() {
@@ -651,6 +669,23 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    returnNotificarPaciente(event) {
+        const patch = {
+            op: 'notificar',
+            observaciones: event.descripcion,
+            organizacion: this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud.historial.length - 1].organizacion,
+            tipoPrestacion: this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud.historial.length - 1].tipoPrestacion,
+            fechaNotificacion: event.fecha
+        };
+        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
+            this.plex.toast('success', 'Paciente notificado con éxito.');
+            this.cargarSolicitudes();
+        }, error => {
+            this.plex.toast('danger', 'Ha ocurrido un error al notificar al paciente.');
+        });
+        this.cerrar();
+    }
+
     returnAnular(event) {
         this.showAnular = false;
         this.showSidebar = false;
@@ -807,6 +842,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     nuevaSolicitud() {
+        const arreColumns = this.columns.filter(col => col.key !== 'paciente');
+        this.columns = arreColumns;
         this.showNuevaSolicitud = true;
         this.showAuditar = false;
         this.showSidebar = true;
@@ -814,8 +851,6 @@ export class SolicitudesComponent implements OnInit {
         this.showDetalle = false;
         this.showCitar = false;
         this.showIniciarPrestacion = false;
-        const arreColumns = this.columns.filter(col => col.key !== 'paciente');
-        this.columns = arreColumns;
     }
 
     returnBusqueda(event) {
@@ -923,6 +958,9 @@ export class SolicitudesComponent implements OnInit {
                     }
                 });
             }
+            if ((prestacion.estadoActual.tipo === 'pendiente' || prestacion.estadoActual.tipo === 'auditoria') && !prestacion.solicitud.turno && prestacion.solicitud.historial.length) {
+                this.itemsDropdown.push({ icon: 'telefono', label: 'Comunicación con el paciente', handler: () => { this.notificarPaciente(prestacion); } });
+            }
         }
     }
 
@@ -933,10 +971,18 @@ export class SolicitudesComponent implements OnInit {
                 return true;
             }
         } else {
-            if ((prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) || prestacion.estadoActual.tipo === 'ejecucion') {
+            if ((prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) || prestacion.estadoActual.tipo === 'ejecucion' || prestacion.estadoActual.tipo === 'auditoria') {
                 return true;
             }
         }
         return false;
     }
+
+    existeNotificacion(prestacion) {
+        if (prestacion.solicitud.historial) {
+            return (prestacion.solicitud.historial.findIndex(elem => elem.accion === 'notificar') !== -1) ? true : false;
+        }
+        return null;
+    }
+
 }
