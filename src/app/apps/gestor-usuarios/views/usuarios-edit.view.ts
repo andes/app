@@ -1,21 +1,15 @@
 import { OnInit, Component, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { map, pluck, switchMap, tap, publishReplay, refCount, delay, takeUntil } from 'rxjs/operators';
+import { pluck, switchMap, tap, publishReplay, refCount, delay, takeUntil } from 'rxjs/operators';
 import { UsuariosHttp } from '../services/usuarios.http';
 import { Observable, forkJoin, BehaviorSubject, Subject } from 'rxjs';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { PerfilesHttp } from '../services/perfiles.http';
 import { PermisosService } from '../services/permisos.service';
 import { ArbolPermisosComponent } from '../components/arbol-permisos/arbol-permisos.component';
-import { Observe } from '@andes/shared';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-
-function elementAt(index = 0) {
-    return map((array: any[]) => array.length ? array[0] : null);
-}
 
 @Component({
     selector: 'gestor-usarios-usuarios-edit',
@@ -26,28 +20,22 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     @ViewChild(ArbolPermisosComponent, { static: true }) arbol: ArbolPermisosComponent;
     private userId = '';
+    private _permisos = new BehaviorSubject([]);
+
     public organizacionId = '';
     public orgName = '';
-
     public user$: Observable<any>;
-
-
-    private _permisos = new BehaviorSubject([]);
     public permisos$ = this._permisos.asObservable();
+    public perfiles = [];
+    public arbolPermisos = [];
+    public habilitados = {};
 
     get permisos() {
         return this._permisos.getValue();
     }
-
     set permisos(value) {
         this._permisos.next(value);
     }
-
-
-    public perfiles = [];
-    public arbolPermisos = [];
-
-    public habilitados = {};
 
     constructor(
         private location: Location,
@@ -60,7 +48,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
         public perfilesHttp: PerfilesHttp,
         public permisosService: PermisosService
     ) { }
-
 
 
     getOrganizacion() {
@@ -97,14 +84,14 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
             );
 
 
-            forkJoin(
+            forkJoin([
                 this.perfilesHttp.find().pipe(tap(perfiles => {
                     this.permisos$.pipe(delay(1), takeUntil(this.destroy$)).subscribe((permisos) => {
                         perfiles.forEach(perfil => {
                             const enabled = this.perfilesHttp.validatePerfil(permisos, perfil);
                             this.tooglePerfil(perfil, enabled);
                         });
-                        this.perfiles = perfiles;
+                        this.perfiles = perfiles.sort((a, b) => a.nombre.localeCompare(b.nombre));
                     });
                 })),
                 this.user$.pipe(
@@ -117,7 +104,7 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                     })
                 ),
                 this.permisosService.get().pipe(tap(permisos => this.arbolPermisos = permisos))
-            ).pipe(takeUntil(this.destroy$)).subscribe(() => { });
+            ]).pipe(takeUntil(this.destroy$)).subscribe(() => { });
         });
     }
 
@@ -190,6 +177,5 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
     volver() {
         this.location.back();
-        // this.router.navigate(['..'], { relativeTo: this.route });
     }
 }

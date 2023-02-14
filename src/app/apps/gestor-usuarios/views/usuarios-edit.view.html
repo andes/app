@@ -1,8 +1,8 @@
 <plex-layout [main]="4">
     <plex-layout-main>
         <header>
-            <plex-title [titulo]="orgName" size="sm">
-                <plex-button size="sm" label="VOLVER" (click)="volver()" type="danger"></plex-button>
+            <plex-title [titulo]="orgName" size="md">
+                <plex-button label="VOLVER" (click)="volver()" type="danger"></plex-button>
             </plex-title>
             <ng-container *ngIf="user$ | async as user">
                 <gestor-usuarios-usuario-detalle [usuario]="user"></gestor-usuarios-usuario-detalle>
@@ -24,16 +24,16 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <plex-title main titulo="Permisos del usuario">
-            <plex-button type="success" size="sm" (click)="grabar()">
+            <plex-button type="success" (click)="grabar()">
                 GUARDAR
             </plex-button>
-            <plex-button type="danger" size="sm" (click)="borrar()">
+            <plex-button type="danger" (click)="borrar()">
                 <plex-icon name="delete"></plex-icon>
             </plex-button>
-            <plex-button type="info" size="sm" (click)="copy()" title="Copiar permisos" titlePosition="left">
+            <plex-button type="info" (click)="copy()" title="Copiar permisos" titlePosition="left">
                 <plex-icon name="content-copy"></plex-icon>
             </plex-button>
-            <plex-button type="info" size="sm" (click)="paste()" title="Pegar permisos" titlePosition="left"
+            <plex-button type="info" (click)="paste()" title="Pegar permisos" titlePosition="left"
                          *ngIf="permisosService.hasCopy()">
                 <plex-icon name="content-paste"></plex-icon>
             </plex-button>

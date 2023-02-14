@@ -1,12 +1,11 @@
 <ng-container *ngIf="perfil">
-    <plex-title titulo="{{!perfil.id ? 'Crear agrupación' : 'Editar de perfil'}}" size="lg">
+    <plex-title titulo="{{!perfil.id ? 'Crear agrupación' : 'Detalle de perfil'}}" size="lg">
         <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
         <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
     </plex-title>
     <plex-wrapper>
         <plex-grid type="full" cols="2">
             <plex-text label="Nombre" [(ngModel)]="perfil.nombre" name="nombre" [required]="true"></plex-text>
-            <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
             <plex-wrapper *ngIf="canGlobal">
                 <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal"
                            (click)="esGlobal = !esGlobal">
