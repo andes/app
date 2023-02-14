@@ -1,30 +1,21 @@
-<div class="row my-3" *ngIf="perfil">
-    <div class="col">
-        <div class="page-title float-left">{{!perfil.id ? 'Crear agrupación' : 'Editar de perfil'}}</div>
-    </div>
-    <div class="col d-flex justify-content-end">
-        <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
-        <plex-button type="success" label="Guardar" (click)="guardar($event)">
-        </plex-button>
-    </div>
-</div>
 <ng-container *ngIf="perfil">
-    <div class="row mb-3">
-        <div class="col-6">
+    <plex-title titulo="{{!perfil.id ? 'Crear agrupación' : 'Editar de perfil'}}" size="lg">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+        <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
+    </plex-title>
+    <plex-wrapper>
+        <plex-grid type="full" cols="2">
             <plex-text label="Nombre" [(ngModel)]="perfil.nombre" name="nombre" [required]="true"></plex-text>
-        </div>
-        <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
-        <div class="col d-flex align-items-end" *ngIf="canGlobal">
-            <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal"
-                       (click)="esGlobal = !esGlobal">
+            <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
+            <plex-wrapper *ngIf="canGlobal">
+                <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal"
+                           (click)="esGlobal = !esGlobal">
+                </plex-bool>
+            </plex-wrapper>
+            <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfil.activo">
             </plex-bool>
-        </div>
-        <div class="col d-flex align-items-end">
-            <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfil.activo"></plex-bool>
-        </div>
-    </div>
+        </plex-grid>
+    </plex-wrapper>
     <arbol-permisos [permisos]="permisos$ | async" [userPermissions]="perfil.permisos">
     </arbol-permisos>
-
-
 </ng-container>

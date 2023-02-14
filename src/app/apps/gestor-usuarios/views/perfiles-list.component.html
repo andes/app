@@ -1,18 +1,15 @@
 <plex-layout main="6">
     <plex-layout-main>
-        <div class="row my-3">
-            <div class="col d-flex justify-content-between">
-                <plex-button size="sm" label="VOLVER" (click)="volver()" type="danger"></plex-button>
-                <plex-button size="sm" label="NUEVO" (click)="nuevo()" type="success"></plex-button>
-            </div>
-        </div>
+        <plex-title titulo="Listado de perfiles" size="lg">
+            <plex-button label="VOLVER" (click)="volver()" type="danger"></plex-button>
+            <plex-button label="NUEVO" (click)="nuevo()" type="success"></plex-button>
+        </plex-title>
         <plex-wrapper>
             <plex-grid type="full" cols="1">
-                <plex-text [(ngModel)]="searchName" (change)="buscar($event)" [debounce]="500"
+                <plex-text label="Nombre" [(ngModel)]="searchName" (change)="buscar($event)" [debounce]="500"
                            placeholder="Buscar por nombre">
                     <plex-icon name="account-search"></plex-icon>
                 </plex-text>
-
             </plex-grid>
         </plex-wrapper>
         <table class="table table-striped">
