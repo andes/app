@@ -1,40 +1,43 @@
 <plex-layout main="6">
     <plex-layout-main>
-        <div class="row my-3">
-            <div class="col d-flex justify-content-between">
-                <plex-button size="sm" label="VOLVER" (click)="volver()" type="danger"></plex-button>
-                <plex-button size="sm" label="NUEVO" (click)="nuevo()" type="success"></plex-button>
-            </div>
-        </div>
+        <plex-title titulo="Listado de perfiles" size="lg">
+            <plex-button label="VOLVER" (click)="volver()" type="danger"></plex-button>
+            <plex-button label="NUEVO" (click)="nuevo()" type="success"></plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-grid type="full" cols="1">
+                <plex-text label="Nombre" [(ngModel)]="searchName" (change)="buscar($event)" [debounce]="500"
+                           placeholder="Buscar por nombre">
+                    <plex-icon name="account-search"></plex-icon>
+                </plex-text>
+            </plex-grid>
+        </plex-wrapper>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="w-50">Nombre</th>
                     <th>Alcance</th>
                     <th>Estado</th>
-                    <th>Acción</th>
+                    <th>Actualización</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="hover" *ngFor="let perfil of perfilesHttp.perfiles$ | async" (click)="select(perfil)"
                     [ngClass]="{'bg-inverse text-white': isSelected(perfil)}">
-                    <td>{{perfil.nombre}}</td>
+
+                    <td>{{perfil.nombre}} </td>
                     <td>
                         <plex-badge type="info">
                             {{ !perfil.organizacion ? 'LOCAL' : 'GLOBAL' }}
                         </plex-badge>
                     </td>
                     <td>
-                        <plex-badge *ngIf="perfil.activo" type="success">
+                        <plex-badge>
                             {{ perfil.activo ? 'ACTIVO' : 'DESACTIVADO' }}
                         </plex-badge>
                     </td>
                     <td>
-                        &nbsp;
-                        <!-- <plex-button type="danger" size="sm" title="Borrar" (click)="remove(perfil)">
-                            <plex-icon name="delete"></plex-icon>
-                        </plex-button> -->
-                    </td>
+                        {{(perfil.updatedAt ? perfil.updatedAt : perfil.createdAt) | date: 'dd/MM/yyyy HH:mm:ss'}} </td>
                 </tr>
             </tbody>
         </table>

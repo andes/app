@@ -12,6 +12,7 @@ import { Auth } from '@andes/auth';
 
 export class PerfilListComponent implements OnInit {
     private selectedId;
+    public searchName = '';
 
     constructor(
         public perfilesHttp: PerfilesHttp,
@@ -35,7 +36,7 @@ export class PerfilListComponent implements OnInit {
         }, {
             name: 'Perfiles'
         }]);
-        this.perfilesHttp.search({});
+        this.perfilesHttp.search({ sort: 'nombre', activo: true });
     }
 
     select(perfil) {
@@ -61,5 +62,15 @@ export class PerfilListComponent implements OnInit {
 
     volver() {
         this.router.navigate(['../usuarios'], { relativeTo: this.route });
+    }
+
+    buscar(text) {
+        const textoBusqueda = text.value && text.value.length ? text.value.trim() : '';
+        // debugger;
+        if (textoBusqueda.length > 0) {
+            this.perfilesHttp.search({ nombre: '^' + text.value, sort: 'nombre', activo: true });
+        } else {
+            this.perfilesHttp.search({ sort: 'nombre', activo: true });
+        }
     }
 }

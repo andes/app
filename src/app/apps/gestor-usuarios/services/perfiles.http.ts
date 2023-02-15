@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Server, cache } from '@andes/shared';
 import { BehaviorSubject, zip } from 'rxjs';
 import { switchMap, distinctUntilChanged, map, tap, merge } from 'rxjs/operators';
+import { query } from '@angular/animations';
 
 const shiroTrie = require('shiro-trie');
 
@@ -25,10 +26,14 @@ export class PerfilesHttp {
     private url = '/modules/gestor-usuarios/perfiles'; // URL to web api
 
     constructor(private server: Server) {
+
         this.perfiles$ = this.searchParams$
             .pipe(
                 merge(this.searchReset$),
                 switchMap((query) => {
+                    if (!query) {
+                        query = { sort: 'nombre', activo: true };
+                    }
                     return this.find(query);
                 }),
                 cache()
@@ -66,7 +71,7 @@ export class PerfilesHttp {
         return this.server.get(`${this.url}/${id}`, { showError: false });
     }
 
-    find(query = {}): Observable<any> {
+    find(query = { activo: true }): Observable<any> {
         return this.server.get(this.url, { params: query });
     }
 

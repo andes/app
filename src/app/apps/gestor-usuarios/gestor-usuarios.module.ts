@@ -13,6 +13,7 @@ import { ArbolPermisosComponent } from './components/arbol-permisos/arbol-permis
 import { UsuariosListComponent } from './views/usuarios-list.view';
 import { UsuariosEditComponent } from './views/usuarios-edit.view';
 import { UsuarioDetalleComponent } from './components/usuario-detalle/usuario-detalle.component';
+import { SharedModule } from '@andes/shared';
 
 
 @NgModule({
@@ -22,7 +23,9 @@ import { UsuarioDetalleComponent } from './components/usuario-detalle/usuario-de
         FormsModule,
         RouterModule,
         HttpClientModule,
-        GestorUsuariosRouting
+        GestorUsuariosRouting,
+        SharedModule
+
     ],
     declarations: [
         PerfilListComponent,
