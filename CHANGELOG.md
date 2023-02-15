@@ -1,3 +1,11 @@
+## [5.114.1](https://github.com/andes/app/compare/v5.114.0...v5.114.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* **CIT:** correccion mensaje error y codigo ([#2802](https://github.com/andes/app/issues/2802)) ([89cb50a](https://github.com/andes/app/commit/89cb50a770096ce2561e013715f2a0d04a77e866))
+* **IN-484:** Error al visualizar datos de una cama ([#2750](https://github.com/andes/app/issues/2750)) ([c569506](https://github.com/andes/app/commit/c569506e883e15db7478572246efbf1154cdbf74))
+
 # [5.114.0](https://github.com/andes/app/compare/v5.113.0...v5.114.0) (2023-02-08)
 
 
