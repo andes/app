@@ -4,8 +4,8 @@
 
             <plex-title size="md" titulo="Datos básicos">
                 <plex-button label="volver" type="danger" position="left" routerLink='/tm/profesional'></plex-button>
-                <plex-button *ngIf='mostrarBtnGuardar' label="Guardar" type="success" position="right" [validateForm]="formulario"
-                    (click)='save($event)'>
+                <plex-button *ngIf='mostrarBtnGuardar' label="Guardar" type="success" position="right"
+                             [validateForm]="formulario" (click)='save($event)' [disabled]="deshabilitarBoton">
                 </plex-button>
             </plex-title>
             <plex-wrapper>
@@ -31,15 +31,17 @@
                            type="slide" (change)="limpiarContacto()"></plex-bool>
             </plex-title>
             <plex-wrapper class="mr-1" *ngFor="let _unContacto of profesional.contactos; let i = index">
-                <plex-select [data]="tipoComunicacion" [(ngModel)]="_unContacto.tipo" name='tipo-{{i}}' placeholder="Seleccione..."
-                    label="Tipo" [readonly]="noPoseeContacto" [required]="!noPoseeContacto" (change)="_unContacto.valor = ''">
+                <plex-select [data]="tipoComunicacion" [(ngModel)]="_unContacto.tipo" name='tipo-{{i}}'
+                             placeholder="Seleccione..." label="Tipo" [readonly]="noPoseeContacto"
+                             [required]="!noPoseeContacto" (change)="_unContacto.valor = ''">
                 </plex-select>
                 <plex-phone *ngIf="contactoTelefonico(i)" label="Número" [(ngModel)]="_unContacto.valor"
-                            placeholder="Ej: 2990000000" name="valor-{{i}}" [required]="!noPoseeContacto" [readonly]="noPoseeContacto"
-                            [pattern]="patronContactoNumerico">
+                            placeholder="Ej: 2990000000" name="valor-{{i}}" [required]="!noPoseeContacto"
+                            [readonly]="noPoseeContacto" [pattern]="patronContactoNumerico">
                 </plex-phone>
                 <plex-text email label="Dirección" *ngIf="!contactoTelefonico(i)" [(ngModel)]="_unContacto.valor"
-                    placeholder="Ej: ejemplo@email.com" required="true" name="valor-{{i}}" [readonly]="noPoseeContacto">
+                           placeholder="Ej: ejemplo@email.com" required="true" name="valor-{{i}}"
+                           [readonly]="noPoseeContacto">
                 </plex-text>
                 <plex-button *ngIf="i == 0" title="Agregar contacto" type="info" icon="plus" name="agregarContacto"
                              (click)="addContacto('celular', '')" [disabled]="noPoseeContacto">

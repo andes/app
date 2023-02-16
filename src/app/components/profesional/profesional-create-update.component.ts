@@ -35,6 +35,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     public fechaNacimiento: Date;
     public fechaFallecimiento: Date;
+    public deshabilitarBoton = false;
 
     // Getter que previene el error de AOT
     // https://github.com/angular/angular-cli/issues/6099
@@ -230,7 +231,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     save($event) {
         if ($event.formValid) {
-            this.profesional.contactos.forEach(c => c.tipo = (typeof c.tipo === 'string') ? c.tipo : c.tipo.id );
+            // una vez q son validos los datos y se aprieta el boton se deshabilita el mismo
+            this.deshabilitarBoton = true;
+            this.profesional.contactos.forEach(c => c.tipo = (typeof c.tipo === 'string') ? c.tipo : c.tipo.id);
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
