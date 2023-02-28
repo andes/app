@@ -17,16 +17,18 @@
                             <section *ngIf="capa !== 'interconsultores'" class="item-indicacion">
                                 <div class="item__container"></div>
                                 <div class="item__botonera">
-                                    <plex-button *ngIf="permisosMapaCamasService.indicacionesEjecutar && detener$ | async"
-                                                 type="danger" icon="stop" size="sm" (click)="onDetenerClick()"
-                                                 tooltip="Suspender" tooltipPosition="bottom">
-                                    </plex-button>
-                                    <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
-                                                 (click)="onContinuarClick()" tooltip="Continuar"
-                                                 tooltipPosition="bottom">
-                                    </plex-button>
+                                    <ng-container *ngIf="permisosMapaCamasService.indicacionesEjecutar">
+                                        <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
+                                                     (click)="onDetenerClick()" tooltip="Suspender"
+                                                     tooltipPosition="bottom">
+                                        </plex-button>
+                                        <plex-button *ngIf="continuar$ | async" type="success" icon="play" size="sm"
+                                                     (click)="onContinuarClick()" tooltip="Continuar"
+                                                     tooltipPosition="bottom">
+                                        </plex-button>
+                                    </ng-container>
 
-                                    <plex-dropdown *ngIf="permisosMapaCamasService.indicacionesEjecutar && borradores.length"
+                                    <plex-dropdown *ngIf="permisosMapaCamasService.indicacionesValidar && borradores.length"
                                                    right="true" size="sm" label="Validar borradores" type="warning">
                                         <plex-button label="Seleccionadas" type="link"
                                                      [disabled]="!soloBorradoresSeleccionados"
@@ -63,7 +65,7 @@
                                         </plex-button>
                                         <plex-button type="info" size="sm"
                                                      [icon]="showSecciones[seccion.concepto.term] ? 'chevron-up' : 'chevron-down'"
-                                                     (click)="tootleSeccion(seccion.concepto)">
+                                                     (click)="toggleSeccion(seccion.concepto)">
                                         </plex-button>
                                     </div>
                                 </td>

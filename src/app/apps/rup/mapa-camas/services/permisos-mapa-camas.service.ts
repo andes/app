@@ -20,10 +20,10 @@ export class PermisosMapaCamasService {
     public censo = false;
     public descargarListado = false;
     public registros = false;
-    public indicacionesVer;
-    public indicacionesCrear;
-    public indicacionesEjecutar;
-    public indicacionesValidar;
+    public indicacionesVer = false;
+    public indicacionesCrear = false;
+    public indicacionesEjecutar = false;
+    public indicacionesValidar = false;
 
     constructor(
         private auth: Auth,

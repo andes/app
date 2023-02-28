@@ -96,6 +96,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     constructor(
         public permisosMapaCamasService: PermisosMapaCamasService,
+        public ejecucionService: RupEjecucionService,
         private prestacionService: PrestacionesService,
         private route: ActivatedRoute,
         private resumenInternacionService: InternacionResumenHTTP,
@@ -108,7 +109,6 @@ export class PlanIndicacionesComponent implements OnInit {
         private maquinaEstadoService: MaquinaEstadosHTTP,
         private organizacionService: OrganizacionService,
         private router: Router,
-        public ejecucionService: RupEjecucionService,
         private cd: ChangeDetectorRef,
     ) {
     }
@@ -121,6 +121,7 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.horas = this.getHorariosGrilla();
             })
         ).subscribe();
+        this.permisosMapaCamasService.calcularPermisos();
         this.hoy = moment();
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
@@ -387,7 +388,7 @@ export class PlanIndicacionesComponent implements OnInit {
         );
     }
 
-    tootleSeccion(seccion) {
+    toggleSeccion(seccion) {
         this.showSecciones[seccion.term] = !this.showSecciones[seccion.term];
     }
 
