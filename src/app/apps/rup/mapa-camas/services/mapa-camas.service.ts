@@ -17,6 +17,7 @@ import { SalaComunService } from '../views/sala-comun/sala-comun.service';
 import { MapaCamasHTTP } from './mapa-camas.http';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { InternacionResumenHTTP, IResumenInternacion } from './resumen-internacion.http';
+import { PermisosMapaCamasService } from '../services/permisos-mapa-camas.service';
 @Injectable()
 export class MapaCamasService {
     public timer$;
@@ -69,6 +70,7 @@ export class MapaCamasService {
     public capa;
     public fecha: Date;
     public permisos: string[];
+    public esProfesional = this.auth.profesional;
 
     /**
      * Listado de movimientos de la internacion seleccionada
@@ -84,6 +86,7 @@ export class MapaCamasService {
         private internacionResumenHTTP: InternacionResumenHTTP,
         private conceptosTurneablesService: ConceptosTurneablesService,
         public auth: Auth,
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) {
         this.maquinaDeEstado$ = combineLatest([
             this.ambito2,
@@ -719,5 +722,10 @@ export class MapaCamasService {
         const dateDif = moment(fechaHasta).endOf('day').diff(moment(fechaDesde).startOf('day'), 'days');
         const diasEstada = dateDif === 0 ? 1 : dateDif;
         return diasEstada;
+    }
+
+    controlRegistros() {
+        return this.prestacionesPermitidas(this.selectedCama).pipe(map(prestacion =>
+            (prestacion?.length && this.permisosMapaCamasService.registros && this.esProfesional) ? true : false));
     }
 }

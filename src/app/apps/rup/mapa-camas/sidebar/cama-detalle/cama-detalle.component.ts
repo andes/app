@@ -63,7 +63,7 @@ export class CamaDetalleComponent implements OnInit {
 
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
-    public esProfesional = this.auth.profesional;
+    public botonRegistroHabilitado$;
 
     items = [
         {
@@ -141,6 +141,7 @@ export class CamaDetalleComponent implements OnInit {
                 return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
+        this.botonRegistroHabilitado$ = this.mapaCamasService.controlRegistros();
     }
 
     sector(cama: ISnapshot) {
@@ -279,7 +280,8 @@ export class CamaDetalleComponent implements OnInit {
             (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
 
-    generarRegistro(acciones, permisos) {
-        return (acciones?.length && permisos && this.esProfesional) ? true : false;
+    verIndicacion() {
+        return this.permisosMapaCamasService.indicacionesCrear || this.permisosMapaCamasService.indicacionesEjecutar ||
+            this.permisosMapaCamasService.indicacionesValidar || this.permisosMapaCamasService.indicacionesVer;
     }
 }

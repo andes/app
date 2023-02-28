@@ -28,8 +28,7 @@
                     <plex-badge *ngIf="prestacion?.ejecucion.registros[0].esCensable" type="info" size="sm">
                         Censable
                     </plex-badge>
-                    <ng-container
-                                  *ngIf="generarRegistro((accionesEstado$ | async), permisosMapaCamasService.registros)">
+                    <ng-container *ngIf="botonRegistroHabilitado$ | async">
                         <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
                         </plex-button>
                     </ng-container>
@@ -85,7 +84,7 @@
                           [fields]="pacienteFields">
         </paciente-detalle>
         <plex-title size="sm" titulo="DATOS DE INTERNACION">
-            <ng-container *ngIf="generarRegistro((accionesEstado$ | async), permisosMapaCamasService.registros)">
+            <ng-container *ngIf="botonRegistroHabilitado$ | async">
                 <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
                 </plex-button>
             </ng-container>

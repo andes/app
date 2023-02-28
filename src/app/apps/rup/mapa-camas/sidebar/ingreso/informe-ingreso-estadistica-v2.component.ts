@@ -21,7 +21,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
-    public esProfesional = this.auth.profesional;
+    public botonRegistroHabilitado$;
 
     // EVENTOS
     @Output() toggleEditar = new EventEmitter<any>();
@@ -63,6 +63,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
             switchMap(cama => this.mapaCamasService.prestacionesPermitidas(of(cama))),
             cache()
         );
+        this.botonRegistroHabilitado$ = this.mapaCamasService.controlRegistros();
     }
 
     toggleEdit() {
@@ -71,9 +72,5 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
 
     onNuevoRegistrio() {
         this.accion.emit({ accion: 'nuevo-registro' });
-    }
-
-    generarRegistro(acciones, permisos) {
-        return (acciones?.length && permisos && this.esProfesional) ? true : false;
     }
 }
