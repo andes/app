@@ -1,5 +1,6 @@
 <plex-title size="sm" titulo="SUSPENDER TURNO">
-    <plex-button *ngIf="!suspendio" size="sm" type="success" icon="check" (click)="suspenderTurno()"></plex-button>
+    <plex-button *ngIf="!suspendio" size="sm" type="success" icon="check" [disabled]="!motivoSuspensionSelect.select"
+                 (click)="suspenderTurno()"></plex-button>
     <!--TODO: chequear que todos los mensajes a enviar tuvieron una respuesta-->
 </plex-title>
 <ng-container class="text-white" *ngIf="showSuspenderTurno">
@@ -40,7 +41,7 @@
     <div class="row">
         <div class="col-12">
             <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
-                         label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
+                         label="Motivo de Suspensión" placeholder="Seleccione un motivo de suspensión">
             </plex-select>
         </div>
     </div>

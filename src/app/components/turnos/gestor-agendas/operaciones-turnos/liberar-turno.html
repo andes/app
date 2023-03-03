@@ -6,12 +6,13 @@
 </plex-title>
 
 <ng-container *ngIf="showLiberarTurno">
-    <div class="d-flex justify-content-around">
+    <div class="d-flex justify-content-around mt-3">
         <plex-label titulo="Hora Turno" subtitulo="{{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs"
                     direction="column" icon="reloj">
         </plex-label>
         <plex-label *ngIf="turnosSeleccionados[0].paciente?.id" titulo="Paciente" direction="column" icon="paciente"
-                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}"></plex-label>
+                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}">
+        </plex-label>
     </div>
     <plex-select [(ngModel)]="motivoLiberacionSelect" name="motivoLiberacion" [data]="motivoLiberacion"
                  label="Motivos de Liberación" placeholder="Seleccione un motivo de liberación" [required]="true">
