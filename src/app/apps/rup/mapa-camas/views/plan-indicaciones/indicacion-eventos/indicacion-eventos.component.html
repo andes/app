@@ -1,51 +1,56 @@
-<plex-title titulo="Registrar evento" size="md">
-    <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()">
-    </plex-button>
-    <plex-button *ngIf="!editando && evento" class="mr-1" type="warning" size="sm" icon="pencil" (click)="onEdit()">
-    </plex-button>
-    <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()"></plex-button>
-</plex-title>
+<form #form="ngForm">
+    <plex-title titulo="Registrar evento" size="md">
+        <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check"
+                     [disabled]="form.invalid" (click)="onGuardar()">
+        </plex-button>
+        <plex-button *ngIf="!editando && evento" class="mr-1" type="warning" size="sm" icon="pencil" (click)="onEdit()">
+        </plex-button>
+        <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()">
+        </plex-button>
+    </plex-title>
 
-<plex-detail>
-    <plex-icon *ngIf="indicacion.seccion.term === ' - sin sección -'" name="documento" class="icon--noSeccion">
-    </plex-icon>
-    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
-               name="docuemento-manzana" class="icon--alimentacion"></plex-icon>
-    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'" name="mano-gota"
-               class="icon--hidratacion"></plex-icon>
-    <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'" name="pildoras"
-               class="icon--producto"></plex-icon>
-    <plex-icon *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'" name="documento-termometro"
-               class="icon--procedimiento">
-    </plex-icon>
-    <plex-badge [color]="indicacion.estado.tipo | indicacionColor">
-        {{ indicacion.estado.tipo | indicacionLabel }}
+    <plex-detail>
+        <plex-icon *ngIf="indicacion.seccion.term === ' - sin sección -'" name="documento" class="icon--noSeccion">
+        </plex-icon>
+        <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de alimentación parenteral'"
+                   name="docuemento-manzana" class="icon--alimentacion"></plex-icon>
+        <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de hidratación'" name="mano-gota"
+                   class="icon--hidratacion"></plex-icon>
+        <plex-icon *ngIf="indicacion.seccion.term === 'sección: indicaciones de medicación'" name="pildoras"
+                   class="icon--producto"></plex-icon>
+        <plex-icon *ngIf="indicacion.seccion.term === 'sección: otras indicaciones'" name="documento-termometro"
+                   class="icon--procedimiento">
+        </plex-icon>
+        <plex-badge [color]="indicacion.estado.tipo | indicacionColor">
+            {{ indicacion.estado.tipo | indicacionLabel }}
+        </plex-badge>
+        <plex-badge type="info" tooltip="Fecha de inicio">
+            {{ indicacion.fechaInicio | fecha }}
+        </plex-badge>
+        <div title case="capitalize">
+            {{ indicacion.nombre }}
+        </div>
+    </plex-detail>
+
+    <ng-container *ngIf="editando || !evento">
+        <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora" name="fechaHora" [min]="horaMin" [max]="horaMax"
+                       [required]="true">
+        </plex-datetime>
+        <plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado" [required]="true">
+        </plex-select>
+        <plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [html]="true">
+        </plex-text>
+    </ng-container>
+</form>
+
+<ng-container *ngIf="!editando && evento">
+    <plex-badge [type]="estadoType">{{ evento.estado }} a las {{ horarioEjecucion | date:'HH:mm' }}
     </plex-badge>
-    <plex-badge type="info" tooltip="Fecha de inicio">
-        {{ indicacion.fechaInicio | fecha }}
-    </plex-badge>
-    <div title case="capitalize">
-        {{ indicacion.nombre }}
-    </div>
-</plex-detail>
-
-<ng-container *ngIf="puedeEditar && (editando || !evento)">
-    <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora">
-    </plex-datetime>
-    <plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado">
-    </plex-select>
-    <plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [required]="true" [html]="true">
-    </plex-text>
-</ng-container>
-
-<ng-container *ngIf="evento && (!puedeEditar || !editando)">
-    <plex-badge [type]="estadoType">{{ evento.estado }} a las {{ horarioEjecucion | date:'HH:mm' }}</plex-badge>
     <plex-label *ngIf="evento.createdBy" titulo="Creado por"
-                subtitulo="{{ evento.createdBy.nombreCompleto || 'Automáticamente por prescripción' }}"></plex-label>
+                subtitulo="{{ evento.createdBy.nombreCompleto || 'Automáticamente por prescripción' }}">
+    </plex-label>
     <plex-label *ngIf="evento.updatedBy" titulo="Actualizado por" subtitulo="{{ evento.updatedBy?.nombreCompleto }}">
     </plex-label>
-    <ng-container *ngIf="observaciones">
-        <b>Observaciones</b><br>
-        <div [innerHtml]="observaciones"></div>
-    </ng-container>
+    <b>Observaciones</b><br>
+    <div [innerHtml]="observaciones"></div>
 </ng-container>

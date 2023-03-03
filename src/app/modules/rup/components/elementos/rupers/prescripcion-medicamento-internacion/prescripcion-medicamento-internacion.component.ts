@@ -1,7 +1,6 @@
 import { Unsubscribe } from '@andes/shared';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/operators';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 

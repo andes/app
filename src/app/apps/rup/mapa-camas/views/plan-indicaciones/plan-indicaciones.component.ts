@@ -328,12 +328,12 @@ export class PlanIndicacionesComponent implements OnInit {
     onNuevaIndicacion(seccion) {
         this.indicacionEventoSelected = null;
         this.indicacionView = null;
-        this.nuevaIndicacion = true;
         this.seccionSelected = seccion;
         this.indicacion = null;
         if (!seccion) {
             this.seccionSelected = this.secciones.find(s => s.concepto.conceptId === '6381000013101');
         }
+        this.nuevaIndicacion = true;
     }
 
     onSaveIndicacion(indicacion) {

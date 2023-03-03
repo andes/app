@@ -2,6 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { RUPComponent } from 'src/app/modules/rup/components/core/rup.component';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IPrestacionRegistro } from 'src/app/modules/rup/interfaces/prestacion.registro.interface';
@@ -104,7 +105,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
 
     onSave() {
         if (!this.prescripcion.rupInstance.validateForm(true)) {
-            this.plex.toast('warning', 'Revise que todos los campos requeridos contengan datos válidos.', 'Acción denegada');
+            this.plex.toast('warning', 'Revise que todos los campos requeridos contengan datos válidos.', 'Acción denegada', 5000);
             return;
         }
         this.registro.valor.sustancias.forEach(s => {
