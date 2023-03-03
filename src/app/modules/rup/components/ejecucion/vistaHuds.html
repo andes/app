@@ -33,7 +33,9 @@
 
                         </plex-tab>
                     </ng-container>
-
+                    <plex-tab label="Historial de turnos" [allowClose]="false">
+                        <historial-turnos [paciente]="paciente"></historial-turnos>
+                    </plex-tab>
                 </plex-tabs>
             </plex-tab>
             <ng-container *ngFor="let registro of registros">

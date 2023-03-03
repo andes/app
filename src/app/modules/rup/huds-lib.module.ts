@@ -27,6 +27,7 @@ import { VistaRegistroComponent } from './components/huds/vistaRegistro';
 import { VistaSolicitudTopComponent } from './components/huds/vistaSolicitudTop';
 import { ElementosRUPModule } from './elementos-rup.module';
 import { RUPLibModule } from './rup-lib.module';
+import { VistaHistorialTurnosComponent } from './components/huds/vistaHistorialTurnos.component';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { RUPLibModule } from './rup-lib.module';
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
+        VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent
     ],
@@ -76,6 +78,7 @@ import { RUPLibModule } from './rup-lib.module';
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         VistaSolicitudTopComponent,
+        VistaHistorialTurnosComponent,
         HudsBusquedaComponent,
         ListadoInternacionHudsComponent
     ],
