@@ -65,7 +65,7 @@
                                    label="Filtrar por paciente" debounce="400"></plex-text>
                         <div collapse>
                             <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada"
-                                         (change)="cargarSolicitudes()" [data]="estadosEntrada" name="estado"
+                                         (change)="cargarSolicitudes()" [data]="selectEstados" name="estado"
                                          label="Estado" ngModelOptions="{standalone: true}">
                             </plex-select>
                             <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion" tmOrganizaciones
@@ -146,32 +146,31 @@
                                         *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                             </plex-badge>
-                            <plex-badge type="info"
+                            <plex-badge type="{{prestacion | estadoPrestacion}}"
                                         *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada'">
-                                {{prestacion.estadoActual.tipo}}
+                                {{prestacion | estadoSolicitud}}
                             </plex-badge>
-                            <plex-badge type="success"
+                            <plex-badge type="{{prestacion | estadoPrestacion}}"
                                         *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'">
-                                Registro
-                                en HUDS</plex-badge>
+                                Registro en HUDS</plex-badge>
                             <ng-container ngProjectAs="plex-button" *ngIf="prestacion | estadoSolicitud as estado">
-                                <plex-badge type="info" *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
+                                <plex-badge type="{{prestacion | estadoPrestacion}}"
+                                            *ngIf="!prestacion.solicitud.turno && estado === 'rechazada'">
                                     CONTRARREFERIDA
                                 </plex-badge>
 
                                 <ng-container
                                               *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'auditoria'">
-                                    <plex-badge type="warning" class="mr-0">
-                                        {{prestacion.estadoActual.tipo}}
+                                    <plex-badge type="info" class="mr-0">
+                                        {{prestacion | estadoSolicitud}}
                                     </plex-badge>
-                                    <plex-badge type="danger bg-danger" class="ml-0"
+                                    <plex-badge type="info bg-info" class="ml-0"
                                                 *ngIf="prestacion | auditoriasSolicitud as auditorias">
                                         <span class="text-white">
                                             <strong>{{auditorias}}</strong>
                                         </span>
                                     </plex-badge>
                                 </ng-container>
-
                                 <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                             type="success">
@@ -284,14 +283,15 @@
                                         *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                             </plex-badge>
-                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'rechazada'" type="danger">
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'rechazada'"
+                                        type="{{prestacion | estadoPrestacion}}">
                                 CONTRARREFERIDA</plex-badge>
                             <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && !prestacion.solicitud.turno"
-                                        type="info">
+                                        type="{{prestacion | estadoPrestacion}}">
                                 {{prestacion.estadoActual.tipo}}
                             </plex-badge>
                             <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'validada' && prestacion.solicitud.turno"
-                                        type="success">
+                                        type="{{prestacion | estadoPrestacion}}">
                                 Turno Dado
                             </plex-badge>
                             <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
