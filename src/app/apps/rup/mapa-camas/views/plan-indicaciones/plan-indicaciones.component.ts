@@ -257,13 +257,14 @@ export class PlanIndicacionesComponent implements OnInit {
         this.onSelectedChange();
     }
 
-    cambiarEstado(estado: string, motivo?: string) {
+    cambiarEstado(estado: string, observaciones?: string) {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
-        const estadoParams = {
+        const estadoParams: any = {
             tipo: estado,
             fecha: new Date(),
-            motivo
+            observaciones
         };
+
         const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
         forkJoin(
             datos

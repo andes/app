@@ -1,10 +1,8 @@
 <plex-title titulo="Registrar evento" size="md">
-    <ng-container *ngIf="puedeEditar">
-        <plex-button *ngIf="editando" class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()">
-        </plex-button>
-        <plex-button *ngIf="!editando" class="mr-1" type="warning" size="sm" icon="pencil" (click)="onEdit()">
-        </plex-button>
-    </ng-container>
+    <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check" (click)="onGuardar()">
+    </plex-button>
+    <plex-button *ngIf="!editando && evento" class="mr-1" type="warning" size="sm" icon="pencil" (click)="onEdit()">
+    </plex-button>
     <plex-button type="danger" size="sm" icon="close" (click)="onCancelar()"></plex-button>
 </plex-title>
 
