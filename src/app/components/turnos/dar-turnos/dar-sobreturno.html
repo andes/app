@@ -1,0 +1,97 @@
+<form #form="ngForm">
+    <plex-title size="md" titulo="Agregar Sobreturno"></plex-title>
+    <span *ngIf="paciente">
+        <div class="row">
+            <div class="col-6">
+                <plex-phone *ngIf="paciente" label="Celular:" [(ngModel)]="telefono" (change)="cambioTelefono=true"
+                            name="telefono"></plex-phone>
+            </div>
+            <div class="col-6">
+                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
+                           [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+            </div>
+        </div>
+        <div class="row" *ngIf="modelo.obraSocial !== 'SUMAR'">
+            <div class="col-12">
+                <plex-radio *ngIf="this.modelo.obraSocial" [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
+                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                </plex-radio>
+            </div>
+            <div class="col-12">
+                <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas"
+                (change)="seleccionarPrepaga($event)" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
+                <label>Programa</label>
+                <div>{{modelo.obraSocial}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
+            <div class="col">
+                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
+                             [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
+                             [required]="true">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
+                               name="horaTurno" label="Hora Turno">
+                </plex-datetime>
+            </div>
+            <div *ngIf="agenda.link" class="col">
+                <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
+                           name="turno_link" label="Link">
+                </plex-text>
+            </div>
+            <div class="col-12">
+                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
+                           (change)="verificarNota()"></plex-text>
+            </div>
+        </div>
+        <div class="row" class="botones">
+            <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
+                         (click)="guardar($event)">
+            </plex-button>
+        </div>
+    </span>
+</form>
+
+<!-- MODAL: Reporte de errores -->
+<plex-modal size="sm" #modalSobreturno [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="true">
+    <plex-icon name="check-circle" type="success"></plex-icon>
+    <plex-modal-subtitle class="font-title text-center" type="success" size="sm"><b>El sobreturno se
+            guardó<br>correctamente</b></plex-modal-subtitle>
+    <main>
+        <section class="w-100 h-100">
+            <plex-title titulo="Datos del sobreturno" size="sm"></plex-title>
+            <plex-grid size="md" type="full" cols="2">
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ sobreturno?.horaInicio | date: 'EEEE' | uppercase }} {{sobreturno?.horaInicio | date:
+                    'dd/MM/yyyy'}}" subtitulo="{{sobreturno?.horaInicio | date: 'HH:mm'}} hs"
+                            icon="calendario-fecha-abajo">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize"
+                            titulo="{{paciente?.apellido}}, {{paciente?.nombre}}" subtitulo="{{ paciente?.documento |
+                                number}}" icon="account">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ sobreturno?.tipoPrestacion.nombre }}"
+                            subtitulo="Prestación" icon="mano-corazon">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ getEquipoProfesional() }}"
+                            subtitulo="Equipo profesional" icon="paciente">
+                </plex-label>
+
+            </plex-grid>
+        </section>
+    </main>
+    <plex-button modal center type="success" (click)="volver()">
+        ACEPTAR
+    </plex-button>
+</plex-modal>
+<!-- FIN MODAL -->

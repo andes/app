@@ -8,6 +8,7 @@ import { SharedModule } from '@andes/shared';
 import { SortBloquesPipe } from '../../pipes/agenda-bloques.pipe';
 import { EspacioFisicoPipe } from '../../pipes/espacioFisico.pipe';
 import { DarTurnosComponent } from './dar-turnos/dar-turnos.component';
+import { DarSobreturnoComponent } from './dar-turnos/dar-sobreturno.component';
 import { CalendarioComponent } from './dar-turnos/calendario.component';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
 import { DirectiveLibModule } from '../../directives/directives.module';
@@ -28,6 +29,7 @@ import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
     ],
     declarations: [
         DarTurnosComponent,
+        DarSobreturnoComponent,
         CalendarioComponent,
         SortBloquesPipe,
         EspacioFisicoPipe,
@@ -37,6 +39,7 @@ import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
     ],
     exports: [
         DarTurnosComponent,
+        DarSobreturnoComponent,
         SortBloquesPipe,
         EspacioFisicoPipe,
         CalendarioComponent,

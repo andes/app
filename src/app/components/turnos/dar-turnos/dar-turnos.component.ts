@@ -9,7 +9,6 @@ import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
-import { forEach } from 'vis-util';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
@@ -136,6 +135,7 @@ export class DarTurnosComponent implements OnInit {
     public prestacionSeleccionada: any = null; // filtro por prestacion en calendario
     public profesionalSeleccionado: any = null; // filtro por profesional en calendario
     public agendasDelDia = [];
+    public showSobreturno = false;
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
@@ -538,6 +538,7 @@ export class DarTurnosComponent implements OnInit {
         }
         const esAgendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         let turnoAnterior = null;
+        this.showSobreturno = false;
         this.turnoDoble = false;
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(agendaSeleccionada => {
@@ -1235,18 +1236,16 @@ export class DarTurnosComponent implements OnInit {
     }
 
     agregarSobreturno() {
-        localStorage.setItem('revision', 'true');
-        this.router.navigate(['citas/sobreturnos', this.agenda.id], { queryParams: { paciente: this.paciente.id } });
+        this.showSobreturno = !this.showSobreturno;
     }
 
-    volver() {
+    public volver() {
         // se ingresó desde monitoreo de inscriptos
         if (this.solicitudVacunacion) {
             this.afterDarTurno.emit(null);
             this.plex.clearNavbar();
             return;
         }
-
         // se ingresó desde citas
         if (this._pacienteSeleccionado) {
             this.afterDarTurno.emit(this.paciente);
