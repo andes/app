@@ -219,7 +219,7 @@
                                    label="Filtrar por paciente" debounce="400"></plex-text>
                         <div collapse>
                             <plex-select [(ngModel)]="estadoSalida" (change)="cargarSolicitudes()"
-                                         [data]="estadosSalida" name="estado" label="Estado"
+                                         [data]="selectEstados" name="estado" label="Estado"
                                          ngModelOptions="{standalone: true}">
                             </plex-select>
                             <plex-select [(ngModel)]="organizacionesDestino" name="organizacion" tmOrganizaciones
