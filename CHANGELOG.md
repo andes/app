@@ -1,3 +1,19 @@
+# [5.115.0](https://github.com/andes/app/compare/v5.114.1...v5.115.0) (2023-03-08)
+
+
+### Bug Fixes
+
+* **RUP:** cambio del calulo de la edad gestacional ([#2739](https://github.com/andes/app/issues/2739)) ([4f06142](https://github.com/andes/app/commit/4f061429bb3e581f29563d1359fd7c9ed6d77cce))
+* **RUP:** Componente numerico se quita valor por defecto 0 ([#2824](https://github.com/andes/app/issues/2824)) ([527fc87](https://github.com/andes/app/commit/527fc872f431074c8325e1d4b94044d44f9d4683))
+* **TOP:** corrige filtro por estado bandeja salida ([#2825](https://github.com/andes/app/issues/2825)) ([c60f720](https://github.com/andes/app/commit/c60f7209616302fc253733fb4c4ab87ce6bcd469))
+
+
+### Features
+
+* **HUDS:** agrega historial de turnos de paciente ([#2818](https://github.com/andes/app/issues/2818)) ([3a7ae97](https://github.com/andes/app/commit/3a7ae97c98237152cb22334bf0c9c83dc064b7a7))
+* **INT:** registra eventos solo validadas ([#2708](https://github.com/andes/app/issues/2708)) ([d74d790](https://github.com/andes/app/commit/d74d790dd705e82b1a84042b8b89c9d1d4fcdfed))
+* **TOP:** modifica badges de solicitudes con pipe ([#2806](https://github.com/andes/app/issues/2806)) ([3eba161](https://github.com/andes/app/commit/3eba1613a554ba45155a14e90f5ff8760c3d95c6))
+
 ## [5.114.1](https://github.com/andes/app/compare/v5.114.0...v5.114.1) (2023-02-15)
 
 
