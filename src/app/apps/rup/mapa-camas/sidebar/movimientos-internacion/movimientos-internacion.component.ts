@@ -99,7 +99,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
                     return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, idInternacion).pipe(
                         map(movimientos => {
                             return movimientos.filter((mov) => {
-                                return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
+                                return desde.getTime() <= mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
                             }).map(mov => {
                                 if (mov.sectores) {
                                     mov.sectorName = [...mov.sectores].reverse().map(s => s.nombre).join(', ');
