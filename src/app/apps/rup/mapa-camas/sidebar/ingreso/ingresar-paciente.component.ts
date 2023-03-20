@@ -628,17 +628,21 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
 
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-
         if (!this.prestacion?.id && !this.resumen?.id) { // se trata de un ingreso nuevo
             // chequeamos estado de la cama
+
             this.mapaCamasService.snapshot$.subscribe(camas => {
-                //  si para la nueva fecha la cama seleccionada se encuentra ocupada, anulamos la seleccion
-                const camaSeleccionada = camas.filter(cama => cama.id === this.cama?.id)?.shift();
-                if (!camaSeleccionada || camaSeleccionada?.estado === 'ocupada') {
-                    this.plex.toast('danger', 'La cama seleccionada no está disponible en la fecha indicada');
-                    this.mapaCamasService.select(null);
+                if (this.informeIngreso.fechaIngreso && this.cama) {
+                    //  si para la nueva fecha la cama seleccionada se encuentra ocupada, anulamos la seleccion
+                    const camaSeleccionada = camas.filter(cama => cama.id === this.cama.id)?.shift();
+
+                    if (!camaSeleccionada || camaSeleccionada?.estado === 'ocupada') {
+                        this.plex.toast('danger', 'La cama seleccionada no está disponible en la fecha indicada');
+                        this.mapaCamasService.select(null);
+                    }
                 }
             });
+
         }
     }
 
