@@ -28,6 +28,7 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 @Component({
     selector: 'app-ingresar-paciente',
     templateUrl: './ingresar-paciente.component.html',
+    styleUrls: ['./ingresar-paciente.component.scss'],
 })
 
 export class IngresarPacienteComponent implements OnInit, OnDestroy {

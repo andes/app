@@ -1,6 +1,6 @@
 <ng-container *ngIf="paciente">
     <form #formIngreso="ngForm">
-        <plex-title justify titulo="INGRESO" size="md">
+        <plex-title justify titulo="INGRESO" size="md" class="title-fixed">
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
                         (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
             </plex-button>
