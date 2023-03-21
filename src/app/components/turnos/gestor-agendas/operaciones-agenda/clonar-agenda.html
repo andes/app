@@ -101,7 +101,7 @@
             <div class="col text-right">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button type="success" label="Clonar Agenda" (click)="clonar()">
+                <plex-button [disabled]="hideClonar" type="success" label="Clonar Agenda" (click)="clonar()">
                 </plex-button>
             </div>
         </div>

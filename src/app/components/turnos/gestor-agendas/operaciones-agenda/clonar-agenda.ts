@@ -34,6 +34,7 @@ export class ClonarAgendaComponent implements OnInit {
     public showModal = false;
     private _agenda: any;
     private estado: Estado = 'noSeleccionado';
+    hideClonar = false;
     /**
      * Días seleccionados del calendario para la clonación. SIN CONFLICTOS
      * @private
@@ -281,6 +282,7 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
                 if (conf) {
+                    this.hideClonar = true;
                     const elem = this.seleccionados[0];
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                     this.seleccionados = [...this.seleccionados];
