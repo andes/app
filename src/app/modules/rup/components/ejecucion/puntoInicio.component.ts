@@ -738,6 +738,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     buscarPaciente() {
         this.buscandoPaciente = true;
     }
+    esAgregarPaciente() {
+
+        const fechaAgenda = moment(this.agendaSeleccionada?.horaInicio).format('YYYY-MM-DD');
+        return ((this.agendaSeleccionada?.dinamica && moment(moment(new Date()).format('YYYY-MM-DD')).isSame(fechaAgenda)) && !this.esFutura(this.agendaSeleccionada) && ((this.agendaSeleccionada.cupo && this.agendaSeleccionada.cupo > 0) || this.agendaSeleccionada.cupo < 0));
+    }
 
     cancelarDacionTurno() {
         this.buscandoPaciente = false;
