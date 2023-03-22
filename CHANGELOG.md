@@ -1,3 +1,10 @@
+## [5.115.1](https://github.com/andes/app/compare/v5.115.0...v5.115.1) (2023-03-22)
+
+
+### Bug Fixes
+
+* **CIT:** se deshabilita clonar agendas duplicadas ([#2820](https://github.com/andes/app/issues/2820)) ([3137903](https://github.com/andes/app/commit/31379037243d6f4955219b07a1960e8f1e870ef5))
+
 # [5.115.0](https://github.com/andes/app/compare/v5.114.1...v5.115.0) (2023-03-08)
 
 
