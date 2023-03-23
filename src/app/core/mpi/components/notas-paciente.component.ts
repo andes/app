@@ -41,6 +41,7 @@ export class NotaComponent implements OnInit {
     removeNota(i) {
         if (i >= 0) {
             this.notas.splice(i, 1);
+            this.plex.toast('success', 'Se eliminó la nota');
         }
     }
 
@@ -48,7 +49,7 @@ export class NotaComponent implements OnInit {
         this.nuevaNota.fecha = new Date();
         this.nuevaNota.destacada = false;
         (this.notas) ? this.notas.push(this.nuevaNota) : (this.notas = [this.nuevaNota]);
-
+        this.plex.toast('success', 'Nota agregada con éxito');
         if (this.notas.length > 1) {
             this.notas.sort((a, b) => {
                 return (a.fecha.getDate() > b.fecha.getDate() ? 1 : (b.fecha.getDate() > a.fecha.getDate() ? -1 : 0));
