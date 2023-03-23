@@ -26,6 +26,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
 
     public mostrar;
     public hayMovimientosAt$: Observable<Boolean>;
+    public hayMovimientosSinEgresoAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
     public capa;
 
@@ -111,6 +112,16 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
                 );
                 return historial.length > 0 && tieneIDMov;
+            })
+        );
+
+        this.hayMovimientosSinEgresoAt$ = this.mapaCamasService.historialInternacion$.pipe(
+            map((historial) => {
+                const egreso = historial.some(mov => mov.extras?.egreso);
+                const tieneIDMov = historial.every(
+                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento
+                );
+                return historial.length > 0 && tieneIDMov && !egreso;
             })
         );
 
