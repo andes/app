@@ -35,7 +35,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     showCargarSolicitud = false;
     // VER SI HACE FALTA
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
-
+    public puedeCrearSolicitud = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         public auth: Auth,
@@ -43,7 +43,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
+        this.puedeCrearSolicitud = this.auth.check('turnos:puntoInicio:solicitud');
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         // No está autorizado para ver esta pantalla
         if (!this.autorizado) {

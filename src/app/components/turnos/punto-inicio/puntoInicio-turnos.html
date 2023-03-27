@@ -56,8 +56,9 @@
                             </plex-button>
                         </td>
                         <td class="align-middle">
-                            <plex-button *ngIf="puedeCrearSolicitud" type="info" tooltip="Solicitudes"
-                                         icon="open-in-app" (click)="verificarOperacion('ingresarSolicitud', paciente)">
+                            <plex-button *ngIf="puedeCrearSolicitud || puedeVisualizarSolicitud" type="info"
+                                         tooltip="Solicitudes" icon="open-in-app"
+                                         (click)="verificarOperacion('ingresarSolicitud', paciente)">
                             </plex-button>
                         </td>
                         <td class="align-middle">

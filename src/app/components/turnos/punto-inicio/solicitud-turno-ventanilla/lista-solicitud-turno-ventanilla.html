@@ -1,6 +1,7 @@
 <div *ngIf="!showCargarSolicitud">
     <plex-title main titulo="Solicitudes">
-        <plex-button type="success" label="Cargar Solicitud nueva" (click)="formularioSolicitud()"></plex-button>
+        <plex-button *ngIf="puedeCrearSolicitud" type="success" label="Cargar Solicitud nueva"
+                     (click)="formularioSolicitud()"></plex-button>
     </plex-title>
     <div class="row mt-2">
         <div class="col-12">
