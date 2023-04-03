@@ -5,10 +5,10 @@
             <ng-container *ngIf="!valorManual">
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                     <div *ngIf="item.elementoRUP" class="pr-3">
-                        <rup [ngClass]="{'readonly': valorManual}" [elementoRUP]="item.elementoRUP"
-                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
-                             (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
+                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                             [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                             (change)="emitChange2()" (ejecutarAccion)="emitEjecutarAccion($event)"
+                             [habilitado]="valorManual">
                         </rup>
                     </div>
                 </ng-container>
@@ -16,8 +16,8 @@
             <ng-container *ngIf="valorManual">
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                     <div *ngIf="item.elementoRUP" class="pr-3">
-                        <rup [ngClass]="{'readonly': !valorManual}" [elementoRUP]="item.elementoRUP"
-                             [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                        <rup [readonly]="false" [elementoRUP]="item.elementoRUP" [paciente]="paciente"
+                             [params]="{ title: item.params.title, type: item.params.type }" [prestacion]="prestacion"
                              [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange2()"
                              (ejecutarAccion)="emitEjecutarAccion($event)" [habilitado]="valorManual">
                         </rup>
@@ -46,14 +46,15 @@
                     <!-- Campo para ingreso manual del valor del registro -->
                     <form #form="ngForm">
                         <ng-container *ngIf="!soloValores && valorEditable">
-                            <plex-float [label]="params?.title || registro.concepto.term" *ngIf="valorManual"
+                            <plex-float *ngIf="valorManual" [label]="params?.title || registro.concepto.term"
                                         placeholder="Ingrese un valor" [(ngModel)]="registro.valor" label=''
                                         name="valorCalculo" (change)="emitChange2()" [disabled]="!valorManual"
-                                        [required]="true">
+                                        [required]="true" [min]="params?.min" [max]="params?.max">
                             </plex-float>
-                            <plex-float [label]="params?.title || registro.concepto.term" *ngIf="!valorManual"
+                            <plex-float *ngIf="!valorManual" [label]="params?.title || registro.concepto.term"
                                         [(ngModel)]="registro.valor" [disabled]="true"
-                                        [ngModelOptions]="{standalone: true}">
+                                        [ngModelOptions]="{standalone: true}" [required]="true" [min]="params?.min"
+                                        [max]="params?.max">
                             </plex-float>
                         </ng-container>
                     </form>
