@@ -137,7 +137,7 @@
                                  icon="pencil" type="warning" ariaLabel="Editar agenda" tooltip="Editar"
                                  tooltipPosition="top" (click)="editarAgenda(agenda)">
                     </plex-button>
-                    <plex-button class="ml-1" size="sm" *ngIf="botones.clonar"
+                    <plex-button class="ml-1" size="sm" *ngIf="botones.clonar  && !agenda.dinamica"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
                                  icon="content-copy" type="info" ariaLabel="Clonar agenda" tooltip="Clonar"
                                  tooltipPosition="top" (click)="clonar()">
