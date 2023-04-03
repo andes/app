@@ -575,7 +575,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     this.agenda = ag;
 
                     // Compruebo si la agenda es editable
-                    if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
+                    if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion' && agenda.estado !== 'pendienteAsistencia') {
                         this.showEditarAgendaPanel = false;
                         this.showTurnos = true;
                         return;
