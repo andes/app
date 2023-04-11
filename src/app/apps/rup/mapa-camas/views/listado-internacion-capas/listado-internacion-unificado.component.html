@@ -1,7 +1,7 @@
 <plex-layout [main]="idInternacionSelected ? 8: 12" [foco]="idInternacionSelected ? 'sidebar': 'main'">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'" class="mb-0 border-0">
-            <plex-title titulo="LISTADO INTERNACION">
+            <plex-title titulo="LISTADO DE INTERNACION">
                 <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <app-filtros-listado-capas></app-filtros-listado-capas>
@@ -9,15 +9,15 @@
 
         <div *ngIf="listadoInternacionCapasService.missingFilters$ | async" justify="center" class="mt-5">
             <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                titulo="No hay resultados"
-                subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
+                        titulo="No hay resultados"
+                        subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
             </plex-label>
         </div>
         <ng-container *ngIf="!(listadoInternacionCapasService.missingFilters$ | async) && mainView === 'principal'">
             <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                    titulo="No hay resultados"
-                    subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
+                            titulo="No hay resultados"
+                            subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
                 </plex-label>
             </div>
             <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
@@ -26,8 +26,8 @@
                     </plex-table-columns>
                 </plex-title>
                 <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
-                        [class.selected]="internacion.id === idInternacionSelected"
-                        (click)="seleccionarInternacion(internacion)">
+                    [class.selected]="internacion.id === idInternacionSelected"
+                    (click)="seleccionarInternacion(internacion)">
                     <td *plTableCol="'nombre'">
                         {{internacion.paciente | nombre }}
                     </td>
@@ -73,6 +73,10 @@
         </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar type="invert" *ngIf="idInternacionSelected">
+        <plex-title titulo="DETALLES" size="md">
+            <plex-button icon="close" type="danger" size="sm" (click)="cancelar()">
+            </plex-button>
+        </plex-title>
         <app-internacion-detalle *ngIf="accion === 'verDetalle' || accion === 'editando'" (accion)="onAccion($event)">
         </app-internacion-detalle>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
