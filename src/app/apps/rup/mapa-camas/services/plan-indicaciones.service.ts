@@ -18,7 +18,7 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
     getIndicaciones(idInternacion: string, fecha: Date, capa: string) {
         return this.search({
             internacion: idInternacion,
-            rangoFechas:fecha
+            rangoFechas: fecha
         }).pipe(
             map(indicaciones => {
                 const fechaMax = moment(fecha).endOf('day').toDate();

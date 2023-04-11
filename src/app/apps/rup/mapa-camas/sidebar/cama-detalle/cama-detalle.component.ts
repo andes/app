@@ -277,4 +277,9 @@ export class CamaDetalleComponent implements OnInit {
             relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && this.permisosMapaCamasService.ingreso) ||
             (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
+
+    verIndicacion() {
+        return this.permisosMapaCamasService.indicacionesCrear || this.permisosMapaCamasService.indicacionesEjecutar ||
+            this.permisosMapaCamasService.indicacionesValidar || this.permisosMapaCamasService.indicacionesVer;
+    }
 }
