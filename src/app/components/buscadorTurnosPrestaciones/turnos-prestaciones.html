@@ -15,7 +15,8 @@
             <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
                            name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
             </plex-datetime>
-            <plex-text [(ngModel)]="documento" (change)="refreshSelection($event,'documento')" label="Documento">
+            <plex-text [(ngModel)]="datoPaciente" (change)="refreshSelection($event,'paciente')" label="paciente"
+                       placeholder="Ingrese un documento, apellido o nombre">
             </plex-text>
             <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
                          label="Prestación" tmPrestaciones preload="true">
@@ -155,7 +156,7 @@
                             </th>
                         </thead>
                         <tbody>
-                            <tr *cdkVirtualFor="let busqueda of busqueda$" class="hover"
+                            <tr *ngFor="let busqueda of busqueda$ | async" class="hover"
                                 (click)="mostrarPrestacion(busqueda)"
                                 [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                                 <td>

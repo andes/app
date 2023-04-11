@@ -40,7 +40,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstados;
     public sumarB = false;
     public arrayEstadosFacturacion;
-    public documento;
+    public datoPaciente;
     public financiadores: IFinanciador[];
     prestacion: any;
     paciente: any;
@@ -291,8 +291,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             if (tipo === 'estadoFacturacion') {
                 this.parametros['estadoFacturacion'] = data ? data.id : '';
             }
-            if (tipo === 'documento') {
-                this.parametros['documento'] = data ? data : '';
+            if (tipo === 'paciente') {
+                this.parametros['paciente'] = data ? data : '';
             }
             if (tipo === 'ambito') {
                 this.parametros['ambito'] = data ? data.id : '';
