@@ -43,6 +43,12 @@
                         <div *ngFor="let profesional of turno.profesionales">
                             {{profesional | nombre}}
                         </div>
+                        <div *ngIf="turno.paciente.obraSocial">
+                            Obra Social: {{turno.paciente.obraSocial.nombre}}
+                        </div>
+                        <div *ngIf="!turno.paciente.obraSocial">
+                            Sin obra social
+                        </div>
                         <div>
                             <em class="small">{{turno.organizacion.nombre}}</em>
                         </div>
