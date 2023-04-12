@@ -724,7 +724,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // Detecta si una Agenda es futura
     esFutura(agenda: IAgenda = null) {
         const fechaAgenda = moment(agenda.horaInicio).startOf('day');
-        const fechaActual = moment(new Date()).endOf('day');
+        const fechaActual = moment().endOf('day');
         return fechaAgenda.isAfter(fechaActual);
     }
 
@@ -739,10 +739,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = true;
     }
 
-    esAgregarPaciente() {
-
+    esHoy() {
         const fechaAgenda = moment(this.agendaSeleccionada?.horaInicio).format('YYYY-MM-DD');
-        return ((this.agendaSeleccionada?.dinamica && moment(moment(new Date()).format('YYYY-MM-DD')).isSame(fechaAgenda)) && !this.esFutura(this.agendaSeleccionada) && ((this.agendaSeleccionada.cupo && this.agendaSeleccionada.cupo > 0) || this.agendaSeleccionada.cupo < 0));
+        return ((this.agendaSeleccionada?.dinamica && moment(moment().format('YYYY-MM-DD')).isSame(fechaAgenda, 'day')) && (this.agendaSeleccionada.cupo && this.agendaSeleccionada.cupo !== 0));
+    }
+    verificarBloque() {
+        return (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda' && this.agendaSeleccionada !== 'servicio-intermedio' && (!this.paciente || (!this.agendaSeleccionada.tipoPrestaciones[0].noNominalizada && this.getCantidadPacientes(this.agendaSeleccionada))));
+    }
+
+    verificarTurno() {
+        return (this.turno?.paciente && this.turno.asistencia && this.turno.estado !== 'suspendido');
+    }
+
+    verTipoPrestacion() {
+        return (this.turno?.paciente?.id && this.turno.tipoPrestacion && this.agendaSeleccionada?.tipoPrestaciones?.length > 1);
     }
 
     cancelarDacionTurno() {
