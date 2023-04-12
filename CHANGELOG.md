@@ -1,3 +1,16 @@
+# [5.116.0](https://github.com/andes/app/compare/v5.115.1...v5.116.0) (2023-04-12)
+
+
+### Bug Fixes
+
+* **IN-513:** No se ven los registros de un paciente ([#2812](https://github.com/andes/app/issues/2812)) ([39f6b99](https://github.com/andes/app/commit/39f6b9908acbaee51f6d29a99c554276c807a570))
+* **MISC-266:** Error en filtros en el buscador de turnos y prestaciones ([#2809](https://github.com/andes/app/issues/2809)) ([0bbfe43](https://github.com/andes/app/commit/0bbfe434817f42f3e0e01f2dc1e3d1a2a6e2a66c))
+
+
+### Features
+
+* **TOP:** agrega informacion en vista de prestacion ([#2813](https://github.com/andes/app/issues/2813)) ([f4bd11a](https://github.com/andes/app/commit/f4bd11af7bee22631ded0e6034bcdf0167668525))
+
 ## [5.115.1](https://github.com/andes/app/compare/v5.115.0...v5.115.1) (2023-03-22)
 
 
