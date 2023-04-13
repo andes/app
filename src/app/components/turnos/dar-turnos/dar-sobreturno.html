@@ -10,23 +10,10 @@
                            [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
             </div>
         </div>
-        <div class="row" *ngIf="modelo.obraSocial !== 'SUMAR'">
-            <div class="col-12">
-                <plex-radio *ngIf="this.modelo.obraSocial" [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial"
-                            name="os" (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
-                </plex-radio>
-            </div>
-            <div class="col-12">
-                <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas"
-                             (change)="seleccionarPrepaga($event)" label="Seleccione una Prepaga" idField="nombre"
-                             labelField="nombre">
-                </plex-select>
-            </div>
-        </div>
         <div class="row">
-            <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
-                <label>Programa</label>
-                <div>{{modelo.obraSocial}}</div>
+            <div class="col-12">
+                <seleccionar-financiador [paciente]="paciente"
+                                         (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
             </div>
         </div>
         <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">

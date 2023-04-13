@@ -1,17 +1,17 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
-import { DocumentosService } from '../../../services/documentos.service';
+import { Plex } from '@andes/plex';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
+import { DocumentosService } from '../../../services/documentos.service';
+import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 
 // Servicios
-import { TurnoService } from '../../../services/turnos/turno.service';
-import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
+import { AgendaService } from '../../../services/turnos/agenda.service';
+import { TurnoService } from '../../../services/turnos/turno.service';
 
-import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -23,23 +23,16 @@ export class TurnosPacienteComponent implements OnInit {
     cambioMotivo: boolean;
     turnoArancelamiento: any;
     showMotivoConsulta = false;
-    ultimosTurnos: any[];
     puedeRegistrarAsistencia: boolean;
     puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
     todaysdate: Date;
-    obraSocialSeleccionada: String;
     _turnos: any;
-    _obraSocial: any;
     _operacion: string;
-    tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
-    showPuntoInicio = true;
-    showListaPrepagas: Boolean = false;
-    public obraSocialPaciente: any[] = [];
-    public prepagas: any[] = [];
+    public financiador = '';
     public _paciente: IPaciente;
     @Input('operacion')
     set operacion(value: string) {
@@ -70,10 +63,6 @@ export class TurnosPacienteComponent implements OnInit {
     }
     @Output() turnosPacienteChanged = new EventEmitter<any>();
 
-    public modelo: any = {
-        obraSocial: ''
-    };
-
     // Inicialización
     constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
                 public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
@@ -83,38 +72,10 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.check('turnos:turnos:liberarTurno');
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
-        this.loadObraSocial();
-        this.obraSocialService.getPrepagas().subscribe(prepagas => {
-            this.prepagas = prepagas;
-        });
     }
-    loadObraSocial() {
-        // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!this._paciente) {
-            return;
-        } else {
-            this._obraSocial = this._paciente.financiador || [];
-        }
-        if (this._obraSocial.length) {
-            this.obraSocialPaciente = this._obraSocial.map((os: any) => {
-                let osPaciente;
 
-                if (os.nombre) {
-                    osPaciente = {
-                        'id': os.nombre,
-                        'label': os.nombre
-                    };
-                } else {
-                    osPaciente = {
-                        'id': os.financiador,
-                        'label': os.financiador
-                    };
-                }
-                return osPaciente;
-            });
-            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-        }
-        this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+    setFinanciador(financiador) {
+        this.financiador = financiador;
     }
 
     cambiarMotivo() {
@@ -127,20 +88,11 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     showArancelamiento(turno) {
-        if (turno.obraSocial === 'prepaga' && !turno.prepaga) {
-            this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
-            return;
-        }
-        if (turno.obraSocial === 'prepaga' || turno.prepaga) {
-            this.obraSocialSeleccionada = turno.prepaga.nombre;
-        } else {
-            this.obraSocialSeleccionada = turno.obraSocial || (turno.paciente.obraSocial && turno.paciente.obraSocial.nombre);
-        }
-
-        if (!this.obraSocialSeleccionada) {
+        if (!this.financiador) {
             this.plex.toast('danger', 'Seleccione una obra social o prepaga', '¡Atención!');
             return;
         }
+
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
     }
@@ -151,11 +103,11 @@ export class TurnosPacienteComponent implements OnInit {
             data['motivoConsulta'] = turno.motivoConsulta;
         }
 
-        const obraSocialUpdate = this._obraSocial.find(os => os.nombre === this.obraSocialSeleccionada);
+        const obraSocialUpdate = this._paciente.financiador.find(os => os.nombre === this.financiador);
         turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : {
             codigoPuco: null,
-            nombre: this.obraSocialSeleccionada,
-            financiador: this.obraSocialSeleccionada
+            nombre: this.financiador,
+            financiador: this.financiador
         };
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
@@ -192,8 +144,6 @@ export class TurnosPacienteComponent implements OnInit {
                 this.plex.toast(tipoToast, mensaje);
             }
         });
-        // });
-
     }
 
     liberarTurno(turno) {
@@ -213,16 +163,6 @@ export class TurnosPacienteComponent implements OnInit {
         return (moment(turno.horaInicio)).isSame(new Date(), 'day');
     }
 
-    seleccionarObraSocial(event, elem) {
-        if (event.value === 'prepaga') {
-            this.obraSocialService.getPrepagas().subscribe(prepagas => {
-                elem.showListaPrepagas = true;
-                this.prepagas = prepagas;
-            });
-        } else {
-            elem.showListaPrepagas = false;
-        }
-        elem.obraSocial = event && event.value;
-    }
+
 }
 

@@ -11,4 +11,5 @@ export interface IObraSocial {
     prepaga?: Boolean;
     codigoPuco?: Number;
     idObraSocial?: Number;
+    origen?: String;
 }

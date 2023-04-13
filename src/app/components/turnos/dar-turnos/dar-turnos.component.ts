@@ -48,6 +48,7 @@ export class DarTurnosComponent implements OnInit {
     public nota = '';
     public link: String = '';
     public changeCarpeta = false;
+    public financiador;
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     autocitado = false;
@@ -985,10 +986,11 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
+    public setFinanciador(financiador) {
+        this.financiador = { ...financiador, numeroAfiliado: this.numeroAfiliado };
+    }
+
     private guardarTurno(agd: IAgenda) {
-        if (this.numeroAfiliado && this.obraSocialPaciente) {
-            this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
-        }
         const pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
@@ -1001,7 +1003,7 @@ export class DarTurnosComponent implements OnInit {
             sexo: this.paciente.sexo,
             telefono: this.telefono,
             carpetaEfectores: this.paciente.carpetaEfectores,
-            obraSocial: this.obraSocialPaciente
+            obraSocial: this.financiador
         };
         if (agd.dinamica) {
             const datosTurno = {
@@ -1019,7 +1021,7 @@ export class DarTurnosComponent implements OnInit {
                     this.turno.id = resultado.id;
                     this.afterSaveTurno(pacienteSave);
                 },
-                error => {
+                () => {
                     this.agenda = null;
                     this.actualizar();
                     this.plex.toast('danger', 'Turno no asignado');

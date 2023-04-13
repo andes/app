@@ -193,8 +193,6 @@
                     </plex-grid>
                 </ng-container>
 
-
-
                 <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
                 <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
                             size="sm">
@@ -283,6 +281,18 @@
                     </plex-item>
                 </plex-list>
 
+                <!-- Financiador: Obras sociales y prepagas -->
+                <ng-container>
+                    <div class="mb-4">
+                        <plex-title titulo="Cobertura Social" size="sm">
+                        </plex-title>
+                        <plex-grid type="auto" size="md" cols="1">
+                            <seleccionar-financiador [paciente]="paciente"
+                                                     (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
+                        </plex-grid>
+                    </div>
+                </ng-container>
+
                 <!--Información Adicional -->
                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT == 'dinamica'">
                     <plex-title titulo="Información Adicional" size="sm">
@@ -320,6 +330,5 @@
                 </plex-button>
             </div>
         </ng-container>
-
     </plex-layout-sidebar>
 </plex-layout>
