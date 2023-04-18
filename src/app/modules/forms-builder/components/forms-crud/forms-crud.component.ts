@@ -29,6 +29,7 @@ export class AppFormsCrudComponent implements OnInit {
     public disable = false;
     public recursos = [];
     public secciones = [];
+    public seccionesInForm = [];
     public hasOcurrences = false;
     public isFormSnomedizable = false;
     public desabilitado = false;
@@ -158,8 +159,18 @@ export class AppFormsCrudComponent implements OnInit {
     }
 
     onRemove(i) {
+        const itemRemove = this.form.fields[i];
+        this.seccionesInForm.forEach((s, j) => {
+            if (itemRemove.sections.find(i => i.id === s.seccion)) {
+                s.cantidad--;
+                if (!s.cantidad) {
+                    this.seccionesInForm.splice(j, 1);
+                }
+            }
+        });
         this.form.fields.splice(i, 1);
         this.form.fields = [...this.form.fields];
+
     }
 
     save($event) {
@@ -248,20 +259,31 @@ export class AppFormsCrudComponent implements OnInit {
     }
 
     setFieldType(f) {
-        f.type = this.tiposList.find(t => t?.id === f.type) as any;
+        const typeField = f.type.id ? f.type.id : f.type;
+        const resourceField = f.resources.id ? f.resources.id : f.resources;
+        f.type = this.tiposList.find(t => t?.id.toString() === typeField.toString()) as any;
         if ((f.type as any)?.id === 'select') {
-            f.resources = this.recursos.find(t => t?.id === f.resources) as any;
+            f.resources = this.recursos.find(t => t?.id.toString() === resourceField.toString()) as any;
         }
     }
 
     loadPresetSection(section) {
         const fields = [...section.fields];
+        if (this.seccionesInForm && this.seccionesInForm.find(s => s.seccion === section.id)) {
+            return this.plex.toast('danger', 'La sección ya se ha agregado al formulario');
+        }
+        this.seccionesInForm.push(
+            {
+                seccion: section.id,
+                cantidad: fields.length
+            });
         const sec: any = this.secciones.find(s => s.id === section.id);
         sec.preset = section.preset;
         fields.forEach(f => {
             f.sections = [sec];
             this.setFieldType(f);
         });
+
         this.form.fields = [...this.form.fields, ...fields];
     }
 
