@@ -13,6 +13,13 @@
 }
 
 // GENERICAS
+.title-fixed {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 99 !important;
+    background-color: rgb(255, 255, 255) !important;
+}
+
 .pointer {
     cursor: pointer;
 }
