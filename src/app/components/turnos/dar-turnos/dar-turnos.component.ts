@@ -463,8 +463,8 @@ export class DarTurnosComponent implements OnInit {
                             || (agenda.turnosRestantesProgramados > 0 && !delDia))) ||
                             ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this.tipoTurno === 'gestion' && ((this.autocitado && agenda.turnosRestantesProfesional > 0) ||
                                 (!this.autocitado && agenda.turnosRestantesGestion > 0))) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0 && !(this.tipoTurno === 'gestion')) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && !(this.tipoTurno === 'gestion')) ||
+                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0 && delDia && !(this.tipoTurno === 'gestion')) ||
+                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && delDia && !(this.tipoTurno === 'gestion')) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.condicionLlave)
                             );
                         return cond;
