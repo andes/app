@@ -2,7 +2,6 @@ import { Auth } from '@andes/auth';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { publishReplay, refCount, tap } from 'rxjs/operators';
 import { IZonaSanitaria } from 'src/app/interfaces/IZonaSanitaria';
 import { FormsService } from 'src/app/modules/forms-builder/services/form.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
@@ -26,9 +25,12 @@ export class BiQueriesComponent implements OnInit {
     public mostrarSalida = false;
     public tipoPrestaciones;
     public totalOrganizaciones = false;
+    public totalZonasSanitarias = false;
     public permisosZonas: any[];
     public zonasSanitarias: IZonaSanitaria[] = [];
-    public orgs = [];
+    public zonaRequired = false;
+    public inProgress = false;
+    private idSubmoduloQueries = '60cce2a42e15361fe51b373d'; // coleccion modulos, mod. visualizacion, submodulo bi-queries
 
     constructor(
         private queryService: QueriesService,
@@ -38,11 +40,13 @@ export class BiQueriesComponent implements OnInit {
         private formsService: FormsService,
         private auth: Auth,
         private router: Router,
+        private organizacionService: OrganizacionService
     ) { }
 
     ngOnInit() {
         const permisos = this.auth.getPermissions('visualizacionInformacion:biQueries:?');
-        this.totalOrganizaciones = !this.auth.check('visualizacionInformacion:totalOrganizaciones');
+        this.totalOrganizaciones = this.auth.check('visualizacionInformacion:totalOrganizaciones');
+        this.totalZonasSanitarias = this.auth.check('visualizacionInformacion:zonasSanitarias:*');
         this.permisosZonas = this.auth.getPermissions('visualizacionInformacion:zonasSanitarias:?');
         if (this.permisosZonas.length > 0) {
             this.loadZonasSanitarias();
@@ -74,9 +78,41 @@ export class BiQueriesComponent implements OnInit {
     }
 
     getArgumentos() {
+        this.inProgress = true;
         if (this.consultaSeleccionada) {
+            // filtramos zonas y organizaciones segun permisos
+            this.zonaRequired = false;
+            const idsZonasPermitidas = this.zonasSanitarias.map(zona => zona.id);
+            const zonaIndex = this.consultaSeleccionada.argumentos.findIndex(arg => arg.key === 'zona');
+            let zonas = this.consultaSeleccionada.argumentos[zonaIndex]?.items;
+
+            if (idsZonasPermitidas.length) {
+                if (zonas) {
+                    if (this.permisosZonas[0] === '*') {
+                        // todas las zonas
+                        this.organizaciones$ = this.organizacionService.get({ activo: true });
+                    } else {
+                        // algunas zonas
+                        zonas = zonas.filter(zona => idsZonasPermitidas.includes(zona.id));
+                        zonas.length ? this.consultaSeleccionada.argumentos[zonaIndex] = zonas : delete this.consultaSeleccionada.argumentos[zonaIndex];
+                        this.organizaciones$ = this.organizacionService.get({ 'zonaSanitaria.id': { $in: idsZonasPermitidas }, activo: true });
+                        this.zonaRequired = true;
+                    }
+                }
+            } else {
+                if (zonaIndex !== -1) {
+                    // si no tiene permizo para zonas, eliminamos el argumento
+                    this.consultaSeleccionada.argumentos.splice(zonaIndex, 1);
+                }
+                if (this.totalOrganizaciones) {
+                    // todas las organizaciones
+                    this.organizaciones$ = this.organizacionService.get({ activo: true });
+                } else {
+                    this.organizaciones$ = this.auth.getModuleOrganizaciones(this.idSubmoduloQueries);
+                }
+            }
             this.argumentos = this.consultaSeleccionada.argumentos;
-            this.organizaciones$ = this.auth.getModuleOrganizaciones('60cce2a42e15361fe51b373d');
+            this.inProgress = false;
         }
     }
 
@@ -139,7 +175,7 @@ export class BiQueriesComponent implements OnInit {
                     }
                 }
             });
-            params['totalOrganizaciones'] = !this.totalOrganizaciones;
+            params['totalOrganizaciones'] = this.totalOrganizaciones;
             this.queryService.descargarCsv(this.consultaSeleccionada.nombre, params).subscribe();
         }
     }
