@@ -209,9 +209,11 @@ export class CamaDetalleComponent implements OnInit {
         });
     }
 
-    // param 'completo' indica si se borra solo un movimiento o la internación completa
+    // parametro 'completo' indica si se borra solo un movimiento ó la internación completa
     deshacerInternacion(completo: boolean) {
-        this.plex.confirm(`Esta acción deshace ${completo ? 'una internación' : 'un movimiento'}, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!`, `¿Quiere deshacer ${completo ? 'esta internación?' : 'este movimiento?'}`).then((resultado) => {
+        const msjDeshacer = (completo) ? 'Si el paciente tiene prestaciones  se deberá <b>romper validación</b> de las mismas antes de intentar realizar esta acción. <br><br><b>¿Está seguro que desea anular la internación?</b>' : 'Esta acción deshace el último movimiento.<br><b>¡Esta acción no se puede revertir!</b> ';
+        const msjTitulo = (completo) ? 'internación' : 'movimiento';
+        this.plex.confirm(msjDeshacer, 'Anular ' + msjTitulo).then((resultado) => {
             if (resultado) {
                 this.cama$.pipe(
                     first(),
