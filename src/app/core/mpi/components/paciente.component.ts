@@ -37,6 +37,7 @@ export class PacienteComponent implements OnInit {
     relacionesBorradas: any[] = [];
     relacionesEdit: any[] = []; // relaciones nuevas o editadas
     backUpDatos = [];
+    backDireccion = [];
     pacientesSimilares = [];
     documentacionPermiso = false;
     validado = false;
@@ -567,11 +568,8 @@ export class PacienteComponent implements OnInit {
                                     this.pacienteModel.fechaFallecimiento = null;
                                 }
                                 //  Se completan datos FALTANTES
-                                if (!this.pacienteModel.direccion[0].valor && resultado.direccion && resultado.direccion[0].valor) {
-                                    this.pacienteModel.direccion[0].valor = resultado.direccion[0].valor;
-                                }
-                                if (!this.pacienteModel.direccion[0].codigoPostal && resultado.cpostal) {
-                                    this.pacienteModel.direccion[0].codigoPostal = resultado.cpostal;
+                                if (resultado.direccion[0]) { // direccion fisica
+                                    this.pacienteModel.direccion[0] = resultado.direccion[0];
                                 }
                                 if (resultado.direccion[1]) { // direccion legal
                                     this.pacienteModel.direccion[1] = resultado.direccion[1];
@@ -602,7 +600,8 @@ export class PacienteComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.pacienteModel.fechaNacimiento;
         this.backUpDatos['cuil'] = this.pacienteModel.cuil;
         this.backUpDatos['fechaFallecimiento'] = this.pacienteModel.fechaFallecimiento;
-        this.backUpDatos['direccion'] = this.pacienteModel.direccion ? this.pacienteModel.direccion : null;
+        this.backDireccion = [...(this.pacienteModel.direccion ? this.pacienteModel.direccion : null)];
+        this.backUpDatos['direccion'] = JSON.parse(JSON.stringify(this.backDireccion));
         this.backUpDatos['foto'] = this.pacienteModel.foto;
         this.backUpDatos['fotoId'] = this.pacienteModel.fotoId;
         this.backUpDatos['identificadores'] = this.pacienteModel.identificadores;
@@ -610,26 +609,27 @@ export class PacienteComponent implements OnInit {
 
     deshacerValidacion() {
         this.showDeshacer = false;
-        this.pacienteModel.direccion = this.backUpDatos['direccion'] ? this.backUpDatos['direccion'] : [this.direccion];
         this.pacienteModel.foto = this.backUpDatos['foto'];
         this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
         this.pacienteModel.identificadores = this.backUpDatos['identificadores'];
 
-        if (this.backUpDatos['estado'] === 'temporal') {
-            this.pacienteModel.nombre = this.backUpDatos['nombre'];
-            this.pacienteModel.apellido = this.backUpDatos['apellido'];
-            this.pacienteModel.fechaNacimiento = this.backUpDatos['fechaNacimiento'];
-            this.pacienteModel.cuil = this.backUpDatos['cuil'];
-            this.pacienteModel.estado = this.backUpDatos['estado'];
-            this.pacienteModel.genero = this.backUpDatos['genero'];
-            this.pacienteModel.fechaFallecimiento = this.backUpDatos['fechaFallecimiento'];
-            this.validado = false;
-        }
+        this.conservarDatos();
         this.disableValidar = false;
         this.pacientesSimilares = [];
         this.visualizarIgnorarGuardar = false;
         this.disableGuardar = false;
         this.checkDisableValidar();
+    }
+
+    conservarDatos() {
+        this.pacienteModel.nombre = this.backUpDatos['nombre'];
+        this.pacienteModel.apellido = this.backUpDatos['apellido'];
+        this.pacienteModel.fechaNacimiento = this.backUpDatos['fechaNacimiento'];
+        this.pacienteModel.cuil = this.backUpDatos['cuil'];
+        this.pacienteModel.estado = this.backUpDatos['estado'];
+        this.pacienteModel.genero = this.backUpDatos['genero'];
+        this.pacienteModel.fechaFallecimiento = this.backUpDatos['fechaFallecimiento'];
+        this.pacienteModel.direccion = this.backUpDatos['direccion'];
     }
 }
 
