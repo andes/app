@@ -459,16 +459,23 @@ export class DarTurnosComponent implements OnInit {
                 if (!this.mostrarNoDisponibles) {
                     this.agendas = this.agendas.filter(agenda => {
                         const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                        const cond = (agenda.estado === 'publicada' && !(this.tipoTurno === 'gestion') && (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia && this.hayTurnosEnHorario(agenda))
-                            || (agenda.turnosRestantesProgramados > 0 && !delDia))) ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this.tipoTurno === 'gestion' && ((this.autocitado && agenda.turnosRestantesProfesional > 0) ||
-                                (!this.autocitado && agenda.turnosRestantesGestion > 0))) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0 && delDia && !(this.tipoTurno === 'gestion')) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1 && delDia && !(this.tipoTurno === 'gestion')) ||
-                                ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.condicionLlave)
-                            );
-                        return cond;
+                        // por estados
+                        const publicada = agenda.estado === 'publicada';
+                        const disponible = agenda.estado === 'disponible';
+                        const esGestion = this.tipoTurno === 'gestion';
+                        // por tipo
+                        const dinamicaDelDiaConCupoDisponible = agenda.dinamica && delDia && ((agenda as any).cupo > 0 || agenda.cupo === -1) && !esGestion;
+                        const delDiaConTurnosDisponibles = (agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia;
+                        const programadaConTurnosDisponibles = agenda.turnosRestantesProgramados > 0 && !delDia;
+                        const autocitadoConTurnosDisponibles = this.autocitado && agenda.turnosRestantesProfesional > 0;
+                        const llaveConTurnosDisponibles = !this.autocitado && agenda.turnosRestantesGestion > 0;
+                        // condiciones
+                        const accesoDirectoConTurnosDisponibles = !esGestion && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
+                        const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
 
+                        const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
+                            ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
+                        return cond;
                     });
                 }
 
@@ -489,12 +496,14 @@ export class DarTurnosComponent implements OnInit {
 
     // retorna true si algun bloque de la agenda es exclusivo de gestión
     contieneExclusivoGestion(agenda: IAgenda): boolean {
-        return agenda.bloques.some(bloque => bloque.reservadoGestion > 0 && bloque.accesoDirectoDelDia === 0 && bloque.accesoDirectoProgramado === 0 && bloque.reservadoProfesional === 0);
+        return agenda.bloques.some(bloque =>
+            bloque.reservadoGestion > 0 &&
+            bloque.accesoDirectoDelDia === 0 &&
+            bloque.accesoDirectoProgramado === 0 &&
+            bloque.reservadoProfesional === 0);
     }
 
     hayTurnosEnHorario(agenda) {
-        const ultimoBloque = agenda.bloques.length - 1;
-        const ultimoTurno = agenda.bloques[ultimoBloque].turnos.length - 1;
         const ultimahora = moment(agenda.horaFin).format();
         const horaLimite = (moment(new Date()).format());
         const resolucion = (ultimahora > horaLimite);
