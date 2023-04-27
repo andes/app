@@ -58,10 +58,13 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 import { InicioComponent } from './components/inicio/inicio.component';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
-import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
-import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
+import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
+import { CatalogoNovedadesComponent } from './components/novedades/catalogo-novedades/catalogo-novedades.component';
+import { FiltroNovedadesComponent } from './components/novedades/catalogo-novedades/filtro-novedades/filtro-novedades.component';
+import { CalendarioNovedadesComponent } from './components/novedades/lista-novedades/calendario/calendario-novedades.component';
+import { DetalleNovedadComponent } from './components/novedades/detalle-novedad/detalle-novedad.component';
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { HistorialCarpetasComponent } from './components/prestamosHC/historial/historial-hc.component';
@@ -291,8 +294,11 @@ registerLocaleData(localeEs, 'es');
         PrestarHcComponent,
         DevolverHcComponent,
         NovedadesComponent,
-        HeaderNovedadesComponent,
         ListaNovedadesComponent,
+        HeaderNovedadesComponent,
+        CatalogoNovedadesComponent,
+        FiltroNovedadesComponent,
+        CalendarioNovedadesComponent,
         DetalleNovedadComponent,
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,

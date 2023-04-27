@@ -44,6 +44,7 @@ $plex-tabs-color-extend: (
     height: 50px;
     padding: 7px;
 }
+
 nav .actions {
     position: absolute;
     right: 0;
@@ -63,7 +64,7 @@ $mdi-font-path: "~@mdi/font/fonts/";
 // Plex
 @import "~@andes/plex/src/lib/styles.scss";
 @import "./src/app/components/novedades/novedades.scss";
- 
+
 // IMPORTS DE MÓDULOS
 // RUP
 // @andrrrl ver con @jfgabriel
@@ -72,7 +73,7 @@ $mdi-font-path: "~@mdi/font/fonts/";
 .grow-reverse {
     display: flex;
 
-    > .label {
+    >.label {
         align-self: center;
     }
 

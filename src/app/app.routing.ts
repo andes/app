@@ -179,6 +179,7 @@ const appRoutes: Routes = [
     { path: 'mapa-camas', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard], runGuardsAndResolvers: 'always' },
 
     { path: 'novedades/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'novedades/fecha/:fecha', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades/:modulo', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades/:modulo/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

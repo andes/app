@@ -1,10 +1,10 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <detalle-novedad>
-        </detalle-novedad>
+        <catalogo-novedades *ngIf="!novedad" (setNovedad)="setNovedad($event)" (volver)="volver()" [fecha]="fecha" [novedad]="novedad" filtroModulo="filtroModulo"></catalogo-novedades>
+        <detalle-novedad *ngIf="novedad" [novedad]="novedad" (volver)="volver()"></detalle-novedad>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <lista-novedades>
-        </lista-novedades>
+        <calendario-novedades [fecha]="fecha" [novedad]="novedad" (volver)="volver()" (setFecha)="setFecha($event)" ></calendario-novedades>
+        <lista-novedades [novedad]="novedad" (setNovedad)="setNovedad($event)"></lista-novedades>
     </plex-layout-sidebar>
 </plex-layout>

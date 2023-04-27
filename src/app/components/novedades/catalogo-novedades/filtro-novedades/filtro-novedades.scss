@@ -1,0 +1,29 @@
+.selectNovedades,
+.itemCatalogo {
+    margin-top: 20px;
+}
+
+.cardNovedad {
+    max-width: 280px;
+    text-align: center;
+}
+
+.social {
+    span {
+        text-transform: uppercase;
+    }
+
+    .youtube {
+        color: red;
+
+        i {
+            font-size: 20px !important;
+            line-height: 0.6;
+            vertical-align: middle;
+        }
+    }
+}
+
+.selector {
+    align-items: center;
+}
