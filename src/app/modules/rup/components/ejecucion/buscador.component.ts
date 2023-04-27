@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, S
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
@@ -21,7 +22,7 @@ import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.inter
 
 export class BuscadorComponent implements OnInit, OnChanges {
     @Input() conceptoFrecuente;
-    // @Input() prestacion: IPrestacion;
+    @Input() prestacion: IPrestacion;
     @Input() tipoPrestacion: ITipoPrestacion;
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
@@ -137,7 +138,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
-
+            this.buscar();
         });
 
     }
@@ -183,6 +184,24 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
 
+    private buscarTerm(word, registro) {
+        const actualTerm = registro.term.toLowerCase();
+        let matchTerm = actualTerm.indexOf(word) >= 0;
+        if (matchTerm && (this.busquedaActual === 'misFrecuentes' || this.busquedaActual === 'frecuentesTP')) {
+            matchTerm = !(registro.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
+        }
+        return matchTerm;
+    }
+
+    private filtrarTermPrestacion() {
+        let resultados = this.resultsAux[this.busquedaActual][this.filtroActual];
+        if (this.busquedaActual === 'misFrecuentes' || this.busquedaActual === 'frecuentesTP') {
+            resultados = resultados.filter(registro => !(registro.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId));
+        }
+        this.results[this.busquedaActual][this.filtroActual] = resultados;
+    }
+
+
     /**
      * Buscar resultados para los tipos de busqueda que sean sugeridos o mis frecuentes
      *
@@ -201,12 +220,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
             const search = this.search.toLowerCase();
             let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
-            // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
                 words.forEach(word => {
                     if (this.results[this.busquedaActual][concepto]) {
                         this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                            return registro.term.toLowerCase().indexOf(word) >= 0;
+                            return this.buscarTerm(word, registro);
                         });
                     }
                 });
@@ -217,14 +235,14 @@ export class BuscadorComponent implements OnInit, OnChanges {
             words.forEach(word => {
                 if (this.results[this.busquedaActual]['todos']) {
                     this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
-                        return registro.term.toLowerCase().indexOf(word) >= 0;
+                        return this.buscarTerm(word, registro);
                     });
                 }
             });
 
         } else {
             this.filtroActual = 'todos';
-            this.results[this.busquedaActual] = this.resultsAux[this.busquedaActual];
+            this.filtrarTermPrestacion();
         }
     }
 

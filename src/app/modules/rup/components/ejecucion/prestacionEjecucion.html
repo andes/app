@@ -349,6 +349,7 @@
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
                     <rup-buscador [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"
+                                  [prestacion]="prestacion"
                                   [conceptoFrecuente]="conceptoFrecuente" (_onDragStart)="arrastrandoConcepto(true)"
                                   (_onDragEnd)="arrastrandoConcepto(false)" (selected)="onSelectConcepto($event)">
                     </rup-buscador>
