@@ -13,6 +13,7 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -30,6 +31,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     public inicio: Date;
     public fin: Date;
     public guardado = false;
+    private prestacionesProfesional;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -37,20 +39,23 @@ export class RupAsignarTurnoComponent implements OnInit {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
-        private plex: Plex,
-        private router: Router,
         public serviceTurno: TurnoService,
         public servicioPrestacion: PrestacionesService,
+        private plex: Plex,
+        private router: Router,
         private obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
-        private serviceAgenda: AgendaService
-    ) {
-    }
+        private serviceAgenda: AgendaService,
+        private conceptosTurneablesService: ConceptosTurneablesService
+    ) { }
 
     ngOnInit() {
-        this.getPrestacionesAgendaDinamicas();
         this.inicio = this.agenda.horaInicio;
         this.fin = this.agenda.horaFin;
+        this.conceptosTurneablesService.getByPermisos('rup:tipoPrestacion:?').subscribe(data => {
+            this.prestacionesProfesional = data.map(concept => concept.id);
+            this.getPrestacionesAgendaDinamicas();
+        });
     }
 
     searchStart() {
@@ -124,9 +129,11 @@ export class RupAsignarTurnoComponent implements OnInit {
      */
     getPrestacionesAgendaDinamicas() {
         let listaPrestaciones = [];
+
         this.agenda.bloques.forEach(unBloque => {
-            listaPrestaciones = listaPrestaciones.concat(unBloque.tipoPrestaciones);
+            listaPrestaciones = unBloque.tipoPrestaciones.filter((prestacion: any) => this.prestacionesProfesional.includes(prestacion.id));
         });
+
         this.prestaciones = listaPrestaciones.filter((elem, pos, arr) => {
             return arr.indexOf(elem) === pos;
         });
