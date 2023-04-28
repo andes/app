@@ -163,8 +163,10 @@ export class ListadoPerinatalComponent implements OnInit {
             profesional: this.profesional?.id,
             organizacionOrigen: this.organizacion?.id,
             paciente: this.paciente || '',
-            estado: 'AUSENTE'
         };
+        if (this.verAusente) {
+            params['estado'] = 'AUSENTE';
+        }
         this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 
