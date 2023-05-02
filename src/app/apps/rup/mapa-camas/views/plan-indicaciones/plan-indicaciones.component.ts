@@ -121,11 +121,11 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.horas = this.getHorariosGrilla();
             })
         ).subscribe();
-        this.permisosMapaCamasService.calcularPermisos();
         this.hoy = moment();
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
+        this.permisosMapaCamasService.setAmbito(this.ambito);
         this.loading = true;
         this.getInternacion().pipe(
             switchMap(resumen => {

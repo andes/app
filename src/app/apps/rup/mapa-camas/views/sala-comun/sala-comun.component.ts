@@ -6,12 +6,10 @@ import { SalaComunService } from './sala-comun.service';
 import { ActivatedRoute } from '@angular/router';
 import { ISalaComun } from '../../interfaces/ISalaComun';
 import { Observable } from 'rxjs';
-import { MapaCamasService } from '../../services/mapa-camas.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { cache } from '@andes/shared';
 import { map, pluck } from 'rxjs/operators';
 import { SnomedExpression } from '../../../../mitos';
-import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
@@ -48,7 +46,6 @@ export class SalaComunComponent implements OnInit {
         private location: Location,
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
-        private mapaCamasService: MapaCamasService,
         private salaComunService: SalaComunService,
         public permisosMapaCamasService: PermisosMapaCamasService,
     ) { }

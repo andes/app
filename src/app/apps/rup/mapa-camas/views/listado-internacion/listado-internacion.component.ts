@@ -135,9 +135,9 @@ export class InternacionListadoComponent implements OnInit {
         } else {
             this.router.navigate(['/inicio']);
         }
+        this.mapaCamasService.setAmbito('internacion');
         this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setView('listado-internacion');
-        this.mapaCamasService.setAmbito('internacion');
         this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
         this.plex.updateTitle([{
             route: '/inicio',

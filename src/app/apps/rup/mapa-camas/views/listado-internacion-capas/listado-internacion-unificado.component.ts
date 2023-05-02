@@ -154,9 +154,9 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         }
         this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setAmbito('internacion');
+        this.permisosMapaCamasService.setAmbito('internacion');
         this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.select({ id: ' ' } as any);
-        this.permisosMapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
             route: '/inicio',
