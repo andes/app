@@ -1,5 +1,7 @@
-<plex-title [titulo]="selectedConcept ? selectedConcept.term : nombreSeccion" size="md">
-    <plex-button class="mr-1" type="success" icon="check" size="sm" [disabled]="prescripcion?.rupInstance?.formulario.invalid" (click)="onSave()"></plex-button>
+<plex-title [titulo]="selectedConcept ? selectedConcept.term : nombreSeccion" size="md" class="title-fixed"
+            justify="center">
+    <plex-button class="mr-1" type="success" icon="check" size="sm"
+                 [disabled]="prescripcion?.rupInstance?.formulario.invalid" (click)="onSave()"></plex-button>
     <plex-button type="danger" icon="close" size="sm" (click)="onCancel()"></plex-button>
 </plex-title>
 
