@@ -163,47 +163,18 @@
             <!--Paciente detalle -->
             <paciente-detalle [paciente]="paciente" orientacion="horizontal" size="xs" [fields]="pacienteFields">
             </paciente-detalle>
-            <!-- Tiene turnos disponibles -->
-            <ng-container
-                          *ngIf="estadoT === 'seleccionada' && (opciones.profesional && opciones.tipoPrestacion || opciones.tipoPrestacion)">
-                <!--Lista de turnos, bloque por bloque-->
-                <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
-                <plex-grid class="turnos_disponibles" responsive type="full" cols="4" *ngFor="let bloque of bloques">
-                    <plex-label align="center" size="md" titulo="Del día"
-                                subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
-                    </plex-label>
-                    <plex-label align="center" size="md" titulo="Programados"
-                                subtitulo="{{countBloques[findIndex(bloque)]?.programado}}">
-                    </plex-label>
-                    <plex-label align="center" size="md" titulo="Con llave"
-                                subtitulo="{{countBloques[findIndex(bloque)]?.gestion}}">
-                    </plex-label>
-                    <plex-label align="center" size="md" titulo="Profesional"
-                                subtitulo="{{countBloques[findIndex(bloque)]?.profesional}}">
-                    </plex-label>
-                </plex-grid>
-            </ng-container>
-
-            <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
-            <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
-                        size="sm">
-                <plex-bool *ngIf="estadoT !== 'noTurnos' && permitirTurnoDoble" class="mr-2 text-secondary"
-                           label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble">
-                </plex-bool>
-                <plex-bool *ngIf="agenda.nominalizada && estadoT !== 'noTurnos'" label="Turno telefónico"
-                           [(ngModel)]='turnoTelefonico' name="turnoTelefonico">
-                </plex-bool>
-            </plex-title>
-
-            <!-- Agenda con turnos disponibles -->
-            <ng-container *ngIf="estadoT === 'seleccionada'">
-                <!--Lista de turnos, bloque por bloque-->
-                <div class="listado-turnos mb-4" *ngFor="let bloque of bloques">
-                    <plex-label *ngIf="!bloque.descripcion" titulo="Descripción: -"></plex-label>
-                    <plex-label *ngIf="bloque.descripcion" titulo="Descripción: {{bloque.descripcion}}">
-                    </plex-label>
-                    <plex-grid *ngIf="opciones.profesional && !opciones.tipoPrestacion"
-                               class="turnos_disponibles border border-white" responsive type="full" cols="4">
+            <div *ngIf="showSobreturno">
+                <dar-sobreturno (agregarSobreturno)="agregarSobreturno()" (volverAlGestor)="volver()"
+                                [idAgenda]="agenda.id" [idPaciente]="paciente.id"></dar-sobreturno>
+            </div>
+            <div *ngIf="!showSobreturno">
+                <!-- Tiene turnos disponibles -->
+                <ng-container
+                              *ngIf="estadoT === 'seleccionada' && (opciones.profesional && opciones.tipoPrestacion || opciones.tipoPrestacion)">
+                    <!--Lista de turnos, bloque por bloque-->
+                    <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
+                    <plex-grid class="turnos_disponibles" responsive type="full" cols="4"
+                               *ngFor="let bloque of bloques">
                         <plex-label align="center" size="md" titulo="Del día"
                                     subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
                         </plex-label>
@@ -217,92 +188,135 @@
                                     subtitulo="{{countBloques[findIndex(bloque)]?.profesional}}">
                         </plex-label>
                     </plex-grid>
-                    <plex-grid *ngIf="tieneTurnos(bloque)" type="full" size="sm">
-                        <plex-card type="dark" mode="filled" size="xs" *ngFor="let turno of bloque.turnos; let i=index"
-                                   selectable="true" [selected]="isActive(turno)" (click)="seleccionarTurno(bloque,i)"
-                                   [ngClass]="{'disabled' : turno.estado !== 'disponible'}">
-                            <plex-label *ngIf="turno.estado === 'disponible'" size="md" direction="column"
-                                        titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
-                            </plex-label>
-                            <plex-label *ngIf="turno.estado !== 'disponible'" size="md" direction="column"
-                                        titulo="{{turno.horaInicio | date: 'HH:mm'}}hs"
-                                        aria-label="turno no disponible">
-                            </plex-label>
-                        </plex-card>
-                    </plex-grid>
-                </div>
-            </ng-container>
+                </ng-container>
 
-            <!--Si no hay turnos disponibles, se muestran alternativas-->
-            <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length<=0 && !reqfiltros">No existen alternativas</h6>
-            <h6 *ngIf="estadoT == 'noTurnos' && reqfiltros">Debe ingresar algún filtro para buscar alternativa</h6>
-            <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length > 0">No hay turnos en esta agenda,
-                <strong>seleccione una agenda alternativa</strong>
-            </h6>
 
-            <plex-list *ngIf="estadoT == 'noTurnos' && alternativas.length > 0" [selectable]="true">
-                <plex-item *ngFor="let alternativa of alternativas; let i=index" (click)="seleccionarAlternativa(i)">
-                    <plex-label titulo="Fecha" subtitulo="{{alternativa.horaInicio | fecha}}" size="md">
-                    </plex-label>
-                    <plex-label titulo="Tipo de Prestación"
-                                subtitulo="{{alternativa.tipoPrestaciones | enumerar:['nombre']}}" size="md">
-                    </plex-label>
-                    <plex-label *ngIf="alternativa.profesionales.length" titulo="Equipo de Salud"
-                                subtitulo="{{alternativa.profesionales | enumerar:['apellido','nombre']}}" size="md">
-                    </plex-label>
-                    <plex-label *ngIf="alternativa.profesionales.length === 0" titulo="Equipo de Salud"
-                                subtitulo="Equipo de Salud no asignado" size="md">
-                    </plex-label>
-                </plex-item>
-            </plex-list>
 
-            <!--Agenda Dinámica -->
-            <plex-list *ngIf="estadoT == 'dinamica'" size="md" [selectable]="false">
-                <plex-item>
-                    <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()" size="sm"></plex-button>
-                    <plex-badge *ngIf="agenda.cupo > 1" type="info">{{agenda.cupo}} cupos disponibles
-                    </plex-badge>
-                    <plex-badge *ngIf="agenda.cupo === 1" type="info">{{agenda.cupo}} cupo disponible
-                    </plex-badge>
-                    <plex-badge *ngIf="agenda.cupo === -1" type="info">Agenda con cupos no limitados
-                    </plex-badge>
-                </plex-item>
-            </plex-list>
-
-            <!--Información Adicional -->
-            <ng-container *ngIf="estadoT === 'seleccionada' || estadoT == 'dinamica'">
-                <plex-title titulo="Información Adicional" size="sm">
+                <!-- Dependiendo el estado, se visualiza el plex-title aducuado -->
+                <plex-title titulo="{{estadoT==='dinamica'?'Agenda dinámica':estadoT==='noTurnos'?'Agendas alternativas':'Selección horario'}}"
+                            size="sm">
+                    <plex-bool *ngIf="estadoT !== 'noTurnos' && permitirTurnoDoble" class="mr-2 text-secondary"
+                               label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble">
+                    </plex-bool>
+                    <plex-bool *ngIf="agenda.nominalizada && estadoT !== 'noTurnos'" label="Turno telefónico"
+                               [(ngModel)]='turnoTelefonico' name="turnoTelefonico">
+                    </plex-bool>
                 </plex-title>
 
-                <plex-grid type="auto" size="md" cols="{{desplegarOS && obraSocialPaciente?3:1}}">
-                    <plex-select *ngIf="desplegarOS" span="2" label="Obra Social" [(ngModel)]="obraSocialPaciente"
-                                 name="obraSocialPaciente" (getData)="loadObrasSociales($event)"
-                                 labelField="financiador">
-                    </plex-select>
-                    <plex-text *ngIf="desplegarOS && obraSocialPaciente" label="Número de Afiliado"
-                               name="obraSocialPaciente.numeroAfiliado" [(ngModel)]="obraSocialPaciente.numeroAfiliado">
-                    </plex-text>
-                </plex-grid>
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [(ngModel)]="motivoConsulta">
-                </plex-text>
-                <plex-grid type="auto" size="md" cols="2">
-                    <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono($event)"
-                                name="telefono">
-                    </plex-phone>
-                    <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
-                               [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
-                </plex-grid>
-                <plex-select *ngIf="bloque && (!turno.tipoPrestacion || (dinamica && bloque.tipoPrestaciones.length > 1))"
-                             label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion"
-                             [data]="bloque.tipoPrestaciones" name="turnoTipoPrestacion"></plex-select>
-                <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
-                </plex-text>
-                <plex-text *ngIf="agenda.link" label="Link" name="link" [(ngModel)]="link"></plex-text>
-            </ng-container>
-            <plex-button *ngIf="estadoT === 'seleccionada'" class="mt-1" justify="end" label="Confirmar" type="success"
-                         (click)="darTurno()" [disabled]="!bloque">
-            </plex-button>
+                <!-- Agenda con turnos disponibles -->
+                <ng-container *ngIf="estadoT === 'seleccionada'">
+                    <!--Lista de turnos, bloque por bloque-->
+                    <div class="listado-turnos mb-4" *ngFor="let bloque of bloques">
+                        <plex-label *ngIf="!bloque.descripcion" titulo="Descripción: -"></plex-label>
+                        <plex-label *ngIf="bloque.descripcion" titulo="Descripción: {{bloque.descripcion}}">
+                        </plex-label>
+                        <plex-grid *ngIf="opciones.profesional && !opciones.tipoPrestacion"
+                                   class="turnos_disponibles border border-white" responsive type="full" cols="4">
+                            <plex-label align="center" size="md" titulo="Del día"
+                                        subtitulo="{{countBloques[findIndex(bloque)]?.delDia}}">
+                            </plex-label>
+                            <plex-label align="center" size="md" titulo="Programados"
+                                        subtitulo="{{countBloques[findIndex(bloque)]?.programado}}">
+                            </plex-label>
+                            <plex-label align="center" size="md" titulo="Con llave"
+                                        subtitulo="{{countBloques[findIndex(bloque)]?.gestion}}">
+                            </plex-label>
+                            <plex-label align="center" size="md" titulo="Profesional"
+                                        subtitulo="{{countBloques[findIndex(bloque)]?.profesional}}">
+                            </plex-label>
+                        </plex-grid>
+                        <plex-grid *ngIf="tieneTurnos(bloque)" type="full" size="sm">
+                            <plex-card type="dark" mode="filled" size="xs"
+                                       *ngFor="let turno of bloque.turnos; let i=index" selectable="true"
+                                       [selected]="isActive(turno)" (click)="seleccionarTurno(bloque,i)"
+                                       [ngClass]="{'disabled' : turno.estado !== 'disponible'}">
+                                <plex-label *ngIf="turno.estado === 'disponible'" size="md" direction="column"
+                                            titulo="{{turno.horaInicio | date: 'HH:mm'}}hs">
+                                </plex-label>
+                                <plex-label *ngIf="turno.estado !== 'disponible'" size="md" direction="column"
+                                            titulo="{{turno.horaInicio | date: 'HH:mm'}}hs"
+                                            aria-label="turno no disponible">
+                                </plex-label>
+                            </plex-card>
+                        </plex-grid>
+                    </div>
+                </ng-container>
 
+                <!--Si no hay turnos disponibles, se muestran alternativas-->
+                <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length<=0 && !reqfiltros">No existen alternativas</h6>
+                <h6 *ngIf="estadoT == 'noTurnos' && reqfiltros">Debe ingresar algún filtro para buscar alternativa</h6>
+                <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length > 0">No hay turnos en esta agenda,
+                    <strong>seleccione una agenda alternativa</strong>
+                </h6>
+
+                <plex-list *ngIf="estadoT == 'noTurnos' && alternativas.length > 0" [selectable]="true">
+                    <plex-item *ngFor="let alternativa of alternativas; let i=index"
+                               (click)="seleccionarAlternativa(i)">
+                        <plex-label titulo="Fecha" subtitulo="{{alternativa.horaInicio | fecha}}" size="md">
+                        </plex-label>
+                        <plex-label titulo="Tipo de Prestación"
+                                    subtitulo="{{alternativa.tipoPrestaciones | enumerar:['nombre']}}" size="md">
+                        </plex-label>
+                        <plex-label *ngIf="alternativa.profesionales.length" titulo="Equipo de Salud"
+                                    subtitulo="{{alternativa.profesionales | enumerar:['apellido','nombre']}}"
+                                    size="md">
+                        </plex-label>
+                        <plex-label *ngIf="alternativa.profesionales.length === 0" titulo="Equipo de Salud"
+                                    subtitulo="Equipo de Salud no asignado" size="md">
+                        </plex-label>
+                    </plex-item>
+                </plex-list>
+
+                <!--Agenda Dinámica -->
+                <plex-list *ngIf="estadoT == 'dinamica'" size="md" [selectable]="false">
+                    <plex-item>
+                        <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()" size="sm"></plex-button>
+                        <plex-badge *ngIf="agenda.cupo > 1" type="info">{{agenda.cupo}} cupos disponibles
+                        </plex-badge>
+                        <plex-badge *ngIf="agenda.cupo === 1" type="info">{{agenda.cupo}} cupo disponible
+                        </plex-badge>
+                        <plex-badge *ngIf="agenda.cupo === -1" type="info">Agenda con cupos no limitados
+                        </plex-badge>
+                    </plex-item>
+                </plex-list>
+
+                <!--Información Adicional -->
+                <ng-container *ngIf="estadoT === 'seleccionada' || estadoT == 'dinamica'">
+                    <plex-title titulo="Información Adicional" size="sm">
+                    </plex-title>
+
+                    <plex-grid type="auto" size="md" cols="{{desplegarOS && obraSocialPaciente?3:1}}">
+                        <plex-select *ngIf="desplegarOS" span="2" label="Obra Social" [(ngModel)]="obraSocialPaciente"
+                                     name="obraSocialPaciente" (getData)="loadObrasSociales($event)"
+                                     labelField="financiador">
+                        </plex-select>
+                        <plex-text *ngIf="desplegarOS && obraSocialPaciente" label="Número de Afiliado"
+                                   name="obraSocialPaciente.numeroAfiliado"
+                                   [(ngModel)]="obraSocialPaciente.numeroAfiliado">
+                        </plex-text>
+                    </plex-grid>
+                    <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta"
+                               [(ngModel)]="motivoConsulta">
+                    </plex-text>
+                    <plex-grid type="auto" size="md" cols="2">
+                        <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono($event)"
+                                    name="telefono">
+                        </plex-phone>
+                        <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
+                                   name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                    </plex-grid>
+                    <plex-select *ngIf="bloque && (!turno.tipoPrestacion || (dinamica && bloque.tipoPrestaciones.length > 1))"
+                                 label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion"
+                                 [data]="bloque.tipoPrestaciones" name="turnoTipoPrestacion"></plex-select>
+                    <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
+                    </plex-text>
+                    <plex-text *ngIf="agenda.link" label="Link" name="link" [(ngModel)]="link"></plex-text>
+                </ng-container>
+                <plex-button *ngIf="estadoT === 'seleccionada'" class="mt-1" justify="end" label="Confirmar"
+                             type="success" (click)="darTurno()" [disabled]="!bloque">
+                </plex-button>
+            </div>
         </ng-container>
+
     </plex-layout-sidebar>
 </plex-layout>
