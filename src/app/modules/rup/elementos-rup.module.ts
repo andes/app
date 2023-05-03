@@ -73,7 +73,7 @@ import { ElementoRUPByIdPipes } from './pipes/elemento-rup-id.pipes';
 import { SemanticClassPipe } from './pipes/semantic-class.pipes';
 import { SemanticIconPipe } from './pipes/semantic-icon.pipes';
 import { RUPSoloValorPipe } from './pipes/elemento-rup-valor.pipes';
-
+import { DirectiveLibModule } from '../../directives/directives.module';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -143,7 +143,8 @@ const RUPComponentsArray = [
         NgDragDropModule,
         MPILibModule,
         MitosModule,
-        FormBuilderModule
+        FormBuilderModule,
+        DirectiveLibModule,
     ],
     declarations: [
         ...RUPComponentsArray,

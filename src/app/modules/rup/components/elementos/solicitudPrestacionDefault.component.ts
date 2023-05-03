@@ -13,15 +13,12 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public reglaSelected = null;
     public formulario = null;
     public profesionales = '';
-    public profesional;
     public organizaciones: any[] = [];
-    afterInit = false;
 
     data = {};
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.afterInit = true;
         }, 300);
     }
 
@@ -90,22 +87,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     isEmpty() {
         const value = this.registro.valor.solicitudPrestacion;
         return !value.motivo && !value.indicaciones && !value.organizacionDestino && !value.profesionalesDestino;
-    }
-
-    loadProfesionales(event) {
-        if (this.registro.valor.solicitudPrestacion.profesionalesDestino) {
-            event.callback(this.registro.valor.solicitudPrestacion.profesionalesDestino);
-        }
-        if (event.query && event.query !== '' && event.query.length > 2) {
-            const query = {
-                nombreCompleto: event.query
-            };
-            this.serviceProfesional.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            event.callback([]);
-        }
     }
 
     verificarAutocitacion() {

@@ -2,7 +2,7 @@
     <plex-text label="Diagnóstico/Motivo" multiline="true" [autoFocus]="true"
                [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
     <plex-text label="Indicaciones" height=100 [html]="true"
-               [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones" *ngIf="afterInit">
+               [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones">
     </plex-text>
 
     <plex-select *ngIf="organizaciones.length || registro.valor.solicitudPrestacion.organizacionDestino"
@@ -11,9 +11,9 @@
                  labelField="nombre" [required]="true" (change)="onOrganizacionChange()">
     </plex-select>
 
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino"
-                 (getData)="loadProfesionales($event)" placeholder="Profesionales" (change)="verificarAutocitacion()"
-                 labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
+    <plex-select [(ngModel)]="this.registro.valor.solicitudPrestacion.profesionalesDestino" tmProfesionales
+                 placeholder="Profesionales" (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre"
+                 [multiple]="true" label="Profesional(es) destino">
     </plex-select>
 
     <plex-bool [(ngModel)]="registro.valor.solicitudPrestacion.informe" name="informe" label="Requiere informe"
@@ -34,7 +34,7 @@
         </plex-label>
         <div>
             <label>Indicaciones</label>
-            <span [innerHTML]="registro.valor.solicitudPrestacion.indicaciones"></span>
+            <span [innerHTML]="registro.valor.solicitudPrestacion.indicaciones || 'Sin indicación'"></span>
         </div>
         <plex-label *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino?.id"
                     titulo="Organización a la cual se solicita"
