@@ -138,6 +138,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
             valor: this.registro.valor,
             elementoRUP: this.elementoRUP.id,
             seccion: this.seccion.concepto,
+            requiereFrecuencia: this.seccion.requiereFrecuencia,
             estados: [{
                 tipo: 'draft',
                 fecha: new Date()
@@ -154,6 +155,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
             this.indicacion.valor = indicacion.valor;
             this.indicacion.elementoRup = indicacion.elementoRUP;
             this.indicacion.seccion = indicacion.seccion;
+            this.indicacion.requiereFrecuencia = indicacion.requiereFrecuencia;
             this.indicacion.estados = indicacion.estados;
             this.edit.emit(this.indicacion);
         } else {
