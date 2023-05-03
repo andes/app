@@ -1,3 +1,17 @@
+# [5.117.0](https://github.com/andes/app/compare/v5.116.0...v5.117.0) (2023-05-03)
+
+
+### Bug Fixes
+
+* **IN-519:** Solapamiento de funcionalidades en el sidebar ([#2835](https://github.com/andes/app/issues/2835)) ([b8362d0](https://github.com/andes/app/commit/b8362d0d25a7e55142c39cdf32a6ba3a6ce6ee3c))
+* **IN-526:** Fijar botones al cargar una indicación ([#2850](https://github.com/andes/app/issues/2850)) ([48a7ceb](https://github.com/andes/app/commit/48a7ceb72fdc353110a0d977011e648497aaf45b))
+
+
+### Features
+
+* **CIT:** implementa mockup en sobreturno ([#2826](https://github.com/andes/app/issues/2826)) ([7ca0702](https://github.com/andes/app/commit/7ca070237d5c6761c8710c5538901d9b23ed433f))
+* **RUP:** no mostrar la prestacion que se utiliza ([#2721](https://github.com/andes/app/issues/2721)) ([bc0b9a2](https://github.com/andes/app/commit/bc0b9a2ae5e0a9881e2091d42cf9a4f325be0258))
+
 # [5.116.0](https://github.com/andes/app/compare/v5.115.1...v5.116.0) (2023-04-12)
 
 
