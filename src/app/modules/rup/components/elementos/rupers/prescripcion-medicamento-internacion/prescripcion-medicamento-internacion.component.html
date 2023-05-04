@@ -11,7 +11,7 @@
     <!-- PRINCIPIO ACTIVO -->
     <ng-container *ngFor="let sustancia of registro.valor.sustancias">
         <plex-grid cols="2" class="mr-3">
-            <plex-select [(ngModel)]="sustancia.ingrediente" name="ingrediente" [snomedExpression]="'<<312415009'"
+            <plex-select [(ngModel)]="sustancia.ingrediente" name="ingrediente" [snomedExpression]="'<410942007'"
                          (change)="valuesChange()" label="Principio activo" [preload]="false" required span="2">
             </plex-select>
 
@@ -39,8 +39,8 @@
 
     <!-- FRECUENCIA -->
     <plex-title size="sm" titulo="Frecuencia">
-        <plex-button *ngIf="!registro.valor.unicaVez" size="sm" icon="plus" type="info" (click)="addFrecuencia()" tooltip="Agregar nuevo item"
-                     tooltipPosition="left">
+        <plex-button *ngIf="!registro.valor.unicaVez" size="sm" icon="plus" type="info" (click)="addFrecuencia()"
+                     tooltip="Agregar nuevo item" tooltipPosition="left">
         </plex-button>
         <plex-button size="sm" icon="delete" type="danger" (click)="deleteFrecuencia()" tooltip="Eliminar último item"
                      tooltipPosition="left" [disabled]="registro.valor.frecuencias.length === 1" class="ml-1">
