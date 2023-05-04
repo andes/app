@@ -13,13 +13,14 @@
         </div>
         <div class="row" *ngIf="modelo.obraSocial !== 'SUMAR'">
             <div class="col-12">
-                <plex-radio *ngIf="this.modelo.obraSocial" [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
-                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                <plex-radio *ngIf="this.modelo.obraSocial" [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial"
+                            name="os" (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
                 </plex-radio>
             </div>
             <div class="col-12">
                 <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas"
-                (change)="seleccionarPrepaga($event)" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
+                             (change)="seleccionarPrepaga($event)" label="Seleccione una Prepaga" idField="nombre"
+                             labelField="nombre">
                 </plex-select>
             </div>
         </div>
@@ -43,7 +44,7 @@
                                name="horaTurno" label="Hora Turno">
                 </plex-datetime>
             </div>
-            <div *ngIf="agenda.link" class="col">
+            <div *ngIf="agenda?.link" class="col">
                 <plex-text placeholder="Ingrese link turno virtual" [(ngModel)]="turno_link" [required]="true"
                            name="turno_link" label="Link">
                 </plex-text>
