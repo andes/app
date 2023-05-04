@@ -155,7 +155,7 @@
                     <plex-button class="ml-1" size="sm" *ngIf="botones.sobreturno"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
                                  icon="account-plus" type="info" ariaLabel="Agregar Sobreturno" tooltip="Sobreturno"
-                                 tooltipPosition="top" (click)="agregarSobreturno(agenda)">
+                                 tooltipPosition="top" (click)="agregarSobreturno($event)">
                     </plex-button>
                     <plex-button class="ml-1" size="sm" *ngIf="botones.reasignar"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
@@ -178,7 +178,49 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <ng-container *ngIf="!enableQueries">
+        <info-agenda [agenda]="agenda" (volver)="volverAlGestor($event)">
+        </info-agenda>
+
+        <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
+        <div *ngIf="showTurnos && agenda.nominalizada">
+            <plex-list *ngIf="!agenda.dinamica" [selectable]="false">
+                <plex-item>
+                    <plex-icon name="calendario-fecha-abajo" size="lg" type="warning"></plex-icon>
+                    <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{estadosAgenda[agenda.estado]?.nombre }}
+                    </plex-badge>
+                    <plex-label size="sm" case="capitalize"
+                                titulo="{{ agenda.horaInicio | date: 'EEEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}"
+                                subtitulo="{{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs">
+                    </plex-label>
+                    <plex-label size="sm" case="capitalize" titulo="Prestación"
+                                subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
+                    </plex-label>
+                    <plex-label *ngIf="agenda.profesionales?.length" size="sm" case="capitalize"
+                                titulo="Equipo de Salud"
+                                subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                    </plex-label>
+                    <plex-label *ngIf="agenda.profesionales?.length === 0" size="sm" case="capitalize"
+                                titulo="Equipo de Salud" subtitulo="Equipo de Salud no asignado">
+                    </plex-label>
+                </plex-item>
+            </plex-list>
+        </div>
+        <ng-container *ngIf="showSobreturno">
+            <plex-title titulo="Agregar Sobreturno">
+            </plex-title>
+            <paciente-busqueda (searchEnd)="onSearchEnd($event.pacientes,$event.scan)" (selected)="onSelect($event)"
+                               [offset]="110">
+            </paciente-busqueda>
+        </ng-container>
+        <div *ngIf="showElegirSobreTurno ">
+            <dar-sobreturno (volver)="volverAlGestor($event)" [idAgenda]="agendasSeleccionadas[0]?.id"
+                            [idPaciente]="paciente.id">
+            </dar-sobreturno>
+            <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                ¡No se encontró ningún paciente!
+            </div>
+        </div>
+        <ng-container *ngIf="!enableQueries && !showSobreturno && !showElegirSobreTurno">
             <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
                 <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
                         (recargarAgendas)="loadAgendas($event)" (cerrarSidebar)="cerrarSidebarAgendas()"></turnos>
