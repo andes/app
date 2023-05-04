@@ -12,15 +12,13 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     public reglasMatch = [];
     public reglaSelected = null;
     public formulario = null;
-
+    public profesionales = '';
     public organizaciones: any[] = [];
-    afterInit = false;
 
     data = {};
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.afterInit = true;
         }, 300);
     }
 
@@ -59,6 +57,11 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 }
             });
         }
+        this.registro?.valor?.solicitudPrestacion?.profesionalesDestino?.forEach(p => {
+            this.profesionales = this.profesionales.concat(p.nombreCompleto + ' - ');
+        });
+        this.profesionales = this.profesionales.slice(0, -3);
+
     }
 
     onOrganizacionChange() {
@@ -84,18 +87,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
     isEmpty() {
         const value = this.registro.valor.solicitudPrestacion;
         return !value.motivo && !value.indicaciones && !value.organizacionDestino && !value.profesionalesDestino;
-    }
-
-    loadProfesionales(event) {
-        if (event && event.query) {
-            const query = {
-                nombreCompleto: event.query
-            };
-            this.serviceProfesional.get(query).subscribe(event.callback);
-        } else {
-            const callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
-            event.callback(callback);
-        }
     }
 
     verificarAutocitacion() {

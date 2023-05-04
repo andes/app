@@ -303,7 +303,6 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onIndicacionesCellClick(indicacion, hora) {
-        this.nuevaIndicacion = false;
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
         if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft' && indicacion.estado.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
             this.onIndicaciones(indicacion, hora);
@@ -354,7 +353,9 @@ export class PlanIndicacionesComponent implements OnInit {
             this.planIndicacionesServices.create(indicacion).subscribe(() => {
                 this.actualizar();
                 this.nuevaIndicacion = false;
-
+                this.plex.toast('success', 'Indicación creada con éxito');
+            }, () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al crear la indicación');
             });
         }
     }
@@ -453,6 +454,9 @@ export class PlanIndicacionesComponent implements OnInit {
             this.planIndicacionesServices.update(indicacion._id, indicacion).subscribe(s => {
                 this.actualizar();
                 this.nuevaIndicacion = false;
+                this.plex.toast('success', 'Indicación editada con éxito');
+            }, () => {
+                this.plex.toast('danger', 'Ha ocurrido un error al editar la indicación');
             });
         }
     }
