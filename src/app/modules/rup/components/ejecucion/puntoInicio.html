@@ -423,34 +423,27 @@
 
                                     </td>
                                     <td>
-                                        <span *ngIf="sobreturno.paciente?.id">{{ sobreturno.paciente | nombre }}
-                                        </span>
-
-                                        <small>
-                                            <span *ngIf="sobreturno.paciente?.id">
+                                        <ng-container *ngIf="sobreturno.paciente?.id">
+                                            <span>{{ sobreturno.paciente | nombre }}</span>
+                                            <small>
                                                 <br>
-                                                <span *ngIf="sobreturno.paciente.documento !== ''"> DNI
-                                                    {{sobreturno.paciente.documento}}</span>
-                                                <span *ngIf="sobreturno.paciente.documento === ''"> Sin
-                                                    documento
-                                                    (temporal)
+                                                <span> {{ sobreturno.paciente | documento }}</span>
+                                                <span *ngIf="sobreturno?.paciente?.carpetaEfectores?.length">
+                                                    | Nro Carpeta
+                                                    <span
+                                                          *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
+                                                        {{carpeta.nroCarpeta}}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                            <span
-                                                  *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores?.length">
-                                                | Nro Carpeta
-                                                <span
-                                                      *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                                                    {{carpeta.nroCarpeta}}
+                                            </small>
+                                            <ng-container *ngIf="sobreturno.tipoPrestacion">
+                                                <br>
+                                                <span class="text-muted">
+                                                    <small> {{sobreturno.tipoPrestacion.nombre}} </small>
                                                 </span>
-                                            </span>
-                                        </small>
-                                        <br *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion">
+                                            </ng-container>
+                                        </ng-container>
 
-                                        <span class="text-muted"
-                                              *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion">
-                                            <small> {{sobreturno.tipoPrestacion.nombre}} </small>
-                                        </span>
                                         <ng-container class="text-muted"
                                                       *ngIf="sobreturno?.prestaciones[0]?.solicitud?.profesional">
                                             <br>

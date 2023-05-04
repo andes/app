@@ -85,4 +85,12 @@ export interface IPacienteBasico {
     genero: string;
     fechaNacimiento: Date;
     obraSocial?: IObraSocial;
+    telefono?: string;
+    carpetaEfectores?: [{
+        organizacion: {
+            id: string;
+            nombre: string;
+        };
+        nroCarpeta: string;
+    }];
 }

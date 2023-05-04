@@ -47,8 +47,8 @@ export class InternacionListadoComponent implements OnInit {
             sorteable: true,
             opcional: false,
             sort: (a, b) => {
-                const aDocumento = a.paciente.numeroIdentificacion || a.paciente.documento;
-                const bDocumento = b.paciente.numeroIdentificacion || b.paciente.documento;
+                const aDocumento = a.paciente.documento || a.paciente.numeroIdentificacion;
+                const bDocumento = b.paciente.documento || b.paciente.numeroIdentificacion;
                 return aDocumento.localeCompare(bDocumento);
             }
         },

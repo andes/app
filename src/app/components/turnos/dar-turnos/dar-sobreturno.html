@@ -77,9 +77,8 @@
                     'dd/MM/yyyy'}}" subtitulo="{{sobreturno?.horaInicio | date: 'HH:mm'}} hs"
                             icon="calendario-fecha-abajo">
                 </plex-label>
-                <plex-label size="sm" grow="full" case="capitalize"
-                            titulo="{{paciente?.apellido}}, {{paciente?.nombre}}" subtitulo="{{ paciente?.documento |
-                                number}}" icon="account">
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ paciente | nombre }}"
+                            subtitulo="{{ paciente | documento }}" icon="account">
                 </plex-label>
                 <plex-label size="sm" grow="full" case="capitalize" titulo="{{ sobreturno?.tipoPrestacion.nombre }}"
                             subtitulo="Prestación" icon="mano-corazon">

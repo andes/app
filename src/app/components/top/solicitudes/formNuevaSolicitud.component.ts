@@ -305,7 +305,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
             alias: this.paciente.alias,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento,
-            numeroIdentificacion: this.paciente.numeroIdentifiacion,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
             sexo: this.paciente.sexo,
             genero: this.paciente.genero,
             fechaNacimiento: this.paciente.fechaNacimiento

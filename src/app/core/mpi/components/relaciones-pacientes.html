@@ -27,12 +27,7 @@
              [ngClass]="{'img-fallecido' : unaRel.fechaFallecimiento}"
              [mpiFotoPaciente]="{id: unaRel.id, fotoId: unaRel.fotoId}" alt="">
 
-        <plex-label *ngIf="!unaRel.numeroIdentificacion" titulo="{{ unaRel | nombre }}"
-                    subtitulo="{{ (unaRel.documento | number) || 'Sin DNI' }}">
-        </plex-label>
-
-        <plex-label *ngIf="unaRel.numeroIdentificacion" titulo="{{ unaRel | nombre }}"
-                    subtitulo="{{ unaRel.numeroIdentificacion }}">
+        <plex-label titulo="{{ unaRel | nombre }}" subtitulo="{{ unaRel | documento }}">
         </plex-label>
 
         <plex-label *ngIf="unaRel.fechaNacimiento" titulo="{{ unaRel | edad }}"
@@ -56,11 +51,11 @@
         <plex-badge type="danger" *ngIf="unaRel.fechaFallecimiento"> Fallecido
         </plex-badge>
 
-        <plex-button label="" type="success" size="sm" icon="plus" [disabled]="!unaRel.relacion"
+        <plex-button label="" type="success" size="sm" icon="plus" tooltip="Agregar" [disabled]="!unaRel.relacion"
                      (click)="addRelacion(unaRel)">
         </plex-button>
 
-        <plex-button type="danger" size="sm" icon="close" (click)="relacionEntrante=[]">
+        <plex-button type="danger" size="sm" icon="close" tooltip="Borrar" (click)="relacionEntrante=[]">
         </plex-button>
     </plex-item>
 </plex-list>

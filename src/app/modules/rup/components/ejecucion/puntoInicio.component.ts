@@ -8,7 +8,6 @@ import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { WebSocketService } from '../../../../services/websocket.service';

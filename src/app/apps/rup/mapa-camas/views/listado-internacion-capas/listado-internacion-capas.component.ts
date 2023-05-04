@@ -40,8 +40,8 @@ export class ListadoInternacionCapasComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const aDocumento = a.paciente.numeroIdentificacion || a.paciente.documento;
-                const bDocumento = b.paciente.numeroIdentificacion || b.paciente.documento;
+                const aDocumento = a.paciente.documento || a.paciente.numeroIdentificacion;
+                const bDocumento = b.paciente.documento || b.paciente.numeroIdentificacion;
                 return aDocumento.localeCompare(bDocumento);
             }
         },

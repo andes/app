@@ -2,14 +2,13 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../services/obraSocial.service';
-import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'dar-sobreturno',
@@ -44,8 +43,8 @@ export class DarSobreturnoComponent implements OnChanges {
     @ViewChild('modalSobreturno', { static: true }) modal: PlexModalComponent;
     @Output() agregarSobreturno = new EventEmitter();
     @Output() volverAlGestor = new EventEmitter();
-    @Input() idAgenda: any;
-    @Input() idPaciente: any;
+    @Input() idAgenda: string;
+    @Input() idPaciente: string;
 
     constructor(
         private plex: Plex,
@@ -196,9 +195,12 @@ export class DarSobreturnoComponent implements OnChanges {
                 }
             }
 
-            const pacienteSave = {
+            const pacienteSave: IPacienteBasico = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
+                alias: this.paciente.alias,
+                numeroIdentificacion: this.paciente.numeroIdentificacion,
+                genero: this.paciente.genero,
                 apellido: this.paciente.apellido,
                 nombre: this.paciente.nombre,
                 fechaNacimiento: this.paciente.fechaNacimiento,
