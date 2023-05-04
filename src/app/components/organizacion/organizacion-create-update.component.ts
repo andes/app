@@ -418,16 +418,14 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                         this.organizacionModel.direccion.codigoPostal = res.domicilio.codigoPostal;
                     }
                 }
-                if (res.coordenadasDeMapa) {
+                const resCoord = res.coordenadasDeMapa;
+                const geoReferenciaValida = resCoord?.latitud && resCoord.latitud !== 'null' && resCoord.longitud && resCoord.longitud !== 'null';
+                if (geoReferenciaValida) {
                     if (!this.organizacionModel.direccion.geoReferencia) {
                         this.organizacionModel.direccion.geoReferencia = new Array<number>(2);
                     }
-                    if (res.coordenadasDeMapa.latitud) {
-                        this.organizacionModel.direccion.geoReferencia[0] = Number(res.coordenadasDeMapa.latitud);
-                    }
-                    if (res.coordenadasDeMapa.longitud) {
-                        this.organizacionModel.direccion.geoReferencia[1] = Number(res.coordenadasDeMapa.longitud);
-                    }
+                    this.organizacionModel.direccion.geoReferencia[0] = Number(resCoord.latitud);
+                    this.organizacionModel.direccion.geoReferencia[1] = Number(resCoord.longitud);
                 }
                 if (res.ofertaPrestacional) {
                     this.organizacionModel.ofertaPrestacional = res.ofertaPrestacional;
