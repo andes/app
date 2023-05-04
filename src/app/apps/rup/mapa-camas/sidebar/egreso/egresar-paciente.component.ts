@@ -354,7 +354,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(), this.prestacion.id).pipe(
                 switchMap(snapshot => {
                     const ultimaCama = snapshot[0];
-                    return this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null);
+                    return this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, this.prestacion.id);
                 })
             ).subscribe(() => {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
