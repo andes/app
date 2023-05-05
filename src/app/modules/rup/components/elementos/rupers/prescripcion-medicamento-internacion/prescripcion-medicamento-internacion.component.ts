@@ -26,6 +26,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     afterInit = false;
     showModal = false;
     backUpFrecuencias = [];
+    fechaMin;
+    fechaMax;
 
     ngAfterViewInit() {
         setTimeout(() => {
@@ -34,6 +36,8 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
     }
 
     ngOnInit() {
+        this.fechaMin = moment().startOf('day').toDate();
+        this.fechaMax = moment().endOf('day').toDate();
         this.frecuencias$ = this.constantesService.search({ source: 'plan-indicaciones:frecuencia' });
         if (!this.registro.valor) {
             this.registro.valor = {

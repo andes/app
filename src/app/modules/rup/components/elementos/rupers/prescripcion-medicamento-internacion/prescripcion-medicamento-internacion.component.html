@@ -56,8 +56,8 @@
         <plex-text label="Velocidad Infusión" [(ngModel)]="frecuencia.velocidad" name="velocidad"></plex-text>
 
         <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
-                       [required]="frecuencia.frecuencia?.type === 'number' || registro.valor.unicaVez"
-                       (change)="valuesChange()"
+                       [required]="frecuencia.frecuencia?.type === 'number' || registro.valor.unicaVez" [min]="fechaMin"
+                       [max]="fechaMax" (change)="valuesChange()"
                        [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
         </plex-datetime>
 

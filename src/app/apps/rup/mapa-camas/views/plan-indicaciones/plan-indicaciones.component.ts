@@ -179,11 +179,11 @@ export class PlanIndicacionesComponent implements OnInit {
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
             if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
-                this.indicaciones = datos.filter(i => i.estado.tipo === 'active' && this.isToday(i.estado.fecha));
+                this.indicaciones = datos.filter(i => i.estado.tipo === 'active');
             } else {
                 this.indicaciones = datos.filter(i => {
                     // se descartan borradores de dias anteriores
-                    return i.estado.tipo !== 'draft' || this.isToday(i.estado.fecha);
+                    return i.estado.tipo !== 'draft' || moment(i.estado.fecha).isSame(moment(this.fecha), 'day');
                 });
             }
             this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
@@ -243,8 +243,8 @@ export class PlanIndicacionesComponent implements OnInit {
         this.indicacionEventoSelected = null;
     }
 
-    isToday(fecha: Date) {
-        return moment(fecha || this.fecha).isSame(new Date(), 'day');
+    isToday(fecha: Date = this.fecha) {
+        return moment(fecha).isSame(moment(), 'day');
     }
 
     onDateChange() {

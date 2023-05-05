@@ -16,7 +16,7 @@
                         <td style="min-width: 500px;">
                             <section *ngIf="capa !== 'interconsultores'" class="item-indicacion">
                                 <div class="item__container"></div>
-                                <div class="item__botonera">
+                                <div class="item__botonera" *ngIf="isToday()">
                                     <ng-container *ngIf="permisosMapaCamasService.indicacionesEjecutar">
                                         <plex-button *ngIf="detener$ | async" type="danger" icon="stop" size="sm"
                                                      (click)="onDetenerClick()" tooltip="Suspender"
@@ -59,9 +59,9 @@
                                         <h6 class="item__title">{{ seccion.concepto.term }}</h6>
                                     </div>
                                     <div class="item__botonera">
-                                        <plex-button *ngIf="isToday && permisosMapaCamasService.indicacionesCrear"
-                                                     size="sm" type="info" icon="plus"
-                                                     (click)="onNuevaIndicacion(seccion)" tooltip="Agregar indicación">
+                                        <plex-button *ngIf="permisosMapaCamasService.indicacionesCrear" size="sm"
+                                                     type="info" icon="plus" (click)="onNuevaIndicacion(seccion)"
+                                                     tooltip="Agregar indicación">
                                         </plex-button>
                                         <plex-button type="info" size="sm"
                                                      [icon]="showSecciones[seccion.concepto.term] ? 'chevron-up' : 'chevron-down'"
@@ -173,7 +173,7 @@
                                                     </ng-container>
                                                 </ng-container>
 
-                                                <div *ngIf="permisosMapaCamasService.indicacionesEjecutar && !indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
+                                                <div *ngIf="isToday() && permisosMapaCamasService.indicacionesEjecutar && permisosMapaCamasService.indicacionesEjecutar && !indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
                                                      in-plan-indicacion-botonera [indicacion]="indicacion"
                                                      (refresh)="actualizar()"
                                                      (cancelIndicacion)="cancelIndicacion($event)">
