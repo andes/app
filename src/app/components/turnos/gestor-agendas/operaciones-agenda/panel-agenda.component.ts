@@ -104,7 +104,7 @@ export class PanelAgendaComponent implements OnInit {
 
                 this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                     this.agenda = resultado;
-                    this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
+                    this.plex.toast('success', 'La agenda se guardó correctamente', 'Información');
                     this.actualizarEstadoEmit.emit(true);
                 }, err => {
                     if (err) {
