@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
@@ -33,6 +34,7 @@ export class PlantillasRUPComponent implements OnInit {
     plantillas$: Observable<any> = this.subject.asObservable();
     mostrarDescendientes = false;
 
+    public puedeCargarEditarPlantilla = false;
     addItems = [
         {
             label: 'Plantilla',
@@ -55,10 +57,16 @@ export class PlantillasRUPComponent implements OnInit {
         private sp: PlantillasService,
         private snomedService: SnomedService,
         public servicioPrestacion: PrestacionesService,
+        private router: Router,
         private auth: Auth
     ) { }
 
     ngOnInit() {
+        this.puedeCargarEditarPlantilla = this.auth.check('rup:plantilla');
+        // Si no tiene permiso, lo redirige al inicio.
+        if (!this.puedeCargarEditarPlantilla) {
+            this.redirect('inicio');
+        }
         this.plex.updateTitle([{
             route: '/',
             name: 'ANDES'
@@ -70,6 +78,10 @@ export class PlantillasRUPComponent implements OnInit {
         }]);
     }
 
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
+    }
     addElementToObservableArray(item) {
         this.plantillas$.pipe(take(1)).subscribe(val => {
 
