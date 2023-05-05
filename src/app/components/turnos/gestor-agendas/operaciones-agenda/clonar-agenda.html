@@ -1,112 +1,82 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <div class="col-8 h-100">
-                <plex-box>
-                    <header>
-                        <plex-button class="mr-1" type="info" size="sm" icon="chevron-left" (click)="cambiarMes('-')">
-                        </plex-button>
-                        {{ fecha | date: "MMM yy" | uppercase}}
-                        <plex-button class="ml-1" type="info" size="sm" icon="chevron-right" (click)="cambiarMes('+')">
-                        </plex-button>
-                    </header>
-                    <table *ngIf="calendario">
-                        <tr *ngFor="let week of calendario">
-                            <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
-                                'weekend'             : day.weekend && !(day.estado == 'seleccionado'),
-                                'outline-primary'     : (day.estado == 'seleccionado') && (day.original == false),
-                                'outline-success'     : day.original == true,
-                                'outline-danger'     : day.estado == 'conflicto',
-                                'hover'               : day.estado !== 'vacio' && day.fecha.getTime() >= today.getTime()
-                            }">
-                                <div>{{ day.fecha | date:"d" }}</div>
-                                <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
-                            </td>
-                        </tr>
-                    </table>
-                </plex-box>
-            </div>
-            <div class="col-4 h-100">
-                <plex-box>
-                    <div class="row">
-                        <div class="col-12">
-                            <fieldset>
-                                <legend>
-                                    <div class="clearfix">
-                                        <span class="float-left">Agenda Original</span>
-                                    </div>
-                                </legend>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <!--<header>Agenda Original</header>-->
-                    <div class="row">
-                        <div class="col-12">
-                            <span>
-                                <b>Fecha:</b> {{agenda.horaInicio | fecha}} - {{agenda.horaInicio | date: 'HH:mm'}}
-                                - {{agenda.horaFin | date: 'HH:mm'}}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <b>Equipo de Salud: </b>
-                            <span *ngFor="let profesional of agenda.profesionales">{{profesional | nombre}} -
-                            </span>
-                            <br />
-                            <b>Tipos Prestaciones: </b>
-                            <span *ngFor="let prestacion of agenda.tipoPrestaciones">{{prestacion.nombre}} - </span>
-                            <br />
-                            <b>Espacio Físico: </b>
-                            <span>{{(agenda | espacioFisico) }}</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>Bloques</label>
+<plex-layout main="8">
+    <plex-layout-main>
+        <header>
+            <plex-button class="mr-1" type="info" size="sm" icon="chevron-left" (click)="cambiarMes('-')">
+            </plex-button>
+            {{ fecha | date: "MMM yy" | uppercase}}
+            <plex-button class="ml-1" type="info" size="sm" icon="chevron-right" (click)="cambiarMes('+')">
+            </plex-button>
+        </header>
+        <table *ngIf="calendario">
+            <tr *ngFor="let week of calendario">
+                <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
+                    'weekend'             : day.weekend && !(day.estado == 'seleccionado'),
+                    'outline-primary'     : (day.estado == 'seleccionado') && (day.original == false),
+                    'outline-success'     : day.original == true,
+                    'outline-danger'     : day.estado == 'conflicto',
+                    'hover'               : day.estado !== 'vacio' && day.fecha.getTime() >= today.getTime()
+                }">
+                    <div>{{ day.fecha | date:"d" }}</div>
+                    <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
+                </td>
+            </tr>
+        </table>
+    </plex-layout-main>
+    <plex-layout-sidebar [type]="'invert'">
+        <plex-title titulo="Agenda original" size="md">
+            <plex-help type="info" size="sm" icon="information-variant">
+                <plex-label direction="row" titulo="Espacio Físico:"
+                    subtitulo="{{(agenda | espacioFisico) }}"></plex-label>
+                <plex-label direction="row" titulo="Bloques:"></plex-label>
 
-                        </div>
+                <ng-template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
+                    <div class="row">
+                        <div class="col">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date:
+                            'HH:mm'}}</div>
+                        <div class="col">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
                     </div>
-                    <ng-template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
-                        <div class="row">
-                            <div class="col">{{unBloque.descripcion}}</div>
-                            <div class="col">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date:
-                                'HH:mm'}}</div>
-                            <div class="col">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
-                        </div>
-                    </ng-template>
-                    <div *ngIf="agendasFiltradas.length>0">
-                        <hr>
-                        <header>Agendas en conflicto</header>
-                        <plex-accordion>
-                            <ng-template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
-                                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}"
-                                            icon="arrow-down-drop-circle-outline">
-                                    <li *ngIf="agendaF.conflictoEF">
-                                        Conflicto con Espacio Físico
-                                    </li>
-                                    <li *ngIf="agendaF.conflictoProfesional">
-                                        Conflicto con Equipo de Salud
-                                    </li>
-                                </plex-panel>
-                            </ng-template>
-                        </plex-accordion>
-                    </div>
-                </plex-box>
-            </div>
-        </div>
-    </section>
+                </ng-template>
+            </plex-help>
+            <plex-button type="success" size="sm" class="ml-1" icon="check" tooltip="Clonar Agenda"
+                (click)="clonar()"></plex-button>
+            <plex-button type="danger" icon="close" class="ml-1" size="sm" tooltip="Cancelar"
+                (click)="cancelar()"></plex-button>
+        </plex-title>
+        <!--Agenda Original-->
+        <plex-list [selectable]="false">
+            <plex-item>
+                <plex-label direction="row" titulo="Fecha:" subtitulo="{{agenda.horaInicio | fecha}} - {{agenda.horaInicio | date: 'HH:mm'}}
+                - {{agenda.horaFin | date: 'HH:mm'}}">
+                </plex-label>
+                <plex-label *ngIf="agenda.profesionales?.length" titulo="Equipo de Salud:"
+                    subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                </plex-label>
+                <plex-label titulo="Prestación:" subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
+                </plex-label>
+                <plex-label *ngIf="agenda.profesionales?.length === 0" titulo="Equipo de Salud:">
+                </plex-label>
+            </plex-item>
+        </plex-list>
 
-    <footer>
-        <div class="row">
-            <div class="col text-right">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
-                </plex-button>
-                <plex-button [disabled]="hideClonar" type="success" label="Clonar Agenda" (click)="clonar()">
-                </plex-button>
-            </div>
-        </div>
-        <!--<plex-button title="Clonar Agenda" label="Clonar Agenda" type="primary" (click)="clonar()"></plex-button>-->
-    </footer>
-</form>
+        <plex-label *ngIf="agendasFiltradas.length>0" titulo="Agendas en conflicto:"></plex-label>
+
+        <plex-accordion *ngIf="agendasFiltradas.length>0">
+            <ng-template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
+                <plex-panel
+                    tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}"
+                    icon="arrow-down-drop-circle-outline">
+                    <li *ngIf="agendaF.conflictoEF">
+                        Conflicto con Espacio Físico
+                    </li>
+                    <li *ngIf="agendaF.conflictoProfesional">
+                        Conflicto con Equipo de Salud
+                    </li>
+                </plex-panel>
+            </ng-template>
+        </plex-accordion>
+
+
+    </plex-layout-sidebar>
+</plex-layout>
 
 <modal-agenda *ngIf="showModal" #modalAgenda [dato]="datos" (close)="cerrarModal()"></modal-agenda>
