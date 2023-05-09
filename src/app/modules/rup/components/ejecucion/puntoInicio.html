@@ -235,6 +235,7 @@
 
                                     </div>
                                     <ng-container *ngIf="verificarTurno(turno)">
+                                        <br *ngIf="!turno.prestaciones?.length" />
                                         <plex-badge
                                                     type="{{ turno.asistencia === 'asistio' ? 'success' : (turno.asistencia === 'noAsistio' ? 'danger': 'info') }}">
                                             {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia">
@@ -273,9 +274,9 @@
                                             </span>
                                         </span>
                                     </small>
-                                    <br *ngIf="verTipoPrestacion()">
+                                    <br *ngIf="verTipoPrestacion(turno)">
                                     <small>
-                                        <span class="text-muted" *ngIf="verTipoPrestacion()">
+                                        <span class="text-muted" *ngIf="verTipoPrestacion(turno)">
                                             {{turno.tipoPrestacion.nombre}}
                                         </span>
                                         <ng-container class="text-muted"

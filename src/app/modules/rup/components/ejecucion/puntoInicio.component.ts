@@ -748,11 +748,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     verificarTurno(turno) {
-        return (turno?.paciente && turno.asistencia && turno.estado !== 'suspendido');
+        return turno?.paciente && turno.asistencia && turno.estado !== 'suspendido';
     }
 
-    verTipoPrestacion() {
-        return (this.turno?.paciente?.id && this.turno.tipoPrestacion && this.agendaSeleccionada?.tipoPrestaciones?.length > 1);
+    verTipoPrestacion(turno) {
+        return turno?.paciente?.id && turno.tipoPrestacion && this.agendaSeleccionada?.tipoPrestaciones?.length > 1;
     }
 
     cancelarDacionTurno() {
