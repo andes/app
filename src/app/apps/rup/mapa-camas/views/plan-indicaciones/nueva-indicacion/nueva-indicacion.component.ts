@@ -1,8 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import { RUPComponent } from 'src/app/modules/rup/components/core/rup.component';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { IPrestacionRegistro } from 'src/app/modules/rup/interfaces/prestacion.registro.interface';
@@ -13,7 +12,7 @@ import { PlantillasService } from 'src/app/modules/rup/services/plantillas.servi
     selector: 'plan-indicaciones-nueva-indicacion',
     templateUrl: './nueva-indicacion.component.html'
 })
-export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
+export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterContentChecked {
 
     @ViewChild('prescripcion') prescripcion: RUPComponent;
     @Output() save = new EventEmitter();
@@ -75,13 +74,11 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
         public ps: PlantillasService,
         private route: ActivatedRoute,
         private auth: Auth,
-        private plex: Plex
+        private plex: Plex,
+        private changeDetector: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
-        this.motivoEditado = this.indicacion?.valor.solicitudPrestacion.motivo;
-        this.indicacionEditada = this.indicacion?.valor.solicitudPrestacion.indicaciones;
-        this.profesionalEditado = this.indicacion?.valor.solicitudPrestacion.profesionalesDestino;
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
@@ -165,11 +162,10 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit {
     }
 
     onCancel() {
-        if (this.indicacion) {
-            this.indicacion.valor.solicitudPrestacion.motivo = this.motivoEditado;
-            this.indicacion.valor.solicitudPrestacion.indicaciones = this.indicacionEditada;
-            this.indicacion.valor.solicitudPrestacion.profesionalesDestino = this.profesionalEditado;
-        }
         this.save.emit();
+    }
+
+    ngAfterContentChecked(): void {
+        this.changeDetector.detectChanges();
     }
 }
