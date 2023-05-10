@@ -1,3 +1,18 @@
+# [5.118.0](https://github.com/andes/app/compare/v5.117.0...v5.118.0) (2023-05-10)
+
+
+### Bug Fixes
+
+* **CITAS:** Agrega control para permitir editar agendas pendientes de asistencia ([#2843](https://github.com/andes/app/issues/2843)) ([0bce64b](https://github.com/andes/app/commit/0bce64be05c9bb6970ecc0cf627ee18a0b3eb4af))
+* **IN:** corrige movimientos con ingreso a las 00 hs ([#2836](https://github.com/andes/app/issues/2836)) ([7d0e19c](https://github.com/andes/app/commit/7d0e19cd4b778519c6abc66c48d27d2a31adfd81))
+* **TM:** corrección de georeferencia con formato invalido ([#2841](https://github.com/andes/app/issues/2841)) ([93ac8a5](https://github.com/andes/app/commit/93ac8a518f691075da6e46d6466f1623b70f26be))
+
+
+### Features
+
+* **IN-527:** Cambiar filtro de principios activos ([#2827](https://github.com/andes/app/issues/2827)) ([a1885cf](https://github.com/andes/app/commit/a1885cfddc10d3e76a784e904a4904df77c282d4))
+* **RUP:** se verifica permiso al link plantillas ([#2833](https://github.com/andes/app/issues/2833)) ([e77585a](https://github.com/andes/app/commit/e77585a7fd02294c897334e21ead8418ada24a8f))
+
 # [5.117.0](https://github.com/andes/app/compare/v5.116.0...v5.117.0) (2023-05-03)
 
 
