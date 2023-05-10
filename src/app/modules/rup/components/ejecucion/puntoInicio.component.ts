@@ -747,12 +747,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda' && this.agendaSeleccionada !== 'servicio-intermedio' && (!this.paciente || (!this.agendaSeleccionada.tipoPrestaciones[0].noNominalizada && this.getCantidadPacientes(this.agendaSeleccionada))));
     }
 
-    verificarTurno() {
-        return (this.turno?.paciente && this.turno.asistencia && this.turno.estado !== 'suspendido');
+    verificarTurno(turno) {
+        return turno?.paciente && turno.asistencia && turno.estado !== 'suspendido';
     }
 
-    verTipoPrestacion() {
-        return (this.turno?.paciente?.id && this.turno.tipoPrestacion && this.agendaSeleccionada?.tipoPrestaciones?.length > 1);
+    verTipoPrestacion(turno) {
+        return turno?.paciente?.id && turno.tipoPrestacion && this.agendaSeleccionada?.tipoPrestaciones?.length > 1;
     }
 
     cancelarDacionTurno() {
