@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ExportHudsService } from '../../services/export-huds.service';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 
@@ -13,7 +12,6 @@ export class DescargasPendientesComponent implements OnInit {
     public completed = [];
     public pending = [];
     public sinPendientes = false;
-    public busqueda$: Observable<any[]>;
     public fechaDesde;
     public fechaHasta;
 
@@ -24,9 +22,6 @@ export class DescargasPendientesComponent implements OnInit {
     ) {
         this.fechaDesde = moment().startOf('day').toDate();
         this.fechaHasta = moment().endOf('day').toDate();
-        exportHudsService.$refrescarPendientes.subscribe(() => {
-            this.descargasPendientes();
-        });
     }
 
     ngOnInit(): void {
@@ -57,9 +52,9 @@ export class DescargasPendientesComponent implements OnInit {
         this.exportHudsService.pendientes(query).subscribe((data) => {
             this.exportHudsService.hud$.next(data);
         });
-        this.busqueda$ = this.exportHudsService.pendiente$;
-        this.busqueda$.pipe(
-            map((prestaciones) => {
+        this.exportHudsService.pendiente$.pipe(
+            map(prestaciones => {
+                prestaciones = prestaciones.filter(prestacion => moment(prestacion.createdAt).isBetween(this.fechaDesde, this.fechaHasta, '[]'));
                 this.completed = prestaciones.filter(prestacion => prestacion.status === 'completed');
                 this.pending = prestaciones.filter(prestacion => prestacion.status === 'pending');
             })

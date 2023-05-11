@@ -1,5 +1,5 @@
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Server, saveAs } from '@andes/shared';
 
 @Injectable()
@@ -9,15 +9,8 @@ export class ExportHudsService {
     public pendiente$: Observable<any[]>;
     public hud$ = new Subject<any[]>();
 
-    $refrescarPendientes = new EventEmitter();
-
     constructor(private server: Server) {
         this.pendiente$ = this.hud$;
-    }
-
-
-    refrescarPendientes() {
-        this.$refrescarPendientes.emit();
     }
 
     pendientes(params) {
