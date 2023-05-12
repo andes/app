@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ExportHudsService } from '../../services/export-huds.service';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 
@@ -13,13 +12,17 @@ export class DescargasPendientesComponent implements OnInit {
     public completed = [];
     public pending = [];
     public sinPendientes = false;
-    public busqueda$: Observable<any[]>;
+    public fechaDesde;
+    public fechaHasta;
 
 
     constructor(
         private exportHudsService: ExportHudsService,
         private auth: Auth
-    ) { }
+    ) {
+        this.fechaDesde = moment().startOf('day').toDate();
+        this.fechaHasta = moment().endOf('day').toDate();
+    }
 
     ngOnInit(): void {
         this.descargasPendientes();
@@ -39,12 +42,19 @@ export class DescargasPendientesComponent implements OnInit {
     }
 
     descargasPendientes() {
-        this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
+        const query: any = { id: this.auth.usuario.id };
+        if (this.fechaDesde) {
+            query.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        }
+        if (this.fechaHasta) {
+            query.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
+        }
+        this.exportHudsService.pendientes(query).subscribe((data) => {
             this.exportHudsService.hud$.next(data);
         });
-        this.busqueda$ = this.exportHudsService.pendiente$;
-        this.busqueda$.pipe(
-            map((prestaciones) => {
+        this.exportHudsService.pendiente$.pipe(
+            map(prestaciones => {
+                prestaciones = prestaciones.filter(prestacion => moment(prestacion.createdAt).isBetween(this.fechaDesde, this.fechaHasta, '[]'));
                 this.completed = prestaciones.filter(prestacion => prestacion.status === 'completed');
                 this.pending = prestaciones.filter(prestacion => prestacion.status === 'pending');
             })

@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server, saveAs } from '@andes/shared';
 
