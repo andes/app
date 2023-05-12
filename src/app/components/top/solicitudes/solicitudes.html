@@ -101,7 +101,8 @@
                             (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh">
                     <plex-table-columns>
                     </plex-table-columns>
-                    <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" (click)="seleccionar(prestacion)">
+                    <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" (click)="seleccionar(prestacion)"
+                        [class.selected]="prestacion?.id===prestacionSelected?.id" [class.selectable]="selectable">
                         <td *plTableCol="'fecha'">
                             <plex-label>
                                 <shared-popover-audit class="mt-3" placement="right" [data]="prestacion"
@@ -242,7 +243,9 @@
                             (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh">
                     <plex-table-columns>
                     </plex-table-columns>
-                    <tr *ngFor="let prestacion of prestacionesSalida; let i=index" (click)="seleccionar(prestacion)">
+                    <tr *ngFor="let prestacion of prestacionesSalida; let i=index" (click)="seleccionar(prestacion)"
+                        [class.selected]="prestacion?.id===prestacionSelected?.id" [class.selectable]="selectable">
+
                         <!-- FECHA -->
                         <td *plTableCol="'fecha'">
                             <plex-label [tituloBold]="true" titulo="Registrada el {{prestacion.createdAt | fecha}}"

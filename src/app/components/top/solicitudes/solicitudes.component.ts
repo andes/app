@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Unsubscribe } from '@andes/shared';
-import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Component, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { concat } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -55,6 +55,7 @@ export class SolicitudesComponent implements OnInit {
     public prestacionesDestino = [];
     public estado;
     public asignadas = false;
+    public prestacionSelected;
     itemsDropdown: any = []; // Acciones del dropdown 'vincular
     openedDropDown = null;
 
@@ -136,6 +137,12 @@ export class SolicitudesComponent implements OnInit {
             label: ''
         },
     ];
+
+    // Permite :hover y click()
+    @Input() selectable = true;
+
+    // Muestra efecto de selección
+    @Input() selected = false;
 
     constructor(
         public auth: Auth,
@@ -273,6 +280,10 @@ export class SolicitudesComponent implements OnInit {
     }
 
     seleccionar(prestacion) {
+        if (prestacion) {
+            this.prestacionSelected = prestacion;
+        }
+
         if (this.seleccionado && this.seleccionado.id === prestacion.id) {
             this.seleccionado = null;
         } else {
