@@ -17,17 +17,18 @@
                 <plex-text label="Tipo/Clave" required name="tipo" [disabled]="desabilitado" [(ngModel)]="form.type"
                            [readonly]="hasOcurrences">
                 </plex-text>
-                <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable">
+                <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable"
+                           (change)="changeSnomedBool()">
                 </plex-bool>
-                <div *ngIf="isFormSnomedizable">
-                    <plex-text label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"></plex-text>
-                </div>
+                <plex-text class="pr-2" label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"
+                           [disabled]="!isFormSnomedizable">
+                </plex-text>
                 <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
             </plex-wrapper>
 
             <plex-title size="sm" titulo="Campos">
                 <plex-dropdown #drop *ngIf="itemsDropdown?.length" class="pl-2 mr-1" [right]="true" type="info"
-                               [items]="itemsDropdown" size="sm" icon="plus" label="">
+                               [items]="itemsDropdown" size="sm" icon="plus" tooltip="Agregar" label="">
                 </plex-dropdown>
                 <plex-button type="success" size="sm" (click)="onAddField()">
                     AGREGAR CAMPO
@@ -62,7 +63,7 @@
                         </plex-select>
                         <plex-text name="descripcion-{{ i }}" label="Descripción" [(ngModel)]="field.description">
                         </plex-text>
-                        <plex-button size="sm" class="mt-4" type="warning" align="center" label="Configuración"
+                        <plex-button size="sm" class="mt-4" type="info" align="center" label="Configuración"
                                      (click)="setConfiguracion(field) ; setDependencyData()">
                         </plex-button>
                         <plex-button size="sm" class="mt-4" type="danger" align="center" label="Eliminar"
@@ -76,8 +77,8 @@
         </form>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title titulo="Configuración">
-            <plex-button size="sm" type="danger" icon="close" (click)="close()"></plex-button>
+        <plex-title titulo="Configuración" size="md">
+            <plex-button size="sm" type="danger" icon="close" tooltip="cerrar" (click)="close()"></plex-button>
         </plex-title>
         <ng-container *ngIf="fieldToConfig">
             <plex-bool type="slide" name="active" label="Campo Obligatorio" [(ngModel)]="fieldToConfig.required">

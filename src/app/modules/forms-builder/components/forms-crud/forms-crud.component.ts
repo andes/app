@@ -1,11 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
 import { FormPresetResourcesService } from '../../services/preset.resources.service';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -14,6 +15,9 @@ import { FormPresetResourcesService } from '../../services/preset.resources.serv
     styleUrls: ['./forms-crud.scss']
 })
 export class AppFormsCrudComponent implements OnInit {
+
+    @ViewChild('formulario', { static: false }) formControl: NgForm;
+
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numerico' },
@@ -289,5 +293,12 @@ export class AppFormsCrudComponent implements OnInit {
 
     setSnvs() {
         this.formToConfig = this.form;
+    }
+
+    changeSnomedBool() {
+        if (!this.isFormSnomedizable) {
+            this.form.snomedCode = null;
+            this.formControl.controls.snomed.markAsPristine();
+        }
     }
 }
