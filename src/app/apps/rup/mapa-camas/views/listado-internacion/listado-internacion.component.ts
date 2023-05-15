@@ -30,13 +30,15 @@ export class InternacionListadoComponent implements OnInit {
     public puedeRomper = false;
     public editando = false;
     public columns = [
-        {
+        { // prioriza nombre autopercibido en caso de tener
             key: 'apellido-nombre',
             label: 'Apellido y nombre',
             sorteable: true,
             opcional: false,
             sort: (a, b) => {
-                return (a.paciente.apellido + a.paciente.nombre).localeCompare(b.paciente.apellido + b.paciente.nombre);
+                const aNombre = a.paciente.alias || a.paciente.nombre;
+                const bNombre = b.paciente.alias || b.paciente.nombre;
+                return (a.paciente.apellido + aNombre).localeCompare(b.paciente.apellido + bNombre);
             }
         },
         {
@@ -45,7 +47,9 @@ export class InternacionListadoComponent implements OnInit {
             sorteable: true,
             opcional: false,
             sort: (a, b) => {
-                return a.paciente.documento.localeCompare(b.paciente.documento);
+                const aDocumento = a.paciente.documento || a.paciente.numeroIdentificacion;
+                const bDocumento = b.paciente.documento || b.paciente.numeroIdentificacion;
+                return aDocumento.localeCompare(bDocumento);
             }
         },
         {

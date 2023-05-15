@@ -208,7 +208,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             const resultado = sms;
             // "if 0 errores"
             if (resultado === '0') {
-                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                this.plex.toast('info', 'Se envió SMS al paciente ' + (paciente.alias || paciente.nombre) + ' ' + paciente.apellido);
             } else {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }

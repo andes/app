@@ -28,7 +28,7 @@
                                         <span
                                               *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
                                             {{carpeta.nroCarpeta}} -
-                                            {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                            {{ turno.paciente | nombre }}
                                         </span>
                                     </span>
                                 </td>

@@ -45,19 +45,19 @@
             </span>
             <span *ngIf="cama.paciente" class="d-block">
                 <plex-icon *ngIf="cama.nota" name="documento" [tooltip]="cama.nota" type="info"></plex-icon>
-                {{cama.paciente.apellido}},
-                {{cama.paciente.nombre}}
+                {{cama.paciente | nombre}}
             </span>
             <span class="d-block"></span>
         </td>
         <td *ngIf="columns.documento">
             <span>
-                {{(cama.paciente) ? cama.paciente.documento : 'Sin Paciente'}}
+                {{cama.paciente ? (cama.paciente | documento) : 'Sin Paciente'}}
             </span>
         </td>
         <td *ngIf="columns.sexo">
+            <!-- Por ahora se muestra la identidad de genero -->
             <span>
-                {{(cama.paciente) ? cama.paciente.sexo : 'Sin Paciente'}}
+                {{cama.paciente ? cama.paciente.genero : 'Sin Paciente'}}
             </span>
         </td>
         <td>

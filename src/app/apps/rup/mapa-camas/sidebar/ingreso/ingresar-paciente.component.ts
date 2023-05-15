@@ -387,7 +387,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             const dtoPaciente = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
+                numeroIdentificacion: this.paciente.numeroIdentificacion,
                 nombre: this.paciente.nombre,
+                alias: this.paciente.alias,
                 apellido: this.paciente.apellido,
                 sexo: this.paciente.sexo,
                 genero: this.paciente.genero,

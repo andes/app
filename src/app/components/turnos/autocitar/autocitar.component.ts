@@ -100,10 +100,13 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         const pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
+            alias: this.paciente.alias,
             fechaNacimiento: this.paciente.fechaNacimiento,
             sexo: this.paciente.sexo,
+            genero: this.paciente.genero,
             telefono: this.paciente.telefono,
             carpetaEfectores: this.paciente.carpetaEfectores,
             obraSocial: this.obraSocialPaciente

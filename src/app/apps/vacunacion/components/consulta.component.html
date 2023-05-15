@@ -45,8 +45,9 @@
                     <p *ngIf="resultado.inscripto">
                         Inscripto: {{ resultado.inscripto.apellido }},
                         {{ resultado.inscripto.nombre }}<br>
-                        Documento: {{ resultado.inscripto.documento }}<br>
+                        Documento: {{ resultado.inscripto | documento }}<br>
                         Sexo: {{ resultado.inscripto.sexo }}<br>
+                        Identidad de género: {{ resultado.inscripto.genero }}<br>
                         Fecha de nacimiento: {{ resultado.inscripto.fechaNacimiento | fecha }}<br>
                         Localidad:
                         {{ resultado.inscripto.localidad? resultado.inscripto.localidad.nombre : 'Sin datos' }}<br></p>

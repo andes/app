@@ -59,7 +59,7 @@ export class ElegirPacienteComponent {
         }
         request.subscribe(internacionEnCurso => {
             if (internacionEnCurso) {
-                this.plex.info('warning', `${paciente.apellido}, ${paciente.alias || paciente.nombre}, DNI: ${paciente.documento || paciente.numeroIdentificacion} tiene una internación
+                this.plex.info('warning', `${paciente.apellido}, ${paciente.alias || paciente.nombre}, DNI: ${paciente.documento || paciente.numeroIdentificacion || 'Sin DNI'} tiene una internación
                 en curso con fecha de ingreso el <b>${moment(internacionEnCurso.fechaIngreso).format('DD/MM/YYYY HH:mm')}</b>.`, 'Paciente ya internado');
             } else {
                 this.ingresoPacienteService.selectPaciente(paciente.id);

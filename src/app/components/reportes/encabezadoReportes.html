@@ -59,7 +59,7 @@
         <plex-list>
             <plex-item *ngFor="let paciente of diagnostico.pacientes;" class="">
                 <plex-label titulo="{{ paciente | nombre }}"
-                            subtitulo="{{ (paciente.documento | number) || 'Sin DNI'}}">
+                            subtitulo="{{ paciente | documento }}">
                 </plex-label>
                 <plex-label titulo="{{paciente.sexo}}">
                 </plex-label>

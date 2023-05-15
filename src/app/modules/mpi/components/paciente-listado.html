@@ -6,17 +6,12 @@
                    [colors]="colorItem(i)">
             <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
 
-            <plex-label *ngIf="!paciente.numeroIdentificacion && !showDatosTutor(paciente)"
-                        titulo="{{ paciente | nombre }}" subtitulo="{{ (paciente.documento | number) || 'Sin DNI'}}">
-            </plex-label>
-
-            <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
-                        subtitulo="{{ paciente.numeroIdentificacion }}">
+            <plex-label *ngIf="!showDatosTutor(paciente)" titulo="{{ paciente | nombre }}"
+                        subtitulo="{{ paciente | documento }}">
             </plex-label>
 
             <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}" subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
-                             {{ (paciente.relaciones[0].documento | number) || paciente.relaciones[0].numeroIdentificacion || 'Sin DNI'}}
-                             - {{ (paciente.relaciones[0] | nombre)}}">
+                             {{ paciente.relaciones[0] | documento }} - {{ (paciente.relaciones[0] | nombre)}}">
             </plex-label>
 
             <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha }}">
@@ -26,7 +21,7 @@
                 Sin DNI
             </plex-badge>
 
-            <plex-badge type="info">{{ paciente | sexo }}
+            <plex-badge type="info">{{ paciente.genero }}
             </plex-badge>
 
             <plex-badge type="" class=""
@@ -39,7 +34,8 @@
             </plex-badge>
 
             <plex-button *ngIf="showBtnRelaciones(paciente)" type="info" size="sm" icon="usuarios"
-                         title="{{openBtnRelaciones(paciente)?'No ver relaciones':'Ver relaciones'}}" (click)="verRelaciones(paciente)">
+                         title="{{openBtnRelaciones(paciente)?'No ver relaciones':'Ver relaciones'}}"
+                         (click)="verRelaciones(paciente)">
             </plex-button>
 
             <plex-button *ngIf="editing" type="warning" size="sm" icon="pencil" title="Editar paciente"

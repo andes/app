@@ -16,8 +16,8 @@
                 [class.selected]=" paciente.id===pacienteSelected?.id">
                 <td *plTableCol="'grupo'"> {{ grupoPoblacional(paciente.grupo.nombre) }} </td>
                 <td *plTableCol="'documento'"> {{ paciente.documento }} </td>
-                <td *plTableCol="'apellido-nombre'"> {{ paciente.apellido + ', ' + paciente.nombre }} </td>
-                <td *plTableCol="'sexo'"> {{ paciente.sexo === 'femenino' ? 'F' : 'M' }} </td>
+                <td *plTableCol="'apellido-nombre'"> {{ paciente | nombre }} </td>
+                <td *plTableCol="'sexo'"> {{ paciente.sexo }} </td>
                 <td *plTableCol="'edad'"> {{ paciente | edad }} </td>
                 <td *plTableCol="'localidad'"> {{ paciente.localidad?.nombre || 'Sin datos' }} </td>
                 <td *plTableCol="'fecha-registro'"> {{ paciente.fechaRegistro | fecha }} </td>
@@ -97,9 +97,11 @@
                         </plex-label>
                         <plex-label titulo="Nombre" subtitulo="{{ pacienteSelected.nombre }}">
                         </plex-label>
-                        <plex-label titulo="DNI" subtitulo="{{ (pacienteSelected.documento | number) || 'Sin DNI' }}">
+                        <plex-label titulo="DNI" subtitulo="{{ pacienteSelected | documento }}">
                         </plex-label>
-                        <plex-label titulo="Sexo" subtitulo="{{pacienteSelected.sexo}}">
+                        <plex-label titulo="Sexo" subtitulo="{{ pacienteSelected.sexo }}">
+                        </plex-label>
+                        <plex-label titulo="Identidad de género" subtitulo="{{pacienteSelected.genero}}">
                         </plex-label>
                         <plex-label titulo="Fecha de nacimiento"
                                     subtitulo="{{pacienteSelected.fechaNacimiento | fecha}}">
@@ -146,7 +148,7 @@
                         <plex-badge *ngIf="candidato.fechaFallecimiento" type="danger">Fallecido:
                             {{ candidato.fechaFallecimiento | fecha:'utc'}}
                         </plex-badge>
-                        <plex-badge type="info">{{ candidato | sexo }}
+                        <plex-badge type="info">{{ candidato.sexo }}
                         </plex-badge>
                         <plex-badge type="" class=""
                                     [ngClass]="{'text-success' : candidato.estado === 'validado' , 'text-warning' : candidato.estado === 'temporal'} ">

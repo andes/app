@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <plex-title titulo="Solicitud de prestamo de Carpeta" size="md"></plex-title>
 
-    <plex-text label="Paciente" [(ngModel)]="paciente.apellido + ' ' + paciente.nombre + ' - ' + paciente.documento"
+    <plex-text label="Paciente" [(ngModel)]="paciente.apellido + ' ' + paciente.alias || paciente.nombre + ' - ' + paciente.documento || paciente.numeroIdentificacion"
                name="paciente" [disabled]="true" [required]="true">
     </plex-text>
     <plex-text label="Nro Carpeta" *ngIf="carpetaEfector" [(ngModel)]="carpetaEfector.nroCarpeta" name="nro-carpeta"

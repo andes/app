@@ -61,7 +61,7 @@
             </plex-label>
             <plex-label *ngIf='profesionalSelected.fechaNacimiento' titulo="Edad"
                         subtitulo="{{ profesionalSelected | edad }}" size="md"></plex-label>
-            <plex-label *ngIf='profesionalSelected.sexo' titulo="Sexo" subtitulo="{{ profesionalSelected | sexo }}"
+            <plex-label *ngIf='profesionalSelected.sexo' titulo="Sexo" subtitulo="{{ profesionalSelected.sexo }}"
                         size="md">
             </plex-label>
             <plex-label *ngIf='profesionalSelected.cuit' titulo="CUIT" subtitulo="{{ profesionalSelected.cuit }}"

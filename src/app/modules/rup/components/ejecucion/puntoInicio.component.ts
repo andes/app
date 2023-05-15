@@ -8,7 +8,6 @@ import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { WebSocketService } from '../../../../services/websocket.service';
@@ -94,7 +93,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         private hudsService: HUDSService,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
-        public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
         public servicioTurnero: TurneroService,
@@ -408,7 +406,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.turno = turno;
             } else {
                 this.plex.confirm(
-                    `Paciente: <b> ${paciente.apellido}, ${paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
+                    `Paciente: <b> ${paciente.apellido}, ${paciente.alias || paciente.nombre}.</b><br>Prestación: <b>${snomedConcept.term}</b>`,
                     '¿Iniciar Prestación?'
                 ).then(confirmacion => {
                     if (confirmacion) {
@@ -471,7 +469,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         const msg = operacion === 'noAsistio' ?
-            `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?` :
+            `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.alias || paciente.nombre} </b> ?` :
             '¿Está seguro que desea revertir los cambios?';
 
         this.plex.confirm(msg).then(confirmacion =>

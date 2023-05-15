@@ -90,7 +90,8 @@ export class ListadoInternacionCapasService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter(
                     (internacion: IResumenInternacion) =>
                         (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                            internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
+                            internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }

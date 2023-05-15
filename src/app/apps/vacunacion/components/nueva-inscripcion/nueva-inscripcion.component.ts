@@ -43,11 +43,13 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
         fechaRegistro: new Date(),
         documento: '',
         nombre: '',
+        alias: '',
         apellido: '',
         tieneTramite: true,
         nroTramite: '',
         grupo: undefined,
         sexo: null,
+        genero: null,
         fechaNacimiento: null,
         localidad: undefined,
         telefono: '',
@@ -160,10 +162,12 @@ export class NuevaInscripcionComponent implements OnInit, OnDestroy {
                         this.opcionesGrupos = grupos;
                     });
                     this.ciudadano.nombre = this.paciente.nombre;
+                    this.ciudadano.alias = this.paciente.alias || undefined;
                     this.ciudadano.apellido = this.paciente.apellido;
                     this.ciudadano.documento = this.paciente.documento !== '' ? this.paciente.documento : this.paciente.numeroIdentificacion;
                     this.ciudadano.fechaNacimiento = this.paciente.fechaNacimiento;
                     this.ciudadano.sexo = this.paciente.sexo;
+                    this.ciudadano.genero = this.paciente.genero;
                     if (this.paciente.contacto.length > 0) {
                         this.paciente.contacto.forEach((contacto) => {
                             if (contacto.tipo === 'celular') {

@@ -748,7 +748,7 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
         if (event.status === false) {
-            this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
+            this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.alias || this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
                 .then(confirmacion => {
                     if (confirmacion) {
                         this.confirmarIniciarPrestacion(event);

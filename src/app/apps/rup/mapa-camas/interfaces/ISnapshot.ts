@@ -16,10 +16,10 @@ export interface ISnapshot {
     fechaAtencion?: Date;
     unidadOrganizativa: ISnomedConcept;
     especialidades: ISnomedConcept[];
-    ambito: String;
-    capa: String;
+    ambito: string;
+    capa: string;
     unidadOrganizativaOriginal: ISnomedConcept;
-    sectorName?: String;
+    sectorName?: string;
     diaEstada?: number;
     sectores: ISectores[];
     jerarquiaSectores?: any[];
@@ -28,23 +28,26 @@ export interface ISnapshot {
     equipamiento: ISnomedConcept[];
     idCama: string;
     paciente?: {
-        id: String;
-        documento: String;
-        nombre: String;
-        apellido: String;
-        sexo: String;
+        id: string;
+        documento: string;
+        numeroIdentificacion?: string;
+        nombre: string;
+        alias?: string;
+        apellido: string;
+        sexo: string;
+        genero: string;
         fechaNacimiento: Date;
     };
     organizacion: {
-        _id: String;
-        nombre: String;
+        _id: string;
+        nombre: string;
     };
     sala?: boolean;
     extras: {
         ingreso?: boolean;
         egreso?: boolean;
-        idInternacion?: String;
-        tipo_egreso?: String;
+        idInternacion?: string;
+        tipo_egreso?: string;
         idMovimiento?: string;
         prestamo?: boolean;
         devolucion?: boolean;
@@ -52,7 +55,7 @@ export interface ISnapshot {
         cambioDeCama?: boolean;
         desbloqueo?: boolean;
     };
-    nota: String;
+    nota: string;
     prioridad?: {
         id: number;
         label: string;
@@ -60,19 +63,19 @@ export interface ISnapshot {
     };
     createdAt?: Date;
     createdBy?: {
-        id: String;
-        nombreCompleto: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        nombreCompleto: string;
+        nombre: string;
+        apellido: string;
         username: Number;
         documento: Number;
     };
     updatedAt?: Date;
     updatedBy?: {
-        id: String;
-        nombreCompleto: String;
-        nombre: String;
-        apellido: String;
+        id: string;
+        nombreCompleto: string;
+        nombre: string;
+        apellido: string;
         username: Number;
         documento: Number;
     };

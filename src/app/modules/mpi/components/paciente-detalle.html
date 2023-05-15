@@ -33,7 +33,7 @@
                     <plex-label *ngIf="relaciones[0].parentesco" titulo="" subtitulo="">
                         {{relaciones[0].parentesco.toUpperCase()}}
                     </plex-label>
-                    <plex-copy *ngIf="relaciones[0].numeroIdentificacion || relaciones[0].documento"
+                    <plex-copy *ngIf="relaciones[0].documento || relaciones[0].numeroIdentificacion"
                                [value]="relaciones[0].documento || relaciones[0].numeroIdentificacion">
                         {{ (relaciones[0].documento | number) || relaciones[0].numeroIdentificacion}}
                     </plex-copy>
@@ -48,7 +48,11 @@
             </ng-container>
         </div>
 
-        <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"
+        <plex-label *ngIf="showSexo" titulo="Sexo" subtitulo="{{ paciente.sexo }}"
+                    [direction]="orientacion === 'vertical' ? 'column' : 'row'">
+        </plex-label>
+
+        <plex-label *ngIf="showSexo" titulo="Identidad de género" subtitulo="{{ paciente.genero }}"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
 

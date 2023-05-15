@@ -115,22 +115,23 @@ export class PrestacionCrearComponent implements OnInit {
             obraSocialPaciente = financiador;
         });
         if (this.tipoPrestacionSeleccionada) {
-            let pacientePrestacion = undefined;
             if (!this.tipoPrestacionSeleccionada.noNominalizada) {
                 this.existePaciente();
-                pacientePrestacion = {
-                    id: this.paciente.id,
-                    nombre: this.paciente.nombre,
-                    apellido: this.paciente.apellido,
-                    documento: this.paciente.documento,
-                    sexo: this.paciente.sexo,
-                    fechaNacimiento: this.paciente.fechaNacimiento,
-                    obraSocial: obraSocialPaciente
-                };
             }
             const conceptoSnomed = this.tipoPrestacionSeleccionada;
             const nuevaPrestacion = {
-                paciente: pacientePrestacion,
+                paciente: {
+                    id: this.paciente.id,
+                    nombre: this.paciente.nombre,
+                    alias: this.paciente.alias,
+                    apellido: this.paciente.apellido,
+                    documento: this.paciente.documento,
+                    numeroIdentificacion: this.paciente.numeroIdentificacion,
+                    sexo: this.paciente.sexo,
+                    fechaNacimiento: this.paciente.fechaNacimiento,
+                    obraSocial: obraSocialPaciente,
+                    genero: this.paciente.genero
+                },
                 solicitud: {
                     fecha: this.fecha,
                     tipoPrestacion: conceptoSnomed,
@@ -156,7 +157,7 @@ export class PrestacionCrearComponent implements OnInit {
                 }]
             };
             this.disableGuardar = true;
-            if (this.tieneAccesoHUDS && pacientePrestacion) {
+            if (this.tieneAccesoHUDS && this.paciente) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
                 const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
@@ -249,12 +250,15 @@ export class PrestacionCrearComponent implements OnInit {
             // Si aún no existe la prestación creada vamos a generarla
             const nuevaPrestacion = {
                 paciente: {
-                    id: unPacientePresente.paciente.id,
-                    nombre: unPacientePresente.paciente.nombre,
-                    apellido: unPacientePresente.paciente.apellido,
-                    documento: unPacientePresente.paciente.documento,
-                    sexo: unPacientePresente.paciente.sexo,
-                    fechaNacimiento: unPacientePresente.paciente.fechaNacimiento
+                    id: this.paciente.id,
+                    nombre: this.paciente.nombre,
+                    alias: this.paciente.alias,
+                    apellido: this.paciente.apellido,
+                    documento: this.paciente.documento,
+                    numeroIdentificacion: this.paciente.numeroIdentificacion,
+                    sexo: this.paciente.sexo,
+                    fechaNacimiento: this.paciente.fechaNacimiento,
+                    genero: this.paciente.genero
                 },
                 solicitud: {
                     tipoPrestacion: unPacientePresente.tipoPrestacion,

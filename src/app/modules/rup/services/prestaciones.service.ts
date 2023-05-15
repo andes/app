@@ -14,6 +14,7 @@ import { AdjuntosService } from './adjuntos.service';
 import { environment } from 'src/environments/environment';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { Router } from '@angular/router';
+import { IPacienteBasico } from 'src/app/core/mpi/interfaces/IPaciente';
 
 
 @Injectable()
@@ -488,7 +489,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null, registrosEjecucion = []): IPrestacion {
-        let pacientePrestacion;
+        let pacientePrestacion: IPacienteBasico;
         if (!paciente) {
             pacientePrestacion = undefined;
         } else {
@@ -496,6 +497,9 @@ export class PrestacionesService {
                 id: paciente.id,
                 nombre: paciente.nombre,
                 apellido: paciente.apellido,
+                alias: paciente.alias,
+                numeroIdentificacion: paciente.numeroIdentificacion,
+                genero: paciente.genero,
                 documento: paciente.documento,
                 sexo: paciente.sexo,
                 fechaNacimiento: paciente.fechaNacimiento

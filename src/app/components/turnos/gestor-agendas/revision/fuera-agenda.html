@@ -18,24 +18,24 @@
             </plex-label>
 
             <ng-container *ngIf="prestacionSeleccionada.paciente?.id">
-                <div *ngIf="prestacionSeleccionada.paciente?.id"> <b>Paciente: &nbsp;</b>{{
-                    prestacionSeleccionada.paciente |
-                    nombre }}
-                    <span *ngIf="prestacionSeleccionada.paciente.documento !== ''"> | DNI {{
-                        prestacionSeleccionada.paciente.documento}}</span>
-                    <span *ngIf="prestacionSeleccionada.paciente.documento === ''"> Sin documento
-                        (temporal)</span>
+                <div>
+                    <b>Paciente: &nbsp;</b>{{ prestacionSeleccionada.paciente | nombre }}
+                    <span> | DNI {{ prestacionSeleccionada.paciente | documento }}
+                    </span>
                     <span *ngIf="prestacionSeleccionada.paciente.fechaNacimiento !== null"> | Edad: {{
-                        prestacionSeleccionada.paciente | edad }}</span>
-                    <span *ngIf="prestacionSeleccionada?.paciente?.id && prestacionSeleccionada?.paciente?.sexo"> |
-                        Sexo:
-                        {{ prestacionSeleccionada.paciente | sexo }}</span>
-                    <span *ngIf="prestacionSeleccionada?.paciente?.id && prestacionSeleccionada?.paciente?.edad">{{
-                        turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+                        prestacionSeleccionada.paciente | edad }}
+                    </span>
+                    <span *ngIf="prestacionSeleccionada?.paciente?.sexo"> | Sexo:
+                        {{ prestacionSeleccionada.paciente.sexo }}
+                    </span>
+                    <span *ngIf="prestacionSeleccionada?.paciente?.genero"> | Identidad de género:
+                        {{ prestacionSeleccionada.paciente.genero }}
+                    </span>
+                    <span *ngIf="prestacionSeleccionada?.paciente?.edad">{{
+                        turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}
+                    </span>
                 </div>
             </ng-container>
-
-            <!--CODIFICACION-->
 
             <div class="pt-2" *ngIf="!showReparo">
                 <plex-title titulo="Codificación" size="sm"></plex-title>

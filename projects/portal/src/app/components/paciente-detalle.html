@@ -4,13 +4,13 @@
             <plex-badge size="success">titular de la cuenta</plex-badge>
             <img [mpiFotoPaciente]="paciente">
             <div title>
-                {{ paciente.nombre }} <br> {{ paciente.apellido }}
+                {{ paciente | nombre }}
             </div>
             <div subtitle>
-                {{ paciente.documento }}
+                {{ paciente | documento }}
                 <br>
                 <plex-button size="sm" type="danger" (click)="modal.show()"
-                             label="{{ isResponsive() ? 'reportar error' : 'reportar error en mis datos' }}" class="mt-4 mr-2">
+                            label="{{ isResponsive() ? 'reportar error' : 'reportar error en mis datos' }}" class="mt-4 mr-2">
                 </plex-button>
                 <plex-button size="sm" type="info" icon="information-variant" tooltip="ver datos secundarios" (click)="ocultarDatos()">
                 </plex-button>
@@ -52,12 +52,12 @@
             <form #formulario="ngForm">
                 <div>
                     <plex-select [ngModelOptions]="{standalone: true}" placeholder="Seleccione un motivo" grow="2" [(ngModel)]="motivoError.select"
-                                 name="motivoError" [data]="errores" label-field="nombre + ' (' + continente + ')'">
+                                name="motivoError" [data]="errores" label-field="nombre + ' (' + continente + ')'">
                     </plex-select>
                 </div>
                 <div class="mt-4">
                     <plex-text placeholder="Describa brevemente el error" multiline="true" name="multi"
-                               [(ngModel)]="descripcionError">
+                            [(ngModel)]="descripcionError">
                     </plex-text>
                 </div>
             </form>
