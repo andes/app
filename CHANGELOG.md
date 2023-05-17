@@ -1,3 +1,17 @@
+# [5.119.0](https://github.com/andes/app/compare/v5.118.0...v5.119.0) (2023-05-17)
+
+
+### Bug Fixes
+
+* **IN-537:** Error al editar egreso ([#2861](https://github.com/andes/app/issues/2861)) ([5e48b8e](https://github.com/andes/app/commit/5e48b8e7b6a78fb2c064f8003f753cb569199b29))
+* **TOP:** se marca la solicitud seleccionada ([#2840](https://github.com/andes/app/issues/2840)) ([1f6946e](https://github.com/andes/app/commit/1f6946eef6facdbe60dd8afa6a254d93e1cbdf46))
+
+
+### Features
+
+* **HUDS:** Agregar filtro de descargas pendientes  ([#2668](https://github.com/andes/app/issues/2668)) ([3c194e3](https://github.com/andes/app/commit/3c194e365c6e3d94b34abe81ccc69010eaa9fd46))
+* **HUDS:** modifica muestra en info de prestacion ([#2859](https://github.com/andes/app/issues/2859)) ([fe4dadb](https://github.com/andes/app/commit/fe4dadbb143e46466808e5d8a801f8892da52177))
+
 # [5.118.0](https://github.com/andes/app/compare/v5.117.0...v5.118.0) (2023-05-10)
 
 
