@@ -26,6 +26,7 @@ export class VistaPrestacionComponent implements OnInit {
     public puedeDescargarInforme: boolean;
     public requestInProgress: boolean;
     public hasPacs: boolean;
+    public mostrarMas = false;
 
     _puedeEditar: boolean;
 
@@ -68,6 +69,10 @@ export class VistaPrestacionComponent implements OnInit {
 
     get idPrestacion(): any {
         return this._idPrestacion;
+    }
+
+    mostrar() {
+        this.mostrarMas = !this.mostrarMas;
     }
 
     getTimestamp(fecha) {
