@@ -1,11 +1,12 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormsService } from '../../services/form.service';
 import { FormResourcesService } from '../../services/resources.service';
 import { FormPresetResourcesService } from '../../services/preset.resources.service';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -14,6 +15,9 @@ import { FormPresetResourcesService } from '../../services/preset.resources.serv
     styleUrls: ['./forms-crud.scss']
 })
 export class AppFormsCrudComponent implements OnInit {
+
+    @ViewChild('formulario', { static: false }) formControl: NgForm;
+
     public tiposList = [
         { id: 'string', nombre: 'Texto' },
         { id: 'int', nombre: 'Numerico' },
@@ -29,13 +33,20 @@ export class AppFormsCrudComponent implements OnInit {
     public disable = false;
     public recursos = [];
     public secciones = [];
+    public seccionesInForm = [];
     public hasOcurrences = false;
     public isFormSnomedizable = false;
     public desabilitado = false;
     public fieldToConfig = null;
+    public formToConfig = null;
     public form: any = {
         name: '',
         type: '',
+        config: {
+            idEvento: '',
+            idGrupoEvento: '',
+            configField: []
+        },
         snomedCode: '',
         active: true,
         fields: []
@@ -72,6 +83,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.desabilitado = true;
                 this.isFormSnomedizable = (formulario.snomedCode) ? true : false;
                 this.form.name = formulario.name;
+                this.form.config = formulario.config;
                 this.form.type = formulario.type;
                 this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
@@ -151,8 +163,18 @@ export class AppFormsCrudComponent implements OnInit {
     }
 
     onRemove(i) {
+        const itemRemove = this.form.fields[i];
+        this.seccionesInForm.forEach((s, j) => {
+            if (itemRemove.sections.find(i => i.id === s.seccion)) {
+                s.cantidad--;
+                if (!s.cantidad) {
+                    this.seccionesInForm.splice(j, 1);
+                }
+            }
+        });
         this.form.fields.splice(i, 1);
         this.form.fields = [...this.form.fields];
+
     }
 
     save($event) {
@@ -190,6 +212,7 @@ export class AppFormsCrudComponent implements OnInit {
             const dataSaved: Form = {
                 active: this.form.active,
                 name: this.form.name,
+                config: this.form.config,
                 type: this.form.type,
                 snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                 sections: aux.map(i => {
@@ -203,6 +226,7 @@ export class AppFormsCrudComponent implements OnInit {
                     ...this.formToUpdate,
                     active: this.form.active,
                     snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
+                    config: this.form.config,
                     sections: dataSaved.sections
                 };
                 this.formsService.save(this.formToUpdate).subscribe(() => {
@@ -235,21 +259,46 @@ export class AppFormsCrudComponent implements OnInit {
 
     close() {
         this.fieldToConfig = null;
+        this.formToConfig = null;
     }
 
     setFieldType(f) {
-        f.type = this.tiposList.find(t => t?.id === f.type) as any;
+        const typeField = f.type.id ? f.type.id : f.type;
+        const resourceField = f.resources.id ? f.resources.id : f.resources;
+        f.type = this.tiposList.find(t => t?.id.toString() === typeField.toString()) as any;
         if ((f.type as any)?.id === 'select') {
-            f.resources = this.recursos.find(t => t?.id === f.resources) as any;
+            f.resources = this.recursos.find(t => t?.id.toString() === resourceField.toString()) as any;
         }
     }
 
     loadPresetSection(section) {
         const fields = [...section.fields];
+        if (this.seccionesInForm && this.seccionesInForm.find(s => s.seccion === section.id)) {
+            return this.plex.toast('danger', 'La sección ya se ha agregado al formulario');
+        }
+        this.seccionesInForm.push(
+            {
+                seccion: section.id,
+                cantidad: fields.length
+            });
+        const sec: any = this.secciones.find(s => s.id === section.id);
+        sec.preset = section.preset;
         fields.forEach(f => {
-            f.sections = [this.secciones.find(s => section.id)];
+            f.sections = [sec];
             this.setFieldType(f);
         });
+
         this.form.fields = [...this.form.fields, ...fields];
+    }
+
+    setSnvs() {
+        this.formToConfig = this.form;
+    }
+
+    changeSnomedBool() {
+        if (!this.isFormSnomedizable) {
+            this.form.snomedCode = null;
+            this.formControl.controls.snomed.markAsPristine();
+        }
     }
 }

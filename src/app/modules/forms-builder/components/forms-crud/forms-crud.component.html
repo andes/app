@@ -1,4 +1,4 @@
-<plex-layout [main]="fieldToConfig? 9 : 12" resizable="true" min="2" max="4">
+<plex-layout [main]="(fieldToConfig || formToConfig)? 9 : 12" resizable="true" min="2" max="4">
     <plex-layout-main>
         <form #formulario="ngForm" class="form-scroll">
             <plex-title main titulo="Alta de tipo de formulario">
@@ -8,6 +8,7 @@
                 <plex-button type="success" [validateForm]="formulario" (click)="save($event)" class="ml-2">
                     Guardar
                 </plex-button>
+                <plex-button type="warning" (click)="setSnvs()" class="ml-2">SISA</plex-button>
             </plex-title>
 
             <plex-wrapper>
@@ -16,19 +17,20 @@
                 <plex-text label="Tipo/Clave" required name="tipo" [disabled]="desabilitado" [(ngModel)]="form.type"
                            [readonly]="hasOcurrences">
                 </plex-text>
-                <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable">
+                <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable"
+                           (change)="changeSnomedBool()">
                 </plex-bool>
-                <div *ngIf="isFormSnomedizable">
-                    <plex-text label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"></plex-text>
-                </div>
+                <plex-text class="pr-2" label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"
+                           [disabled]="!isFormSnomedizable">
+                </plex-text>
                 <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
             </plex-wrapper>
 
             <plex-title size="sm" titulo="Campos">
-                <plex-dropdown #drop *ngIf="itemsDropdown?.length" class="pl-2 mr-0" [right]="true"
-                            [items]="itemsDropdown" size="sm" icon="plus" label="">
+                <plex-dropdown #drop *ngIf="itemsDropdown?.length" class="pl-2 mr-1" [right]="true" type="info"
+                               [items]="itemsDropdown" size="sm" icon="plus" tooltip="Agregar" label="">
                 </plex-dropdown>
-                <plex-button type="info" size="sm" (click)="onAddField()">
+                <plex-button type="success" size="sm" (click)="onAddField()">
                     AGREGAR CAMPO
                 </plex-button>
             </plex-title>
@@ -61,20 +63,22 @@
                         </plex-select>
                         <plex-text name="descripcion-{{ i }}" label="Descripción" [(ngModel)]="field.description">
                         </plex-text>
-                        <plex-button size="sm" class="mt-4" type="warning" align="center" label="Configuración"
+                        <plex-button size="sm" class="mt-4" type="info" align="center" label="Configuración"
                                      (click)="setConfiguracion(field) ; setDependencyData()">
                         </plex-button>
                         <plex-button size="sm" class="mt-4" type="danger" align="center" label="Eliminar"
                                      (click)="onRemove(i)">
                         </plex-button>
                     </plex-item>
+                    <!-- hack hasta que se pueda agregar altura al ultimo item por plex-->
+                    <br><br><br><br><br><br>
                 </plex-list>
             </cdk-virtual-scroll-viewport>
         </form>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title size="sm" titulo="Configuración">
-            <plex-button size="sm" type="danger" icon="close" (click)="close()"></plex-button>
+        <plex-title titulo="Configuración" size="md">
+            <plex-button size="sm" type="danger" icon="close" tooltip="cerrar" (click)="close()"></plex-button>
         </plex-title>
         <ng-container *ngIf="fieldToConfig">
             <plex-bool type="slide" name="active" label="Campo Obligatorio" [(ngModel)]="fieldToConfig.required">
@@ -86,6 +90,9 @@
             <ng-container *ngIf="fieldToConfig?.type.id==='selectStatic'">
                 <app-select-static [fieldStatic]="fieldStatic"></app-select-static>
             </ng-container>
+        </ng-container>
+        <ng-container *ngIf="formToConfig">
+            <app-form-config [form]="formToConfig"></app-form-config>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

@@ -141,9 +141,14 @@
 </plex-layout>
 <plex-layout main="8" *ngIf="showFicha" resizable="true" min="1" max="4">
     <plex-layout-main>
-        <app-ficha-epidemiologica-crud [paciente]="paciente" [fichaPaciente]="fichaPaciente" [editFicha]="editFicha"
-                                       (volver)="volver()" [fichaName]="showFicha" [volverBuscador]=true>
+        <app-ficha-epidemiologica-crud *ngIf="showFicha === 'covid19'" [paciente]="paciente"
+                                       [fichaPaciente]="fichaPaciente" [editFicha]="editFicha" (volver)="volver()"
+                                       [fichaName]="showFicha" [volverBuscador]=true>
         </app-ficha-epidemiologica-crud>
+        <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'covid19'" [paciente]="paciente"
+                                          [fichaPaciente]="fichaPaciente" [editFicha]="editFicha" (volver)="volver()"
+                                          [fichaName]="showFicha" [volverBuscador]=true>
+        </app-ficha-epidemiologica-generic>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <ng-container *ngIf="paciente">

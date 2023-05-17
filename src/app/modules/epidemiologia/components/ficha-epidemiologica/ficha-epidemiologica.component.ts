@@ -19,7 +19,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
     itemsDropdownFichas = [];
     public showFicha = null;
     public showLabel = true;
-    public selectedForm;
+    public selectedForm = {};
     public pacienteSelected = null;
     public resultadoBusqueda = null;
     public fichasPaciente: Observable<any>;
@@ -158,6 +158,7 @@ export class FichaEpidemiologicaComponent implements OnInit {
     }
 
     verFicha(ficha) {
+        this.selectedForm['name'] = ficha.type.name;
         this.fichaPaciente$ = of(ficha);
         this.showFicha = ficha.type.name;
         this.editFicha = false;
