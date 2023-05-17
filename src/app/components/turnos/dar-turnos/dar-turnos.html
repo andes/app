@@ -82,7 +82,7 @@
                 </plex-label>
             </plex-item>
         </plex-list>
-        <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT === 'dinamica'">
+        <ng-container *ngIf="cumpleEstados()">
             <plex-title titulo="Dar turno" size="sm"></plex-title>
             <div class="contenedor-slider">
                 <plex-button align="middle" tooltip="Agenda anterior" name="agendaAnterior" class="btn-prev" size="sm"
@@ -172,8 +172,7 @@
             </div>
             <div *ngIf="!showSobreturno">
                 <!-- Tiene turnos disponibles -->
-                <ng-container
-                    *ngIf="estadoT === 'seleccionada' && (opciones.profesional && opciones.tipoPrestacion || opciones.tipoPrestacion)">
+                <ng-container *ngIf="tieneTurnosDisponible()">
                     <!--Lista de turnos, bloque por bloque-->
                     <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
                     <plex-grid class="turnos_disponibles" responsive type="full" cols="4"
@@ -246,7 +245,7 @@
                 </ng-container>
 
                 <!--Si no hay turnos disponibles, se muestran alternativas-->
-                <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length<=0 && !reqfiltros">No existen alternativas</h6>
+                <h6 *ngIf="verInexistenciaAlternativas()">No existen alternativas</h6>
                 <h6 *ngIf="estadoT == 'noTurnos' && reqfiltros">Debe ingresar algún filtro para buscar alternativa</h6>
                 <h6 *ngIf="estadoT == 'noTurnos' && alternativas.length > 0">No hay turnos en esta agenda,
                     <strong>seleccione una agenda alternativa</strong>
@@ -305,9 +304,8 @@
                         <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
                             name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                     </plex-grid>
-                    <plex-select
-                        *ngIf="bloque && (!turno.tipoPrestacion || (dinamica && bloque.tipoPrestaciones.length > 1))"
-                        label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
+                    <plex-select *ngIf="verTipoPrestacion()" label="Tipo de prestación"
+                        [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
                         name="turnoTipoPrestacion"></plex-select>
                     <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
                     </plex-text>

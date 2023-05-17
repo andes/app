@@ -364,13 +364,14 @@ export class DarTurnosComponent implements OnInit {
 
         if (search.tipoPrestacion || search.profesional) {
             const index = this.cacheBusquedas.findIndex(
-                item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
-                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null) &&
-                    (item.organizacion && search.organizacion ? item.organizacion.id === search.organizacion.id : search.organizacion === null)
+                item => (item.profesional?._id === search.profesional?._id) &&
+                    (item.tipoPrestacion?._id === search.tipoPrestacion?._id) &&
+                    (item.organizacion?.id === search.organizacion?.id)
             );
+
             if (index > 0) {
-                this.busquedas = this.cacheBusquedas.filter(p => ((p.tipoPrestacion?.term !== search.tipoPrestacion?.term) && (p.profesional?._id !== search.profesional?._id)));
-                this.cacheBusquedas = [...this.busquedas];
+                this.cacheBusquedas.splice(index, 1);
+                this.busquedas = JSON.parse(JSON.stringify(this.cacheBusquedas));
             }
 
             if (index !== 0) {
@@ -790,6 +791,20 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+    cumpleEstados() {
+        return (this.estadoT === 'seleccionada' || this.estadoT === 'noTurnos' || this.estadoT === 'dinamica');
+    }
+
+    tieneTurnosDisponible() {
+        return (this.estadoT === 'seleccionada' && (this.opciones.profesional && this.opciones.tipoPrestacion));
+    }
+
+    verInexistenciaAlternativas() {
+        return (this.estadoT === 'noTurnos' && this.alternativas.length <= 0 && !this.reqfiltros);
+    }
+    verTipoPrestacion() {
+        return (this.bloque && (!this.turno?.tipoPrestacion || (this.agenda?.dinamica && this.bloque.tipoPrestaciones?.length > 1)));
+    }
     primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {
         return (indiceT - 1 < 0)
             || (turno.horaInicio.getTime() !== bloque.turnos[(indiceT - 1)].horaInicio.getTime())
