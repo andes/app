@@ -32,6 +32,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     horarioEjecucion;
     estadoType;
     puedeEditar = false;
+    capa;
 
     @Output() events = new EventEmitter();
 
@@ -44,6 +45,7 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     ) { }
 
     ngOnChanges() {
+        this.capa = this.mapaCamasService.capa;
         this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
             tap(config => {
                 this.horaOrganizacion = config.planIndicaciones.horaInicio;

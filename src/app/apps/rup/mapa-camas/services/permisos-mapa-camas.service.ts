@@ -24,6 +24,7 @@ export class PermisosMapaCamasService {
     public indicacionesCrear = false;
     public indicacionesEjecutar = false;
     public indicacionesValidar = false;
+    public indicacionesAceptarRechazar = false;
 
     constructor(
         private auth: Auth,
@@ -52,6 +53,7 @@ export class PermisosMapaCamasService {
         this.indicacionesCrear = this.auth.check(`${this.ambito}:indicaciones:create`);
         this.indicacionesEjecutar = this.auth.check(`${this.ambito}:indicaciones:ejecutar`);
         this.indicacionesValidar = this.auth.check(`${this.ambito}:indicaciones:validar`);
+        this.indicacionesAceptarRechazar = this.auth.check(`${this.ambito}:indicaciones:aceptarRechazar`);
         this.registros = this.auth.check('internacion:registros');
     }
 }

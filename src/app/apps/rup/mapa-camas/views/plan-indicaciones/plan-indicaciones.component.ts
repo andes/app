@@ -121,11 +121,11 @@ export class PlanIndicacionesComponent implements OnInit {
                 this.horas = this.getHorariosGrilla();
             })
         ).subscribe();
-        this.permisosMapaCamasService.calcularPermisos();
         this.hoy = moment();
         this.capa = this.route.snapshot.paramMap.get('capa');
         this.ambito = this.route.snapshot.paramMap.get('ambito');
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
+        this.permisosMapaCamasService.setAmbito(this.ambito);
         this.loading = true;
         this.getInternacion().pipe(
             switchMap(resumen => {
@@ -179,7 +179,7 @@ export class PlanIndicacionesComponent implements OnInit {
         ]).subscribe(([datos, eventos]) => {
             this.indicaciones = datos;
             if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
-                this.indicaciones = datos.filter(i => i.estado.tipo === 'active');
+                this.indicaciones = datos.filter(i => (i.estado.tipo === 'active' || i.estado.tipo === 'draft' || i.estado.tipo === 'cancelled') && this.isToday(i.estado.fecha));
             } else {
                 this.indicaciones = datos.filter(i => {
                     // se descartan borradores de dias anteriores
@@ -210,7 +210,8 @@ export class PlanIndicacionesComponent implements OnInit {
             });
 
             this.eventos = eventosMap;
-            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft'); this.loading = false;
+            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
+            this.loading = false;
         }, error => { this.loading = false; });
     }
 
@@ -304,16 +305,18 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onIndicacionesCellClick(indicacion, hora) {
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
-        if (this.capa !== 'interconsultores' && indicacion.estado.tipo !== 'draft' && indicacion.estado.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
+        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado.tipo !== 'draft' && indicacion.estado.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
             this.onIndicaciones(indicacion, hora);
         }
     }
 
     private onIndicaciones(indicacion, hora) {
-        this.indicacionEventoSelected = indicacion;
-        this.horaSelected = hora;
-        this.indicacionView = null;
-        this.cd.detectChanges();
+        if (this.capa === 'enfermeria' || (this.eventos[indicacion.id] && this.eventos[indicacion.id][hora]?.estado === 'realizado')) {
+            this.indicacionEventoSelected = indicacion;
+            this.horaSelected = hora;
+            this.indicacionView = null;
+            this.cd.detectChanges();
+        }
     }
 
     onEventos(debeActualizar: boolean) {
@@ -514,5 +517,22 @@ export class PlanIndicacionesComponent implements OnInit {
             this.actualizar();
             this.plex.toast('success', 'Verificación guardada exitosamente');
         });
+    }
+
+    puedeValidar() {
+        return this.capa === 'medica' && this.permisosMapaCamasService.indicacionesValidar && this.borradores.length;
+    }
+
+    puedeAceptarRechazar(indicacion = null) {
+        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado.tipo !== 'draft' && indicacion.estado.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
+            (this.capa === 'interconsultores' || this.capa === 'medica') && this.permisosMapaCamasService.indicacionesAceptarRechazar;
+    }
+
+    puedeCrearIndicacion() {
+        return this.isToday && this.permisosMapaCamasService.indicacionesCrear && this.capa === 'medica';
+    }
+
+    puedeEjecutar() {
+        this.permisosMapaCamasService.indicacionesEjecutar && this.capa !== 'interconsultores';
     }
 }
