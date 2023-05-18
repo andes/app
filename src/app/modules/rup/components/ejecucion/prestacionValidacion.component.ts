@@ -330,18 +330,10 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                                 this.cargaPlan(prestacionesSolicitadas);
                             }
                         });
-                        // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                        this.servicioPrestacion.prestacionPacienteAusente().subscribe(
-                            result => {
-                                const filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
-                                if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
-                                    this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
-                                } else {
-                                    if (!this.prestacion.solicitud.turno) {
-                                        this.codificacionService.addCodificacion(prestacion.id).subscribe();
-                                    }
-                                }
-                            });
+                        // Cargar el mapeo de snomed a cie10 para las prestaciones fuera de agenda
+                        if (!this.prestacion.solicitud.turno) {
+                            this.codificacionService.addCodificacion(prestacion.id).subscribe();
+                        }
                     }
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
