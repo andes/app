@@ -8,4 +8,5 @@ export interface ITipoPrestacion {
     noNominalizada?: Boolean;
     ambito?: Array<string>;
     queries?: String[];
+    auditable?: Boolean;
 }

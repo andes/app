@@ -51,6 +51,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public pacienteSelected = null;
     public loading = false;
     public pacienteDetalle;
+    public prestacionAuditable;
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -251,8 +252,8 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id && t.estado !== 'suspendido' && t.estado !== 'turnoDoble' &&
-                ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
-                    && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
+                ((t.asistencia === 'asistio' && t.tipoPrestacion.auditable === true && !t.diagnostico.codificaciones[0]?.codificacionAuditoria && !t.diagnostico.ilegible)
+                    || !t.asistencia)
             );
         });
         if (!turnoSinCodificar) {
@@ -264,7 +265,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             };
             label = 'Auditada';
         } else {
-            if (!turnoSinVerificar) { // Si todos los turnos tienen la asistencia verificada
+            if (!turnoSinVerificar) {
                 // Se cambia de estado la agenda a pendienteAuditoria
                 this.agenda.estado = 'pendienteAuditoria';
                 patch = {
@@ -313,8 +314,12 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (turno && turno.diagnostico && turno.diagnostico.codificaciones && !turno.diagnostico.codificaciones.length) {
             sinAuditorias = true; // El turno no tiene codificaciones asociadas
         }
-        const esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias);
+        const esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias || turno.tipoPrestacion.auditable === false);
         return esAuditado;
+    }
+
+    asistenciaVerificada(turno) {
+        return turno?.asistencia && turno?.asistencia === 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term && turno.tipoPrestacion.auditable === true;
     }
 
     cancelar() {
