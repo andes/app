@@ -1,55 +1,50 @@
-<table class="table table-striped table-sm mt-2 table-lista-accesos">
+<plex-table [columns]="columns" #table="plTable" [offset]="160" (scroll)="onScroll()">
+    <plex-table-columns>
+    </plex-table-columns>
     <!-- No hay accesos -->
-    <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
-           [scrollWindow]="false">
-        <ng-container *ngIf="!accesosHuds?.length">
-            <tr>
-                <td colspan="3">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay accesos a la huds
-                </td>
-            </tr>
-        </ng-container>
+    <ng-container *ngIf="!accesosHuds?.length">
+        <tr>
+            <td colspan="3">
+                <i class="mdi mdi-emoticon-sad"></i> No hay accesos a la huds
+            </td>
+        </tr>
+    </ng-container>
 
-        <!-- Listado de accesos -->
+    <!-- Listado de accesos -->
 
-        <ng-container *ngFor="let acceso of accesosHuds; let i=index">
-            <tr class="hover md-2" [ngClass]="{'bg-inverse text-white': false}">
+    <tr *ngFor="let acceso of accesosHuds; let i=index">
+        <td *plTableCol="'fechaAcceso'">
+            <div *ngIf="acceso.fecha">
+                <span class="text-info"><strong>
+                        {{acceso.fecha | date: 'dd/MM/yyyy'}}</strong></span>
+            </div>
+            <div>
+                <span class="text-secondary">{{acceso.fecha | date: 'HH:mm'}}</span>
+            </div>
+        </td>
+        <td *plTableCol="'nombreCompleto'">
+            <div *ngIf="acceso.usuario?.nombreCompleto">
+                <strong>{{acceso.usuario.nombreCompleto}}</strong>
+            </div>
+            <div>
+                <span *ngIf="acceso.matricula" class="text-secondary">Matrícula:
+                    {{acceso.matricula}}</span>
+            </div>
+        </td>
+        <td *plTableCol="'motivo'">
+            <div *ngIf="acceso.motivoAcceso">
 
-                <td class="small">
-                    <div *ngIf="acceso.fecha">
-                        <span class="text-info"><strong>
-                                {{acceso.fecha | date: 'dd/MM/yyyy'}}</strong></span>
-                    </div>
-                    <div>
-                        <span class="text-secondary">{{acceso.fecha | date: 'HH:mm'}}</span>
-                    </div>
-                </td>
-                <td class="medium">
-                    <div *ngIf="acceso.usuario?.nombreCompleto">
-                        <strong>{{acceso.usuario.nombreCompleto}}</strong>
-                    </div>
-                    <div>
-                        <span *ngIf="acceso.matricula" class="text-secondary">Matrícula:
-                            {{acceso.matricula}}</span>
-                    </div>
-                </td>
-                <td class="medium">
-                    <div *ngIf="acceso.motivoAcceso">
-                        <strong>Motivo
-                            de acceso</strong>
-                    </div>
-                    <div>
-                        <span *ngIf="acceso.motivoAcceso" class="text-secondary">{{acceso.motivoAcceso}}</span>
-                    </div>
-                </td>
-                <td class="medium">
-                    <ng-container *ngIf="acceso.organizacion && acceso.organizacion.nombre">
-                        <plex-badge type="info float-right">
-                            {{acceso.organizacion.nombre}}
-                        </plex-badge>
-                    </ng-container>
-                </td>
-            </tr>
-        </ng-container>
-    </tbody>
-</table>
+            </div>
+            <div>
+                <span *ngIf="acceso.motivoAcceso" class="text-secondary">{{acceso.motivoAcceso}}</span>
+            </div>
+        </td>
+        <td *plTableCol="'organizacion'">
+            <ng-container *ngIf="acceso.organizacion && acceso.organizacion.nombre">
+                <plex-badge type="info float-right">
+                    {{acceso.organizacion.nombre}}
+                </plex-badge>
+            </ng-container>
+        </td>
+    </tr>
+</plex-table>

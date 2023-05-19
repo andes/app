@@ -4,8 +4,7 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'vista-accesos-huds',
-    templateUrl: 'vista-accesos-huds.html',
-    styleUrls: ['./vista-accesos-huds.scss']
+    templateUrl: 'vista-accesos-huds.html'
 })
 
 export class VistaAccesosHudsComponent implements OnInit {
@@ -19,11 +18,32 @@ export class VistaAccesosHudsComponent implements OnInit {
     public params;
     private scrollEnd = false;
 
+    public columns = [
+        {
+            key: 'fechaAcceso',
+            label: 'Fecha',
+        },
+        {
+            key: 'nombreCompleto',
+            label: 'Nombre Completo',
+        },
+        {
+            key: 'motivo',
+            label: 'Motivo',
+
+        },
+        {
+            key: 'organizacion',
+            label: 'Organización',
+
+        }
+    ];
+
     ngOnInit() {
         this.params = {
             paciente: this.paciente.id,
             skip: 0,
-            limit: 10
+            limit: 15
         };
         this.getAccesos();
     }
