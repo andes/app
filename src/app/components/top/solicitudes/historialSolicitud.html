@@ -1,8 +1,11 @@
 <plex-list *ngIf="itemsHistorial.length">
     <plex-item *ngFor="let reg of itemsHistorial">
         <plex-icon name="entrada" type="info"></plex-icon>
-        <plex-label [tituloBold]="true" titulo="{{ reg.createdAt | fecha }}"
+        <plex-label *ngIf="reg.accion !== 'notificar'" [tituloBold]="true" titulo="{{ reg.createdAt | fecha }}"
                     subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }}">
+        </plex-label>
+        <plex-label *ngIf="reg.accion === 'notificar'" [tituloBold]="true" titulo="{{ reg.createdAt | fecha }}"
+                    subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }} el {{reg.fechaDeNotificacion | fecha}}">
         </plex-label>
         <plex-label [tituloBold]="true" titulo="Notas"
                     subtitulo="{{ reg.observaciones?  reg.observaciones :'Sin observaciones'}}"></plex-label>
@@ -16,8 +19,10 @@
                     [tituloBold]="true" titulo="Profesional Destino Original"
                     subtitulo="{{ reg.profesional.nombre }} {{ reg.profesional.apellido }}">
         </plex-label>
-        <plex-label *ngIf="!(reg.profesional && (reg.accion === 'referir' || reg.accion === 'asignada'))"
-                    [tituloBold]="true" titulo=" ">
-        </plex-label>
     </plex-item>
 </plex-list>
+<div *ngIf="!itemsHistorial.length" justify="center" class="mt-4">
+    <plex-label class="flex-column" icon="informacion" size="xl" direction="column"
+                titulo="No existe historial para esta solicitud">
+    </plex-label>
+</div>

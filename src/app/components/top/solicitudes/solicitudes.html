@@ -41,7 +41,7 @@
                         <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada') && !this.actualizacion"
                                        type="date" [(ngModel)]="fechaHastaEntrada" (change)="cargarSolicitudes()"
                                        name="fechaHasta" label="Registro hasta" class="fechas" [min]="fechaDesdeEntrada"
-                                       required>
+                                       [max]="hoy" required>
                         </plex-datetime>
 
                         <!--FILTRO DE FECHA ACTUALIZACION-->
@@ -53,7 +53,8 @@
                         <plex-datetime *ngIf="this.actualizacion" type="date"
                                        [(ngModel)]="fechaHastaEntradaActualizacion"
                                        name="fechaHastaEntradaActualizacion" label="Actualización hasta" class="fechas"
-                                       (change)="cargarSolicitudes()" [min]="fechaHastaEntradaActualizacion" required>
+                                       (change)="cargarSolicitudes()" [min]="fechaDesdeEntradaActualizacion" [max]="hoy"
+                                       required>
                         </plex-datetime>
 
                         <plex-select [(ngModel)]="prestacionesDestinoEntrada" name="nombrePrestacion"
@@ -140,6 +141,12 @@
                                         tooltip="Agenda Virtual" tooltipPosition="top">
                                 <plex-icon name="monitor" size="md"></plex-icon>
                             </plex-badge>
+
+                            <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
+                                        tooltip="Paciente notificado">
+                                <plex-icon name="telefono" size="sm"></plex-icon>
+                            </plex-badge>
+
                             <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                         type="danger">AUTOCITADO
                             </plex-badge>
@@ -200,7 +207,7 @@
                         </plex-datetime>
                         <plex-datetime *ngIf="!actualizacion" type="date" [(ngModel)]="fechaHastaSalida"
                                        (change)="cargarSolicitudes()" name="fechaHasta" label="Registro hasta"
-                                       class="fechas" [min]="fechaDesdeSalida" required>
+                                       class="fechas" [min]="fechaDesdeSalida" [max]="hoy" required>
                         </plex-datetime>
                         <!--FILTRO DE FECHA ACTUALIZACION-->
                         <plex-datetime *ngIf="actualizacion" type="date" [(ngModel)]="fechaDesdeSalidaActualizacion"
@@ -209,7 +216,8 @@
                         </plex-datetime>
                         <plex-datetime *ngIf="actualizacion" type="date" [(ngModel)]="fechaHastaSalidaActualizacion"
                                        name="fechaHastaSalidaActualizacion" label="Actualización hasta" class="fechas"
-                                       (change)="cargarSolicitudes()" [min]="fechaHastaSalidaActualizacion" required>
+                                       (change)="cargarSolicitudes()" [min]="fechaDesdeSalidaActualizacion" [max]="hoy"
+                                       required>
                         </plex-datetime>
                         <plex-select [(ngModel)]="prestacionesDestinoSalida" name="nombrePrestacion"
                                      label="Prestación destino" name="prestacionDestino"
@@ -282,6 +290,10 @@
                         </td>
                         <!-- ESTADO Y ACCIONES -->
                         <td class="column-right my-3 d-flex align-items-center">
+                            <plex-badge *ngIf="existeNotificacion(prestacion)" type="info"
+                                        tooltip="Paciente notificado">
+                                <plex-icon name="telefono" size="sm"></plex-icon>
+                            </plex-badge>
                             <plex-badge type="danger"
                                         *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
@@ -351,6 +363,10 @@
                                   (returnPrestacion)="returnPrestacion($event)">
             </prestacion-solicitud>
         </div>
+        <div *ngIf="showNotificarPaciente">
+            <notificar-paciente (cancelarNotificacion)="cerrar()"
+                                (returnNotificarPaciente)="returnNotificarPaciente($event)"></notificar-paciente>
+        </div>
     </plex-layout-sidebar>
 </plex-layout>
 <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
@@ -365,8 +381,8 @@
 <plex-modal #modal (closed)="cerrarDevolver()">
     <plex-icon name="alert-circle" type="info"></plex-icon>
     <plex-modal-title type="danger" *ngIf="prestacionDevolver">
-        {{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' : 'Deshacer
-        Asignación' }}
+        {{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' :
+        'Deshacer Asignación' }}
     </plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo:</plex-modal-subtitle>
     <main>

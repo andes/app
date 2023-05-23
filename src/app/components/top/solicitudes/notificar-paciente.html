@@ -1,0 +1,20 @@
+<plex-title titulo="Comunicación con el paciente">
+    <plex-button type="success" icon="check" size="sm" tooltip="Guardar" [disabled]="!formulario.valid"
+                 (click)="guardar()"></plex-button>
+    <plex-button class="ml-1" type="danger" icon="close" size="sm" tooltip="Cancelar" (click)="cancelar()">
+    </plex-button>
+</plex-title>
+<form #formulario="ngForm">
+    <div class="row">
+        <div class="col-12">
+            <plex-datetime type="date" label="Fecha de notificación" name="fechaNotificacion" [max]="hoy"
+                           [(ngModel)]="fechaNotificacion" [required]="true" placeholder="Ingrese una fecha">
+            </plex-datetime>
+        </div>
+        <div class="col-12">
+            <plex-text label="Descripción" multiline="true" name="descripcionNotificacion"
+                       [(ngModel)]="descripcionNotificacion" placeholder="Ingrese una descripción" [required]="true">
+            </plex-text>
+        </div>
+    </div>
+</form>
