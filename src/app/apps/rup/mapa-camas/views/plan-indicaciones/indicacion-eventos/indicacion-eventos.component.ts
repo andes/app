@@ -9,14 +9,15 @@ import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'in-plan-indicacion-evento',
-    templateUrl: './indicacion-eventos.component.html'
+    templateUrl: './indicacion-eventos.component.html',
+
 })
 export class PlanIndicacionEventoComponent implements OnChanges {
     @Input() indicacion;
     @Input() evento;
     @Input() hora;
     @Input() fecha: Date;
-
+    labelEstado = 'Observaciones';
     fechaHora: Date;
     editando: boolean;
     horaOrganizacion;
@@ -78,7 +79,9 @@ export class PlanIndicacionEventoComponent implements OnChanges {
     onEdit() {
         this.editando = true;
     }
-
+    onInputChange(value) {
+        (value.value?.id === 'realizado') ? this.labelEstado = 'Observaciones' : this.labelEstado = 'Motivo';
+    }
     onGuardar() {
         if (this.evento) {
             this.indicacionEventosService.update(
