@@ -1,3 +1,18 @@
+# [5.120.0](https://github.com/andes/app/compare/v5.119.0...v5.120.0) (2023-05-24)
+
+
+### Bug Fixes
+
+* **CITAS:** quita el llamado a codificación desde la app ([#2858](https://github.com/andes/app/issues/2858)) ([e879843](https://github.com/andes/app/commit/e8798432fa8960f48d10c71ef2edb6c31ba0e721))
+* **HUDS:** se corrige scroll infinito con plex ([#2868](https://github.com/andes/app/issues/2868)) ([2a37776](https://github.com/andes/app/commit/2a37776cf79cc8830ba2ad2280211f422bc64368))
+* **IN-524:** Error en consola al agregar una nueva indicación ([#2865](https://github.com/andes/app/issues/2865)) ([b33ceb7](https://github.com/andes/app/commit/b33ceb720b091152b5b0b3d80543f05d1b53f176))
+
+
+### Features
+
+* **CIT-189:** Agendas auditadas ([#2754](https://github.com/andes/app/issues/2754)) ([a9b61ed](https://github.com/andes/app/commit/a9b61ed83b36a76b756c4ddf172a39084e55fd2e))
+* **TOP-131:** Seguimiento de llamados telefonicos a pacientes ([#2821](https://github.com/andes/app/issues/2821)) ([9d55d7c](https://github.com/andes/app/commit/9d55d7c8cdf2a6f94c85e20e0bf51e397b8a26ac))
+
 # [5.119.0](https://github.com/andes/app/compare/v5.118.0...v5.119.0) (2023-05-17)
 
 
