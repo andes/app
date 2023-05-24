@@ -534,7 +534,7 @@ export class PacienteComponent implements OnInit {
                     }).pipe(
                         map((resultado: any) => {
                             this.loading = false;
-                            if (resultado.error) {
+                            if (resultado.error || resultado.message) {
                                 this.plex.info('warning', 'Revise los datos ingresados o registre como paciente temporal', 'Ciudadano no encontrado');
                                 this.disableValidar = false;
                             } else {
