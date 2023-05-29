@@ -8,9 +8,9 @@
             <!-- ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (accion)="onAccion($event)"
                                                 (cancel)="activateOption('ingreso')" (toggleEditar)="toggleEdit()">
-                <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
-                                 tooltipPosition="left" (click)="onAnularInternacion()">
+                <ng-container *ngIf="hayMovimientosSinEgresoAt$ | async">
+                    <plex-button *ngIf="capa !== 'interconsultores'" size="sm" icon="account-off" type="danger"
+                                 tooltip="Deshacer Internacion" tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>
             </app-informe-ingreso-estadistica-v2>

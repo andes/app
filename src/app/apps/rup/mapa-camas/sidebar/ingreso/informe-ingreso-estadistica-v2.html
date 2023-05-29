@@ -78,6 +78,7 @@
                          tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
                          (click)="toggleEdit()" class="mr-1">
             </plex-button>
+            <ng-content></ng-content>
         </plex-title>
         <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal"
                           [fields]="pacienteFields">
