@@ -383,17 +383,26 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid && this.validarRUP()) {
+            if (this.cama.sala) {
+                this.confirmarGuardar();
+                return;
+            }
             this.mapaCamasService.historial('cama', this.mapaCamasService.fecha, moment().toDate(), this.cama).pipe(
                 take(1),
                 map(resp => resp)
             ).subscribe(historial => {
-                if (historial.length && historial[0].idInternacion && historial[0].idInternacion !== this.cama.idInternacion) {
-                    const proxOcupacion = moment(historial[0].fecha);
-                    this.plex.confirm(`Esta cama está disponible hasta el día ${proxOcupacion.format('DD/MM/YYYY')} a las ${proxOcupacion.format('hh:mm')}. ¿Desea continuar con la internación?`, 'Aviso').then(respuesta => {
-                        if (respuesta) {
-                            this.confirmarGuardar();
-                        }
-                    });
+                if (historial.length) {
+                    // Verificamos si hay otra internacion mas adelante. Asi mismo un bloqueo de cama o cambio de UO
+                    if (historial[0].idInternacion && historial[0].idInternacion !== this.cama.idInternacion ||
+                        historial[0].estado !== 'disponible' ||
+                        historial[0].unidadOrganizativa !== this.cama.unidadOrganizativa) {
+                        const fechaEnConflicto = moment(historial[0].fecha);
+                        this.plex.confirm(`Esta cama está disponible hasta el día ${fechaEnConflicto.format('DD/MM/YYYY')} a las ${fechaEnConflicto.format('HH:mm')}. ¿Desea continuar con la internación?`, 'Aviso').then(respuesta => {
+                            if (respuesta) {
+                                this.confirmarGuardar();
+                            }
+                        });
+                    }
                 } else {
                     this.confirmarGuardar();
                 }
