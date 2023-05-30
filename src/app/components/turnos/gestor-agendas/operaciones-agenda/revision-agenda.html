@@ -246,7 +246,8 @@
                 </ng-container>
 
                 <!--CODIFICACION-->
-                <ng-container *ngIf="turnoSeleccionado?.asistencia === 'asistio' && turnoSeleccionado?.auditable">
+                <ng-container
+                              *ngIf="turnoSeleccionado?.asistencia === 'asistio' && turnoSeleccionado?.tipoPrestacion?.auditable">
                     <div *ngIf="!showReparo" class="mt-4">
                         <plex-title titulo="Codificación" size="sm"></plex-title>
                         <!-- Buscador de prestaciones cie10 -->
