@@ -1,3 +1,16 @@
+# [5.121.0](https://github.com/andes/app/compare/v5.120.0...v5.121.0) (2023-05-31)
+
+
+### Bug Fixes
+
+* **CIT:** Cambia  control de turno auditable por tipo de prestación auditable ([#2872](https://github.com/andes/app/issues/2872)) ([9c0dc1f](https://github.com/andes/app/commit/9c0dc1f38b9da0ca63cee20f531f9932a9f76c39))
+* **mpi:** chequeo de validacion fallida ([#2870](https://github.com/andes/app/issues/2870)) ([b950445](https://github.com/andes/app/commit/b950445721fe381ec1c3743498e0bda403ed1a60))
+
+
+### Features
+
+* **IN:** muestra deshacerInternacion en capa medica ([#2837](https://github.com/andes/app/issues/2837)) ([f0e8f5d](https://github.com/andes/app/commit/f0e8f5d27c1fcc626495f845799fdf336249dc07))
+
 # [5.120.0](https://github.com/andes/app/compare/v5.119.0...v5.120.0) (2023-05-24)
 
 
