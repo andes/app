@@ -125,17 +125,22 @@ export class Auth {
 
     // Devuelve las organizaciones que tiene permiso en general el usuario.
     private organizaciones$;
-    organizaciones(): Observable<any> {
-        if (!this.organizaciones$) {
-            this.organizaciones$ = this.server.get('/auth/organizaciones').pipe(
-                tap((data) => {
-                    this.orgs = data;
-                }),
-                publishReplay(1),
-                refCount()
-            );
-        }
+
+    organizaciones(soloOrgActivas = false): Observable<any> {
+        const params = {
+            soloOrgActivas
+        };
+
+        this.organizaciones$ = this.server.get('/auth/organizaciones', { params }).pipe(
+            tap((data) => {
+                this.orgs = data;
+            }),
+            publishReplay(1),
+            refCount()
+        );
+
         return this.organizaciones$;
+
     }
 
     // Devuelve las organizaciones que tiene permisos sobre un modulo en particular.

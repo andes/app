@@ -29,9 +29,10 @@ export class SelectOrganizacionComponent implements OnInit {
         this.plex.navVisible(false);
     }
 
+    // llamo a organizaciones con 'true' para que me traiga las organizaciones filtradas (MISC-267)
     ngOnInit() {
         this.plex.updateTitle('Seleccione una organización');
-        this.auth.organizaciones().subscribe(data => {
+        this.auth.organizaciones(true).subscribe(data => {
             if (data.length) {
                 this.organizaciones = data;
                 if (this.organizaciones.length === 1) {
@@ -42,6 +43,7 @@ export class SelectOrganizacionComponent implements OnInit {
             }
         });
     }
+
 
     seleccionar(organizacion) {
         this.auth.setOrganizacion(organizacion).subscribe(() => {
