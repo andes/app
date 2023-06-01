@@ -13,22 +13,39 @@
                         [subtitulo]="selectedCama.unidadOrganizativaOriginal.term">
             </plex-label>
             <plex-datetime grow="2" type="datetime" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde"
-                           label="Fecha de préstamo" [debounce]="400" [max]="fechaHasta" (typing)="onType()"
-                           (change)="onDesdeChange()">
+                           label="{{ accion === 'prestar' ? 'Fecha de préstamo' : 'Fecha de devolución' }}"
+                           [debounce]="400" [max]="fechaHasta" (typing)="onType()" (change)="onDesdeChange()">
             </plex-datetime>
-            <plex-datetime *ngIf="accion === 'prestar'" grow="2" type="datetime" [(ngModel)]="fechaHasta"
-                           [disabled]="!prestamoConDevolucion" [required]="prestamoConDevolucion" name="fechaHasta"
-                           label="Fecha de devolución" [min]="fechaDesde" [max]="maxFechaDesde" [debounce]="400"
-                           hint="Este campo se habilita cuando puedan verse afectados movimientos existentes a causa del préstamo."
-                           hintType="info" hintIcon="eye" (typing)="onType()" (change)="onHastaChange()">
-            </plex-datetime>
+
+            <ng-container *ngIf="accion === 'prestar'">
+                <div class="hint-absolute">
+                    <span hint="Este campo se habilita cuando puedan verse afectados movimientos existentes a causa del préstamo."
+                          hintType="info" hintIcon="eye">
+                    </span>
+                </div>
+                <plex-datetime grow="2" type="datetime" [(ngModel)]="fechaHasta" [disabled]="!prestamoConDevolucion"
+                               [required]="prestamoConDevolucion" name="fechaHasta" label="Fecha de devolución"
+                               [min]="fechaDesde" [max]="maxFechaDesde" [debounce]="400" (typing)="onType()"
+                               (change)="onHastaChange()">
+                </plex-datetime>
+                <plex-label *ngIf="prestamoConDevolucion" grow="full">Este recurso registra movimientos dentro del
+                    periodo ingresado. Por este motivo deberá ingresar una fecha de devolución con hasta {{
+                    rangoMaxPrestamo }} días de diferencia.
+                </plex-label>
+            </ng-container>
+
             <plex-select *ngIf="accion === 'prestar'" name="unidadOrganizativa" [data]="unidadesOrganizativas$ | async"
                          label="Unidad Organizativa" idField="conceptId" labelField="term" [required]="true"
                          [(ngModel)]="selectedUnidadOrganizativa">
             </plex-select>
         </plex-wrapper>
-        <div *ngIf="!inProgress && !accionPermitida">
-            {{ mensajeError }}
+        <div *ngIf="!inProgress">
+            <ng-container *ngIf="mensajeErrorPrestamo">
+                {{ mensajeErrorPrestamo }}
+            </ng-container>
+            <ng-container *ngIf="mensajeErrorDevolucion">
+                {{ mensajeErrorDevolucion }}
+            </ng-container>
         </div>
     </form>
 </ng-container>

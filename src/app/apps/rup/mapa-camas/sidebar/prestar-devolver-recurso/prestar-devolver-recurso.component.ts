@@ -11,7 +11,8 @@ import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-prestar-devolver-recurso',
-    templateUrl: 'prestar-devolver-recurso.component.html'
+    templateUrl: 'prestar-devolver-recurso.component.html',
+    styleUrls: ['prestar-devolver-recurso.scss']
 })
 
 export class PrestarDevolverRecursoComponent implements OnInit {
@@ -35,21 +36,21 @@ export class PrestarDevolverRecursoComponent implements OnInit {
     public ambito: string;
     public cama: ISnapshot;
     public inProgress = false;
-    public accionPermitida = false;
     private esOrganizacionV2: boolean; // true si usa capas unificadas
-    public mensajeError = '';
+    public mensajeErrorPrestamo = '';
+    public mensajeErrorDevolucion = '';
 
     constructor(
         public auth: Auth,
         private plex: Plex,
         public mapaCamasService: MapaCamasService,
         public organizacionService: OrganizacionService,
-        private camasHTTP: MapaCamasHTTP
+        private camasHTTP: MapaCamasHTTP,
     ) { }
 
     get disabledGuardar() {
         return this.formulario?.invalid || (this.accion === 'prestar' && !this.selectedUnidadOrganizativa) ||
-            this.inProgress || !this.accionPermitida;
+            this.inProgress || this.mensajeErrorPrestamo.length || this.mensajeErrorDevolucion.length;
     }
 
     ngOnInit() {
@@ -70,7 +71,7 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             return;
         }
         this.inProgress = true;
-        this.accionPermitida = false;
+        this.mensajeErrorPrestamo = '';
         this.maxFechaDesde = moment(this.fechaDesde).add(this.rangoMaxPrestamo, 'days').endOf('day');
 
         forkJoin([
@@ -90,7 +91,7 @@ export class PrestarDevolverRecursoComponent implements OnInit {
              *  Si no usa capas unificadas debe controlarse que la cama este disponible esa fecha en ambas capas
              *  ya que solo se puede prestar una cama ocupada en efectores que usen capas unificadas
              */
-            const camasDisponibles = organizacionV2 ? true : estadistica.estado === 'disponible' && medica.estado === 'disponible';
+            const camasDisponibles = organizacionV2 ? true : estadistica?.estado === 'disponible' && medica?.estado === 'disponible';
 
             if (camasDisponibles) {
                 // se verifica si existen movimientos a futuro en la cama en ambas capas, de ser asi se habilita el campo fechaHasta
@@ -99,12 +100,9 @@ export class PrestarDevolverRecursoComponent implements OnInit {
                 if (this.prestamoConDevolucion && this.fechaHasta) {
                     // deben refrescarse los controles de fechaHasta
                     this.onHastaChange();
-                } else {
-                    this.accionPermitida = true;
                 }
             } else {
-                this.accionPermitida = false;
-                this.mensajeError = 'El recurso seleccionado no se encuentra disponible en la fecha de préstamo ingresada.';
+                this.mensajeErrorPrestamo = 'El recurso seleccionado no se encuentra disponible en la fecha de préstamo ingresada.';
             }
         });
     }
@@ -119,30 +117,24 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             this.camasHTTP.historial('internacion', 'medica', this.fechaDesde, this.fechaHasta, { idCama: this.cama.id })
         ]).subscribe(([historialEstadistica, historialMedica]) => {
             this.inProgress = false;
+            this.mensajeErrorDevolucion = '';
             this.movimientosIntermedios = historialEstadistica.length + historialMedica.length;
-            this.accionPermitida = false;
             const ultimoMovEstadistica = historialEstadistica[historialEstadistica.length - 1];
             const ultimoMovMedica = historialMedica[historialMedica.length - 1];
-            const prestamoDevolucionExistente = historialEstadistica.concat(historialMedica).some(mov => mov.extras.prestamo || mov.extras.devolucion);
+            const prestamoDevolucionExistente = historialEstadistica.concat(historialMedica).some(mov => mov.extras?.prestamo || mov.extras?.devolucion);
 
             if (this.movimientosIntermedios > this.maxMovimientosIntermediosPermitidos) {
-                this.mensajeError = 'Hay demasiados movimientos entre las fechas seleccionadas. Intente ingresando un rango de fechas menor.';
+                this.mensajeErrorDevolucion = 'Hay demasiados movimientos entre las fechas seleccionadas. Intente ingresando un rango de fechas menor.';
             } else if (prestamoDevolucionExistente) {
-                this.mensajeError = 'Existe al menos un préstamo/devolución del recurso entre las fechas ingresadas.';
+                this.mensajeErrorDevolucion = 'Existe al menos un préstamo/devolución del recurso entre las fechas ingresadas.';
             } else if (ultimoMovEstadistica && ultimoMovEstadistica.estado === 'ocupada'
                 || ultimoMovMedica && ultimoMovMedica.estado === 'ocupada' && !this.esOrganizacionV2) {
-                this.mensajeError = 'El recurso seleccionado no se encuentra disponible en la fecha de devolución ingresada.';
-            } else {
-                this.mensajeError = '';
-                this.accionPermitida = true;
+                this.mensajeErrorDevolucion = 'El recurso seleccionado no se encuentra disponible en la fecha de devolución ingresada.';
             }
         });
     }
 
     guardar(cama) {
-        if (!this.accionPermitida) {
-            return;
-        }
         this.inProgress = true;
         let data;
         if (this.prestamoConDevolucion) {
@@ -188,11 +180,11 @@ export class PrestarDevolverRecursoComponent implements OnInit {
             this.inProgress = false;
             const title = this.accion === 'prestar' ? 'Recurso prestado' : 'Recurso devuelto';
             const body = this.prestamoConDevolucion ? `El recurso fue préstado a  <b>${data.prestamo.unidadOrganizativa.term}</b> el 
-                ${moment(this.fechaDesde).format('DD/MM/YYYY hh:mm')} y devuelto a  <b>${cama.unidadOrganizativaOriginal.term}</b> 
-                el ${moment(this.fechaHasta).format('DD/MM/YYYY hh:mm')}` : `El recurso ahora se encuentra en <b>${data.unidadOrganizativa.term}</b>`;
+                ${moment(this.fechaDesde).format('DD/MM/YYYY HH:mm')} y devuelto a  <b>${cama.unidadOrganizativaOriginal.term}</b> 
+                el ${moment(this.fechaHasta).format('DD/MM/YYYY HH:mm')}` : `El recurso ahora se encuentra en <b>${data.unidadOrganizativa.term}</b>`;
             this.plex.info('success', body, title);
             this.onSave.emit();
             this.mapaCamasService.setFecha(this.fechaDesde);
-        });
+        }, error => this.plex.info('warning', 'Ocurrió un problema realizando el movimiento. Revise el historial de la cama para asegurarse que éste movimiento sea correcto.', 'Atención'));
     }
 }
