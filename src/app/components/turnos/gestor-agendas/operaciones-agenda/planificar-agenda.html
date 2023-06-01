@@ -12,9 +12,9 @@
                              [disabled]="!form.valid || !formSidebar.valid" label="Guardar" validateForm="true"
                              type="success" (click)="onSave($event, false)" title="Guardar" size="sm">
                 </plex-button>
-                <plex-button *ngIf="!hideGuardar && !alertas.length" [disabled]="!form.valid || !formSidebar.valid"
-                             label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)"
-                             size="sm">
+                <plex-button *ngIf="!hideGuardar && !alertas.length && !dinamica"
+                             [disabled]="!form.valid || !formSidebar.valid" label="Guardar y clonar" validateForm="true"
+                             type="primary" (click)="onSave($event, true)" size="sm">
                 </plex-button>
             </plex-title>
             <!-- Alertas de profesional y espacio físico -->
