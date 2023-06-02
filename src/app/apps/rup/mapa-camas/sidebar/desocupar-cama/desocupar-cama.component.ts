@@ -51,7 +51,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const HOY = moment().toDate();
         this.inProgress = true;
-
+        this.fecha = this.mapaCamasService.fecha;
         this.historial$ = this.mapaCamasService.fecha2.pipe(
             tap(() => this.inProgress = true),
             switchMap(fecha => {
@@ -111,6 +111,9 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
             switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
         );
+
+        this.verificarFecha();
+
     }
 
     onType() {
