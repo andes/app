@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { auditTime, filter, map, switchMap } from 'rxjs/operators';
+import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
@@ -383,30 +383,57 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid && this.validarRUP()) {
-            this.disableButton = true;
-            const dtoPaciente = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                numeroIdentificacion: this.paciente.numeroIdentificacion,
-                nombre: this.paciente.nombre,
-                alias: this.paciente.alias,
-                apellido: this.paciente.apellido,
-                sexo: this.paciente.sexo,
-                genero: this.paciente.genero,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                direccion: this.paciente.direccion,
-                telefono: this.paciente.telefono
-            };
-
-            if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
-                this.ingresoExtendido(dtoPaciente);
-            } else if (this.capa === 'estadistica-v2') {
-                this.completarIngreso(dtoPaciente);
-            } else if (this.prestacion) {
-                this.actualizarPrestacion(dtoPaciente);
-            } else {
-                this.ingresoSimplificado('ocupada', dtoPaciente, this.resumen?.id);
+            if (this.cama.sala) {
+                this.confirmarGuardar();
+                return;
             }
+            this.mapaCamasService.historial('cama', this.mapaCamasService.fecha, moment().toDate(), this.cama).pipe(
+                take(1),
+                map(resp => resp)
+            ).subscribe(historial => {
+                if (historial.length) {
+                    // Verificamos si hay otra internacion mas adelante. Asi mismo un bloqueo de cama o cambio de UO
+                    if (historial[0].idInternacion && historial[0].idInternacion !== this.cama.idInternacion ||
+                        historial[0].estado !== 'disponible' ||
+                        historial[0].unidadOrganizativa !== this.cama.unidadOrganizativa) {
+                        const fechaEnConflicto = moment(historial[0].fecha);
+                        this.plex.confirm(`Esta cama está disponible hasta el día ${fechaEnConflicto.format('DD/MM/YYYY')} a las ${fechaEnConflicto.format('HH:mm')}. ¿Desea continuar con la internación?`, 'Aviso').then(respuesta => {
+                            if (respuesta) {
+                                this.confirmarGuardar();
+                            }
+                        });
+                    }
+                } else {
+                    this.confirmarGuardar();
+                }
+            });
+        }
+    }
+
+    private confirmarGuardar() {
+        this.disableButton = true;
+        const dtoPaciente = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
+            nombre: this.paciente.nombre,
+            alias: this.paciente.alias,
+            apellido: this.paciente.apellido,
+            sexo: this.paciente.sexo,
+            genero: this.paciente.genero,
+            fechaNacimiento: this.paciente.fechaNacimiento,
+            direccion: this.paciente.direccion,
+            telefono: this.paciente.telefono
+        };
+
+        if (this.capa === 'estadistica' || (this.capa === 'estadistica-v2' && !this.prestacion)) {
+            this.ingresoExtendido(dtoPaciente);
+        } else if (this.capa === 'estadistica-v2') {
+            this.completarIngreso(dtoPaciente);
+        } else if (this.prestacion) {
+            this.actualizarPrestacion(dtoPaciente);
+        } else {
+            this.ingresoSimplificado('ocupada', dtoPaciente, this.resumen?.id);
         }
     }
 
