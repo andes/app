@@ -45,7 +45,6 @@ export class CambiarCamaComponent implements OnInit {
         const HOY = moment().toDate();
         this.historial$ = this.mapaCamasService.fecha2.pipe(
             switchMap(fecha => {
-                // this.fecha = moment(fecha).toDate();
                 return this.mapaCamasService.historial('internacion', fecha, HOY);
             }),
             map((movimientos) => {
@@ -116,7 +115,6 @@ export class CambiarCamaComponent implements OnInit {
                 }
             }
         });
-
     }
 
     guardar(valid) {
