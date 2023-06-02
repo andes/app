@@ -22,7 +22,7 @@
             </div>
             <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
                 <plex-title titulo="pacientes" size="md">
-                    <plex-table-columns [selected]="columnsVisibles">
+                    <plex-table-columns>
                     </plex-table-columns>
                 </plex-title>
                 <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
@@ -35,8 +35,8 @@
                         {{ internacion.paciente | documento }}
                     </td>
                     <td *plTableCol="'diagnostico'">
-                        <span *ngIf="internacion.diagnostico?.term">
-                            {{ internacion.diagnostico?.term}}
+                        <span *ngIf="internacion.idPrestacion?.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo">
+                            {{ internacion.idPrestacion?.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo}}
                         </span>
                     </td>
                     <td *plTableCol="'fechaIngreso'">

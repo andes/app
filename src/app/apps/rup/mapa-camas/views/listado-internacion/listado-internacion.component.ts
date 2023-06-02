@@ -53,6 +53,17 @@ export class InternacionListadoComponent implements OnInit {
             }
         },
         {
+            key: 'diagnostico',
+            label: 'Motivo Ingreso',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => {
+                const nameA = a.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
+                const nameB = b.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
+                return nameA.localeCompare(nameB);
+            }
+        },
+        {
             key: 'fechaIngreso',
             label: 'Fecha de ingreso',
             sorteable: true,

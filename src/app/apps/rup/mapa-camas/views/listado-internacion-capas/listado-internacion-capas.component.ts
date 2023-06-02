@@ -20,8 +20,6 @@ export class ListadoInternacionCapasComponent implements OnInit {
     idInternacionSelected: string = null;
 
     mainView$ = this.mapaCamasService.mainView;
-
-
     public columns = [
         {
             key: 'nombre',
@@ -63,14 +61,22 @@ export class ListadoInternacionCapasComponent implements OnInit {
             opcional: true,
             sort: (a: any, b: any) => a.fechaIngreso.getTime() - b.fechaIngreso.getTime()
         },
-
         {
             key: 'fechaEgreso',
             label: 'Fecha Egreso',
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.fechaEgreso.getTime() - b.fechaEgreso.getTime()
-        }
+        },
+        {
+            key: 'unidadOrganizativa',
+            label: 'Unidad organizativa',
+            sorteable: true,
+            opcional: true,
+            sort: (a, b) => {
+                return a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term);
+            }
+        },
     ];
 
     constructor(

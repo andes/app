@@ -36,6 +36,11 @@
                             <td *plTableCol="'documento'">
                                 {{ internacion.paciente | documento }}
                             </td>
+                            <td *plTableCol="'diagnostico'">
+                                <span *ngIf="internacion.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo">
+                                    {{internacion.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo}}
+                                </span>
+                            </td>
                             <td *plTableCol="'fechaIngreso'">
                                 {{ devuelveFecha(internacion,"ingreso") | fecha }}
                                 {{ devuelveFecha(internacion,"ingreso") | hora }}
@@ -46,7 +51,7 @@
                                     {{ fechaEgreso | hora }}
                                 </span>
                             </td>
-                            <td class="w-25" *plTableCol="'obraSocial'">
+                            <td *plTableCol="'obraSocial'">
                                 {{ internacion.paciente.obraSocial?.nombre }}
                             </td>
                             <td *plTableCol="'unidadOrganizativa'">
