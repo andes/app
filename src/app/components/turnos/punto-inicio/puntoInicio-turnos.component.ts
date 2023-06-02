@@ -24,6 +24,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     public disableNuevoPaciente = true;
     public puedeCrearSolicitud = false;
+    public puedeVisualizarSolicitud = false;
     public puedeAutocitar = false;
     public puedeDarTurno = false;
     public alerta = false;
@@ -76,6 +77,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.puedeVisualizarSolicitud = this.auth.check('turnos:puntoInicio:visualizarSolicitud');
         this.puedeActivarAppMobile = this.auth.getPermissions('turnos:puntoInicio:activarMobile:?').length > 0;
         this.updateTitle('Punto de inicio');
     }
