@@ -1,10 +1,13 @@
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { filter, map, toArray } from 'rxjs/operators';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { SnomedBuscarService } from '../../snomed/snomed-buscar.service';
 import { IRegla } from '../../../interfaces/IRegla';
+import { Observable, of } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
 
@@ -51,6 +54,7 @@ export class VisualizacionReglasComponent implements OnInit {
     public arrayReglas: any = [];
     public filas: any[];
     public parametros;
+    public filas$: Observable<any[]>;
     public loader = false;
     private scrollEnd = false;
 
@@ -58,7 +62,8 @@ export class VisualizacionReglasComponent implements OnInit {
         private servicioReglas: ReglaService,
         private auth: Auth,
         public servicioPrestacion: PrestacionesService,
-        private documentosService: DocumentosService
+        private documentosService: DocumentosService,
+        private buscadorService: SnomedBuscarService,
     ) { }
 
     ngOnInit() {
@@ -109,43 +114,67 @@ export class VisualizacionReglasComponent implements OnInit {
             this.filas = [];
             this.loader = true;
         }
-        this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
-            this.loader = false;
-            this.obtenerFilasTabla(reglas);
-            this.parametros.skip = this.arrayReglas.length;
-            if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
-                this.scrollEnd = true;
-            }
+
+        this.buscadorService.getBuscadoValue().subscribe((value: string) => {
+            this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
+                this.loader = false;
+                this.arrayReglas = reglas;
+                this.generarFilasObservable(reglas, value);
+                this.parametros.skip = this.arrayReglas.length;
+                if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
+                    this.scrollEnd = true;
+                }
+
+            });
         });
+
     }
 
-    /**
-     * Acomoda los datos de las reglas de forma que se pueda acceder facilmente desde la tabla
-     *
-     * @memberof VisualizacionReglasComponent
-     */
-    obtenerFilasTabla(reglas: IRegla[]) {
-        for (const regla of reglas) {
-            this.arrayReglas.push(regla);
-            regla.origen.prestaciones?.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
-                if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
-                    /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
-                     * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
-                     * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización
-                     * y una sola prestación por lo que no< es necesario más validaciones. */
-                    if (!this.prestacion || prestacionAux.prestacion.conceptId === this.prestacion.conceptId) {
-                        this.filas.push({
-                            organizacionOrigen: regla.origen.organizacion,
-                            prestacionOrigen: prestacionAux,
-                            organizacionDestino: regla.destino.organizacion,
-                            prestacionDestino: regla.destino.prestacion
-                        });
+    generarFilasObservable(reglas: IRegla[], value: string) {
+
+        this.filas$ = of(
+            this.arrayReglas.flatMap(regla =>
+                regla.origen.prestaciones?.flatMap((prestacionAux: any) => {
+
+                    if (
+                        !this.prestacionOrigen ||
+                        this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId
+                    ) {
+                        if (
+                            !this.prestacion ||
+                            prestacionAux.prestacion.conceptId === this.prestacion.conceptId
+                        ) {
+                            if (value) {
+                                if (regla.destino.prestacion.term.toLowerCase().includes(value.toLowerCase())) {
+                                    const fila = {
+                                        organizacionOrigen: regla.origen.organizacion,
+                                        prestacionOrigen: prestacionAux.prestacion,
+                                        organizacionDestino: regla.destino.organizacion,
+                                        prestacionDestino: regla.destino.prestacion,
+                                    };
+                                    return fila;
+                                }
+                            } else {
+
+                                const fila = {
+                                    organizacionOrigen: regla.origen.organizacion,
+                                    prestacionOrigen: prestacionAux.prestacion,
+                                    organizacionDestino: regla.destino.organizacion,
+                                    prestacionDestino: regla.destino.prestacion,
+                                };
+
+                                return fila;
+                            }
+
+                        }
                     }
-                }
-            });
-        }
-        if (this.esParametrizado) {
-            this.filas.sort((fila1, fila2) => {
+                    return []; // Devuelve un array vacío si no se cumple ninguna condición
+                })
+            )
+        );
+
+        this.filas$.subscribe(filas => {
+            filas.sort((fila1, fila2) => {
                 if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
                     return 1;
                 }
@@ -154,7 +183,7 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
                 return 0;
             });
-        }
+        });
     }
 
     public seleccionarConcepto(concepto) {

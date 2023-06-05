@@ -10,8 +10,14 @@
                     </plex-button>
 
                     <ng-container ngProjectAs="plex-button" *ngIf="activeIndex === 0">
-                        <plex-help #helpSolicitudes class="text-left" titulo="Reglas Solicitudes"
-                                   tituloBoton="Reglas Solicitudes" size="sm">
+
+                        <plex-help #helpSolicitudes class="text-left" tituloBoton="Reglas Solicitudes" size="sm">
+                            <plex-title titulo="Reglas Solicitudes">
+                                <plex-text [(ngModel)]="search" name="search" (change)="buscar()"
+                                           placeholder=" Buscar ..." [autoFocus]="true">
+                                </plex-text>
+                            </plex-title>
+
                             <visualizacion-reglas info [esParametrizado]="true"
                                                   [prestacion]="prestacion.solicitud.tipoPrestacion" *plHelp
                                                   (addSolicitud)="agregarSolicitud($event, helpSolicitudes)">
