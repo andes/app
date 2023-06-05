@@ -80,6 +80,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public flagValid = true;
 
+    public search = '';
+
     public scopePrivacy = [];
     public registrosHUDS = [];
     public tieneAccesoHUDS: Boolean;
@@ -282,6 +284,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.detalleConceptoHUDS = null;
             this.activeIndex = 0;
         }
+    }
+
+    buscar() {
+        this.buscadorService.setBuscado(this.search);
     }
 
     /**
