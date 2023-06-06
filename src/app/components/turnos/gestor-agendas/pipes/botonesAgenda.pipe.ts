@@ -53,7 +53,7 @@ export class BotonesAgendaPipe implements PipeTransform {
     }
 
     puedoRevisar(agenda) {
-        return agenda.estado !== 'auditada' && moment(agenda.horaFin).isBefore(moment(new Date()));
+        return moment(agenda.horaFin).isBefore(moment(new Date()));
     }
 
     puedoSuspender(agenda) {
