@@ -48,6 +48,7 @@ export interface IAgenda {
     link: String;
     nominalizada: Boolean;
     dinamica: Boolean;
+    multiprofesional: boolean;
     cupo: Number;
     avisos: [{
         profenionalId: String;

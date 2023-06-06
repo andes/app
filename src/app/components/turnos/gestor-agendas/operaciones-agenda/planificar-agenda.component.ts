@@ -41,9 +41,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    public modelo: any = { nominalizada: true, dinamica: false };
+    public modelo: any = { nominalizada: true, dinamica: false, multiprofesional: false };
     public noNominalizada = false;
     public dinamica = false;
+    public multiprofesional = false;
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
@@ -241,7 +242,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     this.dinamica = false;
                 });
             } else {
-                this.noNominalizada = false;
                 this.modelo.nominalizada = true;
                 this.modelo.bloques.length = 0;
                 this.resetBloques();
@@ -251,6 +251,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.bloques.cantidadTurnos = 0;
             this.validarTodo();
         }
+    }
+
+    seleccionarMultiprofesional() {
+        this.multiprofesional = !this.multiprofesional;
     }
 
     calculosInicio() {
@@ -358,12 +362,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         // Valores por defecto
         this.noNominalizada = false;
         this.dinamica = false;
+        this.multiprofesional = false;
         this.modelo.nominalizada = true;
 
-        if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
+        if (this.modelo.tipoPrestaciones?.length === 1) {
             if (this.modelo.tipoPrestaciones[0].noNominalizada) {
                 this.noNominalizada = true;
-                this.dinamica = false;
                 this.modelo.nominalizada = false;
             }
         }
@@ -636,7 +640,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.alertas = [];
         let alerta: string;
         let indice: number;
-        let cantidad: number;
         let iniAgenda = null;
         let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
@@ -755,6 +758,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.dinamica = true;
             this.modelo.cupo = (this.setCupo) ? this.cupoMaximo : -1;
         }
+        this.modelo.multiprofesional = this.multiprofesional;
 
         const arrayPrestaciones = new Array<ITipoPrestacion>();
         let bloqueConPrestActiva = false;
