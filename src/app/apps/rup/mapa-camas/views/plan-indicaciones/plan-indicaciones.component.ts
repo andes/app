@@ -245,12 +245,16 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     isToday(fecha: Date = this.fecha) {
-        return moment(fecha).isSame(moment(), 'day');
+        if (fecha) {
+            return moment(fecha).isSame(moment(), 'day');
+        }
     }
 
-    onDateChange() {
-        this.actualizar();
-        this.resetSelection();
+    onDateChange(event) {
+        if (event.value) {
+            this.actualizar();
+            this.resetSelection();
+        }
     }
 
     resetSelection() {
