@@ -1,3 +1,17 @@
+# [5.122.0](https://github.com/andes/app/compare/v5.121.0...v5.122.0) (2023-06-07)
+
+
+### Bug Fixes
+
+* **MISC-267:** Visualización de solo efectores activos en el LogIn Andes ([#2815](https://github.com/andes/app/issues/2815)) ([c9064ea](https://github.com/andes/app/commit/c9064ea311e7cd2ea7f9b00e5a773dde224a35a5))
+* **MISC-267:** Visualización de solo efectores activos en el LogIn Andes ([#2815](https://github.com/andes/app/issues/2815)) ([e0e40d9](https://github.com/andes/app/commit/e0e40d9e99ddbd5d1583ce00abd7694639a6e9e4))
+
+
+### Features
+
+* **CIT:** se agrega permiso visualizar solicitud ([#2839](https://github.com/andes/app/issues/2839)) ([2ce84e9](https://github.com/andes/app/commit/2ce84e9c49bf6c152e72923957b639784e3eb9a3))
+* **CITAS:** se quita botón clonar,agenda dinamica ([#2844](https://github.com/andes/app/issues/2844)) ([4c9d8c2](https://github.com/andes/app/commit/4c9d8c296fcdf1e5670285056c403650c61da7ca))
+
 # [5.121.0](https://github.com/andes/app/compare/v5.120.0...v5.121.0) (2023-05-31)
 
 
