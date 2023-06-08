@@ -3,7 +3,7 @@
         <plex-title titulo="Plan de indicaciones" main>
             <alergias-paciente *ngIf="paciente" [paciente]="paciente" [cardSize]="sidebarOpen ? 'full' : 'half'">
             </alergias-paciente>
-            <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange()" [max]="hoy">
+            <plex-datetime [(ngModel)]="fecha" skipBy="day" type="date" (change)="onDateChange($event)" [max]="hoy">
             </plex-datetime>
 
             <plex-button type="danger" label="volver" class="ml-2" (click)="goTo()">
