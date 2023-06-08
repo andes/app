@@ -24,9 +24,9 @@
     </plex-layout-main>
     <plex-layout-sidebar [type]="'invert'">
         <plex-title titulo="Agenda original" size="md">
-            <plex-help type="info" size="sm" icon="information-variant">
+            <plex-help type="info" size="sm" icon="information-variant" tooltip="Detalle de agenda">
                 <plex-label direction="row" titulo="Espacio Físico:"
-                    subtitulo="{{(agenda | espacioFisico) }}"></plex-label>
+                            subtitulo="{{(agenda | espacioFisico) }}"></plex-label>
                 <plex-label direction="row" titulo="Bloques:"></plex-label>
 
                 <ng-template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
@@ -38,9 +38,9 @@
                 </ng-template>
             </plex-help>
             <plex-button type="success" size="sm" class="ml-1" icon="check" tooltip="Clonar Agenda"
-                (click)="clonar()"></plex-button>
+                         (click)="clonar()"></plex-button>
             <plex-button type="danger" icon="close" class="ml-1" size="sm" tooltip="Cancelar"
-                (click)="cancelar()"></plex-button>
+                         (click)="cancelar()"></plex-button>
         </plex-title>
         <!--Agenda Original-->
         <plex-list [selectable]="false">
@@ -49,7 +49,7 @@
                 - {{agenda.horaFin | date: 'HH:mm'}}">
                 </plex-label>
                 <plex-label *ngIf="agenda.profesionales?.length" titulo="Equipo de Salud:"
-                    subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
+                            subtitulo="{{agenda.profesionales | enumerar:['apellido','nombre']}}">
                 </plex-label>
                 <plex-label titulo="Prestación:" subtitulo="{{agenda.tipoPrestaciones | enumerar:['nombre']}}">
                 </plex-label>
@@ -62,9 +62,8 @@
 
         <plex-accordion *ngIf="agendasFiltradas.length>0">
             <ng-template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
-                <plex-panel
-                    tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}"
-                    icon="arrow-down-drop-circle-outline">
+                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}"
+                            icon="arrow-down-drop-circle-outline">
                     <li *ngIf="agendaF.conflictoEF">
                         Conflicto con Espacio Físico
                     </li>
