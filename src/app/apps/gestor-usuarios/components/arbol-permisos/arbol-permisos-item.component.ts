@@ -50,11 +50,21 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges {
         if (this.item.visibility) {
             if (this.item.visibility === 'hidden') {
                 return true;
-            } else if (this.item.visibility === 'restricted') {
+            } else {
                 const permitido = this.auth.getPermissions(this.makePermission() + ':?').length > 0;
-                return !permitido;
+
+                if (this.item.visibility === 'restricted') {
+                    return !permitido;
+                }
+
+                if (this.item.visibility === 'local-restricted') {
+                    const local = this.organizacion === this.auth.organizacion.id;
+
+                    return !(local && permitido);
+                }
             }
         }
+
         return false;
     }
     expand($event) {
