@@ -82,7 +82,7 @@
                     </plex-button>
                 </ng-container>
 
-                <ng-container *ngIf="(accionesEstado$ | async)?.length > 0 && permisosMapaCamasService.registros">
+                <ng-container *ngIf="botonRegistroHabilitado$ | async">
                     <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
                     </plex-button>
                 </ng-container>

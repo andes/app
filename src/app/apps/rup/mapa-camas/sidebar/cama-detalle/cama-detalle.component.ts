@@ -63,6 +63,7 @@ export class CamaDetalleComponent implements OnInit {
 
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
+    public botonRegistroHabilitado$;
 
     items = [
         {
@@ -140,6 +141,7 @@ export class CamaDetalleComponent implements OnInit {
                 return respirador?.valor.fechaHasta ? null : respirador;
             })
         );
+        this.botonRegistroHabilitado$ = this.mapaCamasService.controlRegistros();
     }
 
     sector(cama: ISnapshot) {
