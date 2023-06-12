@@ -71,6 +71,11 @@
                                type="slide" (change)="seleccionarDinamica($event)">
                     </plex-bool>
                 </div>
+                <div>
+                    <plex-bool [readonly]="!modelo.horaFin" [(ngModel)]="multiprofesional" name="multiprofesional"
+                               label="Multiprofesional" type="slide">
+                    </plex-bool>
+                </div>
             </plex-grid>
             <!-- Espacio Físico -->
             <plex-grid *ngIf="modelo.horaInicio && modelo.horaFin && showBloque && modelo.bloques?.length" type="full"
