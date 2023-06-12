@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { INovedad } from 'src/app/interfaces/novedades/INovedad.interface';
 import { CommonNovedadesService } from './common-novedades.service';
 
@@ -11,16 +11,18 @@ export class NovedadesComponent implements OnInit {
     novedades = [];
     novedad;
     fecha: string;
+    idNovedad: string;
     filtroModulo = false;
 
     constructor(
         private commonNovedadesService: CommonNovedadesService,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private router: Router) {
     }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            this.fecha = params['fecha'];
+            this.idNovedad = params['novedad'];
 
             this.initNovedades();
         });
@@ -31,10 +33,11 @@ export class NovedadesComponent implements OnInit {
             this.novedades = novedades;
             this.commonNovedadesService.setNovedades(novedades);
             this.fecha ? this.filtrarPorFecha(this.fecha, novedades) : this.commonNovedadesService.setNovedades(novedades);
+            this.idNovedad ? this.buscarNovedad(this.idNovedad, novedades) : this.commonNovedadesService.setNovedades(novedades);
         });
     }
 
-    filtrarPorFecha(fecha: string, novedades: any[]) {
+    filtrarPorFecha(fecha: string, novedades: INovedad[]) {
         if (novedades.length) {
             const filtro = novedades.filter((novedad: INovedad) => moment(novedad.fecha).format('YYYY-MM-DD') === fecha);
 
@@ -45,19 +48,25 @@ export class NovedadesComponent implements OnInit {
         }
     }
 
+    buscarNovedad(id: string, novedades: INovedad[]) {
+        if (novedades.length) {
+            this.novedad = novedades.find((novedad: INovedad) => novedad._id === id);
+        }
+    }
+
     setNovedad(novedad: INovedad) {
         this.novedad = novedad;
     }
 
-    setFecha(fecha: Date | null) {
+    setFecha(fecha: Date | undefined) {
         this.fecha = moment(fecha).format('YYYY-MM-DD');
         this.filtrarPorFecha(this.fecha, this.novedades);
     }
 
     volver() {
-        this.novedad = null;
-        this.fecha = null;
-
+        this.novedad = undefined;
+        this.fecha = undefined;
+        this.router.navigate(['/novedades']);
         this.initNovedades();
     }
 }

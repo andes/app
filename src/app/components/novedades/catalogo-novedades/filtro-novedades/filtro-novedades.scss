@@ -1,9 +1,9 @@
-.selectNovedades,
-.itemCatalogo {
+.select-novedades,
+.item-catalogo {
     margin-top: 20px;
 }
 
-.cardNovedad {
+.card-novedad {
     max-width: 280px;
     text-align: center;
 }
@@ -22,6 +22,10 @@
             vertical-align: middle;
         }
     }
+}
+
+.grid-novedades {
+    overflow-x: auto;
 }
 
 .selector {
