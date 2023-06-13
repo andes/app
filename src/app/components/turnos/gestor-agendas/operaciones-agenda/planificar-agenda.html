@@ -67,7 +67,8 @@
                     </plex-text>
                 </div>
                 <div>
-                    <plex-bool [readonly]="!modelo.horaFin" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
+                    <plex-bool *ngIf="modelo?.tipoPrestaciones?.length === 1 && modelo.tipoPrestaciones[0].agendaDinamica "
+                               [readonly]="!modelo.horaFin" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
                                type="slide" (change)="seleccionarDinamica($event)">
                     </plex-bool>
                 </div>
@@ -97,7 +98,7 @@
                 </plex-select>
             </plex-grid>
             <!-- Bloques -->
-            <plex-grid *ngIf="showBloque && modelo.bloques && modelo.bloques?.length" type="full" cols="1">
+            <plex-grid *ngIf="showBloque && modelo?.bloques?.length" type="full" cols="1">
                 <plex-title titulo="Bloques" size="md">
                     <plex-button *ngIf="!dinamica" icon="plus" type="success btn-sm" title="Agregar Bloque"
                                  (click)="addBloque()">

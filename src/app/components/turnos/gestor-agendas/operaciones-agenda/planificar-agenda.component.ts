@@ -52,7 +52,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public alertaProfesional = '';
     public fecha: Date;
     public autorizado = false;
-    public today = new Date();
+    public today = moment();
     public mobileEnabled: null;
     public virtual = false;
     public datos;
@@ -80,7 +80,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
-        this.today.setHours(0, 0, 0, 0);
+        this.today.startOf('day');
         // recuperamos datos de la organizacion
         this.loadOrganizationData();
         if (this.editaAgenda) {

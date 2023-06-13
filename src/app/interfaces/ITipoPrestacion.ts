@@ -6,6 +6,7 @@ export interface ITipoPrestacion {
     refsetIds: [];
     semanticTag: String;
     noNominalizada?: Boolean;
+    agendaDinamica: boolean;
     ambito?: Array<string>;
     queries?: String[];
     auditable?: Boolean;
