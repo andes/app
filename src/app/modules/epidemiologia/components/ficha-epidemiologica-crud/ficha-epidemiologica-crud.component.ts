@@ -79,7 +79,6 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
     ];
     public segundaClasificacion = [
         { id: 'autotest', nombre: 'Autotest' },
-        { id: 'laboAntigeno', nombre: 'Laboratorio privado (Antígeno)' },
         { id: 'antigeno', nombre: 'Antígeno' },
         { id: 'pcr', nombre: 'PCR-RT' },
         { id: 'lamp', nombre: 'LAMP (NeoKit)' }
