@@ -25,10 +25,18 @@
                                grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
                                [required]="argumento.required">
                 </plex-datetime>
-                <plex-select *ngSwitchCase="'organizacion'" [label]="argumento.label ? argumento.label : argumento.key"
-                             grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                             [required]="argumento.required" [data]="organizaciones$ |async">
-                </plex-select>
+                <ng-container *ngSwitchCase="'organizacion'">
+                    <plex-select *ngIf="argumento.key === 'organizacionOrigen'"
+                                 [label]="argumento.label ? argumento.label : argumento.key" grow="2"
+                                 name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                 [required]="argumento.required" [data]="organizacionesOrigenFiltradas">
+                    </plex-select>
+                    <plex-select *ngIf="argumento.key === 'organizacionDestino'"
+                                 [label]="argumento.label ? argumento.label : argumento.key" grow="2"
+                                 name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
+                                 [required]="argumento.required" [data]="organizacionesDestinoFiltradas">
+                    </plex-select>
+                </ng-container>
                 <plex-select *ngSwitchCase="'unidadOrganizativa'"
                              [label]="argumento.label ? argumento.label : argumento.key" grow="full"
                              name="{{ argumento.key }}" labelField="term" [(ngModel)]="argumentos[argumento.key]"
@@ -50,7 +58,8 @@
                 </plex-select>
                 <plex-select *ngSwitchCase="'zonaSanitaria'" [label]="argumento.label ? argumento.label : argumento.key"
                              grow="2" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
-                             [required]="zonaRequired || argumento.required" [data]="zonasSanitarias">
+                             [required]="argumento.required" [disabled]="disabledFiltroZonas" [data]="zonasSanitarias"
+                             (change)="changeZona($event.value, argumento.key)">
                 </plex-select>
                 <plex-select *ngSwitchCase="'select-static'" [label]="argumento.label ? argumento.label : argumento.key"
                              grow="auto" name="{{ argumento.key }}" [(ngModel)]="argumentos[argumento.key]"
