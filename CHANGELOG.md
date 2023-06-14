@@ -1,3 +1,17 @@
+# [5.123.0](https://github.com/andes/app/compare/v5.122.0...v5.123.0) (2023-06-14)
+
+
+### Bug Fixes
+
+* **EPI:** Quita  la opcion de clasificacion por laboratorio privado ([#2878](https://github.com/andes/app/issues/2878)) ([3556df0](https://github.com/andes/app/commit/3556df0bdc36fb9a7f37fb9214b156fe59c81cdd))
+* **EPI:** Quita opción de antigenos por laabos privados ([#2879](https://github.com/andes/app/issues/2879)) ([44b635e](https://github.com/andes/app/commit/44b635effb1d778f5d9ea7228a41060b72465fcb))
+* **IN-539:** error al editar manualmente una fecha ([#2875](https://github.com/andes/app/issues/2875)) ([d949427](https://github.com/andes/app/commit/d9494272b34dc7eebd66a16ae3e89fe8803bc1a1))
+
+
+### Features
+
+* **GDU:** incorpora visibilidad para local-restricted ([#2871](https://github.com/andes/app/issues/2871)) ([9e6be14](https://github.com/andes/app/commit/9e6be14f4f6204642b405b699670cbb563bee04c))
+
 # [5.122.0](https://github.com/andes/app/compare/v5.121.0...v5.122.0) (2023-06-07)
 
 
