@@ -21,7 +21,7 @@ export class ListadoInternacionCapasService {
     public missingFilters$: Observable<boolean>;
     public estado = new BehaviorSubject<any>(null);
     public listadoInternacion = [];
-    public nuevoListado = {};
+    // public nuevoListado = {};
 
     constructor(
         private resumenHTTP: InternacionResumenHTTP,
@@ -44,19 +44,22 @@ export class ListadoInternacionCapasService {
                         egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta),
                         populate: 'idPrestacion'
                     }).pipe(
+                        // En este switchMap se carga en un array los datos relevantes de cada internación y se
+                        // obtienen los historiales correspondientes para tener las unidades organizativas segun
+                        // su ingreso o egreso correspondiente.
                         switchMap(resumen => {
                             if (!resumen.length) {
                                 return of([]);
                             }
-                            resumen.forEach(int => {
-                                this.nuevoListado = {};
-                                this.nuevoListado['id'] = int.id;
-                                this.nuevoListado['fechaIngreso'] = int.fechaIngreso;
-                                this.nuevoListado['fechaEgreso'] = int.fechaEgreso;
-                                this.nuevoListado['paciente'] = int.paciente;
-                                this.nuevoListado['idPrestacion'] = int.idPrestacion;
-                                this.nuevoListado['diagnostico'] = int.registros.find(r => r.esDiagnosticoPrincipal && r.tipo === 'valoracion-inicial')?.concepto;
-                                this.listadoInternacion.push(this.nuevoListado);
+                            resumen.forEach(inter => {
+                                const nuevoListado = {};
+                                nuevoListado['id'] = inter.id;
+                                nuevoListado['fechaIngreso'] = inter.fechaIngreso;
+                                nuevoListado['fechaEgreso'] = inter.fechaEgreso;
+                                nuevoListado['paciente'] = inter.paciente;
+                                nuevoListado['idPrestacion'] = inter.idPrestacion;
+                                nuevoListado['diagnostico'] = inter.registros.find(reg => reg.esDiagnosticoPrincipal && reg.tipo === 'valoracion-inicial')?.concepto;
+                                this.listadoInternacion.push(nuevoListado);
                             });
                             const request = resumen.map(i =>
                                 this.camasHTTP.historialInternacion('internacion', 'medica', fechaIngresoDesde, moment().toDate(), i.id),
@@ -67,20 +70,17 @@ export class ListadoInternacionCapasService {
                 }
                 return of([]);
             }),
+            // Con el array de internación cargado previamente y los movimientos de cada internación procedemos a agregar la UO.
             map(internaciones => {
-                let index = 0;
-                internaciones.forEach(int => {
-                    const element = this.listadoInternacion[index];
-                    if (int.length) {
-                        element['unidadOrganizativa'] = (int[0].idPrestacion) ? int[0].idPrestacion?.unidadOrganizativa?.term : (int[0].unidadOrganizativa || int[0].unidadOrganizativas[0]);
-                        if (int.length > 1) {
-                            if (int[int.length - 1].extras.egreso) {
-                                element['unidadOrganizativa'] = int[int.length - 1].unidadOrganizativa || int[int.length - 1].unidadOrganizativas[0];
-                            }
-                        }
+                internaciones.forEach((movimientos, index) => {
+                    if (movimientos.length) {
+                        const element = this.listadoInternacion[index];
+                        const egreso = movimientos.find(mov => mov.extras?.egreso);
+                        // Si existe un egreso entonces me quedo con la UO del egreso sino con la UO del ingreso.
+                        element['unidadOrganizativa'] = (movimientos[0].idPrestacion) ? movimientos[0].idPrestacion?.unidadOrganizativa?.term : (movimientos[0].unidadOrganizativa || movimientos[0].unidadOrganizativas[0]);
+                        element['unidadOrganizativa'] = egreso?.unidadOrganizativa || movimientos[movimientos.length - 1].unidadOrganizativa;
+                        this.listadoInternacion[index] = element;
                     }
-                    this.listadoInternacion[index] = element;
-                    index++;
                 });
                 return this.listadoInternacion;
             })
