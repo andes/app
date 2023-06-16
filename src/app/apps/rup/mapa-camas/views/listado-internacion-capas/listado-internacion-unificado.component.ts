@@ -2,6 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { cache } from '@andes/shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
@@ -32,13 +33,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
 
     mainView$ = this.mapaCamasService.mainView;
 
-    public columnsVisibles = { // para inicializar solo con ciertas columnas visibles
-        'nombre': true,
-        'documento': true,
-        'fechaIngreso': true,
-        'fechaEgreso': true,
-        'informe': true
-    };
     public columns = [
         {
             key: 'nombre',
@@ -64,8 +58,8 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => {
-                const nameA = a.diagnostico?.term || '';
-                const nameB = b.diagnostico?.term || '';
+                const nameA = a.idPrestacion?.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
+                const nameB = b.idPrestacion?.ejecucion?.registros[0]?.valor?.informeIngreso?.motivo || '';
                 return nameA.localeCompare(nameB);
             }
         },
@@ -174,7 +168,8 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
                 this.columns.splice(index, 1);
             }
         }
-        this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$;
+
+        this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
     }
 
     seleccionarInternacion(resumen: IResumenInternacion) {

@@ -25,7 +25,7 @@
                         <plex-table-columns>
                         </plex-table-columns>
                     </plex-title>
-        
+
                     <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
                         [class.selected]="internacion.id === idInternacionSelected"
                         (click)="seleccionarPrestacion(internacion)">
@@ -50,12 +50,15 @@
                                 {{ internacion.fechaEgreso | hora }}
                             </span>
                         </td>
+                        <td *plTableCol="'unidadOrganizativa'">
+                            {{ internacion.unidadOrganizativa?.term }}
+                        </td>
                     </tr>
                 </plex-table>
             </ng-container>
-    
+
         </ng-container>
-        
+
         <ng-container *ngIf="mainView !== 'principal'">
             <vista-prestacion [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>

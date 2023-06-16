@@ -1,8 +1,10 @@
 import { Auth } from '@andes/auth';
 import { cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
 
 @Injectable({ providedIn: 'root' })
@@ -18,10 +20,13 @@ export class ListadoInternacionCapasService {
     public refresh = new BehaviorSubject<any>(null);
     public missingFilters$: Observable<boolean>;
     public estado = new BehaviorSubject<any>(null);
+    public listadoInternacion = [];
+    // public nuevoListado = {};
 
     constructor(
         private resumenHTTP: InternacionResumenHTTP,
-        private auth: Auth
+        private auth: Auth,
+        private camasHTTP: MapaCamasHTTP
     ) {
         this.listaInternacion$ = combineLatest([
             this.fechaIngresoDesde,
@@ -31,26 +36,55 @@ export class ListadoInternacionCapasService {
         ]).pipe(
             auditTime(0),
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+                this.listadoInternacion = [];
                 if ((fechaIngresoDesde && fechaIngresoHasta) || fechaEgresoDesde && fechaEgresoHasta) {
                     return this.resumenHTTP.search({
                         organizacion: this.auth.organizacion.id,
                         ingreso: this.resumenHTTP.queryDateParams(fechaIngresoDesde, fechaIngresoHasta),
                         egreso: this.resumenHTTP.queryDateParams(fechaEgresoDesde, fechaEgresoHasta),
                         populate: 'idPrestacion'
-                    });
+                    }).pipe(
+                        // En este switchMap se carga en un array los datos relevantes de cada internación y se
+                        // obtienen los historiales correspondientes para tener las unidades organizativas segun
+                        // su ingreso o egreso correspondiente.
+                        switchMap(resumen => {
+                            if (!resumen.length) {
+                                return of([]);
+                            }
+                            resumen.forEach(inter => {
+                                const nuevoListado = {};
+                                nuevoListado['id'] = inter.id;
+                                nuevoListado['fechaIngreso'] = inter.fechaIngreso;
+                                nuevoListado['fechaEgreso'] = inter.fechaEgreso;
+                                nuevoListado['paciente'] = inter.paciente;
+                                nuevoListado['idPrestacion'] = inter.idPrestacion;
+                                nuevoListado['diagnostico'] = inter.registros.find(reg => reg.esDiagnosticoPrincipal && reg.tipo === 'valoracion-inicial')?.concepto;
+                                this.listadoInternacion.push(nuevoListado);
+                            });
+                            const request = resumen.map(i =>
+                                this.camasHTTP.historialInternacion('internacion', 'medica', fechaIngresoDesde, moment().toDate(), i.id),
+                            );
+                            return forkJoin(request);
+                        })
+                    );
                 }
+                return of([]);
             }),
+            // Con el array de internación cargado previamente y los movimientos de cada internación procedemos a agregar la UO.
             map(internaciones => {
-                internaciones.forEach(internacion => {
-                    if (internacion.registros) {
-                        (internacion as any).diagnostico =
-                            internacion.registros.find(r => r.esDiagnosticoPrincipal && r.tipo === 'valoracion-inicial')?.concepto;
+                internaciones.forEach((movimientos, index) => {
+                    if (movimientos.length) {
+                        const element = this.listadoInternacion[index];
+                        const egreso = movimientos.find(mov => mov.extras?.egreso);
+                        // Si existe un egreso entonces me quedo con la UO del egreso sino con la UO del ingreso.
+                        element['unidadOrganizativa'] = (movimientos[0].idPrestacion) ? movimientos[0].idPrestacion?.unidadOrganizativa?.term : (movimientos[0].unidadOrganizativa || movimientos[0].unidadOrganizativas[0]);
+                        element['unidadOrganizativa'] = egreso?.unidadOrganizativa || movimientos[movimientos.length - 1].unidadOrganizativa;
+                        this.listadoInternacion[index] = element;
                     }
                 });
-                return internaciones;
+                return this.listadoInternacion;
             })
         );
-
         this.listaInternacionFiltrada$ = combineLatest([
             this.listaInternacion$,
             this.pacienteText,
@@ -90,8 +124,8 @@ export class ListadoInternacionCapasService {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter(
                     (internacion: IResumenInternacion) =>
                         (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
-                            internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
-                            internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                        internacion.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
+                        internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
             }
         }
