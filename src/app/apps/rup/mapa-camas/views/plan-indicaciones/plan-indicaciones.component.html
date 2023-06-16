@@ -127,7 +127,7 @@
                                                 </plex-badge>
 
                                                 <ng-container
-                                                              *ngIf="indicacion.estado.verificacion?.estado as verificacion">
+                                                              *ngIf="indicacion.requiereAceptacion && indicacion.estado.verificacion?.estado as verificacion">
                                                     <plex-badge class="circle"
                                                                 tooltip="{{ verificacion === 'aceptada' ? 'Aceptada' : 'Rechazada' }}"
                                                                 type="{{ verificacion === 'aceptada' ? 'success' : 'danger' }}">
@@ -165,7 +165,7 @@
                                                         </plex-button>
                                                     </ng-container>
 
-                                                    <ng-container *ngIf="mostrarLabel(indicacion)">
+                                                    <ng-container *ngIf="capa !== 'interconsultores'">
                                                         <plex-badge tooltip="Indicación aún no aceptada" type="info">
                                                             <plex-icon name="informacion"></plex-icon>
                                                         </plex-badge>

@@ -528,7 +528,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     puedeAceptarRechazar(indicacion = null) {
-        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado.tipo === 'active' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
+        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado.tipo !== 'draft' && indicacion.estado.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
             (this.capa === 'interconsultores' || this.capa === 'medica') && this.permisosMapaCamasService.indicacionesAceptarRechazar;
     }
 
@@ -538,9 +538,5 @@ export class PlanIndicacionesComponent implements OnInit {
 
     puedeEjecutar() {
         this.permisosMapaCamasService.indicacionesEjecutar && this.capa !== 'interconsultores';
-    }
-
-    mostrarLabel(indicacion) {
-        return this.capa !== 'interconsultores' && indicacion.elementoRUP === '60ed8c8770569dd3ad533e96';
     }
 }

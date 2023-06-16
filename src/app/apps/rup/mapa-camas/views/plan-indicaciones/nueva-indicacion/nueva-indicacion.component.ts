@@ -21,9 +21,6 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
     private ambito: string;
     private idInternacion: string;
     public seleccionado = false;
-    public motivoEditado;
-    public indicacionEditada;
-    public profesionalEditado;
 
     selectedConcept = null;
     elementoRUP = null;
@@ -120,7 +117,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
             idInternacion: this.idInternacion,
             idPrestacion: null,
             idRegistro: this.registro.id,
-            fechaInicio: new Date(),
+            fechaInicio: moment().toDate(),
             ambito: this.ambito,
             capa: this.capa,
             organizacion: this.auth.organizacion,
@@ -136,24 +133,14 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
             elementoRUP: this.elementoRUP.id,
             seccion: this.seccion.concepto,
             requiereFrecuencia: this.seccion.requiereFrecuencia,
+            requiereAceptacion: this.seccion.requiereAceptacion,
             estados: [{
                 tipo: 'draft',
-                fecha: new Date()
+                fecha: moment().toDate()
             }]
         };
         if (this.indicacion?.estadoActual.tipo === 'draft') {
-            this.indicacion.fechaInicio = indicacion.fechaInicio;
-            this.indicacion.ambito = indicacion.ambito;
-            this.indicacion.capa = indicacion.capa;
-            this.indicacion.organizacion = indicacion.organizacion;
-            this.indicacion.profesional = indicacion.profesional;
-            this.indicacion.nombre = indicacion.nombre;
-            this.indicacion.concepto = indicacion.concepto;
-            this.indicacion.valor = indicacion.valor;
-            this.indicacion.elementoRup = indicacion.elementoRUP;
-            this.indicacion.seccion = indicacion.seccion;
-            this.indicacion.requiereFrecuencia = indicacion.requiereFrecuencia;
-            this.indicacion.estados = indicacion.estados;
+            Object.keys(indicacion).forEach(key => this.indicacion[key] = indicacion[key]);
             this.edit.emit(this.indicacion);
         } else {
             this.save.emit(indicacion);
