@@ -43,6 +43,7 @@ export class Auth {
     public profesional: string;
     public orgs = [];
     private permisos: string[];
+    private arrayFiltros: any[];
     public mobileUser: any;
     private feature: { [key: string]: boolean };
 
@@ -153,6 +154,7 @@ export class Auth {
     }
 
     setOrganizacion(org: any): Observable<any> {
+        this.limpiarFiltrosCache(org);
         return this.server.post('/auth/v2/organizaciones', { organizacion: org._id }).pipe(
             tap((data) => {
                 this.setToken(data.token);
@@ -160,6 +162,17 @@ export class Auth {
         );
     }
 
+    limpiarFiltrosCache(org: any) {
+
+        this.session$.subscribe((session: ISession) => {
+            this.arrayFiltros = JSON.parse(window.localStorage.getItem(session.usuario.id + '-mapa-camas-filtros'));
+            if (this.organizacion?.id !== org?.id) {
+                this.arrayFiltros = [];
+                localStorage.setItem(session.usuario.id + '-mapa-camas-filtros', JSON.stringify(this.arrayFiltros));
+
+            }
+        });
+    }
     // Metodo que invoca a la api para realizar el recovering de la password
     setValidationTokenAndNotify(usuario: Number): Observable<any> {
         return this.server.post('/auth/setValidationTokenAndNotify', { username: usuario }, { showError: false });
