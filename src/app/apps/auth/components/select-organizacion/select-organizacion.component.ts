@@ -56,14 +56,12 @@ export class SelectOrganizacionComponent implements OnInit {
                         const disclaimer = disclaimers[0];
                         this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
                             if (userDisclaimers.some(item => item.id === disclaimer.id)) {
-                                this.auth.limpiarFiltrosCache(organizacion);
                                 this.router.navigate(['inicio']);
                             } else {
                                 this.showModalDisclaimer = true;
                             }
                         });
                     } else {
-                        this.auth.limpiarFiltrosCache(organizacion);
                         this.router.navigate(['inicio']);
                     }
                 });
