@@ -41,11 +41,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public min$: Observable<Date>;
     public max$: Observable<Date>;
     public paciente;
+    public idPaciente;
 
     @Output() accion = new EventEmitter();
 
     public esProfesional = this.auth.profesional;
     public puedeVerHuds = false;
+    private planIndicConcepId = '4981000013105';
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
@@ -75,7 +77,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
                 const paciente = cama?.paciente || (prestacion?.paciente || resumen?.paciente);
                 this.paciente = paciente;
-                if (paciente) {
+                if (paciente && (!this.idPaciente || resumen.paciente.id !== this.idPaciente)) {
+                    this.idPaciente = resumen.paciente.id;
                     return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
                 }
                 return [];
@@ -136,14 +139,20 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 if (!this.desde) {
                     this.desde = moment().subtract(7, 'd').toDate();
                 }
-                this.desde = this.desde.getTime() < min.getTime() ? moment(min) : this.desde;
+                if (this.desde instanceof Date) {
+                    this.desde = this.desde.getTime() < min.getTime() ? moment(min) : this.desde;
+                } else if (moment.isMoment(this.desde)) {
+                    this.desde = moment(this.desde).toDate().getTime() < min.getTime() ? moment(min) : this.desde;
+                }
                 this.inProgress = false;
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
-                    if (tipoPrestacion) {
-                        return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                    if (prestacion.solicitud.tipoPrestacion.conceptId !== this.planIndicConcepId) {
+                        if (tipoPrestacion) {
+                            return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                        }
+                        return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
                     }
-                    return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
                 });
             })
         );
@@ -156,7 +165,10 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         );
 
         this.prestacionesList$ = this.historial$.pipe(
-            map((prestaciones) => arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion))
+            map((prestaciones) => {
+                prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion);
+                return prestaciones.filter(p => p.conceptId !== this.planIndicConcepId);
+            })
         );
     }
 
