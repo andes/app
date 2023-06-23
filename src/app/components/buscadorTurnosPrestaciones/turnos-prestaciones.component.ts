@@ -344,11 +344,29 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turno.obraSocial = 'prepaga';
             turno.prepaga = this.modelo.prepaga;
         }
-        this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
-            if (respuesta.message) {
-                this.plex.info('info', respuesta.message);
+
+        this.facturacionAutomaticaService.get(turno).subscribe(configuracion => {
+            const encuentraConfiguracion = configuracion.find(res => {
+                const encuentraConceptoId = res?.conceptosTurneables?.find(concepto =>
+                    (concepto.conceptId === turno.tipoPrestacion.conceptId)
+                );
+                if (encuentraConceptoId) {
+                    return res;
+                }
+            });
+
+            if (encuentraConfiguracion) {
+                this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
+                    if (respuesta.message) {
+                        this.plex.info('info', respuesta.message);
+                    }
+                });
+            } else {
+                this.plex.info('danger', 'Este tipo de prestación no se encuentra configurado');
             }
+
         });
+
     }
 
     sortTable(event: string) {
