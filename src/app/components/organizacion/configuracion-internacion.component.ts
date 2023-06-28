@@ -10,6 +10,7 @@ import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina
 import { IOrganizacion } from 'src/app/interfaces/IOrganizacion';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 interface ICapaRef {
     id: string;
@@ -66,6 +67,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         public snomed: SnomedService,
+        private conceptosTurneablesService: ConceptosTurneablesService,
         public auth: Auth,
         private plex: Plex
     ) { }
@@ -185,9 +187,9 @@ export class ConfiguracionInternacionComponent implements OnInit {
 
     loadConceptos(event) {
         if (event.query) {
-            this.snomed.get({
-                search: event.query,
-                semanticTag: ['procedimiento']
+            this.conceptosTurneablesService.search({
+                term: '^' + event.query,
+                ambito: 'internacion'
             }).subscribe(result => event.callback(result));
         } else {
             event.callback([]);
