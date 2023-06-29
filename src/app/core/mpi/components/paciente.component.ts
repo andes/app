@@ -426,7 +426,7 @@ export class PacienteComponent implements OnInit {
 
     setMainSize(tabIndex) {
         if (this.pacientesSimilares && this.pacientesSimilares.length) {
-            this.mainSize = 9;
+            this.mainSize = 8;
             return;
         }
         if (tabIndex === 1) {

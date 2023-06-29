@@ -6,17 +6,17 @@
                 <plex-button label="Volver" type="danger" position="left" (click)="cancel()">
                 </plex-button>
                 <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
-                             label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
-                             (click)="validarPaciente()">
+                    label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
+                    (click)="validarPaciente()">
                 </plex-button>
                 <plex-button *ngIf="showDeshacer" label="Deshacer Validación" type="warning" position="right"
-                             (click)="deshacerValidacion()"></plex-button>
+                    (click)="deshacerValidacion()"></plex-button>
                 <plex-button *ngIf="visualizarIgnorarGuardar" [disabled]="disableIgnorarGuardar"
-                             label="Ignorar y Guardar" type="warning" position="right" [validateForm]="formulario"
-                             (click)="save($event,true)">
+                    label="Ignorar y Guardar" type="warning" position="right" [validateForm]="formulario"
+                    (click)="save($event,true)">
                 </plex-button>
                 <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
-                             [validateForm]="formulario" (click)="save(false)">
+                    [validateForm]="formulario" (click)="save(false)">
                 </plex-button>
 
             </plex-title>
@@ -29,7 +29,7 @@
 
                 <plex-tab label="datos básicos" icon="">
                     <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
-                                   (changes)="datosBasicosForm($event)" name="datos basicos">
+                        (changes)="datosBasicosForm($event)" name="datos basicos">
                     </datos-basicos>
                 </plex-tab>
 
@@ -41,7 +41,7 @@
                 <plex-tab *ngIf="tipoPaciente !== 'bebe'" label="Relaciones" icon="account-multiple">
                     <!-- FAMILIARES: No se muestra para el caso del bebé -->
                     <relaciones-pacientes #relaciones [paciente]="pacienteModel"
-                                          (actualizar)="actualizarRelaciones($event)">
+                        (actualizar)="actualizarRelaciones($event)">
                     </relaciones-pacientes>
                 </plex-tab>
 
@@ -63,24 +63,22 @@
         <div [ngClass]="{'loadMode': loading}">
             <!-- Pacientes candidatos -->
             <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
-                <header>
-                    <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
-                </header>
+                <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
                 <plex-list>
                     <plex-item *ngFor="let elem of pacientesSimilares" class="">
 
                         <img [ngClass]="{'img-fallecido' : elem.paciente.fechaFallecimiento}"
-                             [mpiFotoPaciente]="elem.paciente" />
+                            [mpiFotoPaciente]="elem.paciente" />
 
                         <plex-label *ngIf="!elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
-                                    subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
+                            subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
                         </plex-label>
 
                         <plex-label *ngIf="elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
-                                    subtitulo="{{ elem.paciente.numeroIdentificacion }}"></plex-label>
+                            subtitulo="{{ elem.paciente.numeroIdentificacion }}"></plex-label>
 
                         <plex-label titulo="{{ elem.paciente | edad }}"
-                                    subtitulo="{{ elem.paciente.fechaNacimiento | fecha:'utc' }}">
+                            subtitulo="{{ elem.paciente.fechaNacimiento | fecha:'utc' }}">
                         </plex-label>
 
                         <plex-badge *ngIf="elem.paciente.fechaFallecimiento" type="danger">Fallecido:
@@ -91,7 +89,7 @@
                         </plex-badge>
 
                         <plex-badge type="" class=""
-                                    [ngClass]="{'text-success' : elem.paciente.estado === 'validado' , 'text-warning' : elem.paciente.estado === 'temporal'} ">
+                            [ngClass]="{'text-success' : elem.paciente.estado === 'validado' , 'text-warning' : elem.paciente.estado === 'temporal'} ">
                             {{ elem.paciente.estado }}
                         </plex-badge>
 
@@ -104,7 +102,7 @@
             </div>
             <ng-template #showPanel>
                 <paciente-panel [paciente]="pacienteModel" [direction]="detailDirection"
-                                [showRelaciones]="showRelaciones" (changeRelacion)="toRelacionesOnChange($event)">
+                    [showRelaciones]="showRelaciones" (changeRelacion)="toRelacionesOnChange($event)">
                 </paciente-panel>
             </ng-template>
         </div>
