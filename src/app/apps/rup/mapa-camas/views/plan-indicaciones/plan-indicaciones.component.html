@@ -127,7 +127,7 @@
                                                 </plex-badge>
 
                                                 <ng-container
-                                                              *ngIf="indicacion.estado.verificacion?.estado as verificacion">
+                                                              *ngIf="indicacion.requiereAceptacion && indicacion.estado.verificacion?.estado as verificacion">
                                                     <plex-badge class="circle"
                                                                 tooltip="{{ verificacion === 'aceptada' ? 'Aceptada' : 'Rechazada' }}"
                                                                 type="{{ verificacion === 'aceptada' ? 'success' : 'danger' }}">
