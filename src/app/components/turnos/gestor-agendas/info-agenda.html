@@ -1,5 +1,6 @@
-<plex-title titulo="Bloques y turnos">
-    <plex-help class="mr-1" type="help" icon="information-variant" titulo="Detalle de agenda">
+<plex-title titulo="Bloques y turnos" size="md">
+    <plex-help class="mr-1" type="help" icon="information-variant" titulo="Detalle de agenda"
+               tooltip="Detalle de agenda">
         <div class="container mb-4">
             <div class="row">
                 <div class="col-12">
@@ -65,7 +66,7 @@
     <plex-help *ngIf="agenda.nota" class="mr-1" type="help" icon="message">
         {{ agenda.nota }}
     </plex-help>
-    <plex-button type="danger" icon="close" (click)="volverAtras()" class="mr-1" size="sm">
+    <plex-button type="danger" icon="close" (click)="volverAtras()" tooltip="Cerrar" class="mr-1" size="sm">
     </plex-button>
 
 </plex-title>

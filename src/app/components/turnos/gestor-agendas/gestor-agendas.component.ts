@@ -646,9 +646,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     agregarSobreturno($event?: any) {
         this.pacientes = null;
         if ($event) { $event.stopPropagation(); }
-        if (this.agendasSeleccionadas.length !== 0) {
-            this.showSobreturno = !this.showSobreturno;
-        }
+        this.showSobreturno = true;
         this.showElegirSobreTurno = false;
     }
 
@@ -973,7 +971,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // Si se seleccionó por error un paciente fallecido
         this.servicePaciente.checkFallecido(paciente);
         this.paciente = paciente;
-        this.showSobreturno = false;
         this.loadObraSocial(this.paciente);
         this.verificarTelefono(this.paciente);
         this.showElegirSobreTurno = true;

@@ -67,8 +67,7 @@
                     </plex-text>
                 </div>
                 <div>
-                    <plex-bool *ngIf="modelo?.tipoPrestaciones?.length === 1 && modelo.tipoPrestaciones[0].agendaDinamica "
-                               [readonly]="!modelo.horaFin" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
+                    <plex-bool [readonly]="disabledDinamica" [(ngModel)]="dinamica" name="dinamica" label="Dinámica"
                                type="slide" (change)="seleccionarDinamica($event)">
                     </plex-bool>
                 </div>

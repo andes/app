@@ -206,20 +206,16 @@
             </plex-list>
         </div>
         <ng-container *ngIf="showSobreturno">
-            <plex-title titulo="Agregar Sobreturno">
+            <plex-title titulo="Agregar Sobreturno" size="md">
             </plex-title>
-            <paciente-busqueda (searchEnd)="onSearchEnd($event.pacientes,$event.scan)" (selected)="onSelect($event)"
-                               [offset]="110">
+            <paciente-busqueda *ngIf="!showElegirSobreTurno" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
+                               (selected)="onSelect($event)" [offset]="110">
             </paciente-busqueda>
-        </ng-container>
-        <div *ngIf="showElegirSobreTurno ">
-            <dar-sobreturno (volver)="volverAlGestor($event)" [idAgenda]="agendasSeleccionadas[0]?.id"
-                            [idPaciente]="paciente.id">
+            <dar-sobreturno *ngIf="showElegirSobreTurno" (volver)="volverAlGestor($event)"
+                            [idAgenda]="agendasSeleccionadas[0]?.id" [idPaciente]="paciente.id">
             </dar-sobreturno>
-            <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                ¡No se encontró ningún paciente!
-            </div>
-        </div>
+        </ng-container>
+
         <ng-container *ngIf="!enableQueries && !showSobreturno && !showElegirSobreTurno">
             <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1">
                 <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"

@@ -6,7 +6,7 @@ import * as moment from 'moment';
     templateUrl: 'info-agenda.html',
     styleUrls: ['./turnos.scss']
 })
-export class InfoAgendaComponent implements OnInit {
+export class InfoAgendaComponent {
     @Output() volver = new EventEmitter();
     @Input('agenda')
     set agenda(value: any) {
@@ -30,7 +30,7 @@ export class InfoAgendaComponent implements OnInit {
     hoy: Date;
     public delDia = false;
     public arrayDelDia = [];
-    ngOnInit() { }
+
     public volverAtras() {
         this.volver.emit();
     }
