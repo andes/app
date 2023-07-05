@@ -20,6 +20,7 @@ export class RecursosListadoComponent implements OnInit {
     @Input() permisoBloqueo: boolean;
     estadoRelacion: any;
     canEdit: Boolean;
+    sectorActivo;
     constructor(
         public mapaCamasService: MapaCamasService,
         public auth: Auth,
@@ -90,5 +91,13 @@ export class RecursosListadoComponent implements OnInit {
         } else {
             this.router.navigate([`/mapa-camas/${this.mapaCamasService.ambito}/cama/${cama.id}`]);
         }
+    }
+
+    isActive(sector: any) {
+        return this.sectorActivo && this.sectorActivo.nombre === sector.nombre && this.sectorActivo.subtitulo === sector.subtitulo;
+    }
+
+    toggleSector(sector: any) {
+        this.sectorActivo = sector;
     }
 }

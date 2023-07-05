@@ -1,5 +1,6 @@
 <plex-accordion *ngFor="let sector of sectore$ | async ">
-    <plex-panel>
+    <plex-panel [active]="isActive(sector)"
+                (toggle)="toggleSector(sector)">
         <div plex-accordion-title justify>
             <section class="w-50">
                 <plex-label size="lg" case="capitalize" titulo="{{ sector.nombre }}" subtitulo="{{ sector.subtitulo }}"
