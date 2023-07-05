@@ -3,7 +3,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 39.7px
+        height: 39.7px;
+        padding-bottom: 3px;
+        margin-bottom: 10px;
+        border-bottom: solid 1px #999999;
+
+        plex-badge {
+            margin-bottom: 0;
+        }
     }
 
     .contenedor-imagen {

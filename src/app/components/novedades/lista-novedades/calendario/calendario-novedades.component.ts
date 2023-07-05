@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, LOCALE_ID, OnChanges, OnInit, Output, S
         provide: LOCALE_ID, useValue: 'es-AR'
     }]
 })
-export class CalendarioNovedadesComponent implements OnInit, OnChanges {
+export class CalendarioNovedadesComponent implements OnChanges {
     @Input() fecha;
     @Input() novedad;
     @Output() setFecha = new EventEmitter<any>();
@@ -15,13 +15,14 @@ export class CalendarioNovedadesComponent implements OnInit, OnChanges {
 
     fechaSelector;
 
-    ngOnInit() {
-        this.fechaSelector = this.fecha || null;
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         if (changes.novedad?.currentValue) {
-            this.fechaSelector = null;
+            const fechaNovedad = moment(changes.novedad.currentValue.fecha).format('YYYY-MM-DD');
+            const fechaSelector = moment(this.fechaSelector).format('YYYY-MM-DD');
+
+            if (fechaNovedad !== fechaSelector) {
+                this.fechaSelector = null;
+            }
         }
     }
 
