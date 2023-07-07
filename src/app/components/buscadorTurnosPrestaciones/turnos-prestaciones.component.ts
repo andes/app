@@ -358,11 +358,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             if (encuentraConfiguracion) {
                 this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
                     if (respuesta.message) {
-                        this.plex.info('info', respuesta.message);
+                        this.plex.info('success', respuesta.message);
                     }
                 });
             } else {
-                this.plex.info('danger', 'Este tipo de prestación no se encuentra configurado');
+                this.plex.info('warning', 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero');
             }
 
         });
