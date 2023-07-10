@@ -160,7 +160,7 @@ export class InternacionListadoComponent implements OnInit {
         }]);
 
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
-            map((prestacion) => {
+            map(prestacion => {
                 this.puedeValidar = false;
                 this.puedeRomper = false;
                 if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {

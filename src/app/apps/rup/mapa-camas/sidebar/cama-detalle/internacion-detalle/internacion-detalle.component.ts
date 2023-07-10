@@ -1,12 +1,13 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
+import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -45,6 +46,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         private plex: Plex,
         private prestacionesService: PrestacionesService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
+        private listadoInternacion: ListadoInternacionService,
         private cdr: ChangeDetectorRef
     ) { }
 
@@ -186,7 +188,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                         const idInternacion = resumen?.id ? resumen.id : prestacion.id;
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
                             switchMap(() => {
-                                // en el caso del resumen, si existe prestacion esta viene populada en el resumen
+                                // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación
+                                if (this.capa === 'medica') {
+                                    return of(null);
+                                }
+                                // en el caso del resumen, si existe prestacion, esta viene populada en idPrestacion
                                 const idPrestacion = (resumen?.idPrestacion as any)?.id || prestacion?.id;
                                 const prestacionAux = {
                                     id: idPrestacion,
@@ -199,7 +205,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                 ).subscribe(() => {
                     this.plex.info('success', 'Se deshizo la internación', 'Éxito');;
                     this.mapaCamasService.selectPrestacion(null);
+                    this.mapaCamasService.selectResumen(null);
                     this.listadoInternacionCapasService.refresh.next(true);
+                    this.listadoInternacion.refresh.next(true);
                 });
             }
         });

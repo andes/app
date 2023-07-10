@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { cache } from '@andes/shared';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,7 +9,6 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
-import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { map, take } from 'rxjs/operators';
 
 @Component({
@@ -114,9 +112,7 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
     constructor(
         private plex: Plex,
         public mapaCamasService: MapaCamasService,
-        private permisosMapaCamasService: PermisosMapaCamasService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
-        private location: Location,
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router,

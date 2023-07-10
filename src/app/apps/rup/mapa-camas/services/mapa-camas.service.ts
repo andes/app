@@ -251,8 +251,7 @@ export class MapaCamasService {
             })
         );
 
-        const desde = moment().subtract(12, 'months').toDate();
-        this.historialInternacion$ = this.historial('internacion', desde).pipe(
+        this.historialInternacion$ = this.historial('internacion', null).pipe(
             map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             }),
@@ -533,6 +532,9 @@ export class MapaCamasService {
     }
 
     historial(type: 'cama' | 'internacion', desde: Date, hasta: Date = null, cama: ISnapshot = null): Observable<ISnapshot[]> {
+        if (!desde) {
+            desde = moment().subtract(12, 'months').toDate();
+        }
         return combineLatest([
             this.ambito2,
             this.capa2,

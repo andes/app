@@ -29,9 +29,10 @@ export class ListadoInternacionService {
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
             this.fechaEgresoHasta,
+            this.refresh
         ]).pipe(
             auditTime(1),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
                 if ((fechaIngresoDesde && fechaIngresoHasta) || (fechaEgresoDesde && fechaEgresoHasta)) {
                     const filtros = {
                         fechaIngresoDesde,

@@ -1,7 +1,6 @@
 import { Auth } from '@andes/auth';
 import { cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { forkJoin } from 'rxjs';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
@@ -32,10 +31,11 @@ export class ListadoInternacionCapasService {
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
             this.fechaEgresoDesde,
-            this.fechaEgresoHasta
+            this.fechaEgresoHasta,
+            this.refresh
         ]).pipe(
             auditTime(0),
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta, refresh]) => {
                 this.listadoInternacion = [];
                 if ((fechaIngresoDesde && fechaIngresoHasta) || fechaEgresoDesde && fechaEgresoHasta) {
                     return this.resumenHTTP.search({

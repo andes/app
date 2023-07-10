@@ -2,7 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import { TurneroService } from 'src/app/apps/turnero/services/turnero.service';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -211,28 +211,32 @@ export class CamaDetalleComponent implements OnInit {
 
     // param 'completo' indica si se borra solo un movimiento o la internación completa
     deshacerInternacion(completo: boolean) {
-        this.plex.confirm('Esta acción deshace una internación, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!', '¿Quiere deshacer esta internación?').then((resultado) => {
+        this.plex.confirm(`Esta acción deshace ${completo ? 'una internación' : 'un movimiento'}, es decir, ya no figurará en el listado. ¡Esta acción no se puede revertir!`, `¿Quiere deshacer ${completo ? 'esta internación?' : 'este movimiento?'}`).then((resultado) => {
             if (resultado) {
                 this.cama$.pipe(
                     first(),
                     switchMap(cama => this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, cama.idInternacion, completo)),
                     switchMap(response => {
+                        // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación
+                        if (this.capa === 'medica') {
+                            return of(null);
+                        }
                         // status es true si se desea eliminar internacion completa
                         if (response.status) {
                             return this.cama$.pipe(
                                 first(),
                                 switchMap(cama => {
-                                    if (this.mapaCamasService.capa === 'estadistica') {
+                                    if (this.capa === 'estadistica') {
                                         return of(cama.idInternacion);
                                     }
-                                    return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                                        map(resumen => resumen?.idPrestacion)
-                                        // Si el efector no usa estadistica-v2 entonces esto retornará undefined
-                                    );
+                                    if (this.capa === 'estadistica-v2') {
+                                        return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
+                                            map(resumen => resumen?.idPrestacion)
+                                        );
+                                    }
                                 })
                             );
                         }
-                        return of(null);
                     }),
                     switchMap(idPrestacion => {
                         if (idPrestacion) {
@@ -240,8 +244,8 @@ export class CamaDetalleComponent implements OnInit {
                         }
                         return of(null);
                     })
-                ).subscribe(resp => {
-                    const mensaje = resp ? 'Se deshizo la internación' : 'Se deshizo el úlitmo movimiento';
+                ).subscribe(() => {
+                    const mensaje = completo ? 'Se deshizo la internación' : 'Se deshizo el úlitmo movimiento';
                     this.plex.info('success', mensaje, 'Éxito');
                     this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.mapaCamasService.fecha);

@@ -98,6 +98,11 @@ export class ListadoInternacionCapasComponent implements OnInit {
         }]);
 
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
+        this.mapaCamasService.selectedResumen.subscribe(resumen => {
+            if (!resumen?.id) {
+                this.idInternacionSelected = null;
+            }
+        });
     }
 
     seleccionarPrestacion(resumen: IResumenInternacion) {
