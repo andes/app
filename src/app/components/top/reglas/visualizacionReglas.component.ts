@@ -1,15 +1,14 @@
 import { Auth } from '@andes/auth';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { filter, map, toArray } from 'rxjs/operators';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { SnomedBuscarService } from '../../snomed/snomed-buscar.service';
 import { IRegla } from '../../../interfaces/IRegla';
-import { Observable, of } from 'rxjs';
+import { Observable, of, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
+import { UnidadEdad } from 'src/app/utils/enumerados';
 
 @Component({
     selector: 'visualizacion-reglas',
@@ -57,13 +56,13 @@ export class VisualizacionReglasComponent implements OnInit {
     public filas$: Observable<any[]>;
     public loader = false;
     private scrollEnd = false;
+    public search = '';
 
     constructor(
         private servicioReglas: ReglaService,
         private auth: Auth,
         public servicioPrestacion: PrestacionesService,
-        private documentosService: DocumentosService,
-        private buscadorService: SnomedBuscarService,
+        private documentosService: DocumentosService
     ) { }
 
     ngOnInit() {
@@ -72,6 +71,7 @@ export class VisualizacionReglasComponent implements OnInit {
             organizacionDestino: undefined,
             prestacionDestino: undefined,
             prestacionOrigen: this.prestacion?.conceptId || undefined,
+            search: this.search,
             skip: 0,
             limit: 10
         };
@@ -93,14 +93,20 @@ export class VisualizacionReglasComponent implements OnInit {
         this.parametros['prestacionOrigen'] = this.prestacionOrigen?.conceptId || undefined;
 
         // cada vez que se modifican los filtros seteamos el skip en 0
-        this.parametros.skip = 0;
+        this.parametros['skip'] = 0;
         this.scrollEnd = false;
         if (this.parametros.organizacionOrigen || this.parametros.organizacionDestino || this.parametros.prestacionOrigen || this.parametros.prestacionDestino) {
             this.actualizarTabla();
         } else {
             this.arrayReglas = [];
-            this.filas = null;
         }
+    }
+
+    public onSearchStart(event: any) {
+        this.search = event.value;
+        this.parametros['search'] = this.search;
+        this.parametros['skip'] = 0;
+        this.actualizarTabla();
     }
 
     /**
@@ -109,28 +115,29 @@ export class VisualizacionReglasComponent implements OnInit {
      * @memberof VisualizacionReglasComponent
      */
     actualizarTabla() {
-        if (this.parametros.skip === 0) {
-            this.arrayReglas = [];
-            this.filas = [];
+        if (this.parametros['skip'] === 0) {
             this.loader = true;
+            this.arrayReglas = [];
         }
 
-        this.buscadorService.getBuscadoValue().subscribe((value: string) => {
-            this.servicioReglas.get(this.parametros).subscribe((reglas: [IRegla]) => {
+        this.servicioReglas.get(this.parametros)
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged()
+            )
+            .subscribe((reglas: [IRegla]) => {
                 this.loader = false;
-                this.arrayReglas = reglas;
-                this.generarFilasObservable(reglas, value);
+                this.arrayReglas.push(...reglas);
+                this.generarFilasObservable();
                 this.parametros.skip = this.arrayReglas.length;
                 if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
                     this.scrollEnd = true;
                 }
-
             });
-        });
 
     }
 
-    generarFilasObservable(reglas: IRegla[], value: string) {
+    generarFilasObservable() {
 
         this.filas$ = of(
             this.arrayReglas.flatMap(regla =>
@@ -144,28 +151,14 @@ export class VisualizacionReglasComponent implements OnInit {
                             !this.prestacion ||
                             prestacionAux.prestacion.conceptId === this.prestacion.conceptId
                         ) {
-                            if (value) {
-                                if (regla.destino.prestacion.term.toLowerCase().includes(value.toLowerCase())) {
-                                    const fila = {
-                                        organizacionOrigen: regla.origen.organizacion,
-                                        prestacionOrigen: prestacionAux.prestacion,
-                                        organizacionDestino: regla.destino.organizacion,
-                                        prestacionDestino: regla.destino.prestacion,
-                                    };
-                                    return fila;
-                                }
-                            } else {
 
-                                const fila = {
-                                    organizacionOrigen: regla.origen.organizacion,
-                                    prestacionOrigen: prestacionAux.prestacion,
-                                    organizacionDestino: regla.destino.organizacion,
-                                    prestacionDestino: regla.destino.prestacion,
-                                };
-
-                                return fila;
-                            }
-
+                            const fila = {
+                                organizacionOrigen: regla.origen.organizacion,
+                                prestacionOrigen: prestacionAux.prestacion,
+                                organizacionDestino: regla.destino.organizacion,
+                                prestacionDestino: regla.destino.prestacion,
+                            };
+                            return fila;
                         }
                     }
                     return []; // Devuelve un array vacío si no se cumple ninguna condición

@@ -2,7 +2,7 @@
     <plex-layout-main>
         <!-- Box header -->
         <plex-title main titulo="Punto de inicio">
-            <plex-help type="info" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes">
+            <plex-help #helpSolicitudes class="text-left" tituloBoton="Reglas Solicitudes" size="sm" cardSize="full">
                 <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
             </plex-help>
             <plex-button type="warning" size="sm" (click)="irASolicitudes()"> Mis
