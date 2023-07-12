@@ -1,66 +1,32 @@
-<!-- Listado de evoluciones al visualizar el hallazgo independiente de una prestacion -->
-<form action="">
-    <div class="solo-valores-grid hallazgos">
-        <ng-container *ngIf="registro?.data">
-            <div class="columna">
-                <div class="concepto prestacion-offset">
-                    <h4 *ngIf="registro?.data?.prestacion?.snomed?.term">
-                        {{ registro.data.prestacion.snomed.term[0].toUpperCase() +
-                        registro.data.prestacion.snomed.term.slice(1) }}
-                    </h4>
-                    <div>
-                        <plex-badge type="{{ registro.data.prestacion.snomed.semanticTag }}">
-                            {{ registro.data.prestacion.snomed.semanticTag }}</plex-badge>
-                    </div>
+<ng-container *ngIf="registro?.data">
+    <plex-title titulo="{{ registro.data.prestacion.snomed.term }}" size="lg">
+        <div class="titulo-badges">
+            <plex-badge type="{{ registro.data.prestacion.snomed.semanticTag || 'solicitud' }}">
+                {{ registro.data.prestacion.snomed.semanticTag || 'solicitud' }}
+            </plex-badge>
+        </div>
+    </plex-title>
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="historial" class="icon-info" size="xl"></plex-icon>
+                <div class="info-registro">
+                    <plex-badge size="sm" type="info">
+                        Registros
+                    </plex-badge>
+                    <h6><b>{{ registro.data.fecha | fecha : 'utc' }}</b></h6>
+                    <hr />
                 </div>
-                <div class="divisor">
-                    <div class="datos-prestacion">
-                        <plex-icon name="historial" class="text-info" size="xl"></plex-icon>
-                        <h5 class="ml-1 text-primary evoluciones">Registros</h5>
-                    </div>
-                    <div class="justify-content-end nav-fecha d-flex align-items-end">
-                        {{ registro.data.fecha | fecha : 'utc' }}
-                    </div>
-                </div>
-
-                <div class="borde-datos ml-3 pl-2 pt-1">
-                    <div class="mp-2 mb-2" *ngIf="codificacionCDA">
-                        <ng-container *ngIf="codificacionCDA?.code">
-                            <b>Codificación: </b><br>
-                            {{ codificacionCDA.code.$.code }} - {{ codificacionCDA.code.$.displayName }}<br>
-                        </ng-container>
-                        <b>Registros de la consulta: </b><br>
-                        <!-- <span [innerHTML]="registro.evoluciones[indice].evolucion"></span> -->
-                        <ng-container *ngIf="registro.tipo === 'cda' && codificacionCDA?.text">
-                            <span [innerHtml]="codificacionCDA.text"></span>
-                        </ng-container>
-                        <ng-container *ngIf="!codificacionCDA.text">
-                            Sin registros.
-                        </ng-container>
-                    </div>
-                    <div class="columna-completa">
-                        <ng-container *ngIf="registro?.data?.adjuntos?.length">
-                            <b>Documentos adjuntos:</b>
-                            <div class="d-flex justify-content-between adjuntos">
-                                <ng-container *ngFor="let archivo of registro.data.adjuntos; let i=index">
-                                    <div class="d-flex align-items-center text-info">
-                                        {{
-                                        registro.data.prestacion.snomed.term[0].toUpperCase() +
-                                        registro.data.prestacion.snomed.term.slice(1)
-                                        }}
-                                    </div>
-                                    <div class="d-flex align-items-end mb-1">
-                                        <plex-badge type="info mr-1">PDF</plex-badge>
-                                        <plex-button type="info" size="sm" icon="download mdi-18px"
-                                                     (click)="descargar(archivo)" tooltip="Descargar PDF">
-                                        </plex-button>
-                                    </div>
-                                </ng-container>
+                <ng-container *ngIf="registro?.data?.adjuntos?.length">
+                    <div class="d-flex justify-content-between adjuntos">
+                        <ng-container *ngFor="let archivo of registro.data.adjuntos; let i=index">
+                            <div class="d-flex align-items-end mb-1">
+                                <plex-badge type="info mr-1">PDF</plex-badge>
+                                <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
+                                             tooltip="Descargar PDF">
+                                </plex-button>
                             </div>
                         </ng-container>
-                    </div>
-
-                    <div class="columna-completa">
                         <ng-container
                                       *ngIf="!registro.data.adjuntos && registro?.data?.prestacion?.snomed?.conceptId !== '33879002'">
                             <div class="d-flex align-items-end mb-1">
@@ -68,44 +34,43 @@
                                 <plex-button type="info" size="sm" icon="download mdi-18px" tooltip="Descargar CDA"
                                              (click)="descargarCDA(registro)">
                                 </plex-button>
+
+                                <plex-button type="info" size="sm" icon="download mdi-18px" (click)="descargar(archivo)"
+                                             tooltip="Descargar PDF">
+                                </plex-button>
                             </div>
                         </ng-container>
                     </div>
-
-                </div>
-
+                </ng-container>
             </div>
-
-            <div class="columna prestacion-offset">
-                <div class="concepto border-0">&nbsp;</div>
-                <div class="divisor">
-                    <div class="datos-prestacion">
-                        <plex-icon name="documento-corazon" class="text-info" size="xl"></plex-icon>
-                        <h5 class="text-primary">Datos de la Prestación</h5>
+            <div>
+                <plex-grid cols="2" class="mt-0">
+                    <div *ngIf="registro?.data.profesional">
+                        <b>Profesionales</b>
+                        <p class="texto-detalle">
+                            {{registro?.data.profesional | nombre}}</p>
                     </div>
-                </div>
-                <div class="borde-datos ml-3 pl-2 pt-2">
-                    <div *ngIf="registro?.data.profesional" class="columna-datos d-flex justify-content-between mb-2">
-                        <b>Profesionales: </b><br>
-                        <span>
-                            <ng-container>{{registro?.data.profesional.apellido }}
-                                {{registro?.data.profesional.nombre }}</ng-container><br>
-                            <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}}
-                                {{autorCDA?.name?.given}}</ng-container>
-                        </span>
+                    <div *ngIf="registro?.data.organizacion">
+                        <b>Organización de origen</b>
+                        <p class="texto-detalle">
+                            {{ registro?.data.organizacion.nombre }}</p>
                     </div>
-                    <div *ngIf="registro?.data.organizacion || organizacionCDA?.name"
-                         class="columna-datos d-flex justify-content-between mb-2">
-                        <b>Organización: </b><br>
-                        <span>
-                            <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion.nombre }}
-                            </ng-container>
-                            <ng-container *ngIf="!registro?.data.organizacion && organizacionCDA">
-                                {{organizacionCDA?.name}}</ng-container>
-                        </span>
+                    <div *ngIf="codificacionCDA?.code">
+                        <b>Codificación</b>
+                        <p class="texto-detalle">
+                            {{ codificacionCDA.code.$.code }}</p>
                     </div>
-                </div>
+                    <div *ngIf="codificacionCDA?.code"><b>Tipo de prestación</b>
+                        <p class="texto-detalle">{{ codificacionCDA.code.$.displayName || 'No especificado'}}</p>
+                    </div>
+                </plex-grid>
             </div>
-        </ng-container>
+        </plex-grid>
+        <div *ngIf="codificacionCDA?.text">
+            <b>Detalles del registro</b>
+            <p class="texto-detalle">
+                <span [innerHtml]="codificacionCDA.text"></span>
+            </p>
+        </div>
     </div>
-</form>
+</ng-container>

@@ -1,0 +1,74 @@
+<plex-title titulo="Registros de la consulta" size="md"></plex-title>
+<plex-grid type="full">
+    <div class="lista-prestacion">
+        <div class="lista-header">
+            <div class="titulo">
+                <div class="icono"><plex-icon name="lapiz-documento" size="lg"></plex-icon></div>
+                <span *ngIf="registro.conceptId==='33633005'" class="titulo" case="capitalize">Indicaciones de
+                    medicación</span>
+                <span *ngIf="registro.conceptId==='430147008'" class="titulo" case="capitalize">Indicaciones de
+                    hidratación</span>
+            </div>
+        </div>
+        <div>
+            <plex-accordion activeLast="true">
+                <plex-panel class="lista-panel" *ngFor="let indicacion of indicaciones">
+                    <div plex-accordion-title case="capitalize">
+                        <div class="titulo">
+                            <div *ngIf="registro.conceptId === '430147008'" class="icono hidrico">
+                                <plex-icon size="lg" name="mano-gota"></plex-icon>
+                            </div>
+                            <div *ngIf="registro.conceptId === '33633005'" class="icono medico"><plex-icon size="lg"
+                                           name="pildoras"></plex-icon></div>
+                            <span class="titulo">{{indicacion.nombre}}</span>
+                        </div>
+                        <plex-button disabled type="info" size="sm" icon="chevron-down" class="float-right">
+                        </plex-button>
+                    </div>
+                    <div *ngIf="indicacion">
+                        <div class="badges">
+                            <plex-badge type="info">
+                                {{ indicacion.diasSuministro > 0 ? indicacion.diasSuministro + ' días' :
+                                'Hoy' }}
+                            </plex-badge>
+                            <plex-badge [type]="indicacionBadge[indicacion.estadoActual.tipo]?.type || 'default'">
+                                {{ indicacionBadge[indicacion.estadoActual.tipo]?.concept ||
+                                indicacion.estadoActual.tipo}}
+                            </plex-badge>
+                        </div>
+                        <plex-grid cols="4">
+                            <plex-label size="md" case="capitalize" titulo="Fecha De Inicio"
+                                        subtitulo="{{indicacion.fechaInicio | fecha}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.solicitudPrestacion" size="md" case="capitalize"
+                                        titulo="Indicaciones"
+                                        subtitulo="{{indicacion.valor.solicitudPrestacion.indicaciones || 'Sin Especificar'}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.solicitudPrestacion" size="md" case="capitalize"
+                                        titulo="motivo"
+                                        subtitulo="{{indicacion.valor.solicitudPrestacion.motivo}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.via" size="md" case="capitalize"
+                                        titulo="Vía de administración"
+                                        subtitulo="{{indicacion.valor.via.term}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.presentacion" size="md" case="capitalize"
+                                        titulo="Unidad de presentación"
+                                        subtitulo="{{indicacion.valor.presentacion.term}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.frecuencias" size="md" case="capitalize"
+                                        titulo="Frecuencia"
+                                        subtitulo="{{indicacion.valor.frecuencias[0].frecuencia?.nombre || 'Única vez'}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.frecuencias" size="md" case="capitalize"
+                                        titulo="Horario"
+                                        subtitulo="{{indicacion.valor.frecuencias[0].horario | hora}}hs"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.preparacion" size="md" case="capitalize"
+                                        titulo="Preparación" subtitulo="{{indicacion.valor.preparacion}}"></plex-label>
+                            <plex-label *ngIf="indicacion.estadoActual?.observaciones" size="md" case="capitalize"
+                                        titulo="Motivo de suspensión"
+                                        subtitulo="{{indicacion.estadoActual.observaciones}}"></plex-label>
+                            <plex-label *ngIf="indicacion.valor.frecuencias" size="md" case="capitalize"
+                                        titulo="Velocidad Infusión"
+                                        subtitulo="{{indicacion.valor.frecuencias[0].frecuencia?.velocidad|| 'Sin especificar'}}"></plex-label>
+                        </plex-grid>
+                    </div>
+                </plex-panel>
+            </plex-accordion>
+        </div>
+    </div>
+</plex-grid>

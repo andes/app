@@ -4,6 +4,7 @@ import { AfterContentInit, Component, EventEmitter, Input, Optional, Output, Vie
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { InternacionResumenHTTP } from 'src/app/apps/rup/mapa-camas/services/resumen-internacion.http';
 import { SECCION_CLASIFICACION } from 'src/app/modules/epidemiologia/constantes';
 import { FormsEpidemiologiaService } from 'src/app/modules/epidemiologia/services/ficha-epidemiologia.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
@@ -15,12 +16,10 @@ import { EmitConcepto, RupEjecucionService } from '../../services/ejecucion.serv
 import { HUDSService } from '../../services/huds.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
-
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
     styleUrls: ['hudsBusqueda.scss', 'buscador.scss'],
-    // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
 export class HudsBusquedaComponent implements AfterContentInit {
@@ -64,9 +63,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public prestacionSeleccionada = [];
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
+    private internaciones;
+
     get prestaciones() {
         return this._prestaciones;
     }
+
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => {
             return moment(b.fecha).diff(a.fecha);
@@ -83,8 +85,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public hallazgosCronicos: any = [];
 
     /**
-         * Listado de todos los hallazgos no activos
-         */
+     * Listado de todos los hallazgos no activos
+     */
     public hallazgosNoActivos: any = [];
     public fechaInicio;
     public fechaFin;
@@ -127,6 +129,25 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public txtABuscar;
 
     public efectorRestringido = this.auth.check('huds:soloEfectorActual');
+    public indiceInternaciones;
+    public otrasPrestaciones;
+
+    /**
+     * Ids correspondientes a Prescripción de Medicamentos y Seguimiento Hídrico respectivamente
+     */
+    public condicionRegistros = ['33633005', '430147008'];
+
+    public filtros = [
+        { key: 'planes', titulo: 'prestaciones', icono: 'clipboard-check-outline' },
+        { key: 'solicitudes', titulo: 'solicitudes', icono: 'mano-corazon' },
+        { key: 'hallazgo', titulo: 'hallazgos', icono: 'hallazgo' },
+        { key: 'trastorno', titulo: 'trastornos', icono: 'trastorno' },
+        { key: 'procedimiento', titulo: 'procedimientos', icono: 'termometro' },
+        { key: 'producto', titulo: 'productos', icono: 'pildoras' },
+        { key: 'laboratorios', titulo: 'laboratorios', icono: 'recipiente' },
+        { key: 'vacunas', titulo: 'vacunas', icono: 'vacuna' },
+        { key: 'dominios', titulo: 'dominios nacionales', icono: 'hospital' },
+    ];
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -134,6 +155,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         public auth: Auth,
         public huds: HUDSService,
         private formEpidemiologiaService: FormsEpidemiologiaService,
+        private resumenHTTP: InternacionResumenHTTP,
         public ipsService: IPSService,
         @Optional() private ejecucionService: RupEjecucionService
     ) {
@@ -146,6 +168,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
      */
     ngAfterContentInit() {
         if (this.paciente) {
+            this.listarInternaciones();
             this.listarPrestaciones();
             this.listarConceptos();
             this.listarDominios();
@@ -156,6 +179,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
         setTimeout(() => {
             this.buscarCDAPacientes(token);
         }, 1000 * 30);
+    }
+
+    getTitulo(filtroactual) {
+        return this.filtros.find(filtro => filtro.key === filtroactual).titulo;
     }
 
     dragStart(e) {
@@ -254,13 +281,26 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 registro.class = 'plan';
                 registro.params = params;
                 break;
+            case 'internacion':
+                gtag('huds-open', 'rup', 'internacion', index);
+                registro.id = registro.id;
+                registro.tipo = 'internacion';
+                registro.index = index;
+                break;
         }
 
         this.huds.toogle(registro, tipo);
     }
 
-    listarPrestaciones() {
+    listarInternaciones() {
+        this.resumenHTTP.search({
+            organizacion: this.auth.organizacion.id,
+            ingreso: this.resumenHTTP.queryDateParams(this.fechaInicio, this.fechaFin),
+            paciente: this.paciente.id,
+        }).subscribe((internaciones) => this.internaciones = internaciones);
+    }
 
+    listarPrestaciones() {
         function groupBy(prestaciones: IPrestacion[]) {
             const resultado = [];
             const diccionario = {};
@@ -279,7 +319,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             Object.values(diccionario).forEach(dc => resultado.push(dc));
 
             return resultado;
-
         }
 
 
@@ -364,6 +403,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     this.cargarSolicitudesMezcladas();
                 });
             });
+
+
         });
     }
 
@@ -385,11 +426,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
-
-
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes(token) {
-
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
             this.cdas = registros.map(cda => {
                 cda.id = cda.cda_id;
@@ -478,6 +516,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     filtroBuscador(key: any) {
+        this.searchTerm = null;
         this.filtroActual = key;
         if (key === 'planes') {
             this.setAmbitoOrigen('ambulatorio');
@@ -506,6 +545,79 @@ export class HudsBusquedaComponent implements AfterContentInit {
         return filtro;
     }
 
+    filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion) {
+        const filtroPrestaciones = prestaciones.filter(prestacion =>
+            !prestacionesEnInternacion.some(filtro => filtro.data.id === prestacion.data.id));
+
+        const registros = filtroPrestaciones.flatMap((prestacion) => prestacion.data.ejecucion.registros);
+
+        const indiceRegistros = registros.reduce((grupo, registro) => {
+            const { concepto: { conceptId, term }, id, idPrestacion, createdAt: fecha } = registro;
+            const data = { conceptId, term, id, idPrestacion, fecha };
+
+            if (this.condicionRegistros.includes(data.conceptId)) {
+                return ({
+                    indices: { ...grupo.indices, [data.conceptId]: data },
+                    registros: { ...grupo.registros, [data.conceptId]: { ...grupo.registros[data.conceptId], [data.conceptId]: registro } }
+                });
+            }
+
+            return ({ indices: { ...grupo.indices, ['otras']: { ...grupo.indices['otras'], [data.conceptId]: data } }, registros: { ...grupo.registros, ['otras']: { ...grupo.registros['otras'], [data.conceptId]: registro } } });
+        }, { indices: {}, registros: {} });
+
+        const fechas = registros.map((registro) => registro.createdAt);
+        const fechaDesde = fechas[fechas.length - 1];
+        const fechaHasta = fechas[0];
+
+        this.otrasPrestaciones = { fechaDesde, fechaHasta, indices: Object.values(indiceRegistros.indices), registros: Object.values(indiceRegistros.registros) };
+    }
+
+    filtrarPorInternacion(prestaciones) {
+        const prestacionesEnInternacion = [];
+
+        const internaciones = this.internaciones?.map(internacion => {
+            const prestacionesPorInternacion = prestaciones.filter(prestacion => {
+                const fechaIngresoValida = moment(prestacion.fecha).isSameOrAfter(internacion.fechaIngreso);
+                const fechaEgresoValida = internacion.fechaEgreso ? moment(prestacion.fecha).isSameOrBefore(internacion.fechaEgreso) : moment(prestacion.fecha).isSameOrBefore(moment().toDate());
+                const organizacionValida = internacion.organizacion.id === prestacion.organizacion;
+
+                if (fechaIngresoValida && fechaEgresoValida && organizacionValida) {
+                    prestacionesEnInternacion.push(prestacion);
+
+                    return prestacion;
+                } else { return null; }
+            });
+
+            const indicePrestaciones = prestacionesPorInternacion.reduce((grupo, prestacion, index) => {
+                return ({ ...grupo, [prestacion.data.id]: prestacion });
+            }, {});
+
+            const registros = prestacionesPorInternacion.flatMap((prestacion) => prestacion.data.ejecucion.registros);
+
+            const grupoRegistros = registros.reduce((grupo, registro) => {
+                const dataRegistro = { conceptId: registro.concepto.conceptId, term: registro.concepto.term, id: registro.id, idPrestacion: registro.idPrestacion };
+
+                if (this.condicionRegistros.includes(registro.concepto.conceptId)) {
+                    return ({ ...grupo, [registro.concepto.conceptId]: dataRegistro });
+                }
+
+                return ({ ...grupo, ['otras']: { ...grupo['otras'], [registro.idPrestacion]: { ...indicePrestaciones[registro.idPrestacion] } } });
+            }, {});
+
+            return {
+                id: internacion.id,
+                fechaIngreso: internacion.fechaIngreso,
+                fechaEgreso: internacion.fechaEgreso,
+                organizacion: internacion.organizacion.nombre,
+                registros: Object.values(grupoRegistros)
+            };
+        })
+            .filter(grupo => grupo.registros.length);
+
+        this.indiceInternaciones = internaciones?.reverse();
+
+        this.filtrarOtrasPrestaciones(prestaciones, prestacionesEnInternacion);
+    }
 
     filtrar() {
         this.prestaciones = this.prestacionesCopia.slice();
@@ -523,6 +635,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
         if (this.ambitoOrigen) {
             this.prestaciones = this.prestaciones.filter(p => p.ambito === this.ambitoOrigen);
+
+            if (this.ambitoOrigen === 'internacion') {
+                this.filtrarPorInternacion(this.prestaciones);
+            }
         }
 
         if (this.organizacionSeleccionada) {

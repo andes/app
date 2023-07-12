@@ -1,102 +1,111 @@
 <plex-layout [main]="8" *ngIf="paciente">
     <plex-layout-main>
-        <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeIndexPrestacion"
-                   *ngIf="elementosRUPService.ready | async">
-            <plex-button *feature="'hudsExploracion'" label="Exploracion" tooltip="Exploracion Visual de HUDS"
-                         type="info" size="sm" class="mr-2" (click)="onExploracionClick()">
-            </plex-button>
-            <plex-tab label="Resumen del Paciente">
-                <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
-                </rup-resumenPaciente-estatico>
+        <plex-title titulo="Historia única de Salud">
+            <plex-button type="info" size="sm" (click)="volver()">Volver</plex-button>
+        </plex-title>
+        <div class="mt-4">
+            <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeIndexPrestacion"
+                       *ngIf="elementosRUPService.ready | async">
+                <plex-button *feature="'hudsExploracion'" label="Exploración" tooltip="Exploración Visual de HUDS"
+                             type="info" size="sm" class="mr-2" (click)="onExploracionClick()">
+                </plex-button>
+                <plex-tab label="Resumen del Paciente">
+                    <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
+                    </rup-resumenPaciente-estatico>
 
-                <plex-tabs [activeIndex]="activeIndexResumen">
-                    <plex-tab label="Registros del Paciente">
-                        <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
-                                                           esTab="true">
-                        </rup-resumenPaciente-dinamico-nino>
-                        <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
-                        </rup-resumenPaciente-dinamico>
-                    </plex-tab>
-                    <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
-                    </plex-tab>
-
-                    <plex-tab label="Accesos a la HUDS" [allowClose]="false">
-                        <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
-                    </plex-tab>
-                    <ng-container *ngIf="internacione$ | async as internaciones">
-                        <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
-
-                            <listado-internacion-huds [internaciones]="internaciones">
-                            </listado-internacion-huds>
-
+                    <plex-tabs [activeIndex]="activeIndexResumen">
+                        <plex-tab label="Registros del Paciente">
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
+                                                               esTab="true">
+                            </rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
+                            </rup-resumenPaciente-dinamico>
                         </plex-tab>
-                    </ng-container>
-                    <plex-tab label="Historial de turnos" [allowClose]="false">
-                        <historial-turnos [paciente]="paciente"></historial-turnos>
-                    </plex-tab>
-                </plex-tabs>
-            </plex-tab>
-            <ng-container *ngFor="let registro of registros">
+                        <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
+                            <rup-seguimientoPaciente [paciente]="paciente">
+                            </rup-seguimientoPaciente>
+                        </plex-tab>
 
-                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
-                          [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
+                        <plex-tab label="Accesos a la HUDS" [allowClose]="false">
+                            <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>
+                        </plex-tab>
+                        <ng-container *ngIf="internacione$ | async as internaciones">
+                            <plex-tab *ngIf="internaciones.length" label="Listado Internacion" [allowClose]="false">
 
-                    <vista-registro *ngIf="registro.data.class === 'situación' || 
+                                <listado-internacion-huds [internaciones]="internaciones">
+                                </listado-internacion-huds>
+
+                            </plex-tab>
+                        </ng-container>
+                        <plex-tab label="Historial de turnos" [allowClose]="false">
+                            <historial-turnos [paciente]="paciente"></historial-turnos>
+                        </plex-tab>
+                    </plex-tabs>
+                </plex-tab>
+                <ng-container *ngFor="let registro of registros">
+                    <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
+                              [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
+
+                        <detalle-registro *ngIf="registro.data.class === 'situación' || 
                      registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
-                                    [registro]="registro.data" [paciente]="paciente">
-                    </vista-registro>
+                                          [registro]="registro.data" [paciente]="paciente">
+                        </detalle-registro>
 
-                    <vista-procedimiento *ngIf="registro.data.class === 'plan' || registro.data.class === 'regimen' ||
-                        registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
-                                         [registro]="registro.data" [paciente]="paciente">
-                    </vista-procedimiento>
-                </plex-tab>
+                        <detalle-prestacion *ngIf="prestacionVisible(registro)" [registro]="registro.data"
+                                            [paciente]="paciente"></detalle-prestacion>
+                    </plex-tab>
 
-                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                          [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
-                    <vista-prestacion [prestacion]="registro.data" [paciente]="paciente">
-                    </vista-prestacion>
-                </plex-tab>
-
-                <plex-tab [allowClose]="true" [label]="registro.data[0].solicitud.tipoPrestacion.term"
-                          [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup-group'">
-
-                    <ng-container *ngFor="let prestacion of registro.data">
-                        <vista-prestacion [prestacion]="prestacion" [paciente]="paciente">
+                    <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
+                              [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
+                        <vista-prestacion [prestacion]="registro.data" [paciente]="paciente">
                         </vista-prestacion>
-                    </ng-container>
+                    </plex-tab>
 
-                </plex-tab>
+                    <!-- Incluye registros de internaciones -->
+                    <plex-tab *ngIf="registro.tipo === 'internacion'" [allowClose]="true" label="Internacion"
+                              class="hola" color="solicitud">
+                        <detalle-registro-internacion [internacion]="registro"
+                                                      [paciente]="paciente"></detalle-registro-internacion>
+                    </plex-tab>
 
-                <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
-                          [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
-                    <vista-cda [registro]="registro"></vista-cda>
-                </plex-tab>
+                    <plex-tab [allowClose]="true" [label]="registro.data[0].solicitud.tipoPrestacion.term"
+                              [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup-group'">
 
-                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                          [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
-                    <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
-                </plex-tab>
+                        <ng-container *ngFor="let prestacion of registro.data">
+                            <vista-prestacion [prestacion]="prestacion" [paciente]="paciente">
+                            </vista-prestacion>
+                        </ng-container>
 
-                <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
-                          *ngIf="registro.tipo === 'ficha-epidemiologica'">
-                    <app-ficha-epidemiologica-crud [fichaPaciente]="registro.data" [fichaName]="registro.data.type.name"
-                                                   [paciente]="paciente" [editFicha]="false" [hideVolver]="true">
-                    </app-ficha-epidemiologica-crud>
-                </plex-tab>
+                    </plex-tab>
 
-                <plex-tab *ngIf="registro.tipo === 'dominio'" [allowClose]="true" [label]="registro.data.name"
-                          [class]="registro.data.class">
-                    <vista-ips [registro]="registro.data"></vista-ips>
-                </plex-tab>
+                    <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
+                              [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
+                        <vista-cda [registro]="registro"></vista-cda>
+                    </plex-tab>
 
-            </ng-container>
-        </plex-tabs>
+                    <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
+                              [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
+                        <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
+                    </plex-tab>
+
+                    <plex-tab [allowClose]="true" label="Ficha Epidemilógica"
+                              *ngIf="registro.tipo === 'ficha-epidemiologica'">
+                        <app-ficha-epidemiologica-crud [fichaPaciente]="registro.data"
+                                                       [fichaName]="registro.data.type.name" [paciente]="paciente"
+                                                       [editFicha]="false" [hideVolver]="true">
+                        </app-ficha-epidemiologica-crud>
+                    </plex-tab>
+
+                    <plex-tab *ngIf="registro.tipo === 'dominio'" [allowClose]="true" [label]="registro.data.name"
+                              [class]="registro.data.class">
+                        <vista-ips [registro]="registro.data"></vista-ips>
+                    </plex-tab>
+
+                </ng-container>
+            </plex-tabs>
+        </div>
     </plex-layout-main>
     <plex-layout-sidebar>
         <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
     </plex-layout-sidebar>
-    <plex-layout-footer>
-        <plex-button position="left" label="VOLVER" (click)="volver()" type="info"></plex-button>
-    </plex-layout-footer>
 </plex-layout>

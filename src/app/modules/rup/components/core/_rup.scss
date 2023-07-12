@@ -64,10 +64,9 @@ $rotate: -90deg;
             }
 
             &.#{$tag} {
+
                 &:hover,
                 &.active {
-                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
-
                     .rup-header {
                         .icon-rup {
                             background: $color;
@@ -83,6 +82,9 @@ $rotate: -90deg;
                     .icon-rup {
                         border: 2px solid $color;
                         background: white;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
 
                         i {
                             color: $color;
@@ -97,17 +99,16 @@ $rotate: -90deg;
         &.#{$tag}:not(.mini) {
             &:hover {
                 border: 2px solid $color;
-                box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
 
-            > .rup-header,
-            > .rup-header .icon-rup,
+            >.rup-header,
+            >.rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: $color !important;
             }
 
-            > .rup-header .icon-rup {
+            >.rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: $color !important;
                 mix-blend-mode: hard-light;
@@ -241,15 +242,15 @@ $rotate: -90deg;
                 border: 0;
             }
 
-            > .rup-header,
-            > .rup-header .icon-rup,
+            >.rup-header,
+            >.rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: transparent !important;
                 color: white;
             }
 
-            > .rup-header .icon-rup {
+            >.rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: transparent !important;
             }
@@ -439,7 +440,7 @@ $rotate: -90deg;
         font-weight: normal;
         text-transform: uppercase;
         color: $color;
-        border: 1px solid $color; 
+        border: 1px solid $color;
 
         &:focus {
             outline: 0;
@@ -471,7 +472,6 @@ $rotate: -90deg;
 
         i:hover {
             border: 2px solid $color;
-            box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
         }
     }
 
@@ -491,7 +491,7 @@ $rotate: -90deg;
 }
 
 .form-group {
-    & > label {
+    &>label {
         margin-bottom: 0 !important;
     }
 }
@@ -532,7 +532,8 @@ $rotate: -90deg;
 .grid-envolvente {
     display: grid;
     grid-template-rows: auto 1fr;
-    > .prestacion-offset {
+
+    >.prestacion-offset {
         padding: 10px;
 
         h4 {
@@ -542,11 +543,8 @@ $rotate: -90deg;
     }
 }
 
-@mixin grid-columnas(
-    $cols: (
-        1fr 1fr,
-    )
-) {
+@mixin grid-columnas($cols: (1fr 1fr,
+    )) {
     display: grid;
     grid-template-columns: $cols;
     grid-column-gap: 40px;
@@ -753,15 +751,16 @@ observaciones {
 // Adaptación Rup-card
 plex-layout [type="invert"] {
     .rup-card .rup-header {
-        
+
         .title {
             background: transparent;
         }
-        
+
         .actions {
             background: transparent;
+
             plex-badge {
-                & > span {
+                &>span {
                     color: white;
                 }
             }

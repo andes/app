@@ -3,15 +3,30 @@ import { TurnoService } from '../../../../services/turnos/turno.service';
 import { HUDSService } from '../../services/huds.service';
 @Component({
     selector: 'vista-solicitud-top',
-    templateUrl: 'vistaSolicitudTop.html'
+    templateUrl: 'vistaSolicitudTop.html',
+    styleUrls: ['vistaSolicitudTop.scss'],
 })
 
 export class VistaSolicitudTopComponent implements OnInit {
 
-    @Input() registro: any;
-    turno: any;
-    estado: string;
+    @Input() registro;
+    turno;
+    estado;
     observaciones = '';
+
+    public tipoEstado = {
+        validada: 'success',
+        anulada: 'danger',
+        ejecucion: 'default',
+        pendiente: 'info',
+        auditoria: 'info',
+        asignada: 'success',
+        rechazada: 'danger',
+        vencida: 'danger',
+        'turno dado': 'success',
+        'contrarreferida': 'warning',
+        'registro en huds': 'success'
+    };
 
     constructor(
         public servicioTurnos: TurnoService,
@@ -38,9 +53,8 @@ export class VistaSolicitudTopComponent implements OnInit {
         }
     }
 
-    getPrestacion() {
+    abrirSolicitud() {
         const tipo = 'rup';
         this.huds.toogle(this.registro, tipo);
     }
-
 }
