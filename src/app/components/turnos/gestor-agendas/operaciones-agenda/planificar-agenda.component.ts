@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AfterViewInit, Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
@@ -20,7 +20,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
         'planificar-agenda.scss'
     ]
 })
-export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
+export class PlanificarAgendaComponent implements OnInit {
     hideGuardar: boolean;
     subscriptionID: any;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
@@ -37,6 +37,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
     get editaAgenda(): any {
         return this._editarAgenda;
+    }
+
+    get disabledDinamica() {
+        return !this.modelo.horaFin || this.modelo.tipoPrestaciones?.length !== 1 || !this.modelo.tipoPrestaciones[0].agendaDinamica;
     }
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
@@ -93,9 +97,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
         }
-    }
-
-    ngAfterViewInit() {
     }
 
     cargarAgenda(agenda: IAgenda) {

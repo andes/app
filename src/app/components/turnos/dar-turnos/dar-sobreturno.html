@@ -1,5 +1,4 @@
 <form #form="ngForm">
-    <plex-title size="md" titulo="Agregar Sobreturno"></plex-title>
     <span *ngIf="paciente">
         <div class="row">
             <div class="col-6">
@@ -90,7 +89,7 @@
             </plex-grid>
         </section>
     </main>
-    <plex-button modal center type="success" (click)="volver()">
+    <plex-button modal center type="success" (click)="aceptar()">
         ACEPTAR
     </plex-button>
 </plex-modal>

@@ -41,8 +41,7 @@ export class DarSobreturnoComponent implements OnChanges {
     };
 
     @ViewChild('modalSobreturno', { static: true }) modal: PlexModalComponent;
-    @Output() agregarSobreturno = new EventEmitter();
-    @Output() volverAlGestor = new EventEmitter();
+    @Output() volver = new EventEmitter();
     @Input() idAgenda: string;
     @Input() idPaciente: string;
 
@@ -57,10 +56,10 @@ export class DarSobreturnoComponent implements OnChanges {
     recuperarDatos() {
         this.serviceAgenda.getById(this.idAgenda).subscribe(agenda => {
             this.agenda = agenda;
-            this.inicio = moment(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
-            this.fin = moment(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+            this.inicio = moment(this.hoy.setHours(this.agenda?.horaInicio?.getHours(), this.agenda?.horaInicio?.getMinutes(), 0, 0));
+            this.fin = moment(this.hoy.setHours(this.agenda?.horaFin?.getHours(), this.agenda?.horaFin?.getMinutes(), 0, 0));
 
-            if (this.agenda.tipoPrestaciones.length === 1) {
+            if (this.agenda.tipoPrestaciones?.length === 1) {
                 this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
             }
             if (agenda.link) {
@@ -254,7 +253,6 @@ export class DarSobreturnoComponent implements OnChanges {
                     nota: this.nota
                 }
             };
-
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
                 if (this.changeCarpeta) {
                     this.actualizarCarpetaPaciente();
@@ -286,19 +284,18 @@ export class DarSobreturnoComponent implements OnChanges {
         }
     }
 
-    public volver() {
+    public aceptar() {
         this.modal.close();
-        this.volverAlGestor.emit();
-        this.agregarSobreturno.emit();
+        this.volver.emit();
     }
 
     public cancelar() {
-        this.agregarSobreturno.emit();
+        this.volver.emit();
     }
 
     public getEquipoProfesional() {
         let equipo = '';
-        this.agenda?.profesionales.forEach((profesional) => {
+        this.agenda?.profesionales?.forEach((profesional) => {
             equipo += `${profesional.nombre} ${profesional.apellido}, `;
         });
 

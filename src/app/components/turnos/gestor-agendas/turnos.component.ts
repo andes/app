@@ -22,7 +22,7 @@ export class TurnosComponent implements OnInit {
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;
-        this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
+        this.delDia = this.agenda?.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 

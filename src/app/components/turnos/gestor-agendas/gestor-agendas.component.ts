@@ -17,6 +17,15 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
 import * as enumerado from './../enums';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NgForm } from '@angular/forms';
+
+import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+
+
+
 @Component({
     selector: 'gestor-agendas',
     templateUrl: 'gestor-agendas.html',
@@ -24,20 +33,30 @@ import { NgForm } from '@angular/forms';
 })
 
 export class GestorAgendasComponent implements OnInit, OnDestroy {
+    public pacientesSearch = false;
+    public pacientes: any;
+    public obraSocialPaciente: any[] = [];
 
     showReasignarTurnoAgendas: boolean;
+    public showSobreturno = false;
 
     private guardarAgendaPanel: ViewContainerRef;
+    public esEscaneado = false;
+    public paciente: IPaciente;
+    public loading = false;
+    carpetaEfector: any;
+    changeCarpeta: boolean;
+    telefono: string;
+    cambioTelefono: boolean;
     @ViewChild('guardarAgendaPanel', { static: false }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
         this.guardarAgendaPanel = theElementRef;
     }
     @ViewChild('formu', { static: false }) formu: NgForm;
     @ViewChildren(BiQueriesComponent) biQuery: QueryList<any>;
-
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
     private queryParams: any = localStorage.getItem('filtrosGestorAgendas') ? JSON.parse(localStorage.getItem('filtrosGestorAgendas')) : undefined;
-
+    public showElegirSobreTurno = false;
     public showGestorAgendas = true;
     public showTurnos = false;
     public showReasignarTurno = false;
@@ -133,6 +152,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     ];
 
     constructor(
+        private pacienteCache: PacienteCacheService,
+        private servicePaciente: PacienteService,
+        private serviceCarpetaPaciente: CarpetaPacienteService,
+        public obraSocialService: ObraSocialService,
         public plex: Plex,
         private conceptoTurneablesService: ConceptosTurneablesService,
         public serviceProfesional: ProfesionalService,
@@ -382,11 +405,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showSuspendida = false;
     }
 
-    agregarSobreturno(agenda) {
-        localStorage.setItem('filtrosGestorAgendas', JSON.stringify(this.parametros));
-        localStorage.setItem('idAgenda', agenda._id);
-        this.router.navigate(['citas/sobreturnos', agenda._id]);
-    }
 
     cancelaAgregarNotaAgenda() {
         this.showTurnos = true;
@@ -394,7 +412,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     cerrarSidebarAgendas() {
-        this.agendasSeleccionadas = [];
+        this.showSobreturno = false;
+        this.showElegirSobreTurno = false;
     }
 
     saveAgregarNotaAgenda() {
@@ -421,6 +440,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (agendaModificada && agendaModificada.id) {
             this.verAgenda(this.agendasSeleccionadas[0], false, null);
         }
+        this.showSobreturno = false;
+        this.showElegirSobreTurno = false;
         this.showGestorAgendas = true;
         this.showDarTurnos = false;
         this.showEditarAgenda = false;
@@ -559,7 +580,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     verAgenda(agenda, multiple, e) {
+        if (this.showElegirSobreTurno) {
+            this.showSobreturno = false;
+            this.showElegirSobreTurno = false;
+        }
 
+        if (this.showSobreturno) {
+            this.showSobreturno = false;
+        }
         // Si se presionó el boton suspender, no se muestran otras agendas hasta que se confirme o cancele la acción.
         if (!this.showSuspenderAgenda) {
             this.enableQueries = false;
@@ -613,6 +641,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 });
             }
         }
+    }
+
+    agregarSobreturno($event?: any) {
+        this.pacientes = null;
+        if ($event) { $event.stopPropagation(); }
+        this.showSobreturno = true;
+        this.showElegirSobreTurno = false;
     }
 
     onSeleccionAgendaNoMultiple(ag) {
@@ -912,6 +947,104 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     isMobile() {
         return this.breakpointObserver.isMatched('(max-width: 599px)');
+    }
+
+
+
+    onSearchEnd(pacientes: IPaciente[], scan: string) {
+        this.loading = false;
+        this.esEscaneado = scan?.length > 0;
+        if (this.esEscaneado && pacientes.length === 1 && pacientes[0].id) {
+            this.pacienteCache.setScanCode(scan);
+            this.onSelect(pacientes[0]);
+        } else if (this.esEscaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanCode(scan);
+            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']); // abre paciente-cru
+        } else {
+            this.pacientes = pacientes;
+        }
+    }
+
+
+    onSelect(paciente: any): void {
+        // Si se seleccionó por error un paciente fallecido
+        this.servicePaciente.checkFallecido(paciente);
+        this.paciente = paciente;
+        this.loadObraSocial(this.paciente);
+        this.verificarTelefono(this.paciente);
+        this.showElegirSobreTurno = true;
+        this.servicePaciente.getById(paciente.id).subscribe(
+            pacienteMPI => {
+                this.paciente = pacienteMPI;
+                // this.verificarTelefono(this.paciente);
+                this.obtenerCarpetaPaciente();
+                this.pacientesSearch = false;
+                this.loadObraSocial(this.paciente);
+            });
+    }
+    obtenerCarpetaPaciente() {
+        let indiceCarpeta = -1;
+        if (this.paciente.carpetaEfectores.length > 0) {
+            // Filtro por organizacion
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+            }
+        }
+        if (indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.serviceCarpetaPaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                    this.changeCarpeta = true;
+                }
+            });
+        }
+    }
+
+    loadObraSocial(paciente) {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        if (!paciente || !paciente.documento) {
+            return;
+        }
+        this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocialPaciente = resultado.map((os: any) => {
+                    let osPaciente;
+
+                    if (os.nombre) {
+                        osPaciente = {
+                            'id': os.nombre,
+                            'label': os.nombre
+                        };
+                    } else {
+                        osPaciente = {
+                            'id': os.financiador,
+                            'label': os.financiador
+                        };
+                    }
+                    return osPaciente;
+                });
+                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+            }
+            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+        });
+    }
+
+    verificarTelefono(paciente: IPaciente) {
+        // se busca entre los contactos si tiene un celular
+        this.telefono = '';
+        this.cambioTelefono = false;
+        if (paciente.contacto) {
+            if (paciente.contacto.length > 0) {
+                paciente.contacto.forEach((contacto) => {
+                    if (contacto.tipo === 'celular') {
+                        this.telefono = contacto.valor;
+                    }
+                });
+            }
+        }
     }
 }
 
