@@ -1,0 +1,17 @@
+<plex-detail direction="row" size="xs">
+    <img [mpiFotoPaciente]="paciente" />
+    <div title>{{ paciente | nombre }}</div>
+    <div subtitle>
+        <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">{{ paciente.documento |
+            number }}</plex-copy>
+        <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">{{
+            paciente.numeroIdentificacion }}</plex-copy>
+        <span *ngIf="!paciente.numeroIdentificacion && !paciente.documento">Sin DNI</span>
+    </div>
+    <plex-label titulo="Género" subtitulo="{{paciente.genero}}">
+    </plex-label>
+    <plex-label titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}">
+    </plex-label>
+    <plex-label titulo="Fecha de nacimiento" subtitulo="{{paciente.fechaNacimiento | fecha}}">
+    </plex-label>
+</plex-detail>

@@ -46,10 +46,11 @@ export class HUDSService {
      */
     public toogle(registro: Registro, tipo: string) {
         const index = this.index(registro, tipo);
+
         if (index === -1) {
             const elemento: ElementoHUDS = {
                 tipo: tipo,
-                data: registro
+                data: { ...registro }
             };
             this.push(elemento);
         } else {
@@ -69,6 +70,7 @@ export class HUDSService {
         }
         for (let i = 0; i < this._registrosHUDS.length; i++) {
             const _registro = this._registrosHUDS[i].data;
+
             if (this._registrosHUDS[i].tipo === tipo) {
                 switch (tipo) {
                     case 'concepto':
@@ -85,12 +87,13 @@ export class HUDSService {
                     case 'cda':
                     case 'dominio':
                     case 'solicitud':
-                        if (registro.id === _registro.id) {
+                    case 'ficha-epidemiologica':
+                        if (registro.id === _registro.id || registro.data?.id === _registro.id) {
                             return i;
                         }
                         break;
-                    case 'ficha-epidemiologica':
-                        if (registro.id === _registro.id) {
+                    case 'internacion':
+                        if (registro.id === _registro.id && registro.index === _registro.index) {
                             return i;
                         }
                         break;
@@ -104,6 +107,9 @@ export class HUDSService {
         return this.index(registro, tipo) >= 0;
     }
 
+    someOpen(registro: Registro, index?: number) {
+        return this._registrosHUDS.some(item => registro.id === item.data.id && index === item.data.index);
+    }
 
     /**
     * Genera un token para el acceso a la HUDS de un paciente

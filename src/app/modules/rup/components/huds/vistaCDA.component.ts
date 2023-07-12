@@ -1,18 +1,19 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { CDAService } from '../../services/CDA.service';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
+import { CDAService } from '../../services/CDA.service';
 
 @Component({
     selector: 'vista-cda',
     templateUrl: 'vistaCDA.html',
+    styleUrls: ['vistaCDA.scss'],
     encapsulation: ViewEncapsulation.None,
 })
 
 export class VistaCDAComponent implements OnInit {
 
-    @Input() registro: any = {}; // 12948300
+    @Input() registro;
 
-    archivo: any;
+    archivo;
 
     public codificacionCDA = null;
     public autorCDA = null;

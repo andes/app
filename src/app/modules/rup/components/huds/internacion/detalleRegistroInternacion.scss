@@ -1,0 +1,82 @@
+.prestacion-label {
+    display: contents;
+}
+
+.badges {
+    display: flex;
+    column-gap: 5px;
+    align-items: flex-start;
+}
+
+.lista-prestacion {
+    .lista-grid {
+        column-gap: 3%;
+    }
+
+    .titulo {
+        display: flex;
+        align-items: center;
+    }
+
+    .lista-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .titulo {
+            color: var(--nav-bar-color);
+        }
+
+        .icono {
+            padding: 10px 15px;
+            margin-right: 10px;
+            color: white;
+            background-color: var(--nav-bar-color);
+
+            plex-icon i {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .lista-detail {
+        display: flex;
+        column-gap: 20px;
+        justify-content: space-around;
+    }
+
+    .lista-panel {
+        margin-bottom: 3px;
+        display: block;
+        
+        .icono {
+            border: 1px solid #00bcb4;
+            border-radius: 100%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+
+            &.medico {
+                border-color: #00bcb4;
+                color: #00bcb4;
+            }
+    
+            &.hidrico {
+                border-color: #47c0e9;
+                color: #47c0e9;
+            }
+        }
+    }
+}
+
+.accordion .card-header {
+    padding: 0 !important
+}
+
+.filtro-fechas {
+    display: flex;
+    column-gap: 8px;
+}

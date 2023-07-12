@@ -81,7 +81,7 @@
                                         {{ registro.esSolicitud ? 'solicitud': registro.concepto.semanticTag }}
                                     </plex-badge>
                                     <plex-badge type="info"
-                                                *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                                *ngIf='registro.esPrimeraVez && prestacion.estados && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
                                         Es primera vez
                                     </plex-badge>
 

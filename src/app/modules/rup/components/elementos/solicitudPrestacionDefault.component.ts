@@ -33,7 +33,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
         }
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
-            prestacionOrigen: this.prestacion?.solicitud.tipoPrestacion.conceptId,
+            prestacionOrigen: this.prestacion?.solicitud?.tipoPrestacion.conceptId,
             prestacionDestino: this.registro.concepto?.conceptId
         }).subscribe(reglas => {
             this.reglasMatch = reglas;
