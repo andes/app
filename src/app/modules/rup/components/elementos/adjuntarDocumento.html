@@ -32,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let doc of registro.valor.documentos; let i = index">
+                            <tr *ngFor="let doc of registro?.valor.documentos; let i = index">
                                 <td>
                                     <div class="image hover">
                                         <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="col-12" *ngIf="parametroRegistro">
-                <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
+                <ng-container *ngFor="let doc of registro?.valor.documentos; let i = index">
                     <a>
                         <div class="image hover">
                             <a [href]="createUrl(doc)" target="_blank" [class.adjunto]="!esImagen(doc.ext)">
