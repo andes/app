@@ -211,7 +211,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
                     if (!this.validada) {
                         const puederSerC2 = (registro) => {
-                            return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situación');
+                            return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situación' || registro.concepto.semanticTag === 'evento');
                         };
 
                         const encolarRequestCIE10 = (registro) => {
