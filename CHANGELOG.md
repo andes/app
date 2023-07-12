@@ -1,3 +1,15 @@
+# [5.124.0](https://github.com/andes/app/compare/v5.123.0...v5.124.0) (2023-07-12)
+
+
+### Bug Fixes
+
+* **MISC-278:** repara filtro de seleccion de novedades ([#2877](https://github.com/andes/app/issues/2877)) ([994a6b0](https://github.com/andes/app/commit/994a6b023ea98ca6723858f2ad1403288196fd08))
+
+
+### Features
+
+* **IN:** mantiene estado de accordion en egreso ([#2867](https://github.com/andes/app/issues/2867)) ([7bc3033](https://github.com/andes/app/commit/7bc3033bba245faa52d2cc1b5dd90b50c10749c4))
+
 # [5.123.0](https://github.com/andes/app/compare/v5.122.0...v5.123.0) (2023-06-14)
 
 
