@@ -10,6 +10,7 @@ import { MaquinaEstadosHTTP } from 'src/app/apps/rup/mapa-camas/services/maquina
 import { IOrganizacion } from 'src/app/interfaces/IOrganizacion';
 import { OrganizacionService } from 'src/app/services/organizacion.service';
 import { Auth } from '@andes/auth';
+import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 
 interface ICapaRef {
     id: string;
@@ -24,8 +25,8 @@ interface ICapaRef {
 export class ConfiguracionInternacionComponent implements OnInit {
     @ViewChild('form', { static: true }) form: NgForm;
 
+    private capasOrgReferencia: IMaquinaEstados[] = [];
     private capasOrganizacionActual: IMaquinaEstados[] = [];
-    private accionesInternacion;
     public organizacionActual;
     public usaCapasUnificadas = false;
     public capasTotales: ICapaRef[] = [];
@@ -66,6 +67,7 @@ export class ConfiguracionInternacionComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         public snomed: SnomedService,
+        private conceptosTurneablesService: ConceptosTurneablesService,
         public auth: Auth,
         private plex: Plex
     ) { }
@@ -89,19 +91,23 @@ export class ConfiguracionInternacionComponent implements OnInit {
         ).subscribe(([capasOrgActual, capasOrgReferencia, orgActual, orgReferencia]: [IMaquinaEstados[], IMaquinaEstados[], IOrganizacion, IOrganizacion]) => {
             this.organizacionActual = orgActual;
             this.usaCapasUnificadas = orgActual.usaEstadisticaV2;
-            this.accionesInternacion = capasOrgReferencia.find(item => item.capa === 'medica').estados[1].acciones;
+            capasOrgReferencia.map(capa => {
+                delete capa.id;
+                delete (capa as any)._id;
+                this.capasOrgReferencia[capa.capa] = capa;
+            });
             this.capasTotales = capasOrgReferencia.map(capa => ({ id: capa.capa, nombre: capa.capa }))
                 .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-            /*  Se cargan las capas pre-existentes de la organizacion actual. Las capas no configuradas se completan
-                con las correspondientes de la organizacion de referencia */
+            /*  Se cargan las capas pre-existentes de la organizacion actual. Si es primera vez, las capas no configuradas se
+                completan con las correspondientes de la organizacion de referencia */
             this.capasTotales.forEach(capa => {
                 const capaActual = capasOrgActual.find(c => c.capa === capa.nombre);
                 if (capaActual) {
                     this.capasOrganizacionActual[capa.nombre] = capaActual;
                     capa.activa = true;
                 } else {
-                    this.capasOrganizacionActual[capa.nombre] = capasOrgReferencia.find(c => c.capa === capa.nombre);
+                    this.capasOrganizacionActual[capa.nombre] = Object.assign({}, capasOrgReferencia.find(c => c.capa === capa.nombre));
                     this.capasOrganizacionActual[capa.nombre].organizacion = orgActual.id;
                     delete this.capasOrganizacionActual[capa.nombre].id;
                     delete this.capasOrganizacionActual[capa.nombre]._id;
@@ -149,6 +155,20 @@ export class ConfiguracionInternacionComponent implements OnInit {
         });
     }
 
+    // Setea los valores de una capa por defecto, segun organizacion de referencia
+    setDefault() {
+        this.plex.confirm(`¿Restaurar valores de capa ${this.capaSelected.nombre} por defecto?`, 'Confirmar').then(response => {
+            if (response) {
+                const idCapa = this.capaModel.id?.slice();
+                this.capaModel = Object.assign({}, this.capasOrgReferencia[this.capaSelected.nombre]);
+                this.capaModel.organizacion = this.organizacionActual.id;
+                this.capaModel.id = idCapa;
+                (this.capaModel as any)._id = idCapa;
+                this.changeCapa(this.capaSelected);
+            }
+        });
+    }
+
     // retorna true si existe algún campo sin completar
     campoFaltante() {
         return this.capasTotales.some(capa => {
@@ -166,12 +186,11 @@ export class ConfiguracionInternacionComponent implements OnInit {
     }
 
     loadConceptos(event) {
-        const conceptosInternacion = this.accionesInternacion.map(accion => accion.parametros.concepto);
         if (event.query) {
-            this.snomed.get({
-                search: event.query,
-                semanticTag: ['procedimiento']
-            }).subscribe(result => event.callback(result.concat(conceptosInternacion)));
+            this.conceptosTurneablesService.search({
+                term: '^' + event.query,
+                ambito: 'internacion'
+            }).subscribe(result => event.callback(result));
         } else {
             event.callback([]);
         }
