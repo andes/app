@@ -47,9 +47,9 @@ export class ListadoInternacionCapasService {
                         // En este switchMap se carga en un array los datos relevantes de cada internación y se
                         // obtienen los historiales correspondientes para tener las unidades organizativas segun
                         // su ingreso o egreso correspondiente.
-                        switchMap(resumen => {
+                        map(resumen => {
                             if (!resumen.length) {
-                                return of([]);
+                                return [];
                             }
                             resumen.forEach(inter => {
                                 const nuevoListado = {};
@@ -61,28 +61,11 @@ export class ListadoInternacionCapasService {
                                 nuevoListado['diagnostico'] = inter.registros.find(reg => reg.esDiagnosticoPrincipal && reg.tipo === 'valoracion-inicial')?.concepto;
                                 this.listadoInternacion.push(nuevoListado);
                             });
-                            const request = resumen.map(i =>
-                                this.camasHTTP.historialInternacion('internacion', 'medica', fechaIngresoDesde, moment().toDate(), i.id),
-                            );
-                            return forkJoin(request);
+                            return resumen;
                         })
                     );
                 }
                 return of([]);
-            }),
-            // Con el array de internación cargado previamente y los movimientos de cada internación procedemos a agregar la UO.
-            map(internaciones => {
-                internaciones.forEach((movimientos, index) => {
-                    if (movimientos.length) {
-                        const element = this.listadoInternacion[index];
-                        const egreso = movimientos.find(mov => mov.extras?.egreso);
-                        // Si existe un egreso entonces me quedo con la UO del egreso sino con la UO del ingreso.
-                        element['unidadOrganizativa'] = (movimientos[0].idPrestacion) ? movimientos[0].idPrestacion?.unidadOrganizativa?.term : (movimientos[0].unidadOrganizativa || movimientos[0].unidadOrganizativas[0]);
-                        element['unidadOrganizativa'] = egreso?.unidadOrganizativa || movimientos[movimientos.length - 1].unidadOrganizativa;
-                        this.listadoInternacion[index] = element;
-                    }
-                });
-                return this.listadoInternacion;
             })
         );
         this.listaInternacionFiltrada$ = combineLatest([
