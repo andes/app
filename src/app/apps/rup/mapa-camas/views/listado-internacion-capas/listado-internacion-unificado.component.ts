@@ -89,15 +89,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
             }
         },
         {
-            key: 'unidadOrganizativa',
-            label: 'Unidad organizativa',
-            sorteable: true,
-            opcional: true,
-            sort: (a, b) => {
-                return a.idPrestacion?.unidadOrganizativa.term.localeCompare(b.idPrestacion?.unidadOrganizativa.term);
-            }
-        },
-        {
             key: 'estado',
             label: 'Estado',
             sorteable: true,
