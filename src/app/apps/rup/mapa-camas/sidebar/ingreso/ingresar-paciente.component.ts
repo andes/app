@@ -128,10 +128,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.ingresoPacienteService) {
             return this.ingresoPacienteService.selectedPaciente;
         }
-        return combineLatest(
+        return combineLatest([
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ).pipe(
+        ]).pipe(
             map(([snap, prestacion]) => snap.paciente ? snap.paciente.id : prestacion?.paciente.id)
         ) as Observable<string>;
     }
@@ -264,13 +264,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.inProgress = false;
                 // filtra por cama disponible / ocupada por el mismo paciente (edicion) / cama de sala
                 const camasDisponibles = snapshot.filter(snap => snap.estado === 'ocupada' && snap.paciente.id === idPaciente || snap.estado === 'disponible' || snap.sala);
-                const currentUrl = this.router.url;
-                if (currentUrl.includes('listado-internacion-medico')) {
-                    if (this.cama && !camasDisponibles.find(cama => cama.id === this.cama.id)) {
-                        // si la cama seleccionada no se encuentra entre las disponibles (puede haberse cambiado la fecha/hora del snapshot)
-                        this.cama = null;
-                    }
-                }
                 return camasDisponibles;
             })
         );
@@ -712,6 +705,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
                         this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre.bold()} no se encuentra disponible`,
                             'Cama no disponible');
+                        this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
                     }
                 }
             });

@@ -21,10 +21,8 @@
                     </plex-label>
                 </div>
                 <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
-                    <plex-title titulo="Listado Internacion">
-                        <plex-table-columns>
-                        </plex-table-columns>
-                    </plex-title>
+                    <plex-table-columns>
+                    </plex-table-columns>
 
                     <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
                         [class.selected]="internacion.id === idInternacionSelected"

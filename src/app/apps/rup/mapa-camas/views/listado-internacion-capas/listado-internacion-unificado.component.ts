@@ -11,6 +11,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
+import { map, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-listado-internacion-unificado',
@@ -139,8 +140,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         }
         this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setAmbito('internacion');
-        this.permisosMapaCamasService.setAmbito('internacion');
-        this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.select({ id: ' ' } as any);
 
         this.plex.updateTitle([{
@@ -166,9 +165,14 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
     seleccionarInternacion(resumen: IResumenInternacion) {
         if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
             this.mapaCamasService.selectResumen(resumen);
+            this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen.id;
             const prestacion = resumen.idPrestacion as any; // prestacion populada
             this.mapaCamasService.selectPrestacion(prestacion);
+            this.mapaCamasService.camaSelectedSegunView$.pipe(
+                take(1),
+                map(cama => this.mapaCamasService.select(cama))
+            ).subscribe();
         } else {
             this.idInternacionSelected = null;
         }

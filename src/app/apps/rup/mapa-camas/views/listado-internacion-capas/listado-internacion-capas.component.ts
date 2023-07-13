@@ -3,8 +3,10 @@ import { cache } from '@andes/shared';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { MapaCamasService } from '../../services/mapa-camas.service';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
 
@@ -75,13 +77,15 @@ export class ListadoInternacionCapasComponent implements OnInit {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private location: Location,
+        private permisosMapaCamasService: PermisosMapaCamasService
     ) { }
 
     ngOnInit() {
-        this.mapaCamasService.setView('mapa-camas');
+        this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setCapa('medica');
         this.mapaCamasService.setAmbito('internacion');
-        this.mapaCamasService.setFecha(new Date());
+        this.permisosMapaCamasService.setAmbito('internacion');
+        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -98,15 +102,13 @@ export class ListadoInternacionCapasComponent implements OnInit {
 
     seleccionarPrestacion(resumen: IResumenInternacion) {
         if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
-            this.mapaCamasService.select({
-                id: resumen.id,
-                idCama: resumen.id,
-                idInternacion: resumen.id,
-                paciente: resumen.paciente,
-                fecha: resumen.fechaIngreso,
-                estado: 'ocupada'
-            } as any);
+            this.mapaCamasService.selectResumen(resumen);
+            this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen.id;
+            this.mapaCamasService.camaSelectedSegunView$.pipe(
+                take(1),
+                map(cama => this.mapaCamasService.select(cama))
+            ).subscribe();
         } else {
             this.idInternacionSelected = null;
         }
