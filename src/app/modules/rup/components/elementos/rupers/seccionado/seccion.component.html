@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="rup-body"
-                                 [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
+                                 [hidden]="itemsRegistros[registro.id]?.collapse || (confirmarEliminar && indexEliminar === i) || confirmarDesvincular[registro.id]">
                                 <!-- ... Body -->
                                 <div class="content">
                                     <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
