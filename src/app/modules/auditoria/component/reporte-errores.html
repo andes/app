@@ -10,7 +10,7 @@
 </div>
 
 <div *ngIf="!pacientes.length" class="alert alert-default">
-    <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
+    <plex-icon name="emoticon-happy"></plex-icon> No se encontraron pacientes con datos reportados.
 </div>
 
 <modal-correccion-paciente #modalCorreccion [paciente]="pacienteSelected" (patientCorrected)="savePatient($event)">

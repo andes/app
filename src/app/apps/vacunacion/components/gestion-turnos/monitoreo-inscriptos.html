@@ -45,7 +45,7 @@
                                     {{ pacienteLlamado.estado }}
                                 </plex-badge>
                                 <span class="pl-1" *ngIf="pacienteLlamado.nota">
-                                    <i title="{{ pacienteLlamado.nota }}" class="mdi mdi-comment-outline"></i>
+                                    <i title="{{ pacienteLlamado.nota }}"> <plex-icon name="comment-outline"></plex-icon> </i>
                                 </span>
                             </td>
                             <td *plTableCol="'certificado'">

@@ -14,14 +14,14 @@
                 <small *ngIf="day.turnosDisponibles > 0 || mostrarNoDisponibles"
                        title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
                     A:{{day.agendasDisponibles.length}}
-                    <i *ngIf="day.turnosDisponibles !== 0" class="mdi mdi-check-circle text-success"></i>
-                    <i *ngIf="day.turnosDisponibles == 0" class="mdi mdi-close-circle text-danger"></i>
+                    <plex-icon *ngIf="day.turnosDisponibles !== 0" name="check-circle" type="success"></plex-icon>
+                    <plex-icon *ngIf="day.turnosDisponibles === 0" name="close-circle" type="danger"></plex-icon>
                     <span *ngIf="day.turnosDisponibles > 0">T:{{day.turnosDisponibles}}</span>
                 </small>
                 <small *ngIf="day.dinamicasIndefinidas > 0 && day.turnosDisponibles === 0"
                        title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
                     A:{{day.agendasDisponibles.length}}
-                    <i class="mdi mdi-check-circle text-success"></i>
+                    <plex-icon name="check-circle" type="success"></plex-icon>
                     <span>T:{{day.turnosDisponibles}}</span>
                 </small>
             </div>
