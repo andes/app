@@ -76,6 +76,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
             }
         });
         this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
+            this.editar = false;
             this.capa = this.mapaCamasService.capa;
             if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                 if (resumen?.ingreso) {
@@ -119,11 +120,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
 
         this.hayMovimientosSinEgresoAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
-                const egreso = historial.some(mov => mov.extras?.egreso);
+                const egresoOSala = historial.some(mov => mov.extras?.egreso || mov.idSalaComun);
                 const tieneIDMov = historial.every(
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento
                 );
-                return historial.length > 0 && tieneIDMov && !egreso;
+                return historial.length > 0 && tieneIDMov && !egresoOSala;
             })
         );
 

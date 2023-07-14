@@ -243,7 +243,10 @@ export class MapaCamasService {
                             fecha: this.fecha
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
-                            map(camas => camas[0]),
+                            map(snap => {
+                                snap = snap.filter(sn => sn.idInternacion && sn.idInternacion === internacion.id);
+                                return snap[0] || null;
+                            }),
                             cache()
                         );
                     })

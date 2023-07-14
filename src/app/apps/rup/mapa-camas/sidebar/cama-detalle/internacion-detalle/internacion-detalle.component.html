@@ -8,7 +8,7 @@
             <!-- ASISTENCIAL - ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (accion)="onAccion($event)"
                                                 (cancel)="activateOption('ingreso')" (toggleEditar)="toggleEdit()">
-                <ng-container *ngIf="hayMovimientosSinEgresoAt$ | async">
+                <ng-container *ngIf="(hayMovimientosSinEgresoAt$ | async) && (view$ | async) === 'listado-internacion'">
                     <plex-button *ngIf="capa !== 'interconsultores'" size="sm" icon="account-off" type="danger"
                                  tooltip="Deshacer Internacion" tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>

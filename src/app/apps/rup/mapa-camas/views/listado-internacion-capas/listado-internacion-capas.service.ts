@@ -20,7 +20,6 @@ export class ListadoInternacionCapasService {
     public missingFilters$: Observable<boolean>;
     public estado = new BehaviorSubject<any>(null);
     public listadoInternacion = [];
-    // public nuevoListado = {};
 
     constructor(
         private resumenHTTP: InternacionResumenHTTP,

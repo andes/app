@@ -43,6 +43,7 @@ export interface ISnapshot {
         nombre: string;
     };
     sala?: boolean;
+    idSalaComun?: string;
     extras: {
         ingreso?: boolean;
         egreso?: boolean;

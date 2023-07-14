@@ -1,7 +1,7 @@
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
@@ -15,7 +15,7 @@ import { ListadoInternacionCapasService } from './listado-internacion-capas.serv
     templateUrl: './listado-internacion-capas.component.html',
 })
 
-export class ListadoInternacionCapasComponent implements OnInit {
+export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
     listaInternacion$: Observable<IResumenInternacion[]>;
     selectedPrestacion$: Observable<IPrestacion>;
 
@@ -103,6 +103,10 @@ export class ListadoInternacionCapasComponent implements OnInit {
                 this.idInternacionSelected = null;
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.mapaCamasService.selectResumen(null);
     }
 
     seleccionarPrestacion(resumen: IResumenInternacion) {
