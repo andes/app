@@ -310,25 +310,28 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.modelo.prepaga = null;
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
-            // se obtiene token y loguea el acceso a la huds del paciente
-            window.sessionStorage.setItem('huds-token', hudsToken.token);
-            const aux: any = this.lastSelect$;
-            if (aux._value) {
-                aux._value.seleccionada = false;
-            }
-            this.lastSelect$.next(datos);
-            datos.seleccionada = true;
-            this.showPrestacion = true;
-            this.showListaPrepagas = false;
-            this.prestacion = datos;
-            this.cargarObraSocial(datos);
-        });
-        if (datos.financiador) {
-            this.modelo.prepaga = '';
-        };
+
         this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
-            this.paciente = paciente;;
+            this.paciente = paciente;
+
+            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
+                // se obtiene token y loguea el acceso a la huds del paciente
+                window.sessionStorage.setItem('huds-token', hudsToken.token);
+                const aux: any = this.lastSelect$;
+                if (aux._value) {
+                    aux._value.seleccionada = false;
+                }
+                this.lastSelect$.next(datos);
+                datos.seleccionada = true;
+                this.showPrestacion = true;
+                this.showListaPrepagas = false;
+                this.prestacion = datos;
+                this.cargarObraSocial(datos);
+            });
+            if (datos.financiador) {
+                this.modelo.prepaga = '';
+            };
+
         });
     }
 
@@ -437,26 +440,26 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     cargarObraSocial(datos) {
         if ((datos.idPrestacion)) {
             this.obraSocialPaciente = [];
-            this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
-                if (resultado.length) {
-                    this.obraSocialPaciente = resultado.map((os: any) => {
-                        const osPaciente = {
-                            'id': os.financiador,
-                            'label': os.financiador
-                        };
-                        return osPaciente;
-                    });
-                    this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-                } else {
-                    if (datos.paciente.obraSocial) {
-                        this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+            if (datos.paciente.documento && this.paciente.estado === 'validado') {
+                this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
+                    if (resultado.length) {
+                        this.obraSocialPaciente = resultado.map((os: any) => {
+                            const osPaciente = {
+                                'id': os.financiador,
+                                'label': os.financiador
+                            };
+                            return osPaciente;
+                        });
                         this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                    } else {
+                        if (datos.paciente.obraSocial) {
+                            this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+                            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                        }
                     }
-
-
-                }
-                this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
-            });
+                    this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+                });
+            }
         }
     }
 
