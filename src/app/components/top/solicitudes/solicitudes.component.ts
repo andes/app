@@ -361,7 +361,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     // verifica que el tipo de prestación este entre las autorizadas para el profesional
-    isPresentationEnabled(prestacion) {
+    isPrestationEnabled(prestacion) {
         return this.auth.check('rup:tipoPrestacion:' + prestacion.solicitud.tipoPrestacion.id);
     }
 
@@ -863,18 +863,18 @@ export class SolicitudesComponent implements OnInit {
             if (botones.auditar) {
                 this.itemsDropdown.push({ icon: 'lock-alert', label: 'Auditar Solicitud', handler: () => { this.auditar(prestacion); } });
             }
-            if (botones.darTurno && this.tipoSolicitud === 'entrada') {
-                this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
-            }
-            if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
-                this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.confirmarIniciarPrestacion(); } });
-            }
-            if (botones.citarPaciente) {
-                this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(); } });
-            }
-            if (botones.anular && this.permisoAnular && this.tipoSolicitud === 'entrada') {
-                this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
-            }
+            // if (botones.darTurno && this.tipoSolicitud === 'entrada') {
+            //     this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
+            // }
+            // if (botones.iniciarPrestacion && this.isPrestationEnabled(prestacion)) {
+            //     this.itemsDropdown.push({ icon: 'check', label: 'Iniciar Prestación', handler: () => { this.confirmarIniciarPrestacion(); } });
+            // }
+            // if (botones.citarPaciente) {
+            //     this.itemsDropdown.push({ icon: 'calendar', label: 'Citar Paciente', handler: () => { this.citar(); } });
+            // }
+            // if (botones.anular && this.permisoAnular && this.tipoSolicitud === 'entrada') {
+            //     this.itemsDropdown.push({ icon: 'delete', label: 'Anular', handler: () => { this.anular(prestacion); } });
+            // }
             if (botones.continuarRegistro || prestacion.estadoActual.tipo === 'ejecucion') {
                 this.itemsDropdown.push({
                     icon: 'flecha-izquierda', label: ' Continuar Registro', handler: () => {
@@ -895,7 +895,7 @@ export class SolicitudesComponent implements OnInit {
 
     verificarBotones(botones, prestacion) {
         if (this.tipoSolicitud === 'entrada') {
-            if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) || botones.citarPaciente
+            if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPrestationEnabled(prestacion)) || botones.citarPaciente
                 || (botones.anular && this.permisoAnular) || botones.continuarRegistro || prestacion.estadoActual.tipo === 'asignada') {
                 return true;
             }
