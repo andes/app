@@ -205,12 +205,11 @@ export class MapaCamasService {
         );
 
         this.resumenInternacion$ = combineLatest([
-            this.selectedResumen,
             this.selectedCama,
             this.ambito2,
             this.capa2
         ]).pipe(
-            switchMap(([resumen, cama, ambito, capa]) => {
+            switchMap(([cama, ambito, capa]) => {
                 if (capa === 'estadistica') {
                     return of(null);
                 }
@@ -219,8 +218,7 @@ export class MapaCamasService {
                     return this.internacionResumenHTTP.get(cama.idInternacion);
                 }
                 // listado de internacion
-                return of(resumen);
-
+                return of(this.selectedResumen.getValue());
             }),
             catchError(() => of(null)),
             cache()
@@ -276,7 +274,7 @@ export class MapaCamasService {
         this.mainView.next('principal');
     }
 
-    load(event) {
+    isLoading(event) {
         this.loading.next(event);
     }
 

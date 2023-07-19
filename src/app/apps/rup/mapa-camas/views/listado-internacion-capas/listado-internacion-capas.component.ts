@@ -99,6 +99,7 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
 
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
         this.mapaCamasService.selectedResumen.subscribe(resumen => {
+            // para que al momento de deshacer una internacion (por ej) no quede el sidebar abierto
             if (!resumen?.id) {
                 this.idInternacionSelected = null;
             }
@@ -109,8 +110,9 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         this.mapaCamasService.selectResumen(null);
     }
 
-    seleccionarPrestacion(resumen: IResumenInternacion) {
-        if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
+    onSelect(resumen: IResumenInternacion) {
+        if (resumen?.id !== this.idInternacionSelected) {
+            this.mapaCamasService.isLoading(true);
             this.mapaCamasService.selectResumen(resumen);
             this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen.id;

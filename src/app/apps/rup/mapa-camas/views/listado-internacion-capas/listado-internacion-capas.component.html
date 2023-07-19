@@ -25,8 +25,7 @@
                     </plex-table-columns>
 
                     <tr *ngFor="let internacion of (listaInternacion$ | plSort:table | async)" class="selectable"
-                        [class.selected]="internacion.id === idInternacionSelected"
-                        (click)="seleccionarPrestacion(internacion)">
+                        [class.selected]="internacion.id === idInternacionSelected" (click)="onSelect(internacion)">
                         <td *plTableCol="'nombre'">
                             {{internacion.paciente | nombre }}
                         </td>
@@ -51,7 +50,6 @@
                     </tr>
                 </plex-table>
             </ng-container>
-
         </ng-container>
 
         <ng-container *ngIf="mainView !== 'principal'">

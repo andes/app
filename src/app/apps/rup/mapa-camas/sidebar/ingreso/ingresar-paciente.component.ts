@@ -386,15 +386,17 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             ).subscribe(historial => {
                 if (historial.length) {
                     // Verificamos si hay otra internacion mas adelante. Asi mismo un bloqueo de cama o cambio de UO
-                    if (historial[0].idInternacion && historial[0].idInternacion !== this.cama.idInternacion ||
-                        historial[0].estado !== 'disponible' ||
-                        historial[0].unidadOrganizativa !== this.cama.unidadOrganizativa) {
+                    if ((this.cama.idInternacion !== historial[0]?.idInternacion && historial[0].estado !== 'disponible') ||
+                        historial[0].unidadOrganizativa.id !== this.cama.unidadOrganizativa.id) {
                         const fechaEnConflicto = moment(historial[0].fecha);
+
                         this.plex.confirm(`Esta cama está disponible hasta el día ${fechaEnConflicto.format('DD/MM/YYYY')} a las ${fechaEnConflicto.format('HH:mm')}. ¿Desea continuar con la internación?`, 'Aviso').then(respuesta => {
                             if (respuesta) {
                                 this.confirmarGuardar();
                             }
                         });
+                    } else {
+                        this.confirmarGuardar();
                     }
                 } else {
                     this.confirmarGuardar();
