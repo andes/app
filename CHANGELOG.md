@@ -1,3 +1,11 @@
+## [5.124.1](https://github.com/andes/app/compare/v5.124.0...v5.124.1) (2023-07-19)
+
+
+### Bug Fixes
+
+* **in:** corrige request historial ([#2892](https://github.com/andes/app/issues/2892)) ([5c354d2](https://github.com/andes/app/commit/5c354d2bf2c1caae2a47e131b29ffd10e2dbee60))
+* **in:** editar fecha de ingreso en historial medico ([#2831](https://github.com/andes/app/issues/2831)) ([c1b4ad6](https://github.com/andes/app/commit/c1b4ad64e2d182c5f1757974cedc8d88f681510c))
+
 # [5.124.0](https://github.com/andes/app/compare/v5.123.0...v5.124.0) (2023-07-12)
 
 
