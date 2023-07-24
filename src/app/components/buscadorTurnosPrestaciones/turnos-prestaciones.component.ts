@@ -190,9 +190,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             }),
         ).subscribe();
 
-        this.state$ = combineLatest(
+        this.state$ = combineLatest([
             this.selectPrestaciones$,
-            this.busqueda$
+            this.busqueda$]
         ).pipe(
             map(([selected, items]) => {
                 return {
@@ -311,28 +311,37 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
 
-        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
-            this.paciente = paciente;
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => this.paciente = paciente);
 
-            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
-                // se obtiene token y loguea el acceso a la huds del paciente
-                window.sessionStorage.setItem('huds-token', hudsToken.token);
-                const aux: any = this.lastSelect$;
-                if (aux._value) {
-                    aux._value.seleccionada = false;
-                }
-                this.lastSelect$.next(datos);
-                datos.seleccionada = true;
-                this.showPrestacion = true;
-                this.showListaPrepagas = false;
-                this.prestacion = datos;
-                this.cargarObraSocial(datos);
-            });
-            if (datos.financiador) {
-                this.modelo.prepaga = '';
-            };
 
+        const paramsToken = {
+            usuario: this.auth.usuario,
+            organizacion: this.auth.organizacion,
+            paciente: datos.paciente,
+            motivo: 'auditoria',
+            profesional: this.auth.profesional ? this.auth.profesional : null,
+            idTurno: datos.turno ? datos.turno.id : null,
+            idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
+        };
+        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
+            // se obtiene token y loguea el acceso a la huds del paciente
+            window.sessionStorage.setItem('huds-token', hudsToken.token);
+            const aux: any = this.lastSelect$;
+            if (aux._value) {
+                aux._value.seleccionada = false;
+            }
+            this.lastSelect$.next(datos);
+            datos.seleccionada = true;
+            this.showPrestacion = true;
+            this.showListaPrepagas = false;
+            this.prestacion = datos;
+            this.cargarObraSocial(datos);
         });
+        if (datos.financiador) {
+            this.modelo.prepaga = '';
+        };
+
+
     }
 
     recupero() {

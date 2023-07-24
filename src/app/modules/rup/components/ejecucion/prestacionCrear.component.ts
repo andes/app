@@ -159,8 +159,16 @@ export class PrestacionCrearComponent implements OnInit {
             this.disableGuardar = true;
             if (this.tieneAccesoHUDS && this.paciente) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: this.paciente,
+                    motivo: 'Fuera de agenda',
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: this.tipoPrestacionSeleccionada.id
+                };
+                const token = this.hudsService.generateHudsToken(paramsToken);
                 const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
                 const res = concat(token, nuevaPrest);
 

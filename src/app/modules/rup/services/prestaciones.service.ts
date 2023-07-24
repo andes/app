@@ -759,14 +759,17 @@ export class PrestacionesService {
         const paciente = prestacion.paciente;
         const snomedConcept = prestacion.solicitud.tipoPrestacion;
         if (tieneAccesoHUDS) {
+            const paramsToken = {
+                usuario: this.auth.usuario,
+                organizacion: this.auth.organizacion,
+                paciente: paciente,
+                motivo: snomedConcept.term,
+                profesional: this.auth.profesional,
+                idTurno: turno?.id,
+                idPrestacion: prestacion.id
+            };
             this.hudsService.generateHudsToken(
-                this.auth.usuario,
-                this.auth.organizacion,
-                paciente,
-                snomedConcept.term,
-                this.auth.profesional,
-                turno?.id,
-                prestacion.id
+                paramsToken
             ).subscribe((husdTokenRes) => {
                 if (husdTokenRes.token) {
                     window.sessionStorage.setItem('huds-token', husdTokenRes.token);

@@ -108,16 +108,7 @@ export class HUDSService {
     /**
     * Genera un token para el acceso a la HUDS de un paciente
     */
-    generateHudsToken(usuario, organizacion, paciente, motivo, profesional, idTurno, idPrestacion) {
-        const paramsToken = {
-            usuario: usuario,
-            organizacion: organizacion,
-            paciente: paciente,
-            motivo: motivo,
-            profesional: profesional,
-            idTurno: idTurno,
-            idPrestacion: idPrestacion
-        };
+    generateHudsToken(paramsToken) {
         return this.server.post(this.hudsUrl + '/token', paramsToken);
 
     }
