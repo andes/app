@@ -1,23 +1,25 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnDestroy, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
+import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
 })
 
-export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
     public estadoPrestacion;
-    public existeIngreso;
     public editar;
+    public existeIngreso;
+    public existeEgreso;
     view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
@@ -29,14 +31,13 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
     public hayMovimientosSinEgresoAt$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
     public capa;
+    public inProgress;
 
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
         { key: 'egreso', label: 'EGRESO' }
     ];
-
-    private subscription: Subscription;
 
     constructor(
         public mapaCamasService: MapaCamasService,
@@ -45,14 +46,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         private plex: Plex,
         private prestacionesService: PrestacionesService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
+        private listadoInternacion: ListadoInternacionService,
         private cdr: ChangeDetectorRef
     ) { }
-
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
 
     ngAfterViewChecked() {
         this.cdr.detectChanges();
@@ -63,48 +59,58 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
         this.editar = false;
         this.mapaCamasService.prestacion$.subscribe(prestacion => {
             this.estadoPrestacion = '';
+            this.editar = false;
             this.existeIngreso = false;
+            this.existeEgreso = false;
             if (prestacion) {
-                this.editar = false;
                 this.estadoPrestacion = prestacion.estadoActual.tipo;
-                if (prestacion.ejecucion.registros[prestacion.ejecucion.registros.length - 1].valor.informeIngreso) {
+                if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
                     this.existeIngreso = true;
                 }
-                this.mapaCamasService.load(false);
+                if (prestacion.ejecucion.registros[1]?.valor?.InformeEgreso) {
+                    this.existeEgreso = true;
+                }
             }
+            // loading se setea en true desde el listado de internacion
+            this.mapaCamasService.isLoading(false);
         });
-        this.subscription = this.mapaCamasService.resumenInternacion$.subscribe(resumen => {
-            this.capa = this.mapaCamasService.capa;
-            if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
-                if (resumen?.ingreso) {
-                    this.items = [
-                        { key: 'ingreso-dinamico', label: 'INGRESO' },
-                        { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' }
-                    ];
-                    this.mostrar = 'ingreso-dinamico';
+        // Configura los tabs a mostrar según capa y vista
+        this.mapaCamasService.resumenInternacion$.pipe(
+            take(1),
+            map(resumen => {
+                this.editar = false;
+                this.capa = this.mapaCamasService.capa;
+                if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+                    if (resumen?.ingreso) {
+                        this.items = [
+                            { key: 'ingreso-dinamico', label: 'INGRESO' },
+                            { key: 'movimientos', label: 'MOVIMIENTOS' },
+                            { key: 'registros', label: 'REGISTROS' }
+                        ];
+                        this.mostrar = 'ingreso-dinamico';
+                    } else {
+                        // medico / enfermero
+                        this.items = [
+                            { key: 'ingreso', label: 'INGRESO' },
+                            { key: 'movimientos', label: 'MOVIMIENTOS' },
+                            { key: 'registros', label: 'REGISTROS' }
+                        ];
+                    }
                 } else {
-                    // medico / enfermero
+                    //  estadistica / estadistica-v2
                     this.items = [
                         { key: 'ingreso', label: 'INGRESO' },
                         { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' }
+                        { key: 'registros', label: 'REGISTROS' },
+                        { key: 'egreso', label: 'EGRESO' }
                     ];
                 }
-            } else {
-                //  estadistica / estadistica-v2
-                this.items = [
-                    { key: 'ingreso', label: 'INGRESO' },
-                    { key: 'movimientos', label: 'MOVIMIENTOS' },
-                    { key: 'registros', label: 'REGISTROS' },
-                    { key: 'egreso', label: 'EGRESO' }
-                ];
-            }
-            const registro = this.items.findIndex(item => item.key === 'registros');
-            if (registro !== -1 && !this.permisosMapaCamasService.registros) {
-                this.items.splice(registro, 1);
-            }
-        });
+                const registro = this.items.findIndex(item => item.key === 'registros');
+                if (registro !== -1 && !this.permisosMapaCamasService.registros) {
+                    this.items.splice(registro, 1);
+                }
+            })
+        ).subscribe();
 
         this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map(historial => {
@@ -117,11 +123,13 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
 
         this.hayMovimientosSinEgresoAt$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
-                const egreso = historial.some(mov => mov.extras?.egreso);
+                // loading se setea en true desde el listado de internacion medico
+                this.mapaCamasService.isLoading(false);
+                const egresoOSala = historial.some(mov => mov.extras?.egreso || mov.idSalaComun);
                 const tieneIDMov = historial.every(
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento
                 );
-                return historial.length > 0 && tieneIDMov && !egreso;
+                return historial.length > 0 && tieneIDMov && !egresoOSala;
             })
         );
 
@@ -186,7 +194,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                         const idInternacion = resumen?.id ? resumen.id : prestacion.id;
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
                             switchMap(() => {
-                                // en el caso del resumen, si existe prestacion esta viene populada en el resumen
+                                // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación
+                                if (this.capa === 'medica') {
+                                    return of(null);
+                                }
+                                // en el caso del resumen, si existe prestacion, esta viene populada en idPrestacion
                                 const idPrestacion = (resumen?.idPrestacion as any)?.id || prestacion?.id;
                                 const prestacionAux = {
                                     id: idPrestacion,
@@ -197,19 +209,21 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy, AfterView
                         );
                     })
                 ).subscribe(() => {
-                    this.plex.info('success', 'Se deshizo la internación', 'Éxito');;
+                    this.plex.info('success', 'Se deshizo la internación', 'Éxito');
                     this.mapaCamasService.selectPrestacion(null);
+                    this.mapaCamasService.selectResumen(null);
                     this.listadoInternacionCapasService.refresh.next(true);
+                    this.listadoInternacion.refresh.next(true);
                 });
             }
         });
     }
 
     puedeEgresar() {
-        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && (this.editar || this.existeIngreso)) ? true : false;
+        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && (this.editar || (this.existeIngreso && !this.existeEgreso)));
     }
 
-    puedeEditar() {
-        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada') ? true : false;
+    puedeEditarEgreso() {
+        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && this.existeEgreso);
     }
 }

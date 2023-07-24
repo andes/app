@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { cache } from '@andes/shared';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,8 +9,8 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
-import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { map, take } from 'rxjs/operators';
+import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 
 @Component({
     selector: 'app-listado-internacion-unificado',
@@ -116,7 +115,6 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         public mapaCamasService: MapaCamasService,
         private permisosMapaCamasService: PermisosMapaCamasService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
-        private location: Location,
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router,
@@ -140,7 +138,8 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         }
         this.mapaCamasService.setView('listado-internacion');
         this.mapaCamasService.setAmbito('internacion');
-        this.mapaCamasService.select({ id: ' ' } as any);
+        this.permisosMapaCamasService.setAmbito('internacion');
+        this.mapaCamasService.select({ id: ' ' } as any); // Pequeño HACK
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -160,10 +159,17 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         }
 
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
+        this.mapaCamasService.selectedResumen.subscribe(resumen => {
+            // para que al momento de deshacer una internacion (por ej) no quede el sidebar abierto
+            if (!resumen?.id) {
+                this.idInternacionSelected = null;
+            }
+        });
     }
 
     seleccionarInternacion(resumen: IResumenInternacion) {
-        if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
+        if (resumen?.id !== this.idInternacionSelected) {
+            this.mapaCamasService.isLoading(true);
             this.mapaCamasService.selectResumen(resumen);
             this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen.id;

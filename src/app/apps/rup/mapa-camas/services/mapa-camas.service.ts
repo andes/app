@@ -205,12 +205,11 @@ export class MapaCamasService {
         );
 
         this.resumenInternacion$ = combineLatest([
-            this.selectedResumen,
             this.selectedCama,
             this.ambito2,
             this.capa2
         ]).pipe(
-            switchMap(([resumen, cama, ambito, capa]) => {
+            switchMap(([cama, ambito, capa]) => {
                 if (capa === 'estadistica') {
                     return of(null);
                 }
@@ -219,8 +218,7 @@ export class MapaCamasService {
                     return this.internacionResumenHTTP.get(cama.idInternacion);
                 }
                 // listado de internacion
-                return of(resumen);
-
+                return of(this.selectedResumen.getValue());
             }),
             catchError(() => of(null)),
             cache()
@@ -243,7 +241,10 @@ export class MapaCamasService {
                             fecha: this.fecha
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
-                            map(camas => camas[0]),
+                            map(snap => {
+                                snap = snap.filter(sn => sn.idInternacion && sn.idInternacion === internacion.id);
+                                return snap[0] || null;
+                            }),
                             cache()
                         );
                     })
@@ -251,8 +252,7 @@ export class MapaCamasService {
             })
         );
 
-        const desde = moment().subtract(12, 'months').toDate();
-        this.historialInternacion$ = this.historial('internacion', desde).pipe(
+        this.historialInternacion$ = this.historial('internacion', null).pipe(
             map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             }),
@@ -274,7 +274,7 @@ export class MapaCamasService {
         this.mainView.next('principal');
     }
 
-    load(event) {
+    isLoading(event) {
         this.loading.next(event);
     }
 
@@ -533,6 +533,9 @@ export class MapaCamasService {
     }
 
     historial(type: 'cama' | 'internacion', desde: Date, hasta: Date = null, cama: ISnapshot = null): Observable<ISnapshot[]> {
+        if (!desde) {
+            desde = moment().subtract(12, 'months').toDate();
+        }
         return combineLatest([
             this.ambito2,
             this.capa2,

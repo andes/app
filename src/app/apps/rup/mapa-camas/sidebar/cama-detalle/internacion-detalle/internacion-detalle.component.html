@@ -5,10 +5,11 @@
 
     <ng-container *ngIf="mostrar === 'ingreso'">
         <ng-container *ngIf="!editar">
-            <!-- ESTADISTICA-V2 -->
+            <!-- ASISTENCIAL - ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (accion)="onAccion($event)"
                                                 (cancel)="activateOption('ingreso')" (toggleEditar)="toggleEdit()">
-                <ng-container *ngIf="hayMovimientosSinEgresoAt$ | async">
+                <ng-container
+                              *ngIf="(hayMovimientosSinEgresoAt$ | async) && (view$ | async) === 'listado-internacion' && !(mapaCamasService.loading | async)">
                     <plex-button *ngIf="capa !== 'interconsultores'" size="sm" icon="account-off" type="danger"
                                  tooltip="Deshacer Internacion" tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
@@ -35,26 +36,29 @@
 
     <ng-container *ngIf="mostrar === 'movimientos'">
         <app-movimientos-internacion>
-            <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos)"
+            <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisosMapaCamasService.movimientos) && capa !== 'medica'"
                          [disabled]="(mapaCamasService.prestacion$ | async)?.ejecucion?.registros[1]"
                          label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
             </plex-button>
         </app-movimientos-internacion>
     </ng-container>
 
-    <ng-container *ngIf="mostrar === 'egreso' && !(mapaCamasService.loading | async)">
-
-        <app-informe-egreso *ngIf="!editar && !existeIngreso" (cancel)="activateOption('egreso')">
-            <plex-button *ngIf="puedeEditar()" tooltip="Editar egreso" tooltipPosition="left" icon="pencil"
-                         type="warning" size="sm" (click)="toggleEdit()">
+    <ng-container *ngIf="mostrar === 'egreso'">
+        <!-- informe (Debe tener un egreso cargado) -->
+        <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activateOption('egreso')">
+            <plex-button *ngIf="puedeEditarEgreso() && !(mapaCamasService.loading | async)" tooltip="Editar egreso"
+                         tooltipPosition="left" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
             </plex-button>
         </app-informe-egreso>
+        <!-- Formulario de egreso -->
         <app-egresar-paciente *ngIf="puedeEgresar()" (onSave)="editar ? toggleEdit() : notificarEgreso()">
-            <plex-button *ngIf="!existeIngreso" tooltip="Volver" tooltipPosition="left" icon="arrow-left" type="danger"
+            <plex-button *ngIf="editar" tooltip="Volver" tooltipPosition="left" icon="arrow-left" type="danger"
                          size="sm" (click)="toggleEdit();" [autodisabled]="true">
             </plex-button>
         </app-egresar-paciente>
-
+        <plex-label *ngIf="!existeIngreso">Debe completar el informe de ingreso antes de realizar el
+            egreso.
+        </plex-label>
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">

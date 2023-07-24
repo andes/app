@@ -160,7 +160,7 @@ export class InternacionListadoComponent implements OnInit {
         }]);
 
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
-            map((prestacion) => {
+            map(prestacion => {
                 this.puedeValidar = false;
                 this.puedeRomper = false;
                 if (prestacion?.ejecucion?.registros[1] && prestacion.ejecucion.registros[1].valor?.InformeEgreso) {
@@ -211,7 +211,7 @@ export class InternacionListadoComponent implements OnInit {
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
                 this.verificarPrestacion(prestacion);
-                this.mapaCamasService.load(true);
+                this.mapaCamasService.isLoading(true);
             }
         }
     }

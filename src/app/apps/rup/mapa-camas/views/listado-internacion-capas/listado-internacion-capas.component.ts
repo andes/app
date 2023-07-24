@@ -1,7 +1,7 @@
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
@@ -15,7 +15,7 @@ import { ListadoInternacionCapasService } from './listado-internacion-capas.serv
     templateUrl: './listado-internacion-capas.component.html',
 })
 
-export class ListadoInternacionCapasComponent implements OnInit {
+export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
     listaInternacion$: Observable<IResumenInternacion[]>;
     selectedPrestacion$: Observable<IPrestacion>;
 
@@ -98,10 +98,21 @@ export class ListadoInternacionCapasComponent implements OnInit {
         }]);
 
         this.listaInternacion$ = this.listadoInternacionCapasService.listaInternacionFiltrada$.pipe(cache());
+        this.mapaCamasService.selectedResumen.subscribe(resumen => {
+            // para que al momento de deshacer una internacion (por ej) no quede el sidebar abierto
+            if (!resumen?.id) {
+                this.idInternacionSelected = null;
+            }
+        });
     }
 
-    seleccionarPrestacion(resumen: IResumenInternacion) {
-        if (!this.idInternacionSelected || resumen.id !== this.idInternacionSelected) {
+    ngOnDestroy() {
+        this.mapaCamasService.selectResumen(null);
+    }
+
+    onSelect(resumen: IResumenInternacion) {
+        if (resumen?.id !== this.idInternacionSelected) {
+            this.mapaCamasService.isLoading(true);
             this.mapaCamasService.selectResumen(resumen);
             this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen.id;
