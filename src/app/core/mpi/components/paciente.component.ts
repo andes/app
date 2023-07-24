@@ -116,7 +116,8 @@ export class PacienteComponent implements OnInit {
         reportarError: false,
         notaError: '',
         vinculos: [null],
-        documentos: []
+        documentos: [],
+        createdBy: null,
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];

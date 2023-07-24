@@ -4,6 +4,7 @@ import { IDireccion } from './IDireccion';
 import { EstadoCivil } from '../../../utils/enumerados';
 import { IUbicacion } from '../../../interfaces/IUbicacion';
 import { IObraSocial } from '../../../../../src/app/interfaces/IObraSocial';
+import { ICreatedBy } from 'src/app/interfaces/ICreatedBy';
 
 export interface IPaciente {
     id: string;
@@ -29,6 +30,7 @@ export interface IPaciente {
     estadoCivil: EstadoCivil;
     fotoId: string;
     foto: string;
+    createdBy: ICreatedBy;
     relaciones: [IPacienteRelacion];
     financiador: [{
         codigoPuco: Number;
