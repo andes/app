@@ -78,7 +78,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 const paciente = cama?.paciente || (prestacion?.paciente || resumen?.paciente);
                 this.paciente = paciente;
                 if (paciente && (!this.idPaciente || resumen.paciente.id !== this.idPaciente)) {
-                    this.idPaciente = resumen.paciente.id;
+                    this.idPaciente = this.mapaCamasService.capa !== 'estadistica' ? resumen.paciente.id : null;
                     return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
                 }
                 return [];
@@ -147,12 +147,10 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 this.inProgress = false;
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
-                    if (prestacion.solicitud.tipoPrestacion.conceptId !== this.planIndicConcepId) {
-                        if (tipoPrestacion) {
-                            return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
-                        }
-                        return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
+                    if (tipoPrestacion) {
+                        return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
                     }
+                    return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
                 });
             })
         );
@@ -167,7 +165,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.prestacionesList$ = this.historial$.pipe(
             map((prestaciones) => {
                 prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion);
-                return prestaciones.filter(p => p.conceptId !== this.planIndicConcepId);
             })
         );
     }
