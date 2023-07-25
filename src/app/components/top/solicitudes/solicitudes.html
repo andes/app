@@ -1,4 +1,5 @@
-<plex-layout [main]="showSidebar? 8 : 12" *ngIf="!showDarTurnos && !showCargarSolicitud && !showEditarReglas">
+<plex-layout [main]="showSidebar? 8 : 12" [offset]="160" (scroll)="onScroll()"
+             *ngIf="!showDarTurnos && !showCargarSolicitud && !showEditarReglas">
     <plex-layout-main>
         <header>
             <plex-title main titulo="{{asignadas?'Solicitudes asignadas':'Módulo de solicitudes'}}">
