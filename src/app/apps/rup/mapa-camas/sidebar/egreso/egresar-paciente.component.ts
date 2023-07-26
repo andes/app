@@ -185,15 +185,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
             this.resumen = resumen;
-            let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha;
+            let fecha = moment(resumen?.fechaEgreso).toDate() || moment(this.mapaCamasService.fecha).toDate();
 
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
-                fecha = resumen?.fechaEgreso || moment().toDate();
+                fecha = moment(resumen?.fechaEgreso) || moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
 
-            this.registro.valor.InformeEgreso.fechaEgreso = moment(fecha);
+            this.registro.valor.InformeEgreso.fechaEgreso = moment(fecha).toDate();
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
             this.fechaEgresoOriginal = null;
 
@@ -207,8 +207,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = Object.assign({}, this.prestacion.ejecucion.registros[1].valor.InformeEgreso);
-                    fecha = moment(this.registro.valor.InformeEgreso.fechaEgreso);
-                    this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
+                    fecha = moment(this.registro.valor.InformeEgreso.fechaEgreso).toDate();
+                    this.fechaEgresoOriginal = moment(this.registro.valor.InformeEgreso.fechaEgreso).toDate();
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
                     this.checkTraslado = informeEgreso.tipoEgreso.id === 'Traslado' && !informeEgreso.UnidadOrganizativaDestino?.id;
@@ -251,7 +251,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
             }
-            this.fecha = fecha;
+            this.fecha = moment(fecha);
             this.setDiasEstada();
         });
     }
@@ -265,7 +265,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        this.mapaCamasService.setFecha(this.fecha);
+        const nuevaFecha = moment(this.fecha).toDate();
+        this.mapaCamasService.setFecha(nuevaFecha);
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
             // si se está egresando con fusion de capas puede que estadistica-v2 aun no haya cargado el informe
