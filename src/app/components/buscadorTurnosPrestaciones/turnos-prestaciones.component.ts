@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { ITurnosPrestaciones } from './interfaces/turnos-prestaciones.interface';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -60,6 +61,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showHint = false;
     public prestacionIniciada;
     public showListaPrepagas: Boolean = false;
+    public loader: Boolean = false;
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -158,8 +160,16 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
+            tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
+            takeUntil(this.onDestroy$),
             cache()
         );
+
+        this.turnosPrestacionesService.loading$.pipe(
+            takeUntil(this.onDestroy$)
+        ).subscribe((loading) => {
+            this.loader = loading; // Actualizar el estado del loader
+        });
 
         combineLatest([
             this.accion$,

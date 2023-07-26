@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, Subject } from 'rxjs';
 import { cache, Server, saveAs } from '@andes/shared';
 import { ITurnosPrestaciones } from '../interfaces/turnos-prestaciones.interface';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TurnosPrestacionesService {
@@ -15,6 +15,7 @@ export class TurnosPrestacionesService {
 
     public sortBy$ = new BehaviorSubject<string>('fecha'); // Seteo con fecha para que el primer orden sea por fecha
     public sortOrder$ = new BehaviorSubject<string>('asc');
+    public loading$ = new BehaviorSubject<boolean>(false);
 
     private filtros = new Subject<any>();
 
@@ -38,7 +39,13 @@ export class TurnosPrestacionesService {
     }
 
     buscar(params: any) {
+        this.loading$.next(true);
         this.filtros.next(params);
+        this.filtros.pipe(
+            tap(data => {
+            }),
+            finalize(() => this.loading$.next(false))
+        ).subscribe();
     }
 
     /**
