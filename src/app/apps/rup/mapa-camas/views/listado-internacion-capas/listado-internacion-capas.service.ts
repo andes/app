@@ -100,7 +100,7 @@ export class ListadoInternacionCapasService {
             const esNumero = Number.isInteger(Number(paciente));
             if (esNumero) {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter(
-                    (internacion: IResumenInternacion) => internacion.paciente.documento.includes(paciente)
+                    (internacion: IResumenInternacion) => internacion.paciente.documento?.includes(paciente)
                 );
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter(

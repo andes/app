@@ -185,14 +185,15 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
             this.resumen = resumen;
-            let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha || moment().toDate();
+            let fecha = resumen?.fechaEgreso || this.mapaCamasService.fecha;
 
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
                 fecha = resumen?.fechaEgreso || moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
-            this.registro.valor.InformeEgreso.fechaEgreso = fecha;
+
+            this.registro.valor.InformeEgreso.fechaEgreso = moment(fecha);
             this.fechaMaxProcedimiento = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').toDate();
             this.fechaEgresoOriginal = null;
 
@@ -205,8 +206,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.hayEgreso) {
-                    this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                    fecha = this.registro.valor.InformeEgreso.fechaEgreso;
+                    this.registro.valor.InformeEgreso = Object.assign({}, this.prestacion.ejecucion.registros[1].valor.InformeEgreso);
+                    fecha = moment(this.registro.valor.InformeEgreso.fechaEgreso);
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
 
                     const informeEgreso = this.registro.valor.InformeEgreso;
