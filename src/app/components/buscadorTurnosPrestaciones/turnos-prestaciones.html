@@ -16,7 +16,7 @@
                            name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
             </plex-datetime>
             <plex-text [(ngModel)]="datoPaciente" (change)="refreshSelection($event,'paciente')" label="paciente"
-                       placeholder="Ingrese un documento, apellido o nombre">
+                       placeholder="Ingrese un documento, apellido, nombre, alias o número de identificación">
             </plex-text>
             <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
                          label="Prestación" tmPrestaciones preload="true">

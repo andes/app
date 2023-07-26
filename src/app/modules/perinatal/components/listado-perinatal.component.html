@@ -51,7 +51,7 @@
                 [class.selected]="carnet?.id===carnetSelected?.id" [class.selectable]="selectable">
                 <ng-container *ngIf="carnet">
                     <td *plTableCol="'fechaInicio'">{{ carnet.fecha | fecha }}</td>
-                    <td *plTableCol="'paciente'">{{ carnet.paciente.apellido + ', ' + carnet.paciente.nombre }}</td>
+                    <td *plTableCol="'paciente'">{{ carnet.paciente | nombre }}</td>
                     <td *plTableCol="'documento'">{{ carnet.paciente.documento }}</td>
                     <td *plTableCol="'edad'">{{ carnet.paciente | edad }}</td>
                     <td *plTableCol="'ausente'">

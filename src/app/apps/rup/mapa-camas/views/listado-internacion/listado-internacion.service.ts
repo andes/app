@@ -84,7 +84,8 @@ export class ListadoInternacionService {
         if (paciente) {
             const esNumero = Number.isInteger(Number(paciente));
             if (esNumero) {
-                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento?.includes(paciente));
+                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                    (internacion.paciente.documento?.includes(paciente) || internacion.paciente?.numeroIdentificacion?.includes(paciente)));
             } else {
                 listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
                     (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
