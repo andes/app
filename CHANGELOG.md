@@ -1,3 +1,16 @@
+# [5.125.0](https://github.com/andes/app/compare/v5.124.1...v5.125.0) (2023-07-26)
+
+
+### Bug Fixes
+
+* **INT:** Corrige error al visualizar registros en capa estadistica ([#2897](https://github.com/andes/app/issues/2897)) ([daae6b2](https://github.com/andes/app/commit/daae6b281c3f74283b0853fc7378c71cba49889b))
+
+
+### Features
+
+* **IN-546:** quitar indicaciones de registro ([#2881](https://github.com/andes/app/issues/2881)) ([b99ebe1](https://github.com/andes/app/commit/b99ebe13843d27a9fc018268cdf7aca73e9f4a31))
+* **MPI-406:** Auditoria de pacientes- Creado por ([#2887](https://github.com/andes/app/issues/2887)) ([ca262c8](https://github.com/andes/app/commit/ca262c803dcbcc2df684f9f209eb071d86203af9))
+
 ## [5.124.1](https://github.com/andes/app/compare/v5.124.0...v5.124.1) (2023-07-19)
 
 
