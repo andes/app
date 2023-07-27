@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
+import { map, switchMap, tap, pluck, catchError } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { arrayToSet, cache, notNull } from '@andes/shared';
@@ -41,7 +41,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public min$: Observable<Date>;
     public max$: Observable<Date>;
     public paciente;
-    public idPaciente;
 
     @Output() accion = new EventEmitter();
 
@@ -77,8 +76,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
                 const paciente = cama?.paciente || (prestacion?.paciente || resumen?.paciente);
                 this.paciente = paciente;
-                if (paciente && (!this.idPaciente || resumen.paciente.id !== this.idPaciente)) {
-                    this.idPaciente = this.mapaCamasService.capa !== 'estadistica' ? resumen.paciente.id : null;
+                if (paciente) {
                     return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
                 }
                 return [];
@@ -163,9 +161,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         );
 
         this.prestacionesList$ = this.historial$.pipe(
-            map((prestaciones) => {
-                prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion);
-            })
+            map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion))
         );
     }
 
