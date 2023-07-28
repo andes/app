@@ -185,7 +185,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         ]).subscribe(([view, capa, ambito, cama, prestacion, resumen]) => {
             this.inProgress = false;
             this.resumen = resumen;
-            let fecha = moment(resumen?.fechaEgreso).toDate() || moment(this.mapaCamasService.fecha).toDate();
+            let fecha = moment(resumen?.fechaEgreso || this.mapaCamasService.fecha).toDate();
 
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
@@ -267,7 +267,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     setFecha() {
         const nuevaFecha = moment(this.fecha).toDate();
         this.mapaCamasService.setFecha(nuevaFecha);
-        this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
+        this.registro.valor.InformeEgreso.fechaEgreso = nuevaFecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
             // si se está egresando con fusion de capas puede que estadistica-v2 aun no haya cargado el informe
             if (this.capa === 'estadistica-v2' && !this.informeIngreso?.fechaIngreso) {
