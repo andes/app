@@ -1,3 +1,11 @@
+## [5.125.1](https://github.com/andes/app/compare/v5.125.0...v5.125.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* **in:** corrige sincronizacion fecha egreso ([#2900](https://github.com/andes/app/issues/2900)) ([094e9ad](https://github.com/andes/app/commit/094e9ad2bfc60e98f3e1f299170f0f718d829954))
+* **in:** egreso y filtro por documento en listados ([#2898](https://github.com/andes/app/issues/2898)) ([ef8ec67](https://github.com/andes/app/commit/ef8ec671b269cbc030629005d5ce8f2d9c374930))
+
 # [5.125.0](https://github.com/andes/app/compare/v5.124.1...v5.125.0) (2023-07-26)
 
 
