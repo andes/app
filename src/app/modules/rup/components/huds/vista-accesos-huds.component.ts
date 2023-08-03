@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HUDSService } from '../../services/huds.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'vista-accesos-huds',
@@ -13,7 +12,6 @@ export class VistaAccesosHudsComponent implements OnInit {
 
     constructor(
         private hudsService: HUDSService,
-        public auth: Auth,
     ) { }
 
     public accesosHuds = [];
@@ -47,11 +45,6 @@ export class VistaAccesosHudsComponent implements OnInit {
             skip: 0,
             limit: 15
         };
-        // Si el usuario tiene restricción por efector solamente visualiza las prestaciones del efector el cual se
-        // encuentra logueado, en caso contrario podra ver todas las prestaciones que tiene dicho paciente.
-        if (this.auth.check('huds:efectorHuds')) {
-            this.params['organizacion'] = this.auth.organizacion.id;
-        }
         this.getAccesos();
     }
 
