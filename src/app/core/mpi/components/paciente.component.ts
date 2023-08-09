@@ -304,7 +304,7 @@ export class PacienteComponent implements OnInit {
             (resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.sugeridos) {
-                    this.pacientesSimilares = this.escaneado ? resultadoSave.sugeridos.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.sugeridos;
+                    this.pacientesSimilares = this.escaneado || this.validado ? resultadoSave.sugeridos.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.sugeridos;
                     // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
                     this.visualizarIgnorarGuardar = resultadoSave.sugeridos[0]._score < 0.94;
                     if (!this.visualizarIgnorarGuardar) {
