@@ -20,11 +20,11 @@ export class OrganizacionService {
         public server: Server,
         private auth: Auth) {
 
-        this.organizacionesFiltradas$ = combineLatest(
+        this.organizacionesFiltradas$ = combineLatest([
             this.nombre,
             this.soloNoActivo,
             this.lastResults
-        ).pipe(
+        ]).pipe(
             auditTime(0),
             switchMap(([nombre, soloNoActivo = false, lastResults]) => {
                 if (!lastResults) {
