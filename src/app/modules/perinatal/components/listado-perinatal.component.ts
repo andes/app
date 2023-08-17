@@ -161,7 +161,7 @@ export class ListadoPerinatalComponent implements OnInit {
             fechaDesde: this.fechaDesdeEntrada,
             fechaHasta: this.fechaHastaEntrada,
             profesional: this.profesional?.id,
-            organizacion: this.organizacion?.id,
+            organizacionOrigen: this.organizacion?.id,
             paciente: this.paciente || '',
             estado: 'AUSENTE'
         };

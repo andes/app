@@ -88,7 +88,7 @@ export class FiltrosInternacionComponent implements OnInit {
             hasta: this.filtros.fechaIngresoHasta ? moment(this.filtros.fechaIngresoHasta).startOf('d').format() : undefined,
             egresoDesde: this.filtros.fechaEgresoDesde ? moment(this.filtros.fechaEgresoDesde).startOf('d').format() : undefined,
             egresoHasta: this.filtros.fechaEgresoHasta ? moment(this.filtros.fechaEgresoHasta).endOf('d').format() : undefined,
-            organizacion: this.auth.organizacion.id
+            organizacionOrigen: this.auth.organizacion.id
         };
         this.requestInProgress = true;
         this.servicioDocumentos.descargarReporteInternaciones(params, 'Internaciones').subscribe(
