@@ -1,3 +1,10 @@
+## [5.125.2](https://github.com/andes/app/compare/v5.125.1...v5.125.2) (2023-08-23)
+
+
+### Bug Fixes
+
+* **QUERIES:** cambia filtro en descargas csv ([#2905](https://github.com/andes/app/issues/2905)) ([0fb9aa0](https://github.com/andes/app/commit/0fb9aa0997c64302138023d43c0653d2f828122a))
+
 ## [5.125.1](https://github.com/andes/app/compare/v5.125.0...v5.125.1) (2023-08-02)
 
 
