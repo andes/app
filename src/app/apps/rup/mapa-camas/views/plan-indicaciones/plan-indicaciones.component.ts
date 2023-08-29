@@ -119,7 +119,7 @@ export class PlanIndicacionesComponent implements OnInit {
     ngOnInit() {
         this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
             tap(config => {
-                this.horaOrganizacion = config.planIndicaciones.horaInicio;
+                this.horaOrganizacion = config.planIndicaciones?.horaInicio;
                 this.horas = this.getHorariosGrilla();
             })
         ).subscribe();
@@ -282,12 +282,6 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
 
-    cancelIndicacion(event) {
-        this.selectedIndicacion = { [event.id]: event };
-        this.selectedBuffer.next(this.selectedIndicacion);
-        this.onDetenerClick();
-    }
-
     onDetenerClick() {
         this.indicacionView = false;
         this.suspenderIndicacion = true;
@@ -311,13 +305,13 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onIndicacionesCellClick(indicacion, hora) {
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
-        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado.tipo !== 'draft' && indicacion.estado.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
+        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado?.tipo !== 'draft' && indicacion.estado?.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
             this.onIndicaciones(indicacion, hora);
         }
     }
 
     private onIndicaciones(indicacion, hora) {
-        if (this.capa === 'enfermeria' || (this.eventos[indicacion.id] && this.eventos[indicacion.id][hora]?.estado === 'realizado')) {
+        if (this.capa === 'enfermeria' || (this.eventos[indicacion?.id] && this.eventos[indicacion?.id][hora]?.estado === 'realizado')) {
             this.indicacionEventoSelected = indicacion;
             this.horaSelected = hora;
             this.indicacionView = null;
@@ -407,7 +401,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onValidar(seleccionadas: boolean) {
         const indicaciones = seleccionadas ? Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k)) : this.indicaciones;
-        const registros = indicaciones.filter(indicacion => indicacion.estado.tipo === 'draft').map((indicacion) => {
+        const registros = indicaciones.filter(indicacion => indicacion.estado?.tipo === 'draft').map((indicacion) => {
             return {
                 _id: indicacion.idRegistro,
                 id: indicacion.idRegistro,
@@ -439,14 +433,14 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     editar(indicacion) {
-        if (indicacion.estado.tipo === 'draft') {
+        if (indicacion.estado?.tipo === 'draft') {
             this.indicacion = indicacion;
             this.indicacionEventoSelected = null;
             this.indicacionView = null;
             this.nuevaIndicacion = true;
-            this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion.seccion.conceptId);
+            this.seccionSelected = this.seccionesActivas.find(seccion => seccion.concepto.conceptId === indicacion?.seccion?.conceptId);
         }
-        if (indicacion.estado.tipo === 'active' || indicacion.estado.tipo === 'pending') {
+        if (indicacion.estado?.tipo === 'active' || indicacion.estado?.tipo === 'pending') {
             this.indicacion = indicacion;
             this.indicacionAnterior = indicacion;
             this.suspenderAnterior = true;
@@ -531,7 +525,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     puedeAceptarRechazar(indicacion = null) {
-        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado.tipo !== 'draft' && indicacion.estado.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
+        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado?.tipo !== 'draft' && indicacion.estado?.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
             (this.capa === 'interconsultores' || this.capa === 'medica') && this.permisosMapaCamasService.indicacionesAceptarRechazar;
     }
 

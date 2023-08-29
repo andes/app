@@ -72,7 +72,15 @@
                             <ng-container *ngIf="getItems(seccion) as indicaciones$">
                                 <tr *ngIf="!indicaciones$.length && showSecciones[seccion.concepto.term]">
                                     <td *ngIf="!loading" justify="center">
-                                        <plex-label size="md">No hay indicaciones a la fecha</plex-label>
+                                        <plex-label size="md">No hay indicaciones a la
+                                            fecha</plex-label>
+                                    </td>
+                                    <td colspan="24">
+                                            <plex-label type="default" class="flex-column" icon="documento-cursor"
+                                                        size="xl" direction="column"
+                                                        titulo="No hay solicitudes de entrada en el rango de fechas"
+                                                        subtitulo="Busque y seleccione las indicaciones presionando el boton '+' ">
+                                            </plex-label>
                                     </td>
                                 </tr>
                                 <ng-container *ngIf="showSecciones[seccion.concepto.term]">
@@ -171,12 +179,6 @@
                                                         </plex-badge>
                                                     </ng-container>
                                                 </ng-container>
-
-                                                <div *ngIf="isToday() && permisosMapaCamasService.indicacionesEjecutar && permisosMapaCamasService.indicacionesEjecutar && !indicacionEventoSelected && !nuevaIndicacion && !indicacion.readonly"
-                                                     in-plan-indicacion-botonera [indicacion]="indicacion"
-                                                     (refresh)="actualizar()"
-                                                     (cancelIndicacion)="cancelIndicacion($event)">
-                                                </div>
                                             </div>
                                         </td>
                                         <td *ngFor="let hora of horas" class="pointer"
