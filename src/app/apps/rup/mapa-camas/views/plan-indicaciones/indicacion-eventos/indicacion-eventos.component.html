@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <plex-title titulo="Registrar evento" size="md">
         <plex-button *ngIf="editando || !evento" class="mr-1" type="success" size="sm" icon="check"
-                     [disabled]="form.invalid" (click)="onGuardar()">
+                     [disabled]="!estado || labelEstado=='Motivo' && !observaciones" (click)="onGuardar()">
         </plex-button>
         <plex-button *ngIf="!editando && evento && capa === 'enfermeria'" class="mr-1" type="warning" size="sm"
                      icon="pencil" (click)="onEdit()">
@@ -37,10 +37,17 @@
         <plex-datetime label="Fecha y Hora" [(ngModel)]="fechaHora" name="fechaHora" [min]="horaMin" [max]="horaMax"
                        [required]="true">
         </plex-datetime>
-        <plex-select [data]="estadoItems" [(ngModel)]="estado" name="estado" label="Estado" [required]="true">
+        <plex-select [data]="estadoItems" [(ngModel)]="estado" (change)="onInputChange($event)" name="estado"
+                     label="Estado" [required]="true">
         </plex-select>
-        <plex-text label="Observaciones" [(ngModel)]="observaciones" name="observaciones" [html]="true">
-        </plex-text>
+        <plex-label class="font-weight-bold"> {{labelEstado}} <h3 *ngIf="labelEstado=='Motivo'" class="asteriscoRojo"> *
+            </h3>
+        </plex-label>
+        <div class="fondoBlancoText">
+            <plex-text [(ngModel)]="observaciones" name="observaciones" [required]="labelEstado==='Motivo'"
+                       [html]="true">
+            </plex-text>
+        </div>
     </ng-container>
 </form>
 
@@ -48,7 +55,7 @@
     <plex-badge [type]="estadoType">{{ evento.estado }} a las {{ horarioEjecucion | date:'HH:mm' }}
     </plex-badge>
     <plex-label *ngIf="evento.createdBy" titulo="Creado por"
-                subtitulo="{{ evento.createdBy.nombreCompleto || 'Automáticamente por prescripción' }}">
+                subtitulo="{{ evento.createdBy.nombreCompleto  || 'Automáticamente por prescripción'}}">
     </plex-label>
     <plex-label *ngIf="evento.updatedBy" titulo="Actualizado por" subtitulo="{{ evento.updatedBy?.nombreCompleto }}">
     </plex-label>

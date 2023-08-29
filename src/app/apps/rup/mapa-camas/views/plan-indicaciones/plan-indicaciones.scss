@@ -2,6 +2,18 @@
 
 // MIXINS
 // baseIcon
+.fondoBlancoText {
+    background-color: white !important;
+    color: black !important;
+}
+
+.asteriscoRojo {
+    color: #dd4b39;
+    line-height: 20px;
+    margin-bottom: 0;
+    padding: 0;
+}
+
 @mixin baseIcon() {
     display: flex;
     align-items: center;
