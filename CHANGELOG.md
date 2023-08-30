@@ -1,3 +1,10 @@
+## [5.125.3](https://github.com/andes/app/compare/v5.125.2...v5.125.3) (2023-08-30)
+
+
+### Bug Fixes
+
+* **IN-532:** Control anular internacion ([#2853](https://github.com/andes/app/issues/2853)) ([c9cae13](https://github.com/andes/app/commit/c9cae134d3c17458cfbb5fca4862e66965fede40))
+
 ## [5.125.2](https://github.com/andes/app/compare/v5.125.1...v5.125.2) (2023-08-23)
 
 
