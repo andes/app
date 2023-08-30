@@ -9,6 +9,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { ListadoInternacionCapasService } from './listado-internacion-capas.service';
+import { IngresoPacienteService } from '../../sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 
 @Component({
     selector: 'app-listado-internacion-capas',
@@ -77,7 +78,8 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private location: Location,
-        private permisosMapaCamasService: PermisosMapaCamasService
+        private permisosMapaCamasService: PermisosMapaCamasService,
+        private ingresoPacienteService: IngresoPacienteService
     ) { }
 
     ngOnInit() {
@@ -117,6 +119,7 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectResumen(resumen);
             this.mapaCamasService.setFecha(resumen.fechaIngreso);
             this.idInternacionSelected = resumen._id;
+            this.ingresoPacienteService.selectPaciente(resumen.paciente.id);
             this.mapaCamasService.camaSelectedSegunView$.pipe(
                 take(1),
                 map(cama => this.mapaCamasService.select(cama))

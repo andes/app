@@ -1,6 +1,9 @@
 <div class="mt-2">
     <ng-container *ngIf="!editar">
-        <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
+        <plex-options *ngIf="(intSinMovimientos$ | async)" [items]="items"
+                      (activated)="onActiveOption($event)"></plex-options>
+        <plex-options *ngIf="!(intSinMovimientos$ | async)" [items]="itemsEgr"
+                      (activated)="onActiveOption($event)"></plex-options>
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'ingreso'">
@@ -8,10 +11,9 @@
             <!-- ASISTENCIAL - ESTADISTICA-V2 -->
             <app-informe-ingreso-estadistica-v2 *ngIf="capa !== 'estadistica'" (accion)="onAccion($event)"
                                                 (cancel)="activateOption('ingreso')" (toggleEditar)="toggleEdit()">
-                <ng-container
-                              *ngIf="(hayMovimientosSinEgresoAt$ | async) && (view$ | async) === 'listado-internacion' && !(mapaCamasService.loading | async)">
+                <ng-container *ngIf="(anular$ | async)">
                     <plex-button *ngIf="capa !== 'interconsultores'" size="sm" icon="account-off" type="danger"
-                                 tooltip="Deshacer Internacion" tooltipPosition="left" (click)="onAnularInternacion()">
+                                 tooltip="Deshacer Internación" tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>
             </app-informe-ingreso-estadistica-v2>
@@ -20,8 +22,8 @@
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso" tooltipPosition="left"
                              icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
-                <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                <ng-container *ngIf="(anular$ | async)">
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
                                  tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>
@@ -43,7 +45,7 @@
         </app-movimientos-internacion>
     </ng-container>
 
-    <ng-container *ngIf="mostrar === 'egreso'">
+    <ng-container *ngIf="mostrar === 'egreso' && !(intSinMovimientos$ | async)">
         <!-- informe (Debe tener un egreso cargado) -->
         <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activateOption('egreso')">
             <plex-button *ngIf="puedeEditarEgreso() && !(mapaCamasService.loading | async)" tooltip="Editar egreso"

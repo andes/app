@@ -69,7 +69,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.toggleEditar.emit();
     }
 
-    onNuevoRegistrio() {
+    onNuevoRegistro() {
         this.accion.emit({ accion: 'nuevo-registro' });
     }
 }

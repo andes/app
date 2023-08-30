@@ -2,9 +2,9 @@
     <ng-container *ngIf="prestacion$ | async as prestacion; else sinInforme">
         <plex-title titulo="INGRESO" size="md">
             <ng-container
-                          *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
+                *ngIf="prestacion?.estados && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso" tooltipPosition="left"
-                             icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
+                    icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
                 <ng-content></ng-content>
             </ng-container>
@@ -12,15 +12,15 @@
 
         <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
             <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal"
-                              [fields]="pacienteFields">
+                [fields]="pacienteFields">
                 <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
-                            [subtitulo]="informeIngreso.situacionLaboral">
+                    [subtitulo]="informeIngreso.situacionLaboral">
                 </plex-label>
                 <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
-                            [subtitulo]="informeIngreso.nivelInstruccion">
+                    [subtitulo]="informeIngreso.nivelInstruccion">
                 </plex-label>
                 <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
-                            [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+                    [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
                 </plex-label>
             </paciente-detalle>
             <fieldset>
@@ -29,21 +29,21 @@
                         Censable
                     </plex-badge>
                     <ng-container *ngIf="botonRegistroHabilitado$ | async">
-                        <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
+                        <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistro()"> NUEVO REGISTRO
                         </plex-button>
                     </ng-container>
                 </plex-title>
 
                 <plex-grid cols="2">
                     <plex-label titulo="Fecha ingreso"
-                                subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
+                        subtitulo="{{ informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}">
                     </plex-label>
                     <plex-label titulo="Motivo" subtitulo="{{ informeIngreso.motivo }}">
                     </plex-label>
                     <plex-label titulo="Origen" subtitulo="{{ informeIngreso.origen }}">
                     </plex-label>
                     <plex-label titulo="Especialidad/es"
-                                subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
+                        subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
                     </plex-label>
                     <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
                     </plex-label>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="col-6">
                         <plex-label *ngIf="informeIngreso.obraSocial" titulo="Obra social"
-                                    [subtitulo]="informeIngreso.obraSocial?.nombre">
+                            [subtitulo]="informeIngreso.obraSocial?.nombre">
                         </plex-label>
                     </div>
                 </div>
@@ -71,21 +71,21 @@
     <ng-template #sinInforme>
         <plex-title titulo="INGRESO" size="md">
             <plex-button *ngIf="mapaCamasService.capa === 'estadistica-v2' && permisosMapaCamasService.ingreso"
-                         tooltip="Completar informe" tooltipPosition="left" icon="lapiz-documento" type="warning"
-                         size="sm" class="mr-1" (click)="toggleEdit()">
+                tooltip="Completar informe" tooltipPosition="left" icon="lapiz-documento" type="warning" size="sm"
+                (click)="toggleEdit()">
             </plex-button>
             <plex-button *ngIf="mapaCamasService.capa !== 'estadistica-v2' && permisosMapaCamasService.ingreso"
-                         tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
-                         (click)="toggleEdit()" class="mr-1">
+                tooltip="Editar ingreso" tooltipPosition="left" icon="pencil" type="warning" size="sm"
+                (click)="toggleEdit()" class="mr-1">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
         <paciente-detalle *ngIf="paciente$ | async as paciente" [paciente]="paciente" orientacion="horizontal"
-                          [fields]="pacienteFields">
+            [fields]="pacienteFields">
         </paciente-detalle>
         <plex-title size="sm" titulo="DATOS DE INTERNACION">
             <ng-container *ngIf="botonRegistroHabilitado$ | async">
-                <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
+                <plex-button size="sm" class="mr-1" type="success" (click)="onNuevoRegistro()"> NUEVO REGISTRO
                 </plex-button>
             </ng-container>
         </plex-title>

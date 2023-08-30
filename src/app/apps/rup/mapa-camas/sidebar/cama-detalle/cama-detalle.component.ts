@@ -61,6 +61,8 @@ export class CamaDetalleComponent implements OnInit {
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
     public relacionesPosibles;
+    public sinMovimientosAt$: Observable<Boolean>;
+
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
     public botonRegistroHabilitado$;
@@ -135,6 +137,12 @@ export class CamaDetalleComponent implements OnInit {
                     mov => mov.extras?.ingreso || mov.extras?.idMovimiento
                 );
                 return historial.length > 0 && tieneIDMov && !egreso;
+            })
+        );
+
+        this.sinMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
+            map((historial) => {
+                return historial.length === 0;
             })
         );
 

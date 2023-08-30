@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { IngresoPacienteService } from './ingreso-paciente-workflow.service';
 

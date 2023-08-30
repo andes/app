@@ -1,6 +1,5 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Router } from '@angular/router';
 import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
@@ -86,7 +85,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         profesional: null,
         PaseAunidadOrganizativa: null
     };
-
+    public intSinMovimientos$: Observable<Boolean>;
+    private intSinMovimientos: Boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
 
@@ -99,8 +99,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth,
-        private router: Router,
-        @Optional() private ingresoPacienteService: IngresoPacienteService,
+        private ingresoPacienteService: IngresoPacienteService,
         public elementosRUPService: ElementosRUPService,
         public internacionResumenService: InternacionResumenHTTP,
         private conceptObserverService: ConceptObserverService,
@@ -141,7 +140,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
         this.prepagas$ = this.obraSocialService.getPrepagas();
         const pacienteID$ = this.handlerPacienteID();
-
         this.inProgress = true;
 
         this.registrosIngresoResumen$ = combineLatest([
@@ -153,7 +151,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (capa === 'estadistica' || (capa === 'estadistica-v2' && this.view === 'mapa-camas')) {
                     const desde = moment(fecha).subtract(12, 'hours').toDate();
                     const hasta = moment(fecha).add(12, 'hours').toDate();
-
                     return this.internacionResumenService.search({
                         organizacion: this.auth.organizacion.id,
                         paciente: paciente,
@@ -172,6 +169,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             cache()
         );
 
+        this.intSinMovimientos$ = this.mapaCamasService.historialInternacion$.pipe(
+            map(historial => {
+                return (historial.length === 0);
+            })
+        );
 
         this.subscription = combineLatest([
             this.mapaCamasService.maquinaDeEstado$,
@@ -180,17 +182,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.camaSelectedSegunView$,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.resumenInternacion$,
+            this.intSinMovimientos$,
             pacienteID$.pipe(
                 filter(pacID => !!pacID),
                 switchMap((pacID) => {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )]
-        ).subscribe(([estado, view, capa, cama, prestacion, resumen, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, IPaciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, sinMovimientos, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, Boolean, IPaciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
             this.resumen = resumen;
+            this.intSinMovimientos = sinMovimientos;
 
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
@@ -233,7 +237,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (cama.id && cama.id !== ' ') {
+            if (cama && cama.id && cama.id !== ' ') {
                 this.cama = cama;
                 if (cama.estado === 'ocupada' && !cama.sala) {
                     this.paciente = cama.paciente;
@@ -246,10 +250,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (this.subscription2) {
                     this.subscription2.unsubscribe();
                 }
-                const idInternacion = resumen?.id || prestacion.id;
-                this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, idInternacion).pipe(
-                    map(snapshot => this.cama = snapshot[0])
-                ).subscribe();
+                if (!sinMovimientos) {
+                    const idInternacion = resumen?.id || prestacion.id;
+                    this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, idInternacion).pipe(
+                        map(snapshot => this.cama = snapshot[0])
+                    ).subscribe();
+                }
             } else {
                 this.cama = null;
             }
@@ -464,7 +470,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.cama.paciente = paciente;
         this.cama.fechaIngreso = this.informeIngreso.fechaIngreso;
 
-        if (this.prestacion) {
+        if (this.prestacion && !this.intSinMovimientos) {
             // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
@@ -688,6 +694,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     onType() {
         this.inProgress = true;
+    }
+
+    selectReadonly() {
+        return this.capa !== 'estadistica' && this.capa !== 'estadistica-v2' && this.resumen?.id;
     }
 
     /**
