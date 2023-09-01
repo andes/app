@@ -1,24 +1,36 @@
 <plex-list *ngIf="itemsHistorial.length">
     <plex-item *ngFor="let reg of itemsHistorial">
-        <plex-icon name="entrada" type="info"></plex-icon>
-        <plex-label *ngIf="reg.accion !== 'notificar'" [tituloBold]="true" titulo="{{ reg.createdAt | fecha }}"
-                    subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }}">
-        </plex-label>
-        <plex-label *ngIf="reg.accion === 'notificar'" [tituloBold]="true" titulo="{{ reg.createdAt | fecha }}"
-                    subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }} el {{reg.fechaDeNotificacion | fecha}}">
-        </plex-label>
-        <plex-label [tituloBold]="true" titulo="Notas"
-                    subtitulo="{{ reg.observaciones?  reg.observaciones :'Sin observaciones'}}"></plex-label>
-        <plex-label *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true" titulo="Prestación Destino Original"
-                    subtitulo="{{ reg.tipoPrestacion?.term? reg.tipoPrestacion.term : 'No indica prestación' }}">
-        </plex-label>
-        <plex-label *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true" titulo="Organizacion Destino Original"
-                    subtitulo="{{ reg.organizacion.nombre? reg.organizacion.nombre : 'No indica organización' }}">
-        </plex-label>
-        <plex-label *ngIf="reg.profesional && (reg.accion === 'referir' || reg.accion === 'asignada')"
-                    [tituloBold]="true" titulo="Profesional Destino Original"
-                    subtitulo="{{ reg.profesional.nombre }} {{ reg.profesional.apellido }}">
-        </plex-label>
+        <plex-icon name="entrada" type="info" size="md"></plex-icon>
+        <div>
+            <plex-grid cols="3" size="md" type="auto">
+                <plex-label size="md" *ngIf="reg.accion !== 'notificar'" [tituloBold]="true"
+                            titulo="{{ reg.createdAt | fecha }}"
+                            subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }}">
+                </plex-label>
+                <plex-label size="md" *ngIf="reg.accion === 'notificar'" [tituloBold]="true"
+                            titulo="{{ reg.createdAt | fecha }}"
+                            subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }} el {{reg.fechaDeNotificacion | fecha}}">
+                </plex-label>
+                <plex-label size="md" [tituloBold]="true" titulo="Notas"
+                            subtitulo="{{ reg.observaciones?  reg.observaciones :'Sin observaciones'}}"></plex-label>
+                <plex-label size="md" *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true"
+                            titulo="Prestación Destino Original"
+                            subtitulo="{{ reg.tipoPrestacion?.term? reg.tipoPrestacion.term : 'No indica prestación' }}">
+                </plex-label>
+
+                <plex-label size=" md" *ngIf="reg.descripcion === 'Referida'" [tituloBold]="true"
+                            titulo="Organizacion Destino Original"
+                            subtitulo="{{ reg.organizacion.nombre? reg.organizacion.nombre : 'No indica organización' }}">
+                </plex-label>
+                <plex-label size="md" *ngIf="reg.profesional && (reg.accion === 'referir' || reg.accion === 'asignada')"
+                            [tituloBold]="true" titulo="Profesional Destino Original"
+                            subtitulo="{{ reg.profesional.nombre }} {{ reg.profesional.apellido }}">
+                </plex-label>
+                <plex-label size="md" [tituloBold]="true" titulo="Efector"
+                            subtitulo="{{reg.createdBy.organizacion.nombre? reg.createdBy.organizacion.nombre : 'No indica organización'}}">
+                </plex-label>
+            </plex-grid>
+        </div>
     </plex-item>
 </plex-list>
 <div *ngIf="!itemsHistorial.length" justify="center" class="mt-4">
