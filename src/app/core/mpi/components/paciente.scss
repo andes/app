@@ -8,11 +8,15 @@
 }
 
 .loadMode {
-   opacity: 0.3;
+    opacity: 0.3;
     pointer-events: none !important;
     user-select: none !important;
 }
 
 .img-fallecido {
     filter: grayscale(100%);
+}
+
+.add-height {
+    height: 5.5rem;
 }
