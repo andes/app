@@ -69,7 +69,8 @@
         </ng-container>
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
-                <plex-button label="EXPLORACIÓN VISUAL" size="sm" type="info" (click)="onVerResumen(cama)" class="mr-1">
+                <plex-button *ngIf="puedeVerHuds" label="EXPLORACIÓN VISUAL" size="sm" type="info"
+                             (click)="onVerResumen(cama)" class="mr-1">
                 </plex-button>
 
                 <plex-button *ngIf="capa !== 'estadistica' && verIndicacion()" label="INDICACIONES" size="sm"
