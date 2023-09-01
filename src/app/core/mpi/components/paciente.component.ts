@@ -51,6 +51,7 @@ export class PacienteComponent implements OnInit {
     posibleDuplicado = false;
     loading = true;
     autoFocus = 0;
+    activeTab = 0;
 
     public contacto: IContacto = {
         tipo: 'celular',
@@ -135,7 +136,9 @@ export class PacienteComponent implements OnInit {
     activacionMobilePendiente = null;
     dataMobile;
 
-
+    get width() {
+        return window.innerWidth;
+    }
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
@@ -426,6 +429,9 @@ export class PacienteComponent implements OnInit {
     }
 
     setMainSize(tabIndex) {
+        if (tabIndex) {
+            this.activeTab = tabIndex;
+        }
         if (this.pacientesSimilares && this.pacientesSimilares.length) {
             this.mainSize = 8;
             return;
@@ -501,6 +507,7 @@ export class PacienteComponent implements OnInit {
         const sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         this.disableValidar = true;
         this.loading = true;
+        this.pacientesSimilares = [];
 
         if (this.subscripcionValidar) {
             this.subscripcionValidar.unsubscribe();
@@ -521,6 +528,7 @@ export class PacienteComponent implements OnInit {
                         this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
                         this.paciente = resultado[0];
                         this.actualizarDatosPaciente();
+                        this.setMainSize(this.activeTab);
                         return true;
                     }
                 }
@@ -590,7 +598,7 @@ export class PacienteComponent implements OnInit {
                 this.loading = false;
                 return EMPTY;
             })
-        ).subscribe();
+        ).subscribe(() => this.setMainSize(this.activeTab));
     }
 
     private setBackup() {
