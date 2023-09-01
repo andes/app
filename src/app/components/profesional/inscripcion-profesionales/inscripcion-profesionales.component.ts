@@ -36,6 +36,8 @@ export class InscripcionProfesionalesComponent implements OnInit {
     };
     public estaValidado = false;
     public user = null;
+    public patronDocumento = /^[1-9]{1}[0-9]{4,7}$/;
+    public patronContactoNumerico = /^[0-9]{3,4}[0-9]{6}$/;
 
     constructor(
         private profesionalService: ProfesionalService,
@@ -78,7 +80,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
                 }
             },
             (error) => {
-                this.plex.info('danger', error, 'Sus datos no pudieron ser validados');
+                this.plex.info('warning', error, 'Sus datos no pudieron ser validados');
                 this.enProceso = false;
                 this.profesional.recaptcha = '';
             }
@@ -160,7 +162,7 @@ export class InscripcionProfesionalesComponent implements OnInit {
                 });
             }
         }, (error) => {
-            this.plex.info('danger', error);
+            this.plex.info('warning', error);
             this.enProceso = false;
         });
     }
