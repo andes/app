@@ -51,7 +51,13 @@ export class ReasignarTurnoComponent implements OnInit {
     private permisosRequeridos = 'reasignarTurnos';
 
     public tiposDeTurnos = TiposDeTurnos;
+    public showCrearAgenda = false;
 
+    // public columns = [
+    //     { key: 'nombre', label: 'Nombre' },
+    //     { key: 'tipo', label: 'Tipo de Turno' },
+    //     { key: 'prestacion', label: 'Prestación' },
+    //     { key: 'estado', label: 'Estado' }];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
@@ -73,8 +79,12 @@ export class ReasignarTurnoComponent implements OnInit {
 
     seleccionarTurno(turno, bloque, multiple = false) {
         if (!multiple) {
-            this.turnosSeleccionados = [];
-            this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+            if (this.turnosSeleccionados[0] === turno) {
+                this.turnosSeleccionados = [];
+            } else {
+                this.turnosSeleccionados = [];
+                this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+            }
         } else {
             if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
                 // this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
@@ -137,6 +147,10 @@ export class ReasignarTurnoComponent implements OnInit {
             const turnoReasignado = this.agendaAReasignar.map(b => b.map(t => t.id === event.turno.id))[0];
             this.seleccionarTurno(turnoReasignado, event.bloque, false);
         }
+    }
+
+    crearAgenda() {
+        this.showCrearAgenda = !this.showCrearAgenda;
     }
 
     /**

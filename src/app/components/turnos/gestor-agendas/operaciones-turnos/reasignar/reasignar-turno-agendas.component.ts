@@ -31,6 +31,12 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     delDiaDisponibles: number;
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
+    turno: any;
+    indiceTurno: any;
+    turnoSiguiente: any;
+    bloque: any;
+    indiceBloque: any;
+    indiceAgenda: any;
 
     // Agenda destino
     private _agendaDestino;
@@ -63,12 +69,20 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     @Output() turnoReasignadoEmit = new EventEmitter<any>();
+    @Output() crearAgendaEmit = new EventEmitter<any>();
 
     autorizado: any;
     countBloques = [];
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-                public serviceTurno: TurnoService, public smsService: SmsService, public prestacionesService: PrestacionesService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService,
+        public smsService: SmsService,
+        public prestacionesService: PrestacionesService) { }
+
+    public showCrearAgenda = false;
 
     ngOnInit() {
         this.hoy = new Date();
@@ -76,6 +90,34 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.agendasSimilares = [];
     }
 
+    seleccionarCandidata_(indiceTurno, indiceBloque, indiceAgenda) {
+        if (this.indiceTurno === indiceTurno && this.indiceBloque === indiceBloque && this.indiceAgenda === indiceAgenda) {
+            this.indiceTurno = null;
+            this.indiceBloque = null;
+            this.indiceAgenda = null;
+            this.turno = null;
+            this.turnoSiguiente = null;
+            this.bloque = null;
+            this.agendaSeleccionada = null;
+        } else {
+            this.indiceTurno = indiceTurno;
+            this.indiceBloque = indiceBloque;
+            this.indiceAgenda = indiceAgenda;
+            this.turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+            this.turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
+            this.bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
+            this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
+        }
+    }
+
+    horarioSeleccionado(indiceTurno, indiceBloque, indiceAgenda) {
+        if (indiceTurno === this.indiceTurno && indiceBloque === this.indiceBloque && indiceAgenda === this.indiceAgenda) {
+            return true;
+        }
+        return false;
+    }
+
+    // reasignarTurno(turno, indiceTurno, turnoSiguiente, bloque, indiceBloque) {
     asignarTipoTurno(bloque, turnoSuspendido) {
         let tipoTurno;
 
@@ -263,8 +305,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             } else {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
-        },
-        err => {
+        }, err => {
             if (err) {
                 this.plex.toast('danger', 'ERROR: Servicio caído');
 
@@ -339,4 +380,45 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         }
     }
 
+    crearAgenda() {
+        // this.showCrearAgenda = true;
+        this.crearAgendaEmit.emit();
+    }
+
+    estaSeleccionada(index) {
+        // return this.agendaSeleccionada === agenda;
+        // if (this.indexAgendasSeleccionadas.length) {
+        //     for (let i = 0; this.indexAgendasSeleccionadas.length - 1; i++) {
+        //         if (this.indexAgendasSeleccionadas[i] === index) {
+        //             console.log('seleccionada !');
+        //             return true;
+        //         }
+        //     }
+        // }
+        // console.log('No seleccionada !');
+        return false;
+    }
+
+    seleccionarAgenda(index) {
+        const agregar = true;
+        // if (this.indexAgendasSeleccionadas.length) {
+        //     for (let i = 0; this.indexAgendasSeleccionadas.length - 1; i++) {
+        //         if (this.indexAgendasSeleccionadas[i] && this.indexAgendasSeleccionadas[i] === index) {
+        //             this.indexAgendasSeleccionadas.splice(i, 1);
+        //             console.log('des-seleccionada:', index);
+        //             agregar = false;
+        //         }
+        //     }
+        // }
+        // if (agregar) {
+        //     this.indexAgendasSeleccionadas.push(index);
+        //     console.log('seleccionada:', this.indexAgendasSeleccionadas, index);
+        // }
+        // if (this.agendaSeleccionada === agenda) {
+        //     this.agendaSeleccionada = [];
+        // } else {
+        //     // this.agendaSeleccionada = [];
+        //     this.agendaSeleccionada = agenda;
+        // }
+    }
 }
