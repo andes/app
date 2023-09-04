@@ -19,37 +19,48 @@
             <plex-bool [(ngModel)]="filtros.estado" name="estado" label="Deshabilitados" (change)="filtrar()"
                        type="slide">
             </plex-bool>
+            <plex-bool class="bool-posicion" label="No matriculado" [(ngModel)]="filtros.noMatriculado" name="estado"
+                       type="slide" (change)="filtrar()">
+            </plex-bool>
         </plex-wrapper>
-        <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
-            <plex-title size="sm">
-                <plex-table-columns>
-                </plex-table-columns>
-            </plex-title>
+        <div *ngIf="!(listado$ | async)?.length" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
+                        titulo="No hay resultados para esta búsqueda"
+                        subtitulo="Edite algún filtro para realizar una nueva">
+            </plex-label>
+        </div>
+        <ng-container *ngIf="(listado$ | async)?.length">
+            <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
+                <plex-title titulo="Listado" size="sm">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                </plex-title>
 
-            <tr *ngFor="let profesional of (listado$ | plSort:table | async)"
-                (click)="seleccionarProfesional(profesional)"
-                [class.selected]="profesional.id===profesionalSelected?.id" [class.selectable]="selectable">
-                <td *plTableCol="'documento'">{{profesional.documento}}</td>
-                <td *plTableCol="'apellido'">{{profesional.apellido }}</td>
-                <td *plTableCol="'nombre'">{{profesional.nombre}}</td>
-                <td *plTableCol="'condicion'">
-                    <plex-badge *ngIf="profesional.profesionalMatriculado" type="info">
-                        Matriculado
-                    </plex-badge>
-                    <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
-                        No Matriculado
-                    </plex-badge>
-                </td>
-                <td *plTableCol="'estado'">
-                    <plex-badge *ngIf="profesional.habilitado" type="info">
-                        Habilitado
-                    </plex-badge>
-                    <plex-badge *ngIf="!profesional.habilitado" type="warning">
-                        Deshabilitado
-                    </plex-badge>
-                </td>
-            </tr>
-        </plex-table>
+                <tr *ngFor="let profesional of (listado$ | plSort:table | async)"
+                    (click)="seleccionarProfesional(profesional)"
+                    [class.selected]="profesional.id===profesionalSelected?.id" [class.selectable]="selectable">
+                    <td *plTableCol="'documento'">{{profesional.documento}}</td>
+                    <td *plTableCol="'apellido'">{{profesional.apellido }}</td>
+                    <td *plTableCol="'nombre'">{{profesional.nombre}}</td>
+                    <td *plTableCol="'condicion'">
+                        <plex-badge *ngIf="profesional.profesionalMatriculado" type="info">
+                            Matriculado
+                        </plex-badge>
+                        <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
+                            No Matriculado
+                        </plex-badge>
+                    </td>
+                    <td *plTableCol="'estado'">
+                        <plex-badge *ngIf="profesional.habilitado" type="info">
+                            Habilitado
+                        </plex-badge>
+                        <plex-badge *ngIf="!profesional.habilitado" type="warning">
+                            Deshabilitado
+                        </plex-badge>
+                    </td>
+                </tr>
+            </plex-table>
+        </ng-container>
     </plex-layout-main>
 
     <!-- sidebar listado -->

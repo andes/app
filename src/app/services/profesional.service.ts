@@ -15,7 +15,8 @@ export class ProfesionalService {
     public nombre = new BehaviorSubject<string>(null);
     public activo = new BehaviorSubject<string>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
-    private limit = 15;
+    public noMatriculado = new BehaviorSubject<boolean>(null);
+    private limit = 20;
     private skip;
 
     constructor(private server: Server) {
@@ -25,10 +26,13 @@ export class ProfesionalService {
             this.apellido,
             this.nombre,
             this.activo,
+            this.noMatriculado,
             this.lastResults
         ).pipe(
             auditTime(0),
-            switchMap(([documento, apellido, nombre, activo, lastResults]) => {
+            switchMap(([documento, apellido, nombre, activo, noMatriculado, lastResults]) => {
+
+
                 if (!lastResults) {
                     this.skip = 0;
                 }
@@ -52,6 +56,9 @@ export class ProfesionalService {
                 }
                 if (activo) {
                     params.habilitado = activo;
+                }
+                if (noMatriculado) {
+                    params.profesionalMatriculado = noMatriculado;
                 }
 
                 return this.get(params).pipe(
