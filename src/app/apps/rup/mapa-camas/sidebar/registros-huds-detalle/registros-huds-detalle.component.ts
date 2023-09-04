@@ -1,17 +1,18 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { map, switchMap, tap, pluck, catchError } from 'rxjs/operators';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { arrayToSet, cache, notNull } from '@andes/shared';
-import { Router } from '@angular/router';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
-import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
-import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { catchError, concatMap, map, pluck, switchMap, tap } from 'rxjs/operators';
+import { HUDSService } from 'src/app/modules/rup/services/huds.service';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -47,12 +48,14 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     public esProfesional = this.auth.profesional;
     public puedeVerHuds = false;
+
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
         private auth: Auth,
         private router: Router,
-        private motivoAccesoService: ModalMotivoAccesoHudsService
+        private motivoAccesoService: ModalMotivoAccesoHudsService,
+        private huds: HUDSService
     ) { }
 
     ngOnInit() {
@@ -66,7 +69,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.historial$ = combineLatest([
             this.cama$,
             this.mapaCamasService.selectedPrestacion,
-            this.mapaCamasService.resumenInternacion$
+            this.mapaCamasService.resumenInternacion$,
         ]).pipe(
             switchMap(([cama, prestacion, resumen]) => {
                 if (resumen) {
@@ -86,7 +89,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             }),
             map(prestaciones => {
                 // descarta la propia prestación de la internación actual
-                return prestaciones.filter(p => this.validadaCreadasPorMi(p) && p.id !== estaPrestacionId);
+                return prestaciones.filter(p => p.cda_id ? true : this.validadaCreadasPorMi(p) && p.id !== estaPrestacionId);
             }),
             catchError((e) => {
                 this.accion.emit(null);
@@ -144,16 +147,18 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     this.desde = moment(this.desde).toDate().getTime() < min.getTime() ? moment(min).toDate() : this.desde;
                 }
                 this.inProgress = false;
-                return prestaciones.filter((prestacion) => {
-                    const fecha = moment(prestacion.ejecucion.fecha);
-                    const tipoPrestacionValida = !tipoPrestacion || tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                return prestaciones.filter((registro) => {
+                    const fecha = moment(registro.ejecucion?.fecha || registro.fecha);
+                    const conceptId = registro.solicitud?.tipoPrestacion.conceptId || registro.prestacion.snomed.conceptId;
+                    const tipoPrestacionValida = !tipoPrestacion || tipoPrestacion.conceptId === conceptId;
                     const fechaValida = fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd');
+                    const organizacion = registro.solicitud?.organizacion || registro.prestacion.organizacion;
 
                     if (this.mapaCamasService.capa === 'estadistica') {
-                        const organizacionValida = prestacion.solicitud.organizacion.id === this.idOrganizacion;
-                        return fechaValida && tipoPrestacionValida && organizacionValida && !this.prestacionesEliminadas.some(id => id === prestacion.id);
+                        const organizacionValida = organizacion?.id === this.idOrganizacion;
+                        return fechaValida && tipoPrestacionValida && organizacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
                     } else {
-                        return fechaValida && tipoPrestacionValida && !this.prestacionesEliminadas.some(id => id === prestacion.id);
+                        return fechaValida && tipoPrestacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
                     }
                 });
             })
@@ -167,22 +172,28 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         );
 
         this.prestacionesList$ = this.historial$.pipe(
-            map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion))
+            map(prestaciones => prestaciones = arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud ? item.solicitud.tipoPrestacion : item.prestacion.snomed))
         );
     }
 
     validadaCreadasPorMi(prestacion) {
-        const ejecutada = prestacion.estados.some(e => e.tipo === 'ejecucion');
-        const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
-        const esValidada = estadoPrestacion.tipo === 'validada';
-        const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
-        return ejecutada && (esValidada || createdByMe);
+        if (prestacion.estados) {
+            const ejecutada = prestacion.estados.some(e => e.tipo === 'ejecucion');
+            const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
+            const esValidada = estadoPrestacion.tipo === 'validada';
+            const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
+            return ejecutada && (esValidada || createdByMe);
+        } else {
+            return true;
+        }
     }
 
     esEjecucion(prestacion) {
-        const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
-        const esEjecucion = estadoPrestacion.tipo === 'ejecucion';
-        return esEjecucion;
+        if (prestacion.estados) {
+            const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
+            const esEjecucion = estadoPrestacion.tipo === 'ejecucion';
+            return esEjecucion;
+        }
     }
 
     verHuds() {
@@ -196,6 +207,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 return prestaciones.sort((a, b) => {
                     return b.solicitud.fecha.getTime() - a.solicitud.fecha.getTime();
                 });
+            }),
+            concatMap((prestaciones) => {
+                const token = this.huds.getHudsToken();
+
+                return this.prestacionService.getCDAByPaciente(paciente.id, token).pipe(map((results) => {
+                    return [...results, ...prestaciones];
+                }));
             })
         );
     }
@@ -215,7 +233,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     ejecutar(prestacion: IPrestacion) {
         this.router.navigate(['rup', 'ejecucion', prestacion.id]);
     }
-
 
     onItemAccion(prestacion: IPrestacion, accion: RegistroHUDSItemAccion) {
         switch (accion) {
