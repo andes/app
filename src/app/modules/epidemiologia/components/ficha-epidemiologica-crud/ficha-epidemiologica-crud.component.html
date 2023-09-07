@@ -4,7 +4,7 @@
             <plex-bool *ngIf="editFicha" class="mr-4" [(ngModel)]="showFichaParcial" label="Cargar ficha parcial"
                        (change)="clearDependencias((asintomatico ? {value:true} : {value:false}),'clasificacionFinal',
             ['segundaclasificacion','tipomuestra','antigeno','lamp','pcr','identificadorpcr',
-            'pcrM','clasificacionfinal','fechamuestra'])">
+            'pcrM','ifi','clasificacionfinal','fechamuestra'])">
             </plex-bool>
             <plex-button *ngIf="!hideVolver" type="danger" (click)="toBack()">Volver
             </plex-button>
@@ -73,13 +73,6 @@
                                          grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                          [required]="field.required" [data]="field.items" [readonly]="!editFicha">
                             </plex-select>
-                            <!--Campos opcionales exclusivos de la ficha covid-->
-                            <!--Usuario-->
-                            <plex-select *ngIf="field.key==='funcionusuario'"
-                                         [label]="field.label?field.label:field.key" grow="auto" name="{{ field.key }}"
-                                         [(ngModel)]="seccion.fields[field.key]" [required]="field.required"
-                                         [data]="funcionPersonalSalud" [readonly]="!editFicha">
-                            </plex-select>
                             <!--MPI-->
                             <plex-select *ngIf="field.key==='nacionalidad'" [label]="field.label?field.label:field.key"
                                          grow="auto" name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
@@ -135,11 +128,6 @@
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                            [required]="asintomatico" [readonly]="!editFicha">
                                 </plex-text>
-                                <plex-select *ngIf="field.key==='tipobusqueda' "
-                                             [label]="field.label?field.label:field.key" grow="auto"
-                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                             [data]="tipoBusqueda" [required]="field.required" [readonly]="!editFicha">
-                                </plex-select>
                             </ng-container>
                             <!--Enfermedades previas-->
 
@@ -310,7 +298,7 @@
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="field.required" [data]="segundaClasificacion"
                                              (change)="clearDependencias({value:false},'clasificacionFinal',
-                                             ['tipomuestra','antigeno','lamp','pcr','identificadorpcr','pcrM']) ; resultadoFinal(field.key)" [readonly]="!editFicha">
+                                             ['tipomuestra','antigeno','lamp','pcr','identificadorpcr','pcrM','ifi']) ; resultadoFinal(field.key)" [readonly]="!editFicha">
                                 </plex-select>
                                 <plex-select *ngIf="field.key==='tipomuestra' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'"
                                              [label]="field.label?field.label:field.key" grow="auto"
@@ -322,16 +310,21 @@
                                                name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                                [required]="field.required" [readonly]="!editFicha">
                                 </plex-datetime>
-                                <plex-select *ngIf="field.key==='antigeno' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado' 
-                                              && seccion.fields['segundaclasificacion']?.id!=='lamp' && seccion.fields['segundaclasificacion']?.id!=='pcr'"
+                                <plex-select *ngIf=condicionAntigeno(field,seccion)
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="seccion.fields['segundaclasificacion']?.id==='antigeno'"
                                              [data]="resultadoAntigeno" (change)="resultadoFinal(field.key)"
                                              [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-select *ngIf="field.key==='lamp' && checkConfirmados(seccion.fields['segundaclasificacion'])!=='confirmado'
-                                            && seccion.fields['antigeno']?.id!=='confirmado' && seccion.fields['segundaclasificacion']?.id!=='pcr'"
+                                <plex-select *ngIf=condicionIFI(field,seccion)
+                                             [label]="field.label?field.label:field.key" grow="auto"
+                                             name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
+                                             [required]="seccion.fields['segundaclasificacion']?.id==='ifi'"
+                                             [data]="resultadoAntigeno" (change)="resultadoFinal(field.key)"
+                                             [readonly]="!editFicha">
+                                </plex-select>
+                                <plex-select *ngIf=condicionLamp(field,seccion)
                                              [label]="field.label?field.label:field.key" grow="auto"
                                              name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
                                              [required]="seccion.fields['segundaclasificacion']?.id==='lamp'"
@@ -477,54 +470,6 @@
                                              [required]="field.required" labelField="nombre" idField="_id"
                                              [data]="vacunas$ | async" [readonly]="!editFicha">
                                 </plex-select>
-                                <plex-bool *ngIf="field.key==='sospechosoconantecedente' && !asintomatico"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [readonly]="!editFicha"
-                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['apellidonombresospechoso','sospechosodni'])">
-                                </plex-bool>
-                                <plex-text *ngIf="field.key==='apellidonombresospechoso' && seccion.fields['sospechosoconantecedente']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
-                                <plex-text *ngIf="field.key==='sospechosodni' && seccion.fields['sospechosoconantecedente']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
-                                <plex-bool *ngIf="field.key==='sospechosoconcontacto' && !asintomatico"
-                                           [label]=" field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [readonly]="!editFicha"
-                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['apellidonombrecontacto','dnicontacto'])">
-                                </plex-bool>
-                                <plex-text *ngIf="field.key==='apellidonombrecontacto' && seccion.fields['sospechosoconcontacto']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
-                                <plex-text *ngIf="field.key==='dnicontacto' && seccion.fields['sospechosoconcontacto']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
-                                <plex-bool *ngIf="field.key==='sospechosoconglomerado' && !asintomatico"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [readonly]="!editFicha">
-                                </plex-bool>
-                                <plex-bool *ngIf="field.key==='sospechosoasistencial' && !asintomatico"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [readonly]="!editFicha"
-                                           (change)="clearDependencias($event,'antecedentesEpidemiologicos',['nombreasistencial'])">
-                                </plex-bool>
-                                <plex-text *ngIf="field.key==='nombreasistencial' && seccion.fields['sospechosoasistencial']"
-                                           [label]="field.label?field.label:field.key" grow="auto"
-                                           name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"
-                                           [required]="field.required" [readonly]="!editFicha">
-                                </plex-text>
                                 <plex-bool *ngIf="field.key==='viajezonariesgo'"
                                            [label]="field.label?field.label:field.key" grow="auto"
                                            name="{{ field.key }}" [(ngModel)]="seccion.fields[field.key]"

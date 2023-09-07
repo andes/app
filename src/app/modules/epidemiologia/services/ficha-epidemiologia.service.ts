@@ -41,7 +41,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
     getConceptosCovid(ficha) {
         const conceptos = [];
         const seccionClasificacion = this.getSeccionClasifacionFinal(ficha);
-
+        let segundaClasificacionId = '';
         seccionClasificacion.fields.forEach(field => {
             const key = Object.keys(field)[0];
             switch (key) {
@@ -54,6 +54,7 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                     }
                     break;
                 case 'segundaclasificacion':
+                    segundaClasificacionId = field.segundaclasificacion?.id;
                     if (field.segundaclasificacion.id === 'autotest' ||
                         field.segundaclasificacion.id === 'laboPcr'
                         || field.segundaclasificacion.id === 'laboAntigeno') {
@@ -66,9 +67,9 @@ export class FormsEpidemiologiaService extends ResourceBaseHttp {
                     };
                     break;
                 case 'antigeno':
-                    if (field.antigeno.id === 'confirmado') {
+                    if (field.antigeno.id === 'confirmado' && segundaClasificacionId !== 'ifi') {
                         conceptos.push(this.elementoRupService.getConceptoConfirmadoTestRapido());
-                    } else if (field.antigeno.id === 'muestra') {
+                    } if (field.antigeno.id === 'muestra' && segundaClasificacionId !== 'ifi') {
                         conceptos.push(this.elementoRupService.getConceptoDescartadoTestRapido());
                     }
                     break;
