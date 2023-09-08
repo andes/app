@@ -978,7 +978,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.servicePaciente.getById(paciente.id).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
-                // this.verificarTelefono(this.paciente);
                 this.obtenerCarpetaPaciente();
                 this.pacientesSearch = false;
                 this.loadObraSocial(this.paciente);
