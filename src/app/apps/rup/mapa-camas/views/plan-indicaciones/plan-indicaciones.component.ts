@@ -166,6 +166,11 @@ export class PlanIndicacionesComponent implements OnInit {
         return this.indicaciones.filter(i => i.seccion.conceptId === seccion.concepto.conceptId);
     }
 
+    noHayIndicaciones() {
+        return !this.seccionesActivas.some(seccion => this.getItems(seccion).length > 0);
+    }
+
+
     actualizar() {
         this.loading = true;
         forkJoin([

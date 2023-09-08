@@ -81,7 +81,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
         this.idInternacion = this.route.snapshot.paramMap.get('idInternacion');
 
         let concepto;
-        if (this.seccion && this.seccion.registro) {
+        if (this.seccion?.registro) {
             concepto = {
                 ...this.seccion.registro,
                 esSolicitud: true
