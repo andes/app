@@ -9,6 +9,7 @@
   "dependencies": {
     "file-saver": "^2.0.2",
     "moment": "^2.24.0",
-    "ng2-slugify": "^0.1.0"
+    "ng2-slugify": "^0.1.0",
+    "tslib": "^2.0.0"
   }
 }
