@@ -53,13 +53,11 @@ export class ReasignarTurnoComponent implements OnInit {
     public tiposDeTurnos = TiposDeTurnos;
     public showCrearAgenda = false;
 
-    // public columns = [
-    //     { key: 'nombre', label: 'Nombre' },
-    //     { key: 'tipo', label: 'Tipo de Turno' },
-    //     { key: 'prestacion', label: 'Prestación' },
-    //     { key: 'estado', label: 'Estado' }];
-
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService) { }
 
     ngOnInit() {
         this.autorizado = this.auth.check('turnos:' + this.permisosRequeridos);
@@ -87,7 +85,6 @@ export class ReasignarTurnoComponent implements OnInit {
             }
         } else {
             if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-                // this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
                 delete this.turnosSeleccionados[this.turnosSeleccionados.indexOf(turno)];
                 this.turnosSeleccionados = [... this.turnosSeleccionados];
             } else {
@@ -118,7 +115,7 @@ export class ReasignarTurnoComponent implements OnInit {
         const params = {
             idAgenda: idAgendaAReasignar,
             idBloque: idBloque,
-            idTurno: idTurno
+            idTurno: idTurno,
         };
 
         // Datos de referencia de la agenda origen para pasar al componente hijo (reasignar-turno-agendas)
@@ -153,13 +150,9 @@ export class ReasignarTurnoComponent implements OnInit {
         this.showCrearAgenda = !this.showCrearAgenda;
     }
 
-    /**
-     * Volver al gestor
-     */
     cancelar() {
         this.volverAlGestor.emit(true);
         this.showReasignarTurno = false;
     }
-
 
 }
