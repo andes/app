@@ -27,8 +27,6 @@ import { ZonaSanitariaService } from './../../services/zonaSanitaria.service';
 import * as enumerados from './../../utils/enumerados';
 
 
-
-
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
@@ -41,7 +39,7 @@ import * as enumerados from './../../utils/enumerados';
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input() seleccion: IOrganizacion;
+    @Input() seleccion: IOrganizacion = null;
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     // definición de arreglos
@@ -120,9 +118,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     public listadoUO = [];
 
-    public noPoseeContacto = this.seleccion && this.seleccion.contacto ? true : false; // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
+    public noPoseeContacto = this.seleccion?.contacto ? true : false; // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
     private contactosCache = []; // se guardan los contactos ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee contacto"
-    public noPoseeEdificio = this.seleccion && this.seleccion.edificio ? true : false; // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
+    public noPoseeEdificio = this.seleccion?.edificio ? true : false; // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
     private edificiosCache = []; // se guardan los edficios ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee edificio"
 
     // Datos para el mapa

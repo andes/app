@@ -11,9 +11,6 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -91,9 +88,6 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
             "browserTarget": "andes_app:build:dev"
           },
           "configurations": {

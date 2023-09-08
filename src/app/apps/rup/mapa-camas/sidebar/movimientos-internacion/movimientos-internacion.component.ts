@@ -3,6 +3,8 @@ import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { auditTime, catchError, map, startWith, takeUntil, switchMap } from 'rxjs/operators';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { IResumenInternacion } from '../../services/resumen-internacion.http';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -50,7 +52,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.onDestroy$.next();
+        this.onDestroy$.next(null);
         this.onDestroy$.complete();
     }
 
@@ -79,7 +81,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
             })
         );
 
-        let requestPrestacion;
+        let requestPrestacion: Observable<IPrestacion | IResumenInternacion>;
         if (this.mapaCamasService.capa === 'estadistica') {
             requestPrestacion = this.mapaCamasService.selectedPrestacion;
         } else {

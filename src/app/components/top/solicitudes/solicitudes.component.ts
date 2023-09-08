@@ -186,7 +186,7 @@ export class SolicitudesComponent implements OnInit {
 
             if (this.tipoSolicitud === 'entrada') {
                 this.fechaHastaEntrada = moment().startOf('day').toDate();
-                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days').toDate();
             }
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
@@ -229,7 +229,7 @@ export class SolicitudesComponent implements OnInit {
         if (this.fechaDesdeEntrada) {
             this.mostrarAlertaRangoDias = false;
             if (!this.fechaHastaEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
-                this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days');
+                this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days').toDate();
                 this.mostrarAlertaRangoDias = true;
             }
 
@@ -243,7 +243,7 @@ export class SolicitudesComponent implements OnInit {
         if (this.fechaHastaEntrada) {
             this.mostrarAlertaRangoDias = false;
             if (!this.fechaDesdeEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
-                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days');
+                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days').toDate();
                 this.mostrarAlertaRangoDias = true;
             }
 

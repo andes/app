@@ -138,7 +138,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.view = this.mapaCamasService.view.getValue();
-        this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
+        this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta.getValue();
         this.prepagas$ = this.obraSocialService.getPrepagas();
         const pacienteID$ = this.handlerPacienteID();
 

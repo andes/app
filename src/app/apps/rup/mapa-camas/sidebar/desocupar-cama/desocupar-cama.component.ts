@@ -73,10 +73,10 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                 if (movimientos.length) {
                     const fechaUltimoMovimiento = movimientos[movimientos.length - 1].fecha;
                     const fechaMasUnMinuto = moment(fechaUltimoMovimiento).add(1, 'm');
-                    return of(fechaMasUnMinuto);
+                    return of(fechaMasUnMinuto.toDate());
                 } else {
                     return this.camaSelectedSegunView$.pipe(
-                        map(cama => moment(cama?.fecha).add(1, 'm'))
+                        map(cama => moment(cama?.fecha).add(1, 'm').toDate())
                     );
                 }
             }),

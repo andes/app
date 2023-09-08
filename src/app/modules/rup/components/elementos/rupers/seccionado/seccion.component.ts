@@ -58,7 +58,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy,
     onDestroy$ = new Subject();
 
     ngOnDestroy() {
-        this.onDestroy$.next();
+        this.onDestroy$.next(null);
     }
 
     ngOnInit() {

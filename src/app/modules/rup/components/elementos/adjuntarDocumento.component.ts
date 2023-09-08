@@ -1,9 +1,8 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, OnInit, } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
-import { isUndefined } from 'util';
 import { IMAGENES_EXT, FILE_EXT } from '@andes/shared';
 @Component({
     selector: 'rup-adjuntar-documento',
@@ -32,11 +31,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     public hoy = moment().endOf('day').toDate();
 
     ngOnInit() {
-        if (isUndefined(this.permiteCarga)) {
+        if (this.permiteCarga === undefined) {
             this.permiteCarga = true;
         }
 
-        if (!isUndefined(this.parametroRegistro)) {
+        if (!this.parametroRegistro === undefined) {
             this.registro = this.parametroRegistro;
         }
         if (!this.registro.valor) {

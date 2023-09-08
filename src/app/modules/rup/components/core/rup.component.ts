@@ -163,7 +163,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.onDestroy();
-        this.onDestroy$.next();
+        this.onDestroy$.next(null);
         this.onDestroy$.complete();
 
         if (this.rulesEngine) {
@@ -177,7 +177,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
             const seccionElement = document.querySelectorAll('rup-seccionnado-component plex-panel div.collapse.show div.relacionado');
             if (seccionElement.length) {
                 if (seccionElement.length > 1) {
-                    seccionElement[seccionElement.length -1].scrollIntoView();
+                    seccionElement[seccionElement.length - 1].scrollIntoView();
                 }
             } else {
                 this.elemento.nativeElement.scrollIntoView();

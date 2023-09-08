@@ -1,5 +1,5 @@
 import { distinctUntilChanged, map, scan, filter, publishReplay, refCount, tap } from 'rxjs/operators';
-import { pipe, OperatorFunction, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { pipe, OperatorFunction } from 'rxjs';
 import { saveAs as saveAsFileSaver } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 import * as moment_ from 'moment';

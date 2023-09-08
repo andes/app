@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 
@@ -39,12 +38,6 @@ export class CDAService {
      */
     getCDAList(idPaciente) {
         return this.server.get(this.CDAUrl + 'paciente/' + idPaciente);
-    }
-
-    private handleError(error: any) {
-        const errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        return Observable.throw(errMsg);
     }
 
     protected extractData(res: Response) {

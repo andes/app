@@ -1,5 +1,6 @@
 import { ResourceBaseHttp, Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
+import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { ISnomedConcept } from 'src/app/modules/rup/interfaces/snomed-concept.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +40,6 @@ export interface IResumenInternacion {
         esDiagnosticoPrincipal: boolean;
     }[];
 
-    idPrestacion: string;
+    idPrestacion: string | IPrestacion;
 
 }

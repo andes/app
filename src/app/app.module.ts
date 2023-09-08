@@ -31,7 +31,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 // Libs
 import { ChartsModule } from 'ng2-charts';
-import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { NgxImageCompressService } from 'ngx-image-compress';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -251,7 +251,6 @@ registerLocaleData(localeEs, 'es');
         AuditoriaModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        Ng2ImgMaxModule,
         VisualizacionInformacionModule
 
     ],
@@ -427,9 +426,8 @@ registerLocaleData(localeEs, 'es');
             provide: HTTP_INTERCEPTORS,
             useClass: TokenExpiredInterceptor,
             multi: true,
-        }
-
-
+        },
+        NgxImageCompressService
     ]
 })
 

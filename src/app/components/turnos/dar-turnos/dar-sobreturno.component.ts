@@ -56,8 +56,8 @@ export class DarSobreturnoComponent implements OnChanges {
     recuperarDatos() {
         this.serviceAgenda.getById(this.idAgenda).subscribe(agenda => {
             this.agenda = agenda;
-            this.inicio = moment(this.hoy.setHours(this.agenda?.horaInicio?.getHours(), this.agenda?.horaInicio?.getMinutes(), 0, 0));
-            this.fin = moment(this.hoy.setHours(this.agenda?.horaFin?.getHours(), this.agenda?.horaFin?.getMinutes(), 0, 0));
+            this.inicio = moment(this.hoy.setHours(this.agenda?.horaInicio?.getHours(), this.agenda?.horaInicio?.getMinutes(), 0, 0)).toDate();
+            this.fin = moment(this.hoy.setHours(this.agenda?.horaFin?.getHours(), this.agenda?.horaFin?.getMinutes(), 0, 0)).toDate();
 
             if (this.agenda.tipoPrestaciones?.length === 1) {
                 this.tipoPrestacion = this.agenda.tipoPrestaciones[0];

@@ -41,8 +41,8 @@ export class RevisionFueraAgendaComponent implements OnInit {
     ngOnInit() {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        this.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        this.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
         this.cargarPrestaciones();
     }
 

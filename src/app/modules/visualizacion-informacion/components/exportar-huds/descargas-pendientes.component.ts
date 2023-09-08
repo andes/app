@@ -54,7 +54,7 @@ export class DescargasPendientesComponent implements OnInit {
         });
         this.exportHudsService.pendiente$.pipe(
             map(prestaciones => {
-                prestaciones = prestaciones.filter(prestacion => moment(prestacion.createdAt).isBetween(this.fechaDesde, this.fechaHasta, '[]'));
+                prestaciones = prestaciones.filter(prestacion => moment(prestacion.createdAt).isBetween(this.fechaDesde, this.fechaHasta, null, '[]'));
                 this.completed = prestaciones.filter(prestacion => prestacion.status === 'completed');
                 this.pending = prestaciones.filter(prestacion => prestacion.status === 'pending');
             })
