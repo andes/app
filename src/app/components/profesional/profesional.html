@@ -16,6 +16,9 @@
             <plex-text [(ngModel)]="filtros.nombre" name="nombre" label="Nombre" placeholder="Ingrese nombre"
                        (change)="filtrar()">
             </plex-text>
+            <plex-bool [(ngModel)]="filtros.estado" name="estado" label="Deshabilitados" (change)="filtrar()"
+                       type="slide">
+            </plex-bool>
         </plex-wrapper>
         <plex-table [columns]="columns" #table="plTable" (scroll)="onScroll()" [offset]="102">
             <plex-title size="sm">
@@ -35,6 +38,14 @@
                     </plex-badge>
                     <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
                         No Matriculado
+                    </plex-badge>
+                </td>
+                <td *plTableCol="'estado'">
+                    <plex-badge *ngIf="profesional.habilitado" type="info">
+                        Habilitado
+                    </plex-badge>
+                    <plex-badge *ngIf="!profesional.habilitado" type="warning">
+                        Deshabilitado
                     </plex-badge>
                 </td>
             </tr>
