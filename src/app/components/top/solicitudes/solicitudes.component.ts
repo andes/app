@@ -952,6 +952,7 @@ export class SolicitudesComponent implements OnInit {
                 this.itemsDropdown.push({ icon: 'lock-alert', label: 'Auditar Solicitud', handler: () => { this.auditar(prestacion); } });
             }
             if (botones.darTurno && this.tipoSolicitud === 'entrada') {
+                this.itemsDropdown.push({ icon: 'undo', label: 'Volver a Auditoría', handler: () => { this.volverAuditoria(prestacion); } });
                 this.itemsDropdown.push({ icon: 'calendar-plus', label: 'Dar Turno', handler: () => { this.darTurno(prestacion); } });
             }
             if (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) {
@@ -980,7 +981,17 @@ export class SolicitudesComponent implements OnInit {
             }
         }
     }
-
+    volverAuditoria(prestacionSolicitud) {
+        this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención').then(confirmar => {
+            if (confirmar) {
+                const cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
+                };
+                this.servicioPrestacion.patch(prestacionSolicitud.id, cambioEstado).subscribe(prestacion => { this.plex.toast('info', 'Prestación está en Auditoría'); this.cargarSolicitudes(); }, (err) => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación'));
+            }
+        });
+    }
     verificarBotones(botones, prestacion) {
         if (this.tipoSolicitud === 'entrada') {
             if (botones.auditar || botones.darTurno || (botones.iniciarPrestacion && this.isPresentationEnabled(prestacion)) || botones.citarPaciente
