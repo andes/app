@@ -6,7 +6,7 @@ import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { map, retry, switchMap, take } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { cache } from '@andes/shared';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -20,6 +20,7 @@ export class CambiarCamaComponent implements OnInit {
     // EVENTOS
     @Input() cambiarUO = null;
     @Output() onSave = new EventEmitter<any>();
+    @Output() onCancel = new EventEmitter<any>();
 
     // VARIABLES
     public nuevaCama: ISnapshot;
@@ -30,148 +31,136 @@ export class CambiarCamaComponent implements OnInit {
     public paseConfig = false;
     public allowCama = false;
     public selectCama = false;
-    public historial$: Observable<any[]>;
-    public movimientoEgreso$: Observable<ISnapshot>;
-    public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
 
     constructor(
         public auth: Auth,
         private plex: Plex,
         private mapaCamasService: MapaCamasService,
+        private camasHttp: MapaCamasHTTP
     ) { }
 
     ngOnInit() {
-        const HOY = moment().toDate();
-        this.historial$ = this.mapaCamasService.fecha2.pipe(
-            switchMap(fecha => {
-                return this.mapaCamasService.historial('internacion', fecha, HOY);
-            }),
-            map((movimientos) => {
-                return movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-            }),
-            cache()
-        );
-
-        this.movimientoEgreso$ = this.historial$.pipe(
-            map(movimientos => movimientos.find(m => m.estado !== 'ocupada'))
-        );
-
-        this.fechaMin$ = this.historial$.pipe(
-            switchMap(movimientos => {
-                if (movimientos.length) {
-                    const fechaUltimoMovimiento = movimientos[movimientos.length - 1].fecha;
-                    const fechaMasUnMinuto = moment(fechaUltimoMovimiento).add(1, 'm');
-                    return of(fechaMasUnMinuto.toDate());
-                } else {
-                    return this.camaSelectedSegunView$.pipe(
-                        map(cama => moment(cama?.fecha).add(1, 'm').toDate())
-                    );
-                }
-            })
-        );
-
-        this.hayMovimientosAt$ = combineLatest([
-            this.mapaCamasService.fecha2,
-            this.fechaMin$
-        ]).pipe(
-            map(([fechaElegida, fechaMinima]) => {
-                return moment(fechaElegida).isBefore(moment(fechaMinima));
-            })
-        );
-
+        /*  Setea los observables camasDisponibles, salaPases y camasParaPases que determinan si se puede realizar
+            el movimiento segun cada caso
+        */
         combineLatest([
             this.mapaCamasService.maquinaDeEstado$,
             this.camaSelectedSegunView$
-        ]).pipe(take(1)).subscribe(([maquinaEstados, camaActual]) => {
-            this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
-                switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
-            );
+        ]).pipe(
+            take(1),
+            map(([maquinaEstados, camaActual]) => {
+                this.camasDisponibles$ = this.camaSelectedSegunView$.pipe(
+                    switchMap(cama => this.mapaCamasService.getCamasDisponibles(cama))
+                );
 
-            this.salaPases$ = of({});
+                this.salaPases$ = of({});
 
-            if (maquinaEstados.configPases && maquinaEstados.configPases.allowCama) {
-                this.allowCama = true;
-            }
-
-            if (maquinaEstados.configPases && maquinaEstados.configPases.sala) {
-                if (maquinaEstados.configPases.sala !== camaActual.id) {
-                    this.paseConfig = true;
-                    this.salaPases$ = this.camasDisponibles$.pipe(
-                        map(cama => {
-                            const sala = cama.camasDistintaUO.filter((c: ISnapshot) => c.sala && c.id === maquinaEstados.configPases.sala)[0];
-                            return sala;
-                        })
-                    );
-
-                    this.camasParaPases$ = combineLatest([
-                        this.camasDisponibles$,
-                        this.salaPases$,
-                    ]).pipe(
-                        map(([camasDisp, sala]) => {
-                            return camasDisp.camasDistintaUO.filter((c: ISnapshot) => c.id !== sala.id);
-                        })
-                    );
+                if (maquinaEstados.configPases && maquinaEstados.configPases.allowCama) {
+                    this.allowCama = true;
                 }
-            }
-        });
+
+                if (maquinaEstados.configPases && maquinaEstados.configPases.sala) {
+                    if (maquinaEstados.configPases.sala !== camaActual.id) {
+                        this.paseConfig = true;
+                        this.salaPases$ = this.camasDisponibles$.pipe(
+                            map(cama => {
+                                const sala = cama.camasDistintaUO.filter((c: ISnapshot) => c.sala && c.id === maquinaEstados.configPases.sala)[0];
+                                return sala;
+                            })
+                        );
+
+                        this.camasParaPases$ = combineLatest([
+                            this.camasDisponibles$,
+                            this.salaPases$,
+                        ]).pipe(
+                            map(([camasDisp, sala]) => {
+                                return camasDisp.camasDistintaUO.filter((c: ISnapshot) => c.id !== sala.id);
+                            })
+                        );
+                    }
+                }
+            })
+        ).subscribe();
     }
+
 
     guardar(valid) {
         if (valid.formValid) {
             this.disableButton = true;
+            const fechaCambio = moment(this.mapaCamasService.fecha).toDate();
+            const capa = this.mapaCamasService.capa;
+
             combineLatest([
-                this.mapaCamasService.fecha2,
-                this.camaSelectedSegunView$,
+                this.camaSelectedSegunView$.pipe(
+                    switchMap(camaActual => this.camasHttp.get('internacion', capa, fechaCambio, camaActual.id),)
+                ),
                 this.salaPases$,
-                this.hayMovimientosAt$
+                this.camasHttp.get('internacion', capa, fechaCambio, this.nuevaCama.id),
+                this.camasHttp.historial('internacion', capa, fechaCambio, moment(fechaCambio).add(1, 'day').toDate(), this.nuevaCama.id) // movimientos futuros?
             ]).pipe(
                 take(1),
-                switchMap(([fechaCambio, camaActual, salaPases, movimientos]) => {
+                switchMap(([camaActual, salaPase, nuevaCama, historialNuevaCama]) => {
+                    /*  Se vuelve a consultar para obtener los ultimos estados reales de las camas ya que podrían haber
+                        nuevos movimientos intermedios producto de un mapa de camas desactualizado (Tiempo sin interaccion
+                        por parte del usuario) habiendose ocupado la cama destino o movido el paciente que está seleccionado
+                        actualmente (movimiento realizado por otro usuario en el ultimo periodo de tiempo).
+                    */
+                    historialNuevaCama = historialNuevaCama.filter(mov => mov.estado === 'ocupada');
                     if (!camaActual.sala) {
-                        this.mapaCamasService.setFecha(moment(fechaCambio).toDate());
-                        return this.mapaCamasService.get(fechaCambio, camaActual.idCama).pipe(
-                            map(cama => [cama, fechaCambio, salaPases, movimientos, false])
-                        );
-                    } else {
-                        return of([camaActual, fechaCambio, salaPases, movimientos, true]);
-                    }
-                }),
-                switchMap((params: any) => {
-                    const camaActual = params[0];
-                    const fechaCambio = params[1];
-                    const salaPase = params[2];
-                    const existeMovimiento = params[3];
-                    const esSala = params[4];
-                    const proximaCama = this.nuevaCama || salaPase;
-                    if (!esSala) {
-                        if (camaActual.estado === 'ocupada' && !existeMovimiento) {
-                            return this.cambiarCama(camaActual, proximaCama, fechaCambio);
+                        if (camaActual.estado === 'ocupada' && nuevaCama.estado === 'disponible') {
+                            if (historialNuevaCama.length) { // cama destino tiene movimientos en las prox 24 hs?
+                                const fechaConflicto = moment(historialNuevaCama[0].fecha);
+
+                                /*  llegado a este punto se sabe que la cama destino puede ser ocupada pero solo temporalmente, ya que tiene
+                                    un movimiento poco tiempo mas adelante. Por tanto se advierte al usuario y se consulta si desea ocuparla
+                                    de todas formas. Para esto, la siguiente promesa (con el subscribe interno) es inevitable ya que el plex.confirm
+                                    funciona con promesas y es el único modo de que el pipe espere la respuesta del usuario para continuar.
+                                 */
+                                return new Promise(resolve => {
+                                    this.plex.confirm(`La cama destino está disponible hasta el día ${fechaConflicto.format('DD/MM/YYYY')} a las ${fechaConflicto.format('HH:mm')}. ¿Desea continuar con el movimiento?`, 'Aviso').then(
+                                        respuesta => {
+                                            if (respuesta) {
+                                                // se realiza cambio
+                                                return this.cambiarCama(camaActual, nuevaCama, fechaCambio).subscribe(camas => resolve(camas));
+                                            }
+                                            this.onCancel.emit();
+                                            return resolve(null);
+                                        });
+                                });
+                            } else {
+                                // se realiza cambio sin advertencias
+                                return this.cambiarCama(camaActual, nuevaCama, fechaCambio);
+                            }
                         } else {
-                            return of(null);
+                            const accion = (this.cambiarUO) ? 'pase de unidad organizativa' : 'cambio de cama';
+                            if (camaActual.estado === 'disponible') {
+                                this.plex.info('warning', `No es posible realizar el ${accion} ya que el paciente fué removido de la cama ${camaActual.nombre}.`, 'Atención');
+                            } else if (nuevaCama.estado === 'ocupada') {
+                                this.plex.info('warning', `No es posible realizar el ${accion} ya que la cama ${nuevaCama.nombre} se encuentra ocupada.`, 'Atención');
+                            }
                         }
+                        // fue posible el cambio
+                        this.onCancel.emit();
+                        return of(null);
                     } else {
-                        return this.cambiarCama(camaActual, proximaCama, fechaCambio);
+                        return this.cambiarCama(camaActual, salaPase, fechaCambio);
                     }
-                }),
-            ).subscribe(
-                camas => {
-                    if (camas) {
-                        const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
-                        this.plex.info('success', mensaje);
-                        this.mapaCamasService.setFecha(moment().toDate()); // para que actualice el snapshot al momento luego del cambio
-                        this.onSave.emit();
-                        this.disableButton = false;
-                    } else {
-                        const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
-                        this.plex.info('warning', '', `No es posible realizar el ${mensaje}`);
-                        this.disableButton = false;
-                    }
-                }, err => {
-                    const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
-                    this.plex.info('warning', '', `Ocurrió un error durante el ${mensaje}`);
+                })
+            ).subscribe((camas: any[]) => {
+                if (camas) { // return de forkjoin
+                    const mensaje = (this.cambiarUO) ? 'Pase de unidad organizativa exitoso!' : 'Cambio de cama exitoso!';
+                    this.plex.info('success', mensaje);
+                    this.mapaCamasService.setFecha(this.mapaCamasService.fecha); // para que actualice el snapshot al momento luego del cambio
+                    this.onSave.emit();
+                } else {
+                    this.mapaCamasService.setFecha(this.mapaCamasService.fecha);
                     this.disableButton = false;
-                });
+                }
+            }, () => { // error
+                const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
+                this.plex.info('warning', '', `Ocurrió un error durante el ${mensaje}`);
+                this.disableButton = false;
+            });
         }
     }
 

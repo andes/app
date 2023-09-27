@@ -439,10 +439,14 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 return this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion);
             }),
             switchMap(cama => {
-                this.cama = cama;
+                if (!cama.id) {
+                    // algun error en changeTime
+                    throw new Error();
+                }
                 if (this.capa === 'estadistica') {
                     return of(null);
                 }
+                this.cama = cama;
                 // Prestacion creada por capa estadistica-v2. Puede estar siendo actualizada por medica/enfermeria
                 return this.internacionResumenService.update(cama.idInternacion, {
                     idPrestacion: this.prestacion?.id,
@@ -471,8 +475,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
                     this.disableButton = false;
                     this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                }, () => {
+                    this.plex.info('danger', 'Ocurrió un error actualizando los datos. Revise los movimientos e intente nuevamente.', 'Atención');
                     this.disableButton = false;
                 });
             } else {
@@ -484,6 +488,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         } else {
             if (nuevaPrestacion) {
+                // estadistica-v2
                 this.prestacion = nuevaPrestacion;
             }
             if (this.cama.idInternacion) {
@@ -493,6 +498,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                     this.disableButton = false;
                     this.mapaCamasService.select(this.cama);
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
+                }, () => {
+                    this.plex.info('danger', 'Ocurrió un error actualizando los datos. Revise los movimientos e intente nuevamente.', 'Atención');
+                    this.disableButton = false;
                 });
             } else {
                 // Nueva internacion por capa medica/enfermería/estadistica-v2
@@ -520,17 +528,24 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
                 createAction.pipe(
                     switchMap(internacion => {
+                        if (!internacion.id) {
+                            throw new Error();
+                        }
                         this.cama.idInternacion = internacion.id;
                         return this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso);
                     })
                 ).subscribe(camaEstado => {
-                    this.plex.info('success', 'Paciente internado');
-                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                    this.selectCama(camaEstado);
-                    this.onSave.emit();
+                    if (camaEstado?.id) {
+                        this.plex.info('success', 'Paciente internado');
+                        this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                        this.selectCama(camaEstado);
+                        this.onSave.emit();
+                    } else {
+                        this.plex.info('warning', 'Ocurrió un error realizando el ingreso. Por favor revise los movimientos y de ser necesario anule la internación.', 'Atención');
+                    }
                     this.disableButton = false;
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al ingresar paciente');
+                }, () => {
+                    this.plex.info('warning', 'Ocurrió un error realizando el ingreso. Por favor revise los movimientos y de ser necesario anule la internación.', 'Atención');
                     this.disableButton = false;
                 });
             }
