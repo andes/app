@@ -58,9 +58,12 @@
             </vista-prestacion>
         </ng-container>
     </plex-layout-main>
-    <plex-layout-sidebar type="invert" *ngIf="idInternacionSelected">
-        <app-internacion-detalle>
-        </app-internacion-detalle>
 
+    <plex-layout-sidebar type="invert" *ngIf="idInternacionSelected ">
+        <plex-title titulo="DETALLES" size="md">
+            <plex-button icon="close" type="danger" size="sm" (click)="cancelar()">
+            </plex-button>
+        </plex-title>
+        <app-internacion-detalle></app-internacion-detalle>
     </plex-layout-sidebar>
 </plex-layout>

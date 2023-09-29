@@ -95,8 +95,8 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
         ]).pipe(
             switchMap(([requestPrestacion, cama, capa, { desde, hasta }]) => {
                 const idInternacion = cama?.idInternacion || (requestPrestacion as any).id;
-                if (capa !== '') {
-                    return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, idInternacion).pipe(
+                if (capa && idInternacion) {
+                    return this.mapaCamasHTTP.historialInternacion('internacion', capa, desde, hasta, idInternacion)?.pipe(
                         map(movimientos => {
                             return movimientos.filter((mov) => {
                                 return desde.getTime() <= mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
@@ -109,6 +109,7 @@ export class MovimientosInternacionComponent implements OnInit, OnDestroy {
                         })
                     );
                 }
+                return of(null);
             })
         );
     }
