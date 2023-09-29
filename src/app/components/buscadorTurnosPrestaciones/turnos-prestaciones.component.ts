@@ -372,25 +372,27 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turno.obraSocial = null;
             turno.financiador = this.financiador;
         }
-
-        this.arrayPrestacion.forEach(prestacion => {
-            const encuentraConfiguracion = prestacion.conceptosTurneables?.find(concepto => {
-                return (concepto.conceptId === turno.tipoPrestacion.conceptId);
+        const encuentraConfiguracion = (arrayConceptos) => arrayConceptos.find(concepto => (concepto.conceptId === turno.tipoPrestacion.conceptId));
+        const configuracionesCT: any[] = this.arrayPrestacion.filter(prestacion => prestacion?.conceptosTurneables ? encuentraConfiguracion(prestacion.conceptosTurneables) : false);
+        let inviarFacturacion = false;
+        let messageNoEnviar = '';
+        const esSumar = turno.obraSocial !== 'prepaga' && turno.financiador.financiador === 'SUMAR';
+        if (esSumar) {
+            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.sumar !== null);
+            messageNoEnviar = 'Esta prestación no genera comprobantes automáticos a SUMAR';
+        } else {
+            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.recuperoFinanciero !== null);
+            messageNoEnviar = 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero';
+        }
+        if (inviarFacturacion) {
+            this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
+                if (respuesta.message) {
+                    this.plex.info('success', respuesta.message);
+                }
             });
-
-            if (encuentraConfiguracion && ((turno.paciente.obraSocial?.financiador === 'SUMAR' && prestacion.sumar) ||
-                (turno.paciente.obraSocial?.financiador !== 'SUMAR' && prestacion.recuperoFinaciero))) {
-                // Realizar acción cuando se encuentra una configuración válida
-                this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
-                    if (respuesta.message) {
-                        this.plex.info('success', respuesta.message);
-                    }
-                });
-            } else {
-                // Realizar acción cuando no se encuentra una configuración válida
-                this.plex.info('warning', 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero');
-            }
-        });
+        } else {
+            this.plex.info('warning', messageNoEnviar);
+        }
     }
 
     sortTable(event: string) {
