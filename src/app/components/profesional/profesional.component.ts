@@ -70,6 +70,11 @@ export class ProfesionalComponent implements OnInit {
             key: 'condicion',
             label: 'Condición',
             opcional: true,
+        },
+        {
+            key: 'estado',
+            label: 'Estado',
+            opcional: true
         }
     ];
 
@@ -104,6 +109,8 @@ export class ProfesionalComponent implements OnInit {
         this.profesionalService.documento.next(this.filtros.documento);
         this.profesionalService.apellido.next(this.filtros.apellido);
         this.profesionalService.nombre.next(this.filtros.nombre);
+        this.profesionalService.activo.next(this.filtros.estado);
+
     }
 
     seleccionarProfesional(profesional) {
