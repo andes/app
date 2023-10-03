@@ -295,12 +295,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                     }
                     this.disableButton = false;
+                    this.onSave.emit(null);
                 }, () => {
                     this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
                     this.disableButton = false;
+                    this.onSave.emit(null);
                 });
             }
-            this.onSave.emit(null);
         } else {
             this.plex.info('info', 'Debe completar los datos del egreso para poder guardar.', 'Datos incompletos');
             return;
@@ -312,55 +313,55 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
      */
     egresoSimplificado(estado): Observable<any> {
         // Se configura nuevo estado con datos del egreso
-        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
-            let estadoPatch = {};
-            if (this.cama.sala) {
-                // sala comun
-                this.cama.estado = estado;
-                this.cama.extras = {
+        // if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
+        let estadoPatch = {};
+        if (this.cama.sala) {
+            // sala comun
+            this.cama.estado = estado;
+            this.cama.extras = {
+                egreso: true,
+                idInternacion: this.cama.idInternacion,
+                tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
+            };
+            estadoPatch = this.cama;
+        } else {
+            // cama
+            estadoPatch = {
+                _id: this.cama.id,
+                estado: estado,
+                idInternacion: null,
+                paciente: null,
+                nota: null,
+                fechaIngreso: null,
+                extras: {
                     egreso: true,
                     idInternacion: this.cama.idInternacion,
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                };
-                estadoPatch = this.cama;
-            } else {
-                // cama
-                estadoPatch = {
-                    _id: this.cama.id,
-                    estado: estado,
-                    idInternacion: null,
-                    paciente: null,
-                    nota: null,
-                    fechaIngreso: null,
-                    extras: {
-                        egreso: true,
-                        idInternacion: this.cama.idInternacion,
-                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                    }
-                };
-            }
-            const saveInternacion = () => {
-                if (this.capa !== 'estadistica') {
-                    // estadistica-v2, medica, enfermeria
-                    return this.internacionResumenService.update(this.cama.idInternacion, {
-                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
-                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                    });
                 }
-                return of(null);
             };
-
-            return saveInternacion().pipe(
-                switchMap(resumenSaved => {
-                    if (this.capa !== 'estadistica' && !resumenSaved) {
-                        /*  si hubo algun error actualizando el resumen, no debería actualizar el estado de la cama para
-                            no generar datos inconsistentes entre internacion y movimientos */
-                        throw new Error();
-                    }
-                    return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
-                })
-            );
         }
+        const saveInternacion = () => {
+            if (this.capa !== 'estadistica' && !this.cama.sala) {
+                // estadistica-v2, medica, enfermeria (exceptuando salas)
+                return this.internacionResumenService.update(this.cama.idInternacion, {
+                    tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                    fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                });
+            }
+            return of(null);
+        };
+
+        return saveInternacion().pipe(
+            switchMap(resumenSaved => {
+                if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {
+                    /*  si hubo algun error actualizando el resumen, no debería actualizar el estado de la cama para
+                            no generar datos inconsistentes entre internacion y movimientos */
+                    throw new Error();
+                }
+                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+            })
+        );
+        // }
     }
 
     // Setea valores de la prestacion (estadistica y estadistica-v2) antes de llamar al egreso simplificado
@@ -396,6 +397,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
                 this.disableButton = false;
+                this.onSave.emit(null);
             }, () => {
                 this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
                 this.disableButton = false;
