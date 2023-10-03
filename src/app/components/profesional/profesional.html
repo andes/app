@@ -55,10 +55,12 @@
     <!-- sidebar listado -->
     <plex-layout-sidebar type="invert" *ngIf='profesionalSelected'>
         <plex-title size="md" titulo="Detalle Profesional">
-            <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
-            <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" label="Editar"
-                         type="warning" size="sm" (click)="routeTo('create', profesionalSelected.id)">
+            <plex-button *ngIf="profesionalSelected && !profesionalSelected.profesionalMatriculado" tooltip='Editar'
+                         [icon]="'pencil'" type="warning" size="sm"
+                         (click)="routeTo('create', profesionalSelected.id)  ">
             </plex-button>
+            <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()"></plex-button>
+
         </plex-title>
         <plex-detail size="lg">
             <img *ngIf="fotoProfesional" [src]="fotoProfesional">
