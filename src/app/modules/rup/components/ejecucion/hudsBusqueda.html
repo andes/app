@@ -313,7 +313,7 @@
                                                     </plex-badge>
                                                 </ng-container>
                                                 <button class="btn btn-sm btn-primary btn-icon-rup p-0"
-                                                        *ngIf="emitirConceptos"
+                                                        *ngIf="emitirConceptos && registro?.evoluciones[0]?.estado !== 'resuelto' "
                                                         (click)="$event.stopPropagation(); agregarRegistro(registro)"
                                                         title="Agregar a la consulta" titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
