@@ -151,12 +151,15 @@
                             <plex-badge *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                         type="danger">AUTOCITADO
                             </plex-badge>
+                            <plex-badge *ngIf="prestacion.estadoActual.tipo === 'vencida'" type="danger">
+                                VENCIDA
+                            </plex-badge>
                             <plex-badge type="danger"
                                         *ngIf="prestacion.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad === 'prioritario'">
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                             </plex-badge>
                             <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                        *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada'">
+                                        *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida'">
                                 {{prestacion | estadoSolicitud}}
                             </plex-badge>
                             <plex-badge type="{{prestacion | estadoPrestacion}}"
@@ -187,12 +190,14 @@
                                 <plex-badge *ngIf="estado === 'referida'" type="warning">
                                     REFERIDA
                                 </plex-badge>
+
                                 <ng-container *ngIf="prestacion | botonesSolicitud as botones">
                                     <plex-dropdown #drop *ngIf="verificarBotones(botones, prestacion)" [right]="true"
                                                    class="ml-1" [items]="itemsDropdown" size="sm" icon="dots-vertical"
                                                    (onOpen)="setDropDown(prestacion, drop, botones)">
                                     </plex-dropdown>
                                 </ng-container>
+
                             </ng-container>
                         </td>
                     </tr>

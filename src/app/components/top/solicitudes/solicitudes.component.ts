@@ -35,7 +35,6 @@ export class SolicitudesComponent implements OnInit {
     public permisos;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
-
     public prestaciones = [];
     public showIniciarPrestacion = false;
     public tipoSolicitud = 'entrada';
@@ -68,7 +67,8 @@ export class SolicitudesComponent implements OnInit {
         { id: 'ejecucion', nombre: 'EJECUCIÓN' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
-        { id: 'anulada', nombre: 'ANULADA' }
+        { id: 'anulada', nombre: 'ANULADA' },
+        { id: 'vencida', nombre: 'VENCIDA' }
     ];
 
     public prioridades = [
@@ -999,7 +999,7 @@ export class SolicitudesComponent implements OnInit {
                 return true;
             }
         } else {
-            if ((prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) || prestacion.estadoActual.tipo === 'ejecucion' || prestacion.estadoActual.tipo === 'auditoria') {
+            if ((prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) || prestacion.estadoActual.tipo === 'ejecucion' || prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'vencida') {
                 return true;
             }
         }
