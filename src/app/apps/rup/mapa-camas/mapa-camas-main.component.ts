@@ -14,7 +14,7 @@ import { Auth } from '@andes/auth';
 
 export class MapaCamasMainComponent implements OnInit {
     public perfiles = [
-        { id: 'medica', label: 'Médico' },
+        { id: 'medica', label: 'Profesional a cargo' },
         { id: 'enfermeria', label: 'Enfermero' },
         { id: 'estadistica', label: 'Estadístico' },
         { id: 'interconsultores', label: 'Interconsultores' },
