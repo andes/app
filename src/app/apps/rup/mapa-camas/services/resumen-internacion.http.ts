@@ -20,7 +20,7 @@ export interface IResumenInternacion {
         alias?: string;
         apellido: string;
         documento: string;
-        numeroIdentificion?: string;
+        numeroIdentificacion?: string;
         sexo: string;
         genero: string;
         fechaNacimiento: string;
