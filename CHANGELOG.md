@@ -1,3 +1,17 @@
+# [5.126.0](https://github.com/andes/app/compare/v5.125.3...v5.126.0) (2023-10-04)
+
+
+### Bug Fixes
+
+* **in:** egreso y filtro por documento en listados ([#2898](https://github.com/andes/app/issues/2898)) ([#2893](https://github.com/andes/app/issues/2893)) ([ccc1197](https://github.com/andes/app/commit/ccc119752558bef84158c39d4678a16cafab3ad0))
+* **IN-567:** cambiar nombre al seleccionar perfil ([#2924](https://github.com/andes/app/issues/2924)) ([e56c0f1](https://github.com/andes/app/commit/e56c0f1dd335e773edf8ec38f75ed5afe5676ce4))
+
+
+### Features
+
+* **TM-28:** Deshabilitar profesional no matriculado ([#2921](https://github.com/andes/app/issues/2921)) ([9a01701](https://github.com/andes/app/commit/9a01701ca71bf43be77da1c0988567f7fcf0e44e))
+* **TM-30:** Filtrar profesional por habilitado y estado ([#2922](https://github.com/andes/app/issues/2922)) ([d965755](https://github.com/andes/app/commit/d965755b9245a944f3c3c71cdad1437ca7fada92))
+
 ## [5.125.3](https://github.com/andes/app/compare/v5.125.2...v5.125.3) (2023-08-30)
 
 
