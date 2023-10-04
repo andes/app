@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { InternacionResumenHTTP, IResumenInternacion } from '../../services/resumen-internacion.http';
@@ -16,6 +16,7 @@ import { Plex } from '@andes/plex';
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { IPlexTableColumns } from '@andes/plex/src/lib/table/table.interfaces';
 import { Location } from '@angular/common';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'in-resumen-internacion',
@@ -66,6 +67,7 @@ export class ResumenInternacionComponent implements OnInit {
 
     public textoFiltro = '';
     public textoFiltroVisivility = false;
+    public puedeVerHuds;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -75,7 +77,9 @@ export class ResumenInternacionComponent implements OnInit {
         private mapaCamasHTTP: MapaCamasHTTP,
         private pacienteService: PacienteService,
         private plex: Plex,
-        private location: Location
+        private location: Location,
+        private auth: Auth,
+        private router: Router
     ) { }
 
 
@@ -140,6 +144,12 @@ export class ResumenInternacionComponent implements OnInit {
     ngOnInit() {
         this.idInternacion = this.activatedRoute.snapshot.paramMap.get('idInternacion');
         this.capa = this.activatedRoute.snapshot.paramMap.get('capa');
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
+
+        if (!this.puedeVerHuds) {
+            this.router.navigate(['/mapa-camas/internacion/' + this.capa]);
+        }
+
 
         this.getInternacion().subscribe((resumen) => {
             this.internacion = resumen as any;
@@ -521,17 +531,17 @@ export class ResumenInternacionComponent implements OnInit {
         this.dataSetVisible$.next(dataSetVisible);
     }
 
-    navigateItems(event: KeyboardEvent ) {
+    navigateItems(event: KeyboardEvent) {
         if (this.groupSelected === 'prestaciones' && this.datoIdSelected != null) {
             const key = event.key;
             const pos = this.prestaciones.map((e) => { return e.id; }).indexOf(this.datoIdSelected);
 
-            if (key === 'Up' || key === 'ArrowUp' && this.prestaciones[pos-1]) {
-                this.datoIdSelected = this.prestaciones[pos-1].id;
-                this.prestacionSelected = this.prestaciones[pos-1];
-            } else if ( key === 'Down' || key === 'ArrowDown' && this.prestaciones[pos+1]) {
-                this.datoIdSelected = this.prestaciones[pos+1].id;
-                this.prestacionSelected = this.prestaciones[pos+1];
+            if (key === 'Up' || key === 'ArrowUp' && this.prestaciones[pos - 1]) {
+                this.datoIdSelected = this.prestaciones[pos - 1].id;
+                this.prestacionSelected = this.prestaciones[pos - 1];
+            } else if (key === 'Down' || key === 'ArrowDown' && this.prestaciones[pos + 1]) {
+                this.datoIdSelected = this.prestaciones[pos + 1].id;
+                this.prestacionSelected = this.prestaciones[pos + 1];
             }
         }
     }

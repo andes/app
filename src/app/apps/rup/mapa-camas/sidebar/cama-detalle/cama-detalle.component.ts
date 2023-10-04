@@ -48,6 +48,7 @@ export class CamaDetalleComponent implements OnInit {
     public genero;
     public censable;
     public paciente;
+    public puedeVerHuds;
     public edadPaciente;
     public relacionesPosibles;
     public especialidades;
@@ -100,6 +101,7 @@ export class CamaDetalleComponent implements OnInit {
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
         this.cama$ = this.mapaCamasService.selectedCama;
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),
             switchMap(cama => cama.paciente ? this.mapaCamasService.getPaciente(cama.paciente) : of(null))
