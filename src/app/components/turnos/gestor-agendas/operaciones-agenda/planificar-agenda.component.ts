@@ -115,9 +115,8 @@ export class PlanificarAgendaComponent implements OnInit {
         this.calculosInicio();
     }
 
-
     loadProfesionales(event) {
-        if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {
+        if (this.modelo.profesionales?.length) {
             event.callback(this.modelo.profesionales);
         }
         if (event.query && event.query !== '' && event.query.length > 2) {
@@ -126,7 +125,8 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.lastRequest.unsubscribe();
             }
             const query = {
-                nombreCompleto: event.query
+                nombreCompleto: event.query,
+                prestaciones: this.modelo.tipoPrestaciones.map(p => p._id)
             };
 
             this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
@@ -360,6 +360,9 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
+        // limpiamos profesionales al cambiar la selección de prestaciones
+        this.modelo.profesionales = [];
+
         // Valores por defecto
         this.noNominalizada = false;
         this.dinamica = false;
