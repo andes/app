@@ -57,4 +57,17 @@ export interface IAgenda {
     }];
     enviarSms: String;
     condicionLlave: boolean;
+    createdAt: Date;
+    createdBy: {
+        id: string;
+        nombre: string;
+        apellido: string;
+        nombreCompleto: string;
+        username: number;
+        documento: string;
+        organizacion: {
+            id: string;
+            nombre: string;
+        };
+    };
 }
