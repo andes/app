@@ -1,82 +1,62 @@
-import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
-import { IProfesional } from 'src/app/interfaces/IProfesional';
-import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
-import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
+import { calcularEdad } from '@andes/shared';
 
 @Component({
     selector: 'fuera-agenda',
-    templateUrl: 'fuera-agenda.html'
+    templateUrl: 'fuera-agenda.html',
+    styleUrls: ['fuera-agenda.scss']
 })
-export class RevisionFueraAgendaComponent implements OnInit {
+export class RevisionFueraAgendaComponent implements OnInit, OnChanges {
     // Propiedades privadas
     @HostBinding('class.plex-layout') layout = true;
 
     // Propiedades públicas
-    public prestaciones: ICodificacionPrestacion[];
-    public prestacionSeleccionada: ICodificacionPrestacion;
-    public profesional: IProfesional;
+    @Input() prestacionSeleccionada: ICodificacionPrestacion;
     public showReparo = false;
     public indiceReparo: number;
     public esAgendaOdonto = false;
-    public auditadas = false;
     public diagnosticos = [];
-    public fechaDesde: Date;
-    public fechaHasta: Date;
-    public prestacionSelect: any;
-    public prestacion: IPrestacion;
+
+    private index = -1;
+
+    public columns = [
+        { 'key': 'seleccionar', 'label': '' },
+        { 'key': 'primeraVez', 'label': 'Primera vez' },
+        { 'key': 'desde', 'label': 'Estado' },
+        { 'key': 'snomed', 'label': 'Diag. Snomed' },
+        { 'key': 'cie10', 'label': 'Diag. CIE10' },
+    ];
 
     // Eventos
     @Output() save: EventEmitter<ICodificacionPrestacion[]> = new EventEmitter<ICodificacionPrestacion[]>();
-    @Output() volverAlGestor = new EventEmitter<boolean>();
+    @Output() cerrar = new EventEmitter<boolean>();
 
     // Constructor
     constructor(
-        private prestacionesService: PrestacionesService,
         private serviceCodificacion: CodificacionService,
     ) { }
 
     // Métodos
     ngOnInit() {
-        this.fechaDesde = new Date();
-        this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
-        this.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
-        this.cargarPrestaciones();
+        this.cargarDiagnosticos();
     }
 
-    cargarPrestaciones() {
-        if (this.fechaDesde && this.fechaHasta) {
-            const params = {
-                fechaDesde: moment(this.fechaDesde).startOf('day').toDate(),
-                fechaHasta: moment(this.fechaHasta).endOf('day').toDate(),
-                idProfesional: this.profesional?.id,
-                auditadas: this.auditadas,
-                idPrestacion: this.prestacionSelect?._id
-            };
-            this.serviceCodificacion.get(params).subscribe(datos => {
-                this.prestaciones = datos;
-            });
-        }
+    ngOnChanges() {
+        this.index = -1;
+        this.cargarDiagnosticos();
     }
 
-    estaSeleccionada(prestacion: ICodificacionPrestacion) {
-        return (this.prestacionSeleccionada === prestacion);
-    }
-
-    seleccionarPrestacion(prestacion: ICodificacionPrestacion) {
-        this.prestacionesService.getById(prestacion.idPrestacion).subscribe(prest => this.prestacion = prest);
-        this.prestacionSeleccionada = prestacion;
+    cargarDiagnosticos() {
         this.diagnosticos = [];
-        this.showReparo = false;
-        if (prestacion.diagnostico.codificaciones && prestacion.diagnostico.codificaciones.length) {
-            this.diagnosticos = this.diagnosticos.concat(prestacion.diagnostico.codificaciones);
+        if (this.prestacionSeleccionada.diagnostico.codificaciones && this.prestacionSeleccionada.diagnostico.codificaciones.length) {
+            this.diagnosticos = this.diagnosticos.concat(this.prestacionSeleccionada.diagnostico.codificaciones);
         }
     }
 
-    mostrarReparo(index) {
-        this.indiceReparo = index;
+    mostrarReparo() {
+        this.indiceReparo = this.index;
         this.showReparo = true;
     }
 
@@ -88,16 +68,16 @@ export class RevisionFueraAgendaComponent implements OnInit {
      */
     repararDiagnostico(reparo: any) {
         if (reparo) {
-            this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
+            this.diagnosticos[this.index].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
         this.onSave();
     }
 
-    aprobar(index) {
-        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
+    aprobar() {
+        this.diagnosticos[this.index].codificacionAuditoria = this.diagnosticos[this.index].codificacionProfesional.cie10;
         // En el caso que aprueben el primer diagnóstico, se aprueba el resto
-        if (index === 0) {
+        if (this.index === 0) {
             for (let j = 1; j < this.diagnosticos.length; j++) {
                 this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
             }
@@ -105,8 +85,8 @@ export class RevisionFueraAgendaComponent implements OnInit {
         this.onSave();
     }
 
-    borrarReparo(index) {
-        this.diagnosticos[index].codificacionAuditoria = null;
+    borrarReparo() {
+        this.diagnosticos[this.index].codificacionAuditoria = null;
         this.showReparo = false;
         this.onSave();
     }
@@ -119,7 +99,42 @@ export class RevisionFueraAgendaComponent implements OnInit {
         this.serviceCodificacion.patch(this.prestacionSeleccionada.id, { codificaciones: this.diagnosticos }).subscribe();
     }
 
-    volver() {
-        this.volverAlGestor.emit(true);
+    edad(fechaNacimiento: Date) {
+        return calcularEdad(fechaNacimiento);
     }
+
+    seleccionarDiagnostico(index: number) {
+        if (this.index >= 0 && this.index === index) {
+            this.index = -1;
+        } else {
+            this.index = index;
+        }
+    }
+
+    indexSeleccionado(index) {
+        if (this.index >= 0) {
+            return this.index === index;
+        }
+    }
+
+    mostrarAprobarReprar() {
+        if (this.index >= 0) {
+            return ((this.diagnosticos[this.index].codificacionProfesional?.snomed?.codigo ||
+                this.diagnosticos[this.index].codificacionProfesional?.cie10?.codigo) &&
+                !this.diagnosticos[this.index].codificacionAuditoria?.codigo);
+        }
+    }
+
+    mostrarRestablecer() {
+        if (this.index >= 0) {
+            return ((this.diagnosticos[this.index].codificacionProfesional?.snomed?.codigo ||
+                this.diagnosticos[this.index].codificacionProfesional?.cie10?.codigo) &&
+                this.diagnosticos[this.index].codificacionAuditoria?.codigo);
+        }
+    }
+
+    volver() {
+        this.cerrar.emit(true);
+    }
+
 }

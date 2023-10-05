@@ -1,88 +1,56 @@
-<plex-layout main="8">
-    <plex-layout-main>
-        <form #form="ngForm" class="h-100">
-            <plex-title titulo="Agregar Paciente">
-                <plex-button class="mr-1" position="left" type="danger" label="Cancelar" (click)="volver()">
-                </plex-button>
-                <plex-button position="right" [disabled]="!paciente" [validateForm]="form" label="Guardar" type="success"
-                             (click)="guardar($event)">
-                </plex-button>
-            </plex-title>
+<form #form="ngForm" class="h-100">
+    <plex-title titulo="Agregar Paciente">
+        <plex-button icon="close" tooltip="Cancelar" size="sm" type="danger" (click)="volver()">
+        </plex-button>
+        &nbsp;
+        <plex-button icon="check" tooltip="Guardar" size="sm" type="success" [disabled]="!paciente"
+                     [validateForm]="form" (click)="guardar($event)">
+        </plex-button>
+    </plex-title>
 
-            <span *ngIf="showPaciente && paciente">
-                <div *ngIf="paciente?.id" class="row">
-                    <div class="col">
-                        <label>Paciente</label>
-                        <div>{{paciente | nombre }}</div>
-                    </div>
-                    <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
-                        <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
-                                    (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
-                        </plex-radio>
-                        <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
-                                     [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
-                                     labelField="nombre">
-                        </plex-select>
-                    </div>
-                    <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
-                        <label>Programa</label>
-                        <div>{{modelo.obraSocial}}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono"
-                                    (change)="cambioTelefono=true" name="telefono"></plex-phone>
-                        <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
-                                   name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
-                    </div>
-                    <div class="col">
-                        <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
-                                   (change)="verificarNota()"></plex-text>
-                    </div>
-                </div>
-                <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
-                    <div class="col">
-                        <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
-                                     [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
-                                     [required]="true">
-                        </plex-select>
-                    </div>
-                </div>
-            </span>
-            <ng-container *ngIf="!showPaciente && pacientesSearch">
-                <paciente-busqueda (searchStart)="onSearchStart()"
-                                   (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
-                                   (searchClear)="onSearchClear()" (selected)="onSelect($event)" [offset]="110">
-                </paciente-busqueda>
-            </ng-container>
-        </form>
-    </plex-layout-main>
-    <plex-layout-sidebar>
-        <plex-title titulo="Agenda seleccionada" size="md"></plex-title>
-
-        <!--Agenda seleccionada-->
-        <div class="text-center mt-4" *ngIf="agenda">
-            <h4>
-                <span class="mdi mdi-calendar-today"> Hora Agenda </span>
-            </h4>
-            <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio:
-                {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
-                {{ agenda.horaFin | date: 'HH:mm' }}
-            </span>
-            <h4 class="mt-3">
-                <span class="mdi mdi-hospital">Prestación </span>
-            </h4>
-            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                {{ tipoPrestacion.nombre }}
+    <span *ngIf="showPaciente && paciente">
+        <div *ngIf="paciente?.id" class="row">
+            <div class="col">
+                <label>Paciente</label>
+                <div>{{paciente | nombre }}</div>
             </div>
-            <h4 class="mt-3">
-                <span class="mdi mdi-account">Equipo de Salud </span>
-            </h4>
-            <div *ngFor="let profesional of agenda.profesionales let i = index">
-                {{profesional | nombre}}
+            <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
+                <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
+                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                </plex-radio>
+                <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas"
+                             label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
+                </plex-select>
             </div>
-            <div *ngIf="!agenda.profesionales?.length" justify="center">Equipo de Salud no asignado</div>
+            <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
+                <label>Programa</label>
+                <div>{{modelo.obraSocial}}</div>
+            </div>
         </div>
-    </plex-layout-sidebar>
-</plex-layout>
+        <div class="row">
+            <div class="col">
+                <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono"
+                            (change)="cambioTelefono=true" name="telefono"></plex-phone>
+                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
+                           [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+            </div>
+            <div class="col">
+                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
+                           (change)="verificarNota()"></plex-text>
+            </div>
+        </div>
+        <div class="row" *ngIf="agenda && agenda.tipoPrestaciones.length > 1">
+            <div class="col">
+                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
+                             [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
+                             [required]="true">
+                </plex-select>
+            </div>
+        </div>
+    </span>
+    <ng-container *ngIf="!showPaciente && pacientesSearch">
+        <paciente-busqueda (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.scan)"
+                           (searchClear)="onSearchClear()" (selected)="onSelect($event)" [offset]="110">
+        </paciente-busqueda>
+    </ng-container>
+</form>

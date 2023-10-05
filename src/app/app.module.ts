@@ -101,6 +101,7 @@ import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/ma
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { AuditoriaAgendasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/auditoria-agendas.component';
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
@@ -112,7 +113,6 @@ import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/o
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
-import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
 import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
@@ -271,8 +271,8 @@ registerLocaleData(localeEs, 'es');
         MapsComponent,
         PlanificarAgendaComponent,
         BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        GestorAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
-        RevisionAgendaComponent, AgregarSobreturnoComponent, RevisionFueraAgendaComponent,
+        GestorAgendasComponent, AuditoriaAgendasComponent, TurnosComponent, ClonarAgendaComponent, ModalAgendaComponent,
+        RevisionAgendaComponent, RevisionFueraAgendaComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         PanelAgendaComponent,
         AgregarPacienteComponent,

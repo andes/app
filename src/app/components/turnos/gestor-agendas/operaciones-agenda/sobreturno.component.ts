@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
@@ -9,6 +9,7 @@ import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCach
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
+import { IAgenda } from 'src/app/interfaces/turnos/IAgenda';
 
 @Component({
     selector: 'sobreturno',
@@ -16,13 +17,16 @@ import { ObraSocialService } from './../../../../services/obraSocial.service';
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
+
+    @Input() agenda: IAgenda;
+    @Output() cerrarSobreturno = new EventEmitter<any>();
+
     public nota: any;
     public lenNota = 140;
     public changeCarpeta: boolean;
     public carpetaEfector: any;
     public _revision: any = localStorage.getItem('revision') ? true : false;
     public _agenda;
-    public agenda;
     public loading = false;
     public resultadoBusqueda: IPaciente[] = [];
     public paciente: IPaciente;
@@ -88,7 +92,16 @@ export class AgregarSobreturnoComponent implements OnInit {
                         });
                     }
                 });
-
+            } else {
+                this._agenda = this.agenda;
+                this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
+                this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+                if (this.agenda.tipoPrestaciones.length === 1) {
+                    this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                }
+                if (this.agenda.link) {
+                    this.turno_link = this.agenda.link;
+                }
             }
         });
 
@@ -323,7 +336,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.servicePaciente.patch(pacienteSave.id, cambios).subscribe(resultado => {
 
                     if (resultado) {
-                        this.plex.info('success', 'Se actualizó el numero de telefono');
+                        this.plex.toast('success', 'Se actualizó el numero de teléfono');
                     }
                 });
             }
@@ -374,9 +387,9 @@ export class AgregarSobreturnoComponent implements OnInit {
         if (this.volverVentanillaCitas) {
             this.router.navigate(['citas/punto-inicio']);
         } else if (this._revision) {
-            this.router.navigate(['citas/revision_agenda', this.agenda.id]);
+            this.cerrarSobreturno.emit();
         } else {
-            this.router.navigate(['citas/gestor_agendas']);
+            this.cerrarSobreturno.emit();
         }
     }
 }

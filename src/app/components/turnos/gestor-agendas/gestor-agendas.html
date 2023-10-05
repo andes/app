@@ -10,6 +10,8 @@
             <plex-button *ngIf="puedeRevisarAgendas" class="mr-1" type="info" label="Auditar fuera de agenda"
                          (click)="auditarFueraAgenda()">
             </plex-button>
+            <plex-button type="danger" label="Volver" (click)="volver()"></plex-button>
+
             <plex-button *ngIf="puedeCrearAgenda" type="success" label="Crear agenda" (click)="insertarAgenda()">
             </plex-button>
         </plex-title>
@@ -31,8 +33,9 @@
                 </plex-select>
                 <div collapse>
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                                 tmProfesionales name="profesionales" label="Equipo de Salud"
-                                 placeholder="Buscar un equipo de salud" ngModelOptions="{standalone: true}">
+                                 (getData)="loadProfesionales($event)" name="profesionales" label="Equipo de Salud"
+                                 placeholder="Buscar un equipo de salud" labelField="apellido+' '+nombre"
+                                 ngModelOptions="{standalone: true}">
                     </plex-select>
                     <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')"
                                  name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
@@ -140,16 +143,12 @@
                                  icon="pencil" type="warning" ariaLabel="Editar agenda" tooltip="Editar"
                                  tooltipPosition="top" (click)="editarAgenda(agenda)">
                     </plex-button>
-                    <plex-button class="ml-1" size="sm" *ngIf="botones.clonar  && !agenda.dinamica"
+                    <plex-button class="ml-1" size="sm" *ngIf="botones.clonar && !agenda.dinamica"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
                                  icon="content-copy" type="info" ariaLabel="Clonar agenda" tooltip="Clonar"
                                  tooltipPosition="top" (click)="clonar(agendasSeleccionadas[0])">
                     </plex-button>
-                    <plex-button class="ml-1" size="sm" *ngIf="botones.revision"
-                                 [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
-                                 icon="format-list-checks" type="info" ariaLabel="Revisión de agenda" tooltip="Revisión"
-                                 tooltipPosition="top" (click)="revisionAgenda(agenda)">
-                    </plex-button>
+
                     <plex-button class="ml-1" size="sm" *ngIf="botones.suspender"
                                  [disabled]="agendasSeleccionadas[0]?.id !== agenda.id || agendasSeleccionadas?.length>1"
                                  icon="stop" type="danger" ariaLabel="Suspender agenda" tooltip="Suspender"
@@ -248,9 +247,16 @@
             <!-- Panel Suspender Turno -->
             <div *ngIf="showSuspenderAgenda || showSuspendida">
                 <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)"
-                                  (cerrarSidebar)="volverAlGestor($event)">
+                                  (cerrarSidebar)="cerrarSidebarAgendas()">
                 </suspender-agenda>
             </div>
+
+            <!-- Panel Sobreturno -->
+            <ng-container *ngIf="showSobreturno">
+                <turnos [agenda]="agendasSeleccionadas[0]" (cerrarSidebar)="cerrarSidebarAgendas()"></turnos>
+                <sobreturno [agenda]="agenda" (cerrarSobreturno)="cerrarSobreturno()"></sobreturno>
+            </ng-container>
+
         </ng-container>
         <ng-container *ngIf="enableQueries">
             <app-bi-queries [queries]="queries">

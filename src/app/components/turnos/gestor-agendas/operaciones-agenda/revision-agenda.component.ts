@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -16,6 +16,7 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { Subscription } from 'rxjs';
 import { Unsubscribe } from '@andes/shared';
+import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 
 @Component({
     selector: 'revision-agenda',
@@ -24,14 +25,21 @@ import { Unsubscribe } from '@andes/shared';
 })
 
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
+
+    @Input() agenda: IAgenda;
+
+    @Output() returnSuspenderAgenda = new EventEmitter<any>();
+    @Output() cerrarSidebar = new EventEmitter<any>();
+
     private lastRequest: Subscription;
-    private _agenda: any;
-    private estadoPendienteAuditoria;
-    private estadoCodificado;
-    public agenda: any;
     public cantidadTurnosAsignados: number;
     public indiceReparo: any;
+    private indiceDiagnostico = -1;
+    public showCodificacion = false;
     public showReparo = false;
+    public showSobreturno = false;
+    public showAddPaciente = false;
+    public showModifAsistencia = false;
     public existeCodificacionProfesional: Boolean;
     public horaInicio: any;
     public turnoSeleccionado: any = null;
@@ -42,6 +50,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public diagnosticos = [];
     public showRegistrosTurno = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
+    public estadosAgenda = EstadosAgenda;
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
     public esAgendaOdonto = false;
@@ -50,8 +59,24 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     public resultadoBusqueda = null;
     public pacienteSelected = null;
     public loading = false;
-    public pacienteDetalle;
-    public prestacionAuditable;
+    public columns = [
+        { key: 'select', label: '' },
+        { key: 'primeraVez', label: 'Primera vez' },
+        { key: 'estado', label: 'Estado' },
+        { key: 'diagSnomed', label: 'Diagnóstico Snomed' },
+        { key: 'diagCie10', label: 'Diagnóstico CIE10' }
+    ];
+    public columnsOdo = [
+        { key: 'select', label: '' },
+        { key: 'primeraVez', label: 'Primera vez' },
+        { key: 'estado', label: 'Estado' },
+        { key: 'diagnostico', label: 'Diagnóstico' },
+        { key: 'diente', label: 'Diente' },
+        { key: 'caras', label: 'Caras' }
+    ];
+
+    openedDropDown = null;
+    itemsDropdown = [];
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -65,17 +90,10 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            if (params && params['idAgenda']) {
-                this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
-                    this._agenda = agenda;
-                    this.agenda = agenda;
-                    this.getCantidadTurnosAsignados();
-                    this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
-                });
-            }
-        });
+        this.getCantidadTurnosAsignados();
+        this.esAgendaOdonto = this.agenda.tipoPrestaciones[0].term.includes('odonto');
         localStorage.removeItem('revision');
+        localStorage.removeItem('verListaTurnos');
     }
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -83,6 +101,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             this.lastRequest.unsubscribe();
         }
     }
+
     private getCantidadTurnosAsignados() {
         // verificamos la cant. de turnos asignados que tiene la agenda
         let turnosAsignados = [];
@@ -102,6 +121,10 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.onSearchClear();
         this.showRegistrosTurno = false;
         this.pacientesSearch = true;
+    }
+
+    cerrarBuscarPaciente() {
+        this.pacientesSearch = false;
     }
 
     asignarPaciente(paciente) {
@@ -139,50 +162,49 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
         }
-        this.pacienteDetalle = null;
-        this.existeCodificacionProfesional = false;
-        this.diagnosticos = [];
-        this.paciente = null;
-        this.bloqueSeleccionado = bloque;
-        this.showReparo = false;
-        if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
-            this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
-        } else { // para el caso de sobreturno, que no tiene bloques.
-            this.turnoTipoPrestacion = turno.tipoPrestacion;
-        }
-        if (this.turnoSeleccionado === turno) {
+        if (this.turnoSeleccionado && this.turnoSeleccionado._id === turno._id) {
             this.turnoSeleccionado = null;
         } else {
+            this.existeCodificacionProfesional = false;
+            this.diagnosticos = [];
+            this.paciente = null;
+            this.bloqueSeleccionado = bloque;
+            this.showReparo = false;
+            this.showModifAsistencia = false;
+            if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
+                this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
+            } else { // para el caso de sobreturno, que no tiene bloques.
+                this.turnoTipoPrestacion = turno.tipoPrestacion;
+            }
             this.turnoSeleccionado = turno;
-            this.pacientesSearch = false;
             if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
-            }
-            if (turno.paciente && turno.paciente.id) {
-                this.pacienteDetalle = turno.paciente;
-                this.lastRequest = this.servicePaciente.getById(turno.paciente.id).subscribe(
-                    pacienteMongo => {
-                        this.pacienteDetalle = pacienteMongo;
-                        delete this.pacienteDetalle.cuil;
-                    });
             }
         }
     }
 
     seleccionarAsistencia(asistencia) {
-        if (this.turnoSeleccionado && this.turnoSeleccionado.asistencia) {
-            this.turnoSeleccionado.asistencia = asistencia.id;
+        if (this.turnoTipoPrestacion) {
+            if (this.turnoSeleccionado && asistencia) {
+                this.turnoSeleccionado.asistencia = asistencia.id;
+            }
+            this.onSave();
+            this.pacientesSearch = false;
+            this.showModifAsistencia = false;
+        } else {
+            this.plex.info('warning', 'Debe seleccionar un tipo de Prestacion');
         }
-        this.onSave();
     }
 
-    asistenciaSeleccionada(asistencia) {
-        return (this.turnoSeleccionado.asistencia && this.turnoSeleccionado.asistencia === asistencia.id);
+    indexSeleccionado(id: string) {
+        if (this.turnoSeleccionado) {
+            return this.turnoSeleccionado._id === id;
+        }
     }
 
     estaSeleccionado(turno: any) {
         this.showRegistrosTurno = true;
-        return (this.turnoSeleccionado === turno); // .indexOf(turno) >= 0;
+        return (this.turnoSeleccionado === turno);
     }
 
     /**
@@ -202,27 +224,74 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.onSave();
     }
 
-    borrarDiagnostico(index) {
-        if (!this.diagnosticos[index].codificacionProfesional || (this.diagnosticos[index].codificacionProfesional && this.diagnosticos[index].codificacionProfesional.snomed && !this.diagnosticos[index].codificacionProfesional.snomed.term)) {
-            this.diagnosticos.splice(index, 1);
+    seleccionarDiagnostico(index: number) {
+        if (this.indiceDiagnostico >= 0 && this.indiceDiagnostico === index) {
+            this.indiceDiagnostico = -1;
         } else {
-            this.diagnosticos[index].codificacionAuditoria = null;
+            this.indiceDiagnostico = index;
         }
-        if (index === 0) {
-            this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
-        }
-        this.onSave();
     }
 
-    aprobar(index) {
-        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
-        // En el caso que aprueben el primer diagnóstico, se aprueba el resto
-        if (index === 0) {
-            for (let j = 1; j < this.diagnosticos.length; j++) {
-                this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
+    diagnosticoSeleccionado(index: number) {
+        if (this.indiceDiagnostico >= 0) {
+            return this.indiceDiagnostico === index;
+        }
+    }
+
+    borrarDiagnostico() {
+        if (this.indiceDiagnostico >= 0) {
+            if (!this.diagnosticos[this.indiceDiagnostico].codificacionProfesional ||
+                (this.diagnosticos[this.indiceDiagnostico].codificacionProfesional &&
+                    this.diagnosticos[this.indiceDiagnostico].codificacionProfesional.snomed &&
+                    !this.diagnosticos[this.indiceDiagnostico].codificacionProfesional.snomed.term)) {
+                this.diagnosticos.splice(this.indiceDiagnostico, 1);
+            } else {
+                this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria = null;
+            }
+            if (this.indiceDiagnostico === 0) {
+                this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
+            }
+            this.onSave();
+            this.indiceDiagnostico = -1;
+        }
+    }
+
+    puedeAprobar() {
+        if (this.indiceDiagnostico >= 0) {
+            return ((this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.snomed?.codigo ||
+                this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.cie10?.codigo) &&
+                !this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria?.codigo);
+        }
+    }
+
+    puedeBorrar(tipo: string) {
+        if (this.indiceDiagnostico >= 0) {
+            if (tipo === 'd') {
+                return !(this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.snomed?.codigo ||
+                    this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.cie10?.codigo);
+            } else {
+                return ((this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.snomed?.codigo ||
+                    this.diagnosticos[this.indiceDiagnostico].codificacionProfesional?.cie10?.codigo) &&
+                    this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria?.codigo);
             }
         }
-        this.onSave();
+    }
+
+    puedeReparar() {
+        return this.puedeAprobar();
+    }
+
+    aprobar() {
+        if (this.indiceDiagnostico >= 0) {
+            this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria = this.diagnosticos[this.indiceDiagnostico].codificacionProfesional.cie10;
+            // En el caso que aprueben el primer diagnóstico, se aprueba el resto
+            if (this.indiceDiagnostico === 0) {
+                for (let j = 1; j < this.diagnosticos.length; j++) {
+                    this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
+                }
+            }
+            this.onSave();
+        }
     }
     /**
      * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
@@ -290,9 +359,13 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             }
         }
         if (patchear) {
-            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', label);
-            });
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => { });
+        }
+    }
+
+    modificarAsistencia() {
+        if (this.turnoSeleccionado) {
+            this.showModifAsistencia = true;
         }
     }
 
@@ -358,6 +431,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
+                this.plex.toast('success', 'El estado del turno fué actualizado');
                 this.cerrarAsistencia();
             });
         } else {
@@ -367,17 +441,35 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
 
     agregarSobreturno() {
         localStorage.setItem('revision', 'true');
-        this.router.navigate(['citas/sobreturnos', this.agenda._id]);
+        this.showSobreturno = true;
+    }
+
+    cerrarSobreturno() {
+        this.refresh();
+        this.showSobreturno = false;
+    }
+
+    codificar() {
+        this.showCodificacion = true;
+    }
+
+    cerrarCodificar() {
+        this.indiceDiagnostico = -1;
+        this.showCodificacion = false;
     }
 
     agregarPaciente() {
-        this.router.navigate(['citas/paciente', this.agenda._id]);
+        this.showAddPaciente = true;
+    }
+
+    cerrarPaciente() {
+        this.refresh();
+        this.showAddPaciente = false;
     }
 
     refresh() {
-        this.serviceAgenda.getById(this._agenda.id).subscribe(agenda => {
-            this._agenda = agenda;
-
+        this.serviceAgenda.getById(this.agenda.id).subscribe(_agenda => {
+            this.agenda = _agenda;
         }, err => {
             if (err) {
 
@@ -386,11 +478,11 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
 
     volver() {
-        this.router.navigate(['citas/gestor_agendas']);
+        this.router.navigate(['citas/auditoria_agendas']);
     }
 
-    mostrarReparo(index) {
-        this.indiceReparo = index;
+    mostrarReparo() {
+        this.indiceReparo = this.indiceDiagnostico;
         this.showReparo = true;
     }
     /**
@@ -401,14 +493,14 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
      */
     repararDiagnostico(reparo: any) {
         if (reparo) {
-            this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
+            this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
         this.onSave();
     }
 
-    borrarReparo(index) {
-        this.diagnosticos[index].codificacionAuditoria = null;
+    borrarReparo() {
+        this.diagnosticos[this.indiceDiagnostico].codificacionAuditoria = null;
         this.showReparo = false;
         this.onSave();
     }
@@ -446,7 +538,9 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.paciente = null;
     }
 
-    // ----------------------------------
+    cerrarSidebarRevision() {
+        this.cerrarSidebar.emit();
+    }
 
     // Componente paciente-listado
     @Unsubscribe()
@@ -461,16 +555,40 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 pacienteMongo => {
                     this.loading = false;
                     this.paciente = pacienteMongo;
-                    this.pacienteDetalle = pacienteMongo;
-                    delete this.pacienteDetalle.cuil;
                     this.showRegistrosTurno = true;
-                    this.pacientesSearch = false;
                 });
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
-
     }
-    // ----------------------------------
+
+    setDropDown(drop) {
+        if (this.openedDropDown) {
+            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        }
+        this.openedDropDown = drop;
+        this.itemsDropdown = [];
+        for (let i = 0; i < this.estadosAsistencia.length; i++) {
+            this.itemsDropdown[i] = {
+                label: this.estadosAsistencia[i].nombre,
+                handler: () => { this.seleccionarAsistencia(this.estadosAsistencia[i]); }
+            };
+        }
+    }
+
+    estadoAgenda(estado: String, dato: String) {
+        if (dato === 'n') {
+            return this.estadosAgendaArray.find(e => e.id === estado).nombre;
+        }
+        if (dato === 'c') {
+            return this.estadosAgendaArray.find(e => e.id === estado).class;
+        }
+    }
+
+    class(estado) {
+        if (estado !== 'turnoDoble') {
+            return 'hover';
+        }
+    }
 
 }

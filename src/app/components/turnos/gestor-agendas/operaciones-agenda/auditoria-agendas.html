@@ -1,0 +1,181 @@
+<plex-layout [main]="(agendasSeleccionadas?.length===1 || showAgregarNotaAgenda || prestacionSeleccionada)? 6:12"
+             foco="{{agendasSeleccionadas?.length > 0 && tabIndex===0 || prestacionSeleccionada && tabIndex===1 ? 'sidebar' : (isMobile()?'main':'')}}">
+    <plex-layout-main>
+        <plex-title titulo="Auditoria de Agendas" size="lg">
+            <plex-button type="danger" label="Volver" (click)="volver()"></plex-button>
+        </plex-title>
+        <plex-wrapper (change)="changeCollapse($event)">
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event, 'fechaDesde')"
+                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta" [required]="true">
+            </plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event, 'fechaHasta')"
+                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde" [required]="true">
+            </plex-datetime>
+            <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event, 'prestaciones')"
+                         tmPrestaciones="turnos:planificarAgenda:prestacion:?" ambito="ambulatorio" preload="true"
+                         name="prestaciones" label="Prestación" [multiple]="true">
+            </plex-select>
+            <plex-select *ngIf="tabIndex===0" [(ngModel)]="estado" (change)="refreshSelection($event, 'estado')"
+                         [data]="estadosAgendaArray" name="estado" label="Estado" ngModelOptions="{standalone: true}">
+            </plex-select>
+            <plex-select *ngIf="tabIndex===1" [(ngModel)]="estado" (change)="refreshSelection($event, 'estado')"
+                         [data]="estadosFueraAgendaArray" name="estado" label="Estado"
+                         ngModelOptions="{standalone: true}">
+            </plex-select>
+            <div collapse>
+                <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
+                             (getData)="loadProfesionales($event)" name="profesionales" label="Equipo de Salud"
+                             placeholder="Buscar un equipo de salud" labelField="apellido+' '+nombre"
+                             ngModelOptions="{standalone: true}">
+                </plex-select>
+            </div>
+        </plex-wrapper>
+
+        <plex-title *ngIf="agendas?.length" titulo="Listado" size="sm"></plex-title>
+
+        <plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+            <plex-tab label="Agendas">
+                <plex-table *ngIf="agendas?.length" [columns]="columns" #table="plTable" (scroll)="onScroll()"
+                            [offset]="collapse?300:225">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let agenda of agendas; let i=index" [class.selected]="indexSeleccionado(agenda) >= 0"
+                        [class.selectable]="selectable">
+                        <td *plTableCol="'seleccion'" (click)="verAgenda(agenda, false, $event)">
+                            <i *ngIf="indexSeleccionado(agenda) >= 0" class="adi adi-checkbox-marked"></i>
+                            <i *ngIf="!(indexSeleccionado(agenda) >= 0)" class="adi adi-checkbox-blank-outline"></i>
+                        </td>
+                        <td *plTableCol="'fecha'" (click)="verAgenda(agenda, false, $event)">
+                            <plex-label titulo="{{agenda.horaInicio | date: 'EEEE' | uppercase}}  {{agenda.horaInicio | fecha}}"
+                                        subtitulo="{{agenda.horaInicio |
+                                date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs">
+                            </plex-label>
+                        </td>
+                        <td *plTableCol="'tipoPrestacion'" (click)="verAgenda(agenda, false, $event)">
+                            <plex-label *ngIf="agenda.profesionales?.length" titulo="{{
+                                agenda.tipoPrestaciones | enumerar:['term']:'/' }}" subtitulo="{{ agenda.profesionales |
+                                enumerar:['apellido','nombre'] }}">
+                            </plex-label>
+                            <plex-label *ngIf="!agenda.profesionales?.length"
+                                        titulo="{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}"
+                                        subtitulo="Equipo de Salud no asignado">
+                            </plex-label>
+                        </td>
+                        <td *plTableCol="'espacioFisico'" (click)="verAgenda(agenda, false, $event)">
+                            <span *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda
+                                |
+                                espacioFisico}}</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre">Espacio
+                                físico no
+                                asignado</span>
+                        </td>
+                        <td *ngIf="agenda" (click)="verAgenda(agenda, false, $event)">
+                            <plex-badge class="ml-1" *ngIf="agenda.nota" size="sm" type="info" tooltip="Nota"
+                                        tooltipPosition="top">
+                                <plex-icon name="documento" type="info"></plex-icon>
+                            </plex-badge>
+                            <plex-badge class="ml-1" *ngIf="agenda.link" type="info" tooltip="Agenda Virtual"
+                                        tooltipPosition="top">
+                                <plex-icon name="monitor" size="md"></plex-icon>
+                            </plex-badge>
+                            <plex-badge class="ml-1" type="info" *ngIf="agenda.dinamica">Dinámica
+                            </plex-badge>
+                            <plex-badge class="ml-1" type="info" *ngIf="!agenda.nominalizada">No
+                                Nominalizada</plex-badge>
+                            <plex-badge class="ml-1" type="{{estadosAgenda[agenda.estado]?.class}}">
+                                {{estadosAgenda[agenda.estado]?.nombre}}
+                                <span class="btn-badge btn-badge-danger" dato
+                                      *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0"
+                                      tooltip="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar"
+                                      tooltipPosition="top">{{ turnosSuspendidos[i].count }}</span>
+                            </plex-badge>
+                            <plex-badge class="ml-1" type="warning" *ngIf="suspensionAvisada(agenda)">
+                                Solicitud de suspensión
+                            </plex-badge>
+                        </td>
+                    </tr>
+                </plex-table>
+            </plex-tab>
+
+            <plex-tab label="Fuera de Agenda">
+                <plex-table *ngIf="prestacionesFueraAgenda?.length" [columns]="columns2" #table="plTable"
+                            [offset]="collapse?252:179">
+                    <plex-table-columns>
+                    </plex-table-columns>
+                    <tr *ngFor="let prestacionFA of prestacionesFueraAgenda; let i=index"
+                        [class.selected]="fueraAgendaSeleccionada(prestacionFA)" [class.selectable]="selectable">
+                        <td *plTableCol="'seleccion'" (click)="seleccionarPrestacion(prestacionFA)">
+                            <i *ngIf="fueraAgendaSeleccionada(prestacionFA)" class="adi adi-checkbox-marked"></i>
+                            <i *ngIf="!fueraAgendaSeleccionada(prestacionFA)"
+                               class="hover adi adi-checkbox-blank-outline"></i>
+                        </td>
+                        <td *plTableCol="'fecha'" (click)="seleccionarPrestacion(prestacionFA)" class="hover">
+                            <plex-label
+                                        titulo="{{ prestacionFA.createdAt | date: 'EEEE' | uppercase}} {{ prestacionFA.createdAt | fecha }}">
+                            </plex-label>
+                        </td>
+                        <td *plTableCol="'paciente'" (click)="seleccionarPrestacion(prestacionFA)" class="hover">
+                            <plex-label titulo="{{ prestacionFA.paciente | nombre | uppercase }}">
+                            </plex-label>
+                            <span><small>{{ textDocumento(prestacionFA.paciente.documento) }}</small>
+                                <span *ngIf="registroProfesional(prestacionFA)" [ngClass]="{'text-success': true}"> |
+                                    Registrado por Profesional</span>
+                                <span *ngIf="auditado(prestacionFA)" [ngClass]="{'text-info': true}"> | Auditado</span>
+                            </span>
+                            <small>
+                                <span
+                                      *ngIf="prestacionFA?.paciente?.id && prestacionFA?.paciente?.carpetaEfectores?.length > 0">
+                                    <span *ngFor="let carpeta of prestacionFA.paciente.carpetaEfectores">
+                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion">
+                                            | Nro Carpeta {{carpeta.nroCarpeta}}
+                                        </span>
+                                    </span>
+                                </span>
+                            </small>
+                        </td>
+                        <td *plTableCol="'tipoPrestacion'" class="hover" (click)="seleccionarPrestacion(prestacionFA)">
+                            <plex-label titulo="{{ prestacionFA.prestacion ? prestacionFA.prestacion : 'no encontrado !' }}"
+                                        case="capitalizeFirst">
+                            </plex-label>
+                        </td>
+                    </tr>
+                </plex-table>
+            </plex-tab>
+
+        </plex-tabs>
+
+        <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+
+        <div *ngIf="!loader && tabIndex === 0 && (!agendas?.length)" justify="center" class="mt-5">
+            <plex-label *ngIf="!agendas?.length" class="flex-column" icon="calendar" size="xl" direction="column"
+                        titulo="No hay agendas que coincidan con los filtros de búsqueda">
+            </plex-label>
+        </div>
+
+        <div *ngIf="!loader && tabIndex === 1 && !prestacionesFueraAgenda?.length" justify="center" class="mt-5">
+            <plex-label class="flex-column" icon="calendar" size="xl" direction="column"
+                        titulo="No hay prestaciones que coincidan con los filtros de búsqueda">
+            </plex-label>
+        </div>
+
+    </plex-layout-main>
+
+    <plex-layout-sidebar type="invert">
+        <ng-container *ngIf="!enableQueries">
+
+            <div *ngIf="showRevisionAgenda && agendasSeleccionadas?.length == 1">
+                <revision-agenda [agenda]="agenda" (cerrarSidebar)="cerrarSideBar()">
+                </revision-agenda>
+            </div>
+
+            <div *ngIf="showRevisionFueraAgenda && prestacionSeleccionada">
+                <fuera-agenda [prestacionSeleccionada]="prestacionSeleccionada" [prestacion]="prestacion"
+                              (cerrar)="cerrarSideBar()">
+                </fuera-agenda>
+            </div>
+
+        </ng-container>
+
+    </plex-layout-sidebar>
+
+</plex-layout>
