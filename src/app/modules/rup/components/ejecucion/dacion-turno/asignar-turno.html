@@ -19,46 +19,13 @@
     <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
         ¡No se encontró ningún paciente!
     </div>
-    <fieldset>
-        <ng-container *ngIf="pacienteActivo">
-            <div class="row">
-                <div class="col-md">
-                    <label>Paciente </label>
-                    <span>{{pacienteActivo | nombre }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Documento: </label>
-                    <span>{{pacienteActivo.documento}}</span>
-                </div>
-                <div class="col-md-6">
-                    <label>Sexo: </label>
-                    <span>{{pacienteActivo.genero}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ng-container *ngIf="obraSocialPaciente">
-                        <label *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
-                            Social </label>
-                        <label
-                               *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
-                        </label>
-                        <div>{{obraSocialPaciente.financiador}}</div>
-                    </ng-container>
-                </div>
-            </div>
-        </ng-container>
-        <div class="row" *ngIf="prestaciones.length > 1">
-            <div class="col-md">
-                <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones"
-                             name="turnoTipoPrestacion" [required]="true"></plex-select>
-            </div>
-        </div>
-    </fieldset>
+    <div *ngIf="pacienteActivo">
+        <paciente-detalle [paciente]="pacienteActivo" [fields]="['documento', 'sexo', 'financiador']"
+                          orientacion="horizontal">
+        </paciente-detalle>
+    </div>
     <div class="row" *ngIf="pacienteActivo">
-        <div class="col-3">
+        <div class="col-6">
             <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true"
                            name="horaTurno" label="Hora Turno">
             </plex-datetime>
@@ -70,3 +37,34 @@
         </div>
     </div>
 </form>
+
+<plex-modal size="sm" #modalAsignarTurno [startOpen]="false" [allowEscClose]="true" [allowBackdropClose]="true">
+    <plex-icon name="help-circle" type="info"></plex-icon>
+    <plex-modal-subtitle class="font-title text-center" type="info" size="sm"><b>¿Desea agregar el paciente<br>a la agenda?</b></plex-modal-subtitle>
+    <main>
+        <section class="w-100 h-100">
+            <plex-title titulo="Datos de la agenda" size="sm"></plex-title>
+            <plex-grid size="md" type="full" cols="2">
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ horaTurno | date: 'EEEE' | uppercase }} {{horaTurno | date:
+                    'dd/MM/yyyy'}}" subtitulo="{{horaTurno | date: 'HH:mm'}} hs"
+                            icon="calendario-fecha-abajo">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ pacienteActivo | nombre }}"
+                            subtitulo="{{ pacienteActivo | documento }}" icon="account">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ turnoTipoPrestacion.nombre }}"
+                            subtitulo="Prestación" icon="mano-corazon">
+                </plex-label>
+                <plex-label size="sm" grow="full" case="capitalize" titulo="{{ getEquipoProfesional() }}"
+                            subtitulo="Equipo profesional" icon="paciente">
+                </plex-label>
+            </plex-grid>
+        </section>
+    </main>
+    <plex-button modal left type="danger" (click)="cerrar()">
+        Cancelar
+    </plex-button>
+    <plex-button modal right type="success" (click)="confirmar()">
+        Confirmar
+    </plex-button>
+</plex-modal>
