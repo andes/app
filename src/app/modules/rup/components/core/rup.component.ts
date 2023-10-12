@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex, PlexVisualizadorService } from '@andes/plex';
 import { calcularEdad } from '@andes/shared';
-import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, QueryList, Renderer2, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, QueryList, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Engine } from 'json-rules-engine';
@@ -25,13 +25,13 @@ import { AdjuntosService } from '../../services/adjuntos.service';
 import { RupEjecucionService } from '../../services/ejecucion.service';
 import { PlantillasService } from '../../services/plantillas.service';
 import { ElementosRUPRegister } from '../elementos';
+import { ConstantesService } from './../../../../services/constantes.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { ConstantesService } from './../../../../services/constantes.service';
 
 @Component({
     selector: 'rup',
@@ -125,7 +125,6 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
     // Constructor
     constructor(
         private elemento: ElementRef,
-        private renderer: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
         protected conceptObserverService: ConceptObserverService,

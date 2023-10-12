@@ -1,0 +1,72 @@
+@import '../../../../modules/rup/components/variables.scss';
+
+
+.rup-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .label-agendas {
+        flex-direction: column;
+        flex-grow: 0.5;
+        justify-content: center;
+        display: flex;
+    }
+}
+
+.table {
+    td {
+        border: none;
+    }
+
+    tr {
+        border-bottom: 1px solid;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:first-child {
+            th,
+            td {
+                border-top: none;
+            }
+        }
+    }
+}
+
+.info-agenda {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.icono-circulo {
+    border: solid 2px;
+    border-radius: 50%;
+    padding: 5px;
+    border-color: $informacion;
+    width: 40px;
+    display: flex;
+    height: 40px;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+
+.badge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.button-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.label-agenda {
+    margin-top: 25%;
+}

@@ -1,50 +1,49 @@
-<plex-layout main="8">
-    <plex-layout-main>
-        <plex-title main titulo="Crear Prestación">
-            <plex-button type="danger" label="Volver" (click)="volver()">
-            </plex-button>
-            <plex-button *ngIf="opcion === 'fueraAgenda'" label="INICIAR PRESTACIÓN" type="success"
-                         (click)="iniciarPrestacion()"
-                         [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada" class="ml-1">
-            </plex-button>
-            <plex-wrapper>
-                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora"
-                               grow="2" [max]="max">
-                </plex-datetime>
-                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                             label="Seleccione el tipo de prestación" labelField="term"
-                             tmPrestaciones="rup:tipoPrestacion:?" preload="true" [required]="true"
-                             (change)="seleccionarTipoPrestacion()" grow="2">
-                </plex-select>
-            </plex-wrapper>
-        </plex-title>
+<plex-title size="md" titulo="Crear Prestación">
+    <plex-button *ngIf="opcion === 'fueraAgenda'" label="INICIAR PRESTACIÓN" type="success" size="sm"
+                 (click)="iniciarPrestacion()"
+                 [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada">
+    </plex-button>
 
-        <ng-container class="form-group" *ngIf="mostrarPaciente">
-            <label for="paciente-buscar" class="form-control-label">Paciente</label>
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                             (searchClear)="onSearchClear()">
-            </paciente-buscar>
+    <plex-button type="danger" size="sm" icon="close" (click)="cancelar()" class="ml-1" tooltip="Cerrar">
+    </plex-button>
+    <plex-wrapper>
+        <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora" grow="2"
+                       [max]="max">
+        </plex-datetime>
+        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
+                     label="Seleccione el tipo de prestación" labelField="term" tmPrestaciones="rup:tipoPrestacion:?"
+                     preload="true" [required]="true" (change)="seleccionarTipoPrestacion()" grow="2">
+        </plex-select>
+    </plex-wrapper>
+</plex-title>
 
-            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [offset]="110"
-                              [pacientes]="resultadoBusqueda" (selected)="onSelect($event)">
-            </paciente-listado>
+<ng-container class="form-group" *ngIf="mostrarPaciente">
+    <label for="paciente-buscar" class="form-control-label">Paciente</label>
+    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()">
+    </paciente-buscar>
 
-            <div *ngIf="!loading && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-danger">
-                <plex-icon name="account-alert"></plex-icon> No se encontró ningún paciente..
-            </div>
-            <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
-        </ng-container>
-    </plex-layout-main>
-    <plex-layout-sidebar type="invert">
-        <ng-container *ngIf="paciente && paciente.id">
-            <plex-title titulo="Datos del Paciente" size="md"></plex-title>
-            <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
-            </paciente-detalle>
-            <!-- Lista de Agendas para dar turnos autocitados -->
-            <autocitar-turno *ngIf="opcion==='autocitar' && showAutocitar && paciente" class="autocitar-turno"
-                             (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
-                             [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar">
-            </autocitar-turno>
-        </ng-container>
-    </plex-layout-sidebar>
-</plex-layout>
+    <paciente-listado *ngIf="!paciente && resultadoBusqueda?.length" [offset]="110" [pacientes]="resultadoBusqueda"
+                      (selected)="onSelect($event)">
+    </paciente-listado>
+
+    <div *ngIf="!loading && resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-danger">
+        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+    </div>
+    <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+</ng-container>
+
+<ng-container *ngIf="paciente?.id">
+    <plex-title titulo="Datos del Paciente" size="md"></plex-title>
+    <paciente-detalle [paciente]="paciente" reload="true" orientacion="horizontal" [fields]="pacienteFields">
+    </paciente-detalle>
+    <!-- Lista de Agendas para dar turnos autocitados -->
+    <autocitar-turno *ngIf="opcion==='autocitar' && showAutocitar && paciente" class="autocitar-turno"
+                     (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente" [agendasAutocitar]="agendasAutocitar"
+                     [prestacionAutocitar]="prestacionAutocitar">
+    </autocitar-turno>
+</ng-container>
+<div class="label-paciente" *ngIf="!paciente && !resultadoBusqueda">
+    <plex-label icon="magnify" type="info" size="xl" direction="column" titulo='Buscá y seleccioná un paciente'
+                subtitulo='Podrás ver detalles del registro'>
+    </plex-label>
+</div>

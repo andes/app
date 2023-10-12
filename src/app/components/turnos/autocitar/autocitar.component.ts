@@ -1,13 +1,14 @@
-import { Component, Input, EventEmitter, ViewChild, Output, OnInit, HostBinding } from '@angular/core';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { TurnoService } from '../../../services/turnos/turno.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
-import { TurnoService } from '../../../services/turnos/turno.service';
-import { IObraSocial } from '../../../interfaces/IObraSocial';
-import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'autocitar-turno',
@@ -121,9 +122,16 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
             tipoTurno: 'profesional',
         };
 
-        this.servicioTurno.save(datosTurnoNuevo).subscribe(() => {
-            this.cancelarEmitter.emit(true);
-            this.plex.toast('success', 'El turno autocitado se guardo correctamente');
+        this.servicioTurno.save(datosTurnoNuevo).pipe(
+            catchError(() => {
+                this.cerrarModal();
+                return of(null);
+            })
+        ).subscribe((confirmacion) => {
+            if (confirmacion) {
+                this.plex.toast('success', 'El turno autocitado se guardo correctamente');
+                this.cancelarEmitter.emit(true);
+            }
         });
     }
 

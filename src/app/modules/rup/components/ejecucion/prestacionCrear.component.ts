@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { concat, forkJoin } from 'rxjs';
@@ -15,14 +15,11 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
+    selector: 'prestacion-crear',
     templateUrl: 'prestacionCrear.html',
-    styles: [`
-        .autocitar-turno {
-            height: calc(100% - 302px);
-        }
-    `]
+    styleUrls: ['prestacionCrear.scss']
 })
-export class PrestacionCrearComponent implements OnInit {
+export class PrestacionCrearComponent implements OnInit, OnChanges {
     pacienteFields = ['sexo', 'financiador', 'lugarNacimiento'];
     prestacionAutocitar: any;
     showAutocitar = false;
@@ -30,7 +27,10 @@ export class PrestacionCrearComponent implements OnInit {
     solicitudPrestacion: any;
     solicitudTurno: any;
     agendasAutocitacion: IAgenda[];
-    opcion: any;
+
+    @Input() opcion: string;
+
+    @Output() mostrar = new EventEmitter();
 
     // Fecha seleccionada
     public fecha: Date = new Date();
@@ -56,7 +56,6 @@ export class PrestacionCrearComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
-        private location: Location,
         private osService: ObraSocialCacheService,
         private pacienteService: PacienteService,
         private hudsService: HUDSService
@@ -64,10 +63,6 @@ export class PrestacionCrearComponent implements OnInit {
 
     ngOnInit() {
         this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
-
-        this.route.params.subscribe(params => {
-            this.opcion = params['opcion'];
-        });
 
         this.plex.updateTitle([{
             route: '/',
@@ -80,11 +75,21 @@ export class PrestacionCrearComponent implements OnInit {
         }]);
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['opcion']) {
+            this.fecha = moment().toDate();
+            this.max = moment().toDate();
+            this.resultadoBusqueda = null;
+            this.paciente = null;
+            this.tipoPrestacionSeleccionada = null;
+        }
+    }
 
     cancelarAutocitar() {
         this.showAutocitar = false;
         this.paciente = null;
-        this.onReturn();
+        this.tipoPrestacionSeleccionada = null;
+        this.cancelar();
     }
 
     seleccionarTipoPrestacion() {
@@ -92,11 +97,8 @@ export class PrestacionCrearComponent implements OnInit {
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
-    /**
-     * Vuelve a la página anterior
-     */
-    volver() {
-        this.location.back();
+    cancelar() {
+        this.mostrar.emit();
     }
 
     existePaciente(): void {
@@ -304,9 +306,6 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    onReturn() {
-        this.router.navigate(['/rup']);
-    }
 
     irResumen(id) {
         this.router.navigate(['rup/validacion/', id]);

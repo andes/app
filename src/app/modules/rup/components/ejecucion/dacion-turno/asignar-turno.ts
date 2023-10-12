@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
@@ -14,6 +14,7 @@ import { EMPTY } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -37,6 +38,7 @@ export class RupAsignarTurnoComponent implements OnInit {
     @Input() agenda: IAgenda;
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('modalAsignarTurno', { static: true }) modal: PlexModalComponent;
 
     constructor(
         public serviceTurno: TurnoService,
@@ -162,45 +164,58 @@ export class RupAsignarTurnoComponent implements OnInit {
         }
     }
 
+    confirmar() {
+        const paciente = this.datosTurno.paciente;
+        let fechaTurno;
+
+        const datosConfirma = {
+            nota: '',
+            motivoConsulta: '',
+            tipoPrestacion: this.datosTurno.tipoPrestacion,
+            idAgenda: this.agenda.id,
+            paciente,
+        };
+        // guardamos el turno
+        this.serviceTurno.saveDinamica(datosConfirma).pipe(
+            map(turnoDado => {
+                fechaTurno = turnoDado.horaInicio;
+                return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
+            }), switchMap(idturnoDado => {
+                if (idturnoDado) {
+                    return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
+                        this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                    })
+                    );
+                } else {
+                    this.plex.info('danger', 'No fue posible crear la prestación');
+                    return EMPTY;
+                }
+            })
+        ).subscribe();
+    }
+
+    cerrar() {
+        this.modal.close();
+    }
+
+    getEquipoProfesional() {
+        let equipo = '';
+        this.agenda?.profesionales?.forEach((profesional) => {
+            equipo += `${profesional.nombre} ${profesional.apellido}, `;
+        });
+
+        return equipo === '' ? '-' : equipo.slice(0, -2);
+    }
 
     /**
     * Guarda el turno en la agenda y crea la prestación
     */
     guardarDatosTurno() {
-        const paciente = this.datosTurno.paciente;
         if (this.agenda.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + (paciente.alias || paciente.nombre) +
-                '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                let fechaTurno;
-                if (confirmacion) {
-                    const datosConfirma = {
-                        nota: '',
-                        motivoConsulta: '',
-                        tipoPrestacion: this.datosTurno.tipoPrestacion,
-                        paciente: paciente,
-                        idAgenda: this.agenda.id
-                    };
-                    // guardamos el turno
-                    this.serviceTurno.saveDinamica(datosConfirma).pipe(
-                        map(turnoDado => {
-                            fechaTurno = turnoDado.horaInicio;
-                            return turnoDado?.paciente?.id === paciente.id ? turnoDado.id : null;
-                        }), switchMap(idturnoDado => {
-                            if (idturnoDado) {
-                                return this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', this.servicioPrestacion.getFechaPrestacionTurnoDinamico(fechaTurno), idturnoDado).pipe(tap(prestacion => {
-                                    this.router.navigate(['rup/ejecucion/', prestacion.id]);
-                                })
-                                );
-                            } else {
-                                this.plex.info('danger', 'No fue posible crear la prestación');
-                                return EMPTY;
-                            }
-                        })
-                    ).subscribe();
-                }
-
-            });
+            this.modal.show();
         } else {
+            const paciente = this.datosTurno.paciente;
+
             if (!this.horaTurno) {
                 return this.plex.info('warning', 'Debe seleccionar hora del sobreturno');
             }
@@ -227,8 +242,9 @@ export class RupAsignarTurnoComponent implements OnInit {
                     this.plex.info('danger', 'No fue posible crear la prestación');
                 }
             });
+
+            this.guardado = true;
         }
-        this.guardado = true;
     }
 
     combinarFechas(fecha1, fecha2) {

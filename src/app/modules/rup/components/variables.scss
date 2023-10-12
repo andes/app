@@ -18,11 +18,13 @@ $calificador: #660520;
 $laboratorio: #a0a0a0;
 $registro: #8bc43f; // elemento de registro
 $vacuna: #11910D;
-$dominiosNac: #11312D ;
+$dominiosNac: #11312D;
+$informacion: #00A8E0;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 
-$rup_colors: (problema: $problema,
+$rup_colors: (
+    problema: $problema,
     calificador: $calificador,
     laboratorio: $laboratorio,
     trastorno: $trastorno,
@@ -43,7 +45,9 @@ $rup_colors: (problema: $problema,
     'estructura.corporal': $registro,
     invert: $invert,
     todos: $todos,
-    otro: $otro);
+    informacion: $informacion,
+    otro: $otro
+);
 
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
 .badge-validada,

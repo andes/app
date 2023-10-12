@@ -1,6 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cacheStorage, Unsubscribe } from '@andes/shared';
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -21,7 +22,10 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-puntoInicio',
-    templateUrl: 'puntoInicio.html'
+    templateUrl: 'puntoInicio.html',
+    styleUrls: [
+        'puntoInicio.scss',
+    ],
 })
 export class PuntoInicioComponent implements OnInit, OnDestroy {
     public solicitudes = [];
@@ -59,6 +63,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     public llamandoTurno = false;
     public volverALlamar = false;
+    public verFueraAgenda = false;
+    public tipoPrestacion;
 
     // FILTROS
     private agendasOriginales: any = [];
@@ -83,8 +89,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public tieneAccesoHUDS: Boolean;
     public matchPaciente: Boolean = true;
     public prestacionesValidacion = this.auth.getPermissions('rup:validacion:?');
-
     public permisoServicioIntermedio = this.auth.getPermissions('rup:servicio-intermedio:?');
+    public showSidebar = false;
+
+    prestacionPendiente: IPrestacion;
+    turno: ITurno;
 
     constructor(
         private router: Router,
@@ -98,7 +107,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public servicioTurnero: TurneroService,
         public ws: WebSocketService,
         private conceptosTurneablesService: ConceptosTurneablesService,
-        private servicioIntermedioService: ServicioIntermedioService
+        private servicioIntermedioService: ServicioIntermedioService,
+        private location: Location,
     ) { }
 
     ngOnDestroy() {
@@ -107,7 +117,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
@@ -148,6 +157,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
+    }
+
+    toogleSidebar(value: boolean) {
+        this.showSidebar = value;
+        this.tipoPrestacion = null;
+        this.verFueraAgenda = false;
+    }
+
+    actualizareleccionada(id: number) {
+        this.agendaSeleccionada = this.agendas.find(agenda => agenda.id === id);
     }
 
     /**
@@ -191,7 +210,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             if (this.agendas.length) {
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
-                this.agendas.forEach(agenda => this.cargarPrestacionesTurnos(agenda));
+                this.agendas.forEach(agenda => {
+                    this.cargarPrestacionesTurnos(agenda);
+                    this.getCantidadPacientes(agenda);
+                });
 
             }
 
@@ -216,6 +238,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
             if (this.agendas.length) {
                 this.cargarTurnos(this.agendas[0]);
+                this.actualizareleccionada(this.agendaSeleccionada?.id);
             }
 
             this.servicioIntermedioListado = this.servicioIntermedioItems.reduce((acc, curr) => {
@@ -254,7 +277,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.stopAgendaRefresh();
         this.cancelarDacionTurno();
         // filtrar solo por las prestaciones que el profesional tenga disponibles
-        this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
         // this.agendas = this.agendasOriginales;
         this.fueraDeAgenda = this.prestacionesOriginales;
@@ -276,7 +298,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                 for (let indexAgenda = 0; indexAgenda < agendasLength; indexAgenda++) {
 
-                    const lengthBloques = this.agendas[indexAgenda].bloques.length;
+                    const lengthBloques = this.agendas[indexAgenda]?.bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
                         const _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
@@ -304,16 +326,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
             const search = this.paciente.toLowerCase();
 
+            const filtroAgendas = [];
             // buscamos el paciente en los turnos de la agenda
             const agendasLength = this.agendas.length;
             if (agendasLength) {
 
                 for (let indexAgenda = 0; indexAgenda < agendasLength; indexAgenda++) {
 
-                    const lengthBloques = this.agendas[indexAgenda].bloques.length;
+                    const lengthBloques = this.agendas[indexAgenda]?.bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
+                        const _turnos = [...this.agendas[indexAgenda].bloques[indexBloque].turnos, ...this.agendas[indexAgenda]?.sobreturnos];
 
-                        const _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
+                        const _filtros = _turnos.filter(t => {
                             let nombreCompleto = '';
                             if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
@@ -329,11 +353,17 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                             );
                         });
 
-                        this.matchPaciente = this.matchPaciente || _turnos.length;
+                        this.matchPaciente = this.matchPaciente || _filtros.length > 0;
 
-                        this.agendas[indexAgenda].bloques[indexBloque].turnos = _turnos;
+                        if (_filtros.length) {
+                            filtroAgendas.push(this.agendas[indexAgenda]);
+                        }
+
+                        this.agendas[indexAgenda].bloques[indexBloque].turnos = _filtros;
                     }
                 }
+
+                this.agendas = filtroAgendas;
             }
 
             // buscamos el paciente en los turnos fuera de agenda
@@ -361,13 +391,26 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * Navega para crear una nueva prestación
      */
     crearPrestacion(opcion: string): void {
-        this.router.navigate(['/rup/crear', opcion]);
+        this.showSidebar = true;
+        this.tipoPrestacion = opcion;
+        this.verFueraAgenda = true;
     }
+
+    ocultarCrearPrestacion() {
+        this.showSidebar = this.agendas.length > 0;
+        this.tipoPrestacion = null;
+        this.verFueraAgenda = false;
+    }
+
     /**
     * Navega para ver seleccionar un paciente y ver la huds
     */
     verHuds() {
         this.router.navigate(['/huds']);
+    }
+
+    volver() {
+        this.location.back();
     }
 
     cargarSolicitudes() {
@@ -387,9 +430,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     irASolicitudes() {
         this.router.navigate(['/solicitudes/asignadas']);
     }
-
-    prestacionPendiente: IPrestacion;
-    turno: ITurno;
 
     iniciarPrestacion(turno) {
         const paciente = turno.paciente;
@@ -477,7 +517,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
-    invalidarPrestacion(prestacion, idTurno) {
+    invalidarPrestacion(prestacion) {
         this.plex.confirm('¿Está seguro que desea invalidar esta prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.invalidarPrestacion(prestacion).subscribe(() => this.actualizar());
@@ -491,7 +531,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             '¿Está seguro que desea revertir los cambios?';
 
         this.plex.confirm(msg).then(confirmacion =>
-            confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(this.actualizar.bind(this)) : false
+            confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(() => {
+                this.actualizar();
+            }) : false
         );
     }
 
@@ -525,7 +567,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         const lengthBloques = agenda.bloques.length;
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
-            const _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
+            agenda.bloques[indexBloque].turnos.filter(t => {
                 total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
         }
@@ -533,6 +575,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             total = total + agenda.sobreturnos.length;
         }
 
+        agenda['cantidadPacientes'] = total;
 
         return total;
     }
@@ -563,12 +606,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return miPrestacion || permisoValidar;
     }
 
+    selectAgenda(agenda: any) {
+        this.agendaSeleccionada = agenda;
+    }
+
     cargarTurnos(agenda, servicio = null) {
         this.reloadPuedeDarSobreturno(agenda);
         this.turno = null;
         this.prestacionPendiente = null;
         this.cancelarDacionTurno();
-        this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
         this.intervalAgendaRefresh();
         if (agenda === 'servicio-intermedio') {
             this.servicioSelected = servicio;
@@ -606,6 +652,14 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             ambitoOrigen: 'ambulatorio',
             tipoPrestaciones: this.cargarTiposPrestacion()
         });
+    }
+
+    getDuracionAgenda(agenda) {
+        const inicio = moment(agenda.horaInicio);
+        const fin = moment(agenda.horaFin);
+        const duracion = moment.duration(inicio.diff(fin));
+
+        return -duracion.hours() + ' hs. ' + -duracion.minutes() + ' min.';
     }
 
     cargarTiposPrestacion() {
