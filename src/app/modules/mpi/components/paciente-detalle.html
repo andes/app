@@ -27,6 +27,9 @@
             <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">
                 {{ paciente.numeroIdentificacion }}
             </plex-copy>
+            <plex-button *ngIf="puedeEditar" type="warning" icon="pencil" tooltip="Editar paciente" size="sm"
+                         (click)="editar()">
+            </plex-button>
             <ng-container *ngIf="!this.paciente.numeroIdentificacion && !this.paciente.documento">
 
                 <div *ngIf="showDatosTutor()" justify="center">
@@ -93,6 +96,7 @@
         <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto"
                     [direction]="orientacion === 'vertical' ? 'column' : 'row'">
         </plex-label>
+
     </plex-detail>
 
     <!-- Se muestran las notas destacadas de un paciente -->

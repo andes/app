@@ -22,7 +22,6 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 
-
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
@@ -84,7 +83,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public scopePrivacy = [];
     public registrosHUDS = [];
     public tieneAccesoHUDS: Boolean;
-
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
 
@@ -110,9 +108,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
         public ps: PlantillasService,
-        public ejecucionService: RupEjecucionService
-    ) {
-    }
+        public ejecucionService: RupEjecucionService,
+    ) { }
 
     /**
      * Inicializamos prestacion a traves del id que viene como parametro de la url
@@ -143,7 +140,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         });
 
         this.servicioPrestacion.clearRefSetData();
-
 
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
