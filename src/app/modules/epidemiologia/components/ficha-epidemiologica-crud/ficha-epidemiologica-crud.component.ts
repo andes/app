@@ -73,15 +73,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         { id: 'controlAlta', nombre: 'Control de alta' },
         { id: 'casoAsintomatico', nombre: 'Caso asintomático estudiado en situaciones especiales' }
     ];
-    public tipoBusqueda = [
-        { id: 'activa', nombre: 'Activa' },
-        { id: 'demandaEspontanea', nombre: 'Demanda espontanea' },
-    ];
     public segundaClasificacion = [
         { id: 'autotest', nombre: 'Autotest' },
-        { id: 'antigeno', nombre: 'Antígeno' },
+        { id: 'antigeno', nombre: 'Antígeno COVID-19' },
         { id: 'pcr', nombre: 'PCR-RT' },
-        { id: 'lamp', nombre: 'LAMP (NeoKit)' }
+        { id: 'lamp', nombre: 'LAMP COVID-19 (Neokit)' },
+        { id: 'ifi', nombre: 'IFI' },
     ];
     public tipoMuestra = [
         { id: 'aspirado', nombre: 'Aspirado' },
@@ -426,18 +423,19 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                 const clasificaciones = {
                     segundaclasificacion: this.checkConfirmados(seccion.fields['segundaclasificacion']),
                     antigeno: seccion.fields['antigeno']?.id,
+                    ifi: seccion.fields['ifi']?.id,
                     pcrM: seccion.fields['pcrM'] ? 'muestra' : '',
                     pcr: seccion.fields['pcr']?.id,
                     lamp: seccion.fields['lamp']?.id
                 };
                 if (this.checkConfirmados(seccion.fields['segundaclasificacion']) === 'confirmado') {
-                    this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
+                    this.clearDependencias({ value: false }, seccion.id, ['tipomuestra', 'fechamuestra', 'antigeno', 'ifi', 'lamp', 'pcrM', 'pcr', 'identificadorpcr']);
                 } else {
                     if (!seccion.fields['fechamuestra']) {
                         seccion.fields['fechamuestra'] = new Date();
                     }
                 }
-                if (clasificaciones.antigeno === 'confirmado') {
+                if (clasificaciones.antigeno === 'confirmado' || clasificaciones.ifi === 'confirmado') {
                     seccion.fields['lamp'] = null;
                 }
                 if (!this.asintomatico) {
@@ -449,10 +447,10 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                             seccion.fields['clasificacionfinal'] = 'Descartado';
                             break;
                         case 'muestra':
-                            seccion.fields['clasificacionfinal'] = clasificaciones.antigeno === 'confirmado' ? 'Confirmado' : 'Sospechoso';
+                            seccion.fields['clasificacionfinal'] = (clasificaciones.antigeno === 'confirmado' || clasificaciones.ifi === 'confirmado') ? 'Confirmado' : 'Sospechoso';
                             break;
                         default:
-                            if (!clasificaciones.antigeno && !clasificaciones.pcr && !clasificaciones.lamp) {
+                            if (!clasificaciones.antigeno && !clasificaciones.ifi && !clasificaciones.pcr && !clasificaciones.lamp) {
                                 seccion.fields['clasificacionfinal'] = '';
                             }
                             break;
@@ -707,5 +705,19 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
         } else {
             return field?.id;
         }
+    }
+
+    condicionAntigeno(field, seccion) {
+        return field.key === 'antigeno' && this.checkConfirmados(seccion.fields['segundaclasificacion']) !== 'confirmado'
+            && seccion.fields['segundaclasificacion']?.id !== 'lamp' && seccion.fields['segundaclasificacion']?.id !== 'pcr' && seccion.fields['segundaclasificacion']?.id !== 'ifi';
+    }
+    condicionIFI(field, seccion) {
+        return field.key === 'ifi' && this.checkConfirmados(seccion.fields['segundaclasificacion']) !== 'confirmado'
+            && seccion.fields['segundaclasificacion']?.id !== 'lamp' && seccion.fields['segundaclasificacion']?.id !== 'pcr' && seccion.fields['segundaclasificacion']?.id !== 'antigeno';
+
+    }
+    condicionLamp(field, seccion) {
+        return field.key === 'lamp' && this.checkConfirmados(seccion.fields['segundaclasificacion']) !== 'confirmado'
+            && seccion.fields['antigeno']?.id !== 'confirmado' && seccion.fields['ifi']?.id !== 'confirmado' && seccion.fields['segundaclasificacion']?.id !== 'pcr';
     }
 }
