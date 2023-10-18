@@ -129,4 +129,10 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
+    cancelar() {
+        this.mapaCamasService.selectResumen(null);
+        this.mapaCamasService.selectPrestacion(null);
+        this.idInternacionSelected = null;
+    }
+
 }
