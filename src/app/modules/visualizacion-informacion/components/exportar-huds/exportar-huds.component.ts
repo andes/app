@@ -9,7 +9,7 @@ import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/hud
 
 @Component({
     selector: 'app-exportar-huds',
-    templateUrl: './exportar-huds.component.html'
+    templateUrl: './exportar-huds.component.html',
 })
 
 export class ExportarHudsComponent implements OnInit {
@@ -25,6 +25,8 @@ export class ExportarHudsComponent implements OnInit {
     public completed = [];
     public pending = [];
     public turnosPrestaciones = false;
+    public excluirVacunas;
+    public excluirLaboratorio;
 
 
     constructor(
@@ -85,13 +87,19 @@ export class ExportarHudsComponent implements OnInit {
     }
 
     exportar() {
+        const excluye = [];
+
+        if (this.excluirLaboratorio) { excluye.push('4241000179101'); }
+        if (this.excluirVacunas) { excluye.push('33879002'); }
+
         const params = {
             pacienteId: this.pacienteSelected.id,
             pacienteNombre: this.pacienteSelected.nombreCompleto,
             tipoPrestacion: this.prestacion ? this.prestacion.conceptId : null,
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
-            hudsCompleta: this.hudsCompleta
+            hudsCompleta: this.hudsCompleta,
+            excluye
         };
         this.exportHudsService.peticionHuds(params).subscribe((res) => {
             if (res) {
@@ -106,5 +114,10 @@ export class ExportarHudsComponent implements OnInit {
         this.exportHudsService.pendientes({ id: this.auth.usuario.id }).subscribe((data) => {
             this.exportHudsService.hud$.next(data);
         });
+    }
+
+    cambiarHudsCompleta() {
+        this.excluirLaboratorio = false;
+        this.excluirVacunas = false;
     }
 }

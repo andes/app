@@ -36,15 +36,23 @@
                     </plex-button>
                 </plex-title>
                 <plex-wrapper>
-                    <plex-datetime grow="auto" label="Desde" name="fechaDesde" [(ngModel)]="fechaDesde"
-                                   [disabled]="hudsCompleta" required>
-                    </plex-datetime>
-                    <plex-datetime grow="auto" label="Hasta" name="fechaHasta" [(ngModel)]="fechaHasta"
-                                   [disabled]="hudsCompleta" required>
-                    </plex-datetime>
-                    <plex-bool grow="auto" name="hudsCompleta" [(ngModel)]="hudsCompleta" label="HUDS Completa"
-                               type="slide">
-                    </plex-bool>
+                    <div class="d-flex align-items-end" grow="full">
+                        <plex-datetime grow="auto" label="Desde" name="fechaDesde" [(ngModel)]="fechaDesde"
+                                       [disabled]="hudsCompleta" required>
+                        </plex-datetime>
+                        <plex-datetime grow="auto" label="Hasta" name="fechaHasta" [(ngModel)]="fechaHasta"
+                                       [disabled]="hudsCompleta" required>
+                        </plex-datetime>
+                        <plex-bool grow="auto" name="hudsCompleta" [(ngModel)]="hudsCompleta" label="HUDS Completa"
+                                   type="slide" (change)="cambiarHudsCompleta()">
+                        </plex-bool>
+                    </div>
+                    <div class="d-flex mt-3 {{ hudsCompleta ? 'disabled': '' }}">
+                        <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirVacunas" label="Excluir vacunas">
+                        </plex-bool>
+                        <plex-bool type="checkbox" name="alergia" [(ngModel)]="excluirLaboratorio" label="Excluir Laboratorios">
+                        </plex-bool>
+                    </div>
                     <plex-select grow="full" label="Prestaciones" name="prestacion" idField="conceptId"
                                  [(ngModel)]="prestacion" tmPrestaciones [preload]="true">
                     </plex-select>
