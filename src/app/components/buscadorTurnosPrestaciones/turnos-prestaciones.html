@@ -92,7 +92,8 @@
             </plex-title>
             <ng-container *ngIf="selectPrestaciones$ | async as selectPrestaciones">
                 <cdk-virtual-scroll-viewport [itemSize]="50">
-                    <table *ngIf="(busqueda$ | async)?.length" class="table table-striped table-sm">
+                    <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+                    <table *ngIf="(busqueda$ | async)?.length && !loader" class="table table-striped table-sm">
                         <thead>
                             <th class="selected">
                                 <plex-bool name="all" (change)="selectAll($event)" [ngModel]="state.selectAll">
@@ -190,7 +191,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div *ngIf="!(busqueda$ | async)?.length" justify="center" class="mt-5">
+                    <div *ngIf="!loader && !(busqueda$ | async)?.length  " justify="center" class="mt-5">
                         <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
                                     [titulo]="'No hay resultados'"
                                     subtitulo="Complete los filtros deseados y presione Buscar">

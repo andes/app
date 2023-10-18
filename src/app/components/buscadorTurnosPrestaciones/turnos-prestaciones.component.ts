@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { ITurnosPrestaciones } from './interfaces/turnos-prestaciones.interface';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -60,6 +61,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showHint = false;
     public prestacionIniciada;
     public showListaPrepagas: Boolean = false;
+    public loader: Boolean = false;
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -158,8 +160,16 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
+            tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
+            takeUntil(this.onDestroy$),
             cache()
         );
+
+        this.turnosPrestacionesService.loading$.pipe(
+            takeUntil(this.onDestroy$)
+        ).subscribe((loading) => {
+            this.loader = loading; // Actualizar el estado del loader
+        });
 
         combineLatest([
             this.accion$,
@@ -190,9 +200,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             }),
         ).subscribe();
 
-        this.state$ = combineLatest(
+        this.state$ = combineLatest([
             this.selectPrestaciones$,
-            this.busqueda$
+            this.busqueda$]
         ).pipe(
             map(([selected, items]) => {
                 return {
@@ -310,7 +320,20 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.modelo.prepaga = null;
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
+
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => this.paciente = paciente);
+
+
+        const paramsToken = {
+            usuario: this.auth.usuario,
+            organizacion: this.auth.organizacion,
+            paciente: datos.paciente,
+            motivo: 'auditoria',
+            profesional: this.auth.profesional ? this.auth.profesional : null,
+            idTurno: datos.turno ? datos.turno.id : null,
+            idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
+        };
+        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
             const aux: any = this.lastSelect$;
@@ -327,9 +350,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         if (datos.financiador) {
             this.modelo.prepaga = '';
         };
-        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
-            this.paciente = paciente;;
-        });
+
+
     }
 
     recupero() {
@@ -437,26 +459,26 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     cargarObraSocial(datos) {
         if ((datos.idPrestacion)) {
             this.obraSocialPaciente = [];
-            this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
-                if (resultado.length) {
-                    this.obraSocialPaciente = resultado.map((os: any) => {
-                        const osPaciente = {
-                            'id': os.financiador,
-                            'label': os.financiador
-                        };
-                        return osPaciente;
-                    });
-                    this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-                } else {
-                    if (datos.paciente.obraSocial) {
-                        this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+            if (datos.paciente.documento && this.paciente.estado === 'validado') {
+                this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
+                    if (resultado.length) {
+                        this.obraSocialPaciente = resultado.map((os: any) => {
+                            const osPaciente = {
+                                'id': os.financiador,
+                                'label': os.financiador
+                            };
+                            return osPaciente;
+                        });
                         this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                    } else {
+                        if (datos.paciente.obraSocial) {
+                            this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
+                            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+                        }
                     }
-
-
-                }
-                this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
-            });
+                    this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+                });
+            }
         }
     }
 

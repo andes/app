@@ -23,18 +23,26 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public conceptosInternacion;
 
     public registros = [
-        { label: 'VALORACION INICIAL', handler: () => {
-            this.nuevoRegistro(this.conceptosInternacion.valoracionInicial);
-        } },
-        { label: 'EVOLUCION', handler: () => {
-            this.nuevoRegistro(this.conceptosInternacion.evolucion);
-        } },
-        { label: 'PLAN DE INDICACIONES', handler: () => {
-            this.nuevoRegistro(this.conceptosInternacion.indicaciones);
-        } },
-        { label: 'EPICRISIS', handler: () => {
-            this.nuevoRegistro(this.conceptosInternacion.epicrisis);
-        } },
+        {
+            label: 'VALORACION INICIAL', handler: () => {
+                this.nuevoRegistro(this.conceptosInternacion.valoracionInicial);
+            }
+        },
+        {
+            label: 'EVOLUCION', handler: () => {
+                this.nuevoRegistro(this.conceptosInternacion.evolucion);
+            }
+        },
+        {
+            label: 'PLAN DE INDICACIONES', handler: () => {
+                this.nuevoRegistro(this.conceptosInternacion.indicaciones);
+            }
+        },
+        {
+            label: 'EPICRISIS', handler: () => {
+                this.nuevoRegistro(this.conceptosInternacion.epicrisis);
+            }
+        },
 
     ];
     public tipoPrestaciones = [];
@@ -83,7 +91,16 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional, null, null).subscribe(hudsToken => {
+        const paramsToken = {
+            usuario: this.auth.usuario,
+            organizacion: this.auth.organizacion,
+            paciente: paciente,
+            motivo: this.conceptosInternacion.epicrisis.term,
+            profesional: this.auth.profesional,
+            idTurno: null,
+            idPrestacion: null
+        };
+        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
             window.sessionStorage.setItem('huds-token', hudsToken.token);
 
             this.tipoPrestaciones = [

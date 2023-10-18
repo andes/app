@@ -125,15 +125,16 @@ export class NuevoRegistroSaludComponent implements OnInit {
     }
 
     generarToken(paciente, concepto, prestacion) {
-        return this.hudsService.generateHudsToken(
-            this.auth.usuario,
-            this.auth.organizacion,
-            paciente,
-            concepto.term,
-            this.auth.profesional,
-            null,
-            prestacion.id
-        ).pipe(
+        const paramsToken = {
+            usuario: this.auth.usuario,
+            organizacion: this.auth.organizacion,
+            paciente: paciente,
+            motivo: concepto.term,
+            profesional: this.auth.profesional,
+            idTurno: null,
+            idPrestacion: prestacion.id
+        };
+        return this.hudsService.generateHudsToken(paramsToken).pipe(
             tap(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token))
         );
     }

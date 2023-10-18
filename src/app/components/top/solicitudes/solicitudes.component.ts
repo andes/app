@@ -755,7 +755,16 @@ export class SolicitudesComponent implements OnInit {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
             } else {
                 if (this.accesoHudsPaciente) {
-                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    const paramsToken = {
+                        usuario: this.auth.usuario,
+                        organizacion: this.auth.organizacion,
+                        paciente: this.accesoHudsPaciente,
+                        motivo: motivoAccesoHuds,
+                        profesional: this.auth.profesional,
+                        idTurno: this.accesoHudsTurno,
+                        idPrestacion: this.accesoHudsPrestacion
+                    };
+                    this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', hudsToken.token);
                         this.routeToParams = [];
@@ -793,9 +802,17 @@ export class SolicitudesComponent implements OnInit {
     }
 
     private confirmarIniciarPrestacion(data) {
-        concat(
-            // token HUDS
-            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.prestacionSeleccionada.paciente, 'Fuera de agenda', this.auth.profesional, null, this.prestacionSeleccionada.solicitud.tipoPrestacion.id),
+        // token HUDS
+        const paramsToken = {
+            usuario: this.auth.usuario,
+            organizacion: this.auth.organizacion,
+            paciente: this.prestacionSeleccionada.paciente,
+            motivo: 'Fuera de agenda',
+            profesional: this.auth.profesional,
+            idTurno: null,
+            idPrestacion: this.prestacionSeleccionada.solicitud.tipoPrestacion.id
+        };
+        concat(this.hudsService.generateHudsToken(paramsToken),
             // PATCH pasar prestacion a ejecución
             this.iniciarPrestacion(data.fecha, data.observaciones)
         ).subscribe(

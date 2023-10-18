@@ -415,7 +415,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
                             this.ejecutarPrestacionPendiente(pretacionPendiente, turno).subscribe(() => {
                                 if (this.tieneAccesoHUDS) {
-                                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
+                                    const paramsToken = {
+                                        usuario: this.auth.usuario,
+                                        organizacion: this.auth.organizacion,
+                                        paciente: paciente,
+                                        motivo: snomedConcept.term,
+                                        profesional: this.auth.profesional,
+                                        idTurno: turno.id,
+                                        idPrestacion: snomedConcept._id
+                                    };
+                                    this.hudsService.generateHudsToken(paramsToken ).subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
@@ -433,7 +442,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                     this.plex.info('info', nuevaPrestacion.error, 'Aviso');
                                 }
                                 if (this.tieneAccesoHUDS) {
-                                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id).subscribe((husdTokenRes) => {
+                                    const paramsToken = {
+                                        usuario: this.auth.usuario,
+                                        organizacion: this.auth.organizacion,
+                                        paciente: paciente,
+                                        motivo: snomedConcept.term,
+                                        profesional: this.auth.profesional,
+                                        idTurno: turno.id,
+                                        idPrestacion: snomedConcept._id
+                                    };
+                                    this.hudsService.generateHudsToken( paramsToken).subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
@@ -765,7 +783,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     ejecutarPrestacion(prestacion) {
         this.ejecutarPrestacionPendiente(prestacion).subscribe(() => {
             if (this.tieneAccesoHUDS) {
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, prestacion.paciente, prestacion.solicitud.tipoPrestacion.term, this.auth.profesional, null, prestacion.id).subscribe((husdTokenRes) => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: prestacion.paciente,
+                    motivo: prestacion.solicitud.tipoPrestacion.term,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: prestacion.id
+                };
+                this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
                     if (husdTokenRes.token) {
                         window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                         this.routeTo('ejecucion', prestacion.id); // prestacion pendiente
@@ -821,7 +848,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
                 doRoute();
             } else if (this.accesoHudsPaciente) {
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: this.accesoHudsPaciente,
+                    motivo: motivoAccesoHuds,
+                    profesional: this.auth.profesional,
+                    idTurno: this.accesoHudsTurno,
+                    idPrestacion: this.accesoHudsPrestacion
+                };
+                this.hudsService.generateHudsToken(paramsToken ).subscribe(hudsToken => {
                     // se obtiene token y loguea el acceso a la huds del paciente
                     window.sessionStorage.setItem('huds-token', hudsToken.token);
                     doRoute();
