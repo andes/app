@@ -8,10 +8,10 @@ jobs:
             - name: Use Node.js
               uses: actions/setup-node@v1
               with:
-                  node-version: '10.x'
+                  node-version: '14.x'
             - run: npm ci
             - run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts  
             - run: cp ./projects/portal/src/environments/configuracion.ts.example ./projects/portal/src/environments/configuracion.ts  
             - run: npm run lint
-            - run: rm browserslist && touch browserslist
+            - run: rm .browserslistrc && touch .browserslistrc
             - run: npm run build:prod -- --progress=false

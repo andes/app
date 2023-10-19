@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import * as enumerados from 'src/app/utils/enumerados';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
 import { PacientePortalService } from '../../services/paciente-portal.service';
@@ -45,7 +44,7 @@ export class RegistroCuentaComponent implements OnInit {
     torchAvailable$ = new BehaviorSubject<boolean>(false);
     tryHarder = false;
 
-    constructor(private plex: Plex, private formBuilder: FormBuilder, private router: Router, private scanner: ZXingScannerModule, private scanParser: ScanParser, private pacienteService: PacientePortalService) {
+    constructor(private plex: Plex, private formBuilder: FormBuilder, private router: Router, private scanParser: ScanParser, private pacienteService: PacientePortalService) {
         this.captchaEnabled = captcha.enabled;
     }
 

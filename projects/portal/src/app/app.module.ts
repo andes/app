@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ScanParser } from 'projects/portal/src/app/providers/scan-parser';
@@ -96,7 +95,6 @@ import { RUPLibModule } from 'src/app/modules/rup/rup-lib.module';
         ReactiveFormsModule,
         MPILibModule,
         BrowserAnimationsModule,
-        ZXingScannerModule,
         RecaptchaModule,
         RecaptchaFormsModule,
         RUPLibModule
