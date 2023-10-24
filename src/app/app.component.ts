@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
+import { IProfesional } from './interfaces/IProfesional';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
 import { ProfesionalService } from './services/profesional.service';
@@ -97,9 +98,10 @@ export class AppComponent {
                 this.checkPermissions();
             }
             if (this.auth.profesional) {
-                this.profesionalService.getByID(this.auth.profesional).subscribe(profesional => {
+                this.profesionalService.getByID(this.auth.profesional).subscribe((profesional: IProfesional) => {
                     if (profesional) {
                         this.profesional = profesional;
+                        this.auth.setProfesionalHabilitado(profesional.habilitado);
                         this.profesional.formacionGrado?.forEach(item => {
                             item['estado'] = this.verificarEstado(item);
                         });

@@ -112,7 +112,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
         }
-        if (!this.auth.profesional) {
+        if (!this.auth.profesionalHabilitado || !this.auth.profesional) {
             this.redirect('inicio');
         } else {
             this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
@@ -424,7 +424,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                         idTurno: turno.id,
                                         idPrestacion: snomedConcept._id
                                     };
-                                    this.hudsService.generateHudsToken(paramsToken ).subscribe((husdTokenRes) => {
+                                    this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
@@ -451,7 +451,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                         idTurno: turno.id,
                                         idPrestacion: snomedConcept._id
                                     };
-                                    this.hudsService.generateHudsToken( paramsToken).subscribe((husdTokenRes) => {
+                                    this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
@@ -857,7 +857,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     idTurno: this.accesoHudsTurno,
                     idPrestacion: this.accesoHudsPrestacion
                 };
-                this.hudsService.generateHudsToken(paramsToken ).subscribe(hudsToken => {
+                this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                     // se obtiene token y loguea el acceso a la huds del paciente
                     window.sessionStorage.setItem('huds-token', hudsToken.token);
                     doRoute();
