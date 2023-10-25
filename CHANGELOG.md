@@ -1,3 +1,13 @@
+# [5.127.0](https://github.com/andes/app/compare/v5.126.0...v5.127.0) (2023-10-25)
+
+
+### Features
+
+* **EP:** se realizan cambios en formulario covid ([#2914](https://github.com/andes/app/issues/2914)) ([597e243](https://github.com/andes/app/commit/597e243024a8b644a839bcbbdde7a2897980c495))
+* **HUDS:** agrega filtros de CDAs para exportar ([#2919](https://github.com/andes/app/issues/2919)) ([1886e1c](https://github.com/andes/app/commit/1886e1c8614ad74ff4b8acace253b7929a138043))
+* **HUDS:** agrega filtros de CDAs para exportar ([#2919](https://github.com/andes/app/issues/2919)) ([#2901](https://github.com/andes/app/issues/2901)) ([a1b3f16](https://github.com/andes/app/commit/a1b3f16e4ea8aa64e8faf83542e3f77090ef9aa2))
+* **TM:** se agrega filtro noMatriculado ([#2912](https://github.com/andes/app/issues/2912)) ([1ba5296](https://github.com/andes/app/commit/1ba52961b31d7183cbc46c239c4ec2e1916c493c))
+
 # [5.126.0](https://github.com/andes/app/compare/v5.125.3...v5.126.0) (2023-10-04)
 
 
