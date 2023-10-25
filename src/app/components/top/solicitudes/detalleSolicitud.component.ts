@@ -21,7 +21,7 @@ export class DetalleSolicitudComponent implements OnChanges {
         { key: 'historial', label: 'HISTORIAL' }
     ];
     public mostrar;
-
+    public verIndicaciones = false;
 
     constructor(
         public adjuntosService: AdjuntosService
@@ -47,6 +47,10 @@ export class DetalleSolicitudComponent implements OnChanges {
 
     cambiarOpcion(opcion) {
         this.mostrar = opcion;
+    }
+
+    toggleIndicaciones() {
+        this.verIndicaciones = !this.verIndicaciones;
     }
 
 }
