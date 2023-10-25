@@ -69,14 +69,19 @@
     <div class="row">
         <div class="col-12">
             <plex-title size="sm" titulo="Motivo de Solicitud">
-                <plex-help *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'
-                           type="help" titulo="Indicaciones" tituloBoton="Ver Indicaciones">
-                    <p class="m-2"
-                       [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
-                    </p>
-                </plex-help>
             </plex-title>
             <p>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</p>
+
+            <plex-title size="sm" titulo="Indicaciones"
+                        *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
+                <plex-button type="info" size="sm" label="Ver Indicaciones"
+                             [icon]="verIndicaciones ? 'chevron-up' : 'chevron-down'" (click)="toggleIndicaciones()">
+                </plex-button>
+            </plex-title>
+            <div *ngIf="verIndicaciones">
+                <span
+                      [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"></span>
+            </div>
         </div>
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.estadoActual.tipo === 'anulada'">
