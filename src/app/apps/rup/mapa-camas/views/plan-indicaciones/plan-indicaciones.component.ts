@@ -170,7 +170,6 @@ export class PlanIndicacionesComponent implements OnInit {
         return !this.seccionesActivas.some(seccion => this.getItems(seccion).length > 0);
     }
 
-
     actualizar() {
         this.loading = true;
         forkJoin([
@@ -221,7 +220,6 @@ export class PlanIndicacionesComponent implements OnInit {
             this.loading = false;
         }, error => { this.loading = false; });
     }
-
 
     getInternacion(): Observable<any> {
         if (this.capa === 'estadistica') {
@@ -377,6 +375,10 @@ export class PlanIndicacionesComponent implements OnInit {
         this.suspenderIndicacion = false;
     }
 
+    cancelarRechazo() {
+        this.showMotivoRechazo = false;
+    }
+
     crearPrestacion(paciente, concepto, fecha: Date) {
         const nuevaPrestacion = this.prestacionService.inicializarPrestacion(
             paciente, concepto, 'ejecucion', this.ambito, fecha
@@ -498,7 +500,7 @@ export class PlanIndicacionesComponent implements OnInit {
             this.saveVerificacion();
         } else {
             this.indicacionView = false;
-            this.toggleShowMotivoRechazo();
+            this.toggleShowMotivoRechazo(null, true);
         }
     }
 
@@ -506,24 +508,32 @@ export class PlanIndicacionesComponent implements OnInit {
         indicacion.estado.verificacion = null;
     }
 
-    toggleShowMotivoRechazo(indicacion = null) {
+    toggleShowMotivoRechazo(indicacion = null, show = false) {
+        // console.log('indicacion:', indicacion);
         if (indicacion) {
+            this.onSelectIndicacion(indicacion);
             this.indicacionAVerificar = indicacion;
+            this.showMotivoRechazo = true;
+        } else {
+            this.showMotivoRechazo = show ? show : !this.showMotivoRechazo;
         }
-        this.showMotivoRechazo = !this.showMotivoRechazo;
         this.onClose();
     }
 
-    saveVerificacion(motivo?: string) {
+    saveVerificacion(motivo?) {
         const estadoVerificado = this.indicacionAVerificar.estado;
         estadoVerificado.verificacion = {
             estado: motivo ? 'rechazada' : 'aceptada',
-            motivoRechazo: motivo || null
+            key: motivo ? motivo.key : null,
+            motivoRechazo: motivo ? motivo.nombre : null
         };
+        // console.log('(Save) motivo:', motivo, 'estadoVerificado.verificacion', estadoVerificado.verificacion);
         this.planIndicacionesServices.updateEstado(this.indicacionAVerificar.id, estadoVerificado).subscribe(() => {
             this.actualizar();
             this.plex.toast('success', 'Verificación guardada exitosamente');
+            this.onClose();
         });
+        this.cerrarSidebar();
     }
 
     puedeValidar() {
@@ -542,4 +552,12 @@ export class PlanIndicacionesComponent implements OnInit {
     puedeEjecutar() {
         this.permisosMapaCamasService.indicacionesEjecutar && this.capa !== 'interconsultores';
     }
+
+    cerrarSidebar() {
+        this.nuevaIndicacion = false;
+        this.indicacionView = null;
+        this.indicacionEventoSelected = null;
+        this.suspenderIndicacion = false;
+    }
+
 }

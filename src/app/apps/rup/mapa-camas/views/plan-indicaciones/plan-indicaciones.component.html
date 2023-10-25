@@ -75,8 +75,9 @@
                             </td>
 
                             <td colspan="24">
-                                <plex-label  *ngIf="!nuevaIndicacion && !loading" type="default" class="flex-column" icon="documento-cursor" size="xl"
-                                            direction="column" titulo="Agregar indicación desde el panel central"
+                                <plex-label *ngIf="!nuevaIndicacion && !loading" type="default" class="flex-column"
+                                            icon="documento-cursor" size="xl" direction="column"
+                                            titulo="Agregar indicación desde el panel central"
                                             subtitulo="Busque y seleccione la indicación presionando el botón '+' ">
                                 </plex-label>
                             </td>
@@ -265,15 +266,19 @@
                                        (events)="onEventos($event)">
             </in-plan-indicacion-evento>
         </ng-container>
+
         <ng-container *ngIf="suspenderIndicacion && !indicacionView && !indicacionEventoSelected">
-            <motivo-suspension (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()">
+            <motivo-suspension (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()"
+                               tipo="suspension">
             </motivo-suspension>
         </ng-container>
 
         <ng-container *ngIf="showMotivoRechazo">
-            <motivo-suspension [motivo]="indicacionAVerificar?.estado.verificacion?.motivoRechazo"
-                               (guardar)="saveVerificacion($event)" (cancelar)="toggleShowMotivoRechazo()">
+            <motivo-suspension [key]="indicacionAVerificar?.estado.verificacion?.key"
+                               [motivo]="indicacionAVerificar?.estado.verificacion?.motivoRechazo" tipo="rechazo"
+                               (guardar)="saveVerificacion($event)" (cancelar)="cancelarRechazo()">
             </motivo-suspension>
         </ng-container>
+
     </plex-layout-sidebar>
 </plex-layout>
