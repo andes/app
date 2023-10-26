@@ -85,8 +85,8 @@
             <tr *ngFor="let agenda of agendas; let i=index" [class.selected]="estaSeleccionada(agenda) >= 0"
                 [class.selectable]="selectable">
                 <td *plTableCol="'seleccion'" (click)="verAgenda(agenda, true, $event)">
-                    <i *ngIf="estaSeleccionada(agenda) >= 0" class="mdi mdi-checkbox-marked"></i>
-                    <i *ngIf="!(estaSeleccionada(agenda) >= 0)" class="mdi mdi-checkbox-blank-outline"></i>
+                    <i *ngIf="estaSeleccionada(agenda) >= 0"> <plex-icon name="checkbox-marked"></plex-icon> </i>
+                    <i *ngIf="!(estaSeleccionada(agenda) >= 0)"> <plex-icon name="checkbox-blank-outline"></plex-icon> </i>
                 </td>
                 <td *plTableCol="'fecha'" class="w-20" (click)="verAgenda(agenda, false, $event)">
                     <plex-label titulo="{{agenda.horaInicio | date: 'EEEE' | uppercase}}  {{agenda.horaInicio | fecha}}"

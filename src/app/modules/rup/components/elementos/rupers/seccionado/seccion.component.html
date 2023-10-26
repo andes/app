@@ -63,8 +63,8 @@
                                         <button (click)="desvincular(registro, registro.relacionadoCon[0])"
                                                 class="desvincular"
                                                 *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen && !soloValoresfact"
-                                                title="Desvincular" class="btn btn-sm btn-primary">
-                                            <i class="mdi mdi-link-variant-off"></i>
+                                                title="Desvincular"><plex-icon name="link-variant-off"></plex-icon> 
+                                                
                                         </button>
 
 

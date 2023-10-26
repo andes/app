@@ -73,8 +73,8 @@
     <div class="py-2 d-flex align-items-center">
         <i *ngIf="todosSeleccionados" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()"
            title="Seleccionar todos" titlePosition="right"></i>
-        <i *ngIf="!todosSeleccionados" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()"
-           title="Seleccionar todos" titlePosition="right"></i>
+       
+           <plex-icon  *ngIf="!todosSeleccionados" name="checkbox-blank-outline" class="hover" (click)="seleccionarTodos()"></plex-icon> 
         Seleccionar todos
     </div>
     <small><i>*Agenda suspendida, no se dan turnos</i></small>

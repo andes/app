@@ -25,7 +25,7 @@
                 <!--Resultados-->
                 <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
                 <div *ngIf="!espaciosFisicos?.length && !loader" class="alert alert-default">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
+                    <plex-icon name="emoticon-sad"></plex-icon> No hay resultados que coincidan con los filtros de búsqueda
                 </div>
                 <table *ngIf="espaciosFisicos && espaciosFisicos.length > 0" class="table table-striped">
                     <thead>
