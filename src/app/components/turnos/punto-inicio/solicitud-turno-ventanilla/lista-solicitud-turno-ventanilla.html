@@ -1,7 +1,7 @@
 <div *ngIf="!showCargarSolicitud">
     <plex-title main titulo="Solicitudes">
         <plex-button *ngIf="puedeCrearSolicitud" type="success" label="Cargar Solicitud nueva"
-                     (click)="formularioSolicitud()"></plex-button>
+            (click)="formularioSolicitud()"></plex-button>
     </plex-title>
     <div class="row mt-2">
         <div class="col-12">
@@ -29,21 +29,26 @@
                                 {{ prestacion.solicitud.profesional | nombre }} -
                                 {{ prestacion?.solicitud?.organizacion?.nombre }}
                                 <span class="text-danger"
-                                      *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
+                                    *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
                             </td>
                             <td class="text-center">
                                 <plex-badge *ngIf="prestacion.solicitud?.turno" type="success">Turno Dado</plex-badge>
-                                <span
-                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion !== prestacion?.solicitud?.organizacion?.id) && prestacion.inicio !== 'servicio-intermedio'">
+                                <span *ngIf="verEstado(prestacion)">
                                     <plex-badge type="info">
                                         {{prestacion.estados[prestacion.estados.length-1]?.tipo}}
                                     </plex-badge>
                                 </span>
                                 <plex-button *ngIf="!prestacion.solicitud?.turno && prestacion.solicitud.turneable"
-                                             type="success" size="sm" (click)="darTurno(prestacion)">
+                                    type="success" size="sm" (click)="darTurno(prestacion)">
                                     Dar turno
                                 </plex-button>
 
+                            </td>
+                            <td>
+                                <plex-button *ngIf="puedeDarTurno(prestacion)" type="info" size="sm"
+                                    icon="calendar-plus" tooltip="Dar turno" tooltipPosition="left"
+                                    (click)="darTurno(prestacion)">
+                                </plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -59,5 +64,5 @@
     </div>
 </div>
 <solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente"
-                            (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)">
+    (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)">
 </solicitud-turno-ventanilla>

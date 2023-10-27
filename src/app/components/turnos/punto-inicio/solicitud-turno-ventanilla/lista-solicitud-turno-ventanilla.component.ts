@@ -93,4 +93,12 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     darTurno(prestacion: IPrestacion) {
         this.solicitudPrestacionEmit.emit(prestacion);
     }
+
+    puedeDarTurno(prestacion: IPrestacion) {
+        return !prestacion.solicitud?.turno && prestacion.estadoActual.tipo === 'pendiente' && this.auth.organizacion.id === prestacion.solicitud.organizacion.id;
+    }
+
+    verEstado(prestacion: IPrestacion) {
+        return !prestacion.solicitud?.turno && (this.auth.organizacion.id === prestacion?.solicitud?.organizacion?.id) && prestacion.inicio !== 'servicio-intermedio';
+    }
 }
