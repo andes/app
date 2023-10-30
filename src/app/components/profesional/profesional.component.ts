@@ -109,7 +109,7 @@ export class ProfesionalComponent implements OnInit {
         this.profesionalService.documento.next(this.filtros.documento);
         this.profesionalService.apellido.next(this.filtros.apellido);
         this.profesionalService.nombre.next(this.filtros.nombre);
-        this.profesionalService.activo.next(this.filtros.estado);
+        this.profesionalService.activo.next(this.filtros.estado ? !this.filtros.estado : null);
         this.profesionalService.noMatriculado.next(this.filtros.noMatriculado);
     }
 
