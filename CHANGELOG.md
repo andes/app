@@ -1,3 +1,11 @@
+## [5.127.1](https://github.com/andes/app/compare/v5.127.0...v5.127.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* **INT:** Agrega unidades a la carga de medicamentos al  plan ([#2937](https://github.com/andes/app/issues/2937)) ([90fc5db](https://github.com/andes/app/commit/90fc5db3361845b7d6adb3448212f3e43e16fbd2))
+* **TOP:** repara visualizacion de indicaciones ([#2939](https://github.com/andes/app/issues/2939)) ([02178b1](https://github.com/andes/app/commit/02178b13eb97932aed09fed536d02f1d56fa3ecc))
+
 # [5.127.0](https://github.com/andes/app/compare/v5.126.0...v5.127.0) (2023-10-25)
 
 
