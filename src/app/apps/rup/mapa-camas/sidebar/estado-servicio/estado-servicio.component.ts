@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subscription, timer, of, from } from 'rxjs';
-import { map, tap, defaultIfEmpty, startWith, switchMap, filter, distinct, toArray } from 'rxjs/operators';
+import { Observable, Subscription, from } from 'rxjs';
+import { map, tap, startWith, switchMap, filter, distinct, toArray } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-estado-servicio',
@@ -15,15 +16,18 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     fecha$: Observable<Date>;
     total: number;
     camasXEstado: any = {};
-    camasXEstado$: Observable<any>;
 
     private sub: Subscription;
+    public editaFecha = false;
+    public fecha: Date;
+    public puedeGuardar;
 
     salas$: Observable<ISnapshot[]>;
     salasPaciente$: Observable<ISnapshot[]>;
 
     constructor(
         public mapaCamasService: MapaCamasService,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
@@ -77,5 +81,27 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
 
     setFecha(fechaActual) {
         this.mapaCamasService.setFecha(fechaActual);
+    }
+
+    editarFecha() {
+        this.fecha = moment().toDate();
+        this.editaFecha = !this.editaFecha;
+        this.puedeGuardar = true;
+    }
+
+    guardar() {
+        this.mapaCamasService.setFecha(this.fecha);
+        this.editaFecha = !this.editaFecha;
+        this.puedeGuardar = false;
+        this.plex.toast('success', 'Fecha editada exitosamente');
+    }
+
+    cancelar() {
+        this.fecha = moment().toDate();
+        this.editaFecha = !this.editaFecha;
+    }
+
+    onChange(fecha) {
+        this.fecha = fecha;
     }
 }
