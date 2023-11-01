@@ -48,7 +48,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit,
     onDestroy$ = new Subject();
 
     ngOnDestroy() {
-        this.onDestroy$.next();
+        this.onDestroy$.next(null);
     }
 
     ngOnInit() {

@@ -1,4 +1,4 @@
-//
+@use 'sass:math';
 // Variables
 $andes-azul-oscuro: #002838;
 
@@ -71,19 +71,20 @@ main {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    
+
     .modulo {
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
         flex-direction: column;
-        
+
         box-sizing: border-box;
         width: 300px;
         margin-bottom: 1rem;
-        
+
         &.auto-height {
             height: auto !important;
+
             .submodulos {
                 height: auto;
             }
@@ -110,8 +111,10 @@ main {
             height: 145px;
             // flex-wrap: wrap;
             justify-content: flex-start;
+
             .mini {
                 width: 60px;
+
                 .titulo {
                     font-size: 0.65rem;
                 }
@@ -119,9 +122,10 @@ main {
         }
 
         opacity: 0;
+
         @for $child from 1 through 10 {
             &:nth-child(#{$child}) {
-                animation: submodulos #{$child/4}s ease-in-out 0.05s 1 forwards;
+                animation: submodulos #{(math.div($child, 4))}s ease-in-out 0.05s 1 forwards;
             }
         }
 
@@ -158,6 +162,7 @@ main {
             .titulo {
                 font-size: 13px;
                 line-height: normal;
+
                 a,
                 a:visited,
                 a:hover,
@@ -189,7 +194,8 @@ main {
 .secciones {
     width: 20vw;
     flex-direction: column;
-    & > {
+
+    &> {
         cursor: pointer;
     }
 }
@@ -207,7 +213,7 @@ a.seccion {
 
     @for $child from 1 through 20 {
         &:nth-child(#{$child}) {
-            animation: seccion #{$child/4}s ease-in-out 1.15s 1 forwards;
+            animation: seccion #{(math.div($child, 4))}s ease-in-out 1.15s 1 forwards;
         }
     }
 
@@ -292,6 +298,7 @@ a.seccion {
         font-size: 0.8rem;
         display: flex;
         flex-direction: column;
+
         .subtitulo {
             color: grey;
         }
@@ -344,6 +351,7 @@ a.seccion {
 // Responsive
 
 header {
+
     &.size-sm,
     &.size-md {
         flex-direction: column;
@@ -365,22 +373,27 @@ header {
             font-size: 1rem;
         }
     }
+
     &.size-sm {
         .marca {
             display: flex;
             justify-content: flex-start;
             align-items: baseline;
         }
+
         [svgLogo] {
             height: 40px;
             margin-right: 0px;
         }
+
         div[svgAcronimo] {
             height: 23px;
         }
+
         .provincia {
             top: -4px;
         }
+
         .bienvenida {
             font-size: 0.7rem;
         }
@@ -393,6 +406,7 @@ main {
 
         .modulo {
             height: auto !important;
+
             .submodulos {
                 height: auto;
             }
@@ -404,6 +418,7 @@ main {
             flex-flow: wrap;
             width: 80vw;
             margin-top: 6rem;
+
             .seccion {
                 display: flex;
                 text-decoration: none;
@@ -420,6 +435,7 @@ main {
         .modulos {
             width: 55vw;
         }
+
         .secciones {
             width: 35vw;
         }
@@ -431,6 +447,7 @@ main {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -443,6 +460,7 @@ main {
         bottom: -15px;
         height: 130px;
     }
+
     100% {
         opacity: 1;
         position: relative;
@@ -457,6 +475,7 @@ main {
         position: relative;
         left: -15px;
     }
+
     100% {
         opacity: 1;
         position: relative;

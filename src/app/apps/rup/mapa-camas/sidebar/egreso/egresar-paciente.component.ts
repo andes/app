@@ -189,7 +189,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             if (view === 'listado-internacion' && prestacion) {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
-                fecha = moment(resumen?.fechaEgreso) || moment().toDate();
+                fecha = moment(resumen?.fechaEgreso).toDate() || moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
 
@@ -251,7 +251,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
             }
-            this.fecha = moment(fecha);
+            this.fecha = moment(fecha).toDate();
             this.setDiasEstada();
         });
     }

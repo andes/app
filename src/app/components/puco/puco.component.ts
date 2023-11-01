@@ -113,7 +113,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
                     }
                 }
-                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
+                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc().toDate();
             }
 
 

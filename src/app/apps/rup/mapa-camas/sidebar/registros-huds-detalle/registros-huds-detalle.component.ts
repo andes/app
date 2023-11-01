@@ -138,9 +138,9 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     this.desde = moment().subtract(7, 'd').toDate();
                 }
                 if (this.desde instanceof Date) {
-                    this.desde = this.desde.getTime() < min.getTime() ? moment(min) : this.desde;
+                    this.desde = this.desde.getTime() < min.getTime() ? moment(min).toDate() : this.desde;
                 } else if (moment.isMoment(this.desde)) {
-                    this.desde = moment(this.desde).toDate().getTime() < min.getTime() ? moment(min) : this.desde;
+                    this.desde = moment(this.desde).toDate().getTime() < min.getTime() ? moment(min).toDate() : this.desde;
                 }
                 this.inProgress = false;
                 return prestaciones.filter((prestacion) => {

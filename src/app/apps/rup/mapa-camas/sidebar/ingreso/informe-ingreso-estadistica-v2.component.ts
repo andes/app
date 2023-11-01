@@ -16,7 +16,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 export class InformeIngresoEstadisticaV2Component implements OnInit {
     resumenInternacion$: Observable<IResumenInternacion>;
     accionesEstado$: Observable<any>;
-    prestacion$: Observable<IPrestacion>;
+    prestacion$: Observable<string | IPrestacion>;
     informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
@@ -38,10 +38,11 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
             switchMap(resumen => {
                 if (resumen.idPrestacion) {
                     if ((resumen.idPrestacion as any)?.id) {
-                        // prestacion populada desde el listado
+                        // prestacion ya viene populada desde el listado
                         return of(resumen.idPrestacion);
                     }
-                    return this.prestacionService.getById(resumen.idPrestacion, { showError: false });
+                    // idPrestacion solo trae un id en string
+                    return this.prestacionService.getById((resumen.idPrestacion) as string, { showError: false });
                 }
                 return of(null);
             }),
@@ -51,7 +52,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.informeIngreso$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
-                return prestacion.ejecucion?.registros[0].valor.informeIngreso;
+                return (prestacion as IPrestacion).ejecucion?.registros[0].valor.informeIngreso;
             })
         );
         this.paciente$ = this.resumenInternacion$.pipe(

@@ -27,7 +27,7 @@ export class SugerenciasService {
                                     type: 'success',
                                     title: 'Se envió con éxito!',
                                     html: 'Muchas gracias.'
-                                }).then(() => resolve());
+                                }).then(() => resolve(null));
                             } else {
                                 swal({
                                     type: 'error',

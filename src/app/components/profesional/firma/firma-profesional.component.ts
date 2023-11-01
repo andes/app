@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { IProfesional } from '../../../interfaces/IProfesional';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ProfesionalService } from '../../../services/profesional.service';
-import { Ng2ImgMaxService } from 'ng2-img-max';
+import { NgxImageCompressService } from 'ngx-image-compress';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { IMAGENES_EXT } from '@andes/shared';
@@ -35,7 +35,7 @@ export class FirmaProfesionalComponent {
     public disabledCargar = false;
 
     constructor(
-        private ng2ImgMax: Ng2ImgMaxService,
+        private imageCompress: NgxImageCompressService,
         public sanitizer: DomSanitizer,
         private plex: Plex,
         private profesionalService: ProfesionalService
@@ -70,26 +70,30 @@ export class FirmaProfesionalComponent {
                 this.plex.toast('danger', 'Tipo de archivo incorrecto');
                 return;
             }
+            const reader = new FileReader();
+            reader.onload = this.handleReaderLoaded.bind(this);
+            reader.readAsBinaryString(image);
+            this.disabledCargar = false;
         }
-        this.ng2ImgMax.resizeImage(image, 400, 300).subscribe(
-            result => {
-                this.loading = false;
-                const reader = new FileReader();
-                reader.onload = this.handleReaderLoaded.bind(this);
-                reader.readAsBinaryString(result);
-                this.disabledCargar = false;
-            },
-            error => {
-                this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
-                this.disabledCargar = false;
-            }
-        );
     }
 
     handleReaderLoaded(readerEvt) {
-        this.binaryString = readerEvt.target.result;
-        this.base64textString = btoa(this.binaryString);
-        this.urlFirma = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64textString);
-        this.onFileUploaded.emit(this.base64textString);
+        this.imageCompress.uploadFile().then(({ image, orientation }) => {
+            this.imageCompress.compressFile(image, orientation, 50, 50).then(compressedImg => {
+                this.loading = false;
+                // this.binaryString = readerEvt.target.result;
+                this.base64textString = btoa(compressedImg);
+                this.urlFirma = compressedImg; // this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.base64textString);
+                this.onFileUploaded.emit(this.base64textString);
+            },
+            () => {
+                this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
+                this.disabledCargar = false;
+            });
+        },
+        () => {
+            this.plex.toast('danger', 'Ha ocurrido un error realizando la operación.');
+            this.disabledCargar = false;
+        });
     }
 }

@@ -66,8 +66,8 @@ export class MapaCamasService {
 
     public mainView = new BehaviorSubject<any>('principal');
 
-    public ambito;
-    public capa;
+    public ambito: string;
+    public capa: string;
     public fecha: Date;
     public permisos: string[];
     public esProfesional = this.auth.profesional;
@@ -191,13 +191,12 @@ export class MapaCamasService {
                     return this.prestacionService.getById(cama.idInternacion, { showError: false });
                 }
                 return this.internacionResumenHTTP.get(cama.idInternacion).pipe(
-                    switchMap(
-                        internacionResumen => {
-                            if (internacionResumen.idPrestacion) {
-                                return this.prestacionService.getById(internacionResumen.idPrestacion, { showError: false });
-                            }
-                            return of(null);
-                        })
+                    switchMap(internacionResumen => {
+                        if (internacionResumen.idPrestacion) {
+                            return this.prestacionService.getById((internacionResumen.idPrestacion as string), { showError: false });
+                        }
+                        return of(null);
+                    })
                 );
             }),
             catchError(() => of(null)),

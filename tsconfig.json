@@ -9,7 +9,7 @@
       "dom"
     ],
     "baseUrl": ".",
-    "module": "esnext",
+    "module": "es2020",
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
     "target": "es2015",
@@ -28,14 +28,21 @@
       ]
     }
   },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
   "include": [
     "./**/*.ts",
-    "node_modules/@andes/**/*.ts",
-    "node_modules/ng2-slugify/**/*.ts"
+    "./webpack.config.js",
+    ".eslintrc.js",
+    "node_modules/ng2-slugify/**/*.ts",
+    "node_modules/@andes/plex/**/*.ts",
   ],
   "exclude": [
+    "node_modules/@andes/plex/**/*.spec.ts",
     "node_modules/@schematics/**/*.ts",
-    "node_modules/karma/**/*.ts"
+    "node_modules/karma/**/*.ts",
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": false,

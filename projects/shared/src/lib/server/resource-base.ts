@@ -67,17 +67,16 @@ export abstract class ResourceBaseHttp<T = any> {
     }
 
     public queryDateParams(desde: Date, hasta: Date, diaEntero: Boolean = true) {
+        let desdeF;
+        let hastaF;
 
-        let desdeF = moment(desde);
-        let hastaF = moment(hasta);
         if (diaEntero) {
-            desdeF = desdeF.startOf('day');
-            hastaF = hastaF.endOf('day');
+            desdeF = moment(desde).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+            hastaF = moment(hasta).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+        } else {
+            desdeF = moment(desde).format('YYYY-MM-DD HH:mm:ss');
+            hastaF = moment(hasta).format('YYYY-MM-DD HH:mm:ss');
         }
-
-        desdeF = desdeF.format('YYYY-MM-DD HH:mm:ss');
-        hastaF = hastaF.format('YYYY-MM-DD HH:mm:ss');
-
         if (desde) {
             if (hasta) {
                 return `${desdeF}|${hastaF}`;

@@ -1,16 +1,18 @@
+@use 'sass:math';
+
 // Mixins
 @mixin text-contrast($n) {
-    $color-brightness: round((red($n) * 299) + (green($n) * 587) + (blue($n) * 114) / 1000);
-    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
-    
-    @if abs($color-brightness) < ($light-color/2){
-      color: white;
+    $color-brightness: round((red($n) * 299) + (green($n) * 587) + math.div((blue($n) * 114), 1000));
+    $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + math.div((blue(#ffffff) * 114), 1000));
+
+    @if abs($color-brightness) < math.div($light-color, 2) {
+        color: white;
     }
-  
+
     @else {
-      color: black;
+        color: black;
     }
-  }
+}
 
 // Extension de estilos vis-timeline
 // baseIcon
@@ -19,7 +21,7 @@
     align-items: center;
     justify-content: center;
     align-self: center;
-    
+
     font: normal normal normal 14px/1 "Andes Icons";
     border-radius: 50%;
     background-color: white;
@@ -31,7 +33,7 @@
 
 // Grilla
 .vis-panel .vis-bottom {
-    top: 0px!important;
+    top: 0px !important;
 }
 
 // Tracks
@@ -48,7 +50,7 @@
 }
 
 .vis-ltr .vis-label.vis-nested-group.vis-group-level-2 .vis-inner {
-    padding-left: 5px!important;
+    padding-left: 5px !important;
 }
 
 .vis-label {
@@ -56,16 +58,16 @@
     &.vis-label.vis-nesting-group {
 
         .vis-inner {
-                                
+
             &:after {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
                 color: white;
                 margin-left: 0.25rem;
                 padding: .25rem;
-                background-color: #00a8e0;                    
+                background-color: #00a8e0;
                 width: 20px;
                 height: 20px;
                 content: "\25BC";
@@ -75,29 +77,30 @@
             }
         }
 
-        &.expanded, &.collapsed {
+        &.expanded,
+        &.collapsed {
             &:before {
                 content: "";
                 margin-left: 0.95rem;
             }
-            
+
         }
-    }   
-        
+    }
+
     &.vis-nested-group {
-    
+
         &.vis-group-level-1 {
             background-color: white;
             // ITEM
             display: flex;
             flex-direction: row;
-    
-            .vis-inner {  
+
+            .vis-inner {
                 display: flex;
                 align-self: center;
                 overflow: hidden;
-                padding-left: 5px!important;
-        
+                padding-left: 5px !important;
+
                 // item-title
                 text-align: left;
                 font-weight: 700;
@@ -111,15 +114,15 @@
         &.vis-group-level-2 {
             display: flex;
             align-items: center;
-            background-color: rgba(0,0,0,0.05);
+            background-color: rgba(0, 0, 0, 0.05);
             text-transform: capitalize;
 
             &.vis-inner {
-                padding-left: 0px!important;
+                padding-left: 0px !important;
             }
 
             &:before {
-                display: none!important;
+                display: none !important;
             }
         }
     }
@@ -134,17 +137,17 @@
             color: var(--color);
         }
     }
-                
+
     &.trastornos {
         &:before {
             --color: #ff4a1a;
             @include baseIcon();
-            content: "\e8df"!important;
+            content: "\e8df" !important;
             border: solid 1.5px var(--color);
             color: var(--color);
         }
     }
-                
+
     &.procedimientos {
         &:before {
             --color: #92278e;
@@ -154,7 +157,7 @@
             color: var(--color);
         }
     }
-                
+
     &.hallazgos {
         &:before {
             --color: #f4a03b;
@@ -164,7 +167,7 @@
             color: var(--color);
         }
     }
-                
+
     &.productos {
         &:before {
             --color: #00bcb4;
@@ -175,7 +178,7 @@
         }
     }
 }
-    
+
 
 // Area
 
@@ -183,19 +186,20 @@
     background-color: transparent;
 }
 
-.vis-group.selected, .vis-label.selected  {
+.vis-group.selected,
+.vis-label.selected {
     background-color: var(--bg-color);
 
     .vis-dot.vis-selected {
         box-shadow: inset 0 0 0 0.1em white;
         border: solid 1.5px var(--color);
-        top: -4px!important;
-        left: -3px!important;
+        top: -4px !important;
+        left: -3px !important;
         width: 18px;
         height: 18px;
     }
 }
-        
+
 .vis-item {
     border-style: none;
     border-radius: 0;
@@ -211,24 +215,22 @@
         height: 12px;
 
         // TODO: resolver inyeccion de clase desde .ts
-        &.selected {
+        &.selected {}
 
-        }
-        
         &.relacion {
-            top: -10px!important;
+            top: -10px !important;
         }
 
         &:hover:not(.relacion) {
             cursor: pointer;
             box-shadow: inset 0 0 0 0.1em white;
             border: solid 1.5px var(--color);
-            top: -4px!important;
-            left: -3px!important;
+            top: -4px !important;
+            left: -3px !important;
             width: 18px;
             height: 18px;
         }
-    } 
+    }
 
     // Segmentos
     &.vis-range {
@@ -248,7 +250,7 @@
         font-weight: bolder;
         font-size: .65rem;
         @include text-contrast(#741b03);
-    }            
+    }
 
     &:hover:not(.vis-point, .vis-dot) {
         box-sizing: border-box;
@@ -259,6 +261,6 @@
 
 // Override: modificar en _rup.scss 
 .solo-valores-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))!important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
     grid-gap: 40px;
 }
