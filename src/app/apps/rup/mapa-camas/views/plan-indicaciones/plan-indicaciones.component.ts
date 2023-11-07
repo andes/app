@@ -8,6 +8,7 @@ import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.ser
 import { HeaderPacienteComponent } from 'src/app/components/paciente/headerPaciente.component';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RupEjecucionService } from 'src/app/modules/rup/services/ejecucion.service';
+import { ElementosRUPService } from 'src/app/modules/rup/services/elementosRUP.service';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
@@ -97,6 +98,7 @@ export class PlanIndicacionesComponent implements OnInit {
     constructor(
         public permisosMapaCamasService: PermisosMapaCamasService,
         public ejecucionService: RupEjecucionService,
+        private elementoRUPService: ElementosRUPService,
         private prestacionService: PrestacionesService,
         private route: ActivatedRoute,
         private resumenInternacionService: InternacionResumenHTTP,
