@@ -22,6 +22,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
         }, 300);
     }
 
+
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {
@@ -57,10 +58,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 }
             });
         }
-        this.registro?.valor?.solicitudPrestacion?.profesionalesDestino?.forEach(p => {
-            this.profesionales = this.profesionales.concat(p.nombreCompleto + ' - ');
-        });
-        this.profesionales = this.profesionales.slice(0, -3);
 
     }
 
@@ -86,14 +83,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     isEmpty() {
         const value = this.registro.valor.solicitudPrestacion;
-        return !value.motivo && !value.indicaciones && !value.organizacionDestino && !value.profesionalesDestino;
-    }
-
-    verificarAutocitacion() {
-        if (this.registro.valor.solicitudPrestacion.profesionales) {
-            if (this.registro.valor.solicitudPrestacion.profesionales.find(p => p.id === this.auth.profesional)) {
-                this.registro.valor.solicitudPrestacion['autocitado'] = true;
-            }
-        }
+        return !value.motivo && !value.indicaciones && !value.organizacionDestino;
     }
 }
