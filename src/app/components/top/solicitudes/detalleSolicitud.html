@@ -3,23 +3,10 @@
     <paciente-detalle [paciente]="prestacionSeleccionada.paciente" reload="true" orientacion="horizontal">
     </paciente-detalle>
     <plex-title size="sm" titulo="Solicitud">
-        <plex-badge type="warning mr-1">
-            {{prestacionSeleccionada.solicitud.fecha
-            | fecha}}
+        <plex-badge class="mr-1" type="warning">
+            {{prestacionSeleccionada.solicitud.fecha | fecha}}
         </plex-badge>
-        <plex-badge type="danger mr-1"
-                    *ngIf="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
-            {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
-        </plex-badge>
-        <plex-badge *ngIf="prestacionSeleccionada.solicitud.turno"
-                    type="{{prestacionSeleccionada | estadoPrestacion}}">{{prestacionSeleccionada.estadoActual.tipo ===
-            'validada' ?
-            'Registro en HUDS' : 'Turno dado'}} </plex-badge>
-        <plex-badge type="{{prestacionSeleccionada | estadoPrestacion}}"
-                    *ngIf="!prestacionSeleccionada.solicitud.turno">
-            {{prestacionSeleccionada.estadoActual.tipo !== 'rechazada' ? prestacionSeleccionada.estadoActual.tipo :
-            'CONTRARREFERIDA'}}
-        </plex-badge>
+        <ng-content></ng-content>
     </plex-title>
     <plex-grid cols="3" size="md" direction="row">
         <plex-label *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term"
@@ -107,7 +94,7 @@
         </div>
     </div>
     <div class="mb-3" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
-        <plex-title size="sm" titulo="Archivo Adjunto"></plex-title>
+        <plex-title size="sm" titulo="Archivos Adjuntos"></plex-title>
         <shared-galeria-archivos [files]="fotos" [readonly]="true"></shared-galeria-archivos>
     </div>
 </div>

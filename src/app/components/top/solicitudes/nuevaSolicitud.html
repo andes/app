@@ -4,7 +4,7 @@
                               (operacionFinalizada)="returnForm()"></form-nueva-solicitud>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <plex-title titulo="Detalle del paciente"></plex-title>
+        <plex-title titulo="Detalle del paciente" size="md"></plex-title>
         <paciente-detalle *ngIf="paciente" orientacion="vertical" [paciente]="paciente" [fields]="fieldsDetalle">
         </paciente-detalle>
     </plex-layout-sidebar>

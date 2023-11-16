@@ -60,7 +60,7 @@
         <ng-container *ngIf="state$ | async as state">
             <plex-title titulo="Listado" size="sm">
                 <plex-button *ngIf="!showHint" label="Exportar" size="sm" type="success" (click)="exportPrestaciones()"
-                             [disabled]="!state.enableExport" tooltip="Enviar prestaciones" tooltipPosition="left">
+                             [disabled]="!state.enableExport" tooltip="Enviar prestaciones">
                 </plex-button>
                 <plex-button *ngIf="showHint" label="Exportar" size="sm" type="success" disabled="true"
                              hint="El máximo permitido de prestaciones es de {{prestacionesMax}}" hintType="warning"
@@ -69,8 +69,8 @@
                 <plex-button type="info" size="sm" icon="download" (click)="refreshSelection($event, 'descargar')"
                              tooltip="Descargar CSV" class="ml-2">
                 </plex-button>
-                <plex-dropdown icon="format-list-checks" tooltip="Agregar columnas" type="info" size="sm"
-                               class="d-inline-block" [right]="true" class="ml-2">
+                <plex-dropdown icon="format-list-checks" tooltip="Agregar columnas" tooltipPosition="left" type="info"
+                               size="sm" class="d-inline-block" [right]="true" class="ml-2">
                     <plex-grid cols="3">
                         <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
                         </plex-bool>

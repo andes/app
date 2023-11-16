@@ -24,9 +24,7 @@ export class AuditarSolicitudComponent implements OnInit {
         this.prestacionSeleccionada = value;
         this.resetAuditoria();
     }
-    @Input() showCitar: any;
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
-    @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
@@ -38,8 +36,11 @@ export class AuditarSolicitudComponent implements OnInit {
     prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' }
     ];
-    estadoSolicitud = 0;
-    corfirmarAuditoria = false;
+    estadoSolicitud = {
+        id: 0,
+        nombre: ''
+    };
+    confirmarAuditoria = false;
     solicitudAsignada = false;
     observaciones = '';
     organizacionesDestino = [];
@@ -70,7 +71,7 @@ export class AuditarSolicitudComponent implements OnInit {
 
     resetAuditoria() {
         this.solicitudAsignada = false;
-        this.corfirmarAuditoria = false;
+        this.confirmarAuditoria = false;
         this.showPrioridad = false;
         this.showConfirmar = false;
         this.observaciones = '';
@@ -82,19 +83,22 @@ export class AuditarSolicitudComponent implements OnInit {
     aceptar() {
         this.prioridad = null;
         this.showPrioridad = true;
-        this.estadoSolicitud = 0;
+        this.estadoSolicitud.id = 0;
+        this.estadoSolicitud.nombre = 'Aceptar';
         this.doShowConfirmar();
     }
 
     asignar() {
         this.profesional = this.prestacionSeleccionada.solicitud.profesional ? this.prestacionSeleccionada.solicitud.profesional : null;
         this.solicitudAsignada = true;
-        this.estadoSolicitud = 1;
+        this.estadoSolicitud.id = 1;
+        this.estadoSolicitud.nombre = 'Asignar';
         this.doShowConfirmar();
     }
 
     responder() {
-        this.estadoSolicitud = 2;
+        this.estadoSolicitud.id = 2;
+        this.estadoSolicitud.nombre = 'Responder';
         this.doShowConfirmar();
     }
 
@@ -110,20 +114,21 @@ export class AuditarSolicitudComponent implements OnInit {
                 }
             );
 
-        this.estadoSolicitud = 3;
+        this.estadoSolicitud.id = 3;
+        this.estadoSolicitud.nombre = 'Referir';
         this.doShowConfirmar();
     }
 
     private doShowConfirmar() {
         this.showConfirmar = true;
-        this.corfirmarAuditoria = true;
+        this.confirmarAuditoria = true;
     }
 
     confirmar() {
-        if (this.corfirmarAuditoria) {
-            const data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional };
+        if (this.confirmarAuditoria) {
+            const data: any = { status: this.estadoSolicitud.id, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional };
 
-            if (this.estadoSolicitud === 3) {
+            if (this.estadoSolicitud.id === 3) {
                 data.organizacion = this.organizacionDestino;
                 data.profesional = this.profesionalDestino;
                 data.prestacion = this.tipoPrestacionesDestino.find(e => e.conceptId === this.tipoPrestacionDestino.id);
@@ -134,7 +139,8 @@ export class AuditarSolicitudComponent implements OnInit {
             }
 
             this.returnAuditoria.emit(data);
-            this.estadoSolicitud = -1;
+            this.estadoSolicitud.id = -1;
+            this.estadoSolicitud.nombre = 'Confirmar';
             this.showPrioridad = false;
         }
     }
@@ -146,14 +152,11 @@ export class AuditarSolicitudComponent implements OnInit {
         return regla2.auditable;
     }
 
-    cerrar() {
-        this.returnAuditoria.emit({ status: false });
-    }
-
     cancelar() {
         this.profesional = null;
-        this.estadoSolicitud = -1;
-        this.corfirmarAuditoria = false;
+        this.estadoSolicitud.id = -1;
+        this.estadoSolicitud.nombre = '';
+        this.confirmarAuditoria = false;
         this.showConfirmar = false;
         this.showPrioridad = false;
         this.solicitudAsignada = false;
@@ -181,7 +184,6 @@ export class AuditarSolicitudComponent implements OnInit {
 
     createUrl(doc) {
         /** Hack momentaneo */
-        // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
             const apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
@@ -211,14 +213,6 @@ export class AuditarSolicitudComponent implements OnInit {
             this.tipoPrestacionesDestino = [];
             this.tipoPrestacionesDestinoData = [];
         }
-    }
-
-    cancelarCitar() {
-        this.returnCitar.emit({ status: true });
-    }
-
-    confirmarCitar() {
-        this.returnCitar.emit({ status: false, motivo: this.observaciones });
     }
 
     get documentos() {
