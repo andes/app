@@ -23,7 +23,8 @@ export class FiltrosSolicitudesComponent implements OnChanges {
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'anulada', nombre: 'ANULADA' },
-        { id: 'validada', nombre: 'REGISTRO EN HUDS' }
+        { id: 'validada', nombre: 'REGISTRO EN HUDS' },
+        { id: 'vencida', nombre: 'VENCIDA' }
     ];
 
     @Output() filter = new EventEmitter();
