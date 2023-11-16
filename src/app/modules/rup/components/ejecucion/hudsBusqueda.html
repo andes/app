@@ -391,7 +391,7 @@
                         </plex-select>
                     </div>
                 </div>
-                <div class="row">
+                <div *ngIf="!efectorRestringido" class="row">
                     <div class="col-12">
                         <plex-select [(ngModel)]="organizacionSeleccionada" label="Organización" [data]="organizaciones"
                                      idField="id" labelField="nombre" (change)="filtrar()">

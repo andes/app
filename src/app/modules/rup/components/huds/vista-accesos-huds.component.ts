@@ -11,7 +11,7 @@ export class VistaAccesosHudsComponent implements OnInit {
     @Input() paciente: IPaciente;
 
     constructor(
-        private hudsService: HUDSService
+        private hudsService: HUDSService,
     ) { }
 
     public accesosHuds = [];

@@ -39,6 +39,7 @@ export class PrestacionesService {
 
     private prestacionesUrl = '/modules/rup/prestaciones'; // URL to web api
     private cache: any[] = [];
+    private cachePrimeraBusqueda = [];
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
@@ -50,6 +51,8 @@ export class PrestacionesService {
      */
 
     private datosRefSet = new BehaviorSubject<any>(null);
+
+    public restriccion = this.auth.check('huds:soloEfectorActual');
 
     setRefSetData(datos: IPrestacion[], refsetId?) {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
@@ -147,7 +150,14 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getByPaciente(idPaciente: any, recargarCache: boolean = false): Observable<any[]> {
-        if (this.cache[idPaciente] && !recargarCache) {
+        const copiaCacheAnterior = Object.assign({}, this.cachePrimeraBusqueda);
+        this.cachePrimeraBusqueda[idPaciente] = {
+            idPaciente,
+            idOrg: this.auth.organizacion.id,
+            restriccion: this.restriccion
+        };
+        // Verificamos si se busca el mismo paciente en otra organizacion y si tiene restriccion para tener que volver a cargar los datos.
+        if (!recargarCache && (copiaCacheAnterior[idPaciente]?.idOrg === this.cachePrimeraBusqueda[idPaciente]?.idOrg || (copiaCacheAnterior[idPaciente] && !copiaCacheAnterior[idPaciente]?.restriccion && !this.cachePrimeraBusqueda[idPaciente]?.restriccion))) {
             return this.cache[idPaciente];
         } else {
             const opt = {
@@ -159,6 +169,10 @@ export class PrestacionesService {
                 options: {
                     showError: true
                 }
+            };
+            // En caso de tener que buscar los datos nos fijamos si tiene restriccion por efector.
+            if (this.restriccion) {
+                opt.params['efectorRestringido'] = this.auth.organizacion.id;
             };
             this.cache[idPaciente] = this.server.get(this.prestacionesUrl, opt).pipe(
                 map(prestaciones => {
@@ -357,6 +371,9 @@ export class PrestacionesService {
         };
         if (conceptId) {
             opt.params.prestacion = { prestacion: conceptId };
+        }
+        if (this.restriccion) {
+            opt.params.org = this.auth.organizacion.id;
         }
         return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
     }
