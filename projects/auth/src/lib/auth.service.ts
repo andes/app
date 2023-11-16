@@ -41,6 +41,7 @@ export class Auth {
     public usuario: IUsuario;
     public organizacion: IOrganizacion;
     public profesional: string;
+    public profesionalHabilitado: boolean;
     public cambioUsuario = false;
     public orgs = [];
     private permisos: string[];
@@ -67,6 +68,7 @@ export class Auth {
             publishReplay(1),
             refCount()
         );
+        this.profesionalHabilitado = true;
 
     }
 
@@ -82,6 +84,9 @@ export class Auth {
     setToken(token: string) {
         window.sessionStorage.setItem('jwt', token);
         this.token$.next(token);
+    }
+    setProfesionalHabilitado(habilitado: boolean) {
+        this.profesionalHabilitado = habilitado;
     }
 
 

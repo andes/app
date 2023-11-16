@@ -6,6 +6,7 @@ export interface IProfesional {
     id: String;
     documento: String;
     activo: Boolean;
+    habilitado: boolean;
     nombre: String;
     apellido: String;
     contacto: [{
