@@ -36,6 +36,9 @@ export class ItemCamaComponent implements OnChanges {
         usaRespirador: false
     };
 
+    openedDropDown = null;
+    public itemsDropdown: any = [];
+
     get sectorCama() {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
     }
@@ -91,5 +94,47 @@ export class ItemCamaComponent implements OnChanges {
     accion(relacion, $event) {
         $event.stopPropagation();
         this.accionCama.emit(relacion);
+    }
+
+    setDropDown(relacion, drop) {
+        this.openedDropDown = drop;
+        if (this.openedDropDown) {
+            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        }
+        if (relacion) {
+            this.openedDropDown = drop;
+            this.itemsDropdown = [];
+            this.itemsDropdown.push({
+                label: 'Cambiar de cama',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'cambiarCama';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            }, {
+                label: 'Pase de unidad organizativa',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'cambiarUO';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            }, {
+                label: 'Egresar paciente',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'egresarPaciente';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            });
+        }
+    }
+
+    relacionesYcondiciones(relacion) {
+        return (relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear' && relacion.accion !== 'desocuparCama') || (relacion.accion === 'internarPaciente' && this.permisoIngreso)
+            || (relacion.nombre === 'Bloquear' && this.permisoBloqueo);
+    }
+
+    desocupar(relacion) {
+        return relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear' && relacion.nombre !== 'Desbloquear';
     }
 }
