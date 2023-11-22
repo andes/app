@@ -78,7 +78,7 @@ export class RUPComponent implements OnInit, AfterViewInit, OnDestroy {
      * @memberof RUPComponent
      */
     private loadComponent() {
-        if (!this.registro?.privacy) {
+        if (this.registro) {
             setTimeout(() => {
                 if (this.registro && !this.registro.privacy && this.params?.privacy) {
                     this.registro.privacy = { scope: this.params.privacy };
