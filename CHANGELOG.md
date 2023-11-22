@@ -1,3 +1,15 @@
+# [5.128.0](https://github.com/andes/app/compare/v5.127.1...v5.128.0) (2023-11-22)
+
+
+### Bug Fixes
+
+* **TM-31:** Profesionales deshabilitados ([#2938](https://github.com/andes/app/issues/2938)) ([7e64782](https://github.com/andes/app/commit/7e64782c403c4dff3ff9148cb2fae0953cb4aaac))
+
+
+### Features
+
+* **TOP-156:** Nuevo estado vencido ([#2907](https://github.com/andes/app/issues/2907)) ([72e04a6](https://github.com/andes/app/commit/72e04a6da6385923207e68b3e0474e5290fc5c87))
+
 ## [5.127.1](https://github.com/andes/app/compare/v5.127.0...v5.127.1) (2023-11-01)
 
 
