@@ -12,6 +12,7 @@ import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { NgForm } from '@angular/forms';
+import { Console } from 'console';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -29,6 +30,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public tipoPrestacion;
     public inProgress = true;
     public prestacionesEliminadas = [];
+    idOrganizacion = this.auth.organizacion.id;
 
     public refreshFecha$ = new BehaviorSubject(null);
     public tipoPrestacion$ = new BehaviorSubject(null);
@@ -46,7 +48,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     public esProfesional = this.auth.profesional;
     public puedeVerHuds = false;
-    private planIndicConcepId = '4981000013105';
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
@@ -132,6 +133,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         ]).pipe(
             map(([prestaciones, refreshFecha, tipoPrestacion, min, idPrestacion]) => {
                 if (idPrestacion) {
+
                     this.prestacionesEliminadas.push(idPrestacion);
                 }
                 if (!this.desde) {
@@ -144,11 +146,12 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 }
                 this.inProgress = false;
                 return prestaciones.filter((prestacion) => {
+                    const organizacionValida = prestacion.solicitud.organizacion.id === this.idOrganizacion;
                     const fecha = moment(prestacion.ejecucion.fecha);
                     if (tipoPrestacion) {
                         return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
                     }
-                    return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id);
+                    return fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd') && !this.prestacionesEliminadas.some(id => id === prestacion.id) && organizacionValida;
                 });
             })
         );
