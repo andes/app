@@ -19,7 +19,7 @@
                        placeholder='Ingrese un documento, apellido, nombre, alias o número de identificación'>
             </plex-text>
             <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
-                         label="Prestación" tmPrestaciones preload="true">
+                         label="Prestación" tmPrestaciones preload="true" tipo="nominalizadas">
             </plex-select>
 
             <plex-button type="success" label="Buscar" (click)="refreshSelection($event, 'filter')"
@@ -75,8 +75,6 @@
                         <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
                         </plex-bool>
                         <plex-bool label="Documento" [(ngModel)]="columnas.documento">
-                        </plex-bool>
-                        <plex-bool label="Paciente" [(ngModel)]="columnas.paciente">
                         </plex-bool>
                         <plex-bool label="Prestación" [(ngModel)]="columnas.tipoPrestacion">
                         </plex-bool>
@@ -167,7 +165,7 @@
                                     </plex-bool>
                                 </td>
                                 <td *ngIf="columnas.fecha">{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
-                                <td *ngIf="columnas.documento">{{busqueda.paciente.documento}}</td>
+                                <td *ngIf="columnas.documento">{{busqueda.paciente?.documento}}</td>
                                 <td *ngIf="columnas.paciente">{{busqueda.paciente | nombre}}</td>
                                 <td *ngIf="columnas.tipoPrestacion">{{busqueda.prestacion?.term}}</td>
                                 <td *ngIf="columnas.ambito">{{busqueda.ambito}}</td>

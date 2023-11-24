@@ -1,0 +1,197 @@
+<plex-layout main="{{ showPrestacion? '7': '12'}}">
+    <plex-layout-main>
+        <plex-title titulo="Prestaciones no nominalizadas"></plex-title>
+        <!--Botones / Acciones-->
+        <!--Filtros-->
+        <plex-wrapper>
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection('fechaDesde')"
+                           name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
+            </plex-datetime>
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection('fechaHasta')"
+                           name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
+            </plex-datetime>
+            <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection('prestaciones')" label="Prestación"
+                         tmPrestaciones preload="true" tipo="noNominalizadas">
+            </plex-select>
+            <plex-button type="success" label="Buscar" (click)="refreshSelection('filter')"
+                         [disabled]='botonBuscarDisabled'>
+            </plex-button>
+        </plex-wrapper>
+        <span class="text-danger" *ngIf='botonBuscarDisabled'>
+            El rango de fecha no pueda superar los 31 días</span>
+
+        <!-- Resultados -->
+        <ng-container>
+            <plex-title titulo="Listado" size="sm">
+                <plex-dropdown icon="format-list-checks" tooltip="Agregar columnas" tooltipPosition="left" type="info"
+                               size="sm" class="d-inline-block" [right]="true" class="ml-2">
+                    <plex-grid cols="3">
+                        <plex-bool label="Fecha" [(ngModel)]="columnas.fecha">
+                        </plex-bool>
+                        <plex-bool label="Efector" [(ngModel)]="columnas.efector">
+                        </plex-bool>
+                        <plex-bool label="Prestación" [(ngModel)]="columnas.tipoPrestacion">
+                        </plex-bool>
+                        <plex-bool label="Equipo" [(ngModel)]="columnas.equipoSalud">
+                        </plex-bool>
+                        <plex-bool label="Actividad" [(ngModel)]="columnas.actividad">
+                        </plex-bool>
+                    </plex-grid>
+                </plex-dropdown>
+            </plex-title>
+            <ng-container>
+                <cdk-virtual-scroll-viewport [itemSize]="50">
+                    <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+                    <table *ngIf="(busqueda$ | async)?.length && !loader" class="table table-striped table-sm">
+                        <thead>
+                            <th *ngIf="columnas.fecha">Fecha</th>
+                            <th *ngIf="columnas.efector">Efector</th>
+                            <th *ngIf="columnas.tipoPrestacion">Tipo de Prestación</th>
+                            <th *ngIf="columnas.actividad">Actividad</th>
+                            <th *ngIf="columnas.equipoSalud">
+                                Profesional/es</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let busqueda of busqueda$ | async" class="hover"
+                                (click)="mostrarPrestacion(busqueda)"
+                                [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
+
+                                <td *ngIf="columnas.fecha">{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
+                                <td *ngIf="columnas.efector">
+                                    {{busqueda.organizacion?.nombre}}
+                                </td>
+                                <td *ngIf="columnas.tipoPrestacion">{{busqueda.prestacion?.term}}</td>
+                                <td *ngIf="columnas.actividad">{{busqueda.actividad}}{{busqueda.tematica && ' / ' +
+                                    busqueda.tematica}}</td>
+                                <td *ngIf="columnas.equipoSalud" class="nombres-profesionales">
+                                    <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">
+                                        Profesional no asignado
+                                    </span>
+                                    <ng-container *ngIf="busqueda.profesionales">
+                                        <div *ngIf="busqueda.profesionales.length > 0">
+                                            {{ busqueda.profesionales | enumerar:['apellido','nombre'] }}
+                                        </div>
+                                    </ng-container>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="!loader && !(busqueda$ | async)?.length  " justify="center" class="mt-5">
+                        <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
+                                    [titulo]="'No hay resultados'"
+                                    subtitulo="Complete los filtros deseados y presione Buscar">
+                        </plex-label>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </ng-container>
+    </plex-layout-main>
+
+    <!-- Prestacion -->
+    <plex-layout-sidebar *ngIf="showPrestacion">
+        <plex-title titulo="Prestación" size="md">
+            <plex-button icon="close" type="danger" (click)="onClose()" size="sm"></plex-button>
+        </plex-title>
+
+        <div class="d-flex">
+            <plex-badge *ngIf="!prestacion?.idPrestacion" class="mr-1" size="md" type="danger">La prestación no ha sido
+                iniciada</plex-badge>
+            <plex-badge *ngIf="!prestacion?.idAgenda" size="md" type="warning">Fuera de agenda</plex-badge>
+            <plex-badge *ngIf="prestacion?.idAgenda" size="md" type="success">En agenda</plex-badge>
+        </div>
+
+        <div *ngIf="prestacion?.idPrestacion">
+            <div class="row">
+                <div class="col">
+                    <div *ngIf="prestacion?.prestacion">
+                        <label>Tipo de prestación</label>{{prestacion.prestacion?.term}}
+                    </div>
+                </div>
+                <div class="col">
+                    <div *ngIf="prestacion?.actividad">
+                        <label>Actividad</label>{{prestacion.actividad}}{{prestacion.tematica && ' / ' +
+                        prestacion.tematica}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div *ngIf="prestacion?.profesionales">
+                        <label>Profesionales</label>
+                        <div *ngFor="let profesional of prestacion.profesionales let i = index">{{profesional |
+                            nombre}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <label>Fecha de la prestación</label>
+                        <span>{{ prestacion.fecha | fecha }}</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <label>Estado</label>
+                        <span>{{ prestacion.estado }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="prestacion?.estadoActual">
+                <div class="col">
+                    <div>
+                        <label>Fecha de registro</label>
+                        <span>
+                            {{prestacion.estadoActual.createdAt.fecha | fecha }}
+                            {{prestacion.estadoActual.createdAt.fecha | hora }}
+                        </span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <label>Usuario que registra</label>
+                        <span>{{prestacion.estadoActual.createdBy.nombreCompleto}}
+                        </span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+
+        <div *ngIf="prestacion?.idPrestacion">
+            <vista-prestacion [idPrestacion]="prestacion.idPrestacion"></vista-prestacion>
+        </div>
+
+        <div *ngIf="prestacion?.pacientes?.length">
+            <plex-title titulo="Pacientes" size="md"></plex-title>
+            <table class="table table-striped table-sm">
+                <tbody>
+                    <tr *ngFor="let paciente of pacientes">
+                        <td>{{paciente.nombreCompleto}}</td>
+                        <td>{{paciente.edadReal.valor}} {{paciente.edadReal.unidad}}</td>
+                        <td>{{paciente.documento || paciente.numeroIdentificacion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="prestacion?.documentos?.length">
+            <plex-title titulo="Documentos adjuntos" size="md"></plex-title>
+            <table class="table table-striped table-sm">
+                <tbody>
+                    <tr *ngFor="let documento of prestacion.documentos">
+                        <td class="align-middle">{{documento.descripcion.term}}</td>
+                        <td class="text-right">
+                            <plex-button type="info" size="sm" icon="download" tooltip="Descargar"
+                                         tooltipPosition="left" (click)="getAdjunto(documento)">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </plex-layout-sidebar>
+</plex-layout>

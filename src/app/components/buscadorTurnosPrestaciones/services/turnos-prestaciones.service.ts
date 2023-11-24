@@ -62,7 +62,7 @@ export class TurnosPrestacionesService {
         } else {
             switch (sortBy) {
                 case 'fecha':
-                    prestaciones = prestaciones.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+                    prestaciones = prestaciones.sort((a, b) => a.fecha?.getTime() - b.fecha?.getTime());
                     break;
                 case 'documento':
                     prestaciones = prestaciones.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.documento.localeCompare((b.paciente.documento as string)));
