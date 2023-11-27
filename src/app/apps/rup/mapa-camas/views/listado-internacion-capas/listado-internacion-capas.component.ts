@@ -42,7 +42,7 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             sort: (a: any, b: any) => {
                 const aDocumento = a.paciente.documento || a.paciente.numeroIdentificacion;
                 const bDocumento = b.paciente.documento || b.paciente.numeroIdentificacion;
-                return aDocumento.localeCompare(bDocumento);
+                return aDocumento?.localeCompare(bDocumento);
             }
         },
         {
@@ -68,7 +68,18 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             label: 'Fecha Egreso',
             sorteable: true,
             opcional: true,
-            sort: (a: any, b: any) => a.fechaEgreso.getTime() - b.fechaEgreso.getTime()
+            sort: (a: any, b: any) => a.fechaEgreso?.getTime() - b.fechaEgreso?.getTime()
+        },
+        {
+            key: 'unidadOrganizativa',
+            label: 'Unidad Organizativa',
+            sorteable: true,
+            opcional: true,
+            sort: (a: any, b: any) => {
+                const UOa = a.estadosCama?.unidadOrganizativa.term || a.estadosSala?.unidadOrganizativas[0].term;
+                const UOb = b.estadosCama?.unidadOrganizativa.term || b.estadosSala?.unidadOrganizativas[0].term;
+                return UOa.localeCompare(UOb);
+            }
         }
     ];
 
@@ -111,11 +122,12 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
     }
 
     onSelect(resumen: IResumenInternacion) {
-        if (resumen?.id !== this.idInternacionSelected) {
+
+        if (resumen?._id !== this.idInternacionSelected) {
             this.mapaCamasService.isLoading(true);
             this.mapaCamasService.selectResumen(resumen);
             this.mapaCamasService.setFecha(resumen.fechaIngreso);
-            this.idInternacionSelected = resumen.id;
+            this.idInternacionSelected = resumen._id;
             this.mapaCamasService.camaSelectedSegunView$.pipe(
                 take(1),
                 map(cama => this.mapaCamasService.select(cama))
@@ -133,6 +145,10 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         this.mapaCamasService.selectResumen(null);
         this.mapaCamasService.selectPrestacion(null);
         this.idInternacionSelected = null;
+    }
+
+    existeUO(internacion) {
+        return (internacion.estadosSala?.unidadOrganizativas.length || internacion.estadosCama?.unidadOrganizativa) ? true : false;
     }
 
 }

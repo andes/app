@@ -39,7 +39,7 @@ export interface IResumenInternacion {
         valor: any;
         esDiagnosticoPrincipal: boolean;
     }[];
-
-    idPrestacion: string | IPrestacion;
+    _id: string;
+    idPrestacion: string;
 
 }

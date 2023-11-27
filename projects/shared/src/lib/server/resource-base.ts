@@ -13,6 +13,7 @@ export interface ShowErrorDetail {
  * Implementa las rutas básicas de ResourceBase
  */
 export abstract class ResourceBaseHttp<T = any> {
+    private listadoInternacionUrl = '/modules/rup/internacion';
     /**
      * Endpoint del recurso básico
      */
@@ -30,6 +31,9 @@ export abstract class ResourceBaseHttp<T = any> {
     protected showErrorDetail: ShowErrorDetail = {};
 
     constructor(protected server: Server) { }
+    getListado(body): Observable<T[]> {
+        return this.server.get(`${this.listadoInternacionUrl}/listado-internacion`, { params: body, showError: this.mustShowError('getListados') });
+    }
 
     save(data): Observable<T> {
         if (!data.id) {

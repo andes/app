@@ -36,7 +36,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
         this.prestacion$ = this.resumenInternacion$.pipe(
             switchMap(resumen => {
-                if (resumen.idPrestacion) {
+                if (Object.keys(resumen.idPrestacion).length) { // verifico que idPrestacion no sea {}
                     if ((resumen.idPrestacion as any)?.id) {
                         // prestacion ya viene populada desde el listado
                         return of(resumen.idPrestacion);
