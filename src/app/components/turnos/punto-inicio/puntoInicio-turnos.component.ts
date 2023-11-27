@@ -64,8 +64,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private router: Router,
         private _activatedRoute: ActivatedRoute,
         private plex: Plex,
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
         this._activatedRoute.params.subscribe(parameters => {
@@ -107,16 +106,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.searchClear = false;
         this.loading = false;
         if (this.esEscaneado && pacientes.length === 1) {
-            if (pacientes[0].paciente) {
-                this.pacienteCache.setPaciente(pacientes[0].paciente);
-                this.pacienteCache.setScanCode(scan);
-                this.onPacienteSelected(pacientes[0].paciente);
-            } else {
-                this.pacienteCache.setPaciente(pacientes[0]);
-                this.pacienteCache.setScanCode(scan);
-                this.onPacienteSelected(pacientes[0]);
-            }
-
+            const pacSelected = pacientes[0].paciente || pacientes[0];
+            this.onPacienteSelected(pacSelected);
             this.searchClear = true;
         } else {
             this.resultadoBusqueda = pacientes;
@@ -133,14 +124,12 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     // -----------------------------------------------
 
-    volverAPuntoInicio() {
-        this.showDashboard = true;
-    }
-
     onPacienteSelected(paciente: IPaciente): void {
         this.showTab = 0;
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
+            this.pacienteCache.setPaciente(paciente);
+            this.pacienteCache.setScanCode(paciente.scan);
             this.router.navigate(['/apps/mpi/paciente/con-dni/puntoInicio']); // abre paciente-cru
         } else {
             this.getPacienteById(paciente.id);
@@ -199,11 +188,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showActivarApp = true;
                 break;
         }
-    }
-
-    actualizarPaciente(actualizar) {
-        this.showCreateUpdate = actualizar;
-        this.showDashboard = !actualizar;
     }
 
     afterDarTurno(pac) {
