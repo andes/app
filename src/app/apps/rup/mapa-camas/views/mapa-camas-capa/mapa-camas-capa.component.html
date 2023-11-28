@@ -213,7 +213,8 @@
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-desocupar-cama>
-        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
+        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()"
+                          (onCancel)="volverADetalle()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"
                          [autodisabled]="true">
             </plex-button>

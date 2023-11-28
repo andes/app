@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { catchError, first, map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -286,89 +286,85 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
                 this.egresoExtendido();
             } else {
-                this.egresoSimplificado(this.estadoDestino);
+                // medica, enfermeria
+                this.egresoSimplificado(this.estadoDestino).subscribe(() => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    if (this.view === 'listado-internacion') {
+                        this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                    } else if (this.view === 'mapa-camas') {
+                        this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                    }
+                    this.disableButton = false;
+                    this.onSave.emit(null);
+                }, () => {
+                    this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
+                    this.disableButton = false;
+                    this.onSave.emit(null);
+                });
             }
-            this.onSave.emit(null);
         } else {
-            this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
+            this.plex.info('info', 'Debe completar los datos del egreso para poder guardar.', 'Datos incompletos');
             return;
         }
     }
 
-    egresoSimplificado(estado) {
+    /*  Para las capas estadistica-v2, medica y enfermeria actualiza el resumen.
+        Luego actualiza el estado de la cama cualquiera sea la capa.
+     */
+    egresoSimplificado(estado): Observable<any> {
         // Se configura nuevo estado con datos del egreso
-        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
-            let estadoPatch = {};
-            if (!this.cama.sala) {// si no es sala comun
-                estadoPatch = {
-                    _id: this.cama.id,
-                    estado: estado,
-                    idInternacion: null,
-                    paciente: null,
-                    nota: null,
-                    fechaIngreso: null,
-                    extras: {
-                        egreso: true,
-                        idInternacion: this.cama.idInternacion,
-                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                    }
-                };
-            } else {
-                this.cama.estado = estado;
-                this.cama.extras = {
+        // if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
+        let estadoPatch = {};
+        if (this.cama.sala) {
+            // sala comun
+            this.cama.estado = estado;
+            this.cama.extras = {
+                egreso: true,
+                idInternacion: this.cama.idInternacion,
+                tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
+            };
+            estadoPatch = this.cama;
+        } else {
+            // cama
+            estadoPatch = {
+                _id: this.cama.id,
+                estado: estado,
+                idInternacion: null,
+                paciente: null,
+                nota: null,
+                fechaIngreso: null,
+                extras: {
                     egreso: true,
                     idInternacion: this.cama.idInternacion,
                     tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id
-                };
-                estadoPatch = this.cama;
-            }
-            const saveInternacion = () => {
-                if (this.capa !== 'estadistica') {
-                    return this.internacionResumenService.update(this.cama.idInternacion, {
-                        tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
-                        fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
-                    }).pipe(
-                        catchError(() => of(null))
-                    );
                 }
-                return of(null);
             };
+        }
+        const saveInternacion = () => {
+            if (this.capa !== 'estadistica' && !this.cama.sala) {
+                // estadistica-v2, medica, enfermeria (exceptuando salas)
+                return this.internacionResumenService.update(this.cama.idInternacion, {
+                    tipo_egreso: this.registro.valor.InformeEgreso.tipoEgreso.id,
+                    fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
+                });
+            }
+            return of(null);
+        };
 
-            saveInternacion().pipe(
-                switchMap(() => this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso))
-            ).subscribe(() => {
-                this.plex.toast('success', 'Egreso guardado correctamente', 'Prestacion guardada', 100);
-                if (this.view === 'listado-internacion') {
-                    this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
-                } else if (this.view === 'mapa-camas') {
-                    this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+        return saveInternacion().pipe(
+            switchMap(resumenSaved => {
+                if (this.capa !== 'estadistica' && !this.cama.sala && !resumenSaved) {
+                    /*  si hubo algun error actualizando el resumen, no debería actualizar el estado de la cama para
+                            no generar datos inconsistentes entre internacion y movimientos */
+                    throw new Error();
                 }
-                this.disableButton = false;
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al egresar paciente!');
-                this.disableButton = false;
-            });
-        }
+                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+            })
+        );
+        // }
     }
 
-    cambiarEstado() {
-        if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
-            this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(), this.prestacion.id).pipe(
-                switchMap(snapshot => {
-                    const ultimaCama = snapshot[0];
-                    return this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, this.prestacion.id);
-                })
-            ).subscribe(() => {
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.listadoInternacionService.setFechaHasta(moment().toDate());
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
-            });
-        } else {
-            this.plex.info('success', 'Los datos se actualizaron correctamente');
-        }
-    }
-
+    // Setea valores de la prestacion (estadistica y estadistica-v2) antes de llamar al egreso simplificado
     egresoExtendido() {
         const registros = this.controlRegistrosGuardar();
         if (registros) {
@@ -381,7 +377,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (this.view === 'listado-internacion') {
                         this.mapaCamasService.selectPrestacion(prestacion);
                     }
-                    if (this.resumen?.fechaEgreso && this.capa === 'estadistica-v2') {
+                    if (this.capa === 'estadistica-v2' && this.resumen?.fechaEgreso) {
                         const idInternacion = this.view === 'listado-internacion' ? this.resumen.id : this.cama.idInternacion;
                         // actualiza fecha y tipo de egreso en el resumen para mantener la sincronización
                         return this.internacionResumenService.update(idInternacion, {
@@ -389,18 +385,22 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             fechaEgreso: this.registro.valor.InformeEgreso.fechaEgreso
                         });
                     } else {
-                        this.egresoSimplificado(this.estadoDestino);
-                        this.cambiarEstado();
+                        // estadistica o medica
+                        return this.egresoSimplificado(this.estadoDestino);
                     }
-                    return of(null);
                 }),
             ).subscribe(() => {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
                 if (this.view === 'listado-internacion') {
                     this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                } else if (this.view === 'mapa-camas') {
+                    this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
                 }
+                this.disableButton = false;
+                this.onSave.emit(null);
             }, () => {
-                this.plex.info('danger', 'Error al intentar actualizar los datos');
+                this.plex.info('warning', 'Ocurrió un error egresando al paciente. Revise los movimientos de la internación e intente nuevamente.', 'Atención');
+                this.disableButton = false;
             });
         }
     }
