@@ -1,3 +1,10 @@
+## [5.128.1](https://github.com/andes/app/compare/v5.128.0...v5.128.1) (2023-11-29)
+
+
+### Bug Fixes
+
+* **INT:** Agrega servicio de elementosRup al cargar el plan de indicaciones ([#2947](https://github.com/andes/app/issues/2947)) ([9e151b2](https://github.com/andes/app/commit/9e151b21afb072bb5a9b620c16f55cee2191e6d1))
+
 # [5.128.0](https://github.com/andes/app/compare/v5.127.1...v5.128.0) (2023-11-22)
 
 
