@@ -1,13 +1,17 @@
 <plex-title titulo="Historial de movimientos"></plex-title>
 <!--  HISTORIAL DE MOVIMIENTOS DE UNA CAMA -->
-<plex-grid size="sm" type="full" cols="2" class="mb-1 mt-0">
-    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600"
-                   (change)="onChange($event)">
+<div class="filtros">
+    <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600" (change)="onChange()">
     </plex-datetime>
-    <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600"
-                   (change)="onChange($event)">
+    <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600" (change)="onChange()">
     </plex-datetime>
-</plex-grid>
+
+    <plex-button type="success" size="md" label="Buscar" (click)="buscar()" [disabled]="disableBuscar"></plex-button>
+</div>
+
+<div *ngIf="disableBuscar" class="mb-2">
+    <span class="text-danger">Las fechas seleccionadas son inválidas</span>
+</div>
 
 <table class="table table-striped">
     <thead>
