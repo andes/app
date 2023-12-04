@@ -3,6 +3,7 @@ import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
 import { Subscription } from 'rxjs';
+import { PacienteCacheService } from 'src/app/core/mpi/services/pacienteCache.service';
 
 interface PacienteEscaneado {
     documento: string;
@@ -42,7 +43,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
     constructor(
         private plex: Plex,
-        private pacienteBuscar: PacienteBuscarService) {
+        private pacienteBuscar: PacienteBuscarService,
+        private pacienteCache: PacienteCacheService
+    ) {
     }
 
     public ngOnInit() {
@@ -69,6 +72,8 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         if ($event.type) {
             return;
         }
+        this.pacienteCache.clearPaciente();
+        this.pacienteCache.clearScanState();
         const textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
         if (textoLibre && textoLibre.length) {
             // Controla el scanner
