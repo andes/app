@@ -95,7 +95,7 @@ export class CambiarCamaComponent implements OnInit {
                 switchMap(camaActual => {
                     const refreshCamaActual$ = this.camasHttp.snapshot('internacion', capa, fechaCambio, null, null, camaActual.id);
                     const refreshNuevaCama$ = this.camasHttp.snapshot('internacion', capa, fechaCambio, null, null, this.nuevaCama.id);
-                    const refreshHistorial$ = this.nuevaCama.sala ? of(null) : this.camasHttp.historial('internacion', capa, fechaCambio, moment(fechaCambio).add(1, 'day').toDate(), this.nuevaCama.id);
+                    const refreshHistorial$ = this.nuevaCama.sala ? of(null) : this.camasHttp.historial('internacion', capa, fechaCambio, moment(fechaCambio).add(1, 'day').toDate(), { idCama: this.nuevaCama.id });
 
                     /*  Se vuelve a consultar para obtener los ultimos estados reales de las camas ya que podrían haber
                         nuevos movimientos intermedios producto de un mapa de camas desactualizado (Tiempo sin interaccion
@@ -161,7 +161,7 @@ export class CambiarCamaComponent implements OnInit {
                 }
             }, () => { // error
                 const mensaje = (this.cambiarUO) ? 'pase de unidad organizativa.' : 'cambio de cama.';
-                this.plex.info('warning', '', `Ocurrió un error durante el ${mensaje}`);
+                this.plex.info('warning', `Ocurrió un error durante el ${mensaje}`, 'Atención');
                 this.disableSaveButton = false;
             });
         }
