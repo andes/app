@@ -1,3 +1,10 @@
+## [5.128.2](https://github.com/andes/app/compare/v5.128.1...v5.128.2) (2023-12-06)
+
+
+### Bug Fixes
+
+* **in:** movimiento de cama y edit egreso desde listado ([#2959](https://github.com/andes/app/issues/2959)) ([42cb4fd](https://github.com/andes/app/commit/42cb4fd96a59cb79aeae79eff47ce2c6a49c65c2))
+
 ## [5.128.1](https://github.com/andes/app/compare/v5.128.0...v5.128.1) (2023-11-29)
 
 
