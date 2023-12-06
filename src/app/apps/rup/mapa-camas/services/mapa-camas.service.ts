@@ -731,6 +731,6 @@ export class MapaCamasService {
 
     controlRegistros() {
         return this.prestacionesPermitidas(this.selectedCama).pipe(map(prestacion =>
-            (prestacion?.length && this.permisosMapaCamasService.registros && this.esProfesional) ? true : false));
+            (prestacion?.length && this.permisosMapaCamasService.registros && this.esProfesional && this.capa !== 'farmaceutica') ? true : false));
     }
 }

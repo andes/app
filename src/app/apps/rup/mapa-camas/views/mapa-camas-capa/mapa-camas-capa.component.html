@@ -25,12 +25,14 @@
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
-                <plex-button *ngIf="permisosMapaCamasService.ingreso && mapaCamasService.capa !== 'interconsultores'"
+                <plex-button
+                    *ngIf="permisosMapaCamasService.ingreso && mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
                     class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
                     (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
 
-                <plex-dropdown *ngIf="itemsCrearDropdown.length > 0 && mapaCamasService.capa !== 'interconsultores'"
+                <plex-dropdown
+                    *ngIf="itemsCrearDropdown.length > 0 && mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
                     size="sm" label="NUEVO RECURSO" type="info" class="d-inline-block mr-1" [right]="true"
                     [items]="itemsCrearDropdown">
                 </plex-dropdown>
@@ -171,7 +173,8 @@
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
-                            <th *ngIf="mapaCamasService.capa !== 'interconsultores'" class="col-acciones">ACCIONES
+                            <th *ngIf="mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
+                                class="col-acciones">ACCIONES
                             </th>
                         </tr>
                     </thead>

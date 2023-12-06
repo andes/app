@@ -151,8 +151,21 @@ table.plan-indicaciones {
             border: 2px solid $blue;
         }
     }
+}
 
+.estilo-suspendido {
+    background-color: #dd4b3912;
+    border: 2px solid #dd4b39;
+}
 
+.estilo-pendiente {
+    background-color: #f0a73a12;
+    border: 2px solid orange;
+}
+
+.estilo-aceptado {
+    background-color: #8bf13d12;
+    border: 2px solid greenyellow;
 }
 
 // Item
