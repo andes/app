@@ -9,7 +9,7 @@ import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente, pacienteToBasico } from '../../../core/mpi/interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
@@ -1261,7 +1261,7 @@ export class DarTurnosComponent implements OnInit {
                     const origen = 'citas';
                     const estado = 'pendiente';
                     const motivo = 'No hay turnos disponibles';
-                    if (this.listaEsperaService.save(this.paciente, this.opciones.tipoPrestacion, estado, this.opciones.profesional, this.organizacion, motivo, origen)) {
+                    if (this.listaEsperaService.save(pacienteToBasico(this.paciente), this.opciones.tipoPrestacion, estado, this.opciones.profesional, this.organizacion, motivo, origen)) {
                         this.plex.toast('success', 'Paciente agregado a Lista de Espera');
                         this.estadoT = 'noSeleccionada';
                         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno

@@ -7,6 +7,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { FileObject, FILE_EXT, IMAGENES_EXT, VIDEO_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
+import { IPaciente, pacienteToBasico } from '../../../../app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'form-nueva-solicitud',
@@ -15,7 +16,7 @@ import { DriveService } from 'src/app/services/drive.service';
 })
 export class FormNuevaSolicitudComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    @Input() paciente: any;
+    @Input() paciente: IPaciente;
     @Input() size: any;
     @Input() tipoSolicitud: string;
     @Output() operacionFinalizada = new EventEmitter();
@@ -300,17 +301,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
             },
             tipo: 'solicitud'
         });
-        this.modelo.paciente = {
-            id: this.paciente.id,
-            nombre: this.paciente.nombre,
-            alias: this.paciente.alias,
-            apellido: this.paciente.apellido,
-            documento: this.paciente.documento,
-            numeroIdentificacion: this.paciente.numeroIdentificacion,
-            sexo: this.paciente.sexo,
-            genero: this.paciente.genero,
-            fechaNacimiento: this.paciente.fechaNacimiento
-        };
+        this.modelo.paciente = pacienteToBasico(this.paciente);
         // Se guarda la solicitud 'pendiente' de prestación
         this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
             this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);

@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
-import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente, IPacienteBasico, pacienteToBasico } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
@@ -145,20 +145,9 @@ export class DarSobreturnoComponent implements OnChanges {
                     osPaciente = this.modelo.obraSocial;
             }
 
-            const pacienteSave: IPacienteBasico = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                alias: this.paciente.alias,
-                numeroIdentificacion: this.paciente.numeroIdentificacion,
-                genero: this.paciente.genero,
-                apellido: this.paciente.apellido,
-                nombre: this.paciente.nombre,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                sexo: this.paciente.sexo,
-                telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores,
-                obraSocial: osPaciente
-            };
+            const pacienteSave = pacienteToBasico(this.paciente);
+            pacienteSave.telefono = this.telefono;
+            pacienteSave.obraSocial = osPaciente;
 
             // Si cambió el teléfono lo actualizo en el MPI
             // Pero si borra, no actualiza en MPI.
