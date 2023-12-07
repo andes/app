@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { concat, forkJoin } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { IPaciente, IPacienteBasico, pacienteToBasico } from '../../../../core/mpi/interfaces/IPaciente';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
@@ -119,19 +119,11 @@ export class PrestacionCrearComponent implements OnInit {
                 this.existePaciente();
             }
             const conceptoSnomed = this.tipoPrestacionSeleccionada;
+            delete this.paciente.nombre;
+            const paciente = pacienteToBasico(this.paciente);
+            paciente.obraSocial = obraSocialPaciente;
             const nuevaPrestacion = {
-                paciente: {
-                    id: this.paciente.id,
-                    nombre: this.paciente.nombre,
-                    alias: this.paciente.alias,
-                    apellido: this.paciente.apellido,
-                    documento: this.paciente.documento,
-                    numeroIdentificacion: this.paciente.numeroIdentificacion,
-                    sexo: this.paciente.sexo,
-                    fechaNacimiento: this.paciente.fechaNacimiento,
-                    obraSocial: obraSocialPaciente,
-                    genero: this.paciente.genero
-                },
+                paciente,
                 solicitud: {
                     fecha: this.fecha,
                     tipoPrestacion: conceptoSnomed,

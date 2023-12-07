@@ -83,11 +83,13 @@ export interface IPacienteBasico {
     alias: string;
     documento: string;
     numeroIdentificacion: string;
+    estado: string;
     sexo: string;
     genero: string;
     fechaNacimiento: Date;
     obraSocial?: IObraSocial;
     telefono?: string;
+    direccion?: string;
     carpetaEfectores?: [{
         organizacion: {
             id: string;
@@ -95,4 +97,32 @@ export interface IPacienteBasico {
         };
         nroCarpeta: string;
     }];
+}
+
+export type extras = ['obraSocial', 'direccion', 'carpetaEfectores'];
+
+export function pacienteToBasico(pac: IPaciente, extras?: extras): IPacienteBasico {
+    const response: IPacienteBasico = {
+        id: undefined,
+        nombre: undefined,
+        apellido: undefined,
+        alias: undefined,
+        documento: undefined,
+        numeroIdentificacion: undefined,
+        estado: undefined,
+        sexo: undefined,
+        genero: undefined,
+        fechaNacimiento: undefined,
+    };
+    Object.keys(response).map(key => response[key] = pac[key]);
+
+    extras?.map(field => {
+        if (field === 'direccion') {
+            response[field] = pac.direccion[0]?.valor?.slice();
+        } else {
+            response[field] = pac[field];
+        }
+    });
+
+    return response;
 }
