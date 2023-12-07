@@ -4,7 +4,7 @@ import { cacheStorage, Unsubscribe } from '@andes/shared';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
+import { forkJoin as observableForkJoin, Subscription, switchMap } from 'rxjs';
 import { ITurno } from 'src/app/interfaces/turnos/ITurno';
 import { SnomedService } from '../../../../apps/mitos';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
@@ -18,6 +18,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -98,7 +99,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public servicioTurnero: TurneroService,
         public ws: WebSocketService,
         private conceptosTurneablesService: ConceptosTurneablesService,
-        private servicioIntermedioService: ServicioIntermedioService
+        private servicioIntermedioService: ServicioIntermedioService,
+        public motivosHudsService: MotivosHudsService
+
     ) { }
 
     ngOnDestroy() {
@@ -412,19 +415,22 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     if (confirmacion) {
                         if (pendientes.length) {
                             const pretacionPendiente = pendientes[0];
-
                             this.ejecutarPrestacionPendiente(pretacionPendiente, turno).subscribe(() => {
                                 if (this.tieneAccesoHUDS) {
-                                    const paramsToken = {
-                                        usuario: this.auth.usuario,
-                                        organizacion: this.auth.organizacion,
-                                        paciente: paciente,
-                                        motivo: snomedConcept.term,
-                                        profesional: this.auth.profesional,
-                                        idTurno: turno.id,
-                                        idPrestacion: snomedConcept._id
-                                    };
-                                    this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
+                                    const token = this.motivosHudsService.getMotivo('RUP:Inicio Prestacion').pipe(
+                                        switchMap(motivoH => {
+                                            const paramsToken = {
+                                                usuario: this.auth.usuario,
+                                                organizacion: this.auth.organizacion,
+                                                paciente: paciente,
+                                                motivo: motivoH[0].motivo,
+                                                profesional: this.auth.profesional,
+                                                idTurno: turno.id,
+                                                idPrestacion: snomedConcept._id
+                                            };
+                                            return this.hudsService.generateHudsToken(paramsToken);
+                                        }));
+                                    token.subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', pretacionPendiente.id); // prestacion pendiente
@@ -442,16 +448,21 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                     this.plex.info('info', nuevaPrestacion.error, 'Aviso');
                                 }
                                 if (this.tieneAccesoHUDS) {
-                                    const paramsToken = {
-                                        usuario: this.auth.usuario,
-                                        organizacion: this.auth.organizacion,
-                                        paciente: paciente,
-                                        motivo: snomedConcept.term,
-                                        profesional: this.auth.profesional,
-                                        idTurno: turno.id,
-                                        idPrestacion: snomedConcept._id
-                                    };
-                                    this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
+                                    const token = this.motivosHudsService.getMotivo('RUP:Inicio Prestacion').pipe(
+                                        switchMap(motivoH => {
+                                            const paramsToken = {
+                                                usuario: this.auth.usuario,
+                                                organizacion: this.auth.organizacion,
+                                                paciente: paciente,
+                                                motivo: motivoH[0].motivo,
+                                                profesional: this.auth.profesional,
+                                                idTurno: turno.id,
+                                                idPrestacion: snomedConcept._id
+                                            };
+                                            return this.hudsService.generateHudsToken(paramsToken);
+                                        }));
+
+                                    token.subscribe((husdTokenRes) => {
                                         if (husdTokenRes.token) {
                                             window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                                             this.routeTo('ejecucion', nuevaPrestacion.id); // prestacion
@@ -783,16 +794,21 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     ejecutarPrestacion(prestacion) {
         this.ejecutarPrestacionPendiente(prestacion).subscribe(() => {
             if (this.tieneAccesoHUDS) {
-                const paramsToken = {
-                    usuario: this.auth.usuario,
-                    organizacion: this.auth.organizacion,
-                    paciente: prestacion.paciente,
-                    motivo: prestacion.solicitud.tipoPrestacion.term,
-                    profesional: this.auth.profesional,
-                    idTurno: null,
-                    idPrestacion: prestacion.id
-                };
-                this.hudsService.generateHudsToken(paramsToken).subscribe((husdTokenRes) => {
+                const token = this.motivosHudsService.getMotivo('RUP:Ejecucion').pipe(
+                    switchMap(motivoH => {
+                        const paramsToken = {
+                            usuario: this.auth.usuario,
+                            organizacion: this.auth.organizacion,
+                            paciente: prestacion.paciente,
+                            motivo: motivoH[0].motivo,
+                            profesional: this.auth.profesional,
+                            idTurno: null,
+                            idPrestacion: prestacion.id
+                        };
+                        return this.hudsService.generateHudsToken(paramsToken);
+                    }));
+
+                token.subscribe((husdTokenRes) => {
                     if (husdTokenRes.token) {
                         window.sessionStorage.setItem('huds-token', husdTokenRes.token);
                         this.routeTo('ejecucion', prestacion.id); // prestacion pendiente
@@ -848,16 +864,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
                 doRoute();
             } else if (this.accesoHudsPaciente) {
-                const paramsToken = {
-                    usuario: this.auth.usuario,
-                    organizacion: this.auth.organizacion,
-                    paciente: this.accesoHudsPaciente,
-                    motivo: motivoAccesoHuds,
-                    profesional: this.auth.profesional,
-                    idTurno: this.accesoHudsTurno,
-                    idPrestacion: this.accesoHudsPrestacion
-                };
-                this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
+                const token = this.motivosHudsService.getMotivo('RUP').pipe(
+                    switchMap(motivoH => {
+                        const paramsToken = {
+                            usuario: this.auth.usuario,
+                            organizacion: this.auth.organizacion,
+                            paciente: this.accesoHudsPaciente,
+                            motivo: motivoH[0].motivo,
+                            profesional: this.auth.profesional,
+                            idTurno: this.accesoHudsTurno,
+                            idPrestacion: this.accesoHudsPrestacion
+                        };
+                        return this.hudsService.generateHudsToken(paramsToken);
+                    }));
+                token.subscribe(hudsToken => {
                     // se obtiene token y loguea el acceso a la huds del paciente
                     window.sessionStorage.setItem('huds-token', hudsToken.token);
                     doRoute();

@@ -9,10 +9,12 @@ import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { HUDSService } from '../../modules/rup/services/huds.service';
 import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { switchMap } from 'rxjs/operators';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { cache } from '@andes/shared';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -98,6 +100,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         private exportHudsService: ExportHudsService,
         public obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
+        public motivosHudsService: MotivosHudsService
+
 
     ) { }
 
@@ -329,19 +333,21 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
 
-        this.pacienteService.getById(datos.paciente?.id).subscribe(paciente => this.paciente = paciente);
-
-
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: datos.paciente,
-            motivo: 'auditoria',
-            profesional: this.auth.profesional ? this.auth.profesional : null,
-            idTurno: datos.turno ? datos.turno.id : null,
-            idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
-        };
-        this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => this.paciente = paciente);
+        const token = this.motivosHudsService.getMotivo('TYP').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: datos.paciente,
+                    motivo: motivoH[0].motivo,
+                    profesional: this.auth.profesional ? this.auth.profesional : null,
+                    idTurno: datos.turno ? datos.turno.id : null,
+                    idPrestacion: datos.idPrestacion ? datos.idPrestacion : null
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+        token.subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
             const aux: any = this.lastSelect$;

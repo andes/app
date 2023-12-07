@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { concat, forkJoin } from 'rxjs';
+import { combineLatest, concat, forkJoin, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
@@ -13,6 +13,7 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     templateUrl: 'prestacionCrear.html',
@@ -59,7 +60,9 @@ export class PrestacionCrearComponent implements OnInit {
         private location: Location,
         private osService: ObraSocialCacheService,
         private pacienteService: PacienteService,
-        private hudsService: HUDSService
+        private hudsService: HUDSService,
+        public motivosHudsService: MotivosHudsService
+
     ) { }
 
     ngOnInit() {
@@ -155,21 +158,24 @@ export class PrestacionCrearComponent implements OnInit {
             };
             this.disableGuardar = true;
             if (this.tieneAccesoHUDS && this.paciente) {
+                const motivo = this.motivosHudsService.getMotivo('RUP:Inicio Prestacion');
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-                const paramsToken = {
-                    usuario: this.auth.usuario,
-                    organizacion: this.auth.organizacion,
-                    paciente: this.paciente,
-                    motivo: 'Fuera de agenda',
-                    profesional: this.auth.profesional,
-                    idTurno: null,
-                    idPrestacion: this.tipoPrestacionSeleccionada.id
-                };
-                const token = this.hudsService.generateHudsToken(paramsToken);
+                const token = motivo.pipe(
+                    switchMap(motivoH => {
+                        const paramsToken = {
+                            usuario: this.auth.usuario,
+                            organizacion: this.auth.organizacion,
+                            paciente: this.paciente,
+                            motivo: motivoH[0].motivo,
+                            profesional: this.auth.profesional,
+                            idTurno: null,
+                            idPrestacion: this.tipoPrestacionSeleccionada.id
+                        };
+                        return this.hudsService.generateHudsToken(paramsToken);
+                    })
+                );
                 const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
-                const res = concat(token, nuevaPrest);
-
-                res.subscribe(input => {
+                const res = concat(token, nuevaPrest).subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', input.token);

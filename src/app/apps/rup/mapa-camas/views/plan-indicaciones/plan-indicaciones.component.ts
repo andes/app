@@ -16,6 +16,7 @@ import { PlanIndicacionesEventosServices } from '../../services/plan-indicacione
 import { PlanIndicacionesServices } from '../../services/plan-indicaciones.service';
 import { InternacionResumenHTTP } from '../../services/resumen-internacion.http';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
 
 @Component({
     selector: 'in-plan-indicacion',
@@ -112,6 +113,8 @@ export class PlanIndicacionesComponent implements OnInit {
         private organizacionService: OrganizacionService,
         private router: Router,
         private cd: ChangeDetectorRef,
+        public motivosHudsService: MotivosHudsService
+
     ) {
     }
 
@@ -386,16 +389,21 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     generarToken(paciente, concepto, prestacion) {
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: paciente,
-            motivo: concepto.term,
-            profesional: this.auth.profesional,
-            idTurno: null,
-            idPrestacion: prestacion.id
-        };
-        return this.hudsService.generateHudsToken(paramsToken).pipe(
+        const token = this.motivosHudsService.getMotivo('INT').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: paciente,
+                    motivo: motivoH[0].motivo,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: prestacion.id
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }));
+
+        return token.pipe(
             tap(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token))
         );
     }
