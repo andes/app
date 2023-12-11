@@ -265,7 +265,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        const nuevaFecha = moment(this.fecha).toDate();
+        const nuevaFecha = (this.fecha) ? moment(this.fecha).toDate() : moment().toDate();
         this.mapaCamasService.setFecha(nuevaFecha);
         this.registro.valor.InformeEgreso.fechaEgreso = nuevaFecha;
         if (this.capa === 'estadistica' || this.capa === 'estadistica-v2') {
@@ -675,4 +675,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         );
     }
 
+    egresarPaciente(formEgreso, disable) {
+        return formEgreso.invalid || this.prestacionValidada || this.disableButton || this.inProgress || disable;
+    }
 }

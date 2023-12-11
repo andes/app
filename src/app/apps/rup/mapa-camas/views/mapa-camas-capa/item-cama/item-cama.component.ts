@@ -97,7 +97,6 @@ export class ItemCamaComponent implements OnChanges {
     }
 
     setDropDown(relacion, drop) {
-        this.openedDropDown = drop;
         if (this.openedDropDown) {
             this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
         }

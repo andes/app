@@ -133,4 +133,16 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     egresarPaciente() {
         this.accionDesocupar.emit({ camasDisponibles: null, cama: this.cama, cambiarUO: null, egresar: 'egresarPaciente' });
     }
+
+    disableCambiarCama(formReparada, camasDisponibles) {
+        return formReparada.invalid || !this.permisosMapaCamasService.movimientos || !(camasDisponibles.camasMismaUO.length > 0) || this.inProgress;
+    }
+
+    disableCambiarUO(formReparada, camasDisponibles) {
+        return formReparada.invalid || !this.permisosMapaCamasService.movimientos || !(camasDisponibles.camasDistintaUO.length > 0) || this.inProgress;
+    }
+
+    disableEgresarPaciente(formReparada) {
+        return formReparada.invalid || !this.permisosMapaCamasService.egreso || this.inProgress;
+    }
 }

@@ -7,6 +7,7 @@ import { map, retry, switchMap, take } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -43,6 +44,7 @@ export class CambiarCamaComponent implements OnInit {
         public auth: Auth,
         private plex: Plex,
         public mapaCamasService: MapaCamasService,
+        public camasHttp: MapaCamasHTTP
     ) { }
 
     ngOnInit() {

@@ -324,4 +324,16 @@ export class CamaDetalleComponent implements OnInit {
             }
         });
     }
+
+    puedeDesocupar(relacion) {
+        return relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear' && relacion.nombre !== 'Desbloquear';
+    }
+
+    puedeEditar(cama: ISnapshot) {
+        return this.capa !== 'interconsultores' && cama.estado !== 'bloqueada' && (cama.sala ? this.permisosMapaCamasService.salaEdit : this.permisosMapaCamasService.camaEdit);
+    }
+
+    puedePrestar(cama: ISnapshot, organizacion) {
+        return this.capa !== 'interconsultores' && !cama.sala && this.permisosMapaCamasService.camaPrestamo && (organizacion || cama.estado === 'disponible');
+    }
 }

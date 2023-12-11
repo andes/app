@@ -9,26 +9,23 @@
                                 size="sm" (click)="accion(relacion)" class="mr-1">
                             </plex-button>
                         </ng-container>
-                        <plex-dropdown #drop class="mr-1"
-                            *ngIf="relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear' && relacion.nombre !== 'Desbloquear'"
-                            [right]="true" size="sm" type="danger" icon="menos" [items]="itemsDropdown"
-                            tooltip="Desocupar" (onOpen)="setDropDown(relacion, drop)">
+                        <plex-dropdown #drop class="mr-1" *ngIf="puedeDesocupar(relacion)" [right]="true" size="sm"
+                            type="danger" icon="menos" [items]="itemsDropdown" tooltip="Desocupar"
+                            (onOpen)="setDropDown(relacion, drop)">
                         </plex-dropdown>
                     </ng-container>
                 </ng-container>
-                <plex-button class="mr-1"
-                    *ngIf="capa !== 'interconsultores' && cama.estado !== 'bloqueada' && (cama.sala ? permisosMapaCamasService.salaEdit : permisosMapaCamasService.camaEdit)"
-                    title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)">
+                <plex-button class="mr-1" *ngIf="puedeEditar(cama)" title="Editar Cama" icon="pencil" type="warning"
+                    size="sm" (click)="goTo(cama)">
                 </plex-button>
-                <ng-container
-                    *ngIf="capa !== 'interconsultores' && !cama.sala && permisosMapaCamasService.camaPrestamo  && ((organizacionV2$ | async) || cama.estado === 'disponible')">
+                <ng-container *ngIf="puedePrestar(cama, organizacionV2$ | async )">
                     <plex-button title="Prestar" icon="chevron-right" type="warning" size="sm" class="mr-1"
                         (click)="accion({accion: 'prestar'})"
-                        *ngIf="cama.unidadOrganizativaOriginal.conceptId === cama.unidadOrganizativa.conceptId">
+                        *ngIf="cama.unidadOrganizativaOriginal?.conceptId === cama.unidadOrganizativa?.conceptId">
                     </plex-button>
                     <plex-button title="Devolver" icon="chevron-left" type="warning" size="sm" class="mr-1"
                         (click)="accion({accion: 'devolver'})"
-                        *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.unidadOrganizativa.conceptId">
+                        *ngIf="cama.unidadOrganizativaOriginal?.conceptId !== cama.unidadOrganizativa?.conceptId">
                     </plex-button>
                 </ng-container>
                 <plex-button tooltip="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
