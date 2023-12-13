@@ -15,7 +15,6 @@ import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { ObraSocialService } from '../../services/obraSocial.service';
-import { ITurnosPrestaciones } from './interfaces/turnos-prestaciones.interface';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -82,7 +81,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public accion$ = new Subject<any>();
 
     public onDestroy$ = new Subject<any>();
-
+    public permisos;
+    public nombreProfesional = this.auth.usuario.nombreCompleto;
 
     constructor(
         private auth: Auth,
@@ -221,9 +221,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             estado: '',
             estadoFacturacion: '',
         };
-        const permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
+        this.permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
         if (this.auth.profesional) {
-            if (permisos === 0) {
+            if (this.permisos === 0) {
                 this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
                     this.profesional = rta[0];
                     params.idProfesional = this.profesional.id;
@@ -235,7 +235,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.buscar(params);
             }
         } else {
-            if (permisos === 0) {
+            if (this.permisos === 0) {
                 this.router.navigate(['inicio']);
             } else {
                 this.buscar(params);
