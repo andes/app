@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -91,7 +91,6 @@ export class DarTurnosComponent implements OnInit {
                         }
                     });
                 }
-
             }
 
         } else {
@@ -889,6 +888,56 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+    hayTurnoSuspendido() {
+        if (this._solicitudPrestacion) {
+            const turno = this._solicitudPrestacion.solicitud.historial.reverse().find((turno) => !!turno.idTurnoSuspendido);
+
+            return turno?.idTurnoSuspendido;
+        }
+
+        return false;
+    }
+
+    reasignarTurno(turno_id, agenda_actual) {
+        this.serviceTurno.get({ id: turno_id }).pipe(
+            switchMap((result) => {
+                const { agenda_id, bloque_id, bloques } = result[0];
+
+                let turnoReasignado;
+
+                for (const key in bloques) {
+                    turnoReasignado = bloques[key].turnos.find(turno => turno._id === turno_id);
+                }
+
+                const siguiente = {
+                    idAgenda: agenda_id,
+                    idBloque: bloque_id,
+                    idTurno: turno_id
+                };
+
+                if (turnoReasignado?.reasignado) {
+                    turnoReasignado.reasignado.siguiente = siguiente;
+                } else {
+                    turnoReasignado.reasignado = {
+                        siguiente: siguiente
+                    };
+                }
+
+                // Datos del turno "nuevo", que se guardan en el turno "viejo" para poder referenciarlo
+                const datosTurnoReasignado = {
+                    idAgenda: agenda_id,
+                    idBloque: bloque_id,
+                    idTurno: turno_id,
+                    turno: turnoReasignado
+                };
+
+                return this.serviceTurno.put(datosTurnoReasignado);
+            })
+        ).subscribe(() => {
+            this.guardarTurno(agenda_actual);
+        });
+    }
+
     /**
      * DAR TURNO
      */
@@ -921,7 +970,12 @@ export class DarTurnosComponent implements OnInit {
                         );
 
                     } else {
-                        this.guardarTurno(agd);
+                        const idTurnoSuspendido = this.hayTurnoSuspendido();
+
+                        idTurnoSuspendido ?
+                            this.reasignarTurno(idTurnoSuspendido, agd)
+                            :
+                            this.guardarTurno(agd);
                     }
                 }
             });
