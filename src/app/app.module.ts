@@ -139,6 +139,7 @@ import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.
 import { PacienteBuscarService } from './core/mpi/services/paciente-buscar.service';
 import { PacienteService } from './core/mpi/services/paciente.service';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
+import { PacienteVinculadoCacheService } from './core/mpi/services/pacienteVinculadoCache.service';
 import { DirectiveLibModule } from './directives/directives.module';
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 import { ValidarCertificadoComponent } from './modules/epidemiologia/components/validar-certificado/validar-certificado.component';
@@ -395,6 +396,7 @@ registerLocaleData(localeEs, 'es');
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
         PacienteCacheService,
+        PacienteVinculadoCacheService,
         GeoreferenciaService,
         HistorialBusquedaService,
         CodificacionService,

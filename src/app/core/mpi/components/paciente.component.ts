@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { EMPTY, Subscription } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { filter, first, map, mergeMap } from 'rxjs/operators';
 import { IUbicacion } from 'src/app/interfaces/IUbicacion';
 import { ValidacionService } from 'src/app/services/fuentesAutenticas/validacion.service';
 import { IContacto } from '../../../interfaces/IContacto';
@@ -15,6 +15,7 @@ import { IPaciente } from '../interfaces/IPaciente';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 import { PacienteService } from '../services/paciente.service';
 import { PacienteCacheService } from '../services/pacienteCache.service';
+import { PacienteVinculadoCacheService } from '../services/pacienteVinculadoCache.service';
 import { DatosBasicosComponent } from './datos-basicos.component';
 import { DatosContactoComponent } from './datos-contacto.component';
 import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
@@ -52,6 +53,10 @@ export class PacienteComponent implements OnInit {
     loading = true;
     autoFocus = 0;
     activeTab = 0;
+    esExtranjero;
+    pacienteBase: IPaciente;
+    pacienteExtranjero: IPaciente;
+    registroDNI = false;
 
     public contacto: IContacto = {
         tipo: 'celular',
@@ -146,6 +151,7 @@ export class PacienteComponent implements OnInit {
         private validacionService: ValidacionService,
         private parentescoService: ParentescoService,
         private pacienteCache: PacienteCacheService,
+        private pacienteVinculadoCache: PacienteVinculadoCacheService,
         private _router: Router,
         public plex: Plex,
         private route: ActivatedRoute,
@@ -169,16 +175,16 @@ export class PacienteComponent implements OnInit {
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
+        this.pacienteBase = Object.assign({}, this.pacienteModel);
         this.loadPaciente();
     }
 
 
     private loadPaciente() {
         if (this.paciente) {
-
             if (this.paciente.id) {
-                /* El paciente se agrega al historial de búsqueda sólo si ya existía */
                 this.historialBusquedaService.add(this.paciente);
+
                 // Busco el paciente en mongodb
                 this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
                     if (resultado) {
@@ -194,7 +200,7 @@ export class PacienteComponent implements OnInit {
                     }
                     this.actualizarDatosPaciente();
                     this.loading = false;
-                }, error => {
+                }, () => {
                     this.loading = false;
                     this._router.navigate(['apps/mpi/busqueda']);
                 });
@@ -230,6 +236,16 @@ export class PacienteComponent implements OnInit {
     // ---------------- PACIENTE -----------------------
 
     onSelect(paciente: IPaciente) {
+        if (this.registroDNI) {
+            this.plex.confirm('El paciente extranjero quedará vinculado<br>al paciente con DNI argentino.', 'Atención').then(result => {
+                if (result) {
+                    this.pacienteCache.setPaciente(paciente);
+                    this.pacienteVinculadoCache.setPaciente(this.pacienteExtranjero);
+                    this._router.navigate(['apps/mpi/paciente']);
+                }
+            });
+        }
+
         this.showDeshacer = false;
         this.paciente = Object.assign({}, paciente);
         this.actualizarDatosPaciente();
@@ -276,35 +292,67 @@ export class PacienteComponent implements OnInit {
             this.paciente.lugarNacimiento = this.lugarNacimiento;
         }
         this.pacienteModel = Object.assign({}, this.paciente);
-
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.checkDisableValidar();
     }
 
-
-    save(ignoreSuggestions = false) {
+    prepararPaciente(nuevoPaciente: IPaciente, ignoreSuggestions: boolean) {
         this.delete = true;
         const contactoValid = this.datosContacto.checkForm();
-        const datosBasicosValid = this.datosBasicos.checkForm();
+        const datosBasicosValid = (this.tipoPaciente === 'extranjero' && !this.registroDNI)
+            ? this.datosBasicos.checkFormExtranjero()
+            : this.datosBasicos.checkForm();
+
         if (!contactoValid || !datosBasicosValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
+
         this.disableIgnorarGuardar = ignoreSuggestions;
         this.disableGuardar = true;
-        const pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+
+        const pacienteGuardar: any = Object.assign({}, nuevoPaciente);
+
         pacienteGuardar.ignoreSuggestions = ignoreSuggestions;
-        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
-        pacienteGuardar.tipoIdentificacion = this.pacienteModel.tipoIdentificacion ? ((typeof this.pacienteModel.tipoIdentificacion === 'string')) ? this.pacienteModel.tipoIdentificacion : (Object(this.pacienteModel.tipoIdentificacion).id) : null;
+        pacienteGuardar.sexo = ((typeof nuevoPaciente.sexo === 'string')) ? nuevoPaciente.sexo : (Object(nuevoPaciente.sexo).id);
+        pacienteGuardar.estadoCivil = nuevoPaciente.estadoCivil ? ((typeof nuevoPaciente.estadoCivil === 'string')) ? nuevoPaciente.estadoCivil : (Object(nuevoPaciente.estadoCivil).id) : null;
+        pacienteGuardar.genero = nuevoPaciente.genero ? ((typeof nuevoPaciente.genero === 'string')) ? nuevoPaciente.genero : (Object(nuevoPaciente.genero).id) : pacienteGuardar.sexo;
+        pacienteGuardar.tipoIdentificacion = nuevoPaciente.tipoIdentificacion ? ((typeof nuevoPaciente.tipoIdentificacion === 'string')) ? nuevoPaciente.tipoIdentificacion : (Object(nuevoPaciente.tipoIdentificacion).id) : null;
         pacienteGuardar.contacto.map(elem => {
             elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
             return elem;
         });
 
-        this.pacienteService.save(pacienteGuardar).subscribe(
-            (resultadoSave: any) => {
+        return pacienteGuardar;
+    }
+
+    prepararPacienteConDNI(nuevoPaciente: IPaciente, ignoreSuggestions: boolean) {
+        const paciente = {
+            ...this.pacienteBase,
+            id: nuevoPaciente.id,
+            nombre: nuevoPaciente.nombre,
+            alias: nuevoPaciente.alias,
+            apellido: nuevoPaciente.apellido,
+            sexo: nuevoPaciente.sexo,
+            genero: nuevoPaciente.genero,
+            fechaNacimiento: nuevoPaciente.fechaNacimiento,
+            documento: nuevoPaciente.documento,
+            estadoCivil: nuevoPaciente.estadoCivil,
+            direccion: nuevoPaciente.direccion,
+            lugarNacimiento: nuevoPaciente.lugarNacimiento,
+            notas: nuevoPaciente.notas,
+            contacto: nuevoPaciente.contacto,
+            documentos: nuevoPaciente.documentos,
+            relaciones: nuevoPaciente.relaciones,
+            estado: nuevoPaciente.estado,
+        };
+
+        return this.prepararPaciente(paciente, ignoreSuggestions);
+    }
+
+    guardarPaciente(nuevoPaciente: IPaciente) {
+        return this.pacienteService.save(nuevoPaciente).pipe(
+            first(), filter((resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.sugeridos) {
                     this.pacientesSimilares = this.escaneado || this.validado ? resultadoSave.sugeridos.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.sugeridos;
@@ -316,6 +364,9 @@ export class PacienteComponent implements OnInit {
                         this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
                     this.setMainSize(null);
+
+                    return null;
+
                 } else {
                     if (this.changeRelaciones) {
                         this.saveRelaciones(resultadoSave);
@@ -323,16 +374,68 @@ export class PacienteComponent implements OnInit {
                     if (this.activacionMobilePendiente) {
                         this.datosContacto.activarAppMobile(resultadoSave, this.dataMobile);
                     }
-                    this.historialBusquedaService.add(resultadoSave);
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
 
-                    this.redirect(resultadoSave);
+                    this.historialBusquedaService.add(resultadoSave);
+
+                    return resultadoSave;
                 }
-            },
-            error => {
-                this.plex.info('warning', 'Error guardando el paciente');
             }
-        );
+            ));
+    }
+
+    success(resultadoSave?: any) {
+        this.plex.info('success', 'Los datos se actualizaron correctamente');
+        this.redirect(resultadoSave);
+    }
+
+    mergePaciente(pacienteModel, pacienteExtranjero) {
+        if (pacienteExtranjero) {
+            const { nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero } = pacienteExtranjero;
+            return { ...pacienteModel, nombre, apellido, fechaNacimiento, tipoIdentificacion, numeroIdentificacion, sexo, genero };
+        } else { return pacienteModel; };
+    }
+
+    save(ignoreSuggestions = false) {
+        const esExtranjero = this.pacienteExtranjero?.numeroIdentificacion || this.pacienteExtranjero?.tipoIdentificacion;
+
+        if (esExtranjero && this.registroDNI) {
+            const pacienteConDNI = this.prepararPacienteConDNI(Object.assign({}, this.pacienteModel), ignoreSuggestions);
+            const pacienteExtranjero = this.prepararPaciente(this.pacienteExtranjero, ignoreSuggestions);
+
+            if (pacienteConDNI && pacienteConDNI?.id === pacienteExtranjero?.id) {
+                this.guardarPaciente({ ...pacienteConDNI, id: null }).subscribe((paciente) => {
+                    if (paciente) {
+                        this.pacienteService.linkPatient(paciente, pacienteExtranjero).subscribe(() => {
+                            this.historialBusquedaService.delete(pacienteExtranjero);
+                            this.success(paciente);
+                        });
+                    }
+                });
+            } else {
+                this.pacienteService.linkPatient(pacienteConDNI, pacienteExtranjero).subscribe(() => {
+                    this.historialBusquedaService.delete(pacienteExtranjero);
+                    this.success(pacienteConDNI);
+                });
+            }
+        } else {
+            const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
+
+            if (paciente) {
+                this.guardarPaciente(paciente).subscribe((paciente) => {
+                    const vinculado = this.pacienteVinculadoCache.getPacienteValor();
+
+                    if (vinculado) {
+                        this.pacienteService.linkPatient(paciente, vinculado).subscribe(() => {
+                            this.success(paciente);
+                            this.pacienteVinculadoCache.clearPaciente();
+                            this.pacienteCache.clearScanState();
+                        });
+                    } else {
+                        this.success(paciente);
+                    }
+                });
+            }
+        }
     }
 
     private redirect(resultadoSave?: any) {
@@ -469,6 +572,12 @@ export class PacienteComponent implements OnInit {
         if (data.relaciones) {
             this.actualizarRelaciones(data);
         }
+        if (data.pacienteExtranjero) {
+            this.pacienteExtranjero = data.pacienteExtranjero;
+        }
+        if (data.registroDNI !== undefined) {
+            this.registroDNI = data.registroDNI;
+        }
     }
     documentos(documentosNew) {
         this.pacienteModel.documentos = documentosNew;
@@ -519,19 +628,26 @@ export class PacienteComponent implements OnInit {
             estado: 'validado',
             activo: true
         }).pipe(
+
             map((resultado: any) => {
-                if (!this.pacienteModel.id) {
+                if (!this.pacienteModel.id || (this.tipoPaciente === 'extranjero' && !this.validado)) {
                     // Si estamos creando un nuevo paciente, chequeamos si existe un paciente validado con igual documento y sexo
                     if (resultado.length && resultado[0].documento === this.pacienteModel.documento.toString()) {
                         // El paciente que se intenta validar ya existe
                         this.loading = false;
-                        this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
+                        this.plex.info('warning', 'El paciente que está cargando ya existe en el sistema', 'Atención');
                         this.paciente = resultado[0];
                         this.actualizarDatosPaciente();
                         this.setMainSize(this.activeTab);
+
+                        if (this.tipoPaciente === 'extranjero') {
+                            this.disableGuardar = true;
+                        }
+
                         return true;
                     }
                 }
+
                 return false;
             }),
             mergeMap((validado: any) => {
@@ -586,6 +702,11 @@ export class PacienteComponent implements OnInit {
                                 if (!this.pacienteModel.cuil && resultado.cuil) {
                                     this.pacienteModel.cuil = resultado.cuil;
                                 }
+
+                                if (this.tipoPaciente === 'extranjero') {
+                                    this.disableGuardar = false;
+                                }
+
                                 this.plex.toast('success', '¡Paciente Validado!');
                             }
                             // error
