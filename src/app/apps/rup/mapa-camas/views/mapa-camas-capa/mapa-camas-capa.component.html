@@ -1,28 +1,66 @@
 <plex-layout main="8">
     <plex-layout-main *ngIf="mainView$ | async as mainView">
         <header *ngIf="mainView === 'principal'">
-            <ng-container *ngIf="fecha$ | async as fecha">
-                <plex-title titulo="Mapa de camas - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
-                    <ng-container *ngIf="(estado$ | async) as estado">
-                        <plex-button *ngIf="mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2' || estado.listadoInternacion"
-                                     class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
-                                     (click)="verListadoInternacion()">
-                        </plex-button>
-                        <plex-button *ngIf="estado.historialMedico" class="mr-1" size="sm" label="HISTORIAL"
-                                     type="primary" (click)="verListadoInternacionMedico()">
-                        </plex-button>
-                        <plex-button *ngIf="mapaCamasService.capa === 'farmaceutica'" class="mr-1" size="sm"
-                                     label="Listado de Medicamentos" type="primary" (click)="verListadoMedicamentos()">
-                        </plex-button>
-                    </ng-container>
-                    <plex-dropdown *ngIf="permisosMapaCamasService.censo" size="sm" label="VER CENSO" type="primary"
-                                   class="d-inline-block mr-1" [right]="true" [items]="itemsCensoDropdown">
-                    </plex-dropdown>
-                    <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
-                        <plex-icon name="atom"></plex-icon>
-                    </plex-button>
-                </plex-title>
-            </ng-container>
+            <plex-title titulo="Mapa de camas">
+                <form #formulario="ngForm">
+                    <div class="actions">
+                        <ng-container *ngIf="(estado$ | async) as estado">
+                            <plex-button *ngIf="estado.historialMedico" class="mr-1" size="sm" label="HISTORIAL"
+                                         type="primary" (click)="verListadoInternacionMedico()">
+                            </plex-button>
+
+                            <plex-dropdown *ngIf="permisosMapaCamasService.censo" size="sm" label="VER CENSO"
+                                           type="primary" class="d-inline-block mr-1" [right]="true"
+                                           [items]="itemsCensoDropdown">
+                            </plex-dropdown>
+
+                            <plex-button *ngIf="mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2' || estado.listadoInternacion"
+                                         class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
+                                         (click)="verListadoInternacion()">
+                            </plex-button>
+                            <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas"
+                                         class="mr-1">
+                                <plex-icon name="atom"></plex-icon>
+                            </plex-button>
+                        </ng-container>
+
+                        <ng-container *ngIf="fecha$ | async as fecha">
+                            <plex-badge size="sm" type="info" style="margin-right: -2px;">{{ fecha | date: 'dd/MM/yyyy
+                                HH:mm' }}
+                                <plex-datetime type="datetime" [(ngModel)]="fechaSelector" name="fechaSelector" required
+                                               size="sm" (change)="setFecha(fechaSelector)" [btnOnly]="true">
+                                </plex-datetime>
+                            </plex-badge>
+
+                            <plex-help class="ml-1" type="help" size="sm" cardSize="half" btnType="warning"
+                                       icon="pencil" (close)="closeDatetimeSelector()">
+                                <div class="mb-2 d-flex" justify="between">
+                                    <plex-title size="sm" titulo="Editar fecha y hora"></plex-title>
+                                </div>
+                                <div class="datetime-selector">
+                                    <div class="d-flex flex-column">
+                                        <plex-text placeholder="Cambiar Fecha" name="fechaInput"
+                                                   [(ngModel)]="fechaInput"
+                                                   (keydown.enter)="setFecha(fechaInput, $event)"
+                                                   (change)="checkFecha(fechaInput, $event)"
+                                                   class="{{!isValidDate ? 'has-danger': ''}}">
+                                        </plex-text>
+                                        <span *ngIf="!isValidDate" class="danger">Debe ingresar una fecha
+                                            válida</span>
+                                    </div>
+                                    <plex-button [disabled]="!isValidDate" class="check" size="md" type="success" icon="check"
+                                                 (click)="setFecha(fechaInput)" #dateCheck>
+                                    </plex-button>
+                                </div>
+
+                            </plex-help>
+                            <plex-button class="ml-1" title="Ver mapa actual" titlePosition="left" icon="reload"
+                                         type="info" size="sm" (click)="setFecha()">
+                            </plex-button>
+                        </ng-container>
+                    </div>
+                </form>
+            </plex-title>
 
             <app-filtros-camas></app-filtros-camas>
 

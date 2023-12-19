@@ -1,41 +1,46 @@
-<ng-container *ngIf="!editaFecha">
-    <plex-title justify titulo="ESTADO CAMAS">
-        <ng-container *ngIf="fechaActual$ | async as fechaActual">
-            <ng-container *ngIf="fecha$ | async as fecha">
-                <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
-                </plex-badge>
-                <plex-button size="sm" type="warning" class="ml-1" icon="pencil" tooltip="Editar fecha"
-                    (click)="editarFecha()">
-                </plex-button>
-                <plex-button class="ml-1" title="{{ (fechaActual === fecha) ? null : 'Saltar al presente' }}"
-                    titlePosition="left" icon="skip-forward" type="warning" size="sm" (click)="setFecha(fechaActual)"
-                    [disabled]="(fechaActual === fecha)">
-                </plex-button>
-            </ng-container>
+<ng-container *ngIf="fechaActual$ | async as fechaActual">
+    <ng-container *ngIf="fecha$ | async as fecha">
+        <plex-title justify titulo="ESTADO CAMAS - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
+        </plex-title>
+    </ng-container>
+</ng-container>
+<ng-container>
+    <div class="container-resumen">
+        <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Camas Totales"
+                          [cantidad]="total">
+        </app-icono-camita>
+        <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
+            <app-icono-camita *ngIf="estado.key !== 'inactiva'" [icono]="estado.icon"
+                              [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
+                              [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
+            </app-icono-camita>
         </ng-container>
-    </plex-title>
-    <ng-container>
+    </div>
+</ng-container>
+<ng-container *ngIf="salas$ | async as salas">
+    <ng-container *ngIf="salas.length > 0">
+        <plex-title justify titulo="ESTADO SALAS"></plex-title>
         <div class="container-resumen">
             <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Camas Totales"
-                [cantidad]="total">
+                              [cantidad]="total">
             </app-icono-camita>
             <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
                 <app-icono-camita *ngIf="estado.key !== 'inactiva'" [icono]="estado.icon"
-                    [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
-                    [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
+                                  [nombre]="'Camas ' + estado.label + 's'" [color]="estado.color"
+                                  [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
                 </app-icono-camita>
             </ng-container>
         </div>
     </ng-container>
     <ng-container *ngIf="salas$ | async as salas">
-        <plex-title justify titulo="ESTADO SALAS" *ngIf="salas.length > 0"></plex-title>
         <ng-container *ngIf="salas.length > 0">
+            <plex-title justify titulo="ESTADO SALAS"></plex-title>
             <div class="container-resumen">
                 <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Salas Totales"
-                    [cantidad]="salas.length">
+                                  [cantidad]="salas.length">
                 </app-icono-camita>
                 <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Pacientes Totales"
-                    color="warning" [cantidad]="(salasPaciente$ | async).length">
+                                  color="warning" [cantidad]="(salasPaciente$ | async).length">
                 </app-icono-camita>
             </div>
         </ng-container>
@@ -47,11 +52,11 @@
         <plex-title titulo="Editar fecha" size="sm">
             <plex-button type="danger" icon="close" size="sm" tooltip="Cancelar" (click)="cancelar()"></plex-button>
             <plex-button *ngIf="puedeGuardar" class="ml-1" type="success" icon="check" size="sm" tooltip="Guardar"
-                (click)="guardar()" [disabled]="formulario.invalid"></plex-button>
+                         (click)="guardar()" [disabled]="formulario.invalid"></plex-button>
         </plex-title>
         <plex-datetime type="datetime" label="Fecha y hora del mapa de camas"
-            [max]="mapaCamasService.fechaActual$ | async" name="fechaCambio" [debounce]="600" [(ngModel)]="fecha"
-            (change)="onChange($event.value)" [required]="true">
+                       [max]="mapaCamasService.fechaActual$ | async" name="fechaCambio" [debounce]="600"
+                       [(ngModel)]="fecha" (change)="onChange($event.value)" [required]="true">
         </plex-datetime>
     </form>
 </ng-container>
