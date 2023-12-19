@@ -1,9 +1,52 @@
 <plex-layout main="8">
+
     <plex-layout-main *ngIf="mainView$ | async as mainView">
+
         <header *ngIf="mainView === 'principal'">
-            <ng-container *ngIf="fecha$ | async as fecha">
-                <plex-title titulo="Mapa de camas - {{fecha | date: 'dd/MM/yyyy  HH:mm'}}">
+            <div class="d-flex align-items-center">
+                <plex-title titulo="Mapa de camas"></plex-title>
+                <ng-container *ngIf="fecha$ | async as fecha">
                     <ng-container *ngIf="(estado$ | async) as estado">
+                        <div class="header-datetime">
+                            <plex-badge size="sm" type="info">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha |
+                                date: 'HH:mm'}}
+                            </plex-badge>
+                            <plex-help type="help" size="sm" cardSize="half" icon="calendar">
+                                <div class="m-1">
+                                    <div class="mb-2 d-flex" justify="between">
+                                        <span>Seleccione una fecha</span>
+                                        <div class="d-flex">
+                                            <plex-button size="sm" type="success" icon="check">
+                                            </plex-button>
+                                            <plex-button size="sm" type="danger" icon="close">
+                                            </plex-button>
+                                        </div>
+                                    </div>
+                                    <div class="datetime-selector">
+                                        <plex-text placeholder="Cambiar Fecha" name="fechaSelector"
+                                                   [(ngModel)]="fechaSelector" [prefix]="user">
+                                        </plex-text>
+
+                                        <plex-button size="sm" type="warning" icon="pencil">
+                                        </plex-button>
+                                    </div>
+                                </div>
+                            </plex-help>
+                            <!-- <plex-button icon="calendar" size="sm"></plex-button> -->
+
+                            <!-- <plex-help size="md" btnType="warning" [cardSize]="half" icon="alert-circle-outline"></plex-help> -->
+                        </div>
+                        <!-- <div class="header-datetime">
+                            <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
+                                <plex-datetime title="Cambiar Fecha" titlePosition="left" btnOnly="true" size="sm"
+                                               type="datetime" [ngModel]="fecha" (change)="setFecha($event.value)"
+                                               name="fecha" class="d-inline-block" [max]="fechaActual" [debounce]="600">
+                                </plex-datetime>
+                            </plex-badge>
+                            <plex-datetime label="Fecha menor a" type="date" [(ngModel)]="tModel.fecha" name="fecha"
+                                           [required]="true" [min]="tModel.min" [max]="tModel.max" size="lg">
+                            </plex-datetime>
+                        </div> -->
                         <plex-button *ngIf="mapaCamasService.capa === 'estadistica' || mapaCamasService.capa === 'estadistica-v2' || estado.listadoInternacion"
                                      class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN" type="primary"
                                      (click)="verListadoInternacion()">
@@ -18,8 +61,9 @@
                     <plex-button type="info" size="sm" (click)="onVisualizar()" tooltip="Mapa Visual de Camas">
                         <plex-icon name="atom"></plex-icon>
                     </plex-button>
-                </plex-title>
-            </ng-container>
+                    <!-- </plex-title> -->
+                </ng-container>
+            </div>
 
             <app-filtros-camas></app-filtros-camas>
 

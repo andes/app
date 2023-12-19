@@ -61,6 +61,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     public sortBy: string;
     public sortOrder = 'desc';
+    public fechaSelector;
 
     itemsCrearDropdown = [];
 
@@ -157,6 +158,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.getSnapshot();
 
         this.fecha$ = this.mapaCamasService.fecha2;
+
+        this.fechaSelector = moment().format('DD/MM/YYYY');
     }
 
     getSnapshot(fecha = null) {
@@ -271,5 +274,9 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     onVisualizar() {
         this.router.navigate(['visualizacion'], { relativeTo: this.route });
+    }
+
+    setFecha(fechaActual) {
+        this.mapaCamasService.setFecha(fechaActual);
     }
 }
