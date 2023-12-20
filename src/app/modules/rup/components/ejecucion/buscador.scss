@@ -1,4 +1,5 @@
 @import "../core/rup";
+
 .header {
     align-items: center;
 }
@@ -17,6 +18,7 @@
 
 .buscador-resultados {
     height: calc(100% - 220px);
+
     cdk-virtual-scroll-viewport {
         height: 100%;
         overflow-x: hidden;
@@ -37,19 +39,23 @@
         padding: 2px 0;
         margin: 5px 0;
     }
+
     .filtros {
         align-items: center;
         height: 40px;
     }
+
     .botones-filtros {
         list-style: none;
         margin: 0 1px 0 0;
         padding: 0;
         display: flex;
+
         li {
             width: 16.5%;
             height: 60px;
             position: relative;
+
             button {
                 // text-overflow: ellipsis;
                 white-space: normal;
@@ -62,25 +68,31 @@
                 display: block;
                 border-width: 2px;
                 min-height: 60px;
+
                 i {
                     font-size: 1.75rem;
                     display: block;
                 }
+
                 &[disabled] {
                     cursor: not-allowed;
                     filter: alpha(opacity=65);
                     -webkit-box-shadow: none;
                     box-shadow: none;
                     opacity: 0.65;
-                } // fix a mano para el boton btn-otro para que entre el texto en los filtros
+                }
+
+                // fix a mano para el boton btn-otro para que entre el texto en los filtros
                 &.btn-otro {
                     padding-top: 0;
                     padding-bottom: 0;
+
                     i {
                         font-size: 2rem;
                     }
                 }
             }
+
             .contador {
                 display: inline-block;
                 top: 0;
@@ -109,12 +121,23 @@
 }
 
 @media (max-width: 1600px) {
-    .botoneraPrincipal {
-        display: block;
-        & button {
-            width: 50%;
-            float: left;
-            border: 1px solid white;
+    .botonera {
+
+        &.principal {
+            grid-template-columns: 1fr 1fr;
+            display: grid;
+            gap: 2px;
+        }
+
+        &.historial {
+            display: flex;
+            gap: 2px;
+        }
+
+        & .btn-primary:active,
+        .btn-primary.active {
+            background-color: $invert;
+            color: $blue;
         }
     }
 }
@@ -125,6 +148,7 @@
         font-size: 0.9rem;
         line-height: 1.2rem;
     }
+
     .sugerido {
         font-weight: 400;
         font-size: 0.8rem;

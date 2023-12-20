@@ -101,13 +101,20 @@
         </ul>
     </div>
     <div class="grow" *ngIf="filtroActual === 'planes'">
-        <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
-        </plex-options>
-        <div class="ml-1">
-            <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
-                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
-                         (click)="toogleFiltros()">
-            </plex-button>
+        <div class="row">
+            <div class="btn-group col botonera historial" role="group" aria-label="Botonera principal">
+                <button class="btn btn-primary btn-sm btn-block m-0" (click)="setAmbitoOrigen('ambulatorio')"
+                        [class.active]="ambitoOrigen === 'ambulatorio'">
+                    AMBULATORIO
+                </button>
+                <button class="btn btn-primary btn-sm btn-block m-0" (click)="setAmbitoOrigen('internacion')"
+                        [class.active]="ambitoOrigen === 'internacion'">
+                    INTERNACION
+                </button>
+                <plex-button type="info" size="sm" [icon]="showFiltros ? 'chevron-up' : 'chevron-down'"
+                             [tooltip]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" (click)="toogleFiltros()">
+                </plex-button>
+            </div>
         </div>
     </div>
     <div class="row">
