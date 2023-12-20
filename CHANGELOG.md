@@ -1,3 +1,11 @@
+# [5.129.0](https://github.com/andes/app/compare/v5.128.2...v5.129.0) (2023-12-20)
+
+
+### Features
+
+* **CIT:** reasigna turnos en agenda suspendida desde TOP ([#2927](https://github.com/andes/app/issues/2927)) ([9ffe7b8](https://github.com/andes/app/commit/9ffe7b81f3c2c6bbc3911fc20d3f7326000d0f4e))
+* **MPI:** implementa form para extranjeros con DNI ([#2822](https://github.com/andes/app/issues/2822)) ([1e9e090](https://github.com/andes/app/commit/1e9e090be95ec248439e19d8802771691e4a4101))
+
 ## [5.128.2](https://github.com/andes/app/compare/v5.128.1...v5.128.2) (2023-12-06)
 
 
