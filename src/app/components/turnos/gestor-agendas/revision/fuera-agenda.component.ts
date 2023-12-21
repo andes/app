@@ -2,6 +2,8 @@ import { Component, OnInit, HostBinding, Output, EventEmitter, Input, OnChanges 
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
 import { calcularEdad } from '@andes/shared';
+import { Plex } from '@andes/plex';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'fuera-agenda',
@@ -36,6 +38,7 @@ export class RevisionFueraAgendaComponent implements OnInit, OnChanges {
     // Constructor
     constructor(
         private serviceCodificacion: CodificacionService,
+        private plex: Plex
     ) { }
 
     // Métodos
@@ -71,7 +74,10 @@ export class RevisionFueraAgendaComponent implements OnInit, OnChanges {
             this.diagnosticos[this.index].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
-        this.onSave();
+        this.patchCodificacion().subscribe({
+            complete: () => this.plex.toast('success', 'Diagnóstico reparado exitosamente.'),
+            error: () => this.plex.toast('danger', 'Ocurrió un error reparando el diagnóstico')
+        });
     }
 
     aprobar() {
@@ -82,21 +88,31 @@ export class RevisionFueraAgendaComponent implements OnInit, OnChanges {
                 this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
             }
         }
-        this.onSave();
+        this.patchCodificacion().subscribe({
+            complete: () => this.plex.toast('success', 'Diagnóstico aprobado exitosamente.'),
+            error: () => this.plex.toast('danger', 'Ocurrió un error aprobando el diagnóstico')
+        });
     }
 
     borrarReparo() {
         this.diagnosticos[this.index].codificacionAuditoria = null;
         this.showReparo = false;
-        this.onSave();
+        this.patchCodificacion().subscribe({
+            complete: () => this.plex.toast('success', 'Diagnóstico reestablecido exitosamente.'),
+            error: () => this.plex.toast('danger', 'Ocurrió un error reestableciendo el diagnóstico')
+        });
     }
 
     onSave() {
         // Se guarda la prestación seleccionada
+        this.patchCodificacion().subscribe();
+    }
+
+    private patchCodificacion(): Observable<ICodificacionPrestacion> {
         if (this.diagnosticos) {
             this.prestacionSeleccionada.diagnostico.codificaciones = this.diagnosticos;
         }
-        this.serviceCodificacion.patch(this.prestacionSeleccionada.id, { codificaciones: this.diagnosticos }).subscribe();
+        return this.serviceCodificacion.patch(this.prestacionSeleccionada.id, { codificaciones: this.diagnosticos });
     }
 
     edad(fechaNacimiento: Date) {
