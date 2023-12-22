@@ -18,7 +18,6 @@ import { IngresoPacienteService } from '../../ingreso/ingreso-paciente-workflow/
 export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
-    selectedPaciente$: Observable<any> = this.ingresoPacienteService.selectedPaciente;
     public estadoPrestacion;
     public editar;
     public existeIngreso;
@@ -30,9 +29,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public mostrar;
-    public hayMovimientosAt$: Observable<Boolean>;
-    public intSinMovimientos$: Observable<Boolean>;
-    public hayMovimientosSinEgresoAt$: Observable<Boolean>;
+    public registraEgreso$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
     public capa;
     public inProgress;
@@ -42,7 +39,6 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         { key: 'movimientos', label: 'MOVIMIENTOS' },
         { key: 'registros', label: 'REGISTROS' }
     ];
-    public itemsEgr = [];
 
     constructor(
         public mapaCamasService: MapaCamasService,
@@ -85,67 +81,44 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
 
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
-            take(1),
             map(resumen => {
-                this.editar = false;
+                if (!!this.editar && this.editar !== resumen.paciente.id) {
+                    this.toggleEdit();
+                }
                 this.capa = this.mapaCamasService.capa;
                 if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                     if (resumen?.ingreso) {
                         this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
                         this.mostrar = 'ingreso-dinamico';
                     };
-                    this.itemsEgr = this.items;
                 } else {
-                    for (let i = 0; i < this.items.length; i++) {
-                        this.itemsEgr.push(this.items[i]);
-                    };
-                    this.itemsEgr.push({ key: 'egreso', label: 'EGRESO' });
+                    this.items.push({ key: 'egreso', label: 'EGRESO' });
                 }
                 const registro = this.items.findIndex(item => item.key === 'registros');
                 if (registro !== -1 && !this.permisosMapaCamasService.registros) {
                     this.items.splice(registro, 1);
-                    this.itemsEgr.splice(registro, 1);
                 }
             })
         ).subscribe();
 
-        this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
-            map(historial => {
-                const tieneIDMov = historial.every(
-                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
-                );
-                return historial.length > 0 && tieneIDMov;
-            })
-        );
-
-        this.hayMovimientosSinEgresoAt$ = this.mapaCamasService.historialInternacion$.pipe(
+        this.registraEgreso$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
                 // loading se setea en true desde el listado de internacion medico
                 this.mapaCamasService.isLoading(false);
                 const egresoOSala = historial.some(mov => mov.extras?.egreso || mov.idSalaComun);
-                const tieneIDMov = historial.every(
-                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento
-                );
-                return historial.length > 0 && tieneIDMov && !egresoOSala;
-            })
-        );
-
-        this.intSinMovimientos$ = this.mapaCamasService.historialInternacion$.pipe(
-            map(historial => {
-                return (historial.length === 0);
+                return egresoOSala;
             })
         );
 
         this.anular$ = combineLatest([
             this.mapaCamasService.selectedPrestacion,
-            this.intSinMovimientos$,
-            this.hayMovimientosSinEgresoAt$,
+            this.registraEgreso$,
             this.mapaCamasService.view,
             this.mapaCamasService.loading
         ]).pipe(
             auditTime(1),
-            map(([prestacion, sinMovimientos, sinEgreso, vista, loading]) => {
-                return prestacion?.estadoActual?.tipo !== 'validada' && (sinEgreso || sinMovimientos) && vista === 'listado-internacion' && !loading;
+            map(([prestacion, registraEgreso, vista, loading]) => {
+                return prestacion?.estadoActual?.tipo !== 'validada' && !registraEgreso && vista === 'listado-internacion' && !loading;
             })
         );
     }
@@ -177,8 +150,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     }
 
     toggleEdit() {
-        this.editar = !this.editar;
-        this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+        this.editar = !!this.editar ? null : this.ingresoPacienteService.selectedPaciente.getValue();
+        !!this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
     }
 
     // Notifica unicamente un nuevo egreso

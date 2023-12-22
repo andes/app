@@ -42,14 +42,14 @@
                            (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
-                <plex-select *ngIf="!prestacion || (intSinMovimientos$ | async)" [required]="true"
-                             [readonly]="selectReadonly() && (intSinMovimientos$ | async)" [(ngModel)]="cama"
-                             name="cama" [data]="camas" placeholder="Elija cama" label="Cama" idField="id"
-                             labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)" grow="full">
+                <plex-select *ngIf="!prestacion || !poseeMovimientos" [required]="true" [readonly]="selectReadonly()"
+                             [(ngModel)]="cama" name="cama" [data]="camas" placeholder="Elija cama" label="Cama"
+                             idField="id" labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)"
+                             grow="full">
                 </plex-select>
             </ng-container>
-            <plex-text *ngIf="prestacion && cama && !(intSinMovimientos$ | async)" [required]="true" [disabled]="true"
-                       label="Cama" name="cama" [(ngModel)]="cama.nombre">
+            <plex-text *ngIf="prestacion && cama && poseeMovimientos" [required]="true" [disabled]="true" label="Cama"
+                       name="cama" [(ngModel)]="cama.nombre">
             </plex-text>
 
             <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">

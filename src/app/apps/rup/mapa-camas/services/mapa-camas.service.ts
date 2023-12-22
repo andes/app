@@ -241,8 +241,10 @@ export class MapaCamasService {
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
                             map(snap => {
-                                snap = snap.filter(sn => sn.idInternacion && sn.idInternacion === internacion.id);
-                                return snap[0] || null;
+                                if (snap.length) {
+                                    snap = snap.filter(sn => sn.idInternacion && sn.idInternacion === internacion.id);
+                                }
+                                return snap[0];
                             }),
                             cache()
                         );

@@ -1,9 +1,6 @@
 <div class="mt-2">
     <ng-container *ngIf="!editar">
-        <plex-options *ngIf="(intSinMovimientos$ | async)" [items]="items"
-                      (activated)="onActiveOption($event)"></plex-options>
-        <plex-options *ngIf="!(intSinMovimientos$ | async)" [items]="itemsEgr"
-                      (activated)="onActiveOption($event)"></plex-options>
+        <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'ingreso'">
@@ -45,7 +42,7 @@
         </app-movimientos-internacion>
     </ng-container>
 
-    <ng-container *ngIf="mostrar === 'egreso' && !(intSinMovimientos$ | async)">
+    <ng-container *ngIf="mostrar === 'egreso'">
         <!-- informe (Debe tener un egreso cargado) -->
         <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activateOption('egreso')">
             <plex-button *ngIf="puedeEditarEgreso() && !(mapaCamasService.loading | async)" tooltip="Editar egreso"

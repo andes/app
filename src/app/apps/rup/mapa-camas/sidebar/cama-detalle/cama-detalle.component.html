@@ -6,7 +6,7 @@
                     <ng-container *ngFor="let relacion of relaciones$ | async">
                         <ng-container *ngIf="relacionesYcondiciones(relacion, cama)">
                             <plex-button tooltip="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
-                                         size="sm" (click)="accion(relacion)" class="mr-1">
+                                         size="sm" (click)="accion(relacion)">
                             </plex-button>
                         </ng-container>
                         <plex-dropdown #drop class="mr-1" *ngIf="puedeDesocupar(relacion)" [right]="true" size="sm"
@@ -90,9 +90,9 @@
                     <plex-button size="sm" type="success" (click)="onNuevoRegistrio()"> NUEVO REGISTRO
                     </plex-button>
                 </ng-container>
-                <ng-container *ngIf="!cama.sala && (hayMovimientosAt$ || sinMovimientosAt$) | async">
+                <ng-container *ngIf="!cama.sala && !registraEgreso">
                     <plex-dropdown *ngIf="capa !== 'interconsultores'" class="ml-1" right="true" size="sm"
-                                   icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                                   icon="account-off" type="danger" tooltip="Deshacer Internación"
                                    tooltipPosition="left" [items]="items">
                     </plex-dropdown>
                 </ng-container>

@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, EventEmitter, OnDestroy, OnInit, Optional, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { auditTime, filter, map, switchMap, take } from 'rxjs/operators';
 import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
@@ -85,8 +85,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         profesional: null,
         PaseAunidadOrganizativa: null
     };
-    public intSinMovimientos$: Observable<Boolean>;
-    private intSinMovimientos: Boolean;
+    public poseeMovimientos: Boolean;
     private subscription: Subscription;
     private subscription2: Subscription;
 
@@ -169,12 +168,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             cache()
         );
 
-        this.intSinMovimientos$ = this.mapaCamasService.historialInternacion$.pipe(
-            map(historial => {
-                return (historial.length === 0);
-            })
-        );
-
         this.subscription = combineLatest([
             this.mapaCamasService.maquinaDeEstado$,
             this.mapaCamasService.view,
@@ -182,19 +175,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.camaSelectedSegunView$,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.resumenInternacion$,
-            this.intSinMovimientos$,
             pacienteID$.pipe(
                 filter(pacID => !!pacID),
                 switchMap((pacID) => {
                     return this.mapaCamasService.getPaciente({ id: pacID }, false);
                 })
             )]
-        ).subscribe(([estado, view, capa, cama, prestacion, resumen, sinMovimientos, paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, Boolean, IPaciente]) => {
+        ).subscribe(([estado, view, capa, cama, prestacion, resumen, /* sinMovimientos,*/ paciente]: [IMaquinaEstados, string, string, ISnapshot, IPrestacion, IResumenInternacion, /* Boolean,*/ IPaciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
             this.resumen = resumen;
-            this.intSinMovimientos = sinMovimientos;
+            // Puede suceder, por error, que el ingreso impacte pero no se cree el movimiento correspondiente
+            this.poseeMovimientos = !!(cama?.id); // si tiene cama, entonces registra al menos un movimiento
 
             if (paciente && paciente.financiador && paciente.financiador.length > 0) {
                 const os = paciente.financiador[0];
@@ -250,7 +243,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 if (this.subscription2) {
                     this.subscription2.unsubscribe();
                 }
-                if (!sinMovimientos) {
+                if (this.poseeMovimientos) {
                     const idInternacion = resumen?.id || prestacion.id;
                     this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, idInternacion).pipe(
                         map(snapshot => this.cama = snapshot[0])
@@ -470,7 +463,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         this.cama.paciente = paciente;
         this.cama.fechaIngreso = this.informeIngreso.fechaIngreso;
 
-        if (this.prestacion && !this.intSinMovimientos) {
+        if (this.prestacion && this.poseeMovimientos) {
             // Se actualiza fecha y hora en camas
             this.cama.idInternacion = idInternacion;
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
@@ -697,7 +690,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     selectReadonly() {
-        return this.capa !== 'estadistica' && this.capa !== 'estadistica-v2' && this.resumen?.id;
+        return this.capa !== 'estadistica' && this.capa !== 'estadistica-v2' && this.resumen?.id && this.poseeMovimientos;
     }
 
     /**
