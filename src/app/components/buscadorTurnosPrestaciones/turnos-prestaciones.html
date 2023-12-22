@@ -262,22 +262,16 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="modelo.obraSocial !== 'SUMAR'">
-                <plex-radio *ngIf="prestacion.financiador" [(ngModel)]="modelo.obraSocial" name="os"
-                            (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
-                            [data]="obraSocialPaciente">
-                </plex-radio>
-                <plex-select *ngIf="showListaPrepagas || !prestacion.financiador" [(ngModel)]="modelo.prepaga"
-                             name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
-                             labelField="nombre">
-                </plex-select>
-                <br>
+            <div class="row">
+                <div class="col mb-4">
+                    <ng-container>
+                        <plex-grid type="auto" size="md" cols="2">
+                            <seleccionar-financiador *ngIf="paciente" [paciente]="paciente"
+                                                     (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
+                        </plex-grid>
+                    </ng-container>
+                </div>
             </div>
-            <div *ngIf="modelo.obraSocial === 'SUMAR'">
-                <label>Obra social</label>
-                <div>{{modelo.obraSocial}}</div>
-            </div>
-            <br>
         </div>
 
         <div *ngIf="prestacion.idPrestacion">

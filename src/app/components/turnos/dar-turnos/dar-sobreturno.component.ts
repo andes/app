@@ -27,9 +27,6 @@ export class DarSobreturnoComponent implements OnChanges {
     public horaTurno = null;
     public telefono = '';
     public cambioTelefono = false;
-    public obraSocialPaciente: any[] = [];
-    public prepagas: any[] = [];
-    public showListaPrepagas: Boolean = false;
     public hoy = moment().toDate();
     public inicio: Date;
     public fin: Date;
@@ -69,7 +66,6 @@ export class DarSobreturnoComponent implements OnChanges {
 
         this.servicePaciente.getById(this.idPaciente).subscribe(res => {
             this.paciente = res;
-            this.loadObraSocial(this.paciente);
         });
 
         this.carpetaEfector = {
@@ -85,55 +81,11 @@ export class DarSobreturnoComponent implements OnChanges {
         this.recuperarDatos();
     }
 
-    getPrepagas() {
-        this.obraSocialService.getPrepagas().subscribe(prepagas => {
-            this.showListaPrepagas = true;
-            this.prepagas = prepagas;
-        });
-    }
-
-    loadObraSocial(paciente) {
-        if (!paciente || !paciente.documento) {
-            return;
-        }
-        this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
-            if (resultado.length) {
-                this.obraSocialPaciente = resultado.map((os: any) => {
-                    let osPaciente;
-
-                    if (os.nombre) {
-                        osPaciente = {
-                            'id': os.nombre,
-                            'label': os.nombre
-                        };
-                    } else {
-                        osPaciente = {
-                            'id': os.financiador,
-                            'label': os.financiador
-                        };
-                    }
-                    return osPaciente;
-                });
-
-                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-                this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
-            } else {
-                this.getPrepagas();
-            }
-        });
-    }
-
-    seleccionarPrepaga(event) {
-        this.modelo.prepaga = event.value.nombre;
-    }
-
-    seleccionarObraSocial(event) {
-        if (event.value === 'prepaga') {
-            this.getPrepagas();
-        } else {
-            this.showListaPrepagas = false;
-        }
-        this.modelo.obraSocial = event && event.value;
+    setFinanciador(financiador) {
+        financiador?.prepaga ?
+            this.modelo.prepaga = financiador.nombre
+            :
+            this.modelo.obraSocial = financiador;
     }
 
     // Operaciones con carpetaPaciente
@@ -189,9 +141,8 @@ export class DarSobreturnoComponent implements OnChanges {
                     nombre: null
                 };
             } else {
-                if (this.modelo.prepaga) { osPaciente = this.modelo.prepaga; } else {
-                    osPaciente = this.paciente.financiador && this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
-                }
+                this.modelo.prepaga ? osPaciente = this.modelo.prepaga :
+                    osPaciente = this.modelo.obraSocial;
             }
 
             const pacienteSave: IPacienteBasico = {

@@ -72,29 +72,22 @@
                             </div>
                             <div class="col-md-12">
                                 <div
-                                     *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales?.length && turno.estado !== 'suspendido' && turno.paciente.documento">
-                                    <plex-radio *ngIf="turno.paciente.obraSocial"
-                                                [(ngModel)]="turno.paciente.obraSocial.nombre" name="os"
-                                                (change)="seleccionarObraSocial($event, turno)"
-                                                label="Seleccione una Obra Social" [data]="obraSocialPaciente">
-                                    </plex-radio>
-                                    <plex-select *ngIf="turno.showListaPrepagas || !turno.paciente.obraSocial"
-                                                 [(ngModel)]="turno.prepaga" name="prepagas" [data]="prepagas"
-                                                 label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
-                                    </plex-select>
+                                     *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length && turno?.estado !== 'suspendido' && turno?.paciente.documento">
+                                    <seleccionar-financiador [paciente]="turno.paciente"
+                                                             (setFinanciador)="setFinanciador($event)"></seleccionar-financiador>
                                 </div>
-                                <div *ngIf="modelo.obraSocial === 'SUMAR'">
+                                <div *ngIf="financiador?.nombre === 'SUMAR'">
                                     <strong>Programa</strong>
-                                    {{modelo.obraSocial}}
+                                    {{financiador?.nombre}}
                                 </div>
                             </div>
                             <div class="col-md-12"
                                  *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
-
                                 <plex-button *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id"
                                              class="float-right mr-1" type="danger btn-sm" label="Liberar Turno"
                                              (click)="liberarTurno(turno)">
                                 </plex-button>
+
 
                                 <plex-button *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)"
                                              class="float-right mr-1" type="success btn-sm" label="Dar Asistencia"
@@ -106,7 +99,7 @@
                                              (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
 
 
-                                <plex-button *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales?.length > 0 && turno.paciente.documento"
+                                <plex-button *ngIf="financiador?.nombre !== 'SUMAR' && turno?.profesionales?.length > 0 && turno?.paciente.documento"
                                              class="float-right mr-1" type="info btn-sm" label="Recupero"
                                              (click)="showArancelamiento(turno)">
                                 </plex-button>
@@ -125,8 +118,7 @@
         <div class="row">
             <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador || obraSocialSeleccionada">
                 <label>Obra Social </label>
-                <!-- <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div> -->
-                <div>{{obraSocialSeleccionada}}</div>
+                <div>{{financiador?.nombre}}</div>
             </div>
         </div>
         <div class="row" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.numeroAfiliado">

@@ -27,8 +27,6 @@ import { ITurnosPrestaciones } from './interfaces/turnos-prestaciones.interface'
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busqueda$: Observable<any[]>;
     public paciente$: Observable<any>;
-    public obraSocialPaciente: any[] = [];
-    public prepagas: any[] = [];
     public lastSelect$ = new BehaviorSubject<string>(null);
     public descargasPendientes = false;
     public prestacionesExport = [];
@@ -60,12 +58,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public prestacionesMax = 500;
     public showHint = false;
     public prestacionIniciada;
-    public showListaPrepagas: Boolean = false;
+
+    public financiador;
     public loader: Boolean = false;
-    public modelo: any = {
-        obraSocial: '',
-        prepaga: ''
-    };
 
     public columnas = {
         fecha: true,
@@ -213,9 +208,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         );
 
         this.initialize();
-        this.obraSocialService.getPrepagas().subscribe(prepagas => {
-            this.prepagas = prepagas;
-        });
     }
 
     initialize() {
@@ -316,8 +308,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }
     }
 
+    setFinanciador(financiador: any) {
+        this.financiador = financiador;
+    }
+
     mostrarPrestacion(datos) {
-        this.modelo.prepaga = null;
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
 
@@ -343,15 +338,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             this.lastSelect$.next(datos);
             datos.seleccionada = true;
             this.showPrestacion = true;
-            this.showListaPrepagas = false;
             this.prestacion = datos;
-            this.cargarObraSocial(datos);
         });
-        if (datos.financiador) {
-            this.modelo.prepaga = '';
-        };
-
-
+        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
+            this.paciente = paciente;
+            this.financiador = paciente.financiador[0];
+        });
     }
 
     recupero() {
@@ -362,9 +354,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.origen = 'buscador';
         const turno = this.prestacion;
 
-        if (this.modelo.prepaga !== '') {
+        if (this.financiador.prepaga || this.financiador.origen === 'ANDES') {
+            // OS elegida para facturar
             turno.obraSocial = 'prepaga';
-            turno.prepaga = this.modelo.prepaga;
+            turno.prepaga = this.financiador;
+        } else {
+            turno.obraSocial = null;
+            turno.financiador = this.financiador;
         }
 
         this.facturacionAutomaticaService.get(turno).subscribe(configuracion => {
@@ -386,9 +382,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             } else {
                 this.plex.info('warning', 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero');
             }
-
         });
-
     }
 
     sortTable(event: string) {
@@ -456,47 +450,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }
     }
 
-    cargarObraSocial(datos) {
-        if ((datos.idPrestacion)) {
-            this.obraSocialPaciente = [];
-            if (datos.paciente.documento && this.paciente.estado === 'validado') {
-                this.obraSocialService.getObrasSociales(datos.paciente.documento).subscribe(resultado => {
-                    if (resultado.length) {
-                        this.obraSocialPaciente = resultado.map((os: any) => {
-                            const osPaciente = {
-                                'id': os.financiador,
-                                'label': os.financiador
-                            };
-                            return osPaciente;
-                        });
-                        this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-                    } else {
-                        if (datos.paciente.obraSocial) {
-                            this.obraSocialPaciente.push({ 'id': datos.paciente.obraSocial.nombre, 'label': datos.paciente.obraSocial.nombre });
-                            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-                        }
-                    }
-                    this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
-                });
-            }
-        }
-    }
-
-    seleccionarObraSocial(event) {
-        if (event.value === 'prepaga') {
-            this.modelo.prepaga = null;
-            this.obraSocialService.getPrepagas().subscribe(prepagas => {
-                this.prepagas = prepagas;
-            });
-            this.showListaPrepagas = true;
-        } else {
-            this.showListaPrepagas = false;
-            this.modelo.prepaga = '';
-        }
-        this.modelo.obraSocial = event.value;
-    }
-
     generarComprobante() {
-        return this.prestacionIniciada && this.puedeEmitirComprobante && this.modelo.prepaga !== null && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
+        return this.prestacionIniciada && this.puedeEmitirComprobante && this.financiador && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
     }
 }

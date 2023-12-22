@@ -1,0 +1,10 @@
+<div *ngIf="showSelector">
+    <plex-radio *ngIf="obraSocial" [(ngModel)]="obraSocial" name="obraSocial" (change)="seleccionarObraSocial($event)"
+                label="Seleccione una Obra Social" [data]="selectorObrasSociales">
+    </plex-radio>
+    <plex-select class="w-100" *ngIf="showListado || !obraSocial" [(ngModel)]="financiador" name="financiador"
+                 [data]="selectorFinanciadores"
+                 label="{{ selectorObrasSociales ? 'Seleccione una opción' :  'Seleccione una Obra Social'}}"
+                 idField="nombre" labelField="nombre" (change)="seleccionarOtro($event)">
+    </plex-select>
+</div>

@@ -14,6 +14,7 @@ import { ElementosRUPModule } from 'src/app/modules/rup/elementos-rup.module';
 import { ExportHudsService } from 'src/app/modules/visualizacion-informacion/services/export-huds.service';
 import { VisualizacionInformacionModule } from 'src/app/modules/visualizacion-informacion/visualizacion-informacion.module';
 import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
+import { CITASLibModule } from '../turnos/citas.module';
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import { MPILibModule } from 'src/app/modules/mpi/mpi-lib.module';
         VisualizacionInformacionModule,
         ScrollingModule,
         MPILibModule,
+        CITASLibModule,
         RouterModule.forChild([
             { path: '', component: TurnosPrestacionesComponent, pathMatch: 'full' },
         ])

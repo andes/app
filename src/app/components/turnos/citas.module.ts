@@ -16,6 +16,7 @@ import { BotonesAgendaPipe } from './gestor-agendas/pipes/botonesAgenda.pipe';
 import { BotonesAgendaGeneralPipe } from './gestor-agendas/pipes/botonesAgendaGeneral.pipe';
 import { BotonesTurnosPipe } from './gestor-agendas/pipes/botonesTurnos.pipe';
 import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
+import { SeleccionarFinanciadorComponent } from './dar-turnos/seleccionar-financiador.component';
 
 @NgModule({
     imports: [
@@ -37,7 +38,9 @@ import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
         BotonesAgendaPipe,
         BotonesAgendaGeneralPipe,
         BotonesTurnosPipe,
-        InfoAgendaComponent],
+        InfoAgendaComponent,
+        SeleccionarFinanciadorComponent
+    ],
     exports: [
         DarTurnosComponent,
         DarSobreturnoComponent,
@@ -47,7 +50,9 @@ import { InfoAgendaComponent } from './gestor-agendas/info-agenda.component';
         BotonesAgendaPipe,
         BotonesAgendaGeneralPipe,
         BotonesTurnosPipe,
-        InfoAgendaComponent],
+        InfoAgendaComponent,
+        SeleccionarFinanciadorComponent
+    ],
 })
 export class CITASLibModule {
 
