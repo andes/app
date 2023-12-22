@@ -16,7 +16,7 @@
                            name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
             </plex-datetime>
             <plex-text [(ngModel)]="datoPaciente" (change)="refreshSelection($event,'paciente')" label="paciente"
-                       placeholder="Ingrese un documento, apellido, nombre, alias o número de identificación">
+                       placeholder='Ingrese un documento, apellido, nombre, alias o número de identificación'>
             </plex-text>
             <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
                          label="Prestación" tmPrestaciones preload="true">
@@ -30,8 +30,9 @@
                              label="Ambito">
                 </plex-select>
                 <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                             label="Equipo de salud" placeholder="Buscar por equipo de salud" tmProfesionales
-                             [readonly]="selectProfesional">
+                             label="Equipo de salud" [disabled]="this.permisos===0"
+                             [placeholder]="this.permisos===0? this.nombreProfesional:'Buscar por equipo de salud'"
+                             tmProfesionales [readonly]="selectProfesional">
                 </plex-select>
                 <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="arrayEstados"
                              label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
