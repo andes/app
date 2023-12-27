@@ -1,3 +1,17 @@
+# [5.130.0](https://github.com/andes/app/compare/v5.129.0...v5.130.0) (2023-12-27)
+
+
+### Bug Fixes
+
+* **RUP:** modifica label en boton de filtro ([#2966](https://github.com/andes/app/issues/2966)) ([9d01cee](https://github.com/andes/app/commit/9d01cee3c1c29bde08dc324f9a249632f62a4ddb))
+* **TYP-10:** Corregir Acceso al buscador ([#2964](https://github.com/andes/app/issues/2964)) ([a49ed8d](https://github.com/andes/app/commit/a49ed8d8600734f6a39b901f1315584272a93e72))
+
+
+### Features
+
+* **CIT:** implementa selector de financiadores ([#2854](https://github.com/andes/app/issues/2854)) ([1be5f4b](https://github.com/andes/app/commit/1be5f4bc5bda15c23726c5df44f6089dec3adb5d))
+* **RUP:** visualización de botones del buscador ([#2933](https://github.com/andes/app/issues/2933)) ([0f0eb26](https://github.com/andes/app/commit/0f0eb26d907d81d266eb3055c975550865bb8fd9))
+
 # [5.129.0](https://github.com/andes/app/compare/v5.128.2...v5.129.0) (2023-12-20)
 
 
