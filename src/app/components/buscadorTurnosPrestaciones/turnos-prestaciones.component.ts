@@ -57,6 +57,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     public financiador;
     public loader: Boolean = false;
+    public modelo: any = {
+        obraSocial: '',
+        prepaga: ''
+    };
+    public arrayPrestacion = [];
 
     public columnas = {
         fecha: true,
@@ -204,6 +209,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         );
 
         this.initialize();
+        this.recuperarFacturacion();
     }
 
     initialize() {
@@ -237,6 +243,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.buscar(params);
             }
         }
+    }
+
+    recuperarFacturacion() {
+
+        this.facturacionAutomaticaService.get({}).subscribe(configuracion => {
+            this.arrayPrestacion = configuracion;
+        });
+
     }
 
     buscar(parametros) {
@@ -359,23 +373,21 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turno.financiador = this.financiador;
         }
 
-        this.facturacionAutomaticaService.get(turno).subscribe(configuracion => {
-            const encuentraConfiguracion = configuracion.find(res => {
-                const encuentraConceptoId = res?.conceptosTurneables?.find(concepto =>
-                    (concepto.conceptId === turno.tipoPrestacion.conceptId)
-                );
-                if (encuentraConceptoId) {
-                    return res;
-                }
+        this.arrayPrestacion.forEach(prestacion => {
+            const encuentraConfiguracion = prestacion.conceptosTurneables?.find(concepto => {
+                return (concepto.conceptId === turno.tipoPrestacion.conceptId);
             });
 
-            if (encuentraConfiguracion) {
+            if (encuentraConfiguracion && ((turno.paciente.obraSocial?.financiador === 'SUMAR' && prestacion.sumar) ||
+                (turno.paciente.obraSocial?.financiador !== 'SUMAR' && prestacion.recuperoFinaciero))) {
+                // Realizar acción cuando se encuentra una configuración válida
                 this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
                     if (respuesta.message) {
                         this.plex.info('success', respuesta.message);
                     }
                 });
             } else {
+                // Realizar acción cuando no se encuentra una configuración válida
                 this.plex.info('warning', 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero');
             }
         });
