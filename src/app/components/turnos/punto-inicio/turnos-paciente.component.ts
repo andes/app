@@ -75,7 +75,7 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     setFinanciador(financiador) {
-        this.financiador = financiador;
+        this.financiador = financiador.nombre;
     }
 
     cambiarMotivo() {
