@@ -1,4 +1,4 @@
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component } from '@angular/core';
 
 @Component({
     selector: 'historial-solicitud',
@@ -28,6 +28,6 @@ export class HistorialSolicitudComponent {
             historial = [];
         }
 
-        this.itemsHistorial = historial.sort( (a, b) => moment(b.createdAt).diff(moment(a.createdAt)));
+        this.itemsHistorial = historial.sort((a, b) => moment(b.createdAt).diff(moment(a.createdAt)));
     }
 }

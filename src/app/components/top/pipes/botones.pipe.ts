@@ -14,20 +14,44 @@ export class BotonesSolicitudPipe implements PipeTransform {
             darTurno: false,
             auditar: false,
             anular: false,
-            continuarRegistro: false
+            continuarRegistro: false,
+            verHuds: false,
+            devolverDeshacer: false,
+            cancelar: false,
+            comunicacionPaciente: false
         };
-        if (this.esProfesionalDestino(prestacion) && prestacion.paciente && prestacion.estadoActual.tipo === 'asignada') {
-            botones.iniciarPrestacion = true;
-            botones.citarPaciente = true;
+        if (prestacion?.paciente) {
+            if (prestacion.estadoActual.tipo === 'asignada') {
+                if (this.esEfectorDestino(prestacion)) {
+                    botones.devolverDeshacer = true;
+
+                    if (this.esProfesionalDestino(prestacion)) {
+                        botones.iniciarPrestacion = true;
+                        botones.citarPaciente = true;
+                        botones.verHuds = true;
+                    }
+                }
+            }
+            if (!prestacion.solicitud.turno) {
+                if (prestacion.estadoActual.tipo === 'pendiente') {
+                    if (this.esEfectorDestino(prestacion)) {
+                        botones.darTurno = true;
+                        botones.anular = true;
+                    }
+                    if (prestacion.solicitud.historial.length) {
+                        botones.comunicacionPaciente = true;
+                    }
+                }
+                if (prestacion.estadoActual.tipo === 'auditoria' && prestacion.solicitud.historial.length) {
+                    botones.comunicacionPaciente = true;
+                }
+                if (this.esEfectorDestino(prestacion) && prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada') {
+                    botones.auditar = true;
+                }
+            }
         }
-        if (this.esEfectorDestino(prestacion)) {
-            if (prestacion.estadoActual.tipo === 'pendiente' && prestacion ?.paciente && !prestacion.solicitud.turno) {
-                botones.darTurno = true;
-                botones.anular = true;
-            }
-            if (prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada') {
-                botones.auditar = true;
-            }
+        if (this.esEfectorOrigen(prestacion) && prestacion.estadoActual.tipo === 'pendiente' && !prestacion.solicitud.turno) {
+            botones.cancelar = true;
         }
         // Si es el mismo usuario que creó la solicitud
         if (this.esUsuarioCreador(prestacion)) {
@@ -46,6 +70,10 @@ export class BotonesSolicitudPipe implements PipeTransform {
 
     esEfectorDestino(prestacion) {
         return prestacion.solicitud.organizacion.id === this.auth.organizacion.id;
+    }
+
+    esEfectorOrigen(prestacion) {
+        return prestacion.solicitud.organizacionOrigen.id === this.auth.organizacion.id;
     }
 
     esProfesionalDestino(prestacion) {

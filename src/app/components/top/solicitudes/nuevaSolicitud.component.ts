@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { ActivatedRoute, Router } from '@angular/router';

@@ -1,15 +1,14 @@
-<plex-layout [main]="showSidebar? 8 : 12" [offset]="160" (scroll)="onScroll()"
+<plex-layout [main]="showSidebar ? 8 : 12" [offset]="160" (scroll)="onScroll()"
              *ngIf="!showDarTurnos && !showCargarSolicitud && !showEditarReglas">
     <plex-layout-main>
         <header>
-            <plex-title main titulo="{{asignadas?'Solicitudes asignadas':'Módulo de solicitudes'}}">
+            <plex-title main titulo="{{asignadas ? 'Solicitudes asignadas' : 'Módulo de solicitudes'}}">
                 <plex-button *ngIf="!asignadas" type="danger" label="Reglas Globales"
                              routerLink="/solicitudes/reglasVisualizacion">
                 </plex-button>
             </plex-title>
         </header>
         <plex-tabs (change)="cambio($event);" [activeIndex]="panelIndex">
-
             <plex-button *ngIf="!asignadas && tipoSolicitud === 'entrada'" type="success"
                          label="Nueva Solicitud de Entrada" (click)="nuevaSolicitud()">
             </plex-button>
@@ -23,7 +22,7 @@
                          label="Reglas de entrada" (click)="editarReglas()">
             </plex-button>
 
-            <plex-tab label="Entrada" size="sm">
+            <plex-tab label="Entrada" (click)="panelIndex = 0">
                 <form #formEntrada="ngForm">
                     <plex-wrapper>
                         <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada' && !this.actualizacion"
@@ -64,7 +63,9 @@
                                      [preload]="true" [multiple]="true">
                         </plex-select>
                         <plex-text [(ngModel)]="pacienteEntrada" name="paciente" (change)="onPacienteChange()"
-                                   label="Filtrar por paciente" debounce="400"></plex-text>
+                                   label="Filtrar por paciente" debounce="400">
+                        </plex-text>
+
                         <div collapse>
                             <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada"
                                          (change)="cargarSolicitudes()" [data]="selectEstados" name="estado"
@@ -89,22 +90,29 @@
                         </div>
                     </plex-wrapper>
                 </form>
+
                 <span class="text-danger" *ngIf='mostrarAlertaRangoDias'>
                     El rango de fecha no puede superar los {{ diasIntervalo }} días, se reajustará la fecha en forma
-                    automática</span>
+                    automática
+                </span>
                 <div *ngIf="!prestacionesEntrada?.length && !loader" justify="center" class="mt-5">
                     <plex-label type="info" class="flex-column" icon="documento" size="xl" direction="column"
                                 titulo="No hay solicitudes de entrada en el rango de fechas">
                     </plex-label>
                 </div>
+
                 <plex-title *ngIf="prestacionesEntrada?.length" titulo="Listado de solicitudes" size="sm">
                 </plex-title>
+
                 <plex-table *ngIf="prestacionesEntrada?.length" [columns]="columns" #table="plTable"
-                            (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh">
-                    <plex-table-columns>
+                            (scroll)="onScroll()" [offset]="collapse ? 252 : 180" height="60vh">
+                    <plex-table-columns #columnas>
                     </plex-table-columns>
+
                     <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" (click)="seleccionar(prestacion)"
-                        [class.selected]="prestacion?.id===prestacionSelected?.id" [class.selectable]="selectable">
+                        [class.selected]="prestacion?.id === prestacionSeleccionada?.id"
+                        [class.selectable]="selectable">
+                        <!-- FECHA -->
                         <td *plTableCol="'fecha'">
                             <plex-label>
                                 <shared-popover-audit class="mt-3" placement="right" [data]="prestacion"
@@ -115,28 +123,32 @@
                                 </plex-label>
                             </plex-label>
                         </td>
-                        <ng-container *ngIf="!showSidebar">
-                            <td>
-                                <plex-label *ngIf="!showSidebar" [tituloBold]="true"
-                                            titulo="{{prestacion.paciente | nombre }}"
+                        <!-- PACIENTE -->
+                        <ng-container *ngIf="showPacienteData">
+                            <td *plTableCol="'paciente'" #pacienteColumn>
+                                <plex-label [tituloBold]="true" titulo="{{prestacion.paciente | nombre }}"
                                             subtitulo="DNI: {{prestacion.paciente.documento}}">
                                 </plex-label>
                             </td>
                         </ng-container>
+                        <!-- ORGANIZACION ORIGIN -->
                         <td *plTableCol="'origen'">
                             <plex-label [tituloBold]="true"
                                         titulo="{{prestacion.solicitud.organizacionOrigen? prestacion.solicitud.organizacionOrigen.nombre : 'Sin organización de origen'}}"
                                         subtitulo="{{prestacion.solicitud.profesionalOrigen?(prestacion.solicitud.profesionalOrigen | nombre) : 'Sin profesional de origen'}}">
                             </plex-label>
                         </td>
+                        <!-- ORGANIZACION DESTINO -->
                         <td *plTableCol="'destino'">
                             <plex-label [tituloBold]="true" titulo="{{prestacion.solicitud.tipoPrestacion.term}}"
                                         subtitulo="{{prestacion.solicitud.profesional? (prestacion.solicitud.profesional | nombre):'Sin profesional de destino'}}">
                             </plex-label>
                         </td>
+                        <!-- BOOL ACTUALIZACION -->
                         <td *plTableCol="'actualizacion'">
                             <plex-label titulo="{{prestacion.updatedAt | date:'dd/MM/yyyy - HH:mm'}}"></plex-label>
                         </td>
+                        <!-- BOTONERA -->
                         <td class="column-right my-3 d-flex align-items-center">
                             <plex-badge *ngIf="prestacion | linkTurnoRemoto | async | isNotEmpty" type="info"
                                         tooltip="Agenda Virtual" tooltipPosition="top">
@@ -190,20 +202,15 @@
                                 <plex-badge *ngIf="estado === 'referida'" type="warning">
                                     REFERIDA
                                 </plex-badge>
-
-                                <ng-container *ngIf="prestacion | botonesSolicitud as botones">
-                                    <plex-dropdown #drop *ngIf="verificarBotones(botones, prestacion)" [right]="true"
-                                                   class="ml-1" [items]="itemsDropdown" size="sm" icon="dots-vertical"
-                                                   (onOpen)="setDropDown(prestacion, drop, botones)">
-                                    </plex-dropdown>
-                                </ng-container>
-
                             </ng-container>
                         </td>
                     </tr>
                 </plex-table>
                 <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
             </plex-tab>
+
+            <!-- ##############  SOLICITUDES DE SALIDA ##############  -->
+
             <plex-tab label="Salida">
                 <form #formSalida="ngForm">
                     <plex-wrapper>
@@ -251,14 +258,16 @@
                         </div>
                     </plex-wrapper>
                 </form>
+
                 <plex-title *ngIf="prestacionesSalida?.length" titulo="Listado de solicitudes" size="sm">
                 </plex-title>
                 <plex-table *ngIf="prestacionesSalida?.length" [columns]="columns" #table="plTable"
                             (scroll)="onScroll()" [offset]="collapse?252:180" height="60vh">
-                    <plex-table-columns>
+                    <plex-table-columns #columnas>
                     </plex-table-columns>
                     <tr *ngFor="let prestacion of prestacionesSalida; let i=index" (click)="seleccionar(prestacion)"
-                        [class.selected]="prestacion?.id===prestacionSelected?.id" [class.selectable]="selectable">
+                        [class.selected]="prestacion?.id === prestacionSeleccionada?.id"
+                        [class.selectable]="selectable">
 
                         <!-- FECHA -->
                         <td *plTableCol="'fecha'">
@@ -267,10 +276,9 @@
                             </plex-label>
                         </td>
                         <!-- PACIENTE -->
-                        <ng-container *ngIf="!showSidebar">
-                            <td>
-                                <plex-label *ngIf="!showSidebar" [tituloBold]="true"
-                                            titulo="{{prestacion.paciente | nombre }}"
+                        <ng-container *ngIf="showPacienteData">
+                            <td *plTableCol="'paciente'">
+                                <plex-label [tituloBold]="true" titulo="{{prestacion.paciente | nombre }}"
                                             subtitulo="DNI: {{prestacion.paciente.documento}}">
                                 </plex-label>
                             </td>
@@ -317,17 +325,14 @@
                             </plex-badge>
                             <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                         type="success">Registro en
-                                HUDS</plex-badge>
-                            <ng-container *ngIf="prestacion | botonesSolicitud as botones">
-                                <plex-dropdown #drop *ngIf="verificarBotones(botones, prestacion)" [right]="true"
-                                               class="ml-1" [items]="itemsDropdown" size="sm" icon="dots-vertical"
-                                               (onOpen)="setDropDown(prestacion, drop, botones)">
-                                </plex-dropdown>
-                            </ng-container>
+                                HUDS
+                            </plex-badge>
                         </td>
                     </tr>
                 </plex-table>
+
                 <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+
                 <div *ngIf="!prestacionesSalida?.length && !loader" justify="center" class="mt-5">
                     <plex-label type="info" class="flex-column" icon="documento" size="xl" direction="column"
                                 titulo="No hay solicitudes de salida en el rango de fechas">
@@ -338,44 +343,155 @@
 
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <div *ngIf="showDetalle">
-            <plex-title main titulo="Solicitud de {{this.tipoSolicitud}}">
-                <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+        <ng-container *ngIf="showDetalle">
+            <plex-title main titulo="Solicitud de {{this.tipoSolicitud}}" size="md">
+                <plex-button size="sm" type="danger" [icon]="'close'" tooltip="Cerrar" tooltipPosition="left"
+                             (click)="closeSidebar()">
                 </plex-button>
             </plex-title>
-            <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                               [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
-        </div>
-        <div *ngIf="showAuditar">
-            <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="false"
-                               (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
-        </div>
-        <div *ngIf="showAnular">
-            <anular-solicitud [prestacionSeleccionada]="prestacionSeleccionada" (returnAnular)="returnAnular($event)">
-            </anular-solicitud>
-        </div>
+
+            <div class="row">
+                <!-- Sin estos row-col los plex-help no toman la dimensión ni posición correcta -->
+                <div class="col-12">
+                    <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
+                                       [turnoSeleccionado]="turnoSeleccionado">
+
+                        <ng-container *ngIf="prestacionSeleccionada | botonesSolicitud as botones">
+                            <ng-container *ngIf="tipoSolicitud === 'entrada'">
+                                <!-- INICIAR PRESTACION -->
+                                <plex-help class="mr-1"
+                                           *ngIf="botones.iniciarPrestacion && isPrestationEnabled(prestacionSeleccionada)"
+                                           icon="notas-check" btnType="success" type="info"
+                                           tooltip="Iniciar prestación">
+                                    <form #formIniciar="ngForm">
+                                        <plex-title size="sm" titulo="Iniciar prestación">
+                                            <plex-button type="success" size="sm" icon="check" tooltip="Confirmar"
+                                                         tooltipPosition="left" [disabled]="formIniciar.invalid"
+                                                         (click)="showModal('iniciar', true)">
+                                            </plex-button>
+                                        </plex-title>
+                                        <plex-datetime type="datetime" [(ngModel)]="fechaInicioPrestacion"
+                                                       [required]="true" name="fechaIniciar"
+                                                       label="Fecha y hora de la prestación">
+                                        </plex-datetime>
+                                        <plex-text label="Observaciones" multiline="true" name="obsIniciar"
+                                                   [(ngModel)]="observacionesIniciarPrestacion"
+                                                   placeholder="Ingrese observaciones...">
+                                        </plex-text>
+                                    </form>
+                                </plex-help>
+
+                                <!-- CONTINUAR REGISTRO -->
+                                <plex-button class="mr-1"
+                                             *ngIf="botones.continuarRegistro || prestacionSeleccionada.estadoActual.tipo === 'ejecucion'"
+                                             icon="lapiz-documento" tooltip="Continuar registro" tooltipPosition="left"
+                                             size="sm" type="success" (click)="onContinuarRegistro()">
+                                </plex-button>
+
+                                <!-- DAR TURNO -->
+                                <plex-button class="mr-1" size="sm" *ngIf="botones.darTurno" icon="calendar-plus"
+                                             type="success" (click)="$event.stopPropagation(); onDarTurno()"
+                                             title="Dar Turno">
+                                </plex-button>
+
+                                <!-- CITAR PACIENTE -->
+                                <plex-help class="mr-1" *ngIf="botones.citarPaciente" icon="calendar" btnType="warning"
+                                           type="info" tooltip="Citar paciente">
+                                    <form #formCitar="ngForm">
+                                        <plex-title size="sm" titulo="Citar paciente">
+                                            <plex-button type="success" size="sm" icon="check" tooltip="Confirmar"
+                                                         tooltipPosition="left" [disabled]="formCitar.invalid"
+                                                         (click)="$event.stopPropagation(); citar()">
+                                            </plex-button>
+                                        </plex-title>
+                                        <plex-text label="Observaciones" multiline="true" name="obsCitar"
+                                                   [(ngModel)]="observacionesCitar" [required]="true">
+                                        </plex-text>
+                                    </form>
+                                </plex-help>
+
+                                <!-- VER HUDS -->
+                                <plex-button class="mr-1" *ngIf="botones.verHuds" icon="historial" tooltip="Ver HUDS"
+                                             type="info" size="sm" (click)="onVerHuds()">
+                                </plex-button>
+
+                                <!-- ANULAR SOLICITUD -->
+                                <plex-help class="mr-1" *ngIf="botones.anular && permisoAnular" icon="cancel"
+                                           btnType="danger" type="info" tooltip="Anular solicitud">
+                                    <form #formAnular="ngForm">
+                                        <plex-title size="sm" titulo="Anular solicitud">
+                                            <plex-button type="success" size="sm" icon="check" tooltip="Confirmar"
+                                                         tooltipPosition="left" [disabled]="formAnular.invalid"
+                                                         (click)="$event.stopPropagation(); anular()">
+                                            </plex-button>
+                                        </plex-title>
+                                        <plex-text label="Motivo" multiline="true" name="motivoAnulacion"
+                                                   [(ngModel)]="observacionesAnular" [required]="true">
+                                        </plex-text>
+                                    </form>
+                                </plex-help>
+                            </ng-container>
+
+                            <!-- AUDITAR SOLICITUD -->
+                            <plex-help class="mr-1" *ngIf="botones.auditar" icon="lock-alert" type="info"
+                                       tooltip="Auditar Solicitud"
+                                       [tooltipPosition]="prestacionSeleccionada.estadoActual.tipo === 'rechazada' ? 'left' : 'top'">
+                                <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="false"
+                                                   (returnAuditoria)="returnAuditoria($event)">
+                                </auditar-solicitud>
+                            </plex-help>
+
+                            <!-- CANCELAR -->
+                            <plex-button class="mr-1" *ngIf="botones.cancelar && tipoSolicitud === 'salida'"
+                                         icon="cancel" tooltip="Cancelar" size="sm" type="danger"
+                                         (click)="onCancelar()">
+                            </plex-button>
+
+                            <!-- COMUNICACION CON PACIENTE -->
+                            <plex-help class="mr-1" *ngIf="botones.comunicacionPaciente" type="info" size="sm"
+                                       tooltip="Comunicación con el paciente" tooltipPosition="left" icon="telefono">
+                                <plex-title titulo="Comunicación con el paciente" size="sm">
+                                    <plex-button type="success" icon="check" size="sm" tooltip="Confirmar"
+                                                 tooltipPosition="left" [disabled]="!formComunicacion.valid"
+                                                 (click)="onNotificarPaciente()">
+                                    </plex-button>
+                                </plex-title>
+                                <form #formComunicacion="ngForm">
+                                    <plex-datetime type="datetime" label="Fecha de notificación"
+                                                   name="fechaNotificacion" [max]="hoy" [(ngModel)]="fechaNotificacion"
+                                                   [required]="true" placeholder="Ingrese una fecha">
+                                    </plex-datetime>
+                                    <plex-text label="Descripción" multiline="true" name="descripcionNotificacion"
+                                               [(ngModel)]="descripcionNotificacion"
+                                               placeholder="Ingrese una descripción" [required]="true">
+                                    </plex-text>
+                                </form>
+                            </plex-help>
+
+                            <!-- DEVOLVER / DESHACER -->
+                            <plex-button class="mr-1" *ngIf="botones.devolverDeshacer" icon="clipboard-arrow-left"
+                                         tooltip="{{ prestacionSeleccionada.solicitud.profesional?.id === auth.profesional ? 'Devolver' : 'Deshacer' }}"
+                                         tooltipPosition="left" type="danger" size="sm" (click)="showModal('devolver')">
+                            </plex-button>
+
+                        </ng-container>
+
+                    </detalle-solicitud>
+                </div>
+            </div>
+        </ng-container>
+
         <ng-container *ngIf="showNuevaSolicitud">
             <top-busqueda-paciente (returnBusqueda)="returnBusqueda($event)">
-                <plex-button size="sm" type="danger" [icon]="'close'" (click)="cerrar()">
+                <plex-button size="sm" type="danger" [icon]="'close'" (click)="closeSidebar()">
                 </plex-button>
             </top-busqueda-paciente>
         </ng-container>
-        <div *ngIf="showCitar">
-            <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"
-                               (returnCitar)="returnCitar($event)"></auditar-solicitud>
-        </div>
-        <div *ngIf="showIniciarPrestacion">
-            <prestacion-solicitud [prestacionSeleccionada]="prestacionSeleccionada"
-                                  (returnPrestacion)="returnPrestacion($event)">
-            </prestacion-solicitud>
-        </div>
-        <div *ngIf="showNotificarPaciente">
-            <notificar-paciente (cancelarNotificacion)="cerrar()"
-                                (returnNotificarPaciente)="returnNotificarPaciente($event)"></notificar-paciente>
-        </div>
     </plex-layout-sidebar>
 </plex-layout>
+
 <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
+
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
             (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"
             [solicitudPrestacion]="solicitudTurno">
@@ -384,26 +500,57 @@
 <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
 </modal-motivo-acceso-huds>
 
-<plex-modal #modal (closed)="cerrarDevolver()">
+
+<!-- ################ MODALS ##################3 -->
+
+<!--  DEVOLVER SOLICITUD  -->
+<plex-modal size="sm" #modalDevolver (closed)="hideModal('devolver')">
     <plex-icon name="alert-circle" type="info"></plex-icon>
-    <plex-modal-title type="danger" *ngIf="prestacionDevolver">
-        {{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' :
+    <plex-modal-title type="danger">
+        {{ prestacionSeleccionada?.solicitud?.profesional?.id === auth.profesional ? 'Devolver Solicitud' :
         'Deshacer Asignación' }}
     </plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo:</plex-modal-subtitle>
     <main>
-        <div class="w-50">
-            <div>
-                <plex-text label="Motivo" multiline="true" name="motivoRespuesta" [(ngModel)]="motivoRespuesta"
-                           [required]="true">
-                </plex-text>
-            </div>
+        <div class="w-75">
+            <plex-text label="Motivo" multiline="true" name="motivoRespuesta" [(ngModel)]="motivoRespuesta"
+                       [required]="true">
+            </plex-text>
         </div>
     </main>
-    <plex-button modal right type="success" (click)="confirmarDevolver()" [disabled]='!motivoRespuesta'>
+    <plex-button modal right type="success" (click)="onConfirmarDevolver()" [disabled]='!motivoRespuesta'>
         ACEPTAR
     </plex-button>
-    <plex-button modal left type="danger" (click)="cerrarDevolver()">
+    <plex-button modal left type="danger" (click)="hideModal('devolver')">
         CANCELAR
+    </plex-button>
+</plex-modal>
+
+<!-- INICIAR PRESTACION -->
+<plex-modal size="sm" #modalIniciar [allowEscClose]="false" [allowBackdropClose]="false"
+            (closed)="showModal('iniciar')">
+    <plex-modal-title class="mb-2" type="info">
+        <div class="rounded" align="center">?</div>
+    </plex-modal-title>
+    <plex-modal-subtitle class="text-center">¿Está seguro de querer iniciar una pestación?
+    </plex-modal-subtitle>
+    <main>
+        <div *ngIf="prestacionSeleccionada">
+            <plex-title size="md" titulo="Datos de la prestación"></plex-title>
+            <plex-grid type="auto" cols="2">
+                <plex-label color="#29a9e0" size="md" titulo="Prestación " icon="mano-corazon"
+                            subtitulo="{{ prestacionSeleccionada.solicitud.tipoPrestacion.term }}">
+                </plex-label>
+                <plex-label color="#29a9e0" size="md" titulo="{{ prestacionSeleccionada.paciente | nombre}}"
+                            icon="paciente" subtitulo="{{ prestacionSeleccionada.paciente.documento }}">
+                </plex-label>
+            </plex-grid>
+        </div>
+    </main>
+    <plex-button modal left type="danger" (click)="hideModal('iniciar')">
+        CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="onConfirmarIniciarPrestacion()">
+        ACEPTAR
     </plex-button>
 </plex-modal>

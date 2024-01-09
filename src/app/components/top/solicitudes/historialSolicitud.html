@@ -9,7 +9,7 @@
                 </plex-label>
                 <plex-label size="md" *ngIf="reg.accion === 'notificar'" [tituloBold]="true"
                             titulo="{{ reg.createdAt | fecha }}"
-                            subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }} el {{reg.fechaDeNotificacion | fecha}}">
+                            subtitulo="{{ reg.descripcion }} por {{ reg.createdBy.nombreCompleto }} el {{ reg.fechaDeNotificacion | date: 'dd/MM/yyyy HH:mm' }}">
                 </plex-label>
                 <plex-label size="md" [tituloBold]="true" titulo="Notas"
                             subtitulo="{{ reg.observaciones?  reg.observaciones :'Sin observaciones'}}"></plex-label>
