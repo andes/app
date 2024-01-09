@@ -115,12 +115,9 @@ export class PrestacionCrearComponent implements OnInit {
             obraSocialPaciente = financiador;
         });
         if (this.tipoPrestacionSeleccionada) {
-            if (!this.tipoPrestacionSeleccionada.noNominalizada) {
-                this.existePaciente();
-            }
             const conceptoSnomed = this.tipoPrestacionSeleccionada;
             const nuevaPrestacion = {
-                paciente: {
+                paciente:  this.paciente && {
                     id: this.paciente.id,
                     nombre: this.paciente.nombre,
                     alias: this.paciente.alias,
