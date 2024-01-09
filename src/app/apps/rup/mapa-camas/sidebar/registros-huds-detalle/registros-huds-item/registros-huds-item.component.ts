@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 
-export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion' | 'anular-validacion';
+export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion' | 'anular-validacion' | 'cda';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class RegistroHUDSItemComponent {
         }
     ];
 
-    @Input() prestacion: IPrestacion;
+    @Input() prestacion;
 
     @Output() accion = new EventEmitter<RegistroHUDSItemAccion>();
 
@@ -44,16 +44,20 @@ export class RegistroHUDSItemComponent {
     ) { }
 
     get esEjecucion() {
-        const estadoPrestacion = this.prestacion.estados[this.prestacion.estados.length - 1];
-        const esEjecucion = estadoPrestacion.tipo === 'ejecucion';
-        return esEjecucion;
+        if (this.prestacion.estados) {
+            const estadoPrestacion = this.prestacion.estados[this.prestacion.estados.length - 1];
+            const esEjecucion = estadoPrestacion.tipo === 'ejecucion';
+            return esEjecucion;
+        }
     }
 
     get esMiPrestacion() {
-        const estadoPrestacion = this.prestacion.estados[this.prestacion.estados.length - 1];
+        if (this.prestacion.estados) {
+            const estadoPrestacion = this.prestacion.estados[this.prestacion.estados.length - 1];
 
-        const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
-        return createdByMe;
+            const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
+            return createdByMe;
+        }
     }
 
     emit(accion: RegistroHUDSItemAccion, $event?: Event) {

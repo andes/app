@@ -1,0 +1,75 @@
+$blue: #00a8e0;
+
+.grid-registros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 40px;
+    margin-top: 40px;
+}
+
+.concepto {
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-columns: 0.5fr;
+    font-size: 1.75rem;
+    border-bottom: 2px solid gray;
+    margin-bottom: 15px;
+    align-items: flex-end;
+    height: 75px;
+
+    h4 {
+        margin-bottom: 0;
+        text-transform: capitalize;
+    }
+}
+
+.datos-prestacion {
+    display: flex;
+    align-content: center;
+    padding-left: 4px;
+
+    h5 {
+        font-size: 1.5rem;
+    }
+
+    div {
+        display: flex;
+    }
+}
+
+.borde-datos {
+    border-left: 2px solid gray;
+}
+
+.columna-datos {
+    grid-column: 1/3;
+    border-bottom: 2px solid darkgray;
+    column-gap: 5px;
+
+    span {
+        font-size: 1rem;
+    }
+
+    &.no-border {
+        border-bottom: 0;
+    }
+}
+
+.divisor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid gray;
+}
+.adjuntos {
+    grid-column: 1/3;
+}
+
+.adjuntos {
+    border-bottom: 1px solid $blue;
+    height: 35px;
+
+    .badge {
+        height: 32px !important;
+    }
+}

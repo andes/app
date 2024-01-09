@@ -65,12 +65,14 @@ import { ResumenInternacionComponent } from './views/resumen-internacion/resumen
 import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
+import { VistaCDAComponent } from './views/mapa-camas-capa/vista-cda/vista-cda.component';
 
 
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
     MapaCamasCapaComponent,
+    VistaCDAComponent,
     CensosDiariosComponent,
     CensosMensualesComponent,
     FiltrosCamasComponent,

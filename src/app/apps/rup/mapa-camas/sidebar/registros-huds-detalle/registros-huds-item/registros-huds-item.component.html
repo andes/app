@@ -1,17 +1,17 @@
 <td>
     <small>
-        {{ prestacion.solicitud.fecha | fecha }}
-        {{ prestacion.solicitud.fecha | hora }}
+        {{ prestacion.solicitud?.fecha || prestacion.fecha | fecha }}
+        {{ prestacion.solicitud?.fecha || prestacion.fecha | hora }}
     </small>
 </td>
 <td>
     <small>
-        {{ prestacion.solicitud.tipoPrestacion.term }}
+        {{ prestacion.solicitud?.tipoPrestacion.term || prestacion.prestacion.snomed.term }}
     </small>
 </td>
 <td>
     <small>
-        {{ prestacion.solicitud.profesional | nombre }}
+        {{ prestacion.solicitud?.profesional || prestacion.profesional | nombre }}
     </small>
 </td>
 <td>
