@@ -97,6 +97,16 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     responder() {
+        this.servicioReglas.get({
+            organizacionOrigen: this.auth.organizacion.id,
+            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+        })
+            .subscribe(
+                res => {
+                    this.reglasTOP = res;
+                    this.organizacionesDestino = res.map(elem => ({ id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }));
+                }
+            );
         this.estadoSolicitud.id = 2;
         this.estadoSolicitud.nombre = 'Responder';
         this.doShowConfirmar();
@@ -136,6 +146,10 @@ export class AuditarSolicitudComponent implements OnInit {
                 if (!this.esRemisionAuditable()) {
                     data.estado = { tipo: 'pendiente' };
                 }
+            }
+
+            if (this.estadoSolicitud.id === 2) {
+                data.organizacionContrarreferida = this.prestacionSeleccionada.solicitud.historial[this.prestacionSeleccionada.solicitud?.historial?.length - 1].organizacion;
             }
 
             this.returnAuditoria.emit(data);

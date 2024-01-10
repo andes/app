@@ -14,7 +14,7 @@ export class LinkTurnoRemotoPipe implements PipeTransform {
         let link = '';
         if (prestacion.solicitud?.turno) {
             return (this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).pipe( map ( turnos => {
-                link = turnos[0].bloques[0].turnos[0].link;
+                link = turnos[0]?.bloques[0]?.turnos[0]?.link;
                 if (!link) {
                     link = '';
                 }

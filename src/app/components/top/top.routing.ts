@@ -18,6 +18,7 @@ import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 import { ListaReglasComponent } from './reglas/listaReglas.component';
 import { ReglasComponent } from './reglas/reglas.component';
 import { AuditarSolicitudComponent } from './solicitudes/auditarSolicitud.component';
+import { ReferirSolicitudComponent } from './solicitudes/referirSolicitud.component';
 import { BusquedaPacienteComponent } from './solicitudes/busquedaPaciente.component';
 import { DetalleSolicitudComponent } from './solicitudes/detalleSolicitud.component';
 import { VisualizacionReglasTopComponent } from './reglas/visualizacionReglasTop.component';
@@ -59,6 +60,7 @@ export const TOP_ROUTES = [
         SolicitudesComponent,
         DetalleSolicitudComponent,
         AuditarSolicitudComponent,
+        ReferirSolicitudComponent,
         ReglasComponent,
         ListaReglasComponent,
         BusquedaPacienteComponent,
