@@ -1,3 +1,16 @@
+# [5.131.0](https://github.com/andes/app/compare/v5.130.0...v5.131.0) (2024-01-10)
+
+
+### Bug Fixes
+
+* **CIT:** corrige bug de obra social al generar el comprobante ([#2967](https://github.com/andes/app/issues/2967)) ([49c94b6](https://github.com/andes/app/commit/49c94b61b953abcd253be6b39addc447096e70c4))
+* **CIT:** error al crear prestacion no nominalizada ([#2949](https://github.com/andes/app/issues/2949)) ([07a2701](https://github.com/andes/app/commit/07a270136f141248e5d17513536b0899f64c649b))
+
+
+### Features
+
+* **IN:** sumar laboratorios en vista de registros ([#2913](https://github.com/andes/app/issues/2913)) ([dad26cb](https://github.com/andes/app/commit/dad26cb9d68ec6e094273b33d625796172751d74))
+
 # [5.130.0](https://github.com/andes/app/compare/v5.129.0...v5.130.0) (2023-12-27)
 
 
