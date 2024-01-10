@@ -730,6 +730,25 @@ export class SolicitudesComponent implements OnInit {
         ).subscribe(() => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]));
     }
 
+    volverAuditoria() {
+        this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención').then(confirmar => {
+            if (confirmar) {
+                const cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado).subscribe({
+                    complete: () => {
+                        this.plex.toast('info', 'Prestación nuevamente en Auditoría');
+                        this.closeSidebar();
+                        this.cargarSolicitudes();
+                    },
+                    error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
+                });
+            }
+        });
+    }
+
     onDarTurno() {
         this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
             // Si se seleccionó por error un paciente fallecido

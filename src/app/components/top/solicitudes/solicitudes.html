@@ -388,6 +388,12 @@
                                              size="sm" type="success" (click)="onContinuarRegistro()">
                                 </plex-button>
 
+                                <!-- VOLVER A AUDITORIA -->
+                                <plex-button class="mr-1" *ngIf="botones.volverAuditoria" icon="undo"
+                                             tooltip="Volver a auditoría" type="info" size="sm"
+                                             (click)="volverAuditoria()">
+                                </plex-button>
+
                                 <!-- DAR TURNO -->
                                 <plex-button class="mr-1" size="sm" *ngIf="botones.darTurno" icon="calendar-plus"
                                              type="success" (click)="$event.stopPropagation(); onDarTurno()"
