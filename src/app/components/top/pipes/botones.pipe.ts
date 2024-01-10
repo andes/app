@@ -13,6 +13,7 @@ export class BotonesSolicitudPipe implements PipeTransform {
             citarPaciente: false,
             darTurno: false,
             auditar: false,
+            volverAuditoria: false,
             anular: false,
             continuarRegistro: false,
             verHuds: false,
@@ -37,6 +38,7 @@ export class BotonesSolicitudPipe implements PipeTransform {
                     if (this.esEfectorDestino(prestacion)) {
                         botones.darTurno = true;
                         botones.anular = true;
+                        botones.volverAuditoria = true;
                     }
                     if (prestacion.solicitud.historial.length) {
                         botones.comunicacionPaciente = true;

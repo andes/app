@@ -260,7 +260,6 @@ export class SolicitudesComponent implements OnInit {
             this.actualizarFechas();
             this.activeTab = activeTab;
             this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
-            this.closeSidebar();
             this.cargarSolicitudes();
         }
     }
@@ -333,7 +332,6 @@ export class SolicitudesComponent implements OnInit {
                 }
             };
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
-                this.closeSidebar();
                 this.cargarSolicitudes();
             });
         }
@@ -361,8 +359,9 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-        this.prestacionSeleccionada = null;
+        this.closeSidebar();
         this.guardarFechas();
+        this.prestacionSeleccionada = null;
 
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
@@ -730,6 +729,24 @@ export class SolicitudesComponent implements OnInit {
         ).subscribe(() => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]));
     }
 
+    volverAuditoria() {
+        this.plex.confirm('¿Realmente quiere volver al estado Auditoría?', 'Atención').then(confirmar => {
+            if (confirmar) {
+                const cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'auditoria', observaciones: 'La solicitud pasó a estado Auditoría' }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado).subscribe({
+                    complete: () => {
+                        this.plex.toast('info', 'Prestación nuevamente en Auditoría');
+                        this.cargarSolicitudes();
+                    },
+                    error: () => this.plex.toast('danger', 'ERROR: No es posible cambiar el estado de la prestación')
+                });
+            }
+        });
+    }
+
     onDarTurno() {
         this.pacienteService.getById(this.prestacionSeleccionada.paciente.id).subscribe(paciente => {
             // Si se seleccionó por error un paciente fallecido
@@ -751,7 +768,6 @@ export class SolicitudesComponent implements OnInit {
     volverDarTurno() {
         this.showDarTurnos = false;
         this.solicitudTurno = null;
-        this.closeSidebar();
         this.cargarSolicitudes();
     }
 
@@ -765,7 +781,6 @@ export class SolicitudesComponent implements OnInit {
                 // CAMBIA el estado de la prestacion a 'anulada'
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, cambioEstado).subscribe({
                     complete: () => {
-                        this.closeSidebar();
                         this.cargarSolicitudes();
                         this.plex.toast('info', 'Prestación cancelada');
                     },
@@ -792,7 +807,6 @@ export class SolicitudesComponent implements OnInit {
     onConfirmarDevolver() {
         this.servicioPrestacion.patch(this.prestacionSeleccionada.id, { op: 'devolver', observaciones: this.motivoRespuesta }).subscribe(() => {
             this.hideModal('devolver');
-            this.closeSidebar();
             this.cargarSolicitudes();
         });
     }
