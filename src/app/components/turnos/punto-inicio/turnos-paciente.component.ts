@@ -32,7 +32,12 @@ export class TurnosPacienteComponent implements OnInit {
     _operacion: string;
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
-    public financiador = '';
+    public financiador = {
+        codigoPuco: null,
+        nombre: '',
+        financiador: '',
+        prepaga:false
+    };
     public _paciente: IPaciente;
     @Input('operacion')
     set operacion(value: string) {
@@ -75,7 +80,7 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     setFinanciador(financiador) {
-        this.financiador = financiador.nombre;
+        this.financiador = financiador;
     }
 
     cambiarMotivo() {
@@ -103,12 +108,8 @@ export class TurnosPacienteComponent implements OnInit {
             data['motivoConsulta'] = turno.motivoConsulta;
         }
 
-        const obraSocialUpdate = this._paciente.financiador.find(os => os.nombre === this.financiador);
-        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : {
-            codigoPuco: null,
-            nombre: this.financiador,
-            financiador: this.financiador
-        };
+        const obraSocialUpdate = this.financiador ? this._paciente.financiador.find(os => os.nombre === this.financiador.nombre) : null;
+        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate :this.financiador;
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
         data['turno'] = turno;
