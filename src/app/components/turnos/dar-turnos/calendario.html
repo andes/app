@@ -3,7 +3,7 @@
         <td *ngFor="let day of week;let i = index;" (click)="seleccionar(day)" [ngClass]="{
                 'hidden-xl-down'  : (opcionesCalendario && i > 4),
                 'weekend'          : day.weekend,
-                'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado && mostrarNoDisponibles),
+                'outline-danger'   : outLineDanger(day),
                 'outline-success'  : (day.estado === 'disponible') && !day.seleccionado,
                 'outline-primary'  : day.seleccionado,
                 'hover'            : (day.estado !== 'vacio' && (day.turnosDisponibles > 0 || day.dinamica))
@@ -11,23 +11,28 @@
             <div *ngIf="day.agendasDisponibles && day.agendasDisponibles.length > 0">
                 <div class="dia">{{ day.fecha | date: 'd' }}</div>
                 <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
-                <small *ngIf="day.turnosDisponibles > 0 || mostrarNoDisponibles"
-                       title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
-                    A:{{day.agendasDisponibles.length}}
-                    <plex-icon *ngIf="day.turnosDisponibles !== 0" name="check-circle" type="success"></plex-icon>
-                    <plex-icon *ngIf="day.turnosDisponibles === 0" name="close-circle" type="danger"></plex-icon>
-                    <span *ngIf="day.turnosDisponibles > 0">T:{{day.turnosDisponibles}}</span>
-                </small>
-                <small *ngIf="day.dinamicasIndefinidas > 0 && day.turnosDisponibles === 0"
-                       title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
-                    A:{{day.agendasDisponibles.length}}
-                    <plex-icon name="check-circle" type="success"></plex-icon>
-                    <span>T:{{day.turnosDisponibles}}</span>
+                <small>
+                    <span>A:{{day.agendasDisponibles.length}} </span>
+                    <span *ngIf="(day.turnosDisponibles > 0 || mostrarNoDisponibles)"
+                          title="{{ 'Agendas: ' + day.agendasDisponibles.length + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
+                        <plex-icon *ngIf="day.turnosDisponibles !== 0" name="check-circle" type="success"></plex-icon>
+                        <plex-icon *ngIf="mostrarCloseIcon(day)" name="close-circle" type="danger"></plex-icon>
+                    </span>
+                    <span *ngIf="day.turnosDisponibles === 0 && !agendaDinamicaFutura(day)"
+                          title="{{ 'Agendas dinámicas: ' + day.dinamicasIndefinidas }}">
+                        <plex-icon name="check-circle" type="success"></plex-icon>
+                    </span>
+                    <span> T:{{day.turnosDisponibles}}</span>
                 </small>
             </div>
-            <div *ngIf="day.agendasDisponibles && day.agendasDisponibles.length <= 0">
+            <div *ngIf="day.agendasDisponibles && day.agendasDisponibles.length === 0">
                 <div class="dia">{{ day.fecha | date: 'd' }}</div>
                 <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
+                <small>
+                    <span>
+                        <plex-icon *ngIf="mostrarCloseIcon(day)" name="close-circle" type="danger"></plex-icon>
+                    </span>
+                </small>
             </div>
         </td>
     </tr>
