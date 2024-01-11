@@ -32,8 +32,8 @@ export class SolicitudesComponent implements OnInit {
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
-    showAuditar = false;
-    showReferir = false;
+    public showAuditar = false;
+    public showReferir = false;
     diasIntervalo = 15;
 
     private scrollEnd = false;
@@ -419,7 +419,8 @@ export class SolicitudesComponent implements OnInit {
                 'pendiente',
                 'validada',
                 'ejecucion',
-                'asignada'
+                'asignada',
+                'referir'
             ]
         };
         if (this.tipoSolicitud === 'entrada') {

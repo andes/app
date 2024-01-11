@@ -14,6 +14,7 @@ export class BotonesSolicitudPipe implements PipeTransform {
             darTurno: false,
             auditar: false,
             volverAuditoria: false,
+            referir: false,
             anular: false,
             continuarRegistro: false,
             verHuds: false,
@@ -33,6 +34,9 @@ export class BotonesSolicitudPipe implements PipeTransform {
                     }
                 }
             }
+            if (prestacion.estadoActual.tipo === 'rechazada') {
+                botones.referir = true;
+            }
             if (!prestacion.solicitud.turno) {
                 if (prestacion.estadoActual.tipo === 'pendiente') {
                     if (this.esEfectorDestino(prestacion)) {
@@ -47,7 +51,7 @@ export class BotonesSolicitudPipe implements PipeTransform {
                 if (prestacion.estadoActual.tipo === 'auditoria' && prestacion.solicitud.historial.length) {
                     botones.comunicacionPaciente = true;
                 }
-                if (this.esEfectorDestino(prestacion) && prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada') {
+                if ((this.esEfectorDestino(prestacion) && prestacion.estadoActual.tipo === 'auditoria')) {
                     botones.auditar = true;
                 }
             }

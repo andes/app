@@ -27,7 +27,6 @@ export class ReferirSolicitudComponent implements OnInit {
     showConfirmar = false;
     prioridad;
     profesional = null;
-    estadoSolicitud = 0;
     confirmarReferir = false;
     observaciones = '';
     organizacionesDestino = [];
@@ -37,6 +36,10 @@ export class ReferirSolicitudComponent implements OnInit {
     organizacionDestino;
     tipoPrestacionDestino;
     reglasTOP;
+    estadoSolicitud = {
+        id: 3,
+        nombre: 'Referir'
+    };
 
     constructor(
         public plex: Plex,
@@ -69,7 +72,7 @@ export class ReferirSolicitudComponent implements OnInit {
 
     aceptar() {
         this.prioridad = null;
-        this.estadoSolicitud = 0;
+        this.estadoSolicitud.id = 0;
         this.doShowConfirmar();
     }
 
@@ -90,7 +93,7 @@ export class ReferirSolicitudComponent implements OnInit {
             }
             this.plex.toast('success', 'Se refirio correctamente la solicitud');
             this.returnReferir.emit(data);
-            this.estadoSolicitud = -1;
+            this.estadoSolicitud.id = -1;
         }
     }
 
@@ -106,7 +109,7 @@ export class ReferirSolicitudComponent implements OnInit {
 
     cancelar() {
         this.profesional = null;
-        this.estadoSolicitud = -1;
+        this.estadoSolicitud.id = -1;
         this.confirmarReferir = false;
         this.showConfirmar = false;
         this.cancelarRemision();

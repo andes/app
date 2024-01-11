@@ -438,6 +438,15 @@
                                 </plex-help>
                             </ng-container>
 
+                            <!-- REFERIR -->
+                            <plex-help class="mr-1" *ngIf="botones.referir" tooltip="Referir"
+                                       icon="chevron-double-right" btnType="warning" (click)="referir()">
+                                <referir-solicitud [prestacionSeleccionada]="prestacionSeleccionada"
+                                                   (returnReferir)="returnReferir($event)">
+                                </referir-solicitud>
+                            </plex-help>
+
+
                             <!-- AUDITAR SOLICITUD -->
                             <plex-help class="mr-1" *ngIf="botones.auditar" icon="lock-alert" type="info"
                                        tooltip="Auditar Solicitud"
