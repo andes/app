@@ -521,6 +521,9 @@ export class PrestacionesService {
                 sexo: paciente.sexo,
                 fechaNacimiento: paciente.fechaNacimiento
             };
+            if (paciente.obraSocial) {
+                pacientePrestacion.obraSocial = paciente.obraSocial;
+            }
         }
         const prestacion = {
             paciente: pacientePrestacion
