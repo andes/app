@@ -73,12 +73,12 @@
             <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
                 <div class="rup-card {{ elemento | semanticClass }}">
                     <div class="rup-header">
-                        <div class="icon-rup">
+                        <div class="icon-rup drag-handle p-0 pt-3">
                             <i class="adi {{ elemento | semanticIcon }}"></i>
                         </div>
                         <div class="title">
                             <b *ngIf="!verContenido">
-                                {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}:&nbsp;
+                                {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}:
                             </b>
                             <ng-container *ngIf="elemento?.nombre">
                                 {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
@@ -93,7 +93,7 @@
                                 </ng-container>
                             </div>
                         </div>
-                        <div class="actions">
+                        <div class="actions drag-handle p-0 pt-3">
                             <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length === 1"
                                         size="sm" type="info">
                                 <b> Relacionado con: </b>
