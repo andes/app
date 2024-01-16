@@ -53,7 +53,11 @@
         </ng-container>
 
         <ng-container *ngIf="mainView !== 'principal'">
-            <vista-prestacion [idPrestacion]="mainView.id">
+            <vista-cda *ngIf="mainView.cda_id" [registro]="mainView">
+                <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()">
+                </plex-button>
+            </vista-cda>
+            <vista-prestacion *ngIf="mainView.id" [idPrestacion]="mainView.id">
                 <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
             </vista-prestacion>
         </ng-container>
