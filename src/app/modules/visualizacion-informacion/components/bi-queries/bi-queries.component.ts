@@ -90,15 +90,12 @@ export class BiQueriesComponent implements OnInit {
             // filtramos zonas y organizaciones segun permisos
             const filtrosPorZona = this.consultaSeleccionada.argumentos.filter(arg => arg.tipo === 'zonaSanitaria');
 
-            if (this.zonasSanitarias.length) { // tiene permiso para zonas?
-                if (this.permisosZonas[0] !== '*') {
-                    // permiso solo para algunas zonas
-                    filtrosPorZona.map(filtro => filtro.required = true);
-                }
-            } else {
-                this.organizacionesOrigenFiltradas = this.organizaciones;
-                this.organizacionesDestinoFiltradas = this.organizaciones;
+            if (this.zonasSanitarias.length && this.permisosZonas[0] !== '*') { // tiene permiso para zonas?
+                // permiso solo para algunas zonas
+                filtrosPorZona.map(filtro => filtro.required = true);
             }
+            this.organizacionesOrigenFiltradas = this.organizaciones;
+            this.organizacionesDestinoFiltradas = this.organizaciones;
             this.argumentos = this.consultaSeleccionada.argumentos;
             this.inProgress = false;
         }
