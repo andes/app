@@ -1,30 +1,24 @@
 <plex-layout main="8" resizable="true" min="1" max="4">
     <plex-layout-main *ngIf="!showFicha ; else elseFicha">
         <plex-title titulo="punto de inicio - ficha epidemiológica"></plex-title>
-        <div class="row">
-            <div class="col-12">
-                <paciente-busqueda (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                   (searchClear)="onSearchClear()" (selected)="onSelect($event)">
-                </paciente-busqueda>
-            </div>
-        </div>
-        <div *ngIf="!pacienteSelected" justify="center" class="h-75">
+        <paciente-busqueda (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="onSearchClear()"
+                           (selected)="onSelect($event)" [offset]="110">
+        </paciente-busqueda>
+        <div *ngIf="showLabel" justify="center" class="h-75">
             <plex-label icon="arrow-up" type="default" size="xl" direction="column"
                         titulo='Comience buscando y seleccionando un paciente en la barra superior'>
             </plex-label>
         </div>
     </plex-layout-main>
     <ng-template #elseFicha>
-        <plex-layout-main>
-            <app-ficha-epidemiologica-crud *ngIf="showFicha === 'covid19'" [paciente]="pacienteSelected"
-                                           [fichaPaciente]="fichaPaciente$ | async" [editFicha]="editFicha"
-                                           [fichaName]="showFicha" [form]="selectedForm" (volver)="volver()">
-            </app-ficha-epidemiologica-crud>
-            <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'covid19'" [fichaName]="showFicha"
-                                              [fichaPaciente]="fichaPaciente$ | async" [paciente]="pacienteSelected"
-                                              [form]="selectedForm" (volver)="volver()" [editFicha]="editFicha">
-            </app-ficha-epidemiologica-generic>
-        </plex-layout-main>
+        <app-ficha-epidemiologica-crud *ngIf="showFicha === 'covid19'" [paciente]="pacienteSelected"
+                                       [fichaPaciente]="fichaPaciente$ | async" [editFicha]="editFicha"
+                                       [fichaName]="showFicha" [form]="selectedForm" (volver)="volver()">
+        </app-ficha-epidemiologica-crud>
+        <app-ficha-epidemiologica-generic *ngIf="showFicha !== 'covid19'" [fichaName]="showFicha"
+                                          [fichaPaciente]="fichaPaciente$ | async" [paciente]="pacienteSelected"
+                                          [form]="selectedForm" (volver)="volver()" [editFicha]="editFicha">
+        </app-ficha-epidemiologica-generic>
     </ng-template>
     <plex-layout-sidebar [type]="'invert'">
         <ng-container *ngIf="pacienteSelected">
