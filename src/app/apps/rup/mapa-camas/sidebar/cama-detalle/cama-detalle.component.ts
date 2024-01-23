@@ -50,7 +50,6 @@ export class CamaDetalleComponent implements OnInit {
     public paciente;
     public puedeVerHuds;
     public edadPaciente;
-    public relacionesPosibles;
     public especialidades;
     public validadoColor;
     public titleColor;
@@ -61,10 +60,12 @@ export class CamaDetalleComponent implements OnInit {
     public editNota = false;
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
-
+    public relacionesPosibles;
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
     public botonRegistroHabilitado$;
+    public openedDropDown = null;
+    public itemsDropdown: any = [];
 
     items = [
         {
@@ -283,7 +284,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     relacionesYcondiciones(relacion, cama) {
-        return this.capa !== 'interconsultores' && ((relacion.accion !== 'internarPaciente' &&
+        return this.capa !== 'interconsultores' && relacion.accion !== 'desocuparCama' && ((relacion.accion !== 'internarPaciente' &&
             relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && this.permisosMapaCamasService.ingreso) ||
             (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
@@ -291,5 +292,48 @@ export class CamaDetalleComponent implements OnInit {
     verIndicacion() {
         return this.permisosMapaCamasService.indicacionesCrear || this.permisosMapaCamasService.indicacionesEjecutar ||
             this.permisosMapaCamasService.indicacionesValidar || this.permisosMapaCamasService.indicacionesVer;
+    }
+
+    setDropDown(relacion, drop) {
+        this.relacionesPosibles = { ...relacion };
+        if (this.openedDropDown) {
+            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        }
+        this.openedDropDown = drop;
+        this.itemsDropdown = [];
+        this.itemsDropdown.push({
+            label: 'Cambiar de cama',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.relacionesPosibles.accion = 'cambiarCama';
+                this.accionCama.emit(this.relacionesPosibles);
+            }
+        }, {
+            label: 'Pase de unidad organizativa',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.relacionesPosibles.accion = 'cambiarUO';
+                this.accionCama.emit(this.relacionesPosibles);
+            }
+        }, {
+            label: 'Egresar paciente',
+            handler: ($event: Event) => {
+                $event.stopPropagation();
+                this.relacionesPosibles.accion = 'egresarPaciente';
+                this.accionCama.emit(this.relacionesPosibles);
+            }
+        });
+    }
+
+    puedeDesocupar(relacion) {
+        return relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear' && relacion.nombre !== 'Desbloquear';
+    }
+
+    puedeEditar(cama: ISnapshot) {
+        return this.capa !== 'interconsultores' && cama.estado !== 'bloqueada' && (cama.sala ? this.permisosMapaCamasService.salaEdit : this.permisosMapaCamasService.camaEdit);
+    }
+
+    puedePrestar(cama: ISnapshot, organizacion) {
+        return this.capa !== 'interconsultores' && !cama.sala && this.permisosMapaCamasService.camaPrestamo && (organizacion || cama.estado === 'disponible');
     }
 }

@@ -192,11 +192,15 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     }
 
     selectCama(cama, relacion) {
+        this.cambiarUO = null;
         this.mapaCamasService.resetView();
         this.mapaCamasService.select(cama);
         if (relacion) {
             this.estadoRelacion = relacion;
             this.accion = relacion.accion;
+            if (relacion.accion === 'cambiarUO') {
+                this.cambiarUO = true;
+            }
         }
     }
 
@@ -224,6 +228,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     volverADetalle() {
         const cama = this.mapaCamasService.selectedCama.getValue();
         this.accion = cama.id ? 'verDetalle' : null;
+        this.cambiarUO = null;
     }
 
     volverADesocupar() {

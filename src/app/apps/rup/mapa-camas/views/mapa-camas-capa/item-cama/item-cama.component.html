@@ -76,7 +76,7 @@
                 {{ cama.diaEstada }}
             </span>
         </td>
-        <td class="d-flex align-items-center">
+        <td>
             <plex-badge [type]="estadoCama?.color">
                 {{estadoCama?.label}}
             </plex-badge>
@@ -87,26 +87,28 @@
                 O<sub>2</sub>
             </plex-badge>
             <plex-badge *ngIf="equipos.respirador || equipos.usaRespirador" size="sm"
-                        [type]="equipos.usaRespirador ? 'success' : 'info'" class="ml-1" title="Respirador">
+                [type]="equipos.usaRespirador ? 'success' : 'info'" class="ml-1" title="Respirador">
                 R
             </plex-badge>
             <plex-badge *ngIf="equipos.monitorParamedico" size="sm" type="info" class="ml-1" title="Monitor paramédico">
                 M
             </plex-badge>
         </td>
-        <td *ngIf="capa !== 'interconsultores'">
+        <td *ngIf="capa !== 'interconsultores'" class="d-flex">
             <ng-container *ngIf="permisosMapaCamasService.movimientos">
                 <ng-container *ngFor="let relacion of relacionesPosibles">
-                    <ng-container *ngIf="(relacion.accion !== 'internarPaciente' && relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && permisoIngreso)
-                                  || (relacion.nombre === 'Bloquear' && permisoBloqueo)">
-                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
-                                     size="sm" (click)="accion(relacion, $event)">
+                    <ng-container *ngIf="relacionesYcondiciones(relacion)">
+                        <plex-button class="mr-1" title="{{ relacion.nombre }}" [icon]="relacion.icon"
+                            [type]="relacion.color" size="sm" (click)="accion(relacion, $event)">
                         </plex-button>
                     </ng-container>
+                    <plex-dropdown #drop class="mr-1" *ngIf="desocupar(relacion)" [right]="true" size="sm" type="danger"
+                        icon="menos" [items]="itemsDropdown" tooltip="Desocupar" (onOpen)="setDropDown(relacion, drop)">
+                    </plex-dropdown>
                 </ng-container>
             </ng-container>
-            <plex-button *ngIf="canEdit && cama.estado !== 'bloqueada'" title="Editar Cama" icon="pencil" type="warning"
-                         size="sm" (click)="goTo()">
+            <plex-button class="mr-1" *ngIf="canEdit && cama.estado !== 'bloqueada'" title="Editar Cama" icon="pencil"
+                type="warning" size="sm" (click)="goTo()">
             </plex-button>
         </td>
     </ng-container>

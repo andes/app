@@ -1,7 +1,7 @@
 <form #formCambiarCama="ngForm">
     <plex-title justify titulo="{{ (cambiarUO) ? 'Pase de Unidad Organizativa' : 'Cambiar cama' }}">
-        <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formCambiarCama"
-                     (click)="guardar($event)" [disabled]="disableSaveButton" [autodisabled]="true">
+        <plex-button class="mr-1" title="guardar" icon="check" type="success" size="sm" [validateForm]="formCambiarCama"
+            (click)="guardar($event)" [disabled]="formCambiarCama.invalid" [autodisabled]="true">
         </plex-button>
         <ng-content></ng-content>
     </plex-title>
@@ -9,14 +9,13 @@
         <ng-container *ngIf="cambiarUO; else cambioNormal">
             <ng-container *ngIf="paseConfig; else cambioNormal">
                 <plex-bool *ngIf="allowCama" label="¿Desea elegir cama destino?" [(ngModel)]="selectCama"
-                           name="selectCama" type="slide" (click)="nuevaCama = null">
-                </plex-bool>
+                    name="selectCama" type="slide" (click)="nuevaCama = null"></plex-bool>
                 <ng-container *ngIf="selectCama; else onlySala">
                     <ng-container *ngIf="camasParaPases$ | async as camasParaPases">
                         <ng-container *ngIf="camasParaPases.length > 0; else noHayCamas">
                             <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama" [data]="camasParaPases"
-                                         placeholder="Elija cama" label="Cama" idField="id"
-                                         labelField="nombre + '(' + sectorName + ')'">
+                                placeholder="Elija cama" label="Cama" idField="id"
+                                labelField="nombre + '(' + sectorName + ')'">
                             </plex-select>
                         </ng-container>
                         <ng-template #noHayCamas>
@@ -33,11 +32,26 @@
         </ng-container>
         <ng-template #cambioNormal>
             <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
-                <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
-                             [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
-                             placeholder="Elija cama" label="Cama" idField="id"
-                             labelField="nombre + '(' + sectorName + ')'">
-                </plex-select>
+                <plex-datetime grow="2" label="Fecha y hora del {{ (cambiarUO) ? 'pase de cama' : 'cambio de cama' }}"
+                    [(ngModel)]="fecha" name="fechaCambiarCama" required [debounce]="600" grow="full"
+                    [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin$ | async" (change)="verificarFecha()"
+                    (typing)="onType()">
+                </plex-datetime>
+                <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientosAt; else checkOcupada">
+                    Hay movimientos posteriores a la fecha ingresada.
+                </ng-container>
+                <ng-template #checkOcupada>
+                    <ng-container *ngIf="camaDesocupada$ | async as camaDesocupada; else puedeEgresarDefinitivo">
+                        La cama actualmente no está ocupada.
+                    </ng-container>
+                </ng-template>
+                <br>
+                <ng-template #puedeEgresarDefinitivo>
+                    <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
+                        [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
+                        placeholder="Elija cama" label="Cama" idField="id" labelField="nombre + '(' + sectorName + ')'">
+                    </plex-select>
+                </ng-template>
             </ng-container>
         </ng-template>
     </fieldset>

@@ -7,6 +7,7 @@ import { map, retry, switchMap, take } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'app-cambiar-cama',
@@ -31,18 +32,77 @@ export class CambiarCamaComponent implements OnInit {
     public paseConfig = false;
     public allowCama = false;
     public selectCama = false;
+    public historial$: Observable<any[]>;
+    public movimientoEgreso$: Observable<ISnapshot>;
+    public fechaMin$: Observable<Date>;
+    public hayMovimientosAt$: Observable<Boolean>;
+    public camaDesocupada$: Observable<Boolean>;
+    public fecha: Date;
+    public inProgress = true;
 
     constructor(
         public auth: Auth,
         private plex: Plex,
-        private mapaCamasService: MapaCamasService,
-        private camasHttp: MapaCamasHTTP
+        public mapaCamasService: MapaCamasService,
+        public camasHttp: MapaCamasHTTP
     ) { }
 
     ngOnInit() {
-        /*  Setea los observables camasDisponibles, salaPases y camasParaPases que determinan si se puede realizar
-            el movimiento segun cada caso
-        */
+        const HOY = moment().toDate();
+        this.fecha = this.mapaCamasService.fecha;
+        this.historial$ = this.mapaCamasService.fecha2.pipe(
+            switchMap(fecha => {
+                return this.mapaCamasService.historial('internacion', fecha, HOY);
+            }),
+            map((movimientos) => {
+                return movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            }),
+            cache()
+        );
+
+        this.movimientoEgreso$ = this.historial$.pipe(
+            map(movimientos => movimientos.find(m => m.estado !== 'ocupada'))
+        );
+
+        this.fechaMin$ = this.historial$.pipe(
+            switchMap(movimientos => {
+                if (movimientos.length) {
+                    const fechaUltimoMovimiento = movimientos[movimientos.length - 1].fecha;
+                    const fechaMasUnMinuto = moment(fechaUltimoMovimiento).add(1, 'm');
+                    return of(fechaMasUnMinuto.toDate());
+                } else {
+                    return this.camaSelectedSegunView$.pipe(
+                        map(cama => moment(cama?.fecha).add(1, 'm').toDate())
+                    );
+                }
+            })
+        );
+
+        this.hayMovimientosAt$ = combineLatest([
+            this.mapaCamasService.fecha2,
+            this.fechaMin$
+        ]).pipe(
+            map(([fechaElegida, fechaMinima]) => {
+                return moment(fechaElegida).isBefore(moment(fechaMinima));
+            })
+        );
+
+        this.camaDesocupada$ = combineLatest([
+            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.snapshot$,
+            this.historial$,
+            this.mapaCamasService.fecha2,
+        ]).pipe(
+            map(([selectedCama, snapshots, historial]) => {
+                const historialPaciente = historial[historial.length - 1];
+                const camaPaciente = (selectedCama.idCama) ? selectedCama : (historialPaciente) ? historialPaciente : null;
+                if (camaPaciente) {
+                    const cama = snapshots.find(snap => snap.idCama === camaPaciente.idCama);
+                    return (cama.estado !== 'ocupada' || cama.idInternacion !== camaPaciente.idInternacion) && !cama.sala;
+                }
+            })
+        );
+
         combineLatest([
             this.mapaCamasService.maquinaDeEstado$,
             this.camaSelectedSegunView$
@@ -218,5 +278,15 @@ export class CambiarCamaComponent implements OnInit {
             this.mapaCamasService.save(camaOcupada, fecha).pipe(retry(3)),
             this.mapaCamasService.save(camaDesocupada, fecha).pipe(retry(3))
         ]);
+    }
+
+    onType() {
+        this.inProgress = true;
+    }
+
+    verificarFecha() {
+        if (this.fecha) {
+            this.mapaCamasService.setFecha(this.fecha);
+        }
     }
 }
