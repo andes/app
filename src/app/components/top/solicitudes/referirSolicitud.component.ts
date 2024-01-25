@@ -120,6 +120,7 @@ export class ReferirSolicitudComponent implements OnInit {
         this.profesionalDestino = null;
         this.organizacionDestino = null;
         this.tipoPrestacionDestino = null;
+        this.cerrar();
     }
 
     loadProfesionales(event) {

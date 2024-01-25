@@ -1,14 +1,15 @@
-<plex-title main titulo="Auditar solicitud" size="sm"></plex-title>
+<plex-title *ngIf="estadoSolicitud.id !== 3" main titulo="Auditar solicitud" size="sm"></plex-title>
 
 <plex-grid *ngIf="!showConfirmar && !showPrioridad" cols="4">
     <plex-button type="info btn-block" (click)="responder()">Responder</plex-button>
     <plex-button type="warning btn-block" (click)="asignar()">Asignar</plex-button>
-    <plex-button type="warning btn-block" (click)="referir()">Referir</plex-button>
+    <plex-button type="warning btn-block" (click)="referirAuditar()">Referir</plex-button>
     <plex-button type="success btn-block" (click)="aceptar()">Aceptar</plex-button>
 </plex-grid>
 
 <span *ngIf="showConfirmar">
-    <plex-title main titulo="{{ estadoSolicitud.nombre }}" size="sm">
+    <plex-title *ngIf="estadoSolicitud.id !== 3 && estadoSolicitud.nombre!=='Referir' " main
+                titulo="{{ estadoSolicitud.nombre }}" size="sm">
         <plex-button class="mr-1" size="sm" type="danger" icon="arrow-left" tooltip="Volver" (click)="cancelar()">
         </plex-button>
         <plex-button size="sm" type="success" icon="check" tooltip="Confirmar" (click)="confirmar()"
@@ -16,7 +17,8 @@
         </plex-button>
     </plex-title>
 
-    <plex-text label="Observaciones" multiline="true" name="observaciones" [(ngModel)]="observaciones">
+    <plex-text *ngIf="estadoSolicitud.id !== 3 && estadoSolicitud.nombre!=='Referir' " label="Observaciones"
+               multiline="true" name="observaciones" [(ngModel)]="observaciones">
     </plex-text>
 
     <plex-select *ngIf="estadoSolicitud.id === 0" [(ngModel)]="prioridad" [data]="prioridades" name="prioridad"
@@ -28,17 +30,7 @@
     </plex-select>
 
     <ng-container *ngIf="estadoSolicitud.id === 3">
-        <plex-select [(ngModel)]="organizacionDestino" [data]="organizacionesDestino" name="organizacionOrigen"
-                     label="Organización destino" labelField="nombre" [required]="true"
-                     (change)="onSelectOrganizacionDestino()">
-        </plex-select>
-        <plex-select [(ngModel)]="tipoPrestacionDestino" name="tipoPrestacionDestino"
-                     [data]="tipoPrestacionesDestinoData" label="Tipo de Prestación Solicitada"
-                     placeholder="Tipos de Prestación solicitada" [required]="true">
-        </plex-select>
-        <plex-select *ngIf="!autocitado" [(ngModel)]="profesionalDestino" label="Profesional destino" name="profesional"
-                     (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional"
-                     labelField="apellido + ' ' + nombre">
-        </plex-select>
+        <referir-solicitud [prestacionSeleccionada]="prestacionSeleccionada" (returnReferir)="referirAuditar($event)">
+        </referir-solicitud>
     </ng-container>
 </span>

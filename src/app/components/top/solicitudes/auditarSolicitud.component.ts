@@ -129,6 +129,24 @@ export class AuditarSolicitudComponent implements OnInit {
         this.doShowConfirmar();
     }
 
+    referirAuditar(event) {
+        if (event) {
+            if (event.status) {
+                this.returnAuditoria.emit(event);
+            } else {
+                this.estadoSolicitud.id = -1;
+            }
+
+            this.showConfirmar = false;
+            this.confirmarAuditoria = false;
+        }
+        if (!event) {
+            this.estadoSolicitud.id = 3;
+            this.estadoSolicitud.nombre = 'Referir';
+            this.doShowConfirmar();
+        }
+    }
+
     private doShowConfirmar() {
         this.showConfirmar = true;
         this.confirmarAuditoria = true;
@@ -141,7 +159,7 @@ export class AuditarSolicitudComponent implements OnInit {
             if (this.estadoSolicitud.id === 3) {
                 data.organizacion = this.organizacionDestino;
                 data.profesional = this.profesionalDestino;
-                data.prestacion = this.tipoPrestacionesDestino.find(e => e.conceptId === this.tipoPrestacionDestino.id);
+                data.prestacion = this.tipoPrestacionDestino;
                 // verifica si la solicitud es auditable, si no lo es, pasa el estado a pendiente
                 if (!this.esRemisionAuditable()) {
                     data.estado = { tipo: 'pendiente' };
