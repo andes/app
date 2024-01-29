@@ -158,13 +158,15 @@ export class ListadoPerinatalComponent implements OnInit {
 
     descargarListado() {
         const params = {
-            fechaDesde: this.fechaDesdeEntrada,
-            fechaHasta: this.fechaHastaEntrada,
+            fechaDesde: moment(this.fechaDesdeEntrada).startOf('days'),
+            fechaHasta: moment(this.fechaHastaEntrada).endOf('days'),
             profesional: this.profesional?.id,
             organizacionOrigen: this.organizacion?.id,
-            paciente: this.paciente || '',
-            estado: 'AUSENTE'
+            paciente: this.paciente
         };
+        if (this.verAusente) {
+            params['estado'] = 'AUSENTE';
+        }
         this.documentosService.descargarListadoPerinatal(params, `perinatal ${moment().format('DD-MM-hh-mm-ss')}`).subscribe();
     }
 
