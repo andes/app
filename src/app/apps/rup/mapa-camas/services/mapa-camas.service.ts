@@ -236,7 +236,7 @@ export class MapaCamasService {
                 ]).pipe(
                     switchMap(([prestacion, resumen]) => {
                         const internacion = {
-                            id: this.capa === 'estadistica' ? prestacion.id : resumen.id,
+                            id: this.capa === 'estadistica' ? prestacion.id : (resumen.id || resumen._id),
                             fecha: this.fecha
                         };
                         return this.camasHTTP.snapshot(this.ambito, this.capa, internacion.fecha, internacion.id).pipe(
