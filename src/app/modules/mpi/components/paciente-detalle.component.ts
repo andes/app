@@ -7,6 +7,7 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { ModalMotivoAccesoHudsService } from '../../rup/components/huds/modal-motivo-acceso-huds.service';
+import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -23,6 +24,7 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
     @Input() showRelaciones = false;
     @Input() showDocumentos = false;
     @Input() accesoHuds = false;
+    @Input() puedeEditar = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
@@ -175,7 +177,8 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
         private pacienteService: PacienteService,
         private auth: Auth,
         private motivoAccesoService: ModalMotivoAccesoHudsService,
-        private router: Router
+        private router: Router,
+        private pacienteCache: PacienteCacheService
     ) { }
 
     ngOnInit() {
@@ -235,4 +238,17 @@ export class PacienteDetalleComponent implements OnInit, OnChanges {
             }
         });
     }
+
+    editar() {
+        if (this.puedeEditar && this.auth.check('mpi:paciente')) {
+            this.pacienteCache.setPaciente(this.paciente);
+            // localStorage.setItem('idPrestacion', this.prestacion.id);
+            if ((this.paciente.numeroIdentificacion || this.paciente.tipoIdentificacion) && !this.paciente.documento) {
+                this.router.navigate(['apps/mpi/paciente/extranjero/huds']); // abre formulario paciente extranjero
+            } else {
+                this.router.navigate(['apps/mpi/paciente/con-dni/huds']); // abre formulario paciente con/sin-dni
+            }
+        }
+    }
+
 }

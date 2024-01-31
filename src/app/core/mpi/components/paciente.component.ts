@@ -453,11 +453,14 @@ export class PacienteComponent implements OnInit {
             case 'sobreturno':
                 this._router.navigate(['citas/gestor_agendas']);
                 break;
+            case 'huds':
+                const id = this.paciente.id;
+                this._router.navigate(['huds/paciente', id]);
+                break;
             default:
                 this._router.navigate(['apps/mpi/busqueda']);
                 break;
         }
-
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
@@ -762,4 +765,3 @@ export class PacienteComponent implements OnInit {
         this.pacienteModel.direccion = this.backUpDatos['direccion'];
     }
 }
-
