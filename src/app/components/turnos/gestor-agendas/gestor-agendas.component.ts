@@ -594,6 +594,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showBotonesAgenda = false;
             this.showTurnos = false;
             this.showSuspendida = false;
+            this.showEditarAgendaPanel = false;
             if (agenda && agenda.id) {
                 this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                     // Actualizo la agenda local

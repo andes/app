@@ -8,6 +8,7 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Router } from '@angular/router';
 import { InstitucionService } from '../../../../services/turnos/institucion.service';
+
 @Component({
     selector: 'panel-agenda',
     templateUrl: 'panel-agenda.html'
@@ -19,6 +20,7 @@ export class PanelAgendaComponent implements OnInit {
 
     private subscriptionID = null;
     private _editarAgendaPanel: any;
+
     @Input('editaAgendaPanel')
     set editaAgendaPanel(value: any) {
         this._editarAgendaPanel = value;
@@ -29,7 +31,9 @@ export class PanelAgendaComponent implements OnInit {
             this.espacioFisicoPropio = true;
         }
     }
+
     get editaAgendaPanel(): any {
+        this.eliminarProfBaja();
         return this._editarAgendaPanel;
     }
 
@@ -69,6 +73,20 @@ export class PanelAgendaComponent implements OnInit {
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 this.espaciosList = resultado;
             });
+        }
+    }
+
+    eliminarProfBaja() {
+        const profesionales = [];
+        if (this.agenda.profesionales) {
+            for (let i = 0; i < this.agenda.profesionales.length; i++) {
+                this.servicioProfesional.get({ id: this.agenda.profesionales[i].id }).subscribe(resultado => {
+                    if (resultado[0].habilitado) {
+                        profesionales.push(this.agenda.profesionales[i]);
+                    }
+                });
+            };
+            this.agenda.profesionales = profesionales;
         }
     }
 
@@ -114,9 +132,7 @@ export class PanelAgendaComponent implements OnInit {
                 });
             }
         }
-
     }
-
 
     cancelar() {
         this.showEditarAgendaPanel = false;
@@ -209,10 +225,8 @@ export class PanelAgendaComponent implements OnInit {
     selectEspacio($data) {
         this.validarSolapamientos('espacioFisico');
         if (this.alertas.length === 0) {
-
             this.agenda.espacioFisico = $data;
             this.guardarAgenda(this.agenda);
-
         }
     }
 
@@ -221,9 +235,7 @@ export class PanelAgendaComponent implements OnInit {
      */
     validarSolapamientos(tipo) {
         this.alertas = [];
-
         // Inicio y Fin de Agenda
-        let iniAgenda, finAgenda;
 
         if (tipo === 'profesionales') {
             // Loop profesionales

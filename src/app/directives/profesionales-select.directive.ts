@@ -39,7 +39,7 @@ export class SelectProfesionalesDirective implements OnInit, OnDestroy {
                     if (this.lastCallSubscription) {
                         this.lastCallSubscription.unsubscribe();
                     }
-                    this.lastCallSubscription = this.profesionalesService.get({ nombreCompleto: inputText }).subscribe(result => {
+                    this.lastCallSubscription = this.profesionalesService.get({ nombreCompleto: inputText, habilitado: true }).subscribe(result => {
                         $event.callback(result);
                     });
                 } else {

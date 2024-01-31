@@ -126,7 +126,8 @@ export class PlanificarAgendaComponent implements OnInit {
             }
             const query = {
                 nombreCompleto: event.query,
-                prestaciones: this.modelo.tipoPrestaciones.map(p => p._id)
+                prestaciones: this.modelo.tipoPrestaciones.map(p => p._id),
+                habilitado: true
             };
 
             this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
@@ -268,14 +269,10 @@ export class PlanificarAgendaComponent implements OnInit {
                 bloque.horaFin = new Date(bloque.horaFin);
             }
             if (bloque.cantidadTurnos) {
-                bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor
-                ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
-                bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor
-                ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
-                bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor
-                ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
-                bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor
-                ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
+                bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
+                bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
+                bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
+                bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
                 if (!this.modelo.intercalar) {
                     const duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
                     bloque.duracionTurno = Math.floor(duracion);
@@ -473,20 +470,16 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
-                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.ceil
-                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.ceil((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'accesoDirectoProgramado':
-                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.ceil
-                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.ceil((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoGestion':
-                    this.elementoActivo.reservadoGestionPorc = Math.ceil
-                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                    this.elementoActivo.reservadoGestionPorc = Math.ceil((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoProfesional':
-                    this.elementoActivo.reservadoProfesionalPorc = Math.ceil
-                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                    this.elementoActivo.reservadoProfesionalPorc = Math.ceil((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
                     break;
             }
             this.validarTodo();
@@ -497,24 +490,20 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
-                    this.elementoActivo.accesoDirectoDelDia = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    this.elementoActivo.accesoDirectoDelDia = Math.floor((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'accesoDirectoProgramado':
-                    this.elementoActivo.accesoDirectoProgramado = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    this.elementoActivo.accesoDirectoProgramado = Math.floor((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
                     if (this.elementoActivo.accesoDirectoProgramado === 0) {
                         this.elementoActivo.turnosMobile = false;
                         this.elementoActivo.cupoMobile = 0;
                     }
                     break;
                 case 'reservadoGestion':
-                    this.elementoActivo.reservadoGestion = Math.floor
-                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    this.elementoActivo.reservadoGestion = Math.floor((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
                 case 'reservadoProfesional':
-                    this.elementoActivo.reservadoProfesional = Math.floor
-                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                     break;
             }
         }

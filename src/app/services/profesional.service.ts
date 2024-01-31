@@ -13,7 +13,7 @@ export class ProfesionalService {
     public documento = new BehaviorSubject<string>(null);
     public apellido = new BehaviorSubject<string>(null);
     public nombre = new BehaviorSubject<string>(null);
-    public activo = new BehaviorSubject<string>(null);
+    public activo = new BehaviorSubject<boolean>(null);
     public lastResults = new BehaviorSubject<any[]>(null);
     public noMatriculado = new BehaviorSubject<boolean>(null);
     private limit = 20;
@@ -54,7 +54,7 @@ export class ProfesionalService {
                 if (nombre) {
                     params.nombre = nombre;
                 }
-                if (activo) {
+                if (activo !== null) {
                     params.habilitado = activo;
                 }
                 if (noMatriculado) {
