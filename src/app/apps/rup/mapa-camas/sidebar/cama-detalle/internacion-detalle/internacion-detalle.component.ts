@@ -56,9 +56,34 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         this.cdr.detectChanges();
     }
 
+    agregarItem(item: string) {
+        const tabItem = this.items.find(i => i.key === item);
+        if (!tabItem) {
+            this.items.push({ key: item, label: item.toUpperCase() });
+        }
+    }
+
+    quitarItem(item) {
+        const tabItem = this.items.findIndex(i => i.key === item);
+        if (tabItem !== -1) {
+            this.items.splice(tabItem, 1);
+        }
+    }
+
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.editar = false;
+        this.capa = this.mapaCamasService.capa;
+
+        this.mapaCamasService.historialInternacion$.subscribe(
+            historial => {
+                if (historial.length > 0 && (this.capa === 'estadistica' || this.capa !== 'estadistica-v2')) {
+                    this.agregarItem('egreso');
+                } else {
+                    this.quitarItem('egreso');
+                }
+            }
+        );
 
         this.mapaCamasService.prestacion$.subscribe(prestacion => {
             this.estadoPrestacion = '';
@@ -91,12 +116,10 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                         this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
                         this.mostrar = 'ingreso-dinamico';
                     };
-                } else {
-                    this.items.push({ key: 'egreso', label: 'EGRESO' });
                 }
-                const registro = this.items.findIndex(item => item.key === 'registros');
-                if (registro !== -1 && !this.permisosMapaCamasService.registros) {
-                    this.items.splice(registro, 1);
+
+                if (!this.permisosMapaCamasService.registros) {
+                    this.quitarItem('registros');
                 }
             })
         ).subscribe();

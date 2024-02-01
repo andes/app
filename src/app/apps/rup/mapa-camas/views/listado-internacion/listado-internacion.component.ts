@@ -225,6 +225,7 @@ export class InternacionListadoComponent implements OnInit {
     }
 
     volver() {
+        this.mapaCamasService.selectPrestacion(null);
         this.location.back();
     }
 
