@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { catchError, concatMap, map, pluck, switchMap, tap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { HUDSService } from 'src/app/modules/rup/services/huds.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
@@ -23,14 +23,14 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     public historial$: Observable<any>;
     public historialFiltrado$: Observable<any>;
-    private historialInternacion$: Observable<any>;
 
     public desde: Date;
     public hasta: Date;
     public tipoPrestacion;
     public inProgress = true;
     public prestacionesEliminadas = [];
-    idOrganizacion = this.auth.organizacion.id;
+    public idOrganizacion = this.auth.organizacion.id;
+    private admisionHospitalariaConceptId = '32485007';
 
     public refreshFecha$ = new BehaviorSubject(null);
     public tipoPrestacion$ = new BehaviorSubject(null);
@@ -40,8 +40,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
     public prestacionesList$: Observable<any>;
-    public min$: Observable<Date>;
-    public max$: Observable<Date>;
+    public min: Date;
+    public max: Date;
     public paciente;
 
     @Output() accion = new EventEmitter();
@@ -59,28 +59,37 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
-        this.hasta = moment(this.mapaCamasService.fecha).toDate();
-
-        this.historialInternacion$ = this.mapaCamasService.historialInternacion$.pipe(cache());
-
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
         let estaPrestacionId; // id de prestacion correspondiente a la internacion actual
         this.historial$ = combineLatest([
             this.cama$,
+            this.mapaCamasService.historialInternacion$,
             this.mapaCamasService.selectedPrestacion,
             this.mapaCamasService.resumenInternacion$,
         ]).pipe(
-            switchMap(([cama, prestacion, resumen]) => {
-                if (resumen) {
+            switchMap(([cama, movimientos, prestacion, resumen]) => {
+                if (prestacion?.id) { // listado
+                    this.desde = prestacion.ejecucion.fecha;
+                    this.hasta = prestacion.ejecucion.registros[1]?.valor.InformeEgreso.fechaEgreso || new Date();
+                } else if (resumen?.id) { // listado
                     this.desde = resumen.fechaIngreso;
-                    this.hasta = resumen.fechaEgreso || moment().toDate();
+                    this.hasta = resumen.fechaEgreso || new Date();
+                } else { // mapa de camas
+                    this.desde = movimientos.find(m => m.extras && m.extras.ingreso).fecha;
+                    this.hasta = movimientos.find(m => m.extras && m.extras.egreso)?.fecha || new Date();
                 }
-                estaPrestacionId = prestacion?.id ? prestacion.id : this.mapaCamasService.capa === 'estadistica' ? cama.idInternacion : resumen.idPrestacion;
-                const paciente = cama?.paciente || (prestacion?.paciente || resumen?.paciente);
-                this.paciente = paciente;
-                if (paciente) {
-                    return this.motivoAccesoService.getAccessoHUDS(paciente as IPaciente);
+                this.min = moment(this.desde).startOf('day').toDate();
+                this.max = moment(this.hasta).endOf('day').toDate();
+
+                if (this.mapaCamasService.capa === 'estadistica') {
+                    estaPrestacionId = cama.idInternacion || prestacion.id;
+                } else {
+                    estaPrestacionId = cama.idInternacion || resumen.id;
+                }
+                this.paciente = cama.paciente || prestacion.paciente || resumen.paciente;
+
+                if (this.paciente) {
+                    return this.motivoAccesoService.getAccessoHUDS(this.paciente as IPaciente);
                 }
                 return [];
             }),
@@ -98,77 +107,41 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             cache()
         );
 
-        this.min$ = this.historialInternacion$.pipe(
-            map(movimientos => {
-                if (movimientos.length > 0) {
-                    const lastIndex = movimientos.length - 1;
-                    return moment(movimientos[lastIndex].fecha).startOf('day').toDate();
-                }
-                return new Date();
-            }),
-            tap((date) => {
-                if (moment(this.desde).isSameOrBefore(moment(date))) {
-                    this.desde = date;
-                    this.onChangeFecha();
-                }
-            })
-        );
-
-        this.max$ = this.historialInternacion$.pipe(
-            map(movimientos => {
-                const egreso = movimientos.find(m => m.extras && m.extras.egreso);
-                if (egreso) {
-                    this.hasta = egreso.fecha;
-                    this.onChangeFecha();
-                    return egreso.fecha;
-                }
-                return null;
-            })
-        );
-
         this.historialFiltrado$ = combineLatest([
             this.historial$,
             this.refreshFecha$,
             this.tipoPrestacion$,
-            this.min$,
             this.id$
         ]).pipe(
-            map(([prestaciones, refreshFecha, tipoPrestacion, min, idPrestacion]) => {
+            map(([prestaciones, refreshFecha, tipoPrestacion, idPrestacion]) => {
                 if (idPrestacion) {
 
                     this.prestacionesEliminadas.push(idPrestacion);
-                }
-                if (!this.desde) {
-                    this.desde = moment().subtract(7, 'd').toDate();
-                }
-                if (this.desde instanceof Date) {
-                    this.desde = this.desde.getTime() < min.getTime() ? moment(min).toDate() : this.desde;
-                } else if (moment.isMoment(this.desde)) {
-                    this.desde = moment(this.desde).toDate().getTime() < min.getTime() ? moment(min).toDate() : this.desde;
                 }
                 this.inProgress = false;
                 return prestaciones.filter((registro) => {
                     const fecha = moment(registro.ejecucion?.fecha || registro.fecha);
                     const conceptId = registro.solicitud?.tipoPrestacion.conceptId || registro.prestacion.snomed.conceptId;
                     const tipoPrestacionValida = !tipoPrestacion || tipoPrestacion.conceptId === conceptId;
+                    const noEsInternacion = conceptId !== this.admisionHospitalariaConceptId;
                     const fechaValida = fecha.isSameOrBefore(this.hasta, 'd') && fecha.isSameOrAfter(this.desde, 'd');
                     const organizacion = registro.solicitud?.organizacion || registro.prestacion.organizacion;
 
                     if (this.mapaCamasService.capa === 'estadistica') {
                         const organizacionValida = organizacion?.id === this.idOrganizacion;
-                        return fechaValida && tipoPrestacionValida && organizacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
+                        return fechaValida && noEsInternacion && tipoPrestacionValida && organizacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
                     } else {
-                        return fechaValida && tipoPrestacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
+                        return fechaValida && noEsInternacion && tipoPrestacionValida && !this.prestacionesEliminadas.some(id => id === registro.id);
                     }
                 });
-            })
+            }),
+            cache()
         );
 
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.accionesEstado$ = this.estadoCama$.pipe(
             notNull(),
-            pluck('acciones'),
-            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
+            map(estado => estado.acciones.filter(acc => acc.tipo === 'nuevo-registro'))
         );
 
         this.prestacionesList$ = this.historial$.pipe(
