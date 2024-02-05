@@ -14,11 +14,11 @@
 
 <form #formulario="ngForm">
     <plex-grid type="full" cols="2" class="mt-0">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min$ | async" [debounce]="600"
-                       (change)="onChangeFecha()">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [min]="min" [max]="hasta"
+                       [debounce]="600" (change)="onChangeFecha()">
         </plex-datetime>
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [max]="max$ | async" [debounce]="600"
-                       (change)="onChangeFecha()">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [min]="desde" [max]="max"
+                       [debounce]="600" (change)="onChangeFecha()">
         </plex-datetime>
         <plex-select label="Prestación" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId"
                      labelField="term" [data]="prestacionesList$ | async" (change)="onChangeTipoPrestacion()" span="2">
