@@ -171,8 +171,9 @@
                                 {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                             </plex-badge>
                             <plex-badge type="{{prestacion | estadoPrestacion}}"
-                                        *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida'">
-                                {{prestacion | estadoSolicitud}}
+                                        *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'auditoria' && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'vencida'">
+                                {{ prestacion | estadoSolicitud}}
+
                             </plex-badge>
                             <plex-badge type="{{prestacion | estadoPrestacion}}"
                                         *ngIf="!prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'">
@@ -195,7 +196,8 @@
                                         </span>
                                     </plex-badge>
                                 </ng-container>
-                                <plex-badge *ngIf="estado === 'Turno dado'" type="success">Turno dado</plex-badge>
+                                <plex-badge *ngIf="prestacion.solicitud.turno && !prestacion.estadoActual.tipo === 'ejecucion' "
+                                            type="success">Turno dado</plex-badge>
                                 <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                             type="success">
                                     Registro en HUDS</plex-badge>
@@ -321,7 +323,7 @@
                             </plex-badge>
                             <plex-badge *ngIf="prestacion.estadoActual.tipo !== 'rechazada' && prestacion.estadoActual.tipo !== 'validada' && prestacion.solicitud.turno"
                                         type="{{prestacion | estadoPrestacion}}">
-                                Turno Dado
+                                {{ prestacion | estadoSolicitud}}
                             </plex-badge>
                             <plex-badge *ngIf="prestacion.solicitud.turno && prestacion.estadoActual.tipo === 'validada'"
                                         type="success">Registro en
@@ -382,10 +384,9 @@
                                 </plex-help>
 
                                 <!-- CONTINUAR REGISTRO -->
-                                <plex-button class="mr-1"
-                                             *ngIf="botones.continuarRegistro || prestacionSeleccionada.estadoActual.tipo === 'ejecucion'"
-                                             icon="lapiz-documento" tooltip="Continuar registro" tooltipPosition="left"
-                                             size="sm" type="success" (click)="onContinuarRegistro()">
+                                <plex-button class="mr-1" *ngIf="botones.continuarRegistro " icon="lapiz-documento"
+                                             tooltip="Continuar registro" tooltipPosition="left" size="sm"
+                                             type="success" (click)="onContinuarRegistro()">
                                 </plex-button>
 
                                 <!-- VOLVER A AUDITORIA -->

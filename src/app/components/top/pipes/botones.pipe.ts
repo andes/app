@@ -66,10 +66,10 @@ export class BotonesSolicitudPipe implements PipeTransform {
                 botones.anular = true;
             }
         }
-        // Si el usuario tiene permisos para rup e inicio el registro de atencion medica o tiene permisos especiales podra continuar con la prestacion
+        // Si el usuario tiene permisos para rup e inicio el registro de atencion medica o tiene permisos especiales podra continuar con la prestacion en ejecución
         if (this.auth.getPermissions('rup:?').length) {
-            botones.continuarRegistro = ((prestacion.estadoActual.tipo === 'ejecucion') &&
-                (prestacion.estadoActual.createdBy.username === this.auth.usuario.username)) || (this.auth.check(`rup:validacion:${prestacion.solicitud.tipoPrestacion.id}`));
+            botones.continuarRegistro = prestacion.estadoActual.tipo === 'ejecucion' &&
+                (prestacion.estadoActual.createdBy.username === this.auth.usuario.username || this.auth.check(`rup:validacion:${prestacion.solicitud.tipoPrestacion.id}`));
         }
         return botones;
     }

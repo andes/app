@@ -21,6 +21,6 @@ export class EstadoPrestacionPipe implements PipeTransform {
             'vencida': 'danger'
         };
 
-        return prestacion.solicitud.turno ? 'success' : badge[prestacion.estadoActual.tipo];
+        return badge[prestacion.estadoActual.tipo];
     }
 }
