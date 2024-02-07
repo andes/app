@@ -1,3 +1,11 @@
+## [5.132.1](https://github.com/andes/app/compare/v5.132.0...v5.132.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* **IN:** visualizacion de registros en sidebar ([#2973](https://github.com/andes/app/issues/2973)) ([a8df0b8](https://github.com/andes/app/commit/a8df0b8a27322a234566d74526bd079f28330bc3))
+* **PER:** fix en filtros listado perinatal ([#2972](https://github.com/andes/app/issues/2972)) ([8aa0c55](https://github.com/andes/app/commit/8aa0c55705edd151e3b4f249a580f3adba39f70a))
+
 # [5.132.0](https://github.com/andes/app/compare/v5.131.1...v5.132.0) (2024-01-24)
 
 
