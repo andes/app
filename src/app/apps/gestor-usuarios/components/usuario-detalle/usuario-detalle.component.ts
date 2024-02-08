@@ -1,13 +1,11 @@
+import { Plex } from '@andes/plex';
 import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
-import { IUsuario } from '../../interfaces/IUsuario';
-import { ProfesionalService } from '../../../../services/profesional.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 import { IProfesional } from '../../../../interfaces/IProfesional';
-
-function elementAt(index = 0) {
-    return map((array: any[]) => array.length ? array[0] : null);
-}
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { IUsuario } from '../../interfaces/IUsuario';
+import { UsuariosHttp } from '../../services/usuarios.http';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usuarios-usuario-detalle',
@@ -17,31 +15,67 @@ function elementAt(index = 0) {
 
 export class UsuarioDetalleComponent implements OnChanges {
     private usuario$ = new BehaviorSubject<IUsuario>(null);
-    public profesional$: Observable<IProfesional>;
+
     @Input() usuario: IUsuario;
 
+    public profesional: IProfesional;
+    public email;
+    public activate;
+    public editable;
+
     constructor(
-        private profesionalService: ProfesionalService
-    ) {
-        this.profesional$ = this.usuario$.pipe(
-            switchMap((user: IUsuario) => {
-                return this.getProfesional(user);
-            }),
-            elementAt()
-        );
-    }
+        private profesionalService: ProfesionalService,
+        private usuariosHttp: UsuariosHttp,
+        private auth: Auth,
+        public plex: Plex,
+    ) { }
 
     ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (changes.hasOwnProperty('usuario')) {
             this.usuario$.next(changes['usuario'].currentValue);
         }
+
+        const esTemporal = !this.usuario.lastLogin;
+
+        this.getProfesional(this.usuario.documento).subscribe((profesional) => {
+            const permission = this.auth.getPermissions('usuarios:?');
+
+            this.profesional = profesional[0];
+            this.editable = (permission.includes('cuenta') || permission.includes('*')) && !!profesional[0]?.id && esTemporal;
+        });
+
+        this.email = this.usuario.email;
     }
 
-    getProfesional(user) {
+    getProfesional(documento) {
         return this.profesionalService.get({
-            documento: user.usuario,
+            documento,
             fields: 'id documento nombre apellido profesionalMatriculado formacionGrado matriculaExterna profesionExterna'
         });
     }
 
+    enviarActivacion() {
+        this.auth.setValidationTokenAndNotify(this.usuario.usuario).subscribe(
+            data => {
+                if (data.status === 'ok') {
+                    this.plex.info('success', 'Hemos enviado un e-mail para regenerar su contraseña');
+                } else {
+                    this.plex.info('danger', 'No se ha podido enviar el email de activación. <br>Por favor, vuelva a intentar');
+                }
+            }
+        );
+    }
+
+    onEditarUsuario() {
+        return this.usuariosHttp.update(this.usuario.documento, {
+            email: this.email
+        }).subscribe(() => {
+            this.usuario.email = this.email;
+            this.plex.toast('success', 'Usuario modificado exitosamente');
+
+            if (this.activate) {
+                this.enviarActivacion();
+            }
+        });
+    }
 }
