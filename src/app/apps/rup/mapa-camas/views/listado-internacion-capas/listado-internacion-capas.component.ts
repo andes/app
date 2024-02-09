@@ -69,17 +69,6 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
             sorteable: true,
             opcional: true,
             sort: (a: any, b: any) => a.fechaEgreso?.getTime() - b.fechaEgreso?.getTime()
-        },
-        {
-            key: 'unidadOrganizativa',
-            label: 'Unidad Organizativa',
-            sorteable: true,
-            opcional: true,
-            sort: (a: any, b: any) => {
-                const UOa = a.estadosCama?.unidadOrganizativa.term || a.estadosSala?.unidadOrganizativas[0].term;
-                const UOb = b.estadosCama?.unidadOrganizativa.term || b.estadosSala?.unidadOrganizativas[0].term;
-                return UOa.localeCompare(UOb);
-            }
         }
     ];
 
@@ -147,8 +136,5 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
         this.idInternacionSelected = null;
     }
 
-    existeUO(internacion) {
-        return (internacion.estadosSala?.unidadOrganizativas.length || internacion.estadosCama?.unidadOrganizativa) ? true : false;
-    }
 
 }

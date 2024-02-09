@@ -9,13 +9,15 @@
 
         <div *ngIf="listadoInternacionCapasService.missingFilters$ | async" justify="center" class="mt-5">
             <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                titulo="No hay resultados" subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
+                        titulo="No hay resultados"
+                        subtitulo="Debe ingresar un rango válido de fechas de ingreso o egreso">
             </plex-label>
         </div>
         <ng-container *ngIf="!(listadoInternacionCapasService.missingFilters$ | async) && mainView === 'principal'">
             <div *ngIf="!(listaInternacion$ | async)?.length" justify="center" class="mt-5">
                 <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                    titulo="No hay resultados" subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
+                            titulo="No hay resultados"
+                            subtitulo="No hay resultados que coincidan con los filtros de búsqueda">
                 </plex-label>
             </div>
             <plex-table [columns]="columns" #table="plTable" *ngIf="(listaInternacion$ | async)?.length">
@@ -56,12 +58,6 @@
                     <td *plTableCol="'informe'">
                         <plex-badge *ngIf="internacion.idPrestacion.id" type="success"> completo</plex-badge>
                         <plex-badge *ngIf="!internacion.idPrestacion.id" type="danger"> incompleto</plex-badge>
-                    </td>
-                    <td *plTableCol="'unidadOrganizativa'">
-                        <span *ngIf="existeUO(internacion)">
-                            {{ internacion.estadosSala?.unidadOrganizativas[0].term ||
-                            internacion.estadosCama?.unidadOrganizativa.term}}
-                        </span>
                     </td>
                 </tr>
             </plex-table>
