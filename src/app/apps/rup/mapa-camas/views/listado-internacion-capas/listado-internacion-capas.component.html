@@ -47,12 +47,6 @@
                                 {{ internacion.fechaEgreso | hora }}
                             </span>
                         </td>
-                        <td *plTableCol="'unidadOrganizativa'">
-                            <span *ngIf="existeUO(internacion)">
-                                {{ internacion.estadosSala?.unidadOrganizativas[0].term ||
-                                internacion.estadosCama?.unidadOrganizativa.term}}
-                            </span>
-                        </td>
                     </tr>
                 </plex-table>
             </ng-container>

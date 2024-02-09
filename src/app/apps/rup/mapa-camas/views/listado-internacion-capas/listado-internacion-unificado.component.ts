@@ -214,7 +214,4 @@ export class ListadoInternacionUnificadoComponent implements OnInit {
         this.idInternacionSelected = null;
     }
 
-    existeUO(internacion) {
-        return (internacion.estadosSala?.unidadOrganizativas.length || internacion.estadosCama?.unidadOrganizativa) ? true : false;
-    }
 }
