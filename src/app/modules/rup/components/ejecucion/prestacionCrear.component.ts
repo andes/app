@@ -117,7 +117,7 @@ export class PrestacionCrearComponent implements OnInit {
         if (this.tipoPrestacionSeleccionada) {
             const conceptoSnomed = this.tipoPrestacionSeleccionada;
             const nuevaPrestacion = {
-                paciente:  this.paciente && {
+                paciente: this.paciente && {
                     id: this.paciente.id,
                     nombre: this.paciente.nombre,
                     alias: this.paciente.alias,

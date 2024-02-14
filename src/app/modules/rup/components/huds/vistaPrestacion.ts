@@ -59,11 +59,13 @@ export class VistaPrestacionComponent implements OnInit {
             map(prestacion => populateRelaciones(prestacion))
         ).subscribe(prestacion => {
             this.hasPacs = prestacion.metadata?.findIndex(item => item.key === 'pacs-uid') >= 0;
-            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                this.prestacion = prestacion;
-                this.paciente = paciente;
-                this._puedeEditar = this.puedeEditar && this.checkUser();
-            });
+            if (prestacion.paciente?.id) {
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.prestacion = prestacion;
+                    this.paciente = paciente;
+                    this._puedeEditar = this.puedeEditar && this.checkUser();
+                });
+            }
         });
     }
 

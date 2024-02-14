@@ -16,6 +16,7 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
     @Input() tmPrestaciones;
     @Input() preload = false;
     @Input() ambito;
+    @Input() tipo = null;
 
     private subscription: Subscription = null;
     private lastCallSubscription: Subscription = null;
@@ -33,8 +34,14 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
             this.plexSelect.data = [];
             const permisos = this.tmPrestaciones;
             const ambito = this.ambito;
+            const tipo = this.tipo;
+
             this.conceptosTurneables.getByPermisos(permisos, ambito).subscribe(result => {
-                this.plexSelect.data = result;
+                const filtro =
+                    tipo ? result.filter(concepto =>
+                        tipo === 'noNominalizadas' ? concepto.noNominalizada : !concepto.noNominalizada) : result;
+
+                this.plexSelect.data = filtro;
             });
         } else {
             this.subscription = this.plexSelect.getData.subscribe(($event) => {
@@ -47,6 +54,7 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
                         this.lastCallSubscription.unsubscribe();
                     }
                     this.lastCallSubscription = this.conceptosTurneables.search({ permisos, ambito, term: `^${inputText}` }).subscribe(result => {
+
                         $event.callback(result);
                     });
 

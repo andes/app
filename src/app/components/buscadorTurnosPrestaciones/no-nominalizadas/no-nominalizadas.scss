@@ -1,0 +1,21 @@
+table th.sortable:hover {
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+
+cdk-virtual-scroll-viewport {
+    height: calc(100% - 180px);
+    table {
+        table-layout: fixed;
+        width: 100%;
+       
+        tbody tr td {
+            width: 100%;
+        }
+        .selected{
+            width: 4% !important;
+        }
+        
+    }
+    
+}

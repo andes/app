@@ -1,20 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Plex } from '@andes/plex';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, Subject, combineLatest } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
+import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
+import { IFinanciador } from 'src/app/interfaces/IFinanciador';
+import { HUDSService } from '../../modules/rup/services/huds.service';
+import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
+import { ObraSocialService } from '../../services/obraSocial.service';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
-import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
-import { Plex } from '@andes/plex';
-import { HUDSService } from '../../modules/rup/services/huds.service';
-import { Router } from '@angular/router';
-import { ExportHudsService } from '../../modules/visualizacion-informacion/services/export-huds.service';
-import { combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { cache } from '@andes/shared';
-import { IFinanciador } from 'src/app/interfaces/IFinanciador';
-import { ObraSocialService } from '../../services/obraSocial.service';
+import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -156,8 +153,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
             tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
-            takeUntil(this.onDestroy$),
-            cache()
+            takeUntil(this.onDestroy$)
         );
 
         this.turnosPrestacionesService.loading$.pipe(
@@ -316,7 +312,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.descargasPendientes = false;
         this.prestacionIniciada = datos.idPrestacion;
 
-        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => this.paciente = paciente);
+        this.pacienteService.getById(datos.paciente?.id).subscribe(paciente => this.paciente = paciente);
 
 
         const paramsToken = {
@@ -340,7 +336,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             this.showPrestacion = true;
             this.prestacion = datos;
         });
-        this.pacienteService.getById(datos.paciente.id).subscribe(paciente => {
+        this.pacienteService.getById(datos.paciente?.id).subscribe(paciente => {
             this.paciente = paciente;
             this.financiador = paciente.financiador[0];
         });
