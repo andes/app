@@ -14,7 +14,7 @@
                          (turnosPacienteChanged)="refresh()" *plTab>
         </turnos-paciente>
     </plex-tab>
-    <plex-tab icon="history" label="Historial">
+    <plex-tab icon="history" label="Historial" *ngIf="!pacienteRestringido(paciente)">
         <fieldset *plTab>
             <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos$ | async; let i=index" class="list-group-item"

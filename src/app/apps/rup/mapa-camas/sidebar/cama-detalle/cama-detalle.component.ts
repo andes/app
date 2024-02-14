@@ -336,4 +336,8 @@ export class CamaDetalleComponent implements OnInit {
     puedePrestar(cama: ISnapshot, organizacion) {
         return this.capa !== 'interconsultores' && !cama.sala && this.permisosMapaCamasService.camaPrestamo && (organizacion || cama.estado === 'disponible');
     }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
+    }
 }

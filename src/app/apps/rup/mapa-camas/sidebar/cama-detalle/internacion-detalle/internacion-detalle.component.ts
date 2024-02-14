@@ -1,5 +1,6 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Auth } from '@andes/auth';
+import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -8,6 +9,7 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -22,6 +24,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     public existeEgreso;
     view$ = this.mapaCamasService.view;
 
+    @Input() paciente;
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
@@ -47,7 +50,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         private prestacionesService: PrestacionesService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private listadoInternacion: ListadoInternacionService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private auth: Auth,
     ) { }
 
     ngAfterViewChecked() {
@@ -227,5 +231,9 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
 
     puedeEditarEgreso() {
         return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && this.existeEgreso);
+    }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 }

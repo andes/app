@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -156,6 +157,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
             tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
+            map((items) => items.filter(({ paciente }) => !this.pacienteRestringido(paciente), {})),
             takeUntil(this.onDestroy$),
             cache()
         );
@@ -452,5 +454,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     generarComprobante() {
         return this.prestacionIniciada && this.puedeEmitirComprobante && this.financiador && ((!this.prestacion.estadoFacturacion) || this.prestacion.estadoFacturacion?.estado !== 'Comprobante con prestacion');
+    }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 }

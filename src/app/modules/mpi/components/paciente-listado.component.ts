@@ -2,6 +2,7 @@ import { IPacienteMatch } from './../interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 import { PacienteBuscarService } from 'src/app/core/mpi/services/paciente-buscar.service';
 import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
 import { calcularEdad } from '@andes/shared';
@@ -88,7 +89,8 @@ export class PacienteListadoComponent {
 
     constructor(
         private plex: Plex,
-        private pacienteBuscar: PacienteBuscarService) { }
+        private pacienteBuscar: PacienteBuscarService,
+        public auth: Auth) { }
 
     onScroll() {
         this.pacienteBuscar.findByText().subscribe((resultado: any) => {
@@ -167,5 +169,9 @@ export class PacienteListadoComponent {
      */
     public colorItem(pos) {
         return (pos % 2 === 0) ? this.coloresItems.par : this.coloresItems.impar;
+    }
+
+    public pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 }

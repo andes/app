@@ -18,6 +18,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -873,6 +874,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         }
         this.showModalMotivo = false;
+    }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 
     setAccesoHudsParams(paciente, turno, prestacion) {

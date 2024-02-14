@@ -70,19 +70,27 @@ export class ExportarHudsComponent implements OnInit {
         this.prestacion = null;
     }
 
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
+    }
+
     onSelect(paciente: IPaciente): void {
         if (paciente) {
-            this.pacienteSelected = paciente;
-            this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe((motivo) => {
-                if (motivo) {
-                    this.modalAccepted = true;
-                    this.showLabel = false;
-                }
-            },
-            // Si viene error, segundo callback
-            () => {
-                this.pacienteSelected = '';
-            });
+            if (this.pacienteRestringido(paciente)) {
+                this.plex.info('warning', 'Usted no tiene permiso para ingresar a este paciente', 'Atención');
+            } else {
+                this.pacienteSelected = paciente;
+                this.motivoAccesoService.getAccessoHUDS(this.pacienteSelected).subscribe((motivo) => {
+                    if (motivo) {
+                        this.modalAccepted = true;
+                        this.showLabel = false;
+                    }
+                },
+                // Si viene error, segundo callback
+                () => {
+                    this.pacienteSelected = '';
+                });
+            }
         }
     }
 

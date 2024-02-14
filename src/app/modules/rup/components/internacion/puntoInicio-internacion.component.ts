@@ -6,6 +6,7 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../services/huds.service';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -147,5 +148,9 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 this.router.navigate([]);
                 break;
         }
+    }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 }

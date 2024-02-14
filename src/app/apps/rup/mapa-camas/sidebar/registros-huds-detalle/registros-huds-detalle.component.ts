@@ -238,4 +238,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.inProgress = true;
         this.tipoPrestacion$.next(this.tipoPrestacion);
     }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
+    }
 }

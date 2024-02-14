@@ -87,4 +87,8 @@ export class BusquedaMpiComponent implements OnInit {
     afterPacienteCru(paciente: IPaciente) {
         this.updateTitle('Buscar pacientes');
     }
+
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
+    }
 }

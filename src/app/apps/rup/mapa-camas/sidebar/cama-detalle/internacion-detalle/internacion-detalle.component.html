@@ -60,8 +60,14 @@
             egreso.
         </plex-label>
     </ng-container>
-
     <ng-container *ngIf="mostrar === 'registros' && permisosMapaCamasService.registros">
-        <app-registros-huds-detalle (accion)="onAccion($event)"></app-registros-huds-detalle>
+        <app-registros-huds-detalle *ngIf="!pacienteRestringido(paciente)"
+                                    (accion)="onAccion($event)"></app-registros-huds-detalle>
+        <plex-label *ngIf="pacienteRestringido(paciente)" class="mt-4" type="warning" icon="informacion" justify="center"
+                    direction="column">
+            Usted no tiene permiso para ingresar a este paciente
+        </plex-label>
     </ng-container>
+
+
 </div>

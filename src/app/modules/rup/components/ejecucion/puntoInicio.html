@@ -470,7 +470,8 @@
                                     </td>
                                     <td>
                                     <td>
-                                        <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
+                                        <ng-container
+                                                      *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id && !pacienteRestringido(sobreturno.paciente)">
                                             <plex-button size="block" *ngIf="sobreturno.botonera.huds"
                                                          (click)="setRouteToParams(['paciente', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                          label="VER HUDS" type="primary btn-sm">
@@ -562,31 +563,32 @@
                                 </ng-container>
                             </td>
                             <td>
-                                <plex-button size="block"
-                                             *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
-                                             (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
-                                             label="VER HUDS" type="primary btn-sm">
-                                </plex-button>
+                                <ng-container *ngIf="!pacienteRestringido(prestacion.paciente)">
+                                    <plex-button size="block"
+                                                 *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
+                                                 (click)="setRouteToParams(['paciente', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                                 label="VER HUDS" type="primary btn-sm">
+                                    </plex-button>
 
-                                <plex-button size="block"
-                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
-                                             (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
-                                             label="CONTINUAR REGISTRO" type="success btn-sm">
-                                </plex-button>
+                                    <plex-button size="block"
+                                                 *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' && checkPuedeValidar(prestacion)"
+                                                 (click)="setRouteToParams(['ejecucion', prestacion.id]); prestacionNominalizada=prestacion.solicitud.tipoPrestacion.noNominalizada;accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                                 label="CONTINUAR REGISTRO" type="success btn-sm">
+                                    </plex-button>
 
 
-                                <plex-button size="block"
-                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                             (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
-                                             type="success btn-sm">
-                                </plex-button>
+                                    <plex-button size="block"
+                                                 *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
+                                                 (click)="onVerResumenClick('validacion', prestacion)"
+                                                 label="VER RESUMEN" type="success btn-sm">
+                                    </plex-button>
 
-                                <plex-button size="block"
-                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                             label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
-                                             (click)="invalidarPrestacion(prestacion)">
-                                </plex-button>
-
+                                    <plex-button size="block"
+                                                 *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
+                                                 label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                                 (click)="invalidarPrestacion(prestacion)">
+                                    </plex-button>
+                                </ng-container>
                             </td>
                         </tr>
                     </tbody>

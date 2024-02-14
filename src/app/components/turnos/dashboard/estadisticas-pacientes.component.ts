@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnChanges, SimpleChange } from '@angular/core';
-import * as moment from 'moment';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { TurnoService } from '../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
-import { LogPacienteService } from '../../../services/logPaciente.service';
+import { cache } from '@andes/shared';
+import { Component, Input, OnInit } from '@angular/core';
+import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { cache } from '@andes/shared';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { LogPacienteService } from '../../../services/logPaciente.service';
+import { TurnoService } from '../../../services/turnos/turno.service';
 
 
 @Component({
@@ -48,6 +48,10 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.ultimosTurnos$ = this.historial$.pipe(
             map(turnos => turnos.filter(t => moment(t.horaInicio).isSameOrBefore(new Date(), 'day')))
         );
+    }
+
+    public pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
     }
 
     private sortByHoraInicio(turnos: any[]) {

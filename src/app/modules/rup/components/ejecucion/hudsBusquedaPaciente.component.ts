@@ -67,10 +67,18 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
+    pacienteRestringido({ id }: IPaciente) {
+        return !!this.auth.pacienteRestringido?.find(p => p.idPaciente === id);
+    }
+
     onSelect(paciente: IPaciente): void {
         if (paciente) {
-            this.pacienteSelected = paciente;
-            this.showModalMotivo = true;
+            if (this.pacienteRestringido(paciente)) {
+                this.plex.info('warning', 'Usted no tiene permiso para ingresar a este paciente', 'Atención');
+            } else {
+                this.pacienteSelected = paciente;
+                this.showModalMotivo = true;
+            }
         }
     }
 
@@ -86,7 +94,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                 idTurno: null,
                 idPrestacion: null
             };
-            this.hudsService.generateHudsToken( paramsToken).subscribe(hudsToken => {
+            this.hudsService.generateHudsToken(paramsToken).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
                 window.sessionStorage.removeItem('motivoAccesoHuds');
                 this.router.navigate(['/huds/paciente/' + this.pacienteSelected.id]);
