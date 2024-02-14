@@ -4,7 +4,7 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Unsubscribe } from '@andes/shared';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concatWith } from 'rxjs';
+import { catchError, concatWith, map } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
@@ -12,6 +12,9 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
 import { Location } from '@angular/common';
+import { IPaciente } from 'src/app/core/mpi/interfaces/IPaciente';
+import { IPrestacion } from 'src/app/interfaces/turnos/IPrestacion';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
 
 @Component({
     selector: 'solicitudes',
@@ -160,7 +163,8 @@ export class SolicitudesComponent implements OnInit {
         private hudsService: HUDSService,
         private pacienteService: PacienteService,
         private routerService: RouterService,
-        private location: Location
+        private location: Location,
+        private pacienteRestringido: PacienteRestringidoPipe
     ) {
     }
 
@@ -531,22 +535,28 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    esPacienteRestringido(paciente) {
+        return this.pacienteRestringido.transform(paciente);
+    }
+
     @Unsubscribe()
     buscarSolicitudes() {
-        return this.servicioPrestacion.getSolicitudes(this.getParams()).subscribe(resultado => {
-            if (this.tipoSolicitud === 'entrada') {
-                this.prestacionesEntrada = this.prestacionesEntrada.concat(resultado);
-                this.skip = this.prestacionesEntrada.length;
-            } else if (this.tipoSolicitud === 'salida') {
-                this.prestacionesSalida = this.prestacionesSalida.concat(resultado);
-                this.skip = this.prestacionesSalida.length;
-            }
-            // si vienen menos solicitudes que la cantidad límite significa que ya se cargaron todas
-            if (!resultado.length || resultado.length < this.limit) {
-                this.scrollEnd = true;
-            }
-            this.loader = false;
-        });
+        return this.servicioPrestacion.getSolicitudes(this.getParams())
+            .pipe(map((resultado) => resultado.filter((solicitud) => !this.esPacienteRestringido(solicitud.paciente))))
+            .subscribe(resultado => {
+                if (this.tipoSolicitud === 'entrada') {
+                    this.prestacionesEntrada = this.prestacionesEntrada.concat(resultado);
+                    this.skip = this.prestacionesEntrada.length;
+                } else if (this.tipoSolicitud === 'salida') {
+                    this.prestacionesSalida = this.prestacionesSalida.concat(resultado);
+                    this.skip = this.prestacionesSalida.length;
+                }
+                // si vienen menos solicitudes que la cantidad límite significa que ya se cargaron todas
+                if (!resultado.length || resultado.length < this.limit) {
+                    this.scrollEnd = true;
+                }
+                this.loader = false;
+            });
     }
 
     verFechaDateTimeEntrada() {

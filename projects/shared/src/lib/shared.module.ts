@@ -17,6 +17,7 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { GaleriaArchivosComponent } from './components/galeria-archivos/galeria-archivos.component';
 import { FormsModule } from '@angular/forms';
 import { DocumentoPipe } from './pipes/documento.pipe';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import { DocumentoPipe } from './pipes/documento.pipe';
         PopoverAuditComponent,
         GaleriaArchivosComponent,
         UploadFileComponent,
-        NotasComponent
+        NotasComponent,
+        PacienteRestringidoPipe
     ],
     exports: [
         FechaPipe,
@@ -54,8 +56,12 @@ import { DocumentoPipe } from './pipes/documento.pipe';
         PopoverAuditComponent,
         GaleriaArchivosComponent,
         UploadFileComponent,
-        NotasComponent
-    ]
+        NotasComponent,
+        PacienteRestringidoPipe
+    ],
+    providers: [
+        PacienteRestringidoPipe
+    ],
 })
 export class SharedModule {
     static forRoot(host: string): ModuleWithProviders<SharedModule> {
