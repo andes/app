@@ -24,7 +24,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     public existeEgreso;
     view$ = this.mapaCamasService.view;
 
-    @Input() cama;
+    @Input() paciente;
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
@@ -233,5 +233,4 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeEditarEgreso() {
         return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && this.existeEgreso);
     }
-
 }

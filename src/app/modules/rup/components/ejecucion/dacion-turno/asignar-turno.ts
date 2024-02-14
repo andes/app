@@ -15,6 +15,7 @@ import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { AgendaService } from 'src/app/services/turnos/agenda.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
 
 @Component({
     selector: 'rup-asignar-turno',
@@ -48,7 +49,8 @@ export class RupAsignarTurnoComponent implements OnInit {
         private obraSocialService: ObraSocialService,
         private pacienteService: PacienteService,
         private serviceAgenda: AgendaService,
-        private conceptosTurneablesService: ConceptosTurneablesService
+        private conceptosTurneablesService: ConceptosTurneablesService,
+        private pacienteRestringido: PacienteRestringidoPipe
     ) { }
 
     ngOnInit() {
@@ -77,26 +79,34 @@ export class RupAsignarTurnoComponent implements OnInit {
         this.pacienteActivo = null;
     }
 
+    esPacienteRestringido(paciente: IPaciente) {
+        return this.pacienteRestringido.transform(paciente);
+    }
+
     onPacienteSelected(paciente: IPaciente) {
         // Si se seleccionó por error un paciente fallecido
         this.pacienteService.checkFallecido(paciente);
-        this.pacienteActivo = paciente;
         this.pacientes = null;
         if (paciente) {
-            this.obraSocialPaciente = null;
-            if (paciente.id && paciente.documento) {
-                this.obraSocialService.getObrasSociales(paciente.documento).subscribe(
-                    (resultado: IObraSocial[]) => {
-                        if (resultado.length > 0) {
-                            this.obraSocialPaciente = resultado[0];
-                        }
-                        this.setPacienteTurno(paciente);
-                    },
-                    () => {
-                        this.setPacienteTurno(paciente);
-                    });
+            if (!this.esPacienteRestringido(paciente)) {
+                this.pacienteActivo = paciente;
+                this.obraSocialPaciente = null;
+                if (paciente.id && paciente.documento) {
+                    this.obraSocialService.getObrasSociales(paciente.documento).subscribe(
+                        (resultado: IObraSocial[]) => {
+                            if (resultado.length > 0) {
+                                this.obraSocialPaciente = resultado[0];
+                            }
+                            this.setPacienteTurno(paciente);
+                        },
+                        () => {
+                            this.setPacienteTurno(paciente);
+                        });
+                } else {
+                    this.setPacienteTurno(paciente);
+                }
             } else {
-                this.setPacienteTurno(paciente);
+                this.plex.info('warning', 'No tiene permisos para acceder a este paciente.');
             }
 
         } else {

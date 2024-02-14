@@ -13,6 +13,7 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { HUDSService } from '../../services/huds.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PacienteRestringidoPipe } from 'src/app/pipes/pacienteRestringido';
 
 @Component({
     selector: 'prestacion-crear',
@@ -58,7 +59,8 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
         public servicioPrestacion: PrestacionesService,
         private osService: ObraSocialCacheService,
         private pacienteService: PacienteService,
-        private hudsService: HUDSService
+        private hudsService: HUDSService,
+        private pacienteRestringido: PacienteRestringidoPipe
     ) { }
 
     ngOnInit() {
@@ -332,6 +334,10 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
         this.paciente = null;
     }
 
+    esPacienteRestringido(paciente: IPaciente) {
+        return this.pacienteRestringido.transform(paciente);
+    }
+
     // ----------------------------------
 
     // Componente paciente-listado
@@ -339,11 +345,15 @@ export class PrestacionCrearComponent implements OnInit, OnChanges {
     onSelect(paciente: IPaciente): void {
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
-            // Si se seleccionó por error un paciente fallecido
-            this.pacienteService.checkFallecido(paciente);
-            this.paciente = paciente;
-            this.resultadoBusqueda = [this.paciente];
-            this.darTurnoAutocitado();
+            if (!this.esPacienteRestringido(paciente)) {
+                // Si se seleccionó por error un paciente fallecido
+                this.pacienteService.checkFallecido(paciente);
+                this.paciente = paciente;
+                this.resultadoBusqueda = [this.paciente];
+                this.darTurnoAutocitado();
+            } else {
+                this.plex.info('warning', 'No tiene permisos para acceder a este paciente.');
+            }
         } else {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }

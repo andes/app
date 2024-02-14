@@ -20,18 +20,15 @@
             <div class="info-sidebar">
                 <hr class="blanco lg">
                 <ng-container *ngIf="!showLoader">
-                    <div class="row">
+                    <div class="row" *ngIf="!(pacienteSeleccionado | pacienteRestringido)">
                         <div class="col-4">
                             <h5 class="text-info">Registros</h5>
                         </div>
                         <div class="col-8 text-right d-flex justify-content-end">
-                            <!-- <plex-button size="sm" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">
-                                CREAR EPICRISIS
-                            </plex-button> -->
                             <plex-dropdown size="sm" type="success" class="mr-1" [right]="true" [items]="registros"
                                            label="NUEVO REGISTRO">
                             </plex-dropdown>
-                            <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
+                            <plex-button [disabled]="pacienteSeleccionado | pacienteRestringido" size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">
                                 VER HUDS
                             </plex-button>
                         </div>
