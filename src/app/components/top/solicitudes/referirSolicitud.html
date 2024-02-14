@@ -1,0 +1,36 @@
+<plex-title main titulo="{{ estadoSolicitud.nombre }}" size="sm">
+    <plex-button class="mr-1" size="sm" type="danger" icon="arrow-left" tooltip="Volver" [tooltipPosition]="'bottom'"
+                 (click)="cancelar()">
+    </plex-button>
+    <plex-button type="success" size="sm" icon="check" tooltip="Confirmar" [tooltipPosition]="'bottom'"
+                 [disabled]="(!(tipoPrestacionDestino && organizacionDestino))" (click)="confirmar()"></plex-button>
+</plex-title>
+<div class="mt-3">
+    <ng-container>
+        <div class="row">
+            <div class="col-12">
+                <plex-text label="Observaciones" multiline="true" name="observaciones" [(ngModel)]="observaciones">
+                </plex-text>
+            </div>
+
+            <div class="col-12">
+                <plex-select [(ngModel)]="organizacionDestino" [data]="organizacionesDestino" name="organizacionOrigen"
+                             label="Organización destino" labelField="nombre" [required]="true"
+                             (change)="onSelectOrganizacionDestino()">
+                </plex-select>
+            </div>
+            <div class="col-12">
+                <plex-select [(ngModel)]="tipoPrestacionDestino" name="tipoPrestacionDestino"
+                             [data]="tipoPrestacionesDestinoData" label="Tipo de Prestación Solicitada"
+                             placeholder="Tipos de Prestación solicitada" [required]="true">
+                </plex-select>
+            </div>
+            <div class="col-12">
+                <plex-select [(ngModel)]="profesionalDestino" label="Profesional destino" name="profesional"
+                             (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional"
+                             labelField="apellido + ' ' + nombre">
+                </plex-select>
+            </div>
+        </div>
+    </ng-container>
+</div>

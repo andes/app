@@ -32,6 +32,8 @@ export class SolicitudesComponent implements OnInit {
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
+    public showAuditar = false;
+    public showReferir = false;
     diasIntervalo = 15;
 
     private scrollEnd = false;
@@ -270,6 +272,8 @@ export class SolicitudesComponent implements OnInit {
             tableCols.splice(1, 0, { key: 'paciente', label: 'Paciente' });
             this.showPacienteData = true;
         }
+        this.showAuditar = false;
+        this.showReferir = false;
         this.showSidebar = false;
         this.showDetalle = false;
         this.showNuevaSolicitud = false;
@@ -288,7 +292,9 @@ export class SolicitudesComponent implements OnInit {
             }
             (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
 
-            if (prestacion.solicitud && prestacion.solicitud.turno) {
+            prestacion.seleccionada = true;
+            this.prestacionSeleccionada = prestacion;
+            if (prestacion?.solicitud?.turno) {
                 this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
                     this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
                     this.setShowDetallesFlags();
@@ -300,9 +306,21 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    verOpcionContrarreferida(prestacion) {
+
+
+        if (prestacion.solicitud.historial.length > 2) {
+            if (prestacion.solicitud.historial[prestacion.solicitud.historial.length - 2].organizacion.id === this.auth.organizacion.id) {
+            }
+            return (prestacion.solicitud.historial[prestacion.solicitud.historial.length - 2].organizacion.id === this.auth.organizacion.id);
+        }
+    }
+
     private setShowDetallesFlags() {
         this.showDetalle = true;
         this.showSidebar = true;
+        this.showAuditar = false;
+        this.showReferir = false;
         this.showNuevaSolicitud = false;
     }
 
@@ -347,6 +365,20 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = false;
     }
 
+
+
+    referir(prestacion) {
+        const arreColumns = this.columns.filter(col => col.key !== 'paciente');
+        this.columns = arreColumns;
+        this.prestacionSeleccionada = prestacion;
+        this.showAuditar = false;
+        this.showReferir = true;
+        this.showSidebar = true;
+        this.showDetalle = false;
+        this.showNuevaSolicitud = false;
+    }
+
+
     editarReglas() {
         this.showEditarReglas = true;
     }
@@ -385,10 +417,10 @@ export class SolicitudesComponent implements OnInit {
             estados: [
                 'auditoria',
                 'pendiente',
-                'rechazada',
                 'validada',
                 'ejecucion',
-                'asignada'
+                'asignada',
+                'referir'
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
@@ -440,6 +472,7 @@ export class SolicitudesComponent implements OnInit {
                 params['paciente'] = this.pacienteEntrada;
             }
         } else {
+            params.estados.push('rechazada');
             if (this.fechaDesdeSalida && this.fechaHastaSalida) {
                 params['solicitudDesde'] = this.fechaDesdeSalida;
                 params['solicitudHasta'] = this.fechaHastaSalida;
@@ -493,13 +526,13 @@ export class SolicitudesComponent implements OnInit {
         if (this.tipoSolicitud === 'entrada') {
             // Si es bandeja de entrada, por defecto la organización es la propia
             params.organizacion = this.auth.organizacion.id;
-            if (this.organizacionesOrigen && this.organizacionesOrigen.length) {
+            if (this.organizacionesOrigen?.length) {
                 params.organizacionOrigen = this.organizacionesOrigen.map(o => o.id);
             }
         } else {
             // Si es bandeja de entrada, por defecto la organización origen es la propia
             params.organizacionOrigen = this.auth.organizacion.id;
-            if (this.organizacionesDestino && this.organizacionesDestino.length) {
+            if (this.organizacionesDestino?.length) {
                 params.organizacion = this.organizacionesDestino.map(o => o.id);
             }
         }
@@ -537,6 +570,10 @@ export class SolicitudesComponent implements OnInit {
                         estado: { tipo: statuses[event.status], observaciones: event.observaciones }
                     };
 
+                    if (event.status === 2) {
+                        patch.organizacion = event.organizacionContrarreferida;
+                    }
+
                     // DEPRECADO
                     if (!event.status) {
                         patch.motivoRechazo = event.observaciones;
@@ -561,6 +598,29 @@ export class SolicitudesComponent implements OnInit {
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                     () => this.cargarSolicitudes()
                 );
+            }
+        }
+    }
+
+    returnReferir(event) {
+        this.showAuditar = false;
+        this.showReferir = false;
+        this.showSidebar = false;
+        this.columns.splice(1, 0, { key: 'paciente', label: 'Paciente' });
+        if (event.status !== false) {
+            if (event?.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados?.length) {
+                const patch = {
+                    op: 'referir',
+                    estado: 'referir',
+                    observaciones: event.observaciones,
+                    organizacion: event.organizacion,
+                    profesional: event.profesional,
+                    tipoPrestacion: event.prestacion
+                };
+
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(() => {
+                    this.cargarSolicitudes();
+                });
             }
         }
     }
@@ -646,6 +706,9 @@ export class SolicitudesComponent implements OnInit {
 
     nuevaSolicitud() {
         this.showNuevaSolicitud = true;
+        this.showAuditar = false;
+        this.showReferir = false;
+        this.showSidebar = true;
         this.showDetalle = false;
         this.showSidebar = true;
     }
