@@ -1,3 +1,10 @@
+## [5.132.2](https://github.com/andes/app/compare/v5.132.1...v5.132.2) (2024-02-14)
+
+
+### Bug Fixes
+
+* **INT:** Saca el  campod e UO del listado historial medico ([#2975](https://github.com/andes/app/issues/2975)) ([a60f6c3](https://github.com/andes/app/commit/a60f6c346708e16623e144e4615aa3b0c5553286))
+
 ## [5.132.1](https://github.com/andes/app/compare/v5.132.0...v5.132.1) (2024-02-07)
 
 
