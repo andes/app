@@ -9,11 +9,11 @@ export class EstadoSolicitudPipe implements PipeTransform {
     constructor(private auth: Auth) { }
     transform(prestacion: IPrestacion): any {
 
-        if (prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'validada') {
+        if (prestacion.solicitud.turno && prestacion.estadoActual.tipo !== 'validada' && prestacion.estadoActual.tipo !== 'ejecucion') {
             return 'Turno dado';
         }
         if (prestacion.solicitud.organizacion.id === this.auth.organizacion.id) {
-            if (prestacion.estadoActual.tipo === 'pendiente' && prestacion ?.paciente && !prestacion.solicitud.turno) {
+            if (prestacion.estadoActual.tipo === 'pendiente' && prestacion?.paciente && !prestacion.solicitud.turno) {
                 return 'pendiente';
             }
             const esAuditoria = prestacion.estadoActual.tipo === 'auditoria' || prestacion.estadoActual.tipo === 'rechazada';

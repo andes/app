@@ -445,7 +445,7 @@ export class SolicitudesComponent implements OnInit {
             if (this.estadoEntrada) {
                 if (this.estadoEntrada.id === 'turnoDado') {
                     params['tieneTurno'] = true;
-                    params.estados = params.estados.filter(e => e !== 'validada');
+                    params.estados = params.estados.filter(e => e !== 'validada' && e !== 'ejecucion');
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
@@ -488,7 +488,7 @@ export class SolicitudesComponent implements OnInit {
             if (this.estadoSalida) {
                 if (this.estadoSalida.id === 'turnoDado') {
                     params['tieneTurno'] = true;
-                    params.estados = params.estados.filter(e => e !== 'validada');
+                    params.estados = params.estados.filter(e => e !== 'validada' && e !== 'ejecucion');
                 } else if (this.estadoSalida.id === 'registroHUDS') {
                     params['estados'] = ['validada'];
                 } else {
