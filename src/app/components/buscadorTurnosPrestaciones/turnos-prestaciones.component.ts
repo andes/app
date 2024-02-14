@@ -57,6 +57,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     public financiador;
     public loader: Boolean = false;
+    public modelo: any = {
+        obraSocial: '',
+        prepaga: ''
+    };
+    public arrayPrestacion = [];
 
     public columnas = {
         fecha: true,
@@ -204,6 +209,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         );
 
         this.initialize();
+        this.recuperarFacturacion();
     }
 
     initialize() {
@@ -237,6 +243,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.buscar(params);
             }
         }
+    }
+
+    recuperarFacturacion() {
+
+        this.facturacionAutomaticaService.get({}).subscribe(configuracion => {
+            this.arrayPrestacion = configuracion;
+        });
+
     }
 
     buscar(parametros) {
@@ -358,27 +372,27 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turno.obraSocial = null;
             turno.financiador = this.financiador;
         }
-
-        this.facturacionAutomaticaService.get(turno).subscribe(configuracion => {
-            const encuentraConfiguracion = configuracion.find(res => {
-                const encuentraConceptoId = res?.conceptosTurneables?.find(concepto =>
-                    (concepto.conceptId === turno.tipoPrestacion.conceptId)
-                );
-                if (encuentraConceptoId) {
-                    return res;
+        const encuentraConfiguracion = (arrayConceptos) => arrayConceptos.find(concepto => (concepto.conceptId === turno.tipoPrestacion.conceptId));
+        const configuracionesCT: any[] = this.arrayPrestacion.filter(prestacion => prestacion?.conceptosTurneables ? encuentraConfiguracion(prestacion.conceptosTurneables) : false);
+        let inviarFacturacion = false;
+        let messageNoEnviar = '';
+        const esSumar = turno.obraSocial !== 'prepaga' && turno.financiador.financiador === 'SUMAR';
+        if (esSumar) {
+            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.sumar !== null);
+            messageNoEnviar = 'Esta prestación no genera comprobantes automáticos a SUMAR';
+        } else {
+            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.recuperoFinanciero !== null);
+            messageNoEnviar = 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero';
+        }
+        if (inviarFacturacion) {
+            this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
+                if (respuesta.message) {
+                    this.plex.info('success', respuesta.message);
                 }
             });
-
-            if (encuentraConfiguracion) {
-                this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
-                    if (respuesta.message) {
-                        this.plex.info('success', respuesta.message);
-                    }
-                });
-            } else {
-                this.plex.info('warning', 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero');
-            }
-        });
+        } else {
+            this.plex.info('warning', messageNoEnviar);
+        }
     }
 
     sortTable(event: string) {
