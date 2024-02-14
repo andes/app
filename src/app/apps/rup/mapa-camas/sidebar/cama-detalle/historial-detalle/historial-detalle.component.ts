@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { map, switchMap, startWith } from 'rxjs/operators';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { ISnapshot } from '../../../interfaces/ISnapshot';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { IMAQEstado } from '../../../interfaces/IMaquinaEstados';
+import { ISnapshot } from '../../../interfaces/ISnapshot';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 @Component({
     selector: 'app-historial-detalle',
-    templateUrl: './historial-detalle.component.html'
+    templateUrl: './historial-detalle.component.html',
+    styleUrls: ['./historial-detalle.scss']
 })
 export class HistorialDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
@@ -20,15 +21,37 @@ export class HistorialDetalleComponent implements OnInit {
 
     public historial$: Observable<any>;
 
+    public disableBuscar = false;
+
     constructor(
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
     ) {
         this.cama$ = this.mapaCamasService.selectedCama;
         this.estados$ = this.mapaCamasService.estado$;
     }
 
     ngOnInit() {
+        this.historial$ = null;
+    }
 
+    onChange() {
+        if (this.desde && this.hasta) {
+            const fechaDesdeValida = (this.desde <= this.hasta);
+            const fechaHastaValida = (this.hasta <= moment().toDate() && this.hasta >= this.desde);
+
+            this.disableBuscar = !(fechaDesdeValida && fechaHastaValida);
+        } else { this.disableBuscar = true; }
+    }
+
+    getEstado(movimiento) {
+        return this.estados$.pipe(
+            map((estados) => {
+                return estados.find(est => movimiento.estado === est.key);
+            })
+        );
+    }
+
+    buscar() {
         this.historial$ = this.historial.pipe(
             startWith({
                 desde: this.desde, hasta: this.hasta
@@ -54,29 +77,4 @@ export class HistorialDetalleComponent implements OnInit {
             })
         );
     }
-
-    onChange($event) {
-        const filtros = {
-            desde: this.desde,
-            hasta: this.hasta
-        };
-
-        if (this.desde && this.hasta) {
-            const fechaDesdeValida = (this.desde <= this.hasta);
-            const fechaHastaValida = (this.hasta <= moment().toDate() && this.hasta >= this.desde);
-
-            if (fechaDesdeValida && fechaHastaValida) {
-                this.historial.next(filtros);
-            }
-        }
-    }
-
-    getEstado(movimiento) {
-        return this.estados$.pipe(
-            map((estados) => {
-                return estados.find(est => movimiento.estado === est.key);
-            })
-        );
-    }
-
 }
