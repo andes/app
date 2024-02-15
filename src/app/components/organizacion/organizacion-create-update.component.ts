@@ -25,6 +25,7 @@ import { ProvinciaService } from './../../services/provincia.service';
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
 import { ZonaSanitariaService } from './../../services/zonaSanitaria.service';
 import * as enumerados from './../../utils/enumerados';
+import { ConstantesService } from './../../services/constantes.service';
 
 
 @Component({
@@ -45,12 +46,15 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     // definición de arreglos
     tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
     zonasSanitarias$: Observable<IZonaSanitaria[]>;
+    circunferenciaKmTurno$: Observable<any>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     provincias$: Observable<any[]>;
     private localidades = new Subject();
     localidades$: Observable<any[]>;
     servicio;
+    circunferenciaMinima;
+    circunferenciaMaxima;
     private paisArgentina = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
@@ -113,7 +117,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         unidadesOrganizativas: [],
         ofertaPrestacional: { idSisa: Number, nombre: String },
         showMapa: false,
-        zonaSanitaria: null
+        zonaSanitaria: null,
+        circunferenciaKmTurno: null
     };
 
     public listadoUO = [];
@@ -154,11 +159,17 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private router: Router,
         private zonasSanitariasService: ZonaSanitariaService,
         public mapaCamasService: MapaCamasHTTP,
+        public constantesService: ConstantesService
     ) { }
 
     ngOnInit() {
         this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
         this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
+        this.circunferenciaKmTurno$ = this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' });
+        this.circunferenciaKmTurno$.subscribe((data) => {
+            this.circunferenciaMinima = data.find(m => m.nombre === 'minimo-km').key;
+            this.circunferenciaMaxima = data.find(m => m.nombre === 'maximo-km').key;
+        });
 
         this.mapaCamasService.snapshot('internacion', 'medica', moment().toDate()).subscribe((snapshot) => {
             this.camas = snapshot.filter(s => s.estado !== 'inactiva');
@@ -204,7 +215,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (org && org.id) {
             this.updateTitle('Editar organización');
             Object.assign(this.organizacionModel, org);
-            if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
+            if (this.organizacionModel?.direccion?.geoReferencia?.length === 2) {
+
                 this.lat = this.organizacionModel.direccion.geoReferencia[0];
                 this.lng = this.organizacionModel.direccion.geoReferencia[1];
             }
