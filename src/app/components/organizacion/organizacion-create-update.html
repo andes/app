@@ -68,11 +68,18 @@
                     <plex-text label="Código Postal" name="codigoPostal"
                                [(ngModel)]="organizacionModel.direccion.codigoPostal" placeholder="Ingrese CP...">
                     </plex-text>
+                    <plex-int label="Circunferencia en km para turnos" name="circunferenciaKmTurno"
+                              [min]="circunferenciaMinima" [max]="circunferenciaMaxima"
+                              [(ngModel)]="organizacionModel.circunferenciaKmTurno"
+                              [placeholder]="'Ingrese circunferencia desde ' + circunferenciaMinima + ' hasta ' + circunferenciaMaxima">
+                    </plex-int>
                 </div>
 
-                <ng-container *ngIf="organizacionModel?.direccion?.geoReferencia?.length">
-                    <georref-map class="map-container" [latLong]="organizacionModel.direccion.geoReferencia"></georref-map>
+                <ng-container *ngIf="organizacionModel.direccion?.geoReferencia?.length">
+                    <georref-map class="map-container"
+                                 [latLong]="organizacionModel.direccion.geoReferencia"></georref-map>
                 </ng-container>
+
             </plex-grid>
 
 
@@ -130,16 +137,17 @@
                 </plex-button>
             </plex-title>
 
-            <ng-container *ngIf="organizacionModel.edificio">
-                <plex-grid class="pb-4 align-items-end" type="auto" cols="4"
-                           *ngFor="let edificio of organizacionModel.edificio; let i=index">
+
+            <plex-grid class="pb-4 align-items-end" type="auto" cols="4"
+                       *ngFor="let edificio of organizacionModel.edificio; let i=index">
+                <ng-container *ngIf="organizacionModel.edificio">
                     <plex-text label="Descripción" name="descripcion2-{{i}}" [(ngModel)]="edificio.descripcion"
                                [required]="!noPoseeEdificio" [readonly]="!puedeEditarCompleto || noPoseeEdificio">
                     </plex-text>
                     <plex-text label="Detalle de Domicilio" name="valorDomicilio2-{{i}}"
                                [(ngModel)]="edificio.direccion.valor"
-                               placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...." [required]="!noPoseeEdificio"
-                               [readonly]="!puedeEditarCompleto || noPoseeEdificio">
+                               placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."
+                               [required]="!noPoseeEdificio" [readonly]="!puedeEditarCompleto || noPoseeEdificio">
                     </plex-text>
                     <plex-select name="localidad22-{{i}}" [(ngModel)]="edificio.direccion.ubicacion.localidad"
                                  [data]="localidades$ | async" label="Localidad" [required]="!noPoseeEdificio"
@@ -161,7 +169,8 @@
                         </plex-select>
                         <ng-container *ngIf="edificio.contacto.tipo && edificio.contacto.tipo.id">
                             <plex-text *ngIf="edificio.contacto.tipo.id !== 'celular'" label="Dato"
-                                       [(ngModel)]="edificio.contacto.valor" name="valor3-{{i}}" [required]="!noPoseeEdificio"
+                                       [(ngModel)]="edificio.contacto.valor" name="valor3-{{i}}"
+                                       [required]="!noPoseeEdificio"
                                        [readonly]="!puedeEditarCompleto || noPoseeEdificio">
                             </plex-text>
                             <plex-phone label="Número" *ngIf="edificio.contacto.tipo.id === 'celular'"
@@ -172,7 +181,8 @@
                         </ng-container>
                         <ng-container *ngIf="edificio.contacto.tipo && !edificio.contacto.tipo.id">
                             <plex-text *ngIf="edificio.contacto.tipo !== 'celular'" label="Dato"
-                                       [(ngModel)]="edificio.contacto.valor" name="valor3-{{i}}" [required]="!noPoseeEdificio"
+                                       [(ngModel)]="edificio.contacto.valor" name="valor3-{{i}}"
+                                       [required]="!noPoseeEdificio"
                                        [readonly]="!puedeEditarCompleto || noPoseeEdificio">
                             </plex-text>
                             <plex-phone label="Número" *ngIf="edificio.contacto.tipo === 'celular'"
@@ -182,8 +192,9 @@
                             </plex-phone>
                         </ng-container>
                     </ng-container>
-                </plex-grid>
-            </ng-container>
+                </ng-container>
+            </plex-grid>
+
 
 
             <!-- ZONA SANITARIA -->
@@ -191,7 +202,7 @@
                 <plex-title titulo="Zona Sanitaria" size="md"></plex-title>
                 <div class="pt-2">
                     <plex-select name="zonasSanitarias" labelField="nombre" [data]="zonas"
-                             [(ngModel)]="organizacionModel.zonaSanitaria" placeholder="Seleccione...">
+                                 [(ngModel)]="organizacionModel.zonaSanitaria" placeholder="Seleccione...">
                     </plex-select>
                 </div>
             </div>
@@ -202,18 +213,19 @@
             <div class="pb-4 align-items-end">
                 <plex-wrapper>
                     <plex-select class="pt-1" name="servicio" labelField="term" (getData)="loadListadoUO($event)"
-                                idField="conceptId" [(ngModel)]="servicio" placeholder="Seleccione...">
+                                 idField="conceptId" [(ngModel)]="servicio" placeholder="Seleccione...">
                     </plex-select>
                     <plex-button class="pr-1 float-right" icon="plus" type="primary" (click)="addU0()">
                     </plex-button>
                 </plex-wrapper>
                 <plex-list>
-                    <plex-item *ngFor="let unidadOrganizativa of organizacionModel.unidadesOrganizativas; let i = index">
-                        <plex-label><strong >Unidad {{i+1}}: </strong>{{ unidadOrganizativa?.term || '' }}
+                    <plex-item
+                               *ngFor="let unidadOrganizativa of organizacionModel.unidadesOrganizativas; let i = index">
+                        <plex-label><strong>Unidad {{i+1}}: </strong>{{ unidadOrganizativa?.term || '' }}
                         </plex-label>
                         <plex-button *ngIf="puedeEditarCompleto" icon="delete" type="danger"
-                                    (click)="deleteUO(unidadOrganizativa)"
-                                    [disabled]="checkUnidadOrganizativaCama(unidadOrganizativa)">
+                                     (click)="deleteUO(unidadOrganizativa)"
+                                     [disabled]="checkUnidadOrganizativaCama(unidadOrganizativa)">
                         </plex-button>
                     </plex-item>
                 </plex-list>
