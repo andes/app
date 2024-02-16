@@ -11,7 +11,6 @@ export class TurnosPrestacionesService {
 
     public listadoPrestaciones$: Observable<any[]>;
     public prestacionesOrdenada$: Observable<any[]>;
-    public prestacionesFiltrada$ = new BehaviorSubject<any[]>(null);
 
     public sortBy$ = new BehaviorSubject<string>('fecha'); // Seteo con fecha para que el primer orden sea por fecha
     public sortOrder$ = new BehaviorSubject<string>('asc');
@@ -23,14 +22,13 @@ export class TurnosPrestacionesService {
 
         this.listadoPrestaciones$ = this.filtros.pipe(
             switchMap(params => this.get(params)),
-            tap(data => data.forEach((item: any, index) => item.key = `${item._id}-${item.idPrestacion}-${index}`)),
-            cache()
+            tap(data => data.forEach((item: any, index) => item.key = `${item._id}-${item.idPrestacion}-${index}`))
         );
 
-        this.prestacionesOrdenada$ = combineLatest(
+        this.prestacionesOrdenada$ = combineLatest([
             this.listadoPrestaciones$,
             this.sortBy$,
-            this.sortOrder$
+            this.sortOrder$]
         ).pipe(
             map(([prestaciones, sortBy, sortOrder]) =>
                 this.sortPrestaciones(prestaciones, sortBy, sortOrder)
@@ -42,8 +40,6 @@ export class TurnosPrestacionesService {
         this.loading$.next(true);
         this.filtros.next(params);
         this.filtros.pipe(
-            tap(data => {
-            }),
             finalize(() => this.loading$.next(false))
         ).subscribe();
     }

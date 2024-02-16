@@ -1,10 +1,11 @@
 import { Auth } from '@andes/auth';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { AdjuntosService } from 'src/app/modules/rup/services/adjuntos.service';
 import { ObraSocialService } from 'src/app/services/obraSocial.service';
 import { environment } from 'src/environments/environment';
 import { TurnosPrestacionesService } from '../services/turnos-prestaciones.service';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'no-nominalizadas',
@@ -68,14 +69,16 @@ export class NoNominalizadasComponent implements OnInit, OnDestroy {
             estadoFacturacion: '',
             noNominalizada: true
         };
-
         this.showPrestacion = false;
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
-            tap(() => {
-                this.loader = false;
+            startWith([]),
+            map(prestaciones => {
+                setTimeout(() => this.loader = false, 0);
+                return prestaciones;
             }),
-            takeUntil(this.onDestroy$)
+            takeUntil(this.onDestroy$),
+            cache()
         );
 
         this.turnosPrestacionesService.loading$.pipe(

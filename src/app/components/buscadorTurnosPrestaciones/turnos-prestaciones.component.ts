@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { IFinanciador } from 'src/app/interfaces/IFinanciador';
@@ -12,6 +12,7 @@ import { ObraSocialService } from '../../services/obraSocial.service';
 import { ProfesionalService } from '../../services/profesional.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
+import { cache } from '@andes/shared';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -157,8 +158,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
 
         this.busqueda$ = this.turnosPrestacionesService.prestacionesOrdenada$.pipe(
-            tap(() => this.loader = false), // Ocultar el loader cuando los datos estén disponibles
-            takeUntil(this.onDestroy$)
+            map(prestaciones => {
+                this.loader = false;
+                return prestaciones;
+            }), // Ocultar el loader cuando los datos estén disponibles
+            takeUntil(this.onDestroy$),
+            cache()
         );
 
         this.turnosPrestacionesService.loading$.pipe(
@@ -246,11 +251,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     recuperarFacturacion() {
-
         this.facturacionAutomaticaService.get({}).subscribe(configuracion => {
             this.arrayPrestacion = configuracion;
         });
-
     }
 
     buscar(parametros) {
