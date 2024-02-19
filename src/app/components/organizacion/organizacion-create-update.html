@@ -68,7 +68,7 @@
                     <plex-text label="Código Postal" name="codigoPostal"
                                [(ngModel)]="organizacionModel.direccion.codigoPostal" placeholder="Ingrese CP...">
                     </plex-text>
-                    <plex-int label="Circunferencia en km para turnos" name="circunferenciaKmTurno"
+                    <plex-int label="Circunferencia en km para turnos (se tiene en cuenta la ubicación real del dispositivo móbil)" name="circunferenciaKmTurno"
                               [min]="circunferenciaMinima" [max]="circunferenciaMaxima"
                               [(ngModel)]="organizacionModel.circunferenciaKmTurno"
                               [placeholder]="'Ingrese circunferencia desde ' + circunferenciaMinima + ' hasta ' + circunferenciaMaxima">

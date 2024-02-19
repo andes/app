@@ -1,9 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { SnomedService } from '../../apps/mitos';
 import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
@@ -37,7 +37,7 @@ import { ConstantesService } from './../../services/constantes.service';
         }
     `]
 })
-export class OrganizacionCreateUpdateComponent implements OnInit {
+export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input() seleccion: IOrganizacion = null;
@@ -58,6 +58,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     private paisArgentina = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
+    private snomedSubscription: Subscription;
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -117,8 +118,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         unidadesOrganizativas: [],
         ofertaPrestacional: { idSisa: Number, nombre: String },
         showMapa: false,
-        zonaSanitaria: null,
-        circunferenciaKmTurno: null
+        zonaSanitaria: null
     };
 
     public listadoUO = [];
@@ -161,12 +161,15 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         public mapaCamasService: MapaCamasHTTP,
         public constantesService: ConstantesService
     ) { }
+    ngOnDestroy() {
+        this.snomedSubscription.unsubscribe();
+    }
 
     ngOnInit() {
         this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
         this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
         this.circunferenciaKmTurno$ = this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' });
-        this.circunferenciaKmTurno$.subscribe((data) => {
+        this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' }).subscribe((data) => {
             this.circunferenciaMinima = data.find(m => m.nombre === 'minimo-km').key;
             this.circunferenciaMaxima = data.find(m => m.nombre === 'maximo-km').key;
         });
@@ -231,7 +234,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
     }
     loadListadoUO(event) {
-        this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
+        if (this.snomedSubscription) {
+            this.snomedSubscription.unsubscribe();
+        }
+        this.snomedSubscription = this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
             this.organizacionModel.unidadesOrganizativas.forEach((uo) => {
                 result = result.filter(item => item.conceptId !== uo.conceptId);
             });
