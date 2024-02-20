@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 export interface Form {
     name: string;
     type: string;
+    description: string;
     snomedCode: string;
     config: {
         idEvento: string;

@@ -23,6 +23,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
 
     public ficha = [];
     public secciones;
+    public descripcion: string;
     constructor(
         private formsService: FormsService,
         private plex: Plex,
@@ -35,6 +36,7 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
     ngOnChanges() {
         this.formsService.search({ name: this.fichaName }).subscribe(res => {
             this.secciones = res[0].sections;
+            this.descripcion = res[0].description;
             if (this.fichaPaciente) {
                 this.fichaPaciente.secciones.map(sec => {
                     const buscado = this.secciones.findIndex(seccion => seccion.name === sec.name);
@@ -70,7 +72,15 @@ export class FichaEpidemiologicaGenericComponent implements OnInit, OnChanges {
                 const params = {};
                 const key = arg.key;
                 if (key) {
-                    const valor = seccion.fields[key];
+                    let valor = seccion.fields[key];
+                    if (key === 'identificadorpcr') {
+                        // Regex que empieza sin 0 y tiene solo números.
+                        const regexHisop = new RegExp('^[1-9]+[0-9]*$');
+                        if (valor && !regexHisop.test(valor)) {
+                            const numeroPcr = valor.replace(/[a-z]*0*/i, '');
+                            valor = numeroPcr;
+                        }
+                    }
                     if (valor !== undefined && valor !== null) {
                         params[key] = valor;
                         if (valor instanceof Date) {
