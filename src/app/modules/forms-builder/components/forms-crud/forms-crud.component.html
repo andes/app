@@ -1,6 +1,6 @@
 <plex-layout [main]="(fieldToConfig || formToConfig)? 9 : 12" resizable="true" min="2" max="4">
     <plex-layout-main>
-        <form #formulario="ngForm" class="form-scroll">
+        <form #formulario="ngForm">
             <plex-title main titulo="Alta de tipo de formulario">
                 <plex-button type="danger" [routerLink]="'/forms'">
                     Cancelar
@@ -9,22 +9,26 @@
                     Guardar
                 </plex-button>
                 <plex-button type="warning" (click)="setSnvs()" class="ml-2">SISA</plex-button>
+                <plex-button type="danger" (click)="form.active = false" class="ml-2">Inactivar</plex-button>
             </plex-title>
-
             <plex-wrapper>
                 <plex-text label="Nombre" [required]="true" [disabled]="desabilitado" name="nombre"
                            [(ngModel)]="form.name"></plex-text>
-                <plex-text label="Tipo/Clave" required name="tipo" [disabled]="desabilitado" [(ngModel)]="form.type"
-                           [readonly]="hasOcurrences">
+                <plex-text label="Clave/Identificador" required name="tipo" [disabled]="desabilitado"
+                           [(ngModel)]="form.type" [readonly]="hasOcurrences">
                 </plex-text>
+            </plex-wrapper>
+            <plex-wrapper>
+                <plex-text label="Descripción" name="descripcion" [(ngModel)]="form.description"
+                           placeholder="Texto a visualizar en el encabezado de la ficha"></plex-text>
                 <plex-bool label="¿Es snomed?" type="slide" name="isSnomed" [(ngModel)]="isFormSnomedizable"
                            (change)="changeSnomedBool()">
                 </plex-bool>
-                <plex-text class="pr-2" label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"
+                <plex-text class="col-4" label="Código Snomed" name="snomed" [(ngModel)]="form.snomedCode"
                            [disabled]="!isFormSnomedizable">
                 </plex-text>
-                <plex-bool label="Activo" type="slide" name="activo" [(ngModel)]="form.active"></plex-bool>
             </plex-wrapper>
+
 
             <plex-title size="sm" titulo="Campos">
                 <plex-dropdown #drop *ngIf="itemsDropdown?.length" class="pl-2 mr-1" [right]="true" type="info"

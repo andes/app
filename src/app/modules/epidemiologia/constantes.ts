@@ -17,3 +17,10 @@ export const SECCION_OPERACIONES = 'Operaciones';
 export const SECCION_MPI = 'Mpi';
 export const SECCION_CONTACTOS_ESTRECHOS = 'Contactos Estrechos';
 export const SECCION_USUARIO = 'Usuario';
+export const SECCION_LABORATORIO = 'Laboratorio';
+export const FIELD_PRC = 'identificadorpcr';
+
+export const TYPE_FICHA = Object.freeze({
+    UMA: 'UMA',
+    COVID: 'covid19'
+});

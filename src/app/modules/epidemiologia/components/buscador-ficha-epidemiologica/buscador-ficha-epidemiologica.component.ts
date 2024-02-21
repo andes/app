@@ -12,7 +12,7 @@ import { ZonaSanitariaService } from '../../../../services/zonaSanitaria.service
 import { FormsService } from '../../../forms-builder/services/form.service';
 import { FormsEpidemiologiaService } from '../../services/ficha-epidemiologia.service';
 import { ModalMotivoAccesoHudsService } from 'src/app/modules/rup/components/huds/modal-motivo-acceso-huds.service';
-import { SECCION_OPERACIONES } from '../../constantes';
+import { SECCION_CLASIFICACION, SECCION_LABORATORIO, SECCION_OPERACIONES, TYPE_FICHA, FIELD_PRC } from '../../constantes';
 import { PlexWrapperComponent } from '@andes/plex/src/lib/wrapper/wrapper.component';
 
 @Component({
@@ -210,9 +210,12 @@ export class BuscadorFichaEpidemiologicaComponent implements OnInit {
                 return this.formEpidemiologiaService.search(this.query).pipe(
                     map(resultados => {
                         resultados.forEach(ficha => {
-                            const seccionClasificacion = this.formEpidemiologiaService.getSeccionClasifacionFinal(ficha);
-                            const idPcr = seccionClasificacion?.fields.find(field => field.identificadorpcr)?.identificadorpcr;
-                            ficha.idPcr = idPcr ? idPcr : 'Sin PCR';
+                            const seccionPCR = ficha.type.name === TYPE_FICHA.COVID ? SECCION_CLASIFICACION : SECCION_LABORATORIO;
+                            let idPcr = 'Sin PCR';
+                            if (seccionPCR) {
+                                idPcr = this.formEpidemiologiaService.getField(ficha, seccionPCR, FIELD_PRC);
+                            }
+                            ficha.idPcr = idPcr;
                         });
                         this.listado = lastResults ? lastResults.concat(resultados) : resultados;
                         this.query.skip = this.listado.length;

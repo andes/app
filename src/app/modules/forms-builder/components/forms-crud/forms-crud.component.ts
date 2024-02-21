@@ -84,6 +84,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.isFormSnomedizable = (formulario.snomedCode) ? true : false;
                 this.form.name = formulario.name;
                 this.form.config = formulario.config;
+                this.form.description = formulario.description;
                 this.form.type = formulario.type;
                 this.form.snomedCode = formulario.snomedCode;
                 this.form.active = formulario.active;
@@ -212,6 +213,7 @@ export class AppFormsCrudComponent implements OnInit {
             const dataSaved: Form = {
                 active: this.form.active,
                 name: this.form.name,
+                description: this.form.description,
                 config: this.form.config,
                 type: this.form.type,
                 snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
@@ -225,6 +227,7 @@ export class AppFormsCrudComponent implements OnInit {
                 this.formToUpdate = {
                     ...this.formToUpdate,
                     active: this.form.active,
+                    description: this.form.description,
                     snomedCode: this.isFormSnomedizable ? this.form.snomedCode : null,
                     config: this.form.config,
                     sections: dataSaved.sections
