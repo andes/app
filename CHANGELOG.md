@@ -1,3 +1,16 @@
+# [5.133.0](https://github.com/andes/app/compare/v5.132.2...v5.133.0) (2024-02-21)
+
+
+### Bug Fixes
+
+* **IN:** visualizacion de registros en sidebar ([#2973](https://github.com/andes/app/issues/2973)) ([#2903](https://github.com/andes/app/issues/2903)) ([63c0e6f](https://github.com/andes/app/commit/63c0e6f065ee3c3f1f058effc4bd9487cd19a128))
+
+
+### Features
+
+* **IN:** request con boton de busqueda ([#2960](https://github.com/andes/app/issues/2960)) ([7454faf](https://github.com/andes/app/commit/7454faf40a6b6c447d841cdc6ca39ceb3008e06c))
+* **TYP:** listado de prestaciones no nominalizadas ([#2962](https://github.com/andes/app/issues/2962)) ([fe145ff](https://github.com/andes/app/commit/fe145ff4cb3c8272f2037d0ae817f30aacffa11d))
+
 ## [5.132.2](https://github.com/andes/app/compare/v5.132.1...v5.132.2) (2024-02-14)
 
 
