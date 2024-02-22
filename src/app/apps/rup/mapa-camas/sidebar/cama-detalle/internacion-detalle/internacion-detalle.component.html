@@ -20,8 +20,8 @@
                 <plex-button *ngIf="permisosMapaCamasService.ingreso" tooltip="Editar ingreso" tooltipPosition="left"
                              icon="pencil" type="warning" size="sm" (click)="toggleEdit()" class="mr-1">
                 </plex-button>
-                <ng-container *ngIf="anular$ | async">
-                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internacion"
+                <ng-container *ngIf="(anular$ | async)">
+                    <plex-button size="sm" icon="account-off" type="danger" tooltip="Deshacer Internación"
                                  tooltipPosition="left" (click)="onAnularInternacion()">
                     </plex-button>
                 </ng-container>
@@ -56,7 +56,8 @@
             </plex-button>
         </app-informe-egreso>
         <!-- Formulario de egreso -->
-        <app-egresar-paciente *ngIf="puedeEgresar()" (onSave)="editar ? toggleEdit() : notificarEgreso()">
+        <app-egresar-paciente *ngIf="puedeEgresar()" (onSave)="editar ? toggleEdit() : notificarEgreso()"
+                              [editar]="editar">
             <plex-button *ngIf="editar" tooltip="Volver" tooltipPosition="left" icon="arrow-left" type="danger"
                          size="sm" (click)="toggleEdit();" [autodisabled]="true">
             </plex-button>

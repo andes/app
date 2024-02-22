@@ -2,7 +2,7 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, Input } from '@angular/core';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
@@ -25,6 +25,7 @@ import { ListadoInternacionService } from '../../views/listado-internacion/lista
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
+    @Input() editar: boolean;
 
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
@@ -362,7 +363,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                             no generar datos inconsistentes entre internacion y movimientos */
                     throw new Error();
                 }
-                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso);
+                return this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso, true, this.editar);
             })
         );
     }
