@@ -12,7 +12,7 @@ export class NovedadesComponent implements OnInit {
     novedad;
     fecha: string;
     idNovedad: string;
-    filtroModulo = false;
+    idModulo: string;
 
     constructor(
         private commonNovedadesService: CommonNovedadesService,
@@ -23,7 +23,7 @@ export class NovedadesComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.idNovedad = params['novedad'];
-
+            this.idModulo = params['modulo'];
             this.initNovedades();
         });
     }
@@ -34,6 +34,7 @@ export class NovedadesComponent implements OnInit {
             this.commonNovedadesService.setNovedades(novedades);
             this.fecha ? this.filtrarPorFecha(this.fecha, novedades) : this.commonNovedadesService.setNovedades(novedades);
             this.idNovedad ? this.buscarNovedad(this.idNovedad, novedades) : this.commonNovedadesService.setNovedades(novedades);
+            this.idModulo ? this.filtrarPorModulo(this.idModulo, novedades) : this.commonNovedadesService.setNovedades(novedades);
         });
     }
 
@@ -45,6 +46,13 @@ export class NovedadesComponent implements OnInit {
                 this.novedad = null;
                 this.commonNovedadesService.setNovedades(filtro);
             }
+        }
+    }
+
+    filtrarPorModulo(idModulo: string, novedades: INovedad[]) {
+        if (novedades.length) {
+            const filtro = novedades.filter((novedad: INovedad) => novedad.modulo._id === idModulo);
+            this.commonNovedadesService.setNovedades(filtro);
         }
     }
 
