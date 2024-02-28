@@ -1,3 +1,10 @@
+## [5.133.1](https://github.com/andes/app/compare/v5.133.0...v5.133.1) (2024-02-28)
+
+
+### Bug Fixes
+
+* **EPI:** Agergar descripcion. Corrige error con  PCR ([#2979](https://github.com/andes/app/issues/2979)) ([7a0e3f9](https://github.com/andes/app/commit/7a0e3f9160e95c71e74dc89b3d86c61c3eb86aef))
+
 # [5.133.0](https://github.com/andes/app/compare/v5.132.2...v5.133.0) (2024-02-21)
 
 
