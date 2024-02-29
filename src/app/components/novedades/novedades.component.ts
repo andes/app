@@ -32,21 +32,9 @@ export class NovedadesComponent implements OnInit {
         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
             this.novedades = novedades;
             this.commonNovedadesService.setNovedades(novedades);
-            this.fecha ? this.filtrarPorFecha(this.fecha, novedades) : this.commonNovedadesService.setNovedades(novedades);
             this.idNovedad ? this.buscarNovedad(this.idNovedad, novedades) : this.commonNovedadesService.setNovedades(novedades);
             this.idModulo ? this.filtrarPorModulo(this.idModulo, novedades) : this.commonNovedadesService.setNovedades(novedades);
         });
-    }
-
-    filtrarPorFecha(fecha: string, novedades: INovedad[]) {
-        if (novedades.length) {
-            const filtro = novedades.filter((novedad: INovedad) => moment(novedad.fecha).format('YYYY-MM-DD') === fecha);
-
-            if (filtro.length === 1) { this.novedad = filtro[0]; } else {
-                this.novedad = null;
-                this.commonNovedadesService.setNovedades(filtro);
-            }
-        }
     }
 
     filtrarPorModulo(idModulo: string, novedades: INovedad[]) {
@@ -64,11 +52,6 @@ export class NovedadesComponent implements OnInit {
 
     setNovedad(novedad: INovedad) {
         this.novedad = novedad;
-    }
-
-    setFecha(fecha: Date | undefined) {
-        this.fecha = moment(fecha).format('YYYY-MM-DD');
-        this.filtrarPorFecha(this.fecha, this.novedades);
     }
 
     volver() {

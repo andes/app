@@ -1,7 +1,7 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <catalogo-novedades *ngIf="!novedad" (setNovedad)="setNovedad($event)" (volver)="volver()" [fecha]="fecha"
-                            [novedad]="novedad"></catalogo-novedades>
+        <catalogo-novedades *ngIf="!novedad" (setNovedad)="setNovedad($event)" (volver)="volver()" [novedad]="novedad"
+                            [modulo]="idModulo"></catalogo-novedades>
         <detalle-novedad *ngIf="novedad" [novedad]="novedad" (volver)="volver()"></detalle-novedad>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
