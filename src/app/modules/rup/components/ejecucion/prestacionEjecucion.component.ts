@@ -62,7 +62,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Defaults de Tabs panel derecho
     public activeIndex = 0;
-    public panelIndex = 0;
+    public panelIndex = 1;
 
     // Seteamos el concepto desde el cual se buscan sus frecuentes
     public conceptoFrecuente: any;
@@ -135,6 +135,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 this.activeIndex = datos.length + 2;
             } else if (this.activeIndex > datos.length) {
                 this.activeIndex = this.activeIndex - 1;
+            } else {
+                this.activeIndex = 1;
             }
             this.registrosHUDS = [...datos];
         });
@@ -231,8 +233,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                     }
                                 }
                             }
-
-
                         }
 
                     }, (err) => {
@@ -296,7 +296,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             });
             this.armarRelaciones(this.prestacion.ejecucion.registros);
         }
-
     }
 
     /**
@@ -310,7 +309,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.prestacion.ejecucion.registros.splice(posicionActual, 1);
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
     }
-
 
     /**
      * Mover un registro hacia una posición específica

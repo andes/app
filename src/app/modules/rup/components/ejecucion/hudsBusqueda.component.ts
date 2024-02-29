@@ -31,7 +31,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     searchTerm: string;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-    filtroActual: any = 'planes';
+    filtroActual: any = 'trastorno';
     filtroTrastornos = true;
 
     solicitudesMezcladas = [];

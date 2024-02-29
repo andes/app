@@ -30,7 +30,7 @@
                                  titlePosition="left" *ngIf="activeIndex === 0" size="sm">
                     </plex-button>
 
-                    <plex-tab label="Registros de esta consulta">
+                    <plex-tab label="Registros de esta consulta" *ngIf="paciente">
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
                             <div class="col float-right text-right panel-acciones">
@@ -255,8 +255,6 @@
                     <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                         </rup-resumenPaciente-estatico>
-                        <rup-seguimientoPaciente [paciente]="paciente">
-                        </rup-seguimientoPaciente>
                     </plex-tab>
                     <plex-tab *ngIf="prestacionesValidadas.length>0" label="Otros Registros">
                         <ng-container *ngFor="let prestacionValidada of prestacionesValidadas">
@@ -332,12 +330,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="col">
-                <plex-badge *ngIf="!flagValid" type="danger float-right">
-                    Hay registros incompletos
-                </plex-badge>
-            </div> -->
         </div>
     </plex-layout-main>
 
@@ -362,12 +354,6 @@
                         <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
                     </div>
                 </plex-tab>
-                <!-- Queda deshabilitado por ahora -->
-                <!-- <plex-tab label="Indicaciones" *ngIf="elementoRUP.tabs?.includes('plan-indicacion')"
-                          (click)="panelIndex = 2">
-                    <in-plan-indicaciones-resumen [prestacion]="prestacion" (edit)="onEditIndicacion($event)">
-                    </in-plan-indicaciones-resumen>
-                </plex-tab> -->
             </plex-tabs>
         </div>
     </plex-layout-sidebar>
