@@ -55,12 +55,15 @@ export class CamaDetalleComponent implements OnInit {
     public titleColor;
     public tabIndex = 0;
     public editar = false;
-    pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
+    public pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     public nota: String;
     public editNota = false;
     public fechaMin$: Observable<Date>;
     public hayMovimientosAt$: Observable<Boolean>;
     public relacionesPosibles;
+    public sinMovimientosAt$: Observable<Boolean>;
+    public registraEgreso = true; // inicia en true para ocultar el boton
+
     public turnero$: Observable<string>;
     public hayRespirador$: Observable<any>;
     public botonRegistroHabilitado$;
@@ -128,15 +131,9 @@ export class CamaDetalleComponent implements OnInit {
         this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
 
-        this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
-            map((historial) => {
-                const egreso = historial.some(mov => mov.extras?.egreso);
-                const tieneIDMov = historial.every(
-                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento
-                );
-                return historial.length > 0 && tieneIDMov && !egreso;
-            })
-        );
+        this.mapaCamasService.historialInternacion$.subscribe(historial => {
+            this.registraEgreso = historial.some(mov => mov.extras?.egreso);
+        });
 
         this.hayRespirador$ = this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {

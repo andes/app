@@ -8,6 +8,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable } from 'rxjs';
 import { ListadoInternacionService } from './listado-internacion.service';
+import { IngresoPacienteService } from '../../sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 import { map } from 'rxjs/operators';
 import { PermisosMapaCamasService } from '../../services/permisos-mapa-camas.service';
 import { Auth } from '@andes/auth';
@@ -131,6 +132,7 @@ export class InternacionListadoComponent implements OnInit {
         private prestacionService: PrestacionesService,
         public mapaCamasService: MapaCamasService,
         private listadoInternacionService: ListadoInternacionService,
+        private ingresoPacienteService: IngresoPacienteService,
         private permisosMapaCamasService: PermisosMapaCamasService,
         private route: ActivatedRoute,
         private router: Router,
@@ -210,6 +212,7 @@ export class InternacionListadoComponent implements OnInit {
             } else {
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
+                this.ingresoPacienteService.selectPaciente(prestacion.paciente.id);
                 this.verificarPrestacion(prestacion);
                 this.mapaCamasService.isLoading(true);
             }
@@ -222,6 +225,7 @@ export class InternacionListadoComponent implements OnInit {
     }
 
     volver() {
+        this.mapaCamasService.selectPrestacion(null);
         this.location.back();
     }
 

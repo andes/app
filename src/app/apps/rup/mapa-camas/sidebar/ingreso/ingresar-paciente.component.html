@@ -1,14 +1,14 @@
 <ng-container *ngIf="paciente">
     <form #formIngreso="ngForm">
         <plex-title justify titulo="INGRESO" size="md" class="title-fixed">
-            <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
+            <plex-button title="guardar" icon="check" type="success" size="sm" class="mr-1" [validateForm]="formIngreso"
                          (click)="guardar($event)" [disabled]="formIngreso.invalid || disableButton || inProgress">
             </plex-button>
             <ng-content></ng-content>
         </plex-title>
         <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
         <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
-            <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
+            <carpeta-paciente [pacienteSeleccionado]="paciente" [emitOnNew]="true"
                               (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
             </carpeta-paciente>
         </ng-container>
@@ -42,15 +42,14 @@
                            (change)="setFecha()" grow="full" (typing)="onType()">
             </plex-datetime>
             <ng-container *ngIf="camas$ | async as camas">
-                <plex-select *ngIf="!prestacion" [required]="true"
-                             [readonly]="capa !== 'estadistica' && capa !== 'estadistica-v2' && resumen?.id"
+                <plex-select *ngIf="!prestacion || !poseeMovimientos" [required]="true" [readonly]="selectReadonly()"
                              [(ngModel)]="cama" name="cama" [data]="camas" placeholder="Elija cama" label="Cama"
                              idField="id" labelField="nombre + '(' + sectorName + ')'" (change)="selectCama(cama)"
                              grow="full">
                 </plex-select>
             </ng-container>
-            <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama" name="cama"
-                       [(ngModel)]="cama.nombre">
+            <plex-text *ngIf="prestacion && cama && poseeMovimientos" [required]="true" [disabled]="true" label="Cama"
+                       name="cama" [(ngModel)]="cama.nombre">
             </plex-text>
 
             <ng-container *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">

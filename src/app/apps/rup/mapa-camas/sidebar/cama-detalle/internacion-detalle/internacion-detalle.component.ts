@@ -8,6 +8,8 @@ import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
 import { ListadoInternacionCapasService } from '../../../views/listado-internacion-capas/listado-internacion-capas.service';
 import { ListadoInternacionService } from '../../../views/listado-internacion/listado-internacion.service';
+import { IngresoPacienteService } from '../../ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+
 @Component({
     selector: 'app-internacion-detalle',
     templateUrl: './internacion-detalle.component.html',
@@ -27,8 +29,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public mostrar;
-    public hayMovimientosAt$: Observable<Boolean>;
-    public hayMovimientosSinEgresoAt$: Observable<Boolean>;
+    public registraEgreso$: Observable<Boolean>;
     public anular$: Observable<Boolean>;
     public capa;
     public inProgress;
@@ -36,7 +37,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
-        { key: 'egreso', label: 'EGRESO' }
+        { key: 'registros', label: 'REGISTROS' }
     ];
 
     constructor(
@@ -47,21 +48,48 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         private prestacionesService: PrestacionesService,
         private listadoInternacionCapasService: ListadoInternacionCapasService,
         private listadoInternacion: ListadoInternacionService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private ingresoPacienteService: IngresoPacienteService
     ) { }
 
     ngAfterViewChecked() {
         this.cdr.detectChanges();
     }
 
+    agregarItem(item: string) {
+        const tabItem = this.items.find(i => i.key === item);
+        if (!tabItem) {
+            this.items.push({ key: item, label: item.toUpperCase() });
+        }
+    }
+
+    quitarItem(item) {
+        const tabItem = this.items.findIndex(i => i.key === item);
+        if (tabItem !== -1) {
+            this.items.splice(tabItem, 1);
+        }
+    }
+
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.editar = false;
+        this.capa = this.mapaCamasService.capa;
+
+        this.mapaCamasService.historialInternacion$.subscribe(
+            historial => {
+                if (historial.length > 0 && (this.capa === 'estadistica' || this.capa !== 'estadistica-v2')) {
+                    this.agregarItem('egreso');
+                } else {
+                    this.quitarItem('egreso');
+                }
+            }
+        );
+
         this.mapaCamasService.prestacion$.subscribe(prestacion => {
             this.estadoPrestacion = '';
-            this.editar = false;
             this.existeIngreso = false;
             this.existeEgreso = false;
+
             if (prestacion) {
                 this.estadoPrestacion = prestacion.estadoActual.tipo;
                 if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
@@ -70,77 +98,50 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 if (prestacion.ejecucion.registros[1]?.valor?.InformeEgreso) {
                     this.existeEgreso = true;
                 }
+                this.ingresoPacienteService.selectPaciente(prestacion.paciente.id);
             }
             // loading se setea en true desde el listado de internacion
             this.mapaCamasService.isLoading(false);
         });
+
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
-            take(1),
             map(resumen => {
-                this.editar = false;
+                if (!!this.editar && this.editar !== resumen.paciente.id) {
+                    this.toggleEdit();
+                }
                 this.capa = this.mapaCamasService.capa;
                 if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
                     if (resumen?.ingreso) {
-                        this.items = [
-                            { key: 'ingreso-dinamico', label: 'INGRESO' },
-                            { key: 'movimientos', label: 'MOVIMIENTOS' },
-                            { key: 'registros', label: 'REGISTROS' }
-                        ];
+                        this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
                         this.mostrar = 'ingreso-dinamico';
-                    } else {
-                        // medico / enfermero
-                        this.items = [
-                            { key: 'ingreso', label: 'INGRESO' },
-                            { key: 'movimientos', label: 'MOVIMIENTOS' },
-                            { key: 'registros', label: 'REGISTROS' }
-                        ];
-                    }
-                } else {
-                    //  estadistica / estadistica-v2
-                    this.items = [
-                        { key: 'ingreso', label: 'INGRESO' },
-                        { key: 'movimientos', label: 'MOVIMIENTOS' },
-                        { key: 'registros', label: 'REGISTROS' },
-                        { key: 'egreso', label: 'EGRESO' }
-                    ];
+                    };
                 }
-                const registro = this.items.findIndex(item => item.key === 'registros');
-                if (registro !== -1 && !this.permisosMapaCamasService.registros) {
-                    this.items.splice(registro, 1);
+
+                if (!this.permisosMapaCamasService.registros) {
+                    this.quitarItem('registros');
                 }
             })
         ).subscribe();
 
-        this.hayMovimientosAt$ = this.mapaCamasService.historialInternacion$.pipe(
-            map(historial => {
-                const tieneIDMov = historial.every(
-                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento || mov.extras?.egreso
-                );
-                return historial.length > 0 && tieneIDMov;
-            })
-        );
-
-        this.hayMovimientosSinEgresoAt$ = this.mapaCamasService.historialInternacion$.pipe(
+        this.registraEgreso$ = this.mapaCamasService.historialInternacion$.pipe(
             map((historial) => {
                 // loading se setea en true desde el listado de internacion medico
                 this.mapaCamasService.isLoading(false);
                 const egresoOSala = historial.some(mov => mov.extras?.egreso || mov.idSalaComun);
-                const tieneIDMov = historial.every(
-                    mov => mov.extras?.ingreso || mov.extras?.idMovimiento
-                );
-                return historial.length > 0 && tieneIDMov && !egresoOSala;
+                return egresoOSala;
             })
         );
 
         this.anular$ = combineLatest([
             this.mapaCamasService.selectedPrestacion,
-            this.hayMovimientosAt$,
-            this.mapaCamasService.view
+            this.registraEgreso$,
+            this.mapaCamasService.view,
+            this.mapaCamasService.loading
         ]).pipe(
             auditTime(1),
-            map(([prestacion, movimientos, vista]) => {
-                return prestacion?.estadoActual?.tipo !== 'validada' && movimientos && vista === 'listado-internacion';
+            map(([prestacion, registraEgreso, vista, loading]) => {
+                return prestacion?.estadoActual?.tipo !== 'validada' && !registraEgreso && vista === 'listado-internacion' && !loading;
             })
         );
     }
@@ -172,8 +173,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     }
 
     toggleEdit() {
-        this.editar = !this.editar;
-        this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+        this.editar = !!this.editar ? null : this.ingresoPacienteService.selectedPaciente.getValue();
+        !!this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
     }
 
     // Notifica unicamente un nuevo egreso
@@ -228,4 +229,5 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeEditarEgreso() {
         return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && this.existeEgreso);
     }
+
 }

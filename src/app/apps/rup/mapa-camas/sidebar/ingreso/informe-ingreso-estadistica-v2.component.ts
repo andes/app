@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, take } from 'rxjs/operators';
 import { notNull, cache } from '@andes/shared';
 import { IResumenInternacion } from '../../services/resumen-internacion.http';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -35,6 +35,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
     ngOnInit() {
         this.resumenInternacion$ = this.mapaCamasService.resumenInternacion$;
         this.prestacion$ = this.resumenInternacion$.pipe(
+            take(1),
             switchMap(resumen => {
                 if (Object.keys(resumen.idPrestacion).length) { // verifico que idPrestacion no sea {}
                     if ((resumen.idPrestacion as any)?.id) {
@@ -69,7 +70,7 @@ export class InformeIngresoEstadisticaV2Component implements OnInit {
         this.toggleEditar.emit();
     }
 
-    onNuevoRegistrio() {
+    onNuevoRegistro() {
         this.accion.emit({ accion: 'nuevo-registro' });
     }
 }

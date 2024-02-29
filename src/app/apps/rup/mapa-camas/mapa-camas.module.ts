@@ -66,6 +66,7 @@ import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
 import { VistaCDAComponent } from './views/mapa-camas-capa/vista-cda/vista-cda.component';
+import { IngresoPacienteService } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 
 
 
@@ -123,7 +124,8 @@ export const INTERNACION_PROVIDERS = [
     ScrollDispatcher,
     IntegridadService,
     PermisosMapaCamasService,
-    PlanIndicacionesEventosServices
+    PlanIndicacionesEventosServices,
+    IngresoPacienteService
 ];
 
 @NgModule({
