@@ -404,10 +404,12 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                         map(paises => {
                             seccion.fields['nacionalidad'] = paises.find(pais => pais.nombre === 'Argentina');
                         })).subscribe();
-                    seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
-                    seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
-                    seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
-                    this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
+                    if (this.paciente.direccion) {
+                        seccion.fields['direccioncaso'] = this.paciente.direccion[0].valor ? this.paciente.direccion[0].valor : '';
+                        seccion.fields['lugarresidencia'] = this.paciente.direccion[0].ubicacion.provincia ? this.paciente.direccion[0].ubicacion.provincia : '';
+                        seccion.fields['localidadresidencia'] = this.paciente.direccion[0].ubicacion.localidad ? this.paciente.direccion[0].ubicacion.localidad : '';
+                        this.setLocalidades({ provincia: this.paciente.direccion[0].ubicacion.provincia?.id });
+                    }
                     break;
                 case 'antecedentesEpidemiologicos':
                     this.setEstadoVacunacion(seccion.fields);
@@ -596,35 +598,35 @@ export class FichaEpidemiologicaCrudComponent implements OnInit, OnChanges {
                     barrio: null,
                     pais: null
                 },
-                codigoPostal: this.paciente.direccion[0].codigoPostal,
+                codigoPostal: this.paciente.direccion ? this.paciente.direccion[0].codigoPostal : null,
                 ranking: 0,
-                geoReferencia: this.paciente.direccion[0].geoReferencia
+                geoReferencia: this.paciente.direccion ? this.paciente.direccion[0].geoReferencia : null
             };
-            this.paciente.direccion[0] = nuevaDireccion;
+            (this.paciente.direccion) ? this.paciente.direccion[0] = nuevaDireccion : this.paciente.direccion = [nuevaDireccion];
         }
         this.servicePaciente.save(this.paciente).subscribe();
     }
 
     addContactoMpi(key, value) {
-        const index = this.paciente.contacto.findIndex(item => item.tipo === key);
-        if (index >= 0) {
-            this.paciente.contacto[index].valor = value;
+        const nuevo = {
+            tipo: key,
+            valor: value,
+            ranking: 1,
+            activo: true,
+            ultimaActualizacion: new Date()
+        };
+        if (this.paciente.contacto) {
+            const index = this.paciente.contacto.findIndex(item => item.tipo === key);
+            (index >= 0) ? this.paciente.contacto[index].valor = value : this.paciente.contacto.push(nuevo);
         } else {
-            const nuevo = {
-                tipo: key,
-                valor: value,
-                ranking: 1,
-                activo: true,
-                ultimaActualizacion: new Date()
-            };
-            this.paciente.contacto.push(nuevo);
+            this.paciente.contacto = [nuevo];
         }
     }
 
     setDireccion(nuevaDir) {
-        return (nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0]?.valor ||
+        return (this.paciente.direccion ? nuevaDir.dirPaciente.direccioncaso !== this.paciente.direccion[0]?.valor ||
             nuevaDir.provinciaPaciente.lugarresidencia.id !== this.paciente.direccion[0].ubicacion?.provincia?.id ||
-            nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id);
+            nuevaDir.localidadPaciente.localidadresidencia.id !== this.paciente.direccion[0].ubicacion?.localidad?.id : true);
     }
 
     pacienteInternado(event) {

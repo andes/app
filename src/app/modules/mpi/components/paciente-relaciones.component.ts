@@ -1,8 +1,8 @@
-
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-relaciones',
@@ -39,23 +39,20 @@ export class PacienteRelacionesComponent {
     }
 
     // Evento que se emite cuando se selecciona un paciente (click en la listado)
-    @Output() selected: EventEmitter<IPacienteRelacion> = new EventEmitter<IPacienteRelacion>();
+    @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     constructor(
-        private plex: Plex
+        private plex: Plex,
+        private pacienteService: PacienteService
     ) { }
 
-    public seleccionar(paciente: IPacienteRelacion) {
-        (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
-    }
-
     public seleccionarRelacion(relacionado: IPacienteRelacion) {
-        const pacienteRelacion: any = relacionado;
         if (relacionado.referencia) {
-            pacienteRelacion.id = relacionado.referencia;
-            pacienteRelacion.sexo = relacionado.sexo ? relacionado.sexo : 'S/D';
-            pacienteRelacion.validado = 'S/D';
+            let pacienteRel: IPaciente;
+            this.pacienteService.getById(relacionado.referencia).subscribe(result => {
+                pacienteRel = result;
+                (pacienteRel) ? this.selected.emit(pacienteRel) : this.selected.emit(null);
+            });
         }
-        (relacionado.id) ? this.selected.emit(relacionado) : this.selected.emit(null);
     }
 }
