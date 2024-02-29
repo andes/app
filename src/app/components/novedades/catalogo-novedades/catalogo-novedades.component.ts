@@ -27,7 +27,6 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
     fechaDesde: Date = null;
     fechaHasta: Date = null;
 
-
     constructor(
         private novedadesService: NovedadesService,
         private modulosService: ModulosService,
@@ -47,7 +46,9 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
 
     private crearModulos() {
         this.modulosService.search({ activo: true }).subscribe(modulos => {
-            this.modulos = modulos.filter(m => { if (this.modulosService.controlarPermisos(m)) { return m; } })
+            this.modulos = modulos
+                .filter(m => { if (this.modulosService.controlarPermisos(m)) { return m; } })
+                .sort((a, b) => (a.nombre > b.nombre) ? 1 : ((b.nombre > a.nombre) ? -1 : 0));
             if (this.modulo) {
                 this.selectModulo = this.modulos.find(m => m._id === this.modulo);
             }
@@ -61,9 +62,9 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
         for (const novedad of this.novedades) {
             const idModulo = novedad.modulo?._id;
             const arregloNovedades = this.catalogo[idModulo] || [];
-            const mod = this.modulosCatalogo.find(modulo => modulo._id === novedad.modulo._id)
+            const mod = this.modulosCatalogo.find(modulo => modulo._id === novedad.modulo._id);
             if (!mod) {
-                this.modulosCatalogo.push(novedad.modulo)
+                this.modulosCatalogo.push(novedad.modulo);
             }
 
             arregloNovedades.push(novedad);
@@ -84,7 +85,7 @@ export class CatalogoNovedadesComponent implements OnInit, OnChanges {
                 novedades = novedades.filter((novedad: INovedad) => novedad.fecha <= this.fechaDesde);
             }
             if (this.selectModulo) {
-                novedades = novedades.filter((novedad: INovedad) => novedad.modulo._id == this.selectModulo._id);
+                novedades = novedades.filter((novedad: INovedad) => novedad.modulo._id === this.selectModulo._id);
             }
             this.novedades = novedades;
             this.crearCatalogo();
