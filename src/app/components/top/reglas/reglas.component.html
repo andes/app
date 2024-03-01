@@ -1,72 +1,97 @@
 <plex-layout [main]="6">
     <plex-layout-main>
-        <form #form="ngForm">
-            <plex-title titulo="Configuración de Reglas"></plex-title>
-            <div class="pt-2 pb-3">
-                <plex-label [tituloBold]="true" titulo="Organización Destino" subtitulo=""></plex-label>
-                <plex-label>{{ organizacionDestino.nombre }}</plex-label>
-                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" tmPrestaciones ambito="ambulatorio"
-                             label="Prestación Destino" placeholder="Tipos de Prestación Destino" [required]="true"
-                             (change)="cargarReglas()">
-                </plex-select>
+        <header>
+            <plex-title main titulo="Datos de destino" size="lg">
+                <plex-button type="danger" size="sm" (click)="volverASolicitudes()">Volver</plex-button>
+            </plex-title>
+        </header>
+
+        <plex-title titulo="Organización de destino" size="sm"></plex-title>
+
+        <plex-detail direction="row" size="md">
+            <plex-icon type="info" name="hospital" size="xl"></plex-icon>
+            <div title>{{organizacionDestino.nombre}}</div>
+        </plex-detail>
+        <!--  -->
+        <div class="mb-4">
+            <div class="mb-3">
+                <plex-title titulo="Prestación de destino" size="sm"></plex-title>
             </div>
-
-            <plex-title titulo="Organizaciones Origen" size="sm"></plex-title>
-            <div justify="start">
-                <plex-select class="w-100 mr-1" [(ngModel)]="organizacion" name="organizacion" tmOrganizaciones
-                             placeholder="Seleccione la organización origen">
-                </plex-select>
-                <plex-button icon="plus" type="info" tooltip="Agregar Organización" (click)="addOrganizacion()">
-                </plex-button>
-            </div>
-
-            <plex-list *ngFor="let regla of reglas; let i=index" size="sm" (click)="activarRegla(i)">
-                <plex-item>
-                    <plex-label *ngIf="regla.origen && regla.origen.organizacion">
-                        {{ regla.origen.organizacion.nombre }}
-                    </plex-label>
-                    <plex-button icon="delete" type="danger" size="sm" (click)="deleteOrganizacion(i)">
-                    </plex-button>
-                </plex-item>
-            </plex-list>
-        </form>
-    </plex-layout-main>
-
-    <plex-layout-sidebar *ngIf="reglaActiva > -1">
-        <plex-title titulo="Configuración de Prestaciones"></plex-title>
-        <div class="pt-2">
-            <plex-label [tituloBold]="true" titulo="Organización Origen" subtitulo=""></plex-label>
-            <plex-label>{{ regla.origen.organizacion.nombre }}</plex-label>
-        </div>
-
-        <plex-title titulo="Prestaciones Origen" size="sm"></plex-title>
-        <div justify="start">
-            <plex-select class="w-100 mr-1" [(ngModel)]="prestacionOrigen" name="prestacionOrigen" tmPrestaciones
-                         placeholder="prestacionOrigen">
+            <plex-select class="mt-2" [(ngModel)]="prestacionDestino" name="tipoPrestacion" tmPrestaciones
+                         ambito="ambulatorio" placeholder="Seleccione prestación de destino" [required]="true"
+                         (change)="cargarReglas()">
             </plex-select>
-            <plex-button icon="plus" type="info" tooltip="Agregar Prestación" (click)="addPrestacion()">
-            </plex-button>
         </div>
-
-        <plex-list *ngFor="let prestacion of regla.origen.prestaciones; let i=index" size="sm"
-                   (click)="activarPrestacion(i)">
-            <plex-item case="capitalize">
-                <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}"
-                            [tituloBold]="false" subtitulo=""></plex-label>
-                <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"
-                           label="Auditable" type="slide">
-                </plex-bool>
-                <plex-button icon="delete" type="danger" size="sm" (click)="deletePrestacion(i)">
+        <div class="mb-3">
+            <plex-title titulo="Organizaciones de origen" size="sm">
+                <plex-button type="success" label="Agregar organización" size="sm" (click)="addOrganizacion()">
+                </plex-button>
+            </plex-title>
+        </div>
+        <plex-select [(ngModel)]="organizacionOrigen" name="organizacionOrigen" tmOrganizaciones
+                     placeholder="Agregue organización de origen">
+        </plex-select>
+        <plex-list *ngFor="let regla of reglas; let i=index" [striped]="false" (click)="activarRegla(i)">
+            <plex-item [colors]="{ border: '#ffffff' , hover: '#ffffff' , background: '#ffffff' , name: 'media' }">
+                <plex-icon type="info" name="hospital" size="xl"></plex-icon>
+                <plex-label titulo="{{ regla.origen.organizacion.nombre }}"></plex-label>
+                <plex-button icon="close" type="danger" size="sm" (click)="deleteOrganizacion(i)">
                 </plex-button>
             </plex-item>
         </plex-list>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title main titulo="Datos de origen" size="lg">
+            <plex-button type="success" label="Guardar" size="sm" (click)="preSave()" [disabled]="disabledSave()"
+                         class="mr-1">
+            </plex-button>
+        </plex-title>
+
+        <plex-title titulo="Organización de origen" size="sm"></plex-title>
+
+        <div class="no-regla" *ngIf="!regla?.origen?.organizacion">
+            <plex-label type="success" direction="column" titulo="Seleccione organización de origen"
+                        subtitulo="La organización de origen es aquella que da inicio al pedido de traslado" size="xl">
+                <plex-icon name="hospital" size="lg"></plex-icon>
+            </plex-label>
+        </div>
+
+        <ng-container *ngIf="regla?.origen?.organizacion">
+            <div class="mb-3">
+                <plex-detail direction="row" size="md">
+                    <plex-icon type="info" name="hospital" size="xl"></plex-icon>
+                    <div title>{{regla.origen?.organizacion.nombre}}</div>
+                </plex-detail>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="regla?.origen?.organizacion">
+            <plex-title titulo="Prestaciones de Origen" size="sm">
+                <plex-button *ngIf="regla" type="success" label="Agregar prestación" size="sm"
+                             (click)="addPrestacion()">
+                </plex-button>
+            </plex-title>
+            <div *ngIf="regla">
+                <div class="mb-1">
+                    <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen" tmPrestaciones
+                                 placeholder="Agregue prestación de origen">
+                    </plex-select>
+                </div>
+
+                <plex-list *ngFor="let prestacion of regla.origen?.prestaciones; let i=index" [striped]="false"
+                           (click)="activarPrestacion(i)">
+                    <plex-item
+                               [colors]="{ border: '#002738' , hover: '#002738' , background: '#002738' , name: 'media' }">
+                        <plex-icon type="info" name="hospital" size="xl"></plex-icon>
+                        <plex-label titulo="{{ prestacion.prestacion?.term }}"></plex-label>
+                        <plex-button icon="close" type="danger" size="sm" (click)="deletePrestacion(i)">
+                        </plex-button>
+                        <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable"
+                                   name="prestacionAuditable{{i}}" label="Auditable" type="slide">
+                        </plex-bool>
+                    </plex-item>
+                </plex-list>
+            </div>
+        </ng-container>
     </plex-layout-sidebar>
 
-    <plex-layout-footer>
-        <plex-button position="left" type="danger" label="Volver" (click)="cancelar()">
-        </plex-button>
-        <plex-button position="right" type="success" label="Guardar" (click)="preSave()"
-                     [disabled]="form.invalid || !reglaCorrecta()">
-        </plex-button>
-    </plex-layout-footer>
 </plex-layout>

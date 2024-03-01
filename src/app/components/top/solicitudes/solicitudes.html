@@ -483,7 +483,7 @@
     </plex-layout-sidebar>
 </plex-layout>
 
-<reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
+<reglas class="content" *ngIf="showEditarReglas" (volver)="volverReglas($event)"></reglas>
 
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
             (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"
