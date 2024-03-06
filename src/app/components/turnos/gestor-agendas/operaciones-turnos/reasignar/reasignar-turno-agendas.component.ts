@@ -208,7 +208,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         });
     }
 
-    obtenerSupendido() {
+    obtenerSuspendido() {
         const params = {
             idPaciente: this.turnoSeleccionado?.paciente?.id,
             prestacionDestino: this.turnoSeleccionado?.tipoPrestacion?.conceptId,
@@ -220,11 +220,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this.prestacionesService.getSolicitudes(params).pipe(
             map((prestaciones) => {
                 const solicitud = prestaciones.find((prestacion) => {
-                    turnoSuspendido = prestacion.solicitud.historial.find(item => item.idTurnoSuspendido === this.turnoSeleccionado.id);
+                    turnoSuspendido = prestacion.solicitud?.historial?.find(item => item.idTurnoSuspendido === this.turnoSeleccionado.id);
 
                     return !!turnoSuspendido;
                 });
-
                 return { solicitud, turnoSuspendido };
             })
         );
@@ -238,7 +237,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
 
         if (this.turnoSeleccionado) {
-            this.obtenerSupendido().subscribe(({ solicitud, turnoSuspendido }) => {
+            this.obtenerSuspendido().subscribe(({ solicitud, turnoSuspendido }) => {
                 const tipoTurno = this.asignarTipoTurno(bloque, turnoSuspendido);
 
                 this.asignarTurno(bloque, turno, turnoSiguiente, indiceBloque, indiceTurno, solicitud, tipoTurno);
