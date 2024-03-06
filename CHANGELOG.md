@@ -1,3 +1,17 @@
+# [5.134.0](https://github.com/andes/app/compare/v5.133.1...v5.134.0) (2024-03-06)
+
+
+### Bug Fixes
+
+* **RUP:** Control en prestaciones NONominalizadas para el tab Registros de la consulta ([#2981](https://github.com/andes/app/issues/2981)) ([97ea7f4](https://github.com/andes/app/commit/97ea7f474a70ce825522c4891130512003fb602e))
+* **RUP-390:** Error en carga de componente ([#2971](https://github.com/andes/app/issues/2971)) ([7346796](https://github.com/andes/app/commit/734679630b8a5a69cd854e940747ab21d0fa6492))
+* **TYP:** separa cache de busqueda en cada submodulo ([#2977](https://github.com/andes/app/issues/2977)) ([9de4324](https://github.com/andes/app/commit/9de43245344e90d3cef2e8ec5951dd09f1ad9b83))
+
+
+### Features
+
+* **RUP-365:** cambiar foco al iniciar prestacion ([#2918](https://github.com/andes/app/issues/2918)) ([d898333](https://github.com/andes/app/commit/d898333fb3ac9000417bd1276a0d43a3cc851512))
+
 ## [5.133.1](https://github.com/andes/app/compare/v5.133.0...v5.133.1) (2024-02-28)
 
 
