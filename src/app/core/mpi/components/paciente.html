@@ -15,8 +15,8 @@
                              label="Ignorar y Guardar" type="warning" position="right" [validateForm]="formulario"
                              (click)="save($event,true)">
                 </plex-button>
-                <plex-button [disabled]="disableGuardar || (registroDNI && !validado)" label="Guardar" type="success" position="right"
-                             [validateForm]="formulario" (click)="save(false)">
+                <plex-button [disabled]="disableGuardar || (registroDNI && !validado)" label="Guardar" type="success"
+                             position="right" [validateForm]="formulario" (click)="save(false)">
                 </plex-button>
 
             </plex-title>
@@ -63,7 +63,8 @@
             <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
                 <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
                 <plex-list>
-                    <plex-item label="Seleccionar" *ngFor="let elem of pacientesSimilares" (click)="onSelect(elem.paciente)">
+                    <plex-item label="Seleccionar" *ngFor="let elem of pacientesSimilares"
+                               (click)="onSelect(elem.paciente)">
 
                         <img [ngClass]="{'img-fallecido' : elem.paciente.fechaFallecimiento}"
                              [mpiFotoPaciente]="elem.paciente" />
@@ -95,7 +96,6 @@
                             {{ elem.paciente.estado }}
                         </plex-badge>
 
-                        <plex-label titulo="Similitud: {{elem._score * 100}} %"></plex-label>
                     </plex-item>
                 </plex-list>
             </div>
