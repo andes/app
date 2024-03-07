@@ -8,6 +8,8 @@ import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../../services/turnos/sms.service';
 import * as moment from 'moment';
+import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'reasignar-turno-agendas',
@@ -66,7 +68,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     countBloques = [];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-                public serviceTurno: TurnoService, public smsService: SmsService) { }
+                public serviceTurno: TurnoService, public smsService: SmsService, public prestacionesService: PrestacionesService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -74,12 +76,14 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.agendasSimilares = [];
     }
 
-    seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-        const turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
-        const turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
-        const bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
-        this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
+    asignarTipoTurno(bloque, turnoSuspendido) {
         let tipoTurno;
+
+        if (turnoSuspendido && bloque.restantesGestion > 0) {
+            tipoTurno = 'gestion';
+
+            return tipoTurno;
+        }
 
         // Si la agenda es del día
         if (this.agendaSeleccionada.estado === 'publicada' && this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
@@ -100,6 +104,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             }
         }
 
+        return tipoTurno;
+    }
+
+    asignarTurno(bloque, turno, turnoSiguiente, indiceBloque, indiceTurno, solicitud, tipoTurno) {
         // Creo el Turno nuevo
         const datosTurnoNuevo = {
             idAgenda: this.agendaSeleccionada._id,
@@ -117,7 +125,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             }
         };
 
-        // ¿Ragnar Turno?
+        // ¿Reasignar Turno?
         this.plex.confirm('Del ' + moment(this.turnoSeleccionado.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]') + ' al ' + moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
 
             if (!confirmado) {
@@ -186,12 +194,55 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                         turno: turnoReasignado,
                         bloque: { id: this.datosAgenda.idBloque }
                     });
+
+                    if (solicitud && tipoTurno !== 'gestion') {
+                        const params = {
+                            op: 'asignarTurno',
+                            idTurno: turno.id
+                        };
+
+                        this.prestacionesService.patch(solicitud.id, params);
+                    }
                 });
-
-
             });
         });
+    }
 
+    obtenerSuspendido() {
+        const params = {
+            idPaciente: this.turnoSeleccionado?.paciente?.id,
+            prestacionDestino: this.turnoSeleccionado?.tipoPrestacion?.conceptId,
+            turnoSuspendido: this.turnoSeleccionado.id
+        };
+
+        let turnoSuspendido;
+
+        return this.prestacionesService.getSolicitudes(params).pipe(
+            map((prestaciones) => {
+                const solicitud = prestaciones.find((prestacion) => {
+                    turnoSuspendido = prestacion.solicitud?.historial?.find(item => item.idTurnoSuspendido === this.turnoSeleccionado.id);
+
+                    return !!turnoSuspendido;
+                });
+                return { solicitud, turnoSuspendido };
+            })
+        );
+    }
+
+    seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
+        const turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+        const turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
+        const bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
+
+        this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
+
+        if (this.turnoSeleccionado) {
+            this.obtenerSuspendido().subscribe(({ solicitud, turnoSuspendido }) => {
+                const tipoTurno = this.asignarTipoTurno(bloque, turnoSuspendido);
+
+                this.asignarTurno(bloque, turno, turnoSiguiente, indiceBloque, indiceTurno, solicitud, tipoTurno);
+            });
+        }
     }
 
     // esta funcion se repite en suspender turno

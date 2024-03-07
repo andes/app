@@ -93,7 +93,6 @@ export class DarTurnosComponent implements OnInit {
                     });
                 }
             }
-
         } else {
             this.tipoTurno = 'programado';
         }
