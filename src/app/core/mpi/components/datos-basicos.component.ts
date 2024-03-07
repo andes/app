@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, AfterViewChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
@@ -16,8 +16,7 @@ import { PacienteService } from '../services/paciente.service';
     styleUrls: ['datos-basicos.scss']
 })
 
-export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit {
-
+export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
@@ -117,14 +116,20 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit {
         });
     }
 
-    public checkFormExtranjero() {
-        this.formExtranjero.control.markAllAsTouched();
-        return this.formExtranjero.control.valid;
+    ngAfterViewChecked() {
+        this.formBasico.control.valueChanges.subscribe(() => {
+            this.changes.emit({ datosBasicos: true });
+        });
     }
 
     public checkForm() {
         this.formBasico.control.markAllAsTouched();
         return this.formBasico.control.valid;
+    }
+
+    public checkFormExtranjero() {
+        this.formExtranjero.control.markAllAsTouched();
+        return this.formExtranjero.control.valid;
     }
 
     checkDisableValidar() {
@@ -191,7 +196,6 @@ export class DatosBasicosComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
             this.busquedaTutor = resultado.pacientes;
         }
-
     }
 
     onSearchClear() {

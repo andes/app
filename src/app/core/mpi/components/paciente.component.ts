@@ -179,7 +179,6 @@ export class PacienteComponent implements OnInit {
         this.loadPaciente();
     }
 
-
     private loadPaciente() {
         if (this.paciente) {
             if (this.paciente.id) {
@@ -355,12 +354,14 @@ export class PacienteComponent implements OnInit {
             first(), filter((resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.sugeridos) {
-                    this.pacientesSimilares = this.escaneado || this.validado ? resultadoSave.sugeridos.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.sugeridos;
+                    this.pacientesSimilares = this.escaneado || resultadoSave.sugeridos;
                     // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                    this.visualizarIgnorarGuardar = resultadoSave.sugeridos[0]._score < 0.94;
-                    if (!this.visualizarIgnorarGuardar) {
+                    const existePaciente = this.pacientesSimilares[0]?._score > 0.94;
+
+                    if (existePaciente) {
                         this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
                     } else {
+                        this.visualizarIgnorarGuardar = true;
                         this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
                     this.setMainSize(null);
@@ -581,6 +582,10 @@ export class PacienteComponent implements OnInit {
         if (data.registroDNI !== undefined) {
             this.registroDNI = data.registroDNI;
         }
+        if (data.datosBasicos) {
+            this.visualizarIgnorarGuardar = false;
+            this.disableGuardar = false;
+        }
     }
     documentos(documentosNew) {
         this.pacienteModel.documentos = documentosNew;
@@ -742,6 +747,7 @@ export class PacienteComponent implements OnInit {
 
     deshacerValidacion() {
         this.showDeshacer = false;
+        this.validado = false;
         this.pacienteModel.foto = this.backUpDatos['foto'];
         this.pacienteModel.fotoId = this.backUpDatos['fotoId'];
         this.pacienteModel.identificadores = this.backUpDatos['identificadores'];
