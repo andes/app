@@ -306,7 +306,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                     this.prestacion = prestacion;
                     this.checkRomperValidacion();
                     const recorrerRegistros = registro => {
-                        if (!seCreoSolicitud && registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
+                        if (!seCreoSolicitud && registro.esSolicitud && registro.valor?.solicitudPrestacion?.organizacionDestino) {
                             seCreoSolicitud = true;
                             this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
                         }

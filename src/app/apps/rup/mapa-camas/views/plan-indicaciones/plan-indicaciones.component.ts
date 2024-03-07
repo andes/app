@@ -429,6 +429,7 @@ export class PlanIndicacionesComponent implements OnInit {
             registros
         );
         prestacion.trackId = this.idInternacion;
+        prestacion.inicio = 'plan-indicaciones';
         this.prestacionService.post(prestacion).pipe(
             switchMap(prestacion => this.prestacionService.validarPrestacion(prestacion))
         ).subscribe(() => {

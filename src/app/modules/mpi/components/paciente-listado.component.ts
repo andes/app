@@ -20,7 +20,7 @@ export class PacienteListadoComponent {
     public listado: IPaciente[]; // Contiene un listado plano de pacientes
     public listadoRelaciones: IPacienteRelacion[];
     public desplegado: Boolean = false;
-    public seletedOn: Boolean = true;
+    public selectedOn: Boolean = true;
     public coloresItems = {
         impar: {
             border: '#00000000',
@@ -99,10 +99,11 @@ export class PacienteListadoComponent {
     }
 
     public seleccionar(paciente: IPaciente) {
-        if (this.seletedOn) {
+        if (this.selectedOn) {
             (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+            this.selectedId = paciente.id;
         } else {
-            this.seletedOn = true;
+            this.selectedOn = true;
         }
     }
 
@@ -134,7 +135,7 @@ export class PacienteListadoComponent {
     }
 
     public verRelaciones(paciente: IPaciente) {
-        this.seletedOn = false;
+        this.selectedOn = false;
         if (this.desplegado) {
             this.desplegado = false;
             this.pacienteSeleccionado = null;
