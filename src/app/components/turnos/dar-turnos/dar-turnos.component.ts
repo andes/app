@@ -462,8 +462,9 @@ export class DarTurnosComponent implements OnInit {
                 });
 
                 // Por defecto no se muestran las agendas que no tienen turnos disponibles
+                let arreAgendas: IAgenda[] = [];
                 if (!this.mostrarNoDisponibles) {
-                    this.agendas = this.agendas.filter(agenda => {
+                    this.agendas.forEach(agenda => {
                         const delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
                         // por estados
                         const publicada = agenda.estado === 'publicada';
@@ -478,13 +479,26 @@ export class DarTurnosComponent implements OnInit {
                         // condiciones
                         const accesoDirectoConTurnosDisponibles = !esGestion && ((delDiaConTurnosDisponibles && this.hayTurnosEnHorario(agenda)) || programadaConTurnosDisponibles);
                         const gestionConTurnosDisponibles = esGestion && (autocitadoConTurnosDisponibles || llaveConTurnosDisponibles);
-
-                        const cond = (publicada && accesoDirectoConTurnosDisponibles) ||
+                        const agendaDinamicaOconLlave = (publicada && accesoDirectoConTurnosDisponibles) ||
                             ((publicada || disponible) && (gestionConTurnosDisponibles || dinamicaDelDiaConCupoDisponible || agenda.condicionLlave));
-                        return cond;
+                        // Verificamos si existen agendas con llaves y limpiamos el array (por si existen agendas programadas y del dia).
+                        if (agendaDinamicaOconLlave) {
+                            if (arreAgendas.length && (arreAgendas[arreAgendas.length - 1].turnosRestantesDelDia > 0 || arreAgendas[arreAgendas.length - 1].turnosRestantesProgramados > 0)) {
+                                arreAgendas = [];
+                            }
+                            arreAgendas.push(agenda);
+                            // Verificamos si existen agendas con turnos programados y limpiamos el array (por si existen agendas programadas)
+                        } else if (programadaConTurnosDisponibles) {
+                            if (arreAgendas.length && arreAgendas[arreAgendas.length - 1].turnosRestantesDelDia > 0) {
+                                arreAgendas = [];
+                            }
+                            arreAgendas.push(agenda);
+                        } else if (delDiaConTurnosDisponibles) {
+                            arreAgendas.push(agenda);
+                        }
                     });
+                    this.agendas = arreAgendas;
                 }
-
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
                     const inia = moment(a.horaInicio);
