@@ -76,7 +76,8 @@ export class RUPAccionesEnvioInformeComponent {
         if (this.entorno !== 'validacion') {
             return false;
         }
-        return !this.validada && !this.noNominalizada && !this.registro;
+
+        return this.validada && !this.noNominalizada && !this.registro;
     }
 
     get showEnviosBtn() {
