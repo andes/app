@@ -83,7 +83,7 @@ export class DarSobreturnoComponent implements OnChanges {
 
     setFinanciador(financiador) {
         financiador?.prepaga ?
-            this.modelo.prepaga = financiador.nombre
+            this.modelo.prepaga = financiador
             :
             this.modelo.obraSocial = financiador;
     }
