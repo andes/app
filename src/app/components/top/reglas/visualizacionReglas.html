@@ -26,10 +26,11 @@
         <plex-loader *ngIf="loader && filas" type="ball-pulse"></plex-loader>
         <div *ngIf="!loader && filas && !filas?.length" justify="center" class="mt-5">
             <plex-label titulo="No hay resultados para esta búsqueda" direction="column"
-                        subtitulo="Edite el filtro para realizar una nueva búsqueda" type="warning" size="xl" icon="close">
+                        subtitulo="Edite el filtro para realizar una nueva búsqueda" type="warning" size="xl"
+                        icon="close">
             </plex-label>
         </div>
-        <ng-container *ngIf="filas$ | async as filas">
+        <ng-container>
             <plex-list [striped]="true" height="calc(100vh - 247px)" (scrolled)="onScroll()">
                 <plex-item *ngIf="filas?.length ">
                     <b *ngIf="!esParametrizado">Organización origen</b>
