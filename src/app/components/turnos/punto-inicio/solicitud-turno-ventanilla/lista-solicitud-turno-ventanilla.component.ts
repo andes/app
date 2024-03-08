@@ -1,11 +1,9 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 // Interfaces
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { IPrestacion } from 'src/app/modules/rup/interfaces/prestacion.interface';
 
 @Component({
@@ -32,7 +30,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     public autorizado = false;
     public solicitudesPrestaciones = [];
-    showCargarSolicitud = false;
+    public showCargarSolicitud = false;
     public tipoSolicitud = 'entrada';
     public itemsDropdown = [
         {
