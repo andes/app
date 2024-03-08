@@ -8,7 +8,6 @@ import { IRegla } from '../../../interfaces/IRegla';
 import { Observable, of, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { ReglaService } from '../../../services/top/reglas.service';
-import { UnidadEdad } from 'src/app/utils/enumerados';
 
 @Component({
     selector: 'visualizacion-reglas',
@@ -127,7 +126,7 @@ export class VisualizacionReglasComponent implements OnInit {
             )
             .subscribe((reglas: [IRegla]) => {
                 this.loader = false;
-                this.arrayReglas.push(...reglas);
+                this.arrayReglas.push(...reglas.filter(regla => regla.destino?.prestacion?.id));
                 this.generarFilasObservable();
                 this.parametros.skip = this.arrayReglas.length;
                 if (!this.arrayReglas.length || this.arrayReglas.length < this.parametros.limit) {
