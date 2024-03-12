@@ -1,11 +1,11 @@
-<form #form="ngForm" *ngIf="!soloValores">
+<form #form="ngForm" (keydown.enter)="$event.preventDefault()" *ngIf="!soloValores">
     <plex-title size="sm" titulo="Principio Activo">
         <plex-button size="sm" icon="plus" type="info" (click)="addSustancia()" tooltip="Agregar nuevo item"
-                     tooltipPosition="left">
-        </plex-button>
+                     tooltipPosition="left"> </plex-button>
         <plex-button size="sm" icon="delete" type="danger" (click)="deleteSustancia()" tooltip="Eliminar último item"
                      tooltipPosition="left" [disabled]="registro.valor.sustancias.length === 1" class="ml-1">
         </plex-button>
+
     </plex-title>
 
     <!-- PRINCIPIO ACTIVO -->
@@ -14,7 +14,6 @@
             <plex-select [(ngModel)]="sustancia.ingrediente" name="ingrediente" [snomedExpression]="'<410942007'"
                          (change)="valuesChange()" label="Principio activo" [preload]="false" required span="2">
             </plex-select>
-
             <plex-text label="Valor Dosis" [(ngModel)]="sustancia.dosisValor" name="vDosis" required
                        (change)="valuesChange()">
             </plex-text>
@@ -38,18 +37,11 @@
     </plex-text>
 
     <!-- FRECUENCIA -->
-    <plex-title size="sm" titulo="Frecuencia">
-        <plex-button *ngIf="!registro.valor.unicaVez" size="sm" icon="plus" type="info" (click)="addFrecuencia()"
-                     tooltip="Agregar nuevo item" tooltipPosition="left">
-        </plex-button>
-        <plex-button size="sm" icon="delete" type="danger" (click)="deleteFrecuencia()" tooltip="Eliminar último item"
-                     tooltipPosition="left" [disabled]="registro.valor.frecuencias.length === 1" class="ml-1">
-        </plex-button>
-    </plex-title>
+    <plex-title size="sm" titulo="Frecuencia"></plex-title>
 
     <plex-wrapper *ngFor="let frecuencia of registro.valor.frecuencias; let i = index">
         <plex-select [(ngModel)]="frecuencia.frecuencia" name="frecuencia" [data]="frecuencias$ | async"
-                     (change)="valuesChange()" label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
+                     label="Frecuencia" [preload]="true" [required]="!registro.valor.unicaVez"
                      [disabled]="registro.valor.unicaVez">
         </plex-select>
 
@@ -57,8 +49,8 @@
 
         <plex-datetime type="time" name="hora" label="Horario" [(ngModel)]="frecuencia.horario"
                        [required]="frecuencia.frecuencia?.type === 'number' || registro.valor.unicaVez" [min]="fechaMin"
-                       [max]="fechaMax" (change)="valuesChange()"
-                       [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'" span="1">
+                       [max]="fechaMax" [disabled]="frecuencia.frecuencia && frecuencia.frecuencia.type !== 'number'"
+                       span="1">
         </plex-datetime>
 
         <plex-grid *ngIf="i === 0" cols="2">
