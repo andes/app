@@ -15,7 +15,7 @@
                               (selected)="onPacienteSelected($event)" [offset]="80">
             </paciente-listado>
             <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
-              <plex-icon name="account-alert"></plex-icon> No se encontró ningún paciente
+                <plex-icon name="account-alert"></plex-icon> No se encontró ningún paciente
             </div>
         </ng-container>
 
@@ -48,7 +48,7 @@
                                 <br>
                                 <b>Identidad de género: </b>
                                 <span>{{paciente.genero}}</span>
-                            </ng-container> 
+                            </ng-container>
                         </td>
                         <td class="align-middle">
                             <plex-button *ngIf="puedeDarTurno" type="info" tooltip="Dar Turno" icon="calendar-plus"
@@ -66,6 +66,12 @@
                                          icon="cellphone-android" (click)="verificarOperacion('activarApp', paciente)">
                             </plex-button>
                         </td>
+                        <td class="align-middle">
+                            <plex-button *ngIf="puedeDarTurno" type="info" tooltip="Demanda insatisfecha"
+                                         icon="account-cruz"
+                                         (click)="verificarOperacion('demandaInsatisfecha', paciente)">
+                            </plex-button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -79,7 +85,9 @@
             <estadisticas-agendas></estadisticas-agendas>
         </div>
         <div *ngIf="showMostrarEstadisticasPacientes && paciente" type="info">
-            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab">
+            <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab"
+                                    [demandaInsatisfecha]="showDemandaInsatisfecha"
+                                    (demandaCerrada)="demandaCerrada($event)">
             </estadisticas-pacientes>
         </div>
         <div *ngIf="showIngresarSolicitud && paciente" type="info">
@@ -99,4 +107,5 @@
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos && paciente" [pacienteSeleccionado]="paciente"
-            [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
+            [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)">
+</dar-turnos>

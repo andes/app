@@ -1,13 +1,11 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnChanges, SimpleChange } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { Auth } from '@andes/auth';
-import { LogPacienteService } from '../../../services/logPaciente.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { cache } from '@andes/shared';
-
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -17,20 +15,19 @@ import { cache } from '@andes/shared';
 
 export class EstadisticasPacientesComponent implements OnInit {
     pacienteFields = ['sexo', 'fechaNacimiento', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
-
     historial$: Observable<any[]>;
     turnosPaciente$: Observable<any[]>;
     ultimosTurnos$: Observable<any[]>;
-
+    permisos = [];
 
     @Input() showTab: Number = 0;
     @Input() paciente: IPaciente;
+    @Input() demandaInsatisfecha = false;
+    @Output() demandaCerrada = new EventEmitter<any>();
 
-    // Inicialización
     constructor(
         public serviceTurno: TurnoService,
         public auth: Auth,
-        public serviceLogPaciente: LogPacienteService,
     ) { }
 
     ngOnInit() {
@@ -48,6 +45,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.ultimosTurnos$ = this.historial$.pipe(
             map(turnos => turnos.filter(t => moment(t.horaInicio).isSameOrBefore(new Date(), 'day')))
         );
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     }
 
     private sortByHoraInicio(turnos: any[]) {
@@ -57,4 +55,9 @@ export class EstadisticasPacientesComponent implements OnInit {
             return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
         });
     }
+
+    cerrarDemandaInsatisfecha() {
+        this.demandaCerrada.emit();
+    }
+
 }

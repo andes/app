@@ -1,0 +1,23 @@
+<form #formDemanda="ngForm">
+    <plex-title titulo="Demanda Insatisfecha" size="md">
+    </plex-title>
+    <plex-select label="Tipo de prestación" [(ngModel)]="tipoPrestacion" [required]="true"
+                 (getData)="loadTipoPrestaciones($event)" name="tipoPrestacion"></plex-select>
+    <plex-select [(ngModel)]="profesional" (getData)="loadProfesionales($event)" name="profesionales"
+                 label="Profesional" placeholder="Buscar un profesional" labelField="apellido+' '+nombre"
+                 ngModelOptions="{standalone: true}">
+    </plex-select>
+    <plex-select label="Motivo" [(ngModel)]="motivo" [required]="true" [data]="motivos"
+                 name="tipoPrestacion"></plex-select>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            <plex-button type="danger" label="Cancelar" (click)="cerrar()"></plex-button>
+        </div>
+        <div class="col-6">
+            <plex-button class="float-right" type="success" label="Guardar" (click)="guardar()"
+                         [validateForm]="formDemanda">
+            </plex-button>
+        </div>
+    </div>
+</form>
