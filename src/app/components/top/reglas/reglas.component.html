@@ -54,7 +54,7 @@
                 <plex-label *ngIf="prestacion.prestacion?.term" titulo="{{ prestacion.prestacion.term }}"
                             [tituloBold]="false" subtitulo=""></plex-label>
                 <plex-bool ngProjectAs="plex-label" [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"
-                           label="Auditable">
+                           label="Auditable" type="slide">
                 </plex-bool>
                 <plex-button icon="delete" type="danger" size="sm" (click)="deletePrestacion(i)">
                 </plex-button>
