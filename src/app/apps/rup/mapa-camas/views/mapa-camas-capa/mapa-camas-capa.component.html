@@ -207,7 +207,7 @@
     </plex-layout-main>
 
 
-    <plex-layout-sidebar type="invert">
+    <plex-layout-sidebar type="invert" id="sidebarCamas">
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
 
         <app-ingreso-paciente-workflow *ngIf="accion === 'internarPaciente'" (cancel)="volverADetalle()"

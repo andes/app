@@ -56,7 +56,6 @@ export class CensosDiariosComponent implements OnInit {
     generarCensoDiario() {
         this.censoPacientes = [];
         this.censo = {};
-
         this.mapaCamasService.censoDiario(moment(this.fecha).toDate(), this.selectedUnidadOranizativa.conceptId)
             .subscribe((censoDiario: any) => {
                 this.censo = {
@@ -120,13 +119,11 @@ export class CensosDiariosComponent implements OnInit {
             tipo: 'diario',
             fecha: this.fecha,
             unidadOrganizativa: this.selectedUnidadOranizativa.conceptId
-        },
-        'CENSODIARIO'
-        ).subscribe(() => {
-            this.plex.toast('success', 'Descarga exitosa');
-        }, error => {
-            this.plex.toast('danger', 'Descarga fallida');
-        });
+        }, 'CENSODIARIO')
+            .subscribe({
+                next: () => this.plex.toast('success', 'Descarga exitosa'), // o con complete: () =>
+                error: () => this.plex.toast('danger', 'Descarga fallida')
+            });
     }
 
     descargarCenso() {
@@ -138,10 +135,9 @@ export class CensosDiariosComponent implements OnInit {
             unidad: this.selectedUnidadOranizativa
         };
         this.requestInProgress = true;
-        this.servicioDocumentos.descargarCenso(params, 'CENSODIARIO').subscribe(
-            () => this.requestInProgress = false,
-            () => this.requestInProgress = false
-        );
+        this.servicioDocumentos.descargarCenso(params, 'CENSODIARIO').subscribe({
+            next: () => this.requestInProgress = false
+        });
     }
 
     resetCenso() {

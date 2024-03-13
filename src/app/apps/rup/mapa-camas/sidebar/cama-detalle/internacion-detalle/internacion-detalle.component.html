@@ -26,6 +26,11 @@
                     </plex-button>
                 </ng-container>
             </app-informe-ingreso>
+            <app-periodos-censables [editable]="estadoPrestacion !== 'validada'"
+                                    *ngIf="capa === 'estadistica' || capa === 'estadistica-v2'">
+                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+                </plex-button>
+            </app-periodos-censables>
         </ng-container>
 
         <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
