@@ -96,7 +96,7 @@ export class ItemCamaComponent implements OnChanges {
         this.accionCama.emit(relacion);
     }
 
-    setDropDown(relacion, drop) {
+    setDropDown(relacion, drop, cama) {
         if (this.openedDropDown) {
             this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
         }
@@ -117,12 +117,21 @@ export class ItemCamaComponent implements OnChanges {
                     this.relacionesPosibles.accion = 'cambiarUO';
                     this.accionCama.emit(this.relacionesPosibles);
                 }
-            }, {
-                label: 'Egresar paciente',
-                handler: ($event: Event) => {
-                    $event.stopPropagation();
-                    this.relacionesPosibles.accion = 'egresarPaciente';
-                    this.accionCama.emit(this.relacionesPosibles);
+            });
+            const HOY = moment().toDate();
+            const desde = moment(this.mapaCamasService.fecha).subtract(1, 'd').toDate(); // probar con diferencia de 1 dia y no de 7
+            this.mapaCamasService.historial('internacion', desde, HOY, cama).subscribe(mov => {
+                if (!mov.length || !mov[mov.length - 1].extras?.egreso) {
+                    this.itemsDropdown.push(
+                        {
+                            label: 'Egresar paciente',
+                            handler: ($event: Event) => {
+                                $event.stopPropagation();
+                                this.relacionesPosibles.accion = 'egresarPaciente';
+                                this.accionCama.emit(this.relacionesPosibles);
+                            }
+                        }
+                    );
                 }
             });
         }

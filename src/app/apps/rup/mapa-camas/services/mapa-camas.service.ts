@@ -396,8 +396,7 @@ export class MapaCamasService {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     snap.paciente.documento.includes(paciente) || snap.paciente.numeroIdentificacion?.includes(paciente));
             } else {
-                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                    (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.alias?.toLowerCase().includes(paciente.toLowerCase()) ||
                     snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
                 );
@@ -550,8 +549,8 @@ export class MapaCamasService {
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama ? cama.idCama : selectedCama.idCama });
                 } else if (type === 'internacion') {
-                    if (view === 'mapa-camas' && selectedCama.idInternacion) {
-                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedCama.idInternacion);
+                    if (view === 'mapa-camas' && (selectedCama.idInternacion || cama?.idInternacion)) {
+                        return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, (selectedCama.idInternacion || cama.idInternacion));
                     } else if (view === 'listado-internacion') {
                         if (this.capa === 'estadistica' && selectedPrestacion.id) {
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
@@ -571,10 +570,10 @@ export class MapaCamasService {
         return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
-    save(data, fecha, esMovimiento = true): Observable<any> {
+    save(data, fecha, esMovimiento = true, editado = false): Observable<any> {
         if (!data.sala) {
             data.esMovimiento = esMovimiento;
-            return this.camasHTTP.updateEstados(this.ambito, this.capa, fecha, data);
+            return this.camasHTTP.updateEstados(this.ambito, this.capa, fecha, data, editado);
         } else {
             if (data.estado === 'ocupada') {
                 return this.salaComunService.ingresarPaciente(data, fecha);
