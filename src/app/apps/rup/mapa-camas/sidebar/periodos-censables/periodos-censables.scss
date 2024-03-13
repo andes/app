@@ -1,0 +1,26 @@
+.nuevo-periodo {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.periodo-controls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.fechas-periodo {
+    display: flex;
+    column-gap: 5px;
+}
+
+.lista-periodos {
+    margin-top: 10px;
+
+    .periodo {
+        display: flex;
+        padding: 5px;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

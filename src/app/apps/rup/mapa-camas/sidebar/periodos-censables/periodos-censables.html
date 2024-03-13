@@ -1,0 +1,37 @@
+<ng-container>
+    <plex-title size="sm" justify titulo="PERIODO CENSABLE">
+        <plex-button title="Agregar" icon="plus" type="success" size="sm" class="mr-1" (click)="toggleAgregar()"
+                     [disabled]="agregar">
+        </plex-button>
+    </plex-title>
+    <div *ngIf="agregar">
+        <div class="nuevo-periodo">
+            <div class="periodo-controls">
+                <plex-button icon="check" type="success" size="sm" class="mr-1" (click)="guardar()"></plex-button>
+                <plex-button icon="close" type="danger" size="sm" class="mr-1" (click)="cancelar()"></plex-button>
+            </div>
+            <div class="fechas-periodo">
+                <plex-datetime type="date" label="Inicio de censo" [(ngModel)]="nuevoPeriodo.desde" name="fechaDesde"
+                               grow="full">
+                </plex-datetime>
+                <plex-datetime type="date" label="Fin de censo" [(ngModel)]="nuevoPeriodo.hasta" name="fechaHasta"
+                               grow="full" [min]="nuevoPeriodo.desde">
+                </plex-datetime>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="periodos.length" class="lista-periodos">
+        <div *ngFor="let periodo of periodos" class="periodo">
+            <plex-label titulo="Desde" subtitulo="{{periodo.desde | fecha}}">
+            </plex-label>
+            <plex-label titulo="Hasta" subtitulo="{{periodo.hasta | fecha}}">
+            </plex-label>
+            <div>botones</div>
+        </div>
+    </div>
+    <div justify="center" *ngIf="!agregar && !periodos.length">
+        <plex-label class="mt-2" direction="column" size="md" icon="" titulo="No hay periodos censables cargados"
+                    icon="calendario-rango-bold">
+        </plex-label>
+    </div>
+</ng-container>
