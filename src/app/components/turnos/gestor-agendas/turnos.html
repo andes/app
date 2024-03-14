@@ -6,10 +6,11 @@
     <!-- Tiene turnos disponibles -->
     <ng-container *ngIf="!agenda.dinamica">
         <plex-title size="sm" titulo="Turnos disponibles para este bloque"></plex-title>
-        <plex-grid class="turnos_disponibles" responsive type="full" cols="4">
+        <plex-grid class="turnos_disponibles" responsive type="full">
             <plex-label align="center" size="md" titulo="Del día" subtitulo="{{countBloques[mostrar]?.delDia}}">
             </plex-label>
-            <plex-label align="center" size="md" titulo="Programados" subtitulo="{{countBloques[mostrar]?.programado}}">
+            <plex-label align="center" size="md" titulo="Programadoss"
+                        subtitulo="{{countBloques[mostrar]?.programado}}">
             </plex-label>
             <plex-label align="center" size="md" titulo="Con llave" subtitulo="{{countBloques[mostrar]?.gestion}}">
             </plex-label>
@@ -23,26 +24,25 @@
         <ng-container *ngIf="agenda | botonesTurnos:turnosSeleccionados as botones">
             <plex-button *ngIf="botones.sacarAsistencia && turnosSeleccionados?.length" class="mr-1"
                          ariaLabel="Registrar inasistencia" size="sm" type="warning" icon="account-remove"
-                         (click)="eventosTurno('sacarAsistencia')" tooltip="Registrar inasistencia"
+                         (click)="eventosTurno('sacarAsistencia', agenda)" tooltip="Registrar inasistencia"
                          tooltipPosition="top">
             </plex-button>
             <plex-button *ngIf="botones.darAsistencia && turnosSeleccionados?.length" class="mr-1"
                          ariaLabel="Registrar asistencia" size="sm" type="success" icon="account-check"
-                         (click)="eventosTurno('darAsistencia')" tooltip="Registrar asistencia" tooltipPosition="top">
+                         (click)="eventosTurno('darAsistencia', agenda)" tooltip="Registrar asistencia"
+                         tooltipPosition="top">
             </plex-button>
 
             <plex-help *ngIf="botones.nota && turnosSeleccionados?.length" class="mr-1" type="info"
                        icon="comment-outline" tooltip="Agregar nota" tooltipPosition="top">
                 <agregar-nota-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
-                                    (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
-                                    (cancelaAgregarNota)="cancelaAgregarNota($event)">
+                                    (saveAgregarNotaTurno)="saveAgregarNotaTurno()">
                 </agregar-nota-turno>
             </plex-help>
             <plex-help *ngIf="botones.suspender && turnosSeleccionados?.length" class="mr-1" btnType="danger"
                        icon="stop" tooltip="Suspender turnos" tooltipPosition="left">
                 <suspender-turno [agenda]="agenda" [accion]="'suspenderTurno'"
-                                 [turnosSeleccionados]="turnosSeleccionados"
-                                 (saveSuspenderTurno)="saveSuspenderTurno($event)"
+                                 [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno()"
                                  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)">
                 </suspender-turno>
             </plex-help>
@@ -152,7 +152,8 @@
                             Suspendido</plex-badge>
                         <plex-badge *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'" type="danger">
                             suspendido(sin paciente)</plex-badge>
-                        <plex-badge *ngIf="turno?.nota" size="sm" type="warning" tooltip="{{turno.nota}}">
+                        <plex-badge *ngIf="turno?.nota" size="sm" type="info" tooltip="{{turno.nota}}"
+                                    tooltipPosition="right">
                             <plex-icon name="message"></plex-icon>
                         </plex-badge>
                     </div>
@@ -204,7 +205,7 @@
                                  tooltipPosition="top"></plex-button>
                     <plex-button *ngIf="botones.quitarTurnoDoble && turnosSeleccionados[0]?.id === turno.id"
                                  ariaLabel="Quitar Turno doble" size="sm" type="default" icon="numeric-1-box-outline"
-                                 (click)="eventosTurno('quitarTurnoDoble')" tooltip="Quitar Turno doble"
+                                 (click)="eventosTurno('quitarTurnoDoble', agenda)" tooltip="Quitar Turno doble"
                                  tooltipPosition="top">
                     </plex-button>
                     <plex-help *ngIf="botones.editarCarpeta && turnosSeleccionados[0]?.id === turno.id" type="info"
@@ -226,9 +227,9 @@
                                class="help-liberar-turnos" type="info" btnType="danger" icon="account-off"
                                tooltip="Liberar turnos" tooltipPosition="left">
                         <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
-                                       (saveLiberarTurno)="saveLiberarTurno($event)"
+                                       [desdeAgenda]="true" (saveLiberarTurno)="saveLiberarTurno($event)"
                                        (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"
-                                       (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
+                                       (cancelaLiberarTurno)="cancelaLiberarTurno()">
                         </liberar-turno>
                     </plex-help>
                 </ng-container>
@@ -240,7 +241,7 @@
 <div *ngIf="agenda.sobreturnos && agenda.sobreturnos.length">
     <plex-title titulo="SOBRETURNOS" size="sm"></plex-title>
     <plex-table [columns]="columns" #table2="plTable" class="tabla-sobreturnos">
-        <plex-table-columns [selected]="colsVisibles"></plex-table-columns>
+        <plex-table-columns></plex-table-columns>
 
         <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index"
             [class.selected]="estaSeleccionado(agenda.sobreturnos[i])" [class.selectable]="selectable">
@@ -262,7 +263,8 @@
                         </plex-badge>
                         <plex-badge *ngIf="sobreturno && sobreturno.estado === 'suspendido'" type="danger">
                             Suspendido</plex-badge>
-                        <plex-badge *ngIf="sobreturno?.nota" size="sm" type="warning" tooltip="{{sobreturno.nota}}">
+                        <plex-badge *ngIf="sobreturno?.nota" size="sm" type="warning" tooltip="{{sobreturno.nota}}"
+                                    tooltipPosition="right">
                             <plex-icon name="message"></plex-icon>
                         </plex-badge>
                     </div>

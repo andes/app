@@ -1,7 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
@@ -14,7 +13,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
     @Input() agenda: IAgenda;
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
-    @Output() cancelaAgregarNota = new EventEmitter<boolean>();
 
     private _turnosSeleccionados: Array<any>;
 
@@ -70,8 +68,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 if (index === this.turnosSeleccionados.length - 1) {
                     this.saveAgregarNotaTurno.emit();
                 }
-            },
-            err => {
+            }, err => {
                 if (err) {
 
                 }
@@ -84,11 +81,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
         if (this.nota && this.nota.length > this.lenNota) {
             this.nota = this.nota.substring(0, this.lenNota);
         }
-    }
-
-    cancelar() {
-        this.cancelaAgregarNota.emit(true);
-        this.turnosSeleccionados = [];
     }
 
 }

@@ -12,6 +12,9 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
+import { ITurno } from '../../../interfaces/turnos/ITurno';
+import { switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -31,12 +34,12 @@ export class TurnosPacienteComponent implements OnInit {
     _turnos: any;
     _operacion: string;
     turnosPaciente: any;
-    turnosSeleccionados: any[] = [];
+    turnosSeleccionados: ITurno[] = [];
     public financiador = {
         codigoPuco: null,
         nombre: '',
         financiador: '',
-        prepaga:false
+        prepaga: false
     };
     public _paciente: IPaciente;
     @Input('operacion')
@@ -69,8 +72,14 @@ export class TurnosPacienteComponent implements OnInit {
     @Output() turnosPacienteChanged = new EventEmitter<any>();
 
     // Inicialización
-    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService, public documentosService: DocumentosService,
-                public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
+    constructor(
+        public servicioFA: FacturacionAutomaticaService,
+        public obraSocialService: ObraSocialService,
+        public documentosService: DocumentosService,
+        public serviceTurno: TurnoService,
+        public serviceAgenda: AgendaService,
+        public plex: Plex,
+        public auth: Auth) { }
 
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.check('turnos:turnos:registrarAsistencia');
@@ -109,7 +118,7 @@ export class TurnosPacienteComponent implements OnInit {
         }
 
         const obraSocialUpdate = this.financiador ? this._paciente.financiador.find(os => os.nombre === this.financiador.nombre) : null;
-        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate :this.financiador;
+        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : this.financiador;
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
         data['turno'] = turno;
@@ -121,28 +130,47 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     eventosTurno(turno, operacion) {
-        let mensaje = '';
-        let tipoToast = 'info';
         const patch: any = {
             op: operacion,
             turnos: [turno._id],
         };
-
-        // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
+        this.serviceTurno.get({ id: turno.id }).pipe(
+            switchMap(t => {
+                if (t.some(turno => turno.bloques.some(bloque => bloque.turnos.some(turno => turno.paciente && turno.estado !== 'suspendido')))) {
+                    return this.serviceAgenda.patch(turno.agenda_id, patch);
+                } else {
+                    return this.serviceAgenda.getById(turno.agenda_id).pipe(
+                        switchMap(ag => {
+                            if (ag.sobreturnos.some(st => turno.id === st.id && st.estado !== 'suspendido' && st.paciente)) {
+                                return this.serviceAgenda.patch(turno.agenda_id, patch);
+                            } else {
+                                if (ag.sobreturnos.some(st => st.estado === 'suspendido')) {
+                                    this.plex.info('warning', 'El sobreturno se encuentra suspendido', 'Acción denegada');
+                                } else if (t.some(turno => turno.bloques.some(bloque => bloque.turnos.some(turno => turno.estado === 'suspendido')))) {
+                                    this.plex.info('warning', 'El turno se encuentra suspendido', 'Acción denegada');
+                                } else {
+                                    const mensaje = turno.bloque_id ? 'El turno no presenta un paciente registrado' : 'El sobreturno no presenta un paciente registrado';
+                                    this.plex.info('warning', mensaje, 'Acción denegada');
+                                }
+                                return EMPTY;
+                            }
+                        })
+                    );
+                }
+            })
+        ).subscribe(() => {
             this.turnosPacienteChanged.emit();
+            let mensaje = '';
             switch (operacion) {
                 case 'darAsistencia':
-                    mensaje = 'Se registro la asistencia del paciente';
-                    tipoToast = 'success';
+                    mensaje = 'Se registró la asistencia del paciente';
                     break;
                 case 'sacarAsistencia':
-                    mensaje = 'Se registro la inasistencia del paciente';
-                    tipoToast = 'warning';
+                    mensaje = 'Se registró la inasistencia del paciente';
                     break;
             }
             if (mensaje !== '') {
-                this.plex.toast(tipoToast, mensaje);
+                this.plex.toast('success', mensaje);
             }
         });
     }

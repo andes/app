@@ -1,7 +1,10 @@
 <plex-title size="sm" titulo="LIBERAR TURNO">
-    <plex-button type="success" size="sm" icon="check" tooltip="Confirmar" tooltipPosition="left"
+    <plex-button type="success" size="sm" icon="check" tooltip="Guardar" tooltipPosition="left"
                  [disabled]="!motivoLiberacionSelect || (motivoLiberacionSelect.nombre === 'Otro' && !otroMotivoLiberacion)"
                  (click)="liberarTurno()">
+    </plex-button>
+    <plex-button *ngIf="!desdeAgenda" type="danger" size="sm" icon="arrow-left" tooltip="Volver" class="ml-1"
+                 (click)="cancelar()">
     </plex-button>
 </plex-title>
 
