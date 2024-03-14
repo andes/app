@@ -4,11 +4,12 @@
             <div class="list-group-item-text">
                 <div>
                     <plex-badge *ngIf="turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
-                                type="danger">NO ASISTIÓ</plex-badge>
+                        type="danger">NO ASISTIÓ</plex-badge>
                     <plex-badge *ngIf="turno.estado === 'fuera-agenda'" type="warning">
                         FUERA DE AGENDA</plex-badge>
-                    <plex-badge *ngIf="turno.asistencia !== 'noAsistio' && (turno.estado === 'asignado' || turno.estado === 'turnoDoble')"
-                                type="success">
+                    <plex-badge
+                        *ngIf="turno.asistencia !== 'noAsistio' && (turno.estado === 'asignado' || turno.estado === 'turnoDoble')"
+                        type="success">
                         ASIGNADO</plex-badge>
                     <plex-badge *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " type="danger">
                         {{turno.estado | uppercase}}</plex-badge>
@@ -31,7 +32,7 @@
 
     <div *ngIf="!historial.length" justify="center" class="pt-4">
         <plex-label class="flex-column" icon="magnify" type="info" size="xl" direction="column"
-                    [titulo]="'No hay resultados'" subtitulo="No se ha registrado ningún turno para el paciente">
+            [titulo]="'No hay resultados'" subtitulo="No se ha registrado ningún turno para el paciente">
         </plex-label>
     </div>
 </fieldset>

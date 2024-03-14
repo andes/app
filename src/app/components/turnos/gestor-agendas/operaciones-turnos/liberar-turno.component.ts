@@ -14,8 +14,8 @@ import { getMotivosLiberacion } from '../../../../utils/enumerados';
 export class LiberarTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turnosSeleccionados: ITurno;
-
+    @Input() turnosSeleccionados: ITurno[];
+    @Input() desdeAgenda = false;
     @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
     @Output() cancelaLiberarTurno = new EventEmitter<boolean>();
@@ -46,11 +46,10 @@ export class LiberarTurnoComponent implements OnInit {
             };
             const mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(() => {
                 this.plex.toast('success', mensaje, 'Liberar turno', 4000);
                 this.saveLiberarTurno.emit(this.agenda);
-            },
-            err => {
+            }, err => {
                 if (err) {
                     this.plex.info('warning', 'El turno ya tiene una prestación iniciada', 'Información');
                     this.cancelaLiberarTurno.emit(true);

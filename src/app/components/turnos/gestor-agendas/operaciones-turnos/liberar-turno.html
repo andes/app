@@ -1,23 +1,26 @@
 <plex-title size="sm" titulo="LIBERAR TURNO">
-    <plex-button type="success" size="sm" icon="check"
-                 [disabled]="!motivoLiberacionSelect || (motivoLiberacionSelect.nombre === 'Otro' && !otroMotivoLiberacion)"
-                 (click)="liberarTurno()">
+    <plex-button type="success" size="sm" icon="check" tooltip="Guardar" tooltipPosition="left"
+        [disabled]="!motivoLiberacionSelect || (motivoLiberacionSelect.nombre === 'Otro' && !otroMotivoLiberacion)"
+        (click)="liberarTurno()">
+    </plex-button>
+    <plex-button *ngIf="!desdeAgenda" type="danger" size="sm" icon="arrow-left" tooltip="Volver" class="ml-1"
+        (click)="cancelar()">
     </plex-button>
 </plex-title>
 
 <ng-container *ngIf="showLiberarTurno">
     <div class="d-flex justify-content-around mt-3">
         <plex-label titulo="Hora Turno" subtitulo="{{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs"
-                    direction="column" icon="reloj">
+            direction="column" icon="reloj">
         </plex-label>
         <plex-label *ngIf="turnosSeleccionados[0].paciente?.id" titulo="Paciente" direction="column" icon="paciente"
-                    subtitulo="{{turnosSeleccionados[0].paciente | nombre }}">
+            subtitulo="{{turnosSeleccionados[0].paciente | nombre }}">
         </plex-label>
     </div>
     <plex-select [(ngModel)]="motivoLiberacionSelect" name="motivoLiberacion" [data]="motivoLiberacion"
-                 label="Motivos de Liberación" placeholder="Seleccione un motivo de liberación" [required]="true">
+        label="Motivos de Liberación" placeholder="Seleccione un motivo de liberación" [required]="true">
     </plex-select>
     <plex-text *ngIf="motivoLiberacionSelect?.nombre === 'Otro'" label="Ingrese otro motivo" name="otroMotivoLiberacion"
-               [(ngModel)]="otroMotivoLiberacion" [required]="true">
+        [(ngModel)]="otroMotivoLiberacion" [required]="true">
     </plex-text>
 </ng-container>
