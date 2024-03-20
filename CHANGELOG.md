@@ -1,3 +1,10 @@
+## [5.135.1](https://github.com/andes/app/compare/v5.135.0...v5.135.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* **TOP:** cambia estilo de boton por error en plex ([#2989](https://github.com/andes/app/issues/2989)) ([74cc556](https://github.com/andes/app/commit/74cc556de9aa22558a1e115640fd37b979e2fb37))
+
 # [5.135.0](https://github.com/andes/app/compare/v5.134.0...v5.135.0) (2024-03-13)
 
 
