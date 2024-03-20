@@ -35,7 +35,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.permiteCarga = true;
         }
 
-        if (!this.parametroRegistro === undefined) {
+        if (this.parametroRegistro) {
             this.registro = this.parametroRegistro;
         }
         if (!this.registro.valor) {
