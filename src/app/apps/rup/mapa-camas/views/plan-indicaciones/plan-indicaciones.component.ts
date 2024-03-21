@@ -184,43 +184,46 @@ export class PlanIndicacionesComponent implements OnInit {
                     false
                 )
             })
-        ]).subscribe(([datos, eventos]) => {
-            this.indicaciones = datos;
-            if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
-                this.indicaciones = datos.filter(i => (i.estado.tipo === 'active' || i.estado.tipo === 'draft' || i.estado.tipo === 'cancelled' || i.estado.tipo === 'bypass') && this.isToday(i.estado.fecha));
-            } else {
-                this.indicaciones = datos.filter(i => {
-                    // se descartan borradores de dias anteriores
-                    return i.estado.tipo !== 'draft' || moment(i.estado.fecha).isSame(moment(this.fecha), 'day');
-                });
-            }
-            this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
-            this.indicaciones.forEach((indicacion) => {
-                const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
-                if (!seccion) {
-                    this.seccionesActivas.push(
-                        this.secciones.find(s => s.concepto.conceptId === indicacion.seccion.conceptId)
-                    );
+        ]).subscribe({
+            next: ([datos, eventos]) => {
+                this.indicaciones = datos;
+                if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
+                    this.indicaciones = datos.filter(i => (i.estado.tipo === 'active' || i.estado.tipo === 'draft' || i.estado.tipo === 'cancelled' || i.estado.tipo === 'bypass') && this.isToday(i.estado.fecha));
+                } else {
+                    this.indicaciones = datos.filter(i => {
+                        // se descartan borradores de dias anteriores
+                        return i.estado.tipo !== 'draft' || moment(i.estado.fecha).isSame(moment(this.fecha), 'day');
+                    });
                 }
-                this.showSecciones[indicacion.seccion.term] = true;
-                this.resetSelection();
-            });
+                this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
+                this.indicaciones.forEach((indicacion) => {
+                    const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
+                    if (!seccion) {
+                        this.seccionesActivas.push(
+                            this.secciones.find(s => s.concepto.conceptId === indicacion.seccion.conceptId)
+                        );
+                    }
+                    this.showSecciones[indicacion.seccion.term] = true;
+                    this.resetSelection();
+                });
 
-            const eventosMap = {};
-            // filtramos eventos por fecha y hora segun tablero
-            const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
-            const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion - 1);
-            eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
-            eventos.forEach(evento => {
-                eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
-                const hora = moment(evento.fecha).hour();
-                eventosMap[evento.idIndicacion][hora] = evento;
-            });
+                const eventosMap = {};
+                // filtramos eventos por fecha y hora segun tablero
+                const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
+                const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion - 1);
+                eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
+                eventos.forEach(evento => {
+                    eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
+                    const hora = moment(evento.fecha).hour();
+                    eventosMap[evento.idIndicacion][hora] = evento;
+                });
 
-            this.eventos = eventosMap;
-            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
-            this.loading = false;
-        }, error => { this.loading = false; });
+                this.eventos = eventosMap;
+                this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
+                this.loading = false;
+            },
+            error: () => { this.loading = false; }
+        });
     }
 
 
@@ -441,6 +444,7 @@ export class PlanIndicacionesComponent implements OnInit {
             switchMap(prestacion => this.prestacionService.validarPrestacion(prestacion))
         ).subscribe(() => {
             this.actualizar();
+            setTimeout(() => { this.onDateChange({ value: this.fecha }); }, 500); // hackcito para actualizar la grilla
             this.plex.toast('success', 'Indicaciones validadas correctamente.');
         });
     }
