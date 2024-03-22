@@ -15,55 +15,55 @@
         </plex-title>
         <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'internacion'" responsive colsMd="3" colsLg="4"
                    type="full">
-            <plex-label icon="paciente" size="sm" case="capitalize" titulo="Nombre del paciente"
-                        subtitulo="{{ prestacion.paciente.nombre }} {{ prestacion.paciente.apellido }}">
+            <plex-label icon="paciente" size="md" case="capitalize" titulo="Nombre del paciente"
+                        subtitulo="{{ prestacion.paciente | nombre }}">
             </plex-label>
-            <plex-label icon="reloj" size="sm" case="capitalize" titulo="Fecha De Validación"
+            <plex-label icon="reloj" size="md" case="capitalize" titulo="Fecha De Validación"
                         subtitulo="{{ prestacion.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
             </plex-label>
-            <plex-label icon="hospital" size="sm" case="capitalize" titulo="Organización que Valida"
+            <plex-label icon="hospital" size="md" case="capitalize" titulo="Organización que Valida"
                         subtitulo="{{ prestacion.estadoActual.createdBy.organizacion.nombre}}">
             </plex-label>
         </plex-grid>
         <plex-grid *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'" responsive colsMd="3" colsLg="4"
                    type="full">
-            <plex-label icon="reloj" size="sm" case="capitalize" titulo="Fecha De Inicio Prestación"
+            <plex-label icon="reloj" size="md" case="capitalize" titulo="Fecha De Inicio Prestación"
                         subtitulo="{{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}">
             </plex-label>
-            <plex-label icon="reloj" size="sm" case="capitalize" titulo="Fecha De Validación"
+            <plex-label icon="reloj" size="md" case="capitalize" titulo="Fecha De Validación"
                         subtitulo="{{ prestacion.estadoActual.createdAt | date: 'EEE dd/MM/yyyy HH:mm' }}">
             </plex-label>
-            <plex-label icon="hospital" span="2" size="sm" case="capitalize" titulo="Organización que Valida"
+            <plex-label icon="hospital" span="2" size="md" case="capitalize" titulo="Organización que Valida"
                         subtitulo="{{ prestacion.estadoActual.createdBy.organizacion.nombre}}">
             </plex-label>
-            <plex-label icon="medico" size="sm" case="capitalize" titulo="Profesional que valida"
+            <plex-label icon="medico" size="md" case="capitalize" titulo="Profesional que valida"
                         subtitulo="{{ prestacion.estadoActual.createdBy | nombre }}"></plex-label>
         </plex-grid>
         <plex-grid *ngIf="mostrarMas" responsive colsMd="3" colsLg="4" type="full">
-            <plex-label icon="reloj" size="sm" case="capitalize"
+            <plex-label icon="reloj" size="md" case="capitalize"
                         *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000"
                         titulo="Fecha De Creación Solicitud"
                         subtitulo="{{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:mm' }}"></plex-label>
-            <plex-label *ngIf="prestacion.solicitud.profesionalOrigen" icon="medico" size="sm" case="capitalize"
+            <plex-label *ngIf="prestacion.solicitud.profesionalOrigen" icon="medico" size="md" case="capitalize"
                         titulo="Profesional solicitante"
                         subtitulo="{{ prestacion.solicitud.profesionalOrigen  | nombre }}"></plex-label>
-            <plex-label icon="medico" size="sm" case="capitalize" titulo="Profesional que inicia"
+            <plex-label icon="medico" size="md" case="capitalize" titulo="Profesional que inicia"
                         subtitulo="{{  prestacion.solicitud.profesional | nombre }}"></plex-label>
 
-            <plex-label *ngIf="prestacion.unidadOrganizativa" icon="hospital" span="2" size="sm" case="capitalize"
+            <plex-label *ngIf="prestacion.unidadOrganizativa" icon="hospital" span="2" size="md" case="capitalize"
                         titulo="Unidad Organizativa" subtitulo="{{ prestacion.unidadOrganizativa.fsn }}">
             </plex-label>
-            <plex-label *ngIf="prestacion.solicitud.organizacionOrigen" icon="hospital" span="2" size="sm"
+            <plex-label *ngIf="prestacion.solicitud.organizacionOrigen" icon="hospital" span="2" size="md"
                         case="capitalize" titulo="Organización origen"
                         subtitulo="{{ prestacion.solicitud.organizacionOrigen.nombre }}">
             </plex-label>
-            <plex-label icon="hospital" size="sm" case="capitalize" titulo="Organización Ejecutante"
+            <plex-label icon="hospital" size="md" case="capitalize" titulo="Organización Ejecutante"
                         subtitulo="{{ prestacion.solicitud.organizacion.nombre }}">
             </plex-label>
-            <plex-label icon="estetoscopio" size="sm" case="capitalize" titulo="Ámbito"
+            <plex-label icon="estetoscopio" size="md" case="capitalize" titulo="Ámbito"
                         subtitulo="{{ prestacion.solicitud.ambitoOrigen }}"></plex-label>
         </plex-grid>
-        <plex-button type="info" size="sm" [icon]="mostrarMas ? 'chevron-up' : 'chevron-down'" class="mt-2"
+        <plex-button type="info" size="md" [icon]="mostrarMas ? 'chevron-up' : 'chevron-down'" class="mt-2"
                      label="{{ mostrarMas ? 'Ocultar' : 'Mostrar más' }}" justify="center" (click)="mostrar()">
         </plex-button>
 

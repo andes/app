@@ -43,8 +43,6 @@
                               [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto) | async"></span>
                     </div>
 
-
-
                     <div class="columna-completa">
                         <b>Profesionales: </b><br>
                         <span>
@@ -68,7 +66,7 @@
                             <ng-container *ngIf="relacionAux">
                                 <rup class="columna-completa align"
                                      [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
-                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                     [paciente]="paciente" [registro]="relacionAux"
                                      [params]="elementosRUPService.elementoRegistro(relacionAux).params"
                                      [soloValores]="true">
                                 </rup>

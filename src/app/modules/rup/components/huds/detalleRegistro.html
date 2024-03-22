@@ -1,0 +1,149 @@
+<div class="solicitud-wrapper">
+    <plex-title titulo="Evoluciones" size="lg">
+        <div class="titulo-badges">
+            <div *ngIf="registro?.evoluciones && registro?.class === 'trastorno'">
+                <div class="d-inline-flex align-items-center justify-content-end">
+                    <plex-button class="mr-1" [disabled]="!(indice < registro.evoluciones.length - 1)" size="sm"
+                                 icon="chevron-left" type="info" (click)="cambiarEvolucion('+')">
+                    </plex-button>
+                    <b>{{ registro.evoluciones[indice]?.fechaCarga | fecha }}</b>
+                    <plex-button class="ml-1" [disabled]="!(indice > 0)" size="sm" icon="chevron-right" type="info"
+                                 (click)="cambiarEvolucion('-')">
+                    </plex-button>
+                </div>
+            </div>
+            <plex-badge *ngIf="registro.concepto.semanticTag" [type]="registro.class">
+                {{ registro.concepto.semanticTag }}
+            </plex-badge>
+            <plex-badge *ngIf="registro?.valor?.estado !== '' && !registro.evoluciones"
+                        [type]="getEstado(registro?.valor?.estado)">
+                {{ registro?.valor?.estado }}
+            </plex-badge>
+            <plex-badge *ngIf="registro?.valor?.estado !== '' && registro?.evoluciones[indice]?.estado !== ''"
+                        [type]="getEstado(registro?.evoluciones[indice].estado)">
+                {{ registro?.evoluciones[indice].estado }}</plex-badge>
+        </div>
+    </plex-title>
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="historial" class="icon-info" size="xl"></plex-icon>
+                <plex-badge type="xs" type="info">
+                    Registros
+                </plex-badge>
+            </div>
+            <div>
+                <plex-grid cols="3" class="mt-0">
+                    <div>
+                        <b>Profesionales</b>
+                        <p class="texto-detalle">{{ registro?.evoluciones[indice].profesional }}</p>
+                    </div>
+                    <div>
+                        <b>Inicio aproximado</b>
+                        <p class="texto-detalle">
+                            <ng-container *ngIf="registro.concepto.conceptId === '230690007'">
+                                <small *ngIf="registro?.evoluciones?.length">
+                                    {{ registro.evoluciones[indice]?.fechaInicio ?
+                                    (registro.evoluciones[indice]?.fechaInicio | fecha) : 'Sin registro de inicio' }}
+                                </small>
+                            </ng-container>
+                            <ng-container *ngIf="registro.concepto.conceptId !== '230690007'">
+                                <small *ngIf="registro?.evoluciones?.length">
+                                    {{ registro.evoluciones[indice]?.fechaInicio ?
+                                    (registro.evoluciones[indice]?.fechaInicio | fromNow) : 'Sin registro de inicio' }}
+                                </small>
+                                <small *ngIf="registro?.valor?.fechaInicio">
+                                    {{ registro.valor.fechaInicio ? (registro.valor.fechaInicio | fromNow) : 'Sin
+                                    registro de inicio' }}
+                                </small>
+                            </ng-container>
+                        </p>
+                    </div>
+                    <div *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">
+                        <b>Relacionado con</b>
+                        <div>
+                            <ng-container
+                                          *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
+                                <ng-container *ngIf="relacion?.concepto?.term">
+                                    <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
+                                        {{ relacion | relacionRUP }}
+                                    </plex-badge>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="relacionAux">
+                                <rup class="columna-completa align"
+                                     [elementoRUP]="elementosRUPService.elementoRegistro(relacionAux)"
+                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="relacionAux"
+                                     [params]="elementosRUPService.elementoRegistro(relacionAux).params"
+                                     [soloValores]="true">
+                                </rup>
+                            </ng-container>
+                        </div>
+                    </div>
+                </plex-grid>
+            </div>
+        </plex-grid>
+    </div>
+    <div class="mt-4">
+        <b>Evolución</b>
+        <article [innerHTML]="registro.evoluciones[indice].evolucion">
+        </article>
+    </div>
+</div>
+<hr>
+<div class="solicitud-wrapper">
+    <div class="mt-4">
+        <plex-grid cols="2">
+            <div class="registros">
+                <plex-icon name="documento-corazon" class="icon-info" size="xl"></plex-icon>
+                <div class="info-registro">
+                    <plex-badge size="sm" type="info">
+                        Datos de la prestación
+                    </plex-badge>
+                    <h6><b>{{prestacionRelacionada.solicitud.fecha | fecha}}</b></h6>
+                    <hr />
+                </div>
+                <div>
+                    <plex-button size="sm" icon="eye" type="info" (click)="getPrestacion()" tooltip="Ver prestación">
+                    </plex-button>
+                </div>
+            </div>
+            <div>
+                <plex-grid cols="3">
+                    <div>
+                        <b>Prestación</b>
+                        <p class="texto-detalle">{{prestacionRelacionada.solicitud.tipoPrestacion.term}}</p>
+                    </div>
+                    <div>
+                        <b>Profesional</b>
+                        <p class="texto-detalle">{{prestacionRelacionada.solicitud.profesional.apellido}},
+                            {{prestacionRelacionada.solicitud.profesional.nombre}}</p>
+                    </div>
+                    <div>
+                        <b>Ámbito</b>
+                        <p class="texto-detalle"> {{prestacionRelacionada.solicitud.ambitoOrigen}}</p>
+                    </div>
+                </plex-grid>
+            </div>
+        </plex-grid>
+    </div>
+    <div class="mt-3">
+        <plex-title titulo="Otros registros de la prestación" size="sm"></plex-title>
+        <plex-accordion>
+            <plex-panel class="lista-panel"
+                        *ngFor="let registro of prestacionRelacionada.ejecucion?.registros;let i =index">
+                <div plex-accordion-title case="capitalize">
+                    <div class="titulo">
+                        {{ registro.nombre }}
+                    </div>
+                    <plex-button disabled type="info" size="sm" icon="chevron-down" class="float-right">
+                    </plex-button>
+                </div>
+
+                <div>
+                    <detalle-registro-interno [registro]="registro"></detalle-registro-interno>
+                </div>
+            </plex-panel>
+        </plex-accordion>
+    </div>
+</div>
