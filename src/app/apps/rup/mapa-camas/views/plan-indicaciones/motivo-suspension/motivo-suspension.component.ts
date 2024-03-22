@@ -8,11 +8,9 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
 export class MotivoSuspensionComponent {
 
     @Input() motivo;
-    @Input() capa;
-    @Input() rechazar = null;
     @Output() cancelar = new EventEmitter<boolean>();
     @Output() guardar = new EventEmitter<any>();
-    public nuevoMotivo;
+    private nuevoMotivo;
     public editando = false;
 
     guardarSuspension() {
@@ -35,9 +33,5 @@ export class MotivoSuspensionComponent {
             this.nuevoMotivo = this.motivo;
         }
         this.editando = true;
-    }
-
-    puedeEditar() {
-        return this.motivo && !this.editando && this.capa === 'farmaceutica';
     }
 }

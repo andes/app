@@ -6,31 +6,46 @@ import { PlanIndicacionesServices } from '../../../services/plan-indicaciones.se
     selector: '[in-plan-indicacion-botonera]',
     templateUrl: './indicaciones-botonera.component.html'
 })
-export class PlanIndicacionesBotoneraComponent {
+export class PlanIndicacionesBotoneraComponent implements OnChanges {
     @Input() indicacion;
+
     @Output() refresh = new EventEmitter<any>();
     @Output() cancelIndicacion = new EventEmitter<any>();
 
     public items = [];
-    openedDropDown = null;
+
     constructor(
         private planIndicacionesServices: PlanIndicacionesServices,
         private plex: Plex
-    ) { }
+    ) {
 
-    setDropDown(indicacion, drop) {
-        if (this.openedDropDown) {
-            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
-        }
-        if (indicacion) {
-            this.items = [];
-            this.openedDropDown = drop;
-            this.items.push({
-                label: 'Bypass', handler: ($event) => {
-                    $event.stopPropagation();
-                    this.cambiarEstado('bypass');
-                }
-            });
+    }
+
+
+    ngOnChanges() {
+        switch (this.indicacion.estado.tipo) {
+            case 'on-hold':
+                this.items = [
+                    this.crearItem('Continuar', 'active'),
+                    this.crearItem('Suspender', 'cancelled')
+                ];
+                break;
+            case 'completed':
+                break;
+            case 'stopped':
+            case 'cancelled':
+                break;
+            case 'pending':
+                this.items = [
+                    this.crearItem('Continuar', 'active'),
+                    this.crearItem('Suspender', 'cancelled'),
+                ];
+                break;
+            case 'active':
+                this.items = [
+                    this.crearItem('Suspender', 'cancelled'),
+                ];
+                break;
         }
     }
 
@@ -54,7 +69,13 @@ export class PlanIndicacionesBotoneraComponent {
         }
     }
 
-    mostrarDropdown() {
-        return this.indicacion.estadoActual.tipo === 'active' && !this.indicacion.estadoActual.verificacion;
+    crearItem(label: string, state: string) {
+        return {
+            label,
+            handler: ($event) => {
+                $event.stopPropagation();
+                this.cambiarEstado(state);
+            }
+        };
     }
 }

@@ -12,6 +12,9 @@
                         <plex-button *ngIf="estado.historialMedico" class="mr-1" size="sm" label="HISTORIAL"
                             type="primary" (click)="verListadoInternacionMedico()">
                         </plex-button>
+                        <plex-button *ngIf="mapaCamasService.capa === 'interconsultores'" class="mr-1" size="sm"
+                            label="Listado de Medicamentos" type="primary" (click)="verListadoMedicamentos()">
+                        </plex-button>
                     </ng-container>
                     <plex-dropdown *ngIf="permisosMapaCamasService.censo" size="sm" label="VER CENSO" type="primary"
                         class="d-inline-block mr-1" [right]="true" [items]="itemsCensoDropdown">
@@ -25,14 +28,12 @@
             <app-filtros-camas></app-filtros-camas>
 
             <plex-title titulo="{{(!listadoRecursos)? 'LISTADO DE CAMAS' : 'LISTADO DE RECURSOS'}}" size="sm">
-                <plex-button
-                    *ngIf="permisosMapaCamasService.ingreso && mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
+                <plex-button *ngIf="permisosMapaCamasService.ingreso && mapaCamasService.capa !== 'interconsultores'"
                     class="mr-1" label="ADMITIR PACIENTE" type="success" size="sm"
                     (click)="selectCama(null, {'nombre' : 'Internar Paciente', 'accion' : 'internarPaciente'})">
                 </plex-button>
 
-                <plex-dropdown
-                    *ngIf="itemsCrearDropdown.length > 0 && mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
+                <plex-dropdown *ngIf="itemsCrearDropdown.length > 0 && mapaCamasService.capa !== 'interconsultores'"
                     size="sm" label="NUEVO RECURSO" type="info" class="d-inline-block mr-1" [right]="true"
                     [items]="itemsCrearDropdown">
                 </plex-dropdown>
@@ -173,8 +174,7 @@
                                     <plex-icon *ngIf="sortOrder === 'asc'" name="chevron-up"></plex-icon>
                                 </span>
                             </th>
-                            <th *ngIf="mapaCamasService.capa !== 'interconsultores' && mapaCamasService.capa !== 'farmaceutica'"
-                                class="col-acciones">ACCIONES
+                            <th *ngIf="mapaCamasService.capa !== 'interconsultores'" class="col-acciones">ACCIONES
                             </th>
                         </tr>
                     </thead>
@@ -217,15 +217,15 @@
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-desocupar-cama>
-        <app-cambiar-cama *ngIf="accion === 'cambiarCama' || accion === 'cambiarUO' " cambiarUO="{{ cambiarUO }}"
-            (onSave)="volverAResumen()">
+        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()"
+            (onCancel)="volverADetalle()">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"
                 [autodisabled]="true">
             </plex-button>
         </app-cambiar-cama>
         <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" (onSave)="volverAResumen()"
             (cancel)="volverAResumen()">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()"
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()"
                 [autodisabled]="true">
             </plex-button>
         </app-egresar-paciente>

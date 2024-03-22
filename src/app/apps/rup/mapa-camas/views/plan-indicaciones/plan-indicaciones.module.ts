@@ -49,5 +49,4 @@ import { AlergiasPacienteComponent } from './alergias-paciente.component';
     ]
 })
 export class MapaCamasPlanIndicacionModule {
-
 }

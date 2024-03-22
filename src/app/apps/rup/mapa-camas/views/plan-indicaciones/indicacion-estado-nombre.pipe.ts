@@ -12,8 +12,6 @@ export class IndicacionLabelPipe implements PipeTransform {
                 return 'suspendido';
             case 'draft':
                 return 'borrador';
-            case 'bypass':
-                return 'bypass';
             default:
                 return 'activo';
         }

@@ -71,7 +71,6 @@ export class PlanIndicacionesComponent implements OnInit {
             return indicaciones;
         })
     );
-    badgeFarmacia: String = 'Esperando control<br>de farmacia';
 
     get sidebarOpen() {
         return this.indicacionView || this.indicacionEventoSelected || this.nuevaIndicacion || this.suspenderIndicacion || this.showMotivoRechazo;
@@ -79,8 +78,8 @@ export class PlanIndicacionesComponent implements OnInit {
 
     public detener$ = this.botones$.pipe(
         map(indicaciones => {
-            const boton = indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending' || ind.estado.tipo === 'bypass');
-            return boton;
+            const b = indicaciones.length > 0 && indicaciones.every(ind => ind.estado.tipo === 'active' || ind.estado.tipo === 'on-hold' || ind.estado.tipo === 'pending');
+            return b;
         })
     );
 
@@ -184,46 +183,43 @@ export class PlanIndicacionesComponent implements OnInit {
                     false
                 )
             })
-        ]).subscribe({
-            next: ([datos, eventos]) => {
-                this.indicaciones = datos;
-                if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
-                    this.indicaciones = datos.filter(i => (i.estado.tipo === 'active' || i.estado.tipo === 'draft' || i.estado.tipo === 'cancelled' || i.estado.tipo === 'bypass') && this.isToday(i.estado.fecha));
-                } else {
-                    this.indicaciones = datos.filter(i => {
-                        // se descartan borradores de dias anteriores
-                        return i.estado.tipo !== 'draft' || moment(i.estado.fecha).isSame(moment(this.fecha), 'day');
-                    });
+        ]).subscribe(([datos, eventos]) => {
+            this.indicaciones = datos;
+            if (this.capa === 'enfermeria' || this.capa === 'interconsultores') {
+                this.indicaciones = datos.filter(i => (i.estado.tipo === 'active' || i.estado.tipo === 'draft' || i.estado.tipo === 'cancelled') && this.isToday(i.estado.fecha));
+            } else {
+                this.indicaciones = datos.filter(i => {
+                    // se descartan borradores de dias anteriores
+                    return i.estado.tipo !== 'draft' || moment(i.estado.fecha).isSame(moment(this.fecha), 'day');
+                });
+            }
+            this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
+            this.indicaciones.forEach((indicacion) => {
+                const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
+                if (!seccion) {
+                    this.seccionesActivas.push(
+                        this.secciones.find(s => s.concepto.conceptId === indicacion.seccion.conceptId)
+                    );
                 }
-                this.seccionesActivas = this.secciones.filter(s => s.capa === this.capa);
-                this.indicaciones.forEach((indicacion) => {
-                    const seccion = this.seccionesActivas.find(s => s.concepto.conceptId === indicacion.seccion.conceptId);
-                    if (!seccion) {
-                        this.seccionesActivas.push(
-                            this.secciones.find(s => s.concepto.conceptId === indicacion.seccion.conceptId)
-                        );
-                    }
-                    this.showSecciones[indicacion.seccion.term] = true;
-                    this.resetSelection();
-                });
+                this.showSecciones[indicacion.seccion.term] = true;
+                this.resetSelection();
+            });
 
-                const eventosMap = {};
-                // filtramos eventos por fecha y hora segun tablero
-                const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
-                const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion - 1);
-                eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
-                eventos.forEach(evento => {
-                    eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
-                    const hora = moment(evento.fecha).hour();
-                    eventosMap[evento.idIndicacion][hora] = evento;
-                });
+            const eventosMap = {};
+            // filtramos eventos por fecha y hora segun tablero
+            const comienzoTablero = moment(this.fecha).hours(this.horaOrganizacion);
+            const finTablero = moment(this.fecha).add(1, 'days').hours(this.horaOrganizacion - 1);
+            eventos = eventos.filter(ev => moment(ev.fecha).isBetween(comienzoTablero, finTablero, 'hour', '[]'));
+            eventos.forEach(evento => {
+                eventosMap[evento.idIndicacion] = eventosMap[evento.idIndicacion] || {};
+                const hora = moment(evento.fecha).hour();
+                eventosMap[evento.idIndicacion][hora] = evento;
+            });
 
-                this.eventos = eventosMap;
-                this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
-                this.loading = false;
-            },
-            error: () => { this.loading = false; }
-        });
+            this.eventos = eventosMap;
+            this.borradores = this.indicaciones.filter(i => i.estado.tipo === 'draft');
+            this.loading = false;
+        }, error => { this.loading = false; });
     }
 
 
@@ -273,13 +269,12 @@ export class PlanIndicacionesComponent implements OnInit {
         this.onSelectedChange();
     }
 
-    cambiarEstado(estado: string, continuarIndicacion?: boolean, observaciones?: string) {
+    cambiarEstado(estado: string, observaciones?: string) {
         const indicaciones = Object.keys(this.selectedIndicacion).filter(k => this.selectedIndicacion[k]).map(k => this.indicaciones.find(i => i.id === k));
         const estadoParams: any = {
             tipo: estado,
             fecha: new Date(),
-            observaciones,
-            continuarIndicacion
+            observaciones
         };
 
         const datos = indicaciones.map(ind => this.planIndicacionesServices.updateEstado(ind.id, estadoParams));
@@ -291,11 +286,6 @@ export class PlanIndicacionesComponent implements OnInit {
         });
     }
 
-    cancelIndicacion(event) {
-        this.selectedIndicacion = { [event.id]: event };
-        this.selectedBuffer.next(this.selectedIndicacion);
-        this.onDetenerClick();
-    }
 
     onDetenerClick() {
         this.indicacionView = false;
@@ -303,7 +293,7 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     onContinuarClick() {
-        this.cambiarEstado('active', true);
+        this.cambiarEstado('active');
     }
 
     onSelectIndicacion(indicacion) {
@@ -320,7 +310,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     onIndicacionesCellClick(indicacion, hora) {
         const fechaHora = moment(this.fecha).startOf('day').add(hora < this.horaOrganizacion ? hora + 24 : hora, 'h');
-        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado.tipo !== 'draft' && indicacion.estadoActual.verificacion?.estado !== 'rechazada' && (indicacion.estado.verificacion?.estado === 'aceptada' || indicacion.estado.tipo === 'bypass') && fechaHora.isSame(moment(), 'day')) {
+        if (this.permisosMapaCamasService.indicacionesEjecutar && indicacion.estado?.tipo !== 'draft' && indicacion.estado?.verificacion?.estado === 'aceptada' && fechaHora.isSame(moment(), 'day')) {
             this.onIndicaciones(indicacion, hora);
         }
     }
@@ -380,7 +370,7 @@ export class PlanIndicacionesComponent implements OnInit {
 
     guardarSuspension(event) {
         this.suspenderIndicacion = false;
-        this.cambiarEstado('cancelled', false, event);
+        this.cambiarEstado('cancelled', event);
     }
 
     cancelarSuspension() {
@@ -444,7 +434,6 @@ export class PlanIndicacionesComponent implements OnInit {
             switchMap(prestacion => this.prestacionService.validarPrestacion(prestacion))
         ).subscribe(() => {
             this.actualizar();
-            setTimeout(() => { this.onDateChange({ value: this.fecha }); }, 500); // hackcito para actualizar la grilla
             this.plex.toast('success', 'Indicaciones validadas correctamente.');
         });
     }
@@ -468,24 +457,6 @@ export class PlanIndicacionesComponent implements OnInit {
 
         }
 
-    }
-
-    eliminar(indicacion) {
-        const deletedBy = this.auth.usuario;
-        deletedBy['organizacion'] = this.auth.organizacion;
-        const data = {
-            deletedBy,
-            deletedAt: moment().toDate(),
-            indicacion
-        };
-        this.planIndicacionesServices.update(indicacion._id, data).subscribe(() => {
-            this.actualizar();
-            this.plex.toast('success', 'Indicación eliminada con éxito');
-        }, () => {
-            this.plex.toast('danger', 'Ha ocurrido un error al eliminar la indicación');
-        });
-        this.indicacionView = null;
-        this.nuevaIndicacion = false;
     }
 
     onEditIndicacion(indicacion) {
@@ -547,8 +518,7 @@ export class PlanIndicacionesComponent implements OnInit {
         const estadoVerificado = this.indicacionAVerificar.estado;
         estadoVerificado.verificacion = {
             estado: motivo ? 'rechazada' : 'aceptada',
-            motivoRechazo: motivo || null,
-            capa: this.capa
+            motivoRechazo: motivo || null
         };
         this.planIndicacionesServices.updateEstado(this.indicacionAVerificar.id, estadoVerificado).subscribe(() => {
             this.actualizar();
@@ -561,8 +531,8 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     puedeAceptarRechazar(indicacion = null) {
-        return (indicacion) ? (this.capa === 'farmaceutica') && indicacion.estado.tipo !== 'draft' && indicacion.estado.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
-            (this.capa === 'farmaceutica') && this.permisosMapaCamasService.indicacionesAceptarRechazar;
+        return (indicacion) ? (this.capa === 'interconsultores' || this.capa === 'medica') && indicacion.estado?.tipo !== 'draft' && indicacion.estado?.tipo !== 'cancelled' && this.permisosMapaCamasService.indicacionesAceptarRechazar :
+            (this.capa === 'interconsultores' || this.capa === 'medica') && this.permisosMapaCamasService.indicacionesAceptarRechazar;
     }
 
     puedeCrearIndicacion() {
@@ -570,30 +540,6 @@ export class PlanIndicacionesComponent implements OnInit {
     }
 
     puedeEjecutar() {
-        return this.permisosMapaCamasService.indicacionesEjecutar && this.capa !== 'interconsultores';
-    }
-
-    aceptado(indicacion) {
-        return indicacion.estadoActual.tipo !== 'cancelled' && indicacion.estadoActual.verificacion?.estado === 'aceptada' && indicacion.estado?.tipo !== 'pending' && indicacion.concepto.conceptId !== '430147008';
-    }
-
-    pendiente(indicacion) {
-        return !indicacion.estadoActual.verificacion && indicacion.estadoActual.tipo !== 'cancelled' && this.capa === 'enfermeria' && indicacion.estadoActual.tipo === 'bypass';
-    }
-
-    validada(indicacion) {
-        return this.capa === 'enfermeria' && !indicacion.estadoActual.verificacion && indicacion.estadoActual.tipo === 'active';
-    }
-
-    mostrarBotonera(indicacion) {
-        return this.isToday() && this.permisosMapaCamasService.indicacionesEjecutar && this.permisosMapaCamasService.indicacionesEjecutar && !this.indicacionEventoSelected && !this.nuevaIndicacion && !indicacion.readonly;
-    }
-
-    editarIndicacion() {
-        return this.puedeEditar && this.indicacionView.estado.tipo !== 'cancelled' && this.indicacionView.estado.tipo !== 'active';
-    }
-
-    puedeContinuarSuspender() {
-        return this.isToday() && this.permisosMapaCamasService.indicacionesEjecutar && !this.indicacionEventoSelected && !this.nuevaIndicacion && !this.indicacion?.readonly;
+        this.permisosMapaCamasService.indicacionesEjecutar && this.capa !== 'interconsultores';
     }
 }

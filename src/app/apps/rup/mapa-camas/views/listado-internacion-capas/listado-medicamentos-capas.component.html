@@ -1,0 +1,75 @@
+<plex-layout [main]="12">
+    <plex-layout-main>
+
+        <plex-title titulo="Medicamentos">
+            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+        </plex-title>
+        <plex-wrapper>
+            <plex-select name="organizacion" label="Organizacion" [(ngModel)]="organizacion" tmOrganizaciones
+                (change)="filtrar()">
+            </plex-select>
+            <plex-select name="sector" label="Sector" [(ngModel)]="sector" idField="nombre" labelField="nombre"
+                [data]="sectorList$ | async" (change)="filtrar()">
+            </plex-select>
+            <plex-text grow="1" [(ngModel)]="paciente" name="paciente" label="Buscar paciente" [debounce]="500"
+                (change)="filtrar()"></plex-text>
+
+
+        </plex-wrapper>
+
+        <div *ngIf="!(listaMedicamentos$ | async)?.length" class="mt-5">
+            <plex-label class="flex-column" icon="magnify" type="info" justify="center" size="xl" direction="column"
+                titulo="No hay resultados para esta búsqueda" subtitulo="Edite algún filtro para realizar una nueva">
+            </plex-label>
+        </div>
+
+        <plex-table *ngIf="(listaMedicamentos$ | async)?.length" [columns]="columns" #table="plTable" [offset]="102"
+            (scroll)="onScroll()" [headOpacity]="50">
+            <plex-table-columns>
+            </plex-table-columns>
+            <plex-title titulo="Listado de Medicamentos" size="sm">
+                <plex-button size="sm" type="info" label="Descargar" (click)="descargarListado()"></plex-button>
+                <plex-table-columns class="pr-2">
+                </plex-table-columns>
+            </plex-title>
+            <tr *ngFor="let internacion of (listaMedicamentos$| plSort:table | async)">
+
+                <ng-container *ngIf="internacion.valor?.nombre ">
+                    <td *plTableCol="'sector'">
+                        {{internacion.sector }}
+                    </td>
+                    <td *plTableCol="'organizacion'">
+                        {{internacion.organizacion.nombre }}
+                    </td>
+                    <td *plTableCol="'nombre'">
+                        {{internacion.paciente | nombre }}
+                    </td>
+                    <td *plTableCol="'documento'">
+                        {{ internacion.paciente | documento }}
+                    </td>
+                    <td *plTableCol="'diagnostico'">
+                        <span *ngIf="internacion.valor.nombre || internacion.valor.medicamento?.term">
+                            {{ internacion.valor.nombre || internacion.valor.medicamento?.term}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'estado'">
+                        <span *ngIf="internacion.estadoActual?.tipo">
+                            {{ internacion.estadoActual?.tipo==='active'? 'aceptada': internacion.estadoActual?.tipo}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'fecha'">
+                        <span *ngIf="internacion.fechaInicio">
+                            {{ internacion.fechaInicio | fecha}}
+                        </span>
+                    </td>
+                    <td *plTableCol="'fechaEstado'">
+                        <span *ngIf="internacion.estadoActual?.fecha">
+                            {{ internacion.estadoActual?.fecha | fecha}}
+                        </span>
+                    </td>
+                </ng-container>
+            </tr>
+        </plex-table>
+
+    </plex-layout-main>
+</plex-layout>

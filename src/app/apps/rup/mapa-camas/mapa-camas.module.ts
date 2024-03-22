@@ -67,6 +67,8 @@ import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { TimelineMapaCamasComponent } from './views/timelinea-mapa-camas/timeline-mapa-camas.component';
 import { VistaCDAComponent } from './views/mapa-camas-capa/vista-cda/vista-cda.component';
 import { IngresoPacienteService } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.service';
+import { ListadoMedicamentosCapasComponent } from './views/listado-internacion-capas/listado-medicamentos-capas.component';
+import { FiltrosMedicamentosComponent } from './views/listado-internacion-capas/filtros-listado/filtros-medicamentos.component';
 
 
 
@@ -109,8 +111,10 @@ export const INTERNACION_COMPONENTS = [
     IngresoDinamicoComponent,
     PrestarDevolverRecursoComponent,
     ListadoInternacionCapasComponent,
+    ListadoMedicamentosCapasComponent,
     ListadoInternacionUnificadoComponent,
     FiltrosListadoCapasComponent,
+    FiltrosMedicamentosComponent,
     RecursosListadoComponent,
     ResumenInternacionComponent,
     TimelineMapaCamasComponent
