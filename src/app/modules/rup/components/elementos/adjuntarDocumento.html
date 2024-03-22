@@ -68,7 +68,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-12" *ngIf="parametroRegistro">
+            <div class="col-12" *ngIf="parametroRegistro && fileToken">
                 <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
                     <a>
                         <div class="image hover">
