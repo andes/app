@@ -55,7 +55,6 @@
             </span>
         </td>
         <td *ngIf="columns.sexo">
-            <!-- Por ahora se muestra la identidad de genero -->
             <span>
                 {{cama.paciente ? cama.paciente.genero : 'Sin Paciente'}}
             </span>
@@ -94,7 +93,7 @@
                 M
             </plex-badge>
         </td>
-        <td *ngIf="capa !== 'interconsultores'" class="d-flex">
+        <td *ngIf="capa !== 'interconsultores' && capa !== 'farmaceutica'" class="d-flex">
             <ng-container *ngIf="permisosMapaCamasService.movimientos">
                 <ng-container *ngFor="let relacion of relacionesPosibles">
                     <ng-container *ngIf="relacionesYcondiciones(relacion)">

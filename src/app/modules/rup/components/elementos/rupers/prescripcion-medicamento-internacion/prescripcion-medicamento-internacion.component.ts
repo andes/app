@@ -66,23 +66,9 @@ export class SolicitudPrescripcionMedicamentoInternacionComponent extends RUPCom
         });
     }
 
-    addFrecuencia() {
-        this.registro.valor.frecuencias.push({
-            frecuencia: null,
-            horario: null,
-            cantidad: null
-        });
-    }
-
     deleteSustancia() {
         if (this.registro.valor.sustancias.length > 1) {
             this.registro.valor.sustancias.pop();
-        }
-    }
-
-    deleteFrecuencia() {
-        if (this.registro.valor.frecuencias.length > 1) {
-            this.registro.valor.frecuencias.pop();
         }
     }
 

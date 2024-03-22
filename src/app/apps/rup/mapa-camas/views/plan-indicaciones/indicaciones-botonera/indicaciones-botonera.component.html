@@ -1,2 +1,3 @@
-<plex-dropdown type="link" [items]="items" right="true" size="sm" icon="dots-vertical" *ngIf="items.length > 0">
+<plex-dropdown *ngIf="mostrarDropdown()" #drop type="link" [items]="items" [right]="true" size="sm" icon="dots-vertical"
+    (onOpen)="setDropDown(indicacion, drop)">
 </plex-dropdown>

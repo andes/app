@@ -12,6 +12,8 @@ export class IndicacionColorPipe implements PipeTransform {
                 return '#ff8d22';
             case 'cancelled':
                 return '#dd4b39';
+            case 'bypass':
+                return '#949391';
             default:
                 return '#00a8e0';
         }

@@ -1,19 +1,20 @@
 <form #formMotivoSuspension="ngForm">
     <plex-title titulo="Descripción del motivo" size="md">
-        <plex-button *ngIf="motivo && !editando" size="sm" icon="pencil" tooltip="Editar" type="warning"
-                     (click)="editar()">
-        </plex-button>
-        <plex-button size="sm" icon="{{ editando ? 'arrow-left' : 'close' }}"
-                     tooltip="{{ editando ? 'Volver' : 'Cerrar' }}" type="danger" (click)="cancelarSuspension()">
+        <plex-button *ngIf="puedeEditar()" size="sm" icon="pencil" tooltip="Editar" type="warning" class="mr-1"
+            (click)="editar()">
         </plex-button>
         <ng-container *ngIf="!motivo || editando">
             <plex-button [disabled]="nuevoMotivo?.length < 3" size="sm" icon="check" tooltip="Guardar" type="success"
-                         (click)="guardarSuspension()">
+                class="mr-1" (click)="guardarSuspension()">
             </plex-button>
         </ng-container>
+        <plex-button size="sm" icon="{{ editando ? 'arrow-left' : 'close' }}"
+            tooltip="{{ editando ? 'Volver' : 'Cerrar' }}" type="danger" (click)="cancelarSuspension()">
+        </plex-button>
     </plex-title>
     <plex-label *ngIf="motivo && !editando">{{ motivo }}</plex-label>
-    <plex-text *ngIf="!motivo || editando" label="Ingrese motivo de suspensión" [(ngModel)]="nuevoMotivo" name="motivo"
-               grow="full" [required]="true" multiline="true">
+    <plex-text *ngIf="!motivo || editando"
+        label="{{rechazar ? 'Ingrese motivo de rechazo':'Ingrese motivo de suspensión'}}" [(ngModel)]="nuevoMotivo"
+        name="motivo" grow="full" [required]="true" [multiline]="true">
     </plex-text>
 </form>

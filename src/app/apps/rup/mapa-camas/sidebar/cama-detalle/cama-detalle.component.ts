@@ -281,7 +281,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     relacionesYcondiciones(relacion, cama) {
-        return this.capa !== 'interconsultores' && relacion.accion !== 'desocuparCama' && ((relacion.accion !== 'internarPaciente' &&
+        return this.capa !== 'interconsultores' && this.capa !== 'farmaceutica' && relacion.accion !== 'desocuparCama' && ((relacion.accion !== 'internarPaciente' &&
             relacion.nombre !== 'Bloquear') || (relacion.accion === 'internarPaciente' && this.permisosMapaCamasService.ingreso) ||
             (relacion.nombre === 'Bloquear' && this.permisosMapaCamasService.bloqueo && !cama.sala));
     }
