@@ -470,6 +470,24 @@ export class PlanIndicacionesComponent implements OnInit {
 
     }
 
+    eliminar(indicacion) {
+        const deletedBy = this.auth.usuario;
+        deletedBy['organizacion'] = this.auth.organizacion;
+        const data = {
+            deletedBy,
+            deletedAt: moment().toDate(),
+            indicacion
+        };
+        this.planIndicacionesServices.update(indicacion._id, data).subscribe(() => {
+            this.actualizar();
+            this.plex.toast('success', 'Indicación eliminada con éxito');
+        }, () => {
+            this.plex.toast('danger', 'Ha ocurrido un error al eliminar la indicación');
+        });
+        this.indicacionView = null;
+        this.nuevaIndicacion = false;
+    }
+
     onEditIndicacion(indicacion) {
         if (indicacion) {
             this.planIndicacionesServices.update(indicacion._id, indicacion).subscribe(s => {
@@ -573,5 +591,9 @@ export class PlanIndicacionesComponent implements OnInit {
 
     editarIndicacion() {
         return this.puedeEditar && this.indicacionView.estado.tipo !== 'cancelled' && this.indicacionView.estado.tipo !== 'active';
+    }
+
+    puedeContinuarSuspender() {
+        return this.isToday() && this.permisosMapaCamasService.indicacionesEjecutar && !this.indicacionEventoSelected && !this.nuevaIndicacion && !this.indicacion?.readonly;
     }
 }

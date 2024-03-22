@@ -23,7 +23,7 @@ export class PlanIndicacionesServices extends ResourceBaseHttp {
             map(indicaciones => {
                 const fechaMax = moment(fecha).endOf('day').toDate();
                 return indicaciones
-                    .filter(ind => !ind.fechaBaja || moment(fechaMax).startOf('day').isBefore(ind.fechaBaja))
+                    .filter(ind => (!ind.fechaBaja || moment(fechaMax).startOf('day').isBefore(ind.fechaBaja)) && (!ind.deletedAt || !ind.deletedBy))
                     .map(ind => {
                         const estado = ind.estados.sort((a, b) => a.fecha.getTime() - b.fecha.getTime()).reduce(
                             (acc, current) => {
