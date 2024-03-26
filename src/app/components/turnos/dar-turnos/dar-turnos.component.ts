@@ -3,13 +3,13 @@ import { Plex } from '@andes/plex';
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { CarpetaPacienteService } from 'src/app/core/mpi/services/carpeta-paciente.service';
 import { ITipoPrestacion } from 'src/app/interfaces/ITipoPrestacion';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { ConceptosTurneablesService } from 'src/app/services/conceptos-turneables.service';
 import { ReglaService } from 'src/app/services/top/reglas.service';
-import { IPaciente, IPacienteBasico } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
@@ -22,7 +22,6 @@ import { environment } from './../../../../environments/environment';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
-import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 import { SmsService } from './../../../services/turnos/sms.service';
@@ -30,8 +29,6 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 import { EstadosAgenda } from './../enums';
 import { CalendarioDia } from './calendario-dia.class';
 import { EstadosDarTurnos } from './enums';
-
-
 
 @Component({
     selector: 'dar-turnos',
@@ -1233,60 +1230,36 @@ export class DarTurnosComponent implements OnInit {
             this.ponerEnListaEspera();
             return;
         }
-
         // se ingresó desde citas
         if (this._pacienteSeleccionado) {
             this.afterDarTurno.emit(this.paciente);
         } else {
             this.resetBuscarPaciente();
         }
-
         this.ponerEnListaEspera();
-        this.estadoT = 'noSeleccionada';
-        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
-        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
-        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(this.paciente);
-        this.plex.clearNavbar();
     }
 
     // Agrega paciente a lista de espera en caso de no asignarse el turno
     ponerEnListaEspera() {
-        let operacion: Observable<IListaEspera>;
-        const datosPrestacion = this.opciones.tipoPrestacion;
-        const datosProfesional = !this.opciones.profesional ? null : {
-            id: this.opciones.profesional.id,
-            nombre: this.opciones.profesional.nombre,
-            apellido: this.opciones.profesional.apellido
-        };
-        const datosPaciente: IPacienteBasico = !this.paciente ? null : {
-            id: this.paciente.id,
-            nombre: this.paciente.nombre,
-            alias: this.paciente.alias,
-            apellido: this.paciente.apellido,
-            documento: this.paciente.documento,
-            numeroIdentificacion: this.paciente.numeroIdentificacion,
-            fechaNacimiento: this.paciente.fechaNacimiento,
-            sexo: this.paciente.sexo,
-            genero: this.paciente.genero
-        };
-        const organizacion = !this.organizacion ? null : {
-            id: this.organizacion.id,
-            nombre: this.organizacion.nombre
-        };
-        const listaEspera: any = !this.opciones.tipoPrestacion && !this.opciones.profesional ? null : {
-            fecha: new Date(),
-            estado: 'Demanda Rechazada',
-            tipoPrestacion: datosPrestacion,
-            profesional: datosProfesional,
-            paciente: datosPaciente,
-            organizacion: organizacion
-        };
-        if (listaEspera !== null) {
-            operacion = this.serviceListaEspera.post(listaEspera);
-            operacion.subscribe();
-        }
-    }
+        this.plex.confirm('¿Pasa al Paciente a Lista de Espera?', 'LISTA DE ESPERA').then(ok => {
+            if (ok) {
+                if (this.opciones.tipoPrestacion) {
+                    const origen = 'citas';
+                    const estado = 'pendiente';
+                    const motivo = 'No hay turnos disponibles';
+                    if (this.serviceListaEspera.guardar(this.paciente, this.opciones.tipoPrestacion, estado, this.opciones.profesional, this.organizacion, motivo, origen)) {
+                        this.plex.toast('success', 'Paciente agregado a Lista de Espera');
+                        this.estadoT = 'noSeleccionada';
+                        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
+                        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
+                        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
+                        this.afterDarTurno.emit(this.paciente);
+                        this.plex.clearNavbar();
+                    }
+                }
+            };
+        });
+    };
 
     // resetea variables para la pantalla 'buscar paciente'
     resetBuscarPaciente() {
@@ -1308,9 +1281,9 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /*
-    * Determina si se permite seleccionar obra social e ingresar número de afiliado
-    * por el momento esto solo es posible desde el efector: Centro médico integral (colegio médico)
-    */
+* Determina si se permite seleccionar obra social e ingresar número de afiliado
+* por el momento esto solo es posible desde el efector: Centro médico integral (colegio médico)
+*/
     desplegarObraSocial() {
         const puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
         return (this.organizacion.id === idCMI && !puco);

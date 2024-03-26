@@ -7,8 +7,8 @@
                 <span class="text-120">{{ opciones.fecha | date: "MMM yyyy" | uppercase }}</span>
                 <plex-button class="ml-1" size="sm" type="info" icon="chevron-right" (click)="cambiarMes('+')">
                 </plex-button>
-                <plex-button label="Demanda Rechazada" size="sm" class="ml-2" type="warning" (click)="noSeAsignaTurno()"
-                             [disabled]="!opciones.tipoPrestacion">
+                <plex-button label="Lista de espera" size="sm" class="ml-2 invisible" type="warning"
+                             (click)="noSeAsignaTurno()" [disabled]="!opciones.tipoPrestacion">
                 </plex-button>
                 <plex-button class="ml-1" label="Volver" size="sm" type="danger" (click)="volver()">
                 </plex-button>

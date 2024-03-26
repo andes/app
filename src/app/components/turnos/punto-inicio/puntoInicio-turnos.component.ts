@@ -34,6 +34,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showMostrarEstadisticasPacientes = false;
     public showActivarApp = false;
     public showIngresarSolicitud = false;
+    public showDemandaInsatisfecha = false;
     public paciente: IPaciente;
     public autorizado = false;
     public puedeActivarAppMobile = false;
@@ -121,7 +122,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.paciente = null;
     }
 
-
     // -----------------------------------------------
 
     onPacienteSelected(paciente: IPaciente): void {
@@ -146,11 +146,11 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasPacientes = true;
                 this.showIngresarSolicitud = false;
                 this.showMostrarTurnosPaciente = false;
+                this.showDemandaInsatisfecha = false;
                 this.showActivarApp = false;
             }
         });
     }
-
 
     verificarOperacion(operacion, paciente) {
         this.esOperacion = true;
@@ -186,6 +186,13 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
                 this.showActivarApp = true;
+                break;
+            case 'demandaInsatisfecha':
+                this.showDashboard = true;
+                this.showMostrarEstadisticasPacientes = true;
+                this.showDemandaInsatisfecha = true;
+                this.showIngresarSolicitud = false;
+                this.showTab = 1;
                 break;
         }
     }
@@ -242,4 +249,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarTurnosPaciente = false;
         this.showActivarApp = false;
     }
+
+    demandaCerrada() {
+        this.showDemandaInsatisfecha = false;
+    }
+
 }

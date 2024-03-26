@@ -7,12 +7,15 @@
             <br>
             <update-contacto-direccion [pac]="paciente"></update-contacto-direccion>
         </ng-container>
-
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
         <turnos-paciente [paciente]='paciente' [turnos]="turnosPaciente$ | async" [operacion]="'operacionTurnos'"
                          (turnosPacienteChanged)="refresh()" *plTab>
         </turnos-paciente>
+        <ng-container *ngIf="demandaInsatisfecha">
+            <demandaInsatisfecha (demandaCerrada)="cerrarDemandaInsatisfecha()" [paciente]='paciente'>
+            </demandaInsatisfecha>
+        </ng-container>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset *plTab>
