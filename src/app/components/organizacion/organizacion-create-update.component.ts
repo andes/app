@@ -1,9 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { cache } from '@andes/shared';
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { SnomedService } from '../../apps/mitos';
 import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
@@ -25,6 +25,7 @@ import { ProvinciaService } from './../../services/provincia.service';
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
 import { ZonaSanitariaService } from './../../services/zonaSanitaria.service';
 import * as enumerados from './../../utils/enumerados';
+import { ConstantesService } from './../../services/constantes.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ import * as enumerados from './../../utils/enumerados';
         }
     `]
 })
-export class OrganizacionCreateUpdateComponent implements OnInit {
+export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input() seleccion: IOrganizacion = null;
@@ -45,15 +46,19 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     // definición de arreglos
     tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
     zonasSanitarias$: Observable<IZonaSanitaria[]>;
+    circunferenciaKmTurno$: Observable<any>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     provincias$: Observable<any[]>;
     private localidades = new Subject();
     localidades$: Observable<any[]>;
     servicio;
+    circunferenciaMinima;
+    circunferenciaMaxima;
     private paisArgentina = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
+    private snomedSubscription: Subscription;
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -154,11 +159,20 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private router: Router,
         private zonasSanitariasService: ZonaSanitariaService,
         public mapaCamasService: MapaCamasHTTP,
+        public constantesService: ConstantesService
     ) { }
+    ngOnDestroy() {
+        this.snomedSubscription.unsubscribe();
+    }
 
     ngOnInit() {
         this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
         this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
+        this.circunferenciaKmTurno$ = this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' });
+        this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' }).subscribe((data) => {
+            this.circunferenciaMinima = data.find(m => m.nombre === 'minimo-km').key;
+            this.circunferenciaMaxima = data.find(m => m.nombre === 'maximo-km').key;
+        });
 
         this.mapaCamasService.snapshot('internacion', 'medica', moment().toDate()).subscribe((snapshot) => {
             this.camas = snapshot.filter(s => s.estado !== 'inactiva');
@@ -204,7 +218,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (org && org.id) {
             this.updateTitle('Editar organización');
             Object.assign(this.organizacionModel, org);
-            if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
+            if (this.organizacionModel?.direccion?.geoReferencia?.length === 2) {
+
                 this.lat = this.organizacionModel.direccion.geoReferencia[0];
                 this.lng = this.organizacionModel.direccion.geoReferencia[1];
             }
@@ -219,7 +234,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
     }
     loadListadoUO(event) {
-        this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
+        if (this.snomedSubscription) {
+            this.snomedSubscription.unsubscribe();
+        }
+        this.snomedSubscription = this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
             this.organizacionModel.unidadesOrganizativas.forEach((uo) => {
                 result = result.filter(item => item.conceptId !== uo.conceptId);
             });
