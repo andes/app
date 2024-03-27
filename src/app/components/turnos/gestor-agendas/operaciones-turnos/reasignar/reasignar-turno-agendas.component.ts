@@ -1,5 +1,5 @@
 import { environment } from './../../../../../../environments/environment';
-import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IBloque } from './../../../../../interfaces/turnos/IBloque';
@@ -7,6 +7,7 @@ import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
 import { SmsService } from './../../../../../services/turnos/sms.service';
+import { NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
 import { map } from 'rxjs/operators';
@@ -24,6 +25,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input() agendasSimilares: any;
     @Input() agendaAReasignar: any;
     @Input() smsStatus: boolean;
+    @ViewChild('formu', { static: false }) formu: NgForm;
 
     turnoReasignado: any = {};
     // Para cálculos de disponibilidad de turnos programados y del día
@@ -31,6 +33,18 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     delDiaDisponibles: number;
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
+    turnoSel: any;
+    turnoSiguiente: any;
+    bloqueSel: any;
+    seleccionoHorario = false;
+
+    public indiceTurno: any;
+    public collapse = false;
+    public chequed = true;
+
+    private indiceBloque: any;
+    private indiceAgenda: any;
+    private reasignado = false;
 
     // Agenda destino
     private _agendaDestino;
@@ -63,17 +77,50 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     @Output() turnoReasignadoEmit = new EventEmitter<any>();
+    @Output() crearAgendaEmit = new EventEmitter<any>();
 
     autorizado: any;
     countBloques = [];
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
-                public serviceTurno: TurnoService, public smsService: SmsService, public prestacionesService: PrestacionesService) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        public serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService,
+        public smsService: SmsService,
+        public prestacionesService: PrestacionesService) { }
+
+    public showCrearAgenda = false;
 
     ngOnInit() {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.agendasSimilares = [];
+    }
+
+    seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
+        if (this.indiceTurno === indiceTurno && this.indiceBloque === indiceBloque && this.indiceAgenda === indiceAgenda ||
+            this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno].estado !== 'disponible') {
+            this.indiceTurno = null;
+            this.indiceBloque = null;
+            this.indiceAgenda = null;
+            this.turnoSel = null;
+            this.turnoSiguiente = null;
+            this.bloqueSel = null;
+            this.seleccionoHorario = false;
+        } else {
+            this.indiceTurno = indiceTurno;
+            this.indiceBloque = indiceBloque;
+            this.indiceAgenda = indiceAgenda;
+            this.turnoSel = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+            this.turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
+            this.bloqueSel = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
+            this.seleccionoHorario = true;
+        }
+    }
+
+    horarioSeleccionado(indiceTurno, indiceBloque, indiceAgenda) {
+        return (indiceTurno === this.indiceTurno && indiceBloque === this.indiceBloque && indiceAgenda === this.indiceAgenda) ? true : false;
     }
 
     asignarTipoTurno(bloque, turnoSuspendido) {
@@ -125,74 +172,61 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             }
         };
 
-        // ¿Reasignar Turno?
-        this.plex.confirm('Del ' + moment(this.turnoSeleccionado.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]') + ' al ' + moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
+        // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
+        // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
+        this.serviceTurno.save(datosTurnoNuevo).subscribe(resultado => {
 
-            if (!confirmado) {
-                return false;
+            const turnoReasignado = this.turnoSeleccionado;
+            const siguiente = {
+                idAgenda: this.agendaSeleccionada._id,
+                idBloque: this.agendaSeleccionada.bloques[indiceBloque]._id,
+                idTurno: this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno]._id
+            };
+
+            if (turnoReasignado.reasignado) {
+                turnoReasignado.reasignado.siguiente = siguiente;
+            } else {
+                turnoReasignado.reasignado = {
+                    siguiente: siguiente
+                };
             }
 
-            // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
-            // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
-            this.serviceTurno.save(datosTurnoNuevo).subscribe(resultado => {
+            // Datos del turno "nuevo", que se guardan en el turno "viejo" para poder referenciarlo
+            const datosTurnoReasignado = {
+                idAgenda: this.agendaAReasignar.id,
+                idTurno: this.datosAgenda.idTurno,
+                idBloque: this.datosAgenda.idBloque,
+                turno: turnoReasignado
+            };
 
-                const turnoReasignado = this.turnoSeleccionado;
-                const siguiente = {
-                    idAgenda: this.agendaSeleccionada._id,
-                    idBloque: this.agendaSeleccionada.bloques[indiceBloque]._id,
-                    idTurno: this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno]._id
-                };
+            // Se guardan los datos del turno "nuevo" en el turno "viejo/suspendido" (PUT)
+            this.serviceTurno.put(datosTurnoReasignado).subscribe(agenda => {
+                this.agendaDestino.agenda = resultado;
+                this.agendaDestino.turno = turno;
 
-                if (turnoReasignado.reasignado) {
-                    turnoReasignado.reasignado.siguiente = siguiente;
+                // Enviar SMS sólo en Producción
+                if (environment.production === true && this.smsStatus) {
+                    const diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
+                    const tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
+                    const dia = moment(turno.horaInicio).format('DD/MM/YYYY');
+                    const tm = moment(turno.horaInicio).format('HH:mm');
+                    const mensaje = 'AVISO:  Su turno de ' + this.turnoSeleccionado.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
+                        + ' hs. fue REASIGNADO  al ' + dia + ' a las ' + tm + ' hs.   ' + this.auth.organizacion.nombre;
+                    this.plex.toast('info', 'Se informó al paciente mediante un SMS');
+                    this.enviarSMS(this.turnoSeleccionado.paciente, mensaje);
                 } else {
-                    turnoReasignado.reasignado = {
-                        siguiente: siguiente
-                    };
+                    this.plex.toast('info', 'INFO: SMS no enviado');
                 }
-
-                // Datos del turno "nuevo", que se guardan en el turno "viejo" para poder referenciarlo
-                const datosTurnoReasignado = {
-                    idAgenda: this.agendaAReasignar.id,
-                    idTurno: this.datosAgenda.idTurno,
-                    idBloque: this.datosAgenda.idBloque,
-                    turno: turnoReasignado
-                };
-
-                // Se guardan los datos del turno "nuevo" en el turno "viejo/suspendido" (PUT)
-                this.serviceTurno.put(datosTurnoReasignado).subscribe(agenda => {
-                    this.agendaDestino.agenda = resultado;
-                    this.agendaDestino.turno = turno;
-                    this.plex.toast('success', 'El turno se reasignó correctamente');
-
-                    // Enviar SMS sólo en Producción
-                    if (environment.production === true && this.smsStatus) {
-                        const diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
-                        const tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
-                        const dia = moment(turno.horaInicio).format('DD/MM/YYYY');
-                        const tm = moment(turno.horaInicio).format('HH:mm');
-                        const mensaje = 'AVISO:  Su turno de ' + this.turnoSeleccionado.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
-                            + ' hs. fue REASIGNADO  al ' + dia + ' a las ' + tm + ' hs.   ' + this.auth.organizacion.nombre;
-                        this.plex.toast('info', 'Se informó al paciente mediante un SMS');
-                        this.enviarSMS(this.turnoSeleccionado.paciente, mensaje);
-                    } else {
-                        this.plex.toast('info', 'INFO: SMS no enviado');
-                    }
-                    if (this.esTurnoDoble(turnoReasignado)) {
-                        const patch: any = {
-                            op: 'darTurnoDoble',
-                            turnos: [turnoSiguiente._id]
-                        };
-                        // Patchea el turno doble
-                        this.serviceAgenda.patch(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
-                            if (agendaActualizada) {
-                                this.plex.toast('info', 'Se reasignó un turno doble');
-                            }
-                        });
-                    }
-                    this.turnoReasignadoEmit.emit({
-                        turno: turnoReasignado,
-                        bloque: { id: this.datosAgenda.idBloque }
+                if (this.esTurnoDoble(turnoReasignado)) {
+                    const patch: any = {
+                        op: 'darTurnoDoble',
+                        turnos: [turnoSiguiente._id]
+                    };
+                    // Patchea el turno doble
+                    this.serviceAgenda.patch(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
+                        if (agendaActualizada) {
+                            this.plex.toast('info', 'Se reasignó un turno doble');
+                        }
                     });
 
                     if (solicitud && tipoTurno !== 'gestion') {
@@ -203,7 +237,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
                         this.prestacionesService.patch(solicitud.id, params);
                     }
+                };
+                this.turnoReasignadoEmit.emit({
+                    turno: turnoReasignado,
+                    bloque: { id: this.datosAgenda.idBloque }
                 });
+                this.reasignado = true;
+                this.seleccionoHorario = false;
             });
         });
     }
@@ -229,7 +269,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         );
     }
 
-    seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
+    reasignarTurno(indiceTurno, indiceBloque, indiceAgenda) {
         const turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         const turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
         const bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
@@ -263,11 +303,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             } else {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
-        },
-        err => {
+        }, err => {
             if (err) {
                 this.plex.toast('danger', 'ERROR: Servicio caído');
-
             }
         });
     }
@@ -285,7 +323,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         }).length > 0;
     }
 
-    siguienteDisponible(bloque, turno, indiceTurno) {
+    siguienteDisponible(bloque, indiceTurno) {
         if (((indiceTurno < bloque.turnos.length - 1) && (bloque.turnos[indiceTurno + 1].estado !== 'disponible')) || (indiceTurno === (bloque.turnos.length - 1))) {
             return false;
         }
@@ -335,6 +373,62 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 return false;
             } else {
                 return true;
+            }
+        }
+    }
+
+    seleccionarAgenda(indiceAgenda) {
+        if (this.agendaSeleccionada === this.agendasSimilares[indiceAgenda]) {
+            this.indiceTurno = null;
+            this.indiceBloque = null;
+            this.agendaSeleccionada = null;
+        } else {
+            this.indiceTurno = null;
+            this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
+        }
+        this.seleccionoHorario = false;
+    }
+
+    estaSeleccionada(agenda) {
+        return (agenda && agenda === this.agendaSeleccionada);
+    }
+
+    crearAgenda() {
+        this.crearAgendaEmit.emit();
+    }
+
+    mostrarAgendasSimilares() {
+        return this.turnoSeleccionado && !this.turnoSeleccionado?.reasignado?.siguiente && this.agendasSimilares?.length > 0;
+    }
+
+    mostrarHorarioTurno(agenda, turno) {
+        return turno.horaInicio && (this.getFecha(this.hoy) === this.getFecha(agenda.horaInicio) &&
+            this.getHora(turno.horaInicio) > this.getHora(this.hoy)) ||
+            (this.getFecha(this.hoy) !== this.getFecha(agenda.horaInicio));
+    }
+
+    changeCollapse(event) {
+        this.collapse = event;
+    }
+
+    cerrarModal() {
+        this.reasignado = !this.reasignado;
+    }
+
+    turnoSeleccionable(bloque, turno, indiceTurno) {
+        if (turno.estado === 'disponible') {
+            if (this.esTurnoDoble(this.turnoSeleccionado)) {
+                return this.siguienteDisponible(bloque, indiceTurno);
+            } else {
+                if (bloque.pacienteSimultaneos) {
+                    return this.primerSimultaneoDisponible(bloque, turno, indiceTurno);
+                } else {
+                    if (bloque.citarPorBloque) {
+                        return this.primerSimultaneoDisponible(bloque, turno, indiceTurno);
+                    } else {
+                        return true;
+                    }
+                }
             }
         }
     }

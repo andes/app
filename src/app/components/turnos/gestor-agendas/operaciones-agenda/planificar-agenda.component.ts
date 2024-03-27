@@ -115,8 +115,9 @@ export class PlanificarAgendaComponent implements OnInit {
         this.calculosInicio();
     }
 
+
     loadProfesionales(event) {
-        if (this.modelo.profesionales?.length) {
+        if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {
             event.callback(this.modelo.profesionales);
         }
         if (event.query && event.query !== '' && event.query.length > 2) {
@@ -357,9 +358,6 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
-        // limpiamos profesionales al cambiar la selección de prestaciones
-        this.modelo.profesionales = [];
-
         // Valores por defecto
         this.noNominalizada = false;
         this.dinamica = false;
