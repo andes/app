@@ -377,23 +377,24 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }
         const encuentraConfiguracion = (arrayConceptos) => arrayConceptos.find(concepto => (concepto.conceptId === turno.tipoPrestacion.conceptId));
         const configuracionesCT: any[] = this.arrayPrestacion.filter(prestacion => prestacion?.conceptosTurneables ? encuentraConfiguracion(prestacion.conceptosTurneables) : false);
-        let inviarFacturacion = false;
+        let enviarFacturacion = false;
         let messageNoEnviar = '';
         const esSumar = turno.obraSocial !== 'prepaga' && turno.financiador.financiador === 'SUMAR';
         if (esSumar) {
-            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.sumar !== null);
+            enviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.sumar !== null);
             messageNoEnviar = 'Esta prestación no genera comprobantes automáticos a SUMAR';
         } else {
-            inviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.recuperoFinanciero !== null);
+            enviarFacturacion = configuracionesCT.length && configuracionesCT.find(conf => conf.recuperoFinanciero !== null);
             messageNoEnviar = 'Esta prestación no se encuentra disponible para el envío automático a recupero financiero';
         }
-        if (inviarFacturacion) {
+        if (enviarFacturacion || esSumar) {
             this.facturacionAutomaticaService.post(turno).subscribe(respuesta => {
-                if (respuesta.message) {
+                if (respuesta.message && enviarFacturacion) {
                     this.plex.info('success', respuesta.message);
                 }
             });
-        } else {
+        }
+        if (!enviarFacturacion) {
             this.plex.info('warning', messageNoEnviar);
         }
     }
