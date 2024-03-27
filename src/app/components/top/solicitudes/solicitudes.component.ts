@@ -5,12 +5,15 @@ import { Unsubscribe } from '@andes/shared';
 import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, concatWith } from 'rxjs';
+import { concat, switchMap } from 'rxjs';
 import { PacienteService } from 'src/app/core/mpi/services/paciente.service';
 import { RouterService } from 'src/app/services/router.service';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { PlexHelpComponent } from '@andes/plex/src/lib/help/help.component';
+import { MotivosHudsService } from 'src/app/services/motivosHuds.service';
+
 
 @Component({
     selector: 'solicitudes',
@@ -111,6 +114,7 @@ export class SolicitudesComponent implements OnInit {
     public mostrarMasOpcionesSalida = false;
     public mostrarMasOpcionesEntrada = false;
     public mostrarAlertaRangoDias = false;
+    public seleccionado;
     public actualizacion = false;
     public check;
     public collapse = false;
@@ -156,7 +160,8 @@ export class SolicitudesComponent implements OnInit {
         public router: Router,
         private hudsService: HUDSService,
         private pacienteService: PacienteService,
-        private routerService: RouterService
+        private routerService: RouterService,
+        public motivosHudsService: MotivosHudsService
     ) {
     }
 
@@ -765,16 +770,6 @@ export class SolicitudesComponent implements OnInit {
 
     onConfirmarIniciarPrestacion() {
         // token HUDS
-        const paramsToken = {
-            usuario: this.auth.usuario,
-            organizacion: this.auth.organizacion,
-            paciente: this.prestacionSeleccionada.paciente,
-            motivo: 'Fuera de agenda',
-            profesional: this.auth.profesional,
-            idTurno: null,
-            idPrestacion: this.prestacionSeleccionada.solicitud.tipoPrestacion.id
-        };
-        // patch config
         const patch: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -786,7 +781,19 @@ export class SolicitudesComponent implements OnInit {
                 tipo: 'ejecucion'
             }
         };
-        this.hudsService.generateHudsToken(paramsToken).pipe(
+        const token = this.motivosHudsService.getMotivo('RUP:Fuera de agenda').pipe(
+            switchMap(motivoH => {
+                const paramsToken = {
+                    usuario: this.auth.usuario,
+                    organizacion: this.auth.organizacion,
+                    paciente: this.prestacionSeleccionada.paciente,
+                    motivo: motivoH[0].motivo,
+                    profesional: this.auth.profesional,
+                    idTurno: null,
+                    idPrestacion: this.prestacionSeleccionada.solicitud.tipoPrestacion.id
+                };
+                return this.hudsService.generateHudsToken(paramsToken);
+            }),
             concatWith(this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch)),
             catchError(err => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err))
         ).subscribe(() => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]));
