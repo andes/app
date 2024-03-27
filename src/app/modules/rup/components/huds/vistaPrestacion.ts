@@ -21,6 +21,7 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
     @Input() puedeEditar: boolean;
+    @Input() verContenido = true;
 
     public ready$ = this.elementosRUPService.ready;
     public puedeDescargarInforme: boolean;
@@ -29,7 +30,6 @@ export class VistaPrestacionComponent implements OnInit {
     public mostrarMas = false;
 
     _puedeEditar: boolean;
-
 
     constructor(
         private auth: Auth,
