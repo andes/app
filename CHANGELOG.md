@@ -1,3 +1,15 @@
+# [5.136.0](https://github.com/andes/app/compare/v5.135.1...v5.136.0) (2024-03-27)
+
+
+### Bug Fixes
+
+* **HUDS:** corrige error al visualizar solicitudes con adjuntos ([#2992](https://github.com/andes/app/issues/2992)) ([eb27f1e](https://github.com/andes/app/commit/eb27f1e5ec3d4feaf940ac31b181a4fb9b9d513f))
+
+
+### Features
+
+* **IN-583:** Eliminar indicacion en estado borrador ([#2954](https://github.com/andes/app/issues/2954)) ([8ef53e5](https://github.com/andes/app/commit/8ef53e5d21ddc98f850685cde42833ae410cf880))
+
 ## [5.135.1](https://github.com/andes/app/compare/v5.135.0...v5.135.1) (2024-03-20)
 
 
