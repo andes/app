@@ -1,3 +1,10 @@
+## [5.136.1](https://github.com/andes/app/compare/v5.136.0...v5.136.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* **TYP:** Se genera siempre comprobonate para SUMAR ([#2993](https://github.com/andes/app/issues/2993)) ([367d608](https://github.com/andes/app/commit/367d608fb09155b302b5c8fc9b27754e03595f1c))
+
 # [5.136.0](https://github.com/andes/app/compare/v5.135.1...v5.136.0) (2024-03-27)
 
 
