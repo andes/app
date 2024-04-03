@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { cacheStorage, Server } from '@andes/shared';
+import { BehaviorSubject } from 'rxjs';
+import { Server } from '@andes/shared';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
-const url = '/modules/rup/elementosRUP';
+const url = '/modules/rup/elementos-rup';
 
 @Injectable()
 export class ElementosRUPService {
@@ -86,7 +85,7 @@ export class ElementosRUPService {
     }
 
     requeridosDinamicos(prestacion, conceptoId) {
-        return this.server.post('/modules/rup/elementos-rup/requeridos', {
+        return this.server.post(url + '/requeridos', {
             prestacion: prestacion.id,
             conceptId: conceptoId
         });
