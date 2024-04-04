@@ -28,6 +28,7 @@ export class BiQueriesComponent implements OnInit {
     public disabledFiltroZonas = false;
     public inProgress = false;
     private idSubmoduloQueries = '60cce2a42e15361fe51b373d'; // coleccion modulos, mod. visualizacion, submodulo bi-queries
+    public descripcion;
 
     constructor(
         private queryService: QueriesService,
@@ -98,6 +99,7 @@ export class BiQueriesComponent implements OnInit {
             this.organizacionesDestinoFiltradas = this.organizaciones;
             this.argumentos = this.consultaSeleccionada.argumentos;
             this.inProgress = false;
+            this.descripcion = '<b> Descripción: </b> ' + this.consultaSeleccionada.descripcion;
         }
     }
 

@@ -6,8 +6,9 @@
 </plex-title>
 <form #form="ngForm">
     <plex-grid type="full" size="sm">
-        <plex-select [(ngModel)]="consultaSeleccionada" name="select" [required]="true" [data]="queries$ | async"
-                     labelField="nombre" idField="_id" placeholder="Seleccione consulta" (change)="getArgumentos()">
+        <plex-select class="bi-select" [(ngModel)]="consultaSeleccionada" name="select" [required]="true"
+                     [data]="queries$ | async" labelField="nombre" idField="_id" placeholder="Seleccione consulta"
+                     (change)="getArgumentos()">
         </plex-select>
         <ng-container *ngIf="!inProgress">
             <ng-container *ngFor="let argumento of argumentos">
@@ -18,6 +19,7 @@
         </ng-container>
     </plex-grid>
     <ng-container *ngIf="consultaSeleccionada">
+        <span *ngIf='consultaSeleccionada.descripcion' [innerHtml]="descripcion"></span>
         <plex-title titulo="Argumentos"></plex-title>
         <plex-wrapper>
             <ng-container *ngFor="let argumento of argumentos" [ngSwitch]="argumento.tipo">
