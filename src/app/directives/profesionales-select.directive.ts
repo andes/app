@@ -23,7 +23,7 @@ export class SelectProfesionalesDirective implements OnInit, OnDestroy {
         private plexSelect: PlexSelectComponent
     ) {
         plexSelect.idField = 'id';
-        plexSelect.labelField = 'apellido + \' \' + nombre';
+        plexSelect.labelField = 'apellido + \' \' + nombre + \' - \' + documento + \' - \' + ultimaMatricula';
     }
 
     ngOnInit() {
@@ -40,6 +40,19 @@ export class SelectProfesionalesDirective implements OnInit, OnDestroy {
                         this.lastCallSubscription.unsubscribe();
                     }
                     this.lastCallSubscription = this.profesionalesService.get({ nombreCompleto: inputText, habilitado: true }).subscribe(result => {
+                        result.forEach(prof => {
+                            // Buscamos la matrícula mas reciente
+                            let fechaMasReciente = prof.formacionGrado[0]?.fechaDeInscripcion;
+                            let index = 0;
+                            for (let i = 1; i < prof.formacionGrado.length; i++) {
+                                if (prof.formacionGrado[i].fechaDeInscripcion > fechaMasReciente) {
+                                    fechaMasReciente = prof.formacionGrado[i].fechaDeInscripcion;
+                                    index = i;
+                                }
+                            }
+                            const ultimaMatricula = prof.formacionGrado[index]?.titulo;
+                            prof['ultimaMatricula'] = ultimaMatricula ? ultimaMatricula : 'Sin matrícula';
+                        });
                         $event.callback(result);
                     });
                 } else {

@@ -57,10 +57,8 @@
                                 hintType="info" hintIcon="eye">
                     </plex-label>
                     <plex-select [disabled]="!modelo.horaFin || !modelo.tipoPrestaciones?.length"
-                                 [(ngModel)]="modelo.profesionales" name="modelo.profesionales"
-                                 (getData)="loadProfesionales($event)" [multiple]="true"
-                                 labelField="apellido + ' ' + nombre" (change)="verificarProfesional()"
-                                 [closeAfterSelect]="true">
+                                 [(ngModel)]="modelo.profesionales" name="modelo.profesionales" tmProfesionales
+                                 [multiple]="true" (change)="verificarProfesional()" [closeAfterSelect]="true">
                     </plex-select>
                 </div>
             </plex-wrapper>

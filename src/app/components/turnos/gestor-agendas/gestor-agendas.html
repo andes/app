@@ -28,9 +28,8 @@
                 </plex-select>
                 <div collapse>
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                                 (getData)="loadProfesionales($event)" name="profesionales" label="Equipo de Salud"
-                                 placeholder="Buscar un equipo de salud" labelField="apellido+' '+nombre"
-                                 ngModelOptions="{standalone: true}">
+                                 tmProfesionales name="profesionales" label="Equipo de Salud"
+                                 placeholder="Buscar un equipo de salud" ngModelOptions="{standalone: true}">
                     </plex-select>
                     <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')"
                                  name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
@@ -86,7 +85,8 @@
                 [class.selectable]="selectable">
                 <td *plTableCol="'seleccion'" (click)="verAgenda(agenda, true, $event)">
                     <i *ngIf="estaSeleccionada(agenda) >= 0"> <plex-icon name="checkbox-marked"></plex-icon> </i>
-                    <i *ngIf="!(estaSeleccionada(agenda) >= 0)"> <plex-icon name="checkbox-blank-outline"></plex-icon> </i>
+                    <i *ngIf="!(estaSeleccionada(agenda) >= 0)"> <plex-icon name="checkbox-blank-outline"></plex-icon>
+                    </i>
                 </td>
                 <td *plTableCol="'fecha'" class="w-20" (click)="verAgenda(agenda, false, $event)">
                     <plex-label titulo="{{agenda.horaInicio | date: 'EEEE' | uppercase}}  {{agenda.horaInicio | fecha}}"
