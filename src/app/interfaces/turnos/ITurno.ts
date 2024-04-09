@@ -3,6 +3,7 @@ import { IObraSocial } from './../IObraSocial';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
+    _id: string;
     id: string;
     horaInicio: Date;
     estado: string;

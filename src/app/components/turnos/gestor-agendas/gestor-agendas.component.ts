@@ -411,11 +411,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = false;
     }
 
-    cerrarSidebarAgendas() {
-        this.showSobreturno = false;
-        this.showElegirSobreTurno = false;
-    }
-
     saveAgregarNotaAgenda() {
         if (this.parametros) {
             this.getAgendas();

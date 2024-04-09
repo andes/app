@@ -1,9 +1,9 @@
-<plex-layout *ngIf="!showCrearAgenda" main="7">
+<plex-layout *ngIf="!showCrearAgenda" main="6">
     <plex-layout-main>
         <div *ngIf="autorizado && showReasignarTurno" class="plex-layout">
 
             <plex-title titulo="REASIGNACIÓN DE TURNOS">
-                <plex-button type="danger" size="sm" (click)="cancelar()">Volver</plex-button>
+                <plex-button type="danger" (click)="cancelar()">Volver</plex-button>
             </plex-title>
 
             <plex-list [selectable]="false">
@@ -38,22 +38,16 @@
             <plex-title titulo="TURNOS" size="sm"></plex-title>
             <plex-table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
                 <tr *ngIf="bloque === agendaAReasignar.bloques[0]">
-                    <th></th>
-                    <th>Nombre</th>
-                    <th>Tipo Turno</th>
-                    <th>Prestación</th>
-                    <th>Estado</th>
+                    <th class="text-center w-25">Nombre</th>
+                    <th class="text-center">Tipo Turno</th>
+                    <th class="text-center">Prestación</th>
+                    <th class="text-center">Estado</th>
                 </tr>
 
                 <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover"
                     [class.selected]="estaSeleccionado(turno)">
-                    <!-- [ngClass]="{'bg-inverse text-white': estaSeleccionado(turno)}"> -->
                     <ng-container *ngIf="turno.paciente?.id">
-                        <td (click)="seleccionarTurno(turno, bloque, false)">
-                            <i *ngIf="estaSeleccionado(turno)" class="mdi mdi-checkbox-marked"></i>
-                            <i *ngIf="!estaSeleccionado(turno)" class="mdi mdi-checkbox-blank-outline"></i>
-                        </td>
-                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                        <td class="text-center" (click)="seleccionarTurno(turno, bloque, false)">
                             <span *ngIf="turno && turno.paciente">{{ turno.paciente | nombre }} </span>
                             <small>
                                 <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">|
@@ -70,20 +64,20 @@
                                 </span>
                             </small>
                         </td>
-                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                        <td class="text-center" (click)="seleccionarTurno(turno, bloque, false)">
                             <plex-badge type="info" *ngIf="turno?.tipoTurno">{{ turno.tipoTurno ?
                                 tiposDeTurnos[turno.tipoTurno].nombre
                                 : 'sin-tipo' }}
                             </plex-badge>
                         </td>
-                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                        <td class="text-center" (click)="seleccionarTurno(turno, bloque, false)">
                             <small>
                                 <span *ngIf="turno?.tipoPrestacion?.nombre" case="capitalize">
                                     {{turno.tipoPrestacion.nombre}}
                                 </span>
                             </small>
                         </td>
-                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                        <td class="text-center" (click)="seleccionarTurno(turno, bloque, false)">
                             <plex-badge *ngIf="turno?.reasignado?.siguiente" type="info badge-reasignar">
                                 <plex-icon name="check"></plex-icon>
                                 ya reasignado
@@ -101,7 +95,7 @@
     </plex-layout-main>
 
     <plex-layout-sidebar type="invert" *ngIf="!showCrearAgenda">
-        <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]"
+        <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoAReasignar]="turnosSeleccionados[0]"
                                  [agendaAReasignar]="agendaAReasignar" [datosAgenda]="datosAgenda"
                                  [agendaDestino]="agendaDestino" [smsStatus]="smsActivo"
                                  (turnoReasignadoEmit)="reasignacionManualAgendas($event)"
