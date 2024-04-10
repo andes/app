@@ -186,7 +186,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // deshacer desde listado de internacion
         const msjDeshacer = (completo) ? 'Si el paciente tiene prestaciones  se deberá <b>romper validación</b> de las mismas antes de intentar realizar esta acción. <br> <br> <b> ¿Está seguro que desea anular la internación?</b> ' : 'Esta acción deshace el último movimiento.   <br>    <b>¡Esta acción no se puede revertir!</b>';
         const msjTitulo = (completo) ? 'internación' : 'movimiento';
-        this.plex.confirm(msjDeshacer, 'Anular ' + msjTitulo).then((resultado) => {
+        this.plex.confirm(msjDeshacer, 'Anular ' + msjTitulo).then(resultado => {
             if (resultado) {
                 combineLatest([
                     this.mapaCamasService.selectedPrestacion,
@@ -194,7 +194,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 ]).pipe(
                     take(1),
                     switchMap(([prestacion, resumen]) => {
-                        const idInternacion = resumen?.id ? resumen.id : prestacion.id;
+                        const idInternacion = resumen?._id ? resumen._id : prestacion.id;
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
                             switchMap(() => {
                                 // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación

@@ -5,7 +5,6 @@
                 <plex-title titulo="LISTADO DE INTERNACION">
                     <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
                 </plex-title>
-
             </header>
 
             <ng-container *ngIf="mainView === 'principal'">
@@ -24,7 +23,7 @@
                         </plex-label>
                     </div>
                     <plex-table *ngIf="(listaInternacion$ | async)?.length" [columns]="columns" #table="plTable"
-                                [offset]="0">
+                                [offset]="selectedPrestacion?.id ? 180 : 110">
                         <plex-table-columns>
                         </plex-table-columns>
                         <tr *ngFor="let internacion of listaInternacion$ | plSort:table | async"
