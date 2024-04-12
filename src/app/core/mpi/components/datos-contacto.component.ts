@@ -32,6 +32,7 @@ export class DatosContactoComponent implements OnInit {
 
     @Input() paciente: IPaciente;
     @Output() mobileApp: EventEmitter<any> = new EventEmitter<any>();
+    @Output() enCalle: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @ViewChild('form', { static: false }) ngForm: NgForm;
     @ViewChild('mapa', { static: false }) mapa: GeorrefMapComponent;
 
@@ -441,7 +442,7 @@ export class DatosContactoComponent implements OnInit {
     // ------------------------ MAPA ------------------------
 
     get disableGeoreferenciar() {
-        return !(this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad);
+        return !(this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad) || this.paciente.direccion[0].situacionCalle;
     }
 
     refreshMap() {
@@ -468,5 +469,9 @@ export class DatosContactoComponent implements OnInit {
                     return this.georeferencia$;
                 }),
                 cache());
+    }
+
+    changeSituacion() {
+        this.enCalle.emit(this.paciente.direccion[0].situacionCalle);
     }
 }

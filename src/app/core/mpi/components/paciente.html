@@ -32,7 +32,8 @@
                 </plex-tab>
 
                 <plex-tab label="datos de contacto" icon="">
-                    <datos-contacto #datosContacto [paciente]="pacienteModel" (mobileApp)="mobileNotification($event)">
+                    <datos-contacto #datosContacto [paciente]="pacienteModel" (mobileApp)="mobileNotification($event)"
+                                    (enCalle)="situacionPaciente($event)">
                     </datos-contacto>
                 </plex-tab>
 

@@ -8,4 +8,5 @@ export interface IDireccion {
     geoReferencia: [Number, Number];
     ultimaActualizacion: Date;
     activo: Boolean;
+    situacionCalle?: boolean;
 }

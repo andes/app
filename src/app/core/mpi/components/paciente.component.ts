@@ -133,7 +133,7 @@ export class PacienteComponent implements OnInit {
     public paciente: IPaciente;
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
-
+    public situacionEnCalle;
     origen = '';
     tipoPaciente = '';
     contactoImportado = false;
@@ -404,6 +404,9 @@ export class PacienteComponent implements OnInit {
             const pacienteExtranjero = this.prepararPaciente(this.pacienteExtranjero, ignoreSuggestions);
 
             if (pacienteConDNI && pacienteConDNI?.id === pacienteExtranjero?.id) {
+                if (this.situacionEnCalle !== undefined) {
+                    pacienteConDNI.direccion[0].situacionCalle = this.situacionEnCalle;
+                }
                 this.guardarPaciente({ ...pacienteConDNI, id: null }).subscribe((paciente) => {
                     if (paciente) {
                         this.pacienteService.linkPatient(paciente, pacienteExtranjero).subscribe(() => {
@@ -420,7 +423,9 @@ export class PacienteComponent implements OnInit {
             }
         } else {
             const paciente = this.prepararPaciente(this.mergePaciente(this.pacienteModel, this.pacienteExtranjero), ignoreSuggestions);
-
+            if (this.situacionEnCalle !== undefined) {
+                paciente.direccion[0].situacionCalle = this.situacionEnCalle;
+            }
             if (paciente) {
                 this.guardarPaciente(paciente).subscribe((paciente) => {
                     const vinculado = this.pacienteVinculadoCache.getPacienteValor();
@@ -769,5 +774,9 @@ export class PacienteComponent implements OnInit {
         this.pacienteModel.genero = this.backUpDatos['genero'];
         this.pacienteModel.fechaFallecimiento = this.backUpDatos['fechaFallecimiento'];
         this.pacienteModel.direccion = this.backUpDatos['direccion'];
+    }
+
+    situacionPaciente(evento) {
+        this.situacionEnCalle = evento;
     }
 }
