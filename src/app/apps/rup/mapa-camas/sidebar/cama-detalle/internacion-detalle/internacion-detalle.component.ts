@@ -98,7 +98,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 if (prestacion.ejecucion.registros[1]?.valor?.InformeEgreso) {
                     this.existeEgreso = true;
                 }
-                this.ingresoPacienteService.selectPaciente(prestacion.paciente.id);
+                this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
             }
             // loading se setea en true desde el listado de internacion
             this.mapaCamasService.isLoading(false);
@@ -107,15 +107,18 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
-                if (!!this.editar && this.editar !== resumen.paciente.id) {
+                if (!!this.editar && this.editar !== resumen.paciente?.id) {
                     this.toggleEdit();
                 }
                 this.capa = this.mapaCamasService.capa;
-                if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
-                    if (resumen?.ingreso) {
-                        this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
-                        this.mostrar = 'ingreso-dinamico';
-                    };
+                if (resumen) {
+                    if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+                        if (resumen?.ingreso) {
+                            this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
+                            this.mostrar = 'ingreso-dinamico';
+                        };
+                    }
+                    this.ingresoPacienteService.selectPaciente(resumen.paciente?.id);
                 }
 
                 if (!this.permisosMapaCamasService.registros) {

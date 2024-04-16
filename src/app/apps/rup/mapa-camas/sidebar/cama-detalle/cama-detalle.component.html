@@ -93,11 +93,11 @@
                 <ng-container *ngIf="!cama.sala && !registraEgreso">
                     <ng-container *ngIf="capa !== 'interconsultores' && capa !== 'farmaceutica'">
                         <plex-button *ngIf="unicoMovimiento" size="sm" icon="account-off" type="danger"
-                                     tooltip="Deshacer Internacion" tooltipPosition="left"
+                                     tooltip="Deshacer Internación" tooltipPosition="left"
                                      (click)="deshacerInternacion(true)">
                         </plex-button>
                         <plex-dropdown *ngIf="!unicoMovimiento" [right]="true" size="sm" icon="account-off"
-                                       type="danger" tooltip="Deshacer Internacion" tooltipPosition="left"
+                                       type="danger" tooltip="Deshacer Internación" tooltipPosition="left"
                                        [items]="items">
                         </plex-dropdown>
                     </ng-container>
