@@ -145,22 +145,12 @@ export class ElementosRUPService {
         }
         concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
-            if (esIndicacion) {
-                const elemento = this.cacheParaIndicaciones[concepto.conceptId];
-                if (elemento) {
-                    return this.populateElemento(elemento, esSolicitud);
-                } else {
-                    return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
-                }
+            const elemento = esIndicacion ? this.cacheParaIndicaciones[concepto.conceptId] : this.cacheParaSolicitud[concepto.conceptId];
+            if (elemento) {
+                return this.populateElemento(elemento, esSolicitud);
             } else {
-                const elemento = this.cacheParaSolicitud[concepto.conceptId];
-                if (elemento) {
-                    return this.populateElemento(elemento, esSolicitud);
-                } else {
-                    return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
-                }
+                return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
             }
-
         } else {
             const elemento = this.cache[concepto.conceptId];
             if (elemento) {
