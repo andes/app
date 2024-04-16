@@ -17,6 +17,8 @@ export class ElementosRUPService {
     public cacheById: IElementosRUPCache = {};
     // Mantiene un caché de la base de datos de elementos
     private cacheParaSolicitud: IElementosRUPCache = {};
+    // Mantiene un caché de la base de datos para indicaciones de internacion
+    private cacheParaIndicaciones: IElementosRUPCache = {};
     // Precalcula los elementos default
     private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
@@ -48,7 +50,11 @@ export class ElementosRUPService {
             data.filter(e => !e.inactiveAt).forEach(elementoRUP => {
                 elementoRUP.conceptos.forEach((concepto) => {
                     if (elementoRUP.esSolicitud) {
-                        this.cacheParaSolicitud[concepto.conceptId] = elementoRUP;
+                        if (elementoRUP.esIndicacion) {
+                            this.cacheParaIndicaciones[concepto.conceptId] = elementoRUP;
+                        } else {
+                            this.cacheParaSolicitud[concepto.conceptId] = elementoRUP;
+                        }
                     } else {
                         this.cache[concepto.conceptId] = elementoRUP;
                     }
@@ -128,22 +134,33 @@ export class ElementosRUPService {
      *
      * @param {ISnomedConcept} concepto Concepto de SNOMED
      * @param {boolean} esSolicitud Indica si es una solicitud
+     * @param {string} origen Indica si es una solicitud
      * @returns {IElementoRUP} Elemento que implementa el concepto
      * @memberof ElementosRUPService
      */
-    buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
+    buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean, esIndicacion?: boolean): IElementoRUP {
         // Busca el elemento RUP que implemente el concepto
         if (typeof concepto.conceptId === 'undefined') {
             concepto = concepto[1];
         }
         concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
-            const elemento = this.cacheParaSolicitud[concepto.conceptId];
-            if (elemento) {
-                return this.populateElemento(elemento, esSolicitud);
+            if (esIndicacion) {
+                const elemento = this.cacheParaIndicaciones[concepto.conceptId];
+                if (elemento) {
+                    return this.populateElemento(elemento, esSolicitud);
+                } else {
+                    return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
+                }
             } else {
-                return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
+                const elemento = this.cacheParaSolicitud[concepto.conceptId];
+                if (elemento) {
+                    return this.populateElemento(elemento, esSolicitud);
+                } else {
+                    return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
+                }
             }
+
         } else {
             const elemento = this.cache[concepto.conceptId];
             if (elemento) {

@@ -14,7 +14,7 @@ export interface IElementoRUP {
     formulaImplementation?: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
-
+    esIndicacion: Boolean;
     privacy: String;
 
     // Indica si requiere indicar diagnostico principal

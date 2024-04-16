@@ -84,12 +84,14 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
         if (this.seccion?.registro) {
             concepto = {
                 ...this.seccion.registro,
-                esSolicitud: true
+                esSolicitud: true,
+                esIndicacion: true
             };
         } else if (this.indicacion) {
             concepto = {
                 ...this.indicacion.concepto,
-                esSolicitud: true
+                esSolicitud: true,
+                esIndicacion: true
             };
         }
         this.onConceptoSelect(concepto);
@@ -98,7 +100,7 @@ export class PlanIndicacionesNuevaIndicacionComponent implements OnInit, AfterCo
     onConceptoSelect(concepto) {
         this.selectedConcept = concepto;
         if (concepto) {
-            this.elementoRUP = this.elementoRUPService.buscarElemento(concepto, concepto.esSolicitud);
+            this.elementoRUP = this.elementoRUPService.buscarElemento(concepto, concepto.esSolicitud, concepto.esIndicacion);
             this.ps.get(concepto.conceptId, true).subscribe();
             this.registro = this.indicacion ? { valor: this.indicacion.valor, concepto } : new IPrestacionRegistro(this.elementoRUP, concepto);
         }
