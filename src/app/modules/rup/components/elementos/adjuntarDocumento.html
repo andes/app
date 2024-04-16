@@ -32,19 +32,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let doc of registro.valor.documentos; let i = index">
+                            <tr *ngFor="let doc of documentos(); let i = index">
                                 <td>
-                                    <div class="image hover">
-                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
-                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                           class="adjunto" (click)="open(i)">
-                                            {{ doc.ext }}
-                                        </a>
-                                    </div>
-                                    <br>
-                                    <p class="text-center small">
-                                        {{ doc.ext }}
-                                    </p>
+                                    <shared-galeria-archivos [modulo]="'rup'" [file]="doc">
+                                    </shared-galeria-archivos>
                                 </td>
                                 <td>
                                     <plex-select *ngIf="!soloValores && descendientesInformeClinico.length"
@@ -67,18 +58,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="col-12" *ngIf="parametroRegistro && fileToken">
-                <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
-                    <a>
-                        <div class="image hover">
-                            <a [href]="createUrl(doc)" target="_blank" [class.adjunto]="!esImagen(doc.ext)">
-                                <ng-container *ngIf="!esImagen(doc.ext)">{{ doc.ext }}</ng-container>
-                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="open(i)">
-                            </a>
-                        </div>
-                    </a>
-                </ng-container>
             </div>
         </div>
     </div>

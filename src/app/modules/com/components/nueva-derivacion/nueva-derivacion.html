@@ -9,9 +9,10 @@
         </plex-title>
         <form #form="ngForm">
             <plex-wrapper>
-                <plex-select *ngIf="esCOM" [(ngModel)]="modelo.organizacionOrigen" name="organizacionOrigen" [data]="organizacionesOrigen"
-                             label="Organización origen" placeholder="Seleccione la organización origen"
-                             labelField="nombre" [required]="true" grow="full">
+                <plex-select *ngIf="esCOM" [(ngModel)]="modelo.organizacionOrigen" name="organizacionOrigen"
+                             [data]="organizacionesOrigen" label="Organización origen"
+                             placeholder="Seleccione la organización origen" labelField="nombre" [required]="true"
+                             grow="full">
                 </plex-select>
                 <plex-select [(ngModel)]="organizacionDestino" name="organizacionDestino" [data]="organizacionesDestino"
                              label="Organización destino" placeholder="Seleccione la organización destino"

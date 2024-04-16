@@ -5,7 +5,7 @@ import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
-import { FileObject, FILE_EXT, IMAGENES_EXT } from '@andes/shared';
+import { FileObject, FILE_EXT, IMAGENES_EXT, VIDEO_EXT } from '@andes/shared';
 import { DriveService } from 'src/app/services/drive.service';
 
 @Component({
@@ -35,6 +35,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
     documentos = [];
     imagenes = IMAGENES_EXT;
     extensions = FILE_EXT;
+    videos = VIDEO_EXT;
     public documentosUrl = [];
 
     modelo: any = {
@@ -86,7 +87,7 @@ export class FormNuevaSolicitudComponent implements OnInit {
         } else {
             this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
         }
-        this.extensions = this.extensions.concat(this.imagenes);
+        this.extensions = this.extensions.concat(this.imagenes, this.videos);
         this.adjuntosService.token$.subscribe((data: any) => {
             this.fileToken = data.token;
         });
