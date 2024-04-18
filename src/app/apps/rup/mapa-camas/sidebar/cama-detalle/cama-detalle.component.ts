@@ -59,7 +59,6 @@ export class CamaDetalleComponent implements OnInit {
     public nota: String;
     public editNota = false;
     public fechaMin$: Observable<Date>;
-    public hayMovimientosAt$: Observable<Boolean>;
     public relacionesPosibles;
     public sinMovimientosAt$: Observable<Boolean>;
     public registraEgreso = true; // inicia en true para ocultar el boton
@@ -69,6 +68,7 @@ export class CamaDetalleComponent implements OnInit {
     public botonRegistroHabilitado$;
     public openedDropDown = null;
     public itemsDropdown: any = [];
+    public unicoMovimiento = false;
 
     items = [
         {
@@ -132,6 +132,7 @@ export class CamaDetalleComponent implements OnInit {
         this.organizacionV2$ = this.organizacionService.usaCapasUnificadas(this.auth.organizacion.id);
 
         this.mapaCamasService.historialInternacion$.subscribe(historial => {
+            this.unicoMovimiento = historial.length <= 1;
             this.registraEgreso = historial.some(mov => mov.extras?.egreso);
         });
 
@@ -239,6 +240,7 @@ export class CamaDetalleComponent implements OnInit {
                                 })
                             );
                         }
+                        return of(null);
                     }),
                     switchMap(idPrestacion => {
                         if (idPrestacion) {

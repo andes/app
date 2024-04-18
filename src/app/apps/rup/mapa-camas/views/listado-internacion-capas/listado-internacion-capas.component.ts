@@ -125,7 +125,7 @@ export class ListadoInternacionCapasComponent implements OnInit, OnDestroy {
                 map(cama => this.mapaCamasService.select(cama))
             ).subscribe();
         } else {
-            this.idInternacionSelected = null;
+            this.cancelar();
         }
     }
 

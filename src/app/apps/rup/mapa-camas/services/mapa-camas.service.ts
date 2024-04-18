@@ -556,8 +556,8 @@ export class MapaCamasService {
                         if (this.capa === 'estadistica' && selectedPrestacion.id) {
                             return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedPrestacion.id);
                         }
-                        if (selectedResumen.id) {
-                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedResumen.id);
+                        if (selectedResumen._id) {
+                            return this.camasHTTP.historialInternacion(ambito, capa, desde, hasta, selectedResumen._id);
                         }
                     }
                     return of([]);

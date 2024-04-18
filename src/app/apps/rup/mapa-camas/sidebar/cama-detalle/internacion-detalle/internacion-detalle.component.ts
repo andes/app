@@ -98,7 +98,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 if (prestacion.ejecucion.registros[1]?.valor?.InformeEgreso) {
                     this.existeEgreso = true;
                 }
-                this.ingresoPacienteService.selectPaciente(prestacion.paciente.id);
+                this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
             }
             // loading se setea en true desde el listado de internacion
             this.mapaCamasService.isLoading(false);
@@ -107,15 +107,18 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
-                if (!!this.editar && this.editar !== resumen.paciente.id) {
+                if (!!this.editar && this.editar !== resumen.paciente?.id) {
                     this.toggleEdit();
                 }
                 this.capa = this.mapaCamasService.capa;
-                if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
-                    if (resumen?.ingreso) {
-                        this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
-                        this.mostrar = 'ingreso-dinamico';
-                    };
+                if (resumen) {
+                    if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+                        if (resumen?.ingreso) {
+                            this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
+                            this.mostrar = 'ingreso-dinamico';
+                        };
+                    }
+                    this.ingresoPacienteService.selectPaciente(resumen.paciente?.id);
                 }
 
                 if (!this.permisosMapaCamasService.registros) {
@@ -186,7 +189,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // deshacer desde listado de internacion
         const msjDeshacer = (completo) ? 'Si el paciente tiene prestaciones  se deberá <b>romper validación</b> de las mismas antes de intentar realizar esta acción. <br> <br> <b> ¿Está seguro que desea anular la internación?</b> ' : 'Esta acción deshace el último movimiento.   <br>    <b>¡Esta acción no se puede revertir!</b>';
         const msjTitulo = (completo) ? 'internación' : 'movimiento';
-        this.plex.confirm(msjDeshacer, 'Anular ' + msjTitulo).then((resultado) => {
+        this.plex.confirm(msjDeshacer, 'Anular ' + msjTitulo).then(resultado => {
             if (resultado) {
                 combineLatest([
                     this.mapaCamasService.selectedPrestacion,
@@ -194,7 +197,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
                 ]).pipe(
                     take(1),
                     switchMap(([prestacion, resumen]) => {
-                        const idInternacion = resumen?.id ? resumen.id : prestacion.id;
+                        const idInternacion = resumen?._id ? resumen._id : prestacion.id;
                         return this.mapaCamasHTTP.deshacerInternacion(this.mapaCamasService.ambito, this.mapaCamasService.capa, idInternacion, completo).pipe(
                             switchMap(() => {
                                 // hasta acá borramos movimiento(s) y resumen pero no anulamos la prestación
