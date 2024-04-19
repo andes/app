@@ -190,12 +190,12 @@
                                                              hint="Motivo: {{ indicacion.estado.verificacion.motivoRechazo }}"
                                                              hintType="info" hintIcon="eye">
                                                         </div>
+                                                        <plex-button *ngIf="verificacion === 'rechazada'" type="info"
+                                                                     size="sm" icon="eye"
+                                                                     tooltip="Ver motivo de rechazo"
+                                                                     (click)="toggleShowMotivoRechazo(indicacion)">
+                                                        </plex-button>
                                                         <ng-container *ngIf="puedeAceptarRechazar()">
-                                                            <plex-button *ngIf="verificacion === 'rechazada'"
-                                                                         type="info" size="sm" icon="eye"
-                                                                         tooltip="Ver motivo de rechazo"
-                                                                         (click)="toggleShowMotivoRechazo(indicacion)">
-                                                            </plex-button>
                                                             <plex-button *ngIf="capa === 'farmaceutica' && indicacion.estado.tipo !== 'pending'"
                                                                          type="warning" size="sm" icon="undo"
                                                                          tooltip="Volver a verificar"
@@ -289,16 +289,19 @@
                                        (events)="onEventos($event)">
             </in-plan-indicacion-evento>
         </ng-container>
+
         <ng-container *ngIf="suspenderIndicacion && !indicacionView && !indicacionEventoSelected">
-            <motivo-suspension (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()">
+            <motivo-suspension (guardar)="guardarSuspension($event)" (cancelar)="cancelarSuspension()"
+                               tipo="suspension">
             </motivo-suspension>
         </ng-container>
 
         <ng-container *ngIf="showMotivoRechazo">
-            <motivo-suspension [motivo]="indicacionAVerificar?.estado.verificacion?.motivoRechazo" [capa]="capa"
-                               [rechazar]="showMotivoRechazo" (guardar)="saveVerificacion($event)"
-                               (cancelar)="toggleShowMotivoRechazo()">
+            <motivo-suspension [key]="indicacionAVerificar?.estado.verificacion?.key" [capa]="capa"
+                               [motivo]="indicacionAVerificar?.estado.verificacion?.motivoRechazo" tipo="rechazo"
+                               (guardar)="saveVerificacion($event)" (cancelar)="cancelarRechazo()">
             </motivo-suspension>
         </ng-container>
+
     </plex-layout-sidebar>
 </plex-layout>
