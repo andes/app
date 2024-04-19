@@ -12,11 +12,6 @@
 </ng-container>
 
 <ng-container *ngIf="selectedConcept">
-    <ng-container *ngIf="(ps.plantillas(selectedConcept.conceptId, true) | async) as plantillas">
-        <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="playlist-plus" [items]="plantillas"
-                       title="Seleccionar plantilla" titlePosition="left" *ngIf="plantillas.length > 0">
-        </plex-dropdown>
-    </ng-container>
     <rup #prescripcion [elementoRUP]="elementoRUP" [registro]="registro" [prestacion]="prestacion">
     </rup>
 </ng-container>
