@@ -1,3 +1,10 @@
+## [5.136.2](https://github.com/andes/app/compare/v5.136.1...v5.136.2) (2024-04-24)
+
+
+### Bug Fixes
+
+* **INT:** Agregar control de elementosRUP para inidicaciones ([#3001](https://github.com/andes/app/issues/3001)) ([ce8e991](https://github.com/andes/app/commit/ce8e991440014ae25dcdf49bec9bb065ee9fd6a0))
+
 ## [5.136.1](https://github.com/andes/app/compare/v5.136.0...v5.136.1) (2024-04-03)
 
 
