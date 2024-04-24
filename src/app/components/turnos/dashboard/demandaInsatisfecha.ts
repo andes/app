@@ -34,7 +34,7 @@ export class demandaInsatisfechaComponent {
         public plex: Plex,
         public conceptosTurneablesService: ConceptosTurneablesService,
         public profesionalService: ProfesionalService,
-        public serviceListaEspera: ListaEsperaService,
+        public listaEsperaService: ListaEsperaService,
     ) { }
 
     loadTipoPrestaciones(event) {
@@ -53,10 +53,13 @@ export class demandaInsatisfechaComponent {
 
     guardar() {
         if (this.motivo && this.tipoPrestacion) {
-            if (this.serviceListaEspera.guardar(this.paciente, this.tipoPrestacion, this.estado, this.profesional, this.organizacion, this.motivo.nombre, this.origen)) {
-                this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
-                this.cerrar();
-            }
+            this.listaEsperaService.save(this.paciente, this.tipoPrestacion, this.estado, this.profesional, this.organizacion, this.motivo.nombre, this.origen).subscribe({
+                complete: () => {
+                    this.plex.toast('success', 'Demanda insatisfecha guardada exitosamente!');
+                    this.cerrar();
+                },
+                error: (e) => this.plex.toast('danger', e, 'Ha ocurrido un error al guardar')
+            });
         }
     }
 

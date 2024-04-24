@@ -190,7 +190,7 @@ export class DarTurnosComponent implements OnInit {
     constructor(
         public serviceProfesional: ProfesionalService,
         public serviceAgenda: AgendaService,
-        public serviceListaEspera: ListaEsperaService,
+        public listaEsperaService: ListaEsperaService,
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
         public servicioCarpetaPaciente: CarpetaPacienteService,
@@ -1247,7 +1247,7 @@ export class DarTurnosComponent implements OnInit {
                     const origen = 'citas';
                     const estado = 'pendiente';
                     const motivo = 'No hay turnos disponibles';
-                    if (this.serviceListaEspera.guardar(this.paciente, this.opciones.tipoPrestacion, estado, this.opciones.profesional, this.organizacion, motivo, origen)) {
+                    if (this.listaEsperaService.save(this.paciente, this.opciones.tipoPrestacion, estado, this.opciones.profesional, this.organizacion, motivo, origen)) {
                         this.plex.toast('success', 'Paciente agregado a Lista de Espera');
                         this.estadoT = 'noSeleccionada';
                         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
