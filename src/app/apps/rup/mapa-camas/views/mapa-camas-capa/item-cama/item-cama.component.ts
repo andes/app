@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { aporteOxigeno, monitorFisiologico, monitorTelemetrico, respirador } from '../../../constantes-internacion';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PermisosMapaCamasService } from '../../../services/permisos-mapa-camas.service';
+import { MapaCamasHTTP } from '../../../services/mapa-camas.http';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -28,7 +29,6 @@ export class ItemCamaComponent implements OnChanges {
         })
     );
     public capa = this.mapaCamasService.capa;
-
     public equipos = {
         aporteOxigeno: false,
         respirador: false,
@@ -47,7 +47,8 @@ export class ItemCamaComponent implements OnChanges {
         public auth: Auth,
         private router: Router,
         private mapaCamasService: MapaCamasService,
-        public permisosMapaCamasService: PermisosMapaCamasService,
+        private camasHTTP: MapaCamasHTTP,
+        public permisosMapaCamasService: PermisosMapaCamasService
     ) {
     }
 
@@ -103,6 +104,7 @@ export class ItemCamaComponent implements OnChanges {
         if (relacion) {
             this.openedDropDown = drop;
             this.itemsDropdown = [];
+
             this.itemsDropdown.push({
                 label: 'Cambiar de cama',
                 handler: ($event: Event) => {
@@ -117,12 +119,20 @@ export class ItemCamaComponent implements OnChanges {
                     this.relacionesPosibles.accion = 'cambiarUO';
                     this.accionCama.emit(this.relacionesPosibles);
                 }
-            }, {
-                label: 'Egresar paciente',
-                handler: ($event: Event) => {
-                    $event.stopPropagation();
-                    this.relacionesPosibles.accion = 'egresarPaciente';
-                    this.accionCama.emit(this.relacionesPosibles);
+            });
+
+            const busquedaDesde = this.mapaCamasService.fecha;
+            this.camasHTTP.historialInternacion('internacion', this.capa, busquedaDesde, new Date(), this.cama.idInternacion).subscribe(historial => {
+                const registraEgreso = historial.some(mov => mov.extras.egreso);
+                if (!registraEgreso) {
+                    this.itemsDropdown.push({
+                        label: 'Egresar paciente',
+                        handler: ($event: Event) => {
+                            $event.stopPropagation();
+                            this.relacionesPosibles.accion = 'egresarPaciente';
+                            this.accionCama.emit(this.relacionesPosibles);
+                        }
+                    });
                 }
             });
         }
