@@ -296,10 +296,11 @@ export class CamaDetalleComponent implements OnInit {
     setDropDown(relacion, drop) {
         this.relacionesPosibles = { ...relacion };
         if (this.openedDropDown) {
-            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+            this.openedDropDown.open = !!(this.openedDropDown === drop);
         }
         this.openedDropDown = drop;
         this.itemsDropdown = [];
+
         this.itemsDropdown.push({
             label: 'Cambiar de cama',
             handler: ($event: Event) => {
@@ -314,14 +315,18 @@ export class CamaDetalleComponent implements OnInit {
                 this.relacionesPosibles.accion = 'cambiarUO';
                 this.accionCama.emit(this.relacionesPosibles);
             }
-        }, {
-            label: 'Egresar paciente',
-            handler: ($event: Event) => {
-                $event.stopPropagation();
-                this.relacionesPosibles.accion = 'egresarPaciente';
-                this.accionCama.emit(this.relacionesPosibles);
-            }
         });
+
+        if (!this.registraEgreso) {
+            this.itemsDropdown.push({
+                label: 'Egresar paciente',
+                handler: ($event: Event) => {
+                    $event.stopPropagation();
+                    this.relacionesPosibles.accion = 'egresarPaciente';
+                    this.accionCama.emit(this.relacionesPosibles);
+                }
+            });
+        }
     }
 
     puedeDesocupar(relacion) {

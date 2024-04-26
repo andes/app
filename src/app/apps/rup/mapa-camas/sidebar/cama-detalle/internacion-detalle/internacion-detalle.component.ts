@@ -1,5 +1,5 @@
 import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { Component, ContentChild, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewChecked, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { auditTime, map, switchMap, take } from 'rxjs/operators';
 import { PrestacionesService } from 'src/app/modules/rup/services/prestaciones.service';
@@ -19,7 +19,8 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     puedeDesocupar$: Observable<any>;
     resumenInternacion$: Observable<any>;
     public estadoPrestacion;
-    public editar;
+    public editarIngreso;
+    public editarEgreso;
     public existeIngreso;
     public existeEgreso;
     view$ = this.mapaCamasService.view;
@@ -27,7 +28,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     @Input() paciente;
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
-    @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
+    @ViewChild('options', { static: true }) plexOptions: PlexOptionsComponent;
 
     public mostrar;
     public registraEgreso$: Observable<Boolean>;
@@ -73,15 +74,19 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
-        this.editar = false;
+        this.editarIngreso = false;
+        this.editarEgreso = false;
         this.capa = this.mapaCamasService.capa;
 
         this.mapaCamasService.historialInternacion$.subscribe(
             historial => {
-                if (historial.length > 0 && (this.capa === 'estadistica' || this.capa !== 'estadistica-v2')) {
+                if (historial.length && (this.capa === 'estadistica' || historial.some(mov => mov.extras.egreso))) {
                     this.agregarItem('egreso');
                 } else {
                     this.quitarItem('egreso');
+                    if (this.mostrar === 'egreso') {
+                        this.activateOption(this.items[0].key);
+                    }
                 }
             }
         );
@@ -89,16 +94,14 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         this.mapaCamasService.prestacion$.subscribe(prestacion => {
             this.estadoPrestacion = '';
             this.existeIngreso = false;
-            this.existeEgreso = false;
 
             if (prestacion) {
                 this.estadoPrestacion = prestacion.estadoActual.tipo;
                 if (prestacion.ejecucion.registros[0].valor.informeIngreso) {
                     this.existeIngreso = true;
                 }
-                if (prestacion.ejecucion.registros[1]?.valor?.InformeEgreso) {
-                    this.existeEgreso = true;
-                }
+                this.existeEgreso = !!prestacion.ejecucion.registros[1]?.valor?.InformeEgreso;
+                this.editarEgreso = !this.existeEgreso;
                 this.ingresoPacienteService.selectPaciente(prestacion.paciente?.id);
             }
             // loading se setea en true desde el listado de internacion
@@ -108,17 +111,19 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         // Configura los tabs a mostrar según capa y vista
         this.mapaCamasService.resumenInternacion$.pipe(
             map(resumen => {
-                if (!!this.editar && this.editar !== resumen.paciente?.id) {
+                if (!!this.editarIngreso && this.editarIngreso !== resumen.paciente?.id) {
                     this.toggleEdit();
                 }
                 this.capa = this.mapaCamasService.capa;
                 if (resumen) {
-                    if (this.capa !== 'estadistica' && this.capa !== 'estadistica-v2') {
+                    if (this.capa !== 'estadistica-v2') {
                         if (resumen?.ingreso) {
                             this.items[0] = { key: 'ingreso-dinamico', label: 'INGRESO' };
                             this.mostrar = 'ingreso-dinamico';
                         };
                     }
+                    this.existeEgreso = !!resumen.fechaEgreso;
+                    this.editarEgreso = !this.existeEgreso;
                     this.ingresoPacienteService.selectPaciente(resumen.paciente?.id);
                 }
 
@@ -145,6 +150,7 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
         ]).pipe(
             auditTime(1),
             map(([prestacion, registraEgreso, vista, loading]) => {
+                this.activateOption(this.items[0].key);
                 return prestacion?.estadoActual?.tipo !== 'validada' && !registraEgreso && vista === 'listado-internacion' && !loading;
             })
         );
@@ -177,8 +183,13 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     }
 
     toggleEdit() {
-        this.editar = !!this.editar ? null : this.ingresoPacienteService.selectedPaciente.getValue();
-        !!this.editar ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+        if (this.mostrar === 'egreso') {
+            this.editarEgreso = !this.editarEgreso;
+            this.editarEgreso ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+        } else {
+            this.editarIngreso = !!this.editarIngreso ? null : this.ingresoPacienteService.selectedPaciente.getValue();
+            !!this.editarIngreso ? this.accion.emit({ accion: 'editando' }) : this.accion.emit(null);
+        }
     }
 
     // Notifica unicamente un nuevo egreso
@@ -227,10 +238,21 @@ export class InternacionDetalleComponent implements OnInit, AfterViewChecked {
     }
 
     puedeEgresar() {
-        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && (this.editar || (this.existeIngreso && !this.existeEgreso)));
+        let condicion = true; // solo estadistica
+        if (this.capa === 'estadistica') {
+            condicion = this.existeIngreso;
+        }
+        return this.mapaCamasService.view.getValue() === 'listado-internacion'
+            && this.permisosMapaCamasService.egreso
+            && this.estadoPrestacion !== 'validada'
+            && condicion;
     }
 
     puedeEditarEgreso() {
-        return (this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && this.existeEgreso);
+        let condicion = true; // solo asistencial
+        if (this.capa === 'medica') {
+            condicion = this.mapaCamasService.view.getValue() === 'listado-internacion';
+        }
+        return this.permisosMapaCamasService.egreso && this.estadoPrestacion !== 'validada' && condicion;
     }
 }

@@ -5,12 +5,12 @@
                 <plex-button class="mr-1" label="CANCELAR" type="danger" (click)="volver()"></plex-button>
                 <plex-button *ngIf="permisosMapaCamasService.camaBaja && cama?.idCama" class="mr-1"
                              tooltip="{{ (verificarBaja$ | async) ? null : 'Cama utilizada' }}"
-                             [disabled]="!(verificarBaja$ | async) || disabled" label="INACTIVAR CAMA" type="warning"
-                             (click)="darBaja()">
+                             [disabled]="!(verificarBaja$ | async) || disabledAccion" label="INACTIVAR CAMA"
+                             type="warning" (click)="darBaja()">
                 </plex-button>
                 <plex-button label="GUARDAR" title="{{ (puedeEditar) ? null : 'No tiene permisos para editar' }}"
                              type="success" [validateForm]="formCama" (click)="save($event)"
-                             [disabled]="disabled || !puedeEditar">
+                             [disabled]="disabledAccion || !puedeEditar">
                 </plex-button>
             </plex-title>
             <fieldset>
@@ -26,7 +26,7 @@
 
                     <plex-select [(ngModel)]="camaEditada.unidadOrganizativa" name="unidadOrganizativa"
                                  [required]="true" [data]="unidadesOrganizativas$ | async" idField="term"
-                                 labelField="term" label="Unidad organizativa" [disabled]="cama?.estado === 'ocupada'">
+                                 labelField="term" label="Unidad organizativa" [disabled]="cama && camaOcupada">
                     </plex-select>
                     <plex-select name="tipoCama" [snomedExpression]="expr.TipoDeCama" [required]="true"
                                  [(ngModel)]="camaEditada.tipoCama" label="Tipo de cama">
