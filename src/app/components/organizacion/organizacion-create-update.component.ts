@@ -46,7 +46,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
     // definición de arreglos
     tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
     zonasSanitarias$: Observable<IZonaSanitaria[]>;
-    circunferenciaKmTurno$: Observable<any>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     provincias$: Observable<any[]>;
@@ -55,6 +54,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
     servicio;
     circunferenciaMinima;
     circunferenciaMaxima;
+    circunferenciaRegistrar;
     private paisArgentina = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
@@ -168,7 +168,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
         this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
-        this.circunferenciaKmTurno$ = this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' });
         this.constantesService.search({ source: 'organizacion:circunferenciaKmTurno' }).subscribe((data) => {
             this.circunferenciaMinima = data.find(m => m.nombre === 'minimo-km').key;
             this.circunferenciaMaxima = data.find(m => m.nombre === 'maximo-km').key;
@@ -218,6 +217,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
         if (org && org.id) {
             this.updateTitle('Editar organización');
             Object.assign(this.organizacionModel, org);
+            this.circunferenciaRegistrar = this.organizacionModel.configuraciones?.circunferenciaKmTurno || null;
             if (this.organizacionModel?.direccion?.geoReferencia?.length === 2) {
 
                 this.lat = this.organizacionModel.direccion.geoReferencia[0];
@@ -264,6 +264,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit, OnDestroy {
             }
             organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
             organizacionGuardar.direccion.ubicacion.barrio = null;
+
+            if (this.circunferenciaRegistrar) {
+                organizacionGuardar.configuraciones = organizacionGuardar.configuraciones || {};
+                organizacionGuardar.configuraciones['circunferenciaKmTurno'] = this.circunferenciaRegistrar;
+            }
 
             const operacion = this.organizacionService.save(organizacionGuardar);
             operacion.subscribe(result => {

@@ -49,7 +49,6 @@
                 </plex-bool>
             </plex-grid>
 
-
             <!-- DATOS DE DOMICILIO -->
             <plex-title titulo="Datos de domicilio" size="md"></plex-title>
             <plex-grid class="pb-4" type="full" cols="2">
@@ -68,9 +67,9 @@
                     <plex-text label="Código Postal" name="codigoPostal"
                                [(ngModel)]="organizacionModel.direccion.codigoPostal" placeholder="Ingrese CP...">
                     </plex-text>
-                    <plex-int label="Circunferencia en km para turnos (se tiene en cuenta la ubicación real del dispositivo móbil)" name="circunferenciaKmTurno"
-                              [min]="circunferenciaMinima" [max]="circunferenciaMaxima"
-                              [(ngModel)]="organizacionModel.circunferenciaKmTurno"
+                    <plex-int label="Circunferencia en km para turnos (se tiene en cuenta la ubicación real del dispositivo móbil)"
+                              name="circunferenciaKmTurno" [min]="circunferenciaMinima" [max]="circunferenciaMaxima"
+                              [(ngModel)]="circunferenciaRegistrar"
                               [placeholder]="'Ingrese circunferencia desde ' + circunferenciaMinima + ' hasta ' + circunferenciaMaxima">
                     </plex-int>
                 </div>
