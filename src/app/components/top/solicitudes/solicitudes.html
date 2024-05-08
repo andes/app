@@ -25,36 +25,23 @@
             <plex-tab label="Entrada" (click)="panelIndex = 0">
                 <form #formEntrada="ngForm">
                     <plex-wrapper>
-                        <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada' && !this.actualizacion"
-                                       type="date" [(ngModel)]="fechaDesdeEntrada" (change)="cambioFechaDesde()"
+                        <plex-datetime *ngIf="verFechaDateTimeEntrada()" 
+                                       type="date" [(ngModel)]="fechaDesde" (change)="cambioFechaDesde()"
                                        name="fechaDesdeLimitada" label="Registro desde" class="fechas" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="asignadas && tipoSolicitud === 'entrada' && !this.actualizacion"
-                                       type="date" [(ngModel)]="fechaHastaEntrada" (change)="cambioFechaHasta()"
+                        <plex-datetime *ngIf="verFechaDateTimeEntrada()"
+                                       type="date" [(ngModel)]="fechaHasta" (change)="cambioFechaHasta()"
                                        name="fechaHastaLimitada" label="Registro hasta" class="fechas" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada') && !this.actualizacion"
-                                       type="date" [(ngModel)]="fechaDesdeEntrada" (change)="cargarSolicitudes()"
-                                       name="fechaDesde" label="Registro desde" class="fechas" [max]="fechaHastaEntrada"
+                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')"
+                                       type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()"
+                                       name="fechaDesde" label="Registro desde" class="fechas" [max]="fechaHasta"
                                        required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada') && !this.actualizacion"
-                                       type="date" [(ngModel)]="fechaHastaEntrada" (change)="cargarSolicitudes()"
-                                       name="fechaHasta" label="Registro hasta" class="fechas" [min]="fechaDesdeEntrada"
+                        <plex-datetime *ngIf="!(asignadas && tipoSolicitud === 'entrada')"
+                                       type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()"
+                                       name="fechaHasta" label="Registro hasta" class="fechas" [min]="fechaDesde"
                                        [max]="hoy" required>
-                        </plex-datetime>
-
-                        <!--FILTRO DE FECHA ACTUALIZACION-->
-                        <plex-datetime *ngIf="this.actualizacion" type="date"
-                                       [(ngModel)]="fechaDesdeEntradaActualizacion"
-                                       name="fechaDesdeEntradaActualizacion" label="Actualización desde" class="fechas"
-                                       (change)="cargarSolicitudes()" [max]="fechaHastaEntradaActualizacion" required>
-                        </plex-datetime>
-                        <plex-datetime *ngIf="this.actualizacion" type="date"
-                                       [(ngModel)]="fechaHastaEntradaActualizacion"
-                                       name="fechaHastaEntradaActualizacion" label="Actualización hasta" class="fechas"
-                                       (change)="cargarSolicitudes()" [min]="fechaDesdeEntradaActualizacion" [max]="hoy"
-                                       required>
                         </plex-datetime>
 
                         <plex-select [(ngModel)]="prestacionesDestinoEntrada" name="nombrePrestacion"
@@ -216,23 +203,13 @@
             <plex-tab label="Salida">
                 <form #formSalida="ngForm">
                     <plex-wrapper>
-                        <plex-datetime *ngIf="!actualizacion" type="date" [(ngModel)]="fechaDesdeSalida"
+                        <plex-datetime type="date" [(ngModel)]="fechaDesde"
                                        (change)="cargarSolicitudes()" name="fechaDesde" label="Registro desde"
-                                       class="fechas" [max]="fechaHastaSalida" required>
+                                       class="fechas" [max]="fechaHasta" required>
                         </plex-datetime>
-                        <plex-datetime *ngIf="!actualizacion" type="date" [(ngModel)]="fechaHastaSalida"
+                        <plex-datetime type="date" [(ngModel)]="fechaHasta"
                                        (change)="cargarSolicitudes()" name="fechaHasta" label="Registro hasta"
-                                       class="fechas" [min]="fechaDesdeSalida" [max]="hoy" required>
-                        </plex-datetime>
-                        <!--FILTRO DE FECHA ACTUALIZACION-->
-                        <plex-datetime *ngIf="actualizacion" type="date" [(ngModel)]="fechaDesdeSalidaActualizacion"
-                                       name="fechaDesdeSalidaActualizacion" label="Actualización desde" class="fechas"
-                                       (change)="cargarSolicitudes()" [max]="fechaHastaSalidaActualizacion" required>
-                        </plex-datetime>
-                        <plex-datetime *ngIf="actualizacion" type="date" [(ngModel)]="fechaHastaSalidaActualizacion"
-                                       name="fechaHastaSalidaActualizacion" label="Actualización hasta" class="fechas"
-                                       (change)="cargarSolicitudes()" [min]="fechaDesdeSalidaActualizacion" [max]="hoy"
-                                       required>
+                                       class="fechas" [min]="fechaDesde" [max]="hoy" required>
                         </plex-datetime>
                         <plex-select [(ngModel)]="prestacionesDestinoSalida" name="nombrePrestacion"
                                      label="Prestación destino" name="prestacionDestino"

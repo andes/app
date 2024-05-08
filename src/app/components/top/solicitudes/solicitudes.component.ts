@@ -103,6 +103,8 @@ export class SolicitudesComponent implements OnInit {
     public fechaHastaSalidaActualizacion: Date = moment().startOf('day').toDate();
     public fechaNotificacion = new Date();
     public descripcionNotificacion = '';
+    public fechaDesde: Date = moment().startOf('day').toDate();
+    public fechaHasta: Date = moment().startOf('day').toDate();
     public hoy: Date = moment().toDate();
     public pacienteEntrada: any;
     public pacienteSalida: any;
@@ -190,6 +192,8 @@ export class SolicitudesComponent implements OnInit {
                 this.fechaHastaEntrada = moment().startOf('day').toDate();
                 this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days').toDate();
             }
+            this.fechaHasta = moment().startOf('day').toDate();
+            this.fechaDesde = moment(this.fechaHasta).subtract(this.diasIntervalo, 'days').toDate();
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
         this.buscarSolicitudes();
@@ -210,11 +214,8 @@ export class SolicitudesComponent implements OnInit {
     recuperarFechas() {
         const solicitudes = JSON.parse(localStorage.getItem('solicitudes'));
         const fechaHoy = moment().startOf('day').toDate();
-
-        this.fechaDesdeEntrada = solicitudes.fechaDesdeEntrada || fechaHoy;
-        this.fechaHastaEntrada = solicitudes.fechaHastaEntrada || fechaHoy;
-        this.fechaDesdeSalida = solicitudes.fechaDesdeSalida || fechaHoy;
-        this.fechaHastaSalida = solicitudes.fechaHastaSalida || fechaHoy;
+        this.fechaDesde = solicitudes.fechaDesde || fechaHoy;
+        this.fechaHasta = solicitudes.fechaHasta || fechaHoy;
     }
 
     resetFechas() {
@@ -222,36 +223,35 @@ export class SolicitudesComponent implements OnInit {
     }
 
     guardarFechas() {
-        localStorage.setItem('solicitudes', JSON.stringify({ fechaDesdeEntrada: this.fechaDesdeEntrada, fechaHastaEntrada: this.fechaHastaEntrada, fechaDesdeSalida: this.fechaDesdeSalida, fechaHastaSalida: this.fechaHastaSalida }));
+        localStorage.setItem('solicitudes', JSON.stringify({ fechaDesde: this.fechaDesde, fechaHasta: this.fechaHasta }));
     }
 
     cambioFechaDesde() {
-        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        const diferencia = moment(this.fechaHasta).diff(this.fechaDesde, 'days');
 
-        if (this.fechaDesdeEntrada) {
+        if (this.fechaDesde && this.tipoSolicitud === 'entrada') {
             this.mostrarAlertaRangoDias = false;
-            if (!this.fechaHastaEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
-                this.fechaHastaEntrada = moment(this.fechaDesdeEntrada).add(this.diasIntervalo, 'days').toDate();
+
+            if (!this.fechaHasta || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaHasta = moment(this.fechaDesde).add(this.diasIntervalo, 'days').toDate();
                 this.mostrarAlertaRangoDias = true;
             }
-
             this.cargarSolicitudes();
         }
     }
 
     cambioFechaHasta() {
-        const diferencia = moment(this.fechaHastaEntrada).diff(this.fechaDesdeEntrada, 'days');
+        const diferencia = moment(this.fechaHasta).diff(this.fechaDesde, 'days');
 
-        if (this.fechaHastaEntrada) {
+        if (this.fechaHasta && this.tipoSolicitud === 'entrada') {
             this.mostrarAlertaRangoDias = false;
-            if (!this.fechaDesdeEntrada || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
-                this.fechaDesdeEntrada = moment(this.fechaHastaEntrada).subtract(this.diasIntervalo, 'days').toDate();
+
+            if (!this.fechaDesde || (diferencia < 0) || (Math.abs(diferencia) > this.diasIntervalo)) {
+                this.fechaDesde = moment(this.fechaHasta).subtract(this.diasIntervalo, 'days').toDate();
                 this.mostrarAlertaRangoDias = true;
             }
-
             this.cargarSolicitudes();
         }
-
         this.guardarFechas();
     }
 
@@ -259,7 +259,6 @@ export class SolicitudesComponent implements OnInit {
         if (activeTab !== this.activeTab) {
             this.actualizacion = false;
             this.check = false;
-            this.actualizarFechas();
             this.activeTab = activeTab;
             this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
             this.cargarSolicitudes();
@@ -398,18 +397,8 @@ export class SolicitudesComponent implements OnInit {
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
         this.skip = 0;
         this.scrollEnd = false;
-
-        if ((this.tipoSolicitud === 'entrada' && (this.fechaDesdeEntrada && this.fechaHastaEntrada)) ||
-            (this.tipoSolicitud === 'entrada' && (this.fechaDesdeEntradaActualizacion && this.fechaHastaEntradaActualizacion))) {
-            this.loader = true;
-            this.buscarSolicitudes();
-        }
-
-        if ((this.tipoSolicitud === 'salida' && this.fechaDesdeSalida && this.fechaHastaSalida) ||
-            (this.tipoSolicitud === 'salida' && this.fechaDesdeSalidaActualizacion && this.fechaHastaSalidaActualizacion)) {
-            this.loader = true;
-            this.buscarSolicitudes();
-        }
+        this.loader = true;
+        this.buscarSolicitudes();
     }
 
     getParams() {
@@ -424,13 +413,13 @@ export class SolicitudesComponent implements OnInit {
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
-            if (this.fechaDesdeEntrada && this.fechaHastaEntrada) {
-                params['solicitudDesde'] = this.fechaDesdeEntrada;
-                params['solicitudHasta'] = this.fechaHastaEntrada;
+            if (!this.check) {
+                params['solicitudDesde'] = this.fechaDesde;
+                params['solicitudHasta'] = this.fechaHasta;
                 params['ordenFechaDesc'] = true;
             } else {
-                params['solicitudDesdeActualizacion'] = this.fechaDesdeEntradaActualizacion;
-                params['solicitudHastaActualizacion'] = this.fechaHastaEntradaActualizacion;
+                params['solicitudDesdeActualizacion'] = this.fechaDesde;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
                 params['ordenFechaDescAct'] = true;
             }
             /*
@@ -473,13 +462,13 @@ export class SolicitudesComponent implements OnInit {
             }
         } else {
             params.estados.push('rechazada');
-            if (this.fechaDesdeSalida && this.fechaHastaSalida) {
-                params['solicitudDesde'] = this.fechaDesdeSalida;
-                params['solicitudHasta'] = this.fechaHastaSalida;
+            if (!this.check) {
+                params['solicitudDesde'] = this.fechaDesde;
+                params['solicitudHasta'] = this.fechaHasta;
                 params['ordenFechaDesc'] = true;
             } else {
-                params['solicitudDesdeActualizacion'] = this.fechaDesdeSalidaActualizacion;
-                params['solicitudHastaActualizacion'] = this.fechaHastaSalidaActualizacion;
+                params['solicitudDesdeActualizacion'] = this.fechaDesde;
+                params['solicitudHastaActualizacion'] = this.fechaHasta;
                 params['ordenFechaDescAct'] = true;
             }
             if (this.asignadas) {
@@ -554,6 +543,10 @@ export class SolicitudesComponent implements OnInit {
             }
             this.loader = false;
         });
+    }
+
+    verFechaDateTimeEntrada() {
+        return (this.asignadas && this.tipoSolicitud === 'entrada' && !this.actualizacion);
     }
 
 
@@ -724,40 +717,20 @@ export class SolicitudesComponent implements OnInit {
     }
 
     onChange() {
-        this.closeSidebar();
         this.actualizacion = !this.actualizacion;
-        this.actualizarFechas();
         this.loader = true;
-        this.buscarSolicitudes();
+        this.cargarSolicitudes();
     }
 
     actualizarFechas() {
         if (this.tipoSolicitud === 'entrada') {
             this.prestacionesEntrada = [];
-            if (this.actualizacion) {
-                this.fechaDesdeEntrada = null;
-                this.fechaHastaEntrada = null;
-                this.fechaDesdeEntradaActualizacion = moment().startOf('day').toDate();
-                this.fechaHastaEntradaActualizacion = moment().startOf('day').toDate();
-            } else {
-                this.fechaDesdeEntrada = moment().startOf('day').toDate();
-                this.fechaHastaEntrada = moment().startOf('day').toDate();
-                this.fechaDesdeEntradaActualizacion = null;
-                this.fechaHastaEntradaActualizacion = null;
-            }
+            this.fechaDesde = moment().startOf('day').toDate();
+            this.fechaHasta = moment().startOf('day').toDate();
         } else {
             this.prestacionesSalida = [];
-            if (this.actualizacion) {
-                this.fechaDesdeSalida = null;
-                this.fechaHastaSalida = null;
-                this.fechaDesdeSalidaActualizacion = moment().startOf('day').toDate();
-                this.fechaHastaSalidaActualizacion = moment().startOf('day').toDate();
-            } else {
-                this.fechaDesdeSalida = moment().startOf('day').toDate();
-                this.fechaHastaSalida = moment().startOf('day').toDate();
-                this.fechaDesdeSalidaActualizacion = null;
-                this.fechaHastaSalidaActualizacion = null;
-            }
+            this.fechaDesde = moment().startOf('day').toDate();
+            this.fechaHasta = moment().startOf('day').toDate();
         }
     }
 
