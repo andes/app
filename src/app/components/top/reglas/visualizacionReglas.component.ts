@@ -11,7 +11,17 @@ import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
     selector: 'visualizacion-reglas',
-    templateUrl: './visualizacionReglas.html'
+    templateUrl: './visualizacionReglas.html',
+    styles: [`
+        .loader {
+            position: absolute;
+            top: 45%;
+            left: 45%;
+        }
+        .loading {
+            opacity: 50%;
+        }
+    `]
 })
 export class VisualizacionReglasComponent implements OnInit {
     @Input() esParametrizado = false;
