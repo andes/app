@@ -266,9 +266,12 @@
                                             <span *ngIf="turno.paciente.documento === ''">
                                                 Sin documento (temporal)
                                             </span>
+                                            <span *ngIf="turno?.paciente?.fechaNacimiento">
+                                                | Edad: {{ turno.paciente | edad }}
+                                            </span>
                                         </span>
                                         <span *ngIf="turno?.paciente?.id &&  turno.paciente.carpetaEfectores?.length">
-                                            | Nro Carpeta
+                                            <br> Nro Carpeta
                                             <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
                                                 {{ carpeta.nroCarpeta }}
                                             </span>
@@ -428,8 +431,11 @@
                                             <small>
                                                 <br>
                                                 <span> {{ sobreturno.paciente | documento }}</span>
+                                                <span *ngIf="sobreturno?.paciente?.fechaNacimiento">
+                                                    | Edad: {{ sobreturno.paciente | edad }}
+                                                </span>
                                                 <span *ngIf="sobreturno?.paciente?.carpetaEfectores?.length">
-                                                    | Nro Carpeta
+                                                    <br>Nro Carpeta
                                                     <span
                                                           *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
                                                         {{carpeta.nroCarpeta}}
@@ -546,6 +552,9 @@
                                         <br>
                                         <span *ngIf="prestacion.paciente.documento !== ''">
                                             DNI {{prestacion.paciente.documento|number}}
+                                        </span>
+                                        <span *ngIf="prestacion.paciente?.fechaNacimiento">
+                                            | Edad: {{ prestacion.paciente | edad }}
                                         </span>
                                         <span *ngIf="prestacion.paciente.documento === ''">
                                             Sin documento (temporal)
