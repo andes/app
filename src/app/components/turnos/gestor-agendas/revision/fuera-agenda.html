@@ -256,9 +256,8 @@
             <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarPrestaciones()" name="fechaHasta"
                            label="Hasta" class="fechas" [min]="fechaDesde">
             </plex-datetime>
-            <plex-select [(ngModel)]="profesional" label="Profesional" tmProfesionales
-                         labelField="apellido + ' ' + nombre" [closeAfterSelect]="true" (change)="cargarPrestaciones()"
-                         span="2">
+            <plex-select [(ngModel)]="profesional" label="Profesional" tmProfesionales [closeAfterSelect]="true"
+                         (change)="cargarPrestaciones()" span="2">
             </plex-select>
             <plex-select [(ngModel)]="prestacionSelect" name="prestacion" label="Prestación"
                          (change)="cargarPrestaciones()" tmPrestaciones [preload]="true" span="2">
